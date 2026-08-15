@@ -20,9 +20,12 @@
 | `scripts/prototype/gate1_logic_lab.gd` | GDScript / 场景适配器 | 承载 216 格空白运行时数据并把已公开的种子/状态摘要写入预置 Label | Godot 技术负责人 | 本轮创建 |
 | `tests/prototype/run_all.gd` | GDScript / 无头自检入口 | 验证工程入口可实例化、固定节点路径存在、216 格数据容器和种子回显一致 | Godot 技术负责人；结果由 QA 独立复核 | 本轮创建 |
 | `scripts/prototype/*.gd.uid`、`tests/prototype/*.gd.uid` | Godot UID sidecar | Godot 4.7.1 首次扫描生成的脚本稳定资源标识；随对应脚本版本管理 | 对应脚本所有者 | 本轮由引擎生成 |
-| `scripts/prototype/core/**` | GDScript / 纯规则探索 | 后续 STEP-004 的规则状态、投影、事件、摘要与回放候选实现 | Godot 技术负责人 | 未创建；等待规则与信息契约 |
+| `scripts/prototype/core/**` | GDScript / 纯规则探索 | `FullState`、确定性随机、规则事务、版本化事件与状态摘要 | Godot 技术负责人 | Iteration 1 revision 2 已创建；可丢弃基础，不是完整规则核心 |
+| `scripts/prototype/view/player_view_projector.gd` | GDScript / 单向投影 | `FullState -> PlayerView`、三级意图、AI 白名单 DTO 导出 | Godot 技术负责人 | Iteration 1 revision 2 已创建 |
+| `scripts/prototype/replay/replay_runner.gd` | GDScript / 重放入口 | 以 seed + 行动意图重建事件日志并核对最终摘要 | Godot 技术负责人 | Iteration 1 revision 2 已创建 |
 | `resources/prototype/rules/**` | `.tres` 配置 | 后续可调但需序列化的原型规则默认值 | Godot 技术负责人；规则语义由系统与体验负责人验收 | 未创建；等待规则规格 |
-| `tests/prototype/rules/**` | GDScript / 行为测试 | 后续规则矩阵、确定性、回放与信息边界测试 | Godot 技术负责人；QA 独立验收 | 未创建；等待规则规格与 QA 矩阵 |
+| `tests/prototype/test_match_state.gd`、`test_rules_core.gd` | GDScript / 行为测试 | 冻结开局、旗生命周期、炮击、士替死、后备队列、墙修复时序 | Godot 技术负责人；QA 独立验收 | Iteration 1 定向覆盖已创建 |
+| `tests/prototype/test_player_view.gd`、`test_replay.gd` | GDScript / 黑盒与确定性测试 | 隐藏等价投影/查询/错误/AI DTO 与 seed+意图重放一致性 | Godot 技术负责人；QA 独立验收 | Iteration 1 定向覆盖已创建 |
 | `scripts/prototype/ai/**`、`resources/prototype/ai/**` | AI 脚本与配置 | 仅接收 `PlayerView` 的基线 AI 与参数 | 单机 AI 工程师 | 本岗位禁止编辑 |
 | `user://prototype/gate1/**` | 运行时 JSONL/摘要 | 后续本机行动日志、玩家视角事件、随机抽样与回放输出 | Godot 技术负责人生成；QA 消费 | 未创建；只允许运行时写入 |
 | `evidence/prototype/qa/**` | QA 原始证据与索引 | 独立命令、退出码、种子、批量对局与缺陷证据 | QA 与发布负责人 | 本岗位不写生产事实 |
@@ -65,16 +68,17 @@ Gate1LogicLab (Control, 组合根；预置 Theme)
 ## 可丢弃边界与未验证假设
 
 - `scripts/prototype/**` 与 `scenes/prototype/**` 是 GATE-1 探索产物；进入正式功能开发前必须依据证据决定重写或保留，不能因为可运行就升级为正式架构。
-- “确定性规则核心与显示层解耦”仍是 `hypothesis`。Phase 1 只建立一个不把 216 格状态节点化的最小接缝；必须在后续确定性、PlayerView、回放和批量对局原型中验证。
-- 本轮不实现合法行动、迷雾、城墙、三旗、士替死、将帅死亡、行动日志或回放，因此也不声称 `TASK-PROTOTYPE-001`、STEP-004 或 GATE-1 验收完成。
+- “确定性规则核心与显示层解耦”仍是 `hypothesis`。Iteration 1 revision 2 已用真实 FullState、PlayerView、行动事件和回放定向测试形成正向证据，但尚未经过完整棋子几何、全部结算组合、1000 完整对局与独立 QA 复核。
+- 当前只实现冻结开局、正交移动探索接缝、三级意图中的路径阻挡、旗生命周期、同步炮击/将帅与士替死窗口、后备队列、墙修复计数、状态摘要和重放基础；不得据此声称完整 STEP-004、CHECK-004、CHECK-005 或 GATE-1 完成。
+- 炮击采用项目所有者确认的无冷却规则。FullState、PlayerView、日志和摘要均没有共享冷却字段；资格只读取敌墙 `INTACT`、炮在己方大本营和该炮剩余弹药。
 - `.tres` Theme 和三个 `.tscn` 只服务逻辑可读性，不代表正式 UI、主棋盘/小地图 UX 或视觉基线。
 
 ## 后续接口需求
 
-1. 系统与体验负责人提供版本化规则状态字段、合法行动与结算顺序，尤其是将帅实际死亡的最高优先级和车路径逐目标停止条件。
-2. 系统与体验负责人提供 `FullState -> PlayerView` 单向投影字段表，并定义合法行动查询、错误、日志与随机结果的无泄露返回形状。
-3. 单机 AI 工程师只接收不可反查 `FullState` 的 `PlayerView`、公开规则配置、自身记忆和独立 AI 种子；具体 DTO 名称与序列化摘要需双方在实现前对齐。
-4. QA 提供 Phase 1 节点/加载检查的独立复核记录，并在 STEP-004 后补充规则矩阵、隐藏等价配对、确定性回放和 1000 种子入口要求。
+1. 系统与体验负责人继续补充完整棋子几何、车路径逐目标、马/象限制与显形、炮精确吃子、普通士替死及轮上限配置输入；现有实现不得填充未知数值。
+2. 单机 AI 通过 `PlayerViewProjector.export_ai_projection()` 消费真实投影；核心为 1-based 冻结坐标，AI 白名单适配层明确转换为 0-based。
+3. QA 需要独立复核隐藏等价配对、事件/摘要重放以及本轮定向规则矩阵；1000 seeds 仍阻塞于完整合法行动生成器和完整对局模拟器。
+4. 项目经理需要继续处理 QA-P1-003 的 Loop 官方 runtime Snapshot validator 不匹配；本岗位不修改 Registry 或插件。
 5. 项目所有者仍保留 GATE-1、回合上限冻结、显著长期架构取舍与平台承诺的批准权。
 
 ## Phase 1 验证记录
@@ -91,3 +95,11 @@ Gate1LogicLab (Control, 组合根；预置 Theme)
 | `validate_pipeline_contract.py game-pipeline/loops/contracts/CTR-P1-001-vertical-slice.yaml` | 0 | 输出 `OK`；批准 Contract 结构保持有效。 |
 
 这些是生产者的技术自检记录，不替代 QA 独立验收，也不满足 STEP-004、CHECK-004 或 GATE-1。
+
+## Iteration 1 revision 2 接口
+
+- `MatchState.create(seed)` 创建冻结 32 子阵型、红先和确定性三旗的 `full-state-v1`。
+- `RuleEngine.submit_action(state, intent)` 输出 `action-event-v1` 与 `state-summary-v1`；受控全量日志仅在 `state.events`，玩家通道仅在 `state.player_events[side]`。
+- `PlayerViewProjector.project(state, side)` 是单向投影；`list_action_intents(view, intents)` 只读 `PlayerView` 并返回 `KNOWN_LEGAL / TENTATIVE / KNOWN_ILLEGAL`。
+- `PlayerViewProjector.export_ai_projection(view, intents)` 输出现有 AI 白名单接受的 `player-view-ai-v1`，不传 FullState 或完整合法真值。
+- `ReplayRunner.capture(seed, intents)` 与 `replay(recording)` 核对事件摘要和最终状态摘要。
