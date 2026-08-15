@@ -1,0 +1,101 @@
+Veilfront Xiangqi Siege - Iteration 1 revision 2 QA command output
+QA instance: inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
+HEAD: c7fd75d84d171cfbe0943901cd3cd3b5c70d89e9
+Captured environment: 2026-08-15T21:58:05.6417732+08:00
+OS: Microsoft Windows NT 10.0.26200.0
+PowerShell: 5.1.26100.9168
+Python: 3.11.5
+Godot: 4.7.1.stable.official.a13da4feb
+
+=== PROJECT INSTANCE ===
+started_at=2026-08-15T21:56:12.7353808+08:00
+command=python "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/scripts/validate_project_instance.py" --project-root .
+output=state=normal; errors=[]; warnings=[]; plugin=0.4.0-alpha.2; framework_digest=3589bce5cf4388f91a08f12acb5d90679256191d5085e65687d06a635bbdcd32
+exit_code=0
+
+=== PIPELINE CONTRACT ===
+started_at=2026-08-15T21:56:12.7949660+08:00
+command=python "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/scripts/validate_pipeline_contract.py" game-pipeline/loops/contracts/CTR-P1-001-vertical-slice.yaml
+output=OK: game-pipeline\loops\contracts\CTR-P1-001-vertical-slice.yaml
+exit_code=0
+
+=== ORGANIZATION HISTORY ===
+started_at=2026-08-15T21:56:12.8097376+08:00
+command=python "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/scripts/validate_organization_registry.py" --snapshot game-pipeline/organization/snapshot.yaml --history game-pipeline/organization/event-history.yaml
+output=OK: Organization Registry 契约、摘要、审批基线与事件历史一致
+exit_code=0
+
+=== LOOP HISTORY CLI ===
+started_at=2026-08-15T21:56:12.8729935+08:00
+command=python "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/scripts/validate_loop_registry.py" --snapshot game-pipeline/loops/registry/first-production-loop/snapshot.yaml --event "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/contracts/loop-registry-event.template.yaml" --contract game-pipeline/loops/contracts/loop-contract-gate1-vertical-slice.yaml --state-machine "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/contracts/loop-state-machine.default.yaml" --history game-pipeline/loops/registry/first-production-loop/event-history.yaml
+output:
+  ERROR: Snapshot 模板初始状态必须等于状态机 initial_state
+  ERROR: Snapshot 模板 current_iteration 必须从 0 开始
+  ERROR: 注册后的 Snapshot 模板必须位于 sequence=1、record_revision=1
+  ERROR: draft 注册基线的 inputs 和 outputs 必须为空
+  ERROR: Snapshot input_slot_id 必须完整对应 Contract required_inputs
+  ERROR: Snapshot deliverable_id 必须完整对应 Contract required_deliverables
+exit_code=1
+interpretation=Active iteration-1 revision-14 runtime snapshot is rejected by registration-template invariants. No event chain, sequence, digest, or replayed-snapshot mismatch was emitted. Official CLI result remains failed.
+
+=== GODOT IMPORT ===
+started_at=2026-08-15T21:56:28.9479374+08:00
+command=godot --headless --path . --editor --quit-after 1
+output=first_scan_filesystem DONE; WARNING: Scan thread aborted
+exit_code=0
+
+=== GODOT MAIN ===
+started_at=2026-08-15T21:56:43.3884201+08:00
+command=godot --headless --path . --quit-after 2
+output=GATE1_PROTOTYPE_READY seed=471001 cells=216 core=prototype_core_revision2 full_gate1=false
+exit_code=0
+
+=== RUN ALL ===
+started_at=2026-08-15T21:56:50.8947955+08:00
+command=godot --headless --path . --script res://tests/prototype/run_all.gd
+output:
+  PASS: main PackedScene, phase-1 interfaces and 34 preset-node shell expectations
+  PASS: FullState frozen opening, red-first, deterministic flags and no-cooldown fields
+  PASS: FullState->PlayerView hidden-equivalent projection, query, error and AI DTO
+  PASS: flag lifecycle, bombard eligibility, simultaneous generals, rescue, reserve and wall timing
+  PASS: replay event log and final state summary determinism
+  PASS: real PlayerView AI hidden equivalence, independent seed and public audit
+  PROTOTYPE_BASIS_CHECKS_PASSED scaffold=9 focused_suites=5 full_gate1=false
+exit_code=0
+
+=== AI REAL PLAYER VIEW POSITIVE ===
+started_at=2026-08-15T21:56:58.7763801+08:00
+command=godot --headless --path . --script res://tests/prototype/test_ai_fairness.gd
+output_summary=AI_REAL_AUDIT_JSON emitted; FullState digests differ; PlayerView/action-preview/AI-projection digests paired; action/input summary/all public audit fields equal; derived_ai_seed=254111128171952226; forbidden seed inputs include rule_rng and unpublished_random_result
+selected_action=move:red-rook-1:1,12:
+full_state_seed=80123
+match_ai_seed=909001
+exit_code=0
+
+=== AI FAILURE PROPAGATION NEGATIVE CONTROL ===
+started_at=2026-08-15T21:57:07.2605263+08:00
+command=godot --headless --path . --script res://tests/prototype/test_ai_fairness.gd -- --force-failure
+output=ERROR: AI FAIRNESS FAIL: deliberate negative-path sentinel; tests failed count=1
+exit_code=1
+expected_exit_code=1
+
+=== 1000-SEED RUNNER PRESENCE ===
+started_at=2026-08-15T21:57:25.9726806+08:00
+command=Test-Path tests/prototype/run_seeded_matches.gd
+output=false
+exit_code=0
+execution=not_run/blocked_by_missing_artifact
+
+=== PARTIAL IMPLEMENTATION SOURCE REVIEW ===
+started_at=2026-08-15T21:57:45.4277652+08:00
+command=PowerShell source scan over scripts/prototype and tests/prototype
+output:
+  scripts/prototype/gate1_logic_lab.gd declares full_gate1=false
+  tests/prototype/run_all.gd declares full_gate1=false
+  docs/prototype/godot-artifact-map-v1.md says complete geometry, all settlement combinations and 1000 matches remain unverified
+  rule_engine.gd/player_view_projector.gd contain no implementation tokens for horse-leg, elephant-eye/reveal-zone, rook path vision, cannon screen, complete visibility or round limit
+exit_code=0
+
+=== WORKTREE BASELINE ===
+before_qa=clean at HEAD c7fd75d84d171cfbe0943901cd3cd3b5c70d89e9
+QA writes are limited to evidence/prototype/qa/.
