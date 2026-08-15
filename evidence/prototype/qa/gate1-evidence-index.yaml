@@ -1,7 +1,7 @@
 schema_version: veilfront-qa-evidence-index/v1
 artifact_id: artifact:veilfront-xiangqi-siege:gate1-evidence@prototype-v1
-review_kind: iteration_1_revision_3_formal_regression
-reviewed_at: '2026-08-16T01:37:29.6300355+08:00'
+review_kind: iteration_1_revision_4_owner_freeze_revision_3_regression
+reviewed_at: '2026-08-16T03:13:14.9126944+08:00'
 qa_instance:
   instance_id: inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
   position_id: pos:veilfront-xiangqi-siege:quality:qa-release-lead
@@ -12,8 +12,8 @@ loop_binding:
   display_key: LOOP-GATE1-001
   state: active
   iteration: 1
-  record_revision: 20
-  last_event_sequence: 20
+  record_revision: 25
+  last_event_sequence: 25
   contract_id: LOOP-CTR-GATE1-VERTICAL-SLICE-001
   contract_version: 1
   contract_digest: a970c55fe068a1252251ee4d30dedff32bee9da1f8e7e7ef7dc0c501be416799
@@ -23,27 +23,36 @@ pipeline_contract:
   subject_digest: 189b691e6c60b0c5c7b069081ebe34e726ff038211d60a33084eee5638499014
   materialized_file_sha256: fe436181f039389658414032ff1370d2fc1bc896bc7d446e96d8fd0abea23b2e
 source_commits:
-  owner_freeze_revision_2: 5b2c8070b1a6d9be7abadb1a4f4c11e657c886fb
-  revision_2_real_player_view_ai: c7fd75d84d171cfbe0943901cd3cd3b5c70d89e9
-  reviewed_head: ed8ebe1ba9b10d34680194f8630c46ad00b2f81b
+  previous_qa_revision_3: 2f3c69f15af4d7cfb912673bebb604d2f8acc0fc
+  owner_freeze_revision_3: 69a2f81c3eed08c7e4d3051efd6a39b13cf105cf
+  elephant_implementation: a140015c9764f6827dfdfc647a91494585fa21a4
+  reviewed_head: a140015c9764f6827dfdfc647a91494585fa21a4
   production_worktree_at_test_start: clean
 specification_baseline:
-  status: owner-freeze-revision-2-with-one-owner-pending-rule-input
-  owner_pending:
-    - id: PENDING-OWNER-ELEPHANT-REVEAL-CELLS
-      result: blocked
-      reason: approved brief/spec/approval records do not enumerate the exact elephant reveal-cell set
+  status: owner-freeze-revision-3
+  resolved_owner_input:
+    id: PENDING-OWNER-ELEPHANT-REVEAL-CELLS
+    resolution_id: OWNER-CONFIRM-2026-08-16:ELEPHANT-REVEAL-3X3
+    result: closed
+    definition: legal elephant move origin/destination bounding square, exact 3x3 nine cells including origin, eye and destination, no clipping or expansion
+  remaining_hypotheses:
+    - final full-round limit
+    - AI search budget
+    - AI decision randomness
+    - AI difficulty
   files:
     - path: docs/prototype/rules-spec-v1.md
-      sha256: c2dd23aabb45b0bc15e62a3d42459afa4f4a56b5ecc4fca4454a5bc57e22df35
+      sha256: e872e81b33653520af04313d33572426e0e89804212f62f34da34b4fa80af867
     - path: docs/prototype/settlement-order-v1.md
-      sha256: c785dbc9ea6364431fea309cb79d09f14eab1616e5387da6a5ccb894fbf3c323
+      sha256: a950da53815cc62bd40cfbd03f8bace2acf03cf8714883e21ff177351a268c8b
     - path: docs/prototype/information-boundary-v1.md
-      sha256: f5f9bec03f9c83345f23bf3a440cf10281d18d59a8c4adba7d61de098f1d7d62
+      sha256: 89bde29319b6235c31ac5a206f751779658d866d699f7666deeb28f05fdbfe76
     - path: docs/prototype/gate1-observation-plan-v1.md
-      sha256: ea4b15666234f71ee5e41c1e350720a6afe9a91f08f0f913aae97588a3109e96
+      sha256: d8aafd0cc966214138d6f95baefe7f3f50da9eab6bc21a11038799140b393ce2
     - path: docs/prototype/rules-test-coverage-matrix-v1.md
-      sha256: 60a92ca0b1105cd3c5d7dbb7c8d9699563751aad092ad71dc61c4b288d4ca5ca
+      sha256: b1c9f1654381e206f8eb7def1216ad5f72366432981d359d3a457654835d1c10
+    - path: docs/prototype/godot-artifact-map-v1.md
+      sha256: 945ffef12fd9de44bbe0287b3a995c9329fcc3b094b1492b6a8a4ffd7fd651c3
 environment:
   os: Microsoft Windows NT 10.0.26200.0
   python: 3.11.5
@@ -51,27 +60,30 @@ environment:
   godot: 4.7.1.stable.official.a13da4feb
   project_godot_sha256: 87ea184f1f162fd25b4f4efddb7c5b997ccec64a6274884579a777780331f80a
 raw_evidence:
-  revision_3_checklist: evidence/prototype/qa/iteration-1-revision-3-checklist.md
-  revision_3_review: evidence/prototype/qa/iteration-1-revision-3-review.md
-  revision_3_commands: evidence/prototype/qa/iteration-1-revision-3-command-output.txt
+  previous_revision_3_review: evidence/prototype/qa/iteration-1-revision-3-review.md
+  revision_4_review: evidence/prototype/qa/iteration-1-revision-4-review.md
+  revision_4_commands: evidence/prototype/qa/iteration-1-revision-4-command-output.txt
   ai_positive_output:
-    path: evidence/prototype/qa/iteration-1-revision-3-ai-positive-output.txt
-    sha256: eb4ede6abe1a4c6219f32b62a976c99fd0cf8fcfda9812b19a6ceb381a9ae2ad
+    path: evidence/prototype/qa/iteration-1-revision-4-ai-positive-output.txt
+    sha256: 31c2e4973c79a3a99ca314b0d05800b0f26f78fc33a85e0793445ed898e59644
   seeded_output:
-    path: evidence/prototype/qa/iteration-1-revision-3-seeded-output.txt
-    sha256: 5cb6735490c26b55900aabf9ed23a357684b0d171bcf58b2e9eddb38313c7c59
+    path: evidence/prototype/qa/iteration-1-revision-4-seeded-output.txt
+    sha256: 5890d83540b8857d6dfcd9e4168507f2f01bcbfc5691c752b1c1c6fa97af19e5
   seeded_manifest:
-    path: evidence/prototype/qa/iteration-1-revision-3-seeded-manifest.jsonl
-    sha256: 09ddfbe602c818308daf0ecd7b43fe61116a24b6ca1be0ac247a07f634f959a5
+    path: evidence/prototype/qa/iteration-1-revision-4-seeded-manifest.jsonl
+    sha256: df82d3b188ea2fec937ee9364d89e47a119d2d8f686e1a04a41116178517e2b5
     line_count: 1002
-    records_digest: 8ee5bcc23af9538ea0abc6b3c36f85f86d195f46533bb2eba811139e2c94cce3
+    records_count: 1000
+    records_digest: dcc6947442ee14d05636953095d07c19ebd093ff616449598612082baa03575d
+  qa_wall_breach_runner:
+    path: evidence/prototype/qa/revision4_elephant_wall_breach_runner.gd
 checks:
   - id: CHECK-PROJECT-INSTANCE
     contract_check: CHECK-CONTRACT-001
     required: true
     command: 'python "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/scripts/validate_project_instance.py" --project-root .'
-    started_at: '2026-08-16T01:05:45.2457782+08:00'
-    ended_at: '2026-08-16T01:06:03.0427654+08:00'
+    started_at: '2026-08-16T02:49:38.3913710+08:00'
+    ended_at: '2026-08-16T02:49:44.3776893+08:00'
     exit_code: 0
     result: pass
     observation: state=normal, errors=[], warnings=[]
@@ -79,34 +91,33 @@ checks:
     contract_check: CHECK-CONTRACT-001
     required: true
     command: 'python "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/scripts/validate_pipeline_contract.py" game-pipeline/loops/contracts/CTR-P1-001-vertical-slice.yaml'
-    started_at: '2026-08-16T01:05:45.5090856+08:00'
-    ended_at: '2026-08-16T01:05:53.2362159+08:00'
+    started_at: '2026-08-16T02:49:38.3853704+08:00'
+    ended_at: '2026-08-16T02:49:40.1733926+08:00'
     exit_code: 0
     result: pass
-    observation: OK
   - id: CHECK-ORGANIZATION-HISTORY
     contract_check: CHECK-CONTRACT-001
     required: true
     command: 'python "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/scripts/validate_organization_registry.py" --snapshot game-pipeline/organization/snapshot.yaml --history game-pipeline/organization/event-history.yaml'
-    started_at: '2026-08-16T01:05:47.0249875+08:00'
-    ended_at: '2026-08-16T01:06:00.5240494+08:00'
+    started_at: '2026-08-16T02:49:39.4063089+08:00'
+    ended_at: '2026-08-16T02:49:43.2950931+08:00'
     exit_code: 0
     result: pass
   - id: CHECK-LOOP-HISTORY-CLI
-    contract_check: CHECK-CONTRACT-001
     required: true
     command: 'python "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/scripts/validate_loop_registry.py" --snapshot game-pipeline/loops/registry/first-production-loop/snapshot.yaml --event "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/contracts/loop-registry-event.template.yaml" --contract game-pipeline/loops/contracts/loop-contract-gate1-vertical-slice.yaml --state-machine "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/contracts/loop-state-machine.default.yaml" --history game-pipeline/loops/registry/first-production-loop/event-history.yaml'
-    started_at: '2026-08-16T01:05:47.3417315+08:00'
-    ended_at: '2026-08-16T01:06:00.8070721+08:00'
+    started_at: '2026-08-16T02:49:41.1510069+08:00'
+    ended_at: '2026-08-16T02:49:44.2128849+08:00'
     exit_code: 1
     result: fail
+    defect_id: QA-P1-003
     classification: blocked_by_template_cli_runtime_snapshot_mismatch
-    observation: six registration-template invariant errors were emitted against active iteration-1 revision-20 runtime snapshot
+    observation: six registration-template invariant errors against active iteration-1 revision-25 runtime snapshot
   - id: CHECK-LOOP-HISTORY-FUNCTION
     required: true
     command: direct call to validate_history() in the same unmodified locked validate_loop_registry.py
-    started_at: '2026-08-16T01:06:43.1184135+08:00'
-    ended_at: '2026-08-16T01:06:51.0807321+08:00'
+    started_at: '2026-08-16T02:50:22.3287373+08:00'
+    ended_at: '2026-08-16T02:50:27.8812884+08:00'
     exit_code: 0
     result: pass_limited_scope
     observation: history_error_count=0
@@ -115,44 +126,61 @@ checks:
     contract_check: CHECK-003
     required: true
     command: godot --headless --path . --editor --quit-after 1
-    started_at: '2026-08-16T01:08:14.9467836+08:00'
-    ended_at: '2026-08-16T01:09:37.5721096+08:00'
+    started_at: '2026-08-16T02:51:14.7956372+08:00'
+    ended_at: '2026-08-16T02:52:30.1503894+08:00'
     exit_code: 0
     result: pass_with_warning
-    observation: no parse/import/resource errors; forced editor exit emitted Scan thread aborted
+    observation: no parse/import/resource error; forced exit emitted Scan thread aborted
   - id: CHECK-GODOT-MAIN
     contract_check: CHECK-GODOT-001
     required: true
     command: godot --headless --path . --quit-after 2
-    started_at: '2026-08-16T01:10:04.8107251+08:00'
-    ended_at: '2026-08-16T01:10:12.0489589+08:00'
+    started_at: '2026-08-16T02:52:54.9935072+08:00'
+    ended_at: '2026-08-16T02:52:58.0865783+08:00'
     exit_code: 0
-    result: pass_partial_prototype
-    observation: GATE1_PROTOTYPE_READY seed=471001 cells=216 core=prototype_core_revision3 full_gate1=false
+    result: pass
+    observation: seed=471001, cells=216, core=prototype_core_revision3, full_gate1=false
+  - id: CHECK-ELEPHANT-REVEAL
+    contract_check: CHECK-RULES-001
+    required: true
+    command: godot --headless --path . --script res://tests/prototype/run_elephant_reveal.gd
+    started_at: '2026-08-16T02:52:54.9685976+08:00'
+    ended_at: '2026-08-16T02:52:58.4743963+08:00'
+    exit_code: 0
+    result: pass
+    test_file_sha256: 447e3e8a97266be9a7a5309158ab90b651d3f0b338f1379c49492e07892c9e03
+    coverage:
+      - exact origin/destination bounding 3x3 nine cells
+      - origin, elephant eye and destination included
+      - no clipping and no expansion
+      - hidden horse inside/outside
+      - multi-elephant union and per-source refresh
+      - move-start old-source clearing including blocked resolution
+      - death, rescue, return, repair withdrawal and reserve clearing
+      - hidden FullState PlayerView equivalence
   - id: CHECK-RUN-ALL
     contract_check: CHECK-004
     required: true
     command: godot --headless --path . --script res://tests/prototype/run_all.gd
-    started_at: '2026-08-16T01:10:27.6362642+08:00'
-    ended_at: '2026-08-16T01:11:27.4603962+08:00'
+    started_at: '2026-08-16T02:53:16.0189353+08:00'
+    ended_at: '2026-08-16T02:53:43.5073998+08:00'
     exit_code: 0
-    result: pass_frozen_baseline
-    observation: scaffold=9, focused_suites=9, full_gate1=false
+    result: pass
+    observation: scaffold=9, focused_suites=10, full_gate1=false
   - id: CHECK-AI-REAL-PLAYER-VIEW
     contract_check: CHECK-AI-001
     required: true
     command: godot --headless --path . --script res://tests/prototype/test_ai_fairness.gd
-    started_at: '2026-08-16T01:35:54.3702141+08:00'
-    ended_at: '2026-08-16T01:36:43.1697069+08:00'
+    started_at: '2026-08-16T02:54:21.3193353+08:00'
+    ended_at: '2026-08-16T02:55:21.7576803+08:00'
     exit_code: 0
     result: pass_blackbox
     seeds: [80123, 909001, 77231, 880021]
-    observation: real different FullState pair produces equal PlayerView/AI DTO, actions, input summaries and public audit across multiple decisions
   - id: CHECK-AI-FAILURE-PROPAGATION
     required: true
     command: godot --headless --path . --script res://tests/prototype/test_ai_fairness.gd -- --force-failure
-    started_at: '2026-08-16T01:12:53.2694791+08:00'
-    ended_at: '2026-08-16T01:13:35.2527813+08:00'
+    started_at: '2026-08-16T02:55:40.4330506+08:00'
+    ended_at: '2026-08-16T02:56:09.9826211+08:00'
     exit_code: 1
     expected_exit_code: 1
     result: pass_negative_control
@@ -160,26 +188,42 @@ checks:
     contract_check: CHECK-RULES-001
     required: true
     command: godot --headless --path . --script res://tests/prototype/run_move_rules.gd
-    started_at: '2026-08-16T01:13:51.1543771+08:00'
-    ended_at: '2026-08-16T01:14:04.3173758+08:00'
+    started_at: '2026-08-16T02:57:58.4471394+08:00'
+    ended_at: '2026-08-16T02:58:03.6478548+08:00'
     exit_code: 0
     result: pass
-    observation: independent oracle and production generator action sets match for directed geometry/special cases
   - id: CHECK-REPLAY-TAMPER
     contract_check: CHECK-DETERMINISM-001
     required: true
     command: godot --headless --path . --script res://evidence/prototype/qa/revision3_replay_runner.gd
-    started_at: '2026-08-16T01:14:39.6603495+08:00'
-    ended_at: '2026-08-16T01:14:52.9248180+08:00'
+    started_at: '2026-08-16T02:58:17.2680820+08:00'
+    ended_at: '2026-08-16T02:58:20.4175292+08:00'
     exit_code: 0
     result: pass
     observation: deterministic replay passes; intent/event/summary/execution tampering is rejected
+  - id: CHECK-ELEPHANT-WALL-BREACH-CLEAR
+    contract_check: CHECK-RULES-001
+    required: true
+    command: godot --headless --path . --script res://evidence/prototype/qa/revision4_elephant_wall_breach_runner.gd
+    started_at: '2026-08-16T03:02:11.1013358+08:00'
+    ended_at: '2026-08-16T03:02:17.1239517+08:00'
+    exit_code: 0
+    result: pass_blackbox
+    observation: third invader triggers enemy wall breach and clears attacker elephant reveal sources through public action resolution
+  - id: CHECK-NO-COOLDOWN
+    required: true
+    command: source scan of scripts/prototype and resources/prototype plus directed runtime assertions
+    started_at: '2026-08-16T03:13:36.4293884+08:00'
+    ended_at: '2026-08-16T03:13:37.4530132+08:00'
+    exit_code: 0
+    result: pass
+    observation: no production cooldown/冷却 token or field
   - id: CHECK-1000-SEEDED-MATCHES
     contract_check: CHECK-005
     required: true
-    command: godot --headless --path . --script res://tests/prototype/run_seeded_matches.gd -- --seeds 1000 --manifest-path evidence/prototype/qa/iteration-1-revision-3-seeded-manifest.jsonl
-    started_at: '2026-08-16T01:15:33.7077211+08:00'
-    ended_at: '2026-08-16T01:31:58.9665541+08:00'
+    command: godot --headless --path . --script res://tests/prototype/run_seeded_matches.gd -- --seeds 1000 --manifest-path evidence/prototype/qa/iteration-1-revision-4-seeded-manifest.jsonl
+    started_at: '2026-08-16T02:58:40.0435000+08:00'
+    ended_at: '2026-08-16T03:11:39.1869398+08:00'
     exit_code: 0
     result: pass
     seed_range: [1, 1000]
@@ -205,64 +249,50 @@ checks:
       wall_repairs: 0
   - id: CHECK-SEEDED-MANIFEST
     required: true
-    command: godot --headless --path . --script res://tests/prototype/verify_seeded_manifest.gd -- --path evidence/prototype/qa/iteration-1-revision-3-seeded-manifest.jsonl
-    started_at: '2026-08-16T01:32:40.1660221+08:00'
-    ended_at: '2026-08-16T01:32:49.8214001+08:00'
+    command: godot --headless --path . --script res://tests/prototype/verify_seeded_manifest.gd -- --path evidence/prototype/qa/iteration-1-revision-4-seeded-manifest.jsonl
+    started_at: '2026-08-16T03:11:54.2044293+08:00'
+    ended_at: '2026-08-16T03:11:56.2836291+08:00'
     exit_code: 0
     result: pass
     records: 1000
-    records_digest: 8ee5bcc23af9538ea0abc6b3c36f85f86d195f46533bb2eba811139e2c94cce3
+    records_digest: dcc6947442ee14d05636953095d07c19ebd093ff616449598612082baa03575d
   - id: CHECK-SEEDED-MANIFEST-TAMPER
     required: true
-    command: godot --headless --path . --script res://tests/prototype/verify_seeded_manifest.gd -- --path evidence/prototype/qa/iteration-1-revision-3-seeded-manifest.jsonl --force-record-tamper
-    started_at: '2026-08-16T01:32:39.9079444+08:00'
-    ended_at: '2026-08-16T01:32:48.5274003+08:00'
+    command: godot --headless --path . --script res://tests/prototype/verify_seeded_manifest.gd -- --path evidence/prototype/qa/iteration-1-revision-4-seeded-manifest.jsonl --force-record-tamper
+    started_at: '2026-08-16T03:11:58.0197944+08:00'
+    ended_at: '2026-08-16T03:11:59.7637389+08:00'
     exit_code: 1
     expected_exit_code: 1
     result: pass_negative_control
     observation: manifest_count_or_digest_mismatch
-  - id: CHECK-NO-COOLDOWN
-    required: true
-    command: source scan of scripts/prototype and resources/prototype plus directed runtime assertions
-    exit_code: 0
-    result: pass
-    observation: no production cooldown/冷却 tokens or fields; repeated qualification tests pass
-  - id: CHECK-ELEPHANT-REVEAL-CELLS
-    contract_check: CHECK-RULES-001
-    required: true
-    command: approved fact-source search plus directed suite review
-    exit_code: null
-    result: blocked
-    classification: pending_owner_rule_input
-    observation: implementation is explicitly a replaceable hypothesis and cannot count as frozen acceptance
 defect_regression:
   - defect_id: QA-P1-001
     previous_severity: blocker
     status: closed
-    evidence: complete rule/fog/settlement prototype, move oracle, replay, full-match simulator and 1000-seed runner now exist and pass
   - defect_id: QA-P1-002
     previous_severity: high
     status: closed
-    evidence: real FullState to PlayerView to AI blackbox path and negative propagation pass
   - defect_id: QA-P1-003
     previous_severity: high
     status: retained
     severity: high
     classification: template_cli_issue_not_observed_history_corruption
     return_to: pos:veilfront-xiangqi-siege:root:project-manager
-unresolved_acceptance_items:
-  - id: PENDING-OWNER-ELEPHANT-REVEAL-CELLS
-    severity_to_acceptance: blocker
-    classification: missing_approved_rule_value
-    return_to: project-owner via pos:veilfront-xiangqi-siege:root:project-manager
+owner_blocker_regression:
+  - blocker_id: PENDING-OWNER-ELEPHANT-REVEAL-CELLS
+    previous_severity: blocker
+    status: closed
+    evidence: owner-freeze revision 3 plus directed production and independent QA blackbox tests
 new_defects: []
 professional_result:
+  technical_regression: pass
+  professional_result: blocked_by_tooling
   gate_decision: not_made
   evidence_state: blocked
   current_submission_accepted: false
   allow_continue_iteration_1: true
   full_gate1: false
   transition_to_review_allowed: false
-  legal_next_action: remain_active_and_revise_same_loop
-  rationale: technical Revision 3 regression and 1000-seed evidence pass, but the exact elephant reveal-cell rule remains owner-pending and the official Loop CLI still exits 1
+  legal_next_action: resolve_or_formally_waive_QA-P1-003_then_recheck
+  rationale: owner-frozen elephant rule and all technical checks pass, but the required official Loop CLI still exits 1 and QA cannot self-waive it; human GATE-1 remains separate and unmade
 waivers: []

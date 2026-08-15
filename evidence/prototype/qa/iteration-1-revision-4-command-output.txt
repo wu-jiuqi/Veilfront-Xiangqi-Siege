@@ -1,0 +1,173 @@
+ITERATION 1 REVISION 4 / OWNER-FREEZE REVISION 3 QA COMMAND OUTPUT
+project=veilfront-xiangqi-siege
+qa_instance=inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
+commit=a140015c9764f6827dfdfc647a91494585fa21a4
+environment=Windows NT 10.0.26200.0; PowerShell 5.1.26100.9168; Python 3.11.5; Godot 4.7.1.stable.official.a13da4feb
+production_worktree_at_start=clean
+
+===== PROJECT INSTANCE =====
+start=2026-08-16T02:49:38.3913710+08:00
+command=python "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/scripts/validate_project_instance.py" --project-root .
+output=state=normal; plugin_lock.state=normal; errors=[]; warnings=[]; locked/installed version=0.4.0-alpha.2; framework digest=3589bce5cf4388f91a08f12acb5d90679256191d5085e65687d06a635bbdcd32
+exit=0
+end=2026-08-16T02:49:44.3776893+08:00
+
+===== PIPELINE CONTRACT =====
+start=2026-08-16T02:49:38.3853704+08:00
+command=python "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/scripts/validate_pipeline_contract.py" game-pipeline/loops/contracts/CTR-P1-001-vertical-slice.yaml
+output=OK: game-pipeline\loops\contracts\CTR-P1-001-vertical-slice.yaml
+exit=0
+end=2026-08-16T02:49:40.1733926+08:00
+
+===== ORGANIZATION HISTORY =====
+start=2026-08-16T02:49:39.4063089+08:00
+command=python "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/scripts/validate_organization_registry.py" --snapshot game-pipeline/organization/snapshot.yaml --history game-pipeline/organization/event-history.yaml
+output=OK: Organization Registry contract/digest/snapshot/event history consistent (console Chinese text rendered as mojibake)
+exit=0
+end=2026-08-16T02:49:43.2950931+08:00
+
+===== LOOP OFFICIAL CLI =====
+start=2026-08-16T02:49:41.1510069+08:00
+command=python "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/scripts/validate_loop_registry.py" --snapshot game-pipeline/loops/registry/first-production-loop/snapshot.yaml --event "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/contracts/loop-registry-event.template.yaml" --contract game-pipeline/loops/contracts/loop-contract-gate1-vertical-slice.yaml --state-machine "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/contracts/loop-state-machine.default.yaml" --history game-pipeline/loops/registry/first-production-loop/event-history.yaml
+output:
+ERROR: Snapshot template initial state must equal state machine initial_state
+ERROR: Snapshot template current_iteration must start at 0
+ERROR: Registry Snapshot template watermark must be sequence=1, record_revision=1
+ERROR: draft registry item's inputs and outputs must be empty
+ERROR: Snapshot input_slot_id must fully correspond to Contract required_inputs
+ERROR: Snapshot deliverable_id must fully correspond to Contract required_deliverables
+exit=1
+end=2026-08-16T02:49:44.2128849+08:00
+note=Official CLI failure is retained. The English lines are faithful translations of the six mojibake console lines; the locked CLI was not modified.
+
+===== LOOP HISTORY FUNCTION, SAME UNMODIFIED SCRIPT =====
+start=2026-08-16T02:50:22.3287373+08:00
+command=directly load the same locked validate_loop_registry.py and call validate_history(snapshot,history,state-machine,event-contract)
+output=history_error_count=0
+exit=0
+end=2026-08-16T02:50:27.8812884+08:00
+note=History replay result does not replace or convert the failed official CLI.
+
+===== GODOT VERSION AND IMPORT =====
+start=2026-08-16T02:51:14.7956372+08:00
+commands=godot --version; godot --headless --path . --editor --quit-after 1
+output=4.7.1.stable.official.a13da4feb; first_scan_filesystem DONE; WARNING Scan thread aborted at forced editor exit
+version_exit=0
+import_exit=0
+end=2026-08-16T02:52:30.1503894+08:00
+
+===== MAIN SCENE =====
+start=2026-08-16T02:52:54.9935072+08:00
+command=godot --headless --path . --quit-after 2
+output=GATE1_PROTOTYPE_READY seed=471001 cells=216 core=prototype_core_revision3 full_gate1=false
+exit=0
+end=2026-08-16T02:52:58.0865783+08:00
+
+===== ELEPHANT REVEAL DIRECTED SUITE =====
+start=2026-08-16T02:52:54.9685976+08:00
+command=godot --headless --path . --script res://tests/prototype/run_elephant_reveal.gd
+output=ELEPHANT_REVEAL_PASS
+exit=0
+end=2026-08-16T02:52:58.4743963+08:00
+coverage=exact origin/destination bounding 3x3; origin/eye/destination included; no clipping/expansion; hidden horse inside/outside; multi-elephant union; move-start old-source clearing; death/rescue/return/withdrawal/reserve clearing; PlayerView equivalence
+
+===== RUN ALL =====
+start=2026-08-16T02:53:16.0189353+08:00
+command=godot --headless --path . --script res://tests/prototype/run_all.gd
+output:
+PASS: main scene and preset shell/controller nodes
+PASS: UI only exposes human PlayerView and has no MatchState/FullState bypass
+PASS: 216 cells, frozen initial setup, red first, deterministic flags and no cooldown fields
+PASS: FullState to PlayerView hidden-equivalent projection/query/error/AI DTO
+PASS: flag lifecycle, no-cooldown bombardment, simultaneous generals, rescue, reserve FIFO and wall timing
+PASS: deterministic replay; traditional geometry, special qualification, cannon screens and wall constraints
+PASS: rook sequential targets, hidden horse/cannon screen, reveal lifecycle and player-event filtering
+PASS: frozen elephant nine cells, multi-source union, refresh and all exit-source clearing
+PASS: full-match round-cap termination/replay, prepared-action tokens and real PlayerView AI fairness
+PROTOTYPE_BASIS_CHECKS_PASSED scaffold=9 focused_suites=10 full_gate1=false
+exit=0
+end=2026-08-16T02:53:43.5073998+08:00
+
+===== AI POSITIVE =====
+start=2026-08-16T02:54:21.3193353+08:00
+command=godot --headless --path . --script res://tests/prototype/test_ai_fairness.gd
+raw_output=evidence/prototype/qa/iteration-1-revision-4-ai-positive-output.txt
+raw_output_sha256=31c2e4973c79a3a99ca314b0d05800b0f26f78fc33a85e0793445ed898e59644
+terminal_output=AI fairness prototype tests passed
+exit=0
+end=2026-08-16T02:55:21.7576803+08:00
+
+===== AI FORCE-FAILURE NEGATIVE CONTROL =====
+start=2026-08-16T02:55:40.4330506+08:00
+command=godot --headless --path . --script res://tests/prototype/test_ai_fairness.gd -- --force-failure
+output=ERROR: AI FAIRNESS FAIL: deliberate negative-path sentinel; AI fairness prototype tests failed count=1
+exit=1
+expected_exit=1
+end=2026-08-16T02:56:09.9826211+08:00
+
+===== MOVE ORACLE =====
+start=2026-08-16T02:57:58.4471394+08:00
+command=godot --headless --path . --script res://tests/prototype/run_move_rules.gd
+output=MOVE_RULES_SUITE_PASSED elapsed_msec=1843
+exit=0
+end=2026-08-16T02:58:03.6478548+08:00
+
+===== REPLAY AND TAMPER =====
+start=2026-08-16T02:58:17.2680820+08:00
+command=godot --headless --path . --script res://evidence/prototype/qa/revision3_replay_runner.gd
+output=REVISION3_REPLAY_TAMPER_SUITE_PASSED
+exit=0
+end=2026-08-16T02:58:20.4175292+08:00
+tamper_cases=intent target, event id, final-state digest, execution result
+
+===== ELEPHANT SOURCE CLEAR ON ENEMY WALL BREACH, QA BLACKBOX =====
+start=2026-08-16T03:02:11.1013358+08:00
+command=godot --headless --path . --script res://evidence/prototype/qa/revision4_elephant_wall_breach_runner.gd
+output=REVISION4_ELEPHANT_WALL_BREACH_CLEAR_PASS
+exit=0
+end=2026-08-16T03:02:17.1239517+08:00
+observation=third invader caused the enemy wall to enter BREACHED and cleared the attacker's elephant reveal source through the public action path
+
+===== 1000 FIXED SEEDS =====
+start=2026-08-16T02:58:40.0435000+08:00
+command=godot --headless --path . --script res://tests/prototype/run_seeded_matches.gd -- --seeds 1000 --manifest-path evidence/prototype/qa/iteration-1-revision-4-seeded-manifest.jsonl
+raw_output=evidence/prototype/qa/iteration-1-revision-4-seeded-output.txt
+raw_output_sha256=5890d83540b8857d6dfcd9e4168507f2f01bcbfc5691c752b1c1c6fa97af19e5
+manifest=evidence/prototype/qa/iteration-1-revision-4-seeded-manifest.jsonl
+manifest_sha256=df82d3b188ea2fec937ee9364d89e47a119d2d8f686e1a04a41116178517e2b5
+manifest_lines=1002
+output=SEEDED_MATCHES_SUMMARY completed_matches=1000 requested_seeds=1000 failure_count=0 determinism_checked_count=1000 determinism_mismatch_count=0 replay_sample_count=10 replay_verified_count=10 records_count=1000 records_digest=dcc6947442ee14d05636953095d07c19ebd093ff616449598612082baa03575d full_round_limit_hypothesis=8 round_limit_status=hypothesis_cli_overridable winner_counts(red=5,black=9,draw=986) reason_counts(round_limit_flags=14,round_limit_draw=986) rounds(min=8,p50=8,p90=8,p95=8,max=8) metrics(bombardments=3793,candidate_evaluations=55152,flag_captures=14,rescues=18,rook_multi_targets=0,wall_breaches=1,wall_repairs=0)
+exit=0
+end=2026-08-16T03:11:39.1869398+08:00
+
+===== MANIFEST POSITIVE VERIFIER =====
+start=2026-08-16T03:11:54.2044293+08:00
+command=godot --headless --path . --script res://tests/prototype/verify_seeded_manifest.gd -- --path evidence/prototype/qa/iteration-1-revision-4-seeded-manifest.jsonl
+output=SEEDED_MANIFEST_VERIFIED records=1000 digest=dcc6947442ee14d05636953095d07c19ebd093ff616449598612082baa03575d
+exit=0
+end=2026-08-16T03:11:56.2836291+08:00
+
+===== MANIFEST FORCED-TAMPER NEGATIVE CONTROL =====
+start=2026-08-16T03:11:58.0197944+08:00
+command=godot --headless --path . --script res://tests/prototype/verify_seeded_manifest.gd -- --path evidence/prototype/qa/iteration-1-revision-4-seeded-manifest.jsonl --force-record-tamper
+output=ERROR: SEEDED_MANIFEST_VERIFY_FAILED: manifest_count_or_digest_mismatch
+exit=1
+expected_exit=1
+end=2026-08-16T03:11:59.7637389+08:00
+
+===== NO COOLDOWN SOURCE AUDIT =====
+start=2026-08-16T03:13:36.4293884+08:00
+command=case-insensitive cooldown/冷却 scan across scripts/prototype and resources/prototype
+output=NO_PRODUCTION_COOLDOWN_TOKEN_HITS
+exit=0
+end=2026-08-16T03:13:37.4530132+08:00
+
+===== BASELINE AND FILE DIGESTS =====
+head=a140015c9764f6827dfdfc647a91494585fa21a4
+owner_freeze_revision_3_commit=69a2f81c3eed08c7e4d3051efd6a39b13cf105cf
+implementation_commit=a140015c9764f6827dfdfc647a91494585fa21a4
+loop=current_state=active,current_iteration=1,record_revision=25,last_event_sequence=25
+run_elephant_reveal_sha256=9e8267adb00da8caafb7ae050bc6f818745834f27f4f56b87ae22d0d1302c678
+test_elephant_reveal_sha256=447e3e8a97266be9a7a5309158ab90b651d3f0b338f1379c49492e07892c9e03
+move_rules_sha256=f24e3f1047dec0167412cafd44cd8c52de9d80f94f1bca33df66e9a7d39bc091
+rule_engine_sha256=737547c75507a2efe0f0d457654bc001b82402c3a7bde4d02d822f3d021e49fa
