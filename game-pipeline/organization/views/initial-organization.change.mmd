@@ -1,0 +1,36 @@
+%% Organization view=change project=veilfront-xiangqi-siege revision=1 event_sequence=1 scope=all
+%% snapshot_digest=27d954c36e2ff8db08bc85cff96876401585390b264ad5d4ca07712bbeb0e2c5
+%% change_set_id=chg:veilfront-xiangqi-siege:M9J6YVK5207WGBJNFKR7398DYX change_set_digest=fdd6fec0a5f4edfc198a5ae787d5d3676806d16e4166debe58270ee64b9449d2
+flowchart TB
+    n_44ae6bdd9a9d7a["待人工审批\\nchg:veilfront-xiangqi-siege:M9J6YVK5207WGBJNFKR7398DYX\\n建立职责覆盖完整的最小初始编制 | digest fdd6fec0a5f4"]:::pending_review
+    n_e9fdea9b6f8e0a["设计与体验部\\ndept:veilfront-xiangqi-siege:design-experience\\ncreate_department | 规则、信息体验与视觉表达需要共享玩家体验基线；首版规模不足以为每个职能建立独立部门。"]:::proposed
+    n_96d860eeddec08["质量与发布部\\ndept:veilfront-xiangqi-siege:quality\\ncreate_department | 高风险规则组合、迷雾与 AI 公平要求生产者之外的独立验收边界。"]:::proposed
+    n_a21c7c3b3daeac["技术部\\ndept:veilfront-xiangqi-siege:technology\\ncreate_department | 运行时架构、Godot 生产方式与 AI 共享工程接口和性能约束，当前由一个技术部门承接更小且更清晰。"]:::proposed
+    n_b901912d1bd5f8["系统与体验负责人\\npos:veilfront-xiangqi-siege:design-experience:systems-experience-lead\\ncreate_position | 规则与信息 UX 共享同一玩家行为和迷雾语义基线，首版合并可减少交接，同时以独立 QA 防止自证。"]:::proposed
+    n_cc3708a63c40da["视觉制作负责人\\npos:veilfront-xiangqi-siege:design-experience:visual-production-lead\\ncreate_position | 视觉资产具有独立工具链、许可和审美验收，不能由系统设计或技术岗位顺带长期拥有。"]:::proposed
+    n_06c746a310718d["质量与发布负责人\\npos:veilfront-xiangqi-siege:quality:qa-release-lead\\ncreate_position | QA 必须能独立拒收规则、代码、视觉和 AI 交付，并向项目经理提供不被生产岗位覆盖的 Gate 证据。"]:::proposed
+    n_03033041137b0d["项目编制设计\\npos:veilfront-xiangqi-siege:root:project-agent-architect\\ncreate_position | 编制需在里程碑变化和长期职责缺口出现时复审，且必须与日常调度和最终批准分离。"]:::proposed
+    n_585ee00e79c841["项目经理\\npos:veilfront-xiangqi-siege:root:project-manager\\ncreate_position | 三个部门和多个风险域需要持续的跨部门协调，且该职责不能由任一生产部门单方面拥有。"]:::proposed
+    n_0efa6c8cdebd8f["Godot 技术负责人\\npos:veilfront-xiangqi-siege:technology:godot-technical-lead\\ncreate_position | Godot 架构、预置节点优先约束、规则实现和构建验证是跨里程碑长期工程责任。"]:::proposed
+    n_6519d010d3199c["单机 AI 工程师\\npos:veilfront-xiangqi-siege:technology:single-player-ai-engineer\\ncreate_position | AI 的不完全信息搜索、难度和反作弊证据具有独立判断边界，合并进技术负责人会增加隐藏信息污染和验收冲突。"]:::proposed
+    n_44ae6bdd9a9d7a -->|"create_department"| n_e9fdea9b6f8e0a
+    n_44ae6bdd9a9d7a -->|"create_department"| n_96d860eeddec08
+    n_44ae6bdd9a9d7a -->|"create_department"| n_a21c7c3b3daeac
+    n_44ae6bdd9a9d7a -->|"create_position"| n_b901912d1bd5f8
+    n_44ae6bdd9a9d7a -->|"create_position"| n_cc3708a63c40da
+    n_44ae6bdd9a9d7a -->|"create_position"| n_06c746a310718d
+    n_44ae6bdd9a9d7a -->|"create_position"| n_03033041137b0d
+    n_44ae6bdd9a9d7a -->|"create_position"| n_585ee00e79c841
+    n_44ae6bdd9a9d7a -->|"create_position"| n_0efa6c8cdebd8f
+    n_44ae6bdd9a9d7a -->|"create_position"| n_6519d010d3199c
+    n_e9fdea9b6f8e0a -->|"提议归属"| n_e9fdea9b6f8e0a
+    n_e9fdea9b6f8e0a -->|"提议归属"| n_b901912d1bd5f8
+    n_e9fdea9b6f8e0a -->|"提议归属"| n_cc3708a63c40da
+    n_96d860eeddec08 -->|"提议归属"| n_96d860eeddec08
+    n_96d860eeddec08 -->|"提议归属"| n_06c746a310718d
+    n_a21c7c3b3daeac -->|"提议归属"| n_a21c7c3b3daeac
+    n_a21c7c3b3daeac -->|"提议归属"| n_0efa6c8cdebd8f
+    n_a21c7c3b3daeac -->|"提议归属"| n_6519d010d3199c
+    n_585ee00e79c841 -->|"提议归属"| n_03033041137b0d
+    classDef pending_review fill:#fffde7,stroke:#f9a825,stroke-width:3px,color:#5d4037
+    classDef proposed fill:#e1f5fe,stroke:#0277bd,stroke-width:3px,stroke-dasharray:5 3,color:#01579b

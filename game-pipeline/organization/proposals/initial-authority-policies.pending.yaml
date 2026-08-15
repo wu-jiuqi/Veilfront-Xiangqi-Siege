@@ -1,0 +1,112 @@
+authority_policy_proposal:
+  schema_version: game-production-authority-policy-proposal/v1
+  project_id: veilfront-xiangqi-siege
+  status: pending
+  approval_id: null
+  subject_change_set_id: chg:veilfront-xiangqi-siege:M9J6YVK5207WGBJNFKR7398DYX
+  policies:
+  - id: AUTH-VEILFRONT-PROJECT-MANAGER
+    version: 0.1.0
+    grantee_position_id: pos:veilfront-xiangqi-siege:root:project-manager
+    may_decide:
+    - 在已批准项目范围、优先级上限和 Gate 内协调循环、依赖、顺序与交接
+    - 要求责任部门补齐输入、证据、风险和变更影响
+    may_not_decide:
+    - 项目范围、预算、发布日期、核心体验、审美方向、风险接受或发布批准
+    - 长期 Department、Position、Preset、Skill Binding、权限或事实源所有权变化
+    evidence_required:
+    - 项目状态汇总
+    - 决策请求与跨部门依赖记录
+    escalation_target: project-owner
+    redelegation: 仅可依据另行批准的有限授权转授，不得转授人工闸门或独立验收
+    policy_digest: 713953e9f58fff95b9f7b56e5eb0a856a1538e4c443c9dcb88cbc541ac75e54c
+  - id: AUTH-VEILFRONT-ORG-ARCHITECT
+    version: 0.1.0
+    grantee_position_id: pos:veilfront-xiangqi-siege:root:project-agent-architect
+    may_decide:
+    - 生成 pending 编制、Preset、Skill Binding、权限和迁移提案
+    - 运行组织只读校验并渲染确定性组织投影
+    may_not_decide:
+    - 批准、应用或实例化任何长期组织变化
+    - 修改项目领域事实、正式 Snapshot 或 Event History
+    evidence_required:
+    - 职责覆盖矩阵
+    - Change Set、校验结果和组织图
+    escalation_target: project-owner
+    redelegation: 禁止
+    policy_digest: 4d57ca90443a5908322d7b378a67553801826faaaae949cdec07d97f4d8c2379
+  - id: AUTH-VEILFRONT-SYSTEMS-EXPERIENCE
+    version: 0.1.0
+    grantee_position_id: pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
+    may_decide:
+    - 在已确认规则内细化不改变语义的规格、状态和交互表达
+    - 设定原型观测指标、组织结构化试玩并拒收不符合规格的设计交付
+    may_not_decide:
+    - 改变已确认规则、项目范围、核心体验、最终平衡或最终视觉方向
+    - 验收自己生产或实现的规则代码
+    evidence_required:
+    - 规则规格与结算顺序
+    - 平衡指标、UX 流程和变更记录
+    escalation_target: pos:veilfront-xiangqi-siege:root:project-manager
+    redelegation: 仅可分配执行任务，不得转授事实源所有权或人工判断
+    policy_digest: 53c54b867f2719ad8f614caf92eb8e476c4bf478b81199ff52f86f9fb569f42c
+  - id: AUTH-VEILFRONT-VISUAL-PRODUCTION
+    version: 0.1.0
+    grantee_position_id: pos:veilfront-xiangqi-siege:design-experience:visual-production-lead
+    may_decide:
+    - 在已批准美术基线内选择制作方法、资产组织、命名和导入交付方式
+    - 拒收不符合资产规范或许可要求的视觉交付
+    may_not_decide:
+    - 冻结尚未批准的资产精度、色彩、比例、动画、音频或最终审美
+    - 改变玩法、信息可见性、技术架构、预算或外包承诺
+    evidence_required:
+    - 美术基线、资产清单、样片和许可记录
+    escalation_target: pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
+    redelegation: 仅可分配已批准资产任务
+    policy_digest: 2ab64395ca2a88158298e841a1be9fd75dcf50d200ad16f8483f21481304beb5
+  - id: AUTH-VEILFRONT-GODOT-TECHNOLOGY
+    version: 0.1.0
+    grantee_position_id: pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+    may_decide:
+    - 在批准规格内选择 Godot 实现方法、工程结构、测试钩子和性能优化
+    - 按预置节点优先约束管理代码、场景、资源、构建和技术交接
+    may_not_decide:
+    - 把技术假设升级为项目事实，或改变规则、迷雾边界、首版单机范围和目标平台承诺
+    - 自行接受破坏性迁移、在线能力或长期工具部门扩编
+    evidence_required:
+    - 技术方案、场景资源映射、构建与确定性验证
+    escalation_target: pos:veilfront-xiangqi-siege:root:project-manager
+    redelegation: 可分配实现任务，不得转授架构破坏性变更或人工 Gate
+    policy_digest: 4738e0389d391e27eec6d7692059b2b81a61d2ba0061b1fb731048eac8da6285
+  - id: AUTH-VEILFRONT-SINGLE-PLAYER-AI
+    version: 0.1.0
+    grantee_position_id: pos:veilfront-xiangqi-siege:technology:single-player-ai-engineer
+    may_decide:
+    - 在批准信息契约、难度目标和性能预算内选择规则型或搜索型算法
+    - 调整原型搜索参数并生成可审计对局证据
+    may_not_decide:
+    - 读取隐藏状态、引入机器学习或在线服务、改变规则或信息权限
+    - 自行冻结搜索预算、随机性和难度档位
+    evidence_required:
+    - AI 输入契约、参数记录、性能数据和无隐藏读取日志
+    escalation_target: pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+    redelegation: 禁止
+    policy_digest: 667737aa3ae56ab617976478be8728c49d0ca65c523ceb8042eaaed5d60102d2
+  - id: AUTH-VEILFRONT-QA-RELEASE
+    version: 0.1.0
+    grantee_position_id: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+    may_decide:
+    - 依据批准规格判定专业验证通过或失败并拒收证据不足的交付
+    - 维护缺陷、回归、信息泄露、AI 公平、性能和构建验证证据
+    may_not_decide:
+    - 修改任何生产事实源、降低 Gate 标准、接受项目风险或批准发布
+    - 与被验收的生产岗位共享 Agent Instance
+    evidence_required:
+    - 自动化矩阵、可复现缺陷、回归和 Gate 证据包
+    escalation_target: pos:veilfront-xiangqi-siege:root:project-manager
+    redelegation: 仅可分配测试执行，不得转授最终独立验收结论
+    policy_digest: dcdd84e8469f2e349bbe12dc52914dba0f2a9ef04d759335b072ac5def7aeea6
+  integrity:
+    canonicalization: authority-policy-proposal-canonical-json-v1
+    digest_algorithm: sha256
+    proposal_digest: c68e669295befba6b5346aba637fb2ef710ae63c2c6d703418912593818a7f9c

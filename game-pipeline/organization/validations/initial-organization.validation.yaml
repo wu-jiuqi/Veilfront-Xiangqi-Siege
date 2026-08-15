@@ -1,0 +1,59 @@
+organization_validation:
+  schema_version: 0.2-alpha
+  validation_id: val:veilfront-xiangqi-siege:M9J6YVK5207WGBJNFKR7398DYY
+  source_binding:
+    project_id: veilfront-xiangqi-siege
+    organization_revision: 1
+    snapshot_digest: 27d954c36e2ff8db08bc85cff96876401585390b264ad5d4ca07712bbeb0e2c5
+    last_event_sequence: 1
+    last_event_digest: cd15e2161b655810c4cc0c6d22fd4f198532a4aa63f037e7c3823cca34e89550
+  change_set_binding:
+    change_set_id: chg:veilfront-xiangqi-siege:M9J6YVK5207WGBJNFKR7398DYX
+    change_set_digest: fdd6fec0a5f4edfc198a5ae787d5d3676806d16e4166debe58270ee64b9449d2
+    decision_basis_digest: 710aae3700484ce14113dd4bef9c0a5cb6f8e3bf830d90579e76ea6d9a15402e
+  validator_binding:
+    validator_id: organization-registry-validator
+    version: 0.2-alpha
+    digest: c78a8667fbe2659c753ddb31c693b19c62833c6377d9b7de195f6724c7a1da49
+  generated_at: '2026-08-15T18:54:48.3093835+08:00'
+  overall_result: passed
+  issues: []
+  proposal_checks:
+  - check_id: VAL-ORG-001
+    result: passed
+    check: 插件锁、项目实例、已确认简报及摘要匹配的人工批准均有效
+  - check_id: VAL-ORG-002
+    result: passed
+    check: 当前 Snapshot 摘要、事件水位与 Event History 一致
+  - check_id: VAL-ORG-003
+    result: passed
+    check: Change Set 结构、摘要、决策基线和保留物化令牌通过确定性校验
+  - check_id: VAL-ORG-004
+    result: passed
+    check: 模拟应用 3 个 Department 与 7 个 Position 后，稳定 ID、汇报关系、经理引用、Preset 格式和独立验收结构均合法
+  - check_id: VAL-ORG-005
+    result: passed
+    check: 7 个 pending Preset 摘要稳定，生成计划无错误且未生成任何 Codex 适配器
+  - check_id: VAL-ORG-006
+    result: passed
+    check: 当前正式编制图与待审批变化图可由 Snapshot 和 Change Set 确定性渲染
+  projections:
+    occupancy: []
+    effective_availability:
+    - status: no_runtime_instances
+      explanation: 本提案只建立待审批职责席位，不启动 Agent Instance
+    temporary_grant_capacity:
+    - status: none_proposed
+      explanation: 三个部门均禁止无授权临时编制，本 Change Set 不签发 Temporary Grant
+    pending_approval_summary:
+    - change_set_id: chg:veilfront-xiangqi-siege:M9J6YVK5207WGBJNFKR7398DYX
+      departments: 3
+      positions: 7
+      presets: 7
+      authority_policies: 7
+      skill_binding_sets: 7
+      required_approver_role: project-owner
+  integrity:
+    canonicalization: organization-validation-canonical-json-v1
+    digest_algorithm: sha256
+    validation_digest: 2f6d69e22aaaab1fc0a4d50aa0d26d6993bd8a592e8f0c86dcb5e366e2c621ff
