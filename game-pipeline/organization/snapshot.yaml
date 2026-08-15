@@ -2,9 +2,9 @@ organization_snapshot:
   schema_version: 0.2-alpha
   identity:
     project_id: veilfront-xiangqi-siege
-    organization_revision: 4
+    organization_revision: 12
     created_at: '2026-08-15T00:00:00+08:00'
-    updated_at: '2026-08-15T19:51:41.943479+08:00'
+    updated_at: '2026-08-15T20:15:17.6009401+08:00'
   governance_bindings:
     organization_contract:
       id: ORG-CONTRACT-CORE
@@ -437,6 +437,82 @@ organization_snapshot:
       audit:
         registered_by_event_id: evt:01M02M6X3RWNC61XSE25569YM9
         last_changed_by_event_id: evt:01M02M6X3RWNC61XSE25569YM9
+    - instance_id: inst:01M02NJ3JENHD8VV7EKC9G198Q
+      instance_kind: position
+      preset_binding:
+        preset_id: preset:veilfront-xiangqi-siege:systems-experience-lead
+        version: 0.1.0
+        digest: cfd7b2042219dda407a5099e1d0210679506e6d3835d8ccfe93d04864bcbec5a
+      position_binding:
+        position_id: pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
+        definition_digest: 397e9846c8a4aad646ec46a49f5c0870dbf72561e1f84d02be3119540c9c2d23
+      temporary_binding: null
+      lifecycle:
+        state: active
+        state_entered_at: '2026-08-15T20:15:17.6009401+08:00'
+        transition_ref: evt:01M02NJ3JFZP5E9C48DXC79MEG
+      started_at: '2026-08-15T20:15:17.6009401+08:00'
+      expires_at: null
+      audit:
+        registered_by_event_id: evt:01M02NJ3JFAZD7WBZZ7N67N94W
+        last_changed_by_event_id: evt:01M02NJ3JFAZD7WBZZ7N67N94W
+    - instance_id: inst:01M02NJ3JEQXKV6PT6DPX0NKQ0
+      instance_kind: position
+      preset_binding:
+        preset_id: preset:veilfront-xiangqi-siege:godot-technical-lead
+        version: 0.1.0
+        digest: f7d1108b3c7f3ee9e5c19d6566f0d78025d1945bb364664d77f196104a583a0b
+      position_binding:
+        position_id: pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+        definition_digest: 63e2a3afabea3f0348496ecf9db9e82290b5c47a08a5ce759ac58e4471f24e8a
+      temporary_binding: null
+      lifecycle:
+        state: active
+        state_entered_at: '2026-08-15T20:15:17.6009401+08:00'
+        transition_ref: evt:01M02NJ3JF393AJJN7EJX7HDMM
+      started_at: '2026-08-15T20:15:17.6009401+08:00'
+      expires_at: null
+      audit:
+        registered_by_event_id: evt:01M02NJ3JF0GV4WWFWDKREAYME
+        last_changed_by_event_id: evt:01M02NJ3JF0GV4WWFWDKREAYME
+    - instance_id: inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
+      instance_kind: position
+      preset_binding:
+        preset_id: preset:veilfront-xiangqi-siege:qa-release-lead
+        version: 0.1.0
+        digest: 118a9144280d31b0d96ee376fda0a86eb1e713971b4cf96836dadf2968c42018
+      position_binding:
+        position_id: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+        definition_digest: b4ccc95d60ca2311d431818e40fb0b5ee55dfe3d56c9cc3145889c1c0edc2f82
+      temporary_binding: null
+      lifecycle:
+        state: active
+        state_entered_at: '2026-08-15T20:15:17.6009401+08:00'
+        transition_ref: evt:01M02NJ3JF3NK21NN1S6V5201W
+      started_at: '2026-08-15T20:15:17.6009401+08:00'
+      expires_at: null
+      audit:
+        registered_by_event_id: evt:01M02NJ3JF9XSCNH751AGB5WVY
+        last_changed_by_event_id: evt:01M02NJ3JF9XSCNH751AGB5WVY
+    - instance_id: inst:01M02NJ3JFS7AH6WNNHK31B3EX
+      instance_kind: position
+      preset_binding:
+        preset_id: preset:veilfront-xiangqi-siege:single-player-ai-engineer
+        version: 0.1.0
+        digest: 8f20e5bfe60eafb46a684150538a8dae91aadc51ded239a3bd9618ffdbd5da3d
+      position_binding:
+        position_id: pos:veilfront-xiangqi-siege:technology:single-player-ai-engineer
+        definition_digest: c824d1068d628be2b4aebe4ac60c607e1e0d64f607dd8ddde9786e81836b80a0
+      temporary_binding: null
+      lifecycle:
+        state: active
+        state_entered_at: '2026-08-15T20:15:17.6009401+08:00'
+        transition_ref: evt:01M02NJ3JFFQM0N009GE0X8ARZ
+      started_at: '2026-08-15T20:15:17.6009401+08:00'
+      expires_at: null
+      audit:
+        registered_by_event_id: evt:01M02NJ3JF9VEQKNTPG4R95FKP
+        last_changed_by_event_id: evt:01M02NJ3JF9VEQKNTPG4R95FKP
     temporary_grants: []
   governance:
     used_identity_index:
@@ -454,6 +530,10 @@ organization_snapshot:
       - pos:veilfront-xiangqi-siege:technology:single-player-ai-engineer
       instance_ids:
       - inst:01M02M6X3Q8YWJXHY52K3V5AR2
+      - inst:01M02NJ3JENHD8VV7EKC9G198Q
+      - inst:01M02NJ3JEQXKV6PT6DPX0NKQ0
+      - inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
+      - inst:01M02NJ3JFS7AH6WNNHK31B3EX
       temporary_grant_ids: []
     tombstones: []
     pending_change_set_refs: []
@@ -466,10 +546,10 @@ organization_snapshot:
       approval_ref: approval:veilfront-xiangqi-siege:organization-change-set:fdd6fec0a5f4
       applied_by_event_id: evt:QFHA6TR0WEX5FQX5XG7BJPPND3
   event_watermark:
-    last_event_id: evt:01M02M6X3TNN3CC025BTKZ8P9C
-    last_event_sequence: 4
-    last_event_digest: 8bb9ffb1a0c93d00a6a7349b3719bee692374313dd061218cf6f5ce1d49db88f
+    last_event_id: evt:01M02NJ3JF3NK21NN1S6V5201W
+    last_event_sequence: 12
+    last_event_digest: 737fb99668fa94e29ff36d202b119d2806392fa628fad6fba659f783a0168bbb
   snapshot_integrity:
     canonicalization: organization-snapshot-canonical-json-v1
     digest_algorithm: sha256
-    snapshot_digest: 7fff90e196e1070395d2b82ac60ad731c1418afe66554349987635cb69295bd3
+    snapshot_digest: 6ba5b5caf0115d894557d750e505ee53bd03bc4feb26c7058c794a85b353f81c

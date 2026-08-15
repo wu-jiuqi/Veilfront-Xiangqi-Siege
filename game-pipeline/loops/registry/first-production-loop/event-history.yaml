@@ -184,3 +184,33 @@ event_history:
       - game-pipeline/organization/snapshot.yaml@revision-4
       - git:veilfront-xiangqi-siege:623a438#no-project.godot
     integrity: {canonicalization: registry-event-canonical-json-v1, digest_algorithm: sha256, previous_event_digest: 94da79911b40311182718995e5a6c3b05901cf2317d62dde979682d6dbe57b6e, event_digest: 3b39e443b3b6829628c6e49b93a3def73217bc2dd5681c3a469e25944a203163}
+
+  - schema_version: "0.1"
+    event_id: 90eaee39-e686-423c-87ef-c4a4634f90b5
+    mutation_id: fd84da89-2c4a-4d14-9410-666e02c54d48
+    loop_instance_id: 4cbb03b6-dd5a-41c5-a624-895c4b884bcb
+    sequence: 8
+    event_type: core.loop_started
+    occurred_at: '2026-08-15T20:15:17.6009401+08:00'
+    recorded_at: '2026-08-15T20:15:17.6009401+08:00'
+    actor: *project_manager_actor
+    causality:
+      correlation_id: 2e67563b-33b5-4b90-9858-e1b6eb790b8d
+      causation_event_id: 38aa4f1c-4764-4fc0-8980-6e02149da710
+      request_id: user:start:2026-08-15T20:15:17.6009401+08:00
+    concurrency: {expected_record_revision: 7, resulting_record_revision: 8}
+    binding_snapshot: *binding
+    payload:
+      transition_id: TR-READY-ACTIVE
+      from_state: ready
+      to_state: active
+      iteration: {before: 0, after: 1}
+    evidence_refs:
+      - game-pipeline/organization/snapshot.yaml@revision-12
+      - inst:01M02NJ3JENHD8VV7EKC9G198Q
+      - inst:01M02NJ3JEQXKV6PT6DPX0NKQ0
+      - inst:01M02NJ3JFS7AH6WNNHK31B3EX
+      - inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
+      - validate_project_instance.py:state=normal
+      - git:veilfront-xiangqi-siege:01bf7ad#no-project.godot
+    integrity: {canonicalization: registry-event-canonical-json-v1, digest_algorithm: sha256, previous_event_digest: 3b39e443b3b6829628c6e49b93a3def73217bc2dd5681c3a469e25944a203163, event_digest: 24b74d02edda6e9dae422d38fd7147fc96d8336c45f5a08f9dec6dba847a3e60}

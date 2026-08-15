@@ -68,14 +68,14 @@ registry_snapshot:
         assignment_id: ecc9367a-49ac-4114-b4a7-24ecb8985d16
         review_scope: [GATE-1]
   runtime:
-    current_state: ready
-    state_entered_at: '2026-08-15T20:01:47.1921278+08:00'
-    current_iteration: 0
-    last_transition_id: TR-DRAFT-READY
-    last_event_id: 38aa4f1c-4764-4fc0-8980-6e02149da710
-    last_event_digest: 3b39e443b3b6829628c6e49b93a3def73217bc2dd5681c3a469e25944a203163
-    last_event_sequence: 7
-    record_revision: 7
+    current_state: active
+    state_entered_at: '2026-08-15T20:15:17.6009401+08:00'
+    current_iteration: 1
+    last_transition_id: TR-READY-ACTIVE
+    last_event_id: 90eaee39-e686-423c-87ef-c4a4634f90b5
+    last_event_digest: 24b74d02edda6e9dae422d38fd7147fc96d8336c45f5a08f9dec6dba847a3e60
+    last_event_sequence: 8
+    record_revision: 8
   budget:
     limits:
       iteration_limit: 3
