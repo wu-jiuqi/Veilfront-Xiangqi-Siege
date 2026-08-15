@@ -1,12 +1,12 @@
 # GATE-1 观测计划 v1
 
-状态：`prototype / iteration 1 / owner-freeze revision 2`。本计划收集证据，不批准 GATE-1，不冻结回合上限、AI 预算、随机性或难度。
+状态：`prototype / iteration 1 / owner-freeze revision 3`。本计划收集证据，不批准 GATE-1，不冻结回合上限、AI 预算、随机性或难度。
 
 冻结来源：`OWNER-FREEZE-2026-08-15` = `C:/Users/30114/.codex/attachments/dd52e25b-1af0-4fb5-90d1-a5315853a81c/pasted-text.txt`。
 
 ## 变更摘要
 
-规则矩阵新增初始阵型、旗帜完整生命周期、三级意图、同步炮击、后备队列、精确修墙时序和炮击位置验收；项目所有者已确认无共享冷却，对应冲突关闭并转为禁止冷却字段的硬验收。
+规则矩阵新增初始阵型、旗帜完整生命周期、三级意图、同步炮击、后备队列、精确修墙时序和炮击位置验收；项目所有者已确认无共享冷却，并冻结相/象起终点包围 `3x3` 九格显形区、清除时点与多源并集。
 
 ## 自动指标与硬检查
 
@@ -38,6 +38,9 @@
 | RULE-WALL-001 | 红行动使黑方区域入侵数从 3 降至 2 | 本行动仅启动修复；随后黑、红各行动一次且一直 `<3`，红行动结算后才恢复并撤回。中途回到 `>=3` 则清零。 |
 | RULE-CANNON-ORIGIN-001 | 同炮分别在己营、己缓冲、战区，敌墙依次 `INTACT/REPAIRING` | 仅“敌墙 `INTACT` + 炮在己营 + 该炮有弹药”可区域轰炸；回营不恢复弹药。 |
 | RULE-CANNON-COOLDOWN-001 | 同阵营两炮均在己营且有弹药，连续获得合法轰炸机会；检查状态摘要、日志与投影 | 前一门炮轰炸不会锁住另一门或自身后续资格；FullState/PlayerView/日志无共享冷却字段、计时、启动或重置事件。 |
+| RULE-ELEPHANT-REVEAL-001 | 相/象从 `(4,10)` 合资格移动到 `(6,12)` | 新显形源严格等于 `X=4..6,Y=10..12` 九格，包含起点 `(4,10)`、象眼 `(5,11)`、终点 `(6,12)`，不含任何集合外格。 |
+| RULE-ELEPHANT-REVEAL-002 | 建立两个有重叠格的相/象源；随后分别触发源棋下次移动开始、离场/死亡/回营/入队、敌墙倒塌 | 可见格为源并集；清除一个源后，其他源覆盖格仍有效；每种清除事件均不残留该源，墙恢复不恢复旧源。 |
+| INFO-ELEPHANT-PAIR-001 | 两个 FullState 仅让隐身马分别位于九格内/九格外，并在公开前保持其他 PlayerView 条件一致 | 九格内马按规则显形、九格外马保持隐藏；投影不得使用扩大、裁切或上一次已清除的显形集合。 |
 | INFO-PAIR-001 | 隐藏等价状态、相同 PlayerView/AI记忆/AI种子 | 只读查询、三级提示、AI意图和公开前事件摘要一致；仅在授权接触点后可分叉。 |
 
 ## 人工试玩问题
@@ -62,7 +65,7 @@
 
 证据包应支持项目所有者判断：核心循环是否值得继续；胜负/恢复/视野/行动反馈是否闭环；最大风险是否真的被验证；技术成本与需重写范围是否可接受；是否进入正式功能开发及后续视觉准备。自动通过、QA 专业审查或本计划作者均不得代替该人工决定。
 
-追溯：`CTR-P1-001`、`LOOP-CTR-GATE1-VERTICAL-SLICE-001`，以及 `stmt:veilfront-xiangqi-siege:project-goal`、`stmt:veilfront-xiangqi-siege:victory-and-flags`、`stmt:veilfront-xiangqi-siege:single-player-ai`、`stmt:veilfront-xiangqi-siege:implementation`、`OWNER-FREEZE-2026-08-15`。
+追溯：`CTR-P1-001`、`LOOP-CTR-GATE1-VERTICAL-SLICE-001`，以及 `stmt:veilfront-xiangqi-siege:project-goal`、`stmt:veilfront-xiangqi-siege:victory-and-flags`、`stmt:veilfront-xiangqi-siege:single-player-ai`、`stmt:veilfront-xiangqi-siege:implementation`、`OWNER-FREEZE-2026-08-15`、`OWNER-CONFIRM-2026-08-16:ELEPHANT-REVEAL-3X3`。
 
 ## 剩余开放项
 

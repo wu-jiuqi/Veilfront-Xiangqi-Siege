@@ -1,6 +1,6 @@
 # 《雾疆：九路烽棋》规则规格 v1
 
-状态：`prototype / iteration 1 / owner-freeze revision 2`。本文件规范项目简报 `confirmed` 语义及项目所有者后续冻结结论。实现架构仍为 `hypothesis`，剩余 `unknown` 不得被实现默认值冒充批准规则。
+状态：`prototype / iteration 1 / owner-freeze revision 3`。本文件规范项目简报 `confirmed` 语义及项目所有者后续冻结结论。实现架构仍为 `hypothesis`，剩余 `unknown` 不得被实现默认值冒充批准规则。
 
 冻结来源：`OWNER-FREEZE-2026-08-15` = `C:/Users/30114/.codex/attachments/dd52e25b-1af0-4fb5-90d1-a5315853a81c/pasted-text.txt`。
 
@@ -8,6 +8,7 @@
 
 - 关闭初始坐标/阵型/九宫/先手、旗帜生命周期、隐藏阻挡与行动意图、同步炮击、后备部署、城墙修复时序、炮击起源位置七组 `unknown`。
 - 项目所有者再次确认区域轰炸“无冷却”，关闭附件中的共享冷却冲突：不存在阵营共享冷却字段、计时、启动或重置；资格只由敌墙、炮位置与该炮弹药决定。
+- 项目所有者冻结相/象田字显形区为本次合法移动起点与终点包围的 `3x3` 九格，关闭精确格集合歧义并补齐生命周期与多源并集。
 
 ## 1. 坐标、区域与回合术语
 
@@ -63,14 +64,16 @@
 | 棋子 | 特殊规则 |
 |---|---|
 | 马 | 合资格移动无视蹩马腿；完成后处于隐身，除非落在任一有效相/象田字显形区或存在其他公开显形原因。离开全部显形区且无其他原因时恢复隐身。 |
-| 相/象 | 合资格移动无视堵象眼；完成后以本棋子刷新田字显形区，区内隐身马显形，旧区立即失效。 |
+| 相/象 | 合资格移动无视堵象眼；完成后以本棋子刷新田字显形区。设本次合法移动起点 `O=(ox,oy)`、终点 `D=(dx,dy)`，二者为包围方形的对角，显形区严格为 `x=min(ox,dx)..max(ox,dx)` 与 `y=min(oy,dy)..max(oy,dy)` 的笛卡尔积，共 `3x3` 九格；包含起点 `O`、象眼 `(O+D)/2`、终点 `D` 及其余六格，不裁切、不扩展。区内隐身马显形。 |
 | 车 | 可沿同一直线路径穿过敌棋并按起点到终点顺序逐枚处理阵亡/替死；不可穿过己棋。若路径目标将帅实际死亡，立即终局并停止后续目标。该次路径形成视野，持续到此车下一次移动开始。 |
 | 兵/卒 | 可横向或纵向移动 1..5 格；可穿过一枚或多枚敌棋，不可穿己棋，终点必须为空，穿越不伤害、不吃子。 |
 | 炮 | 区域轰炸不需要炮架、不移动炮，与普通行动互斥；资格条件且仅有：敌方墙为 `INTACT`、炮在己方大本营、该炮弹药至少 1。中心完整 `3x3` 必须全在 `Y=6..19`，从九格随机抽三个不同伤害格，允许友军伤害，消耗该炮 1 发且无冷却。炮离营即不可轰炸，回营且三项条件满足即可再次轰炸；弹药不恢复。不存在阵营共享冷却、等待轮数或墙/回营冷却重置。 |
 
+每枚相/象至多维护一个自己的田字显形区。该棋子下次移动开始时先清除旧区；该棋子任何离场、死亡、回营或进入后备队列时立即清除旧区。敌方城墙倒塌使其特殊能力失效时也清除旧区。多个仍有效相/象源取格集合并集；某源清除后，仍被其他源覆盖的格继续有效。
+
 敌方城墙倒塌时，针对该敌方的马、相/象、车、兵/卒特殊能力立即失效并恢复对应默认限制；墙恢复后只影响后续行动资格，不恢复旧视野/显形区或永久资源。
 
-追溯：`stmt:veilfront-xiangqi-siege:phase-gameplay`、`stmt:veilfront-xiangqi-siege:horse-elephant-rules`、`stmt:veilfront-xiangqi-siege:cannon-rules`、`stmt:veilfront-xiangqi-siege:rook-rules`、`stmt:veilfront-xiangqi-siege:pawn-rules`；`OWNER-FREEZE-2026-08-15 §6.5`；`OWNER-CONFIRM-2026-08-15:BOMBARD-NO-COOLDOWN`。
+追溯：`stmt:veilfront-xiangqi-siege:phase-gameplay`、`stmt:veilfront-xiangqi-siege:horse-elephant-rules`、`stmt:veilfront-xiangqi-siege:cannon-rules`、`stmt:veilfront-xiangqi-siege:rook-rules`、`stmt:veilfront-xiangqi-siege:pawn-rules`；`OWNER-FREEZE-2026-08-15 §6.5`；`OWNER-CONFIRM-2026-08-15:BOMBARD-NO-COOLDOWN`；`OWNER-CONFIRM-2026-08-16:ELEPHANT-REVEAL-3X3`。
 
 ## 5. 城墙状态机
 
@@ -115,6 +118,6 @@
 
 ## 9. 剩余 `unknown`
 
-仍未冻结：单局完整轮上限；AI 搜索预算、决策随机性与难度。区域轰炸无冷却已经项目所有者确认，不再属于开放项。
+仍未冻结：单局完整轮上限；AI 搜索预算、决策随机性与难度。区域轰炸无冷却与相/象显形九格均已经项目所有者确认，不再属于开放项。
 
 `stmt:veilfront-xiangqi-siege:implementation` 保持 `hypothesis`：规则核心/显示解耦、可复现种子、玩家投影与回放日志是待原型验证架构，不是正式架构批准。

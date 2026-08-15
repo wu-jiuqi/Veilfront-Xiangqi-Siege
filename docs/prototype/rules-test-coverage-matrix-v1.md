@@ -1,10 +1,15 @@
 # 规则—测试覆盖矩阵 v1
 
-状态：`prototype / iteration 1 / revision 3 coverage audit`。本文件只建立冻结规格到测试的追溯，不改变规则、不验收实现，也不替代独立 QA 或 GATE-1。
+状态：`prototype / iteration 1 / revision 3 coverage audit / owner-freeze revision 3`。本文件只建立冻结规格到测试的追溯，不改变规则、不验收实现，也不替代独立 QA 或 GATE-1。
+
+## 变更摘要
+
+- 项目所有者冻结相/象显形区为合法移动起终点包围的 `3x3` 九格；关闭 `PENDING-OWNER-ELEPHANT-REVEAL-CELLS`。
+- 用 `RULE-ELEPHANT-REVEAL-001/002` 与 `INFO-ELEPHANT-PAIR-001` 替换 owner 决策阻塞；实现与独立 QA 状态仍为待验证。
 
 ## 1. 审计基线与判读
 
-- 规则基线：`rules-spec-v1.md`、`settlement-order-v1.md`、`information-boundary-v1.md`，均为 `owner-freeze revision 2`；区域轰炸最终裁决为 `OWNER-CONFIRM-2026-08-15:BOMBARD-NO-COOLDOWN`。
+- 规则基线：`rules-spec-v1.md`、`settlement-order-v1.md`、`information-boundary-v1.md`，均为 `owner-freeze revision 3`；区域轰炸裁决为 `OWNER-CONFIRM-2026-08-15:BOMBARD-NO-COOLDOWN`，相/象显形裁决为 `OWNER-CONFIRM-2026-08-16:ELEPHANT-REVEAL-3X3`。
 - 验收基线：`gate1-observation-plan-v1.md`、`CTR-P1-001 v1`、`LOOP-CTR-GATE1-VERTICAL-SLICE-001 v1`。
 - 运行证据：`evidence/prototype/qa/iteration-1-revision-2-review.md` 与 `iteration-1-revision-2-command-output.txt`，审查 HEAD `c7fd75d84d171cfbe0943901cd3cd3b5c70d89e9`。
 - Revision 2 的 `run_all.gd` 明示 `focused_suites=5 full_gate1=false`。因此下表的 `PASS-R2` 仅表示对应定向断言通过；`PARTIAL-R2` 表示只覆盖该需求的一部分；`PENDING` 表示必须新增自动测试；`BLOCKED-MISSING` 表示 Contract 要求的执行入口不存在。
@@ -33,7 +38,7 @@
 |---|---|---|---|
 | SPC-QUALIFY-001 | 除炮击外，特殊行动要求敌墙 `INTACT` 且起点/全部经过格/终点均在 `Y=6..19`；边界外回默认规则 | `PENDING-SPC-QUALIFY-001`（覆盖 `5/6,8/9,16/17,19/20` 与三种墙状态） | PENDING |
 | SPC-HORSE-001 | 合资格马无视马腿并在行动后隐身；处于任一有效显形区时显形，离开全部显形区且无其他批准原因时重新隐身；敌墙倒塌/默认区恢复马腿限制及移除特殊能力 | `PENDING-SPC-HORSE-001`; `PENDING-SPC-HORSE-REHIDE-001` | PENDING |
-| SPC-ELEPHANT-001 | 合资格相/象无视象眼并刷新该棋独立田字显形区；该棋旧区失效，多源并集仍有效；敌墙倒塌移除能力。简报/冻结附件未定义显形区的精确格集合 | `PENDING-OWNER-ELEPHANT-REVEAL-CELLS`（先裁决格集合）；裁决后 `PENDING-SPC-ELEPHANT-001` | PENDING-OWNER |
+| SPC-ELEPHANT-001 | 合资格相/象无视象眼；起终点作为包围方形对角，显形源严格为含起点/象眼/终点的 `3x3` 九格；下次移动开始或离场/死亡/回营/入队/敌墙倒塌时清源；多源取并集 | `RULE-ELEPHANT-REVEAL-001`; `RULE-ELEPHANT-REVEAL-002`; `PENDING-SPC-ELEPHANT-001` | PENDING-IMPLEMENTATION |
 | SPC-ROOK-001 | 特殊车可穿敌不可穿己；按路径顺序逐目标；逐目标替死；将帅实际死亡立即停止；路径视野持续到该车下次移动开始 | `PENDING-SPC-ROOK-PATH-001`; `PENDING-SPC-ROOK-VISION-001` | PENDING |
 | SPC-PAWN-001 | 特殊兵/卒可横纵 1..5 格；可穿一个或多个敌棋、不可穿己棋、终点空；穿越不伤害 | `PENDING-SPC-PAWN-001` | PENDING |
 | SPC-BOMB-ELIG-001 | 区域轰炸资格且仅有敌墙 `INTACT`、炮在己方大本营、该炮有弹药；中心完整 `3x3` 位于 `Y=6..19` | `RULE-CANNON-ORIGIN-001`; `test_rules_core.gd::_test_bombardment_origin_and_no_cooldown`; `PENDING-SPC-BOMB-CENTER-001` | PARTIAL-R2 |
@@ -56,7 +61,7 @@
 |---|---|---|---|
 | INFO-PROJECT-001 | 唯一流向 `FullState -> PlayerView`；UI/小地图/提示/公开日志/AI 无 FullState、完整棋盘、规则 RNG 或调试旁路 | `INFO-PAIR-001`; `test_player_view.gd::run_suite`; `test_ai_fairness.gd::_test_real_hidden_equivalent_pair`; `PENDING-INFO-CONSUMER-BOUNDARY-001` | PARTIAL-R2 |
 | INFO-VISION-001 | 己营公开；每枚己棋当前中心 `3x3` 裁边并集；移动后旧区无其他源即回雾 | `PENDING-INFO-VISION-3X3-001`; `PENDING-INFO-OLD-FOG-001`; `PENDING-INFO-VISION-UNION-001` | PENDING |
-| INFO-SPECIAL-VISION-001 | 车路径视野生命周期；隐身马在普通视野中仍隐藏；相/象田字区显形及多源/旧区失效。相/象精确显形格未冻结 | `PENDING-INFO-ROOK-VISION-001`; `PENDING-INFO-HIDDEN-HORSE-001`; `PENDING-OWNER-ELEPHANT-REVEAL-CELLS`，裁决后 `PENDING-INFO-ELEPHANT-REVEAL-001` | PENDING / PENDING-OWNER |
+| INFO-SPECIAL-VISION-001 | 车路径视野生命周期；隐身马在普通视野中仍隐藏；相/象严格九格显形、多源并集与旧源失效 | `PENDING-INFO-ROOK-VISION-001`; `PENDING-INFO-HIDDEN-HORSE-001`; `RULE-ELEPHANT-REVEAL-001`; `RULE-ELEPHANT-REVEAL-002`; `INFO-ELEPHANT-PAIR-001`; `PENDING-INFO-ELEPHANT-REVEAL-001` | PENDING-IMPLEMENTATION |
 | INFO-RANDOM-001 | 未公开炮击格、士/回营选择、RNG 状态和未来抽样在公开点前不可见 | 规则 RNG/未公开记录配对：`test_ai_fairness.gd::_test_real_hidden_equivalent_pair`; `PENDING-INFO-RANDOM-EACH-001` | PARTIAL-R2 |
 | INFO-PREVIEW-001 | 仅凭 PlayerView 分类 `KNOWN_LEGAL/TENTATIVE/KNOWN_ILLEGAL`；等价投影提示字节等价 | `INFO-INTENT-001`; `test_player_view.gd::run_suite`; `PENDING-INFO-PREVIEW-LEG-EYE-001`; `PENDING-INFO-PREVIEW-CANNON-001` | PARTIAL-R2 |
 | INFO-CONTACT-PATH-001 | 隐藏阻挡失败原地且耗行动，只给模糊路线信息；可见非法免费拒绝；不公开阻挡坐标/身份 | `INFO-INTENT-001`; `test_player_view.gd::run_suite` | PASS-R2 |
@@ -114,7 +119,7 @@
 
 ### 规则歧义审计
 
-发现一项真实规则歧义：`PENDING-OWNER-ELEPHANT-REVEAL-CELLS`——项目简报与项目所有者冻结附件都只写“田字显形区域”，没有定义以相/象当前位置或移动轨迹为基准的精确格集合。该项必须等待项目所有者裁决；实现和测试不得自行选取格集合并反向写成 frozen。除此之外未发现实现与规格相反的证据。其余真实开放项仍为单局完整轮上限最终值，以及 AI 搜索预算、决策随机性与难度；上表只要求可注入候选配置并验证语义，不冻结数值。Revision 2 QA 报告的是实现/证据缺失，不是已实现行为与冻结规则冲突。
+`PENDING-OWNER-ELEPHANT-REVEAL-CELLS` 已由项目所有者关闭：精确集合为合法移动起终点包围方形的九格。当前未发现新的 frozen 规则歧义或实现与规格相反的证据。其余真实开放项仍为单局完整轮上限最终值，以及 AI 搜索预算、决策随机性与难度；上表只要求可注入候选配置并验证语义，不冻结数值。Revision 2 QA 报告的是实现/证据缺失，不是已实现行为与冻结规则冲突。
 
 ### 下一交接
 
