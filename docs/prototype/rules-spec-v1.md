@@ -1,23 +1,51 @@
 # 《雾疆：九路烽棋》规则规格 v1
 
-状态：`prototype / iteration 1`。本文件只规范项目简报 `confirmed` 语义；实现架构仍为 `hypothesis`，文末 `unknown` 不得被实现默认值冒充批准规则。
+状态：`prototype / iteration 1 / owner-freeze revision 2`。本文件规范项目简报 `confirmed` 语义及项目所有者后续冻结结论。实现架构仍为 `hypothesis`，剩余 `unknown` 不得被实现默认值冒充批准规则。
+
+冻结来源：`OWNER-FREEZE-2026-08-15` = `C:/Users/30114/.codex/attachments/dd52e25b-1af0-4fb5-90d1-a5315853a81c/pasted-text.txt`。
+
+## 变更摘要
+
+- 关闭初始坐标/阵型/九宫/先手、旗帜生命周期、隐藏阻挡与行动意图、同步炮击、后备部署、城墙修复时序、炮击起源位置七组 `unknown`。
+- 项目所有者再次确认区域轰炸“无冷却”，关闭附件中的共享冷却冲突：不存在阵营共享冷却字段、计时、启动或重置；资格只由敌墙、炮位置与该炮弹药决定。
 
 ## 1. 坐标、区域与回合术语
 
-- 棋盘坐标为 `X=1..9, Y=1..24`，共 216 格。为便于对称测试，南方前进方向为 `+Y`，北方为 `-Y`。
-- 南方大本营 `Y=1..5`、南方缓冲区 `Y=6..8`、中央战区 `Y=9..16`、北方缓冲区 `Y=17..19`、北方大本营 `Y=20..24`。特殊行动区域为 `Y=6..19`。此坐标归一化不改变“双方各 5 线大本营、各 3 线缓冲区、中央 8 线战区”的语义。
-- `行动`：一方完成的一次普通行动或一次特殊行动；两者互斥。`完整轮`：双方各完成一次行动。先手仍为 `unknown`。
+- 服务端固定使用红方视角坐标：`X=1..9, Y=1..24`，共 216 格；红方向 `+Y` 前进，黑方向 `-Y` 前进。客户端镜头可旋转，但不得改变底层坐标。
+- 红方大本营 `Y=1..5`、红方缓冲区 `Y=6..8`、中央战区 `Y=9..16`、黑方缓冲区 `Y=17..19`、黑方大本营 `Y=20..24`。红墙位于 `Y=5/6` 间，黑墙位于 `Y=19/20` 间；特殊行动区域为 `Y=6..19`。`Y=12/13` 只可称为棋盘几何中线，不恢复河界或过河规则。
+- 红方九宫为 `X=4..6,Y=1..3`；黑方九宫为 `X=4..6,Y=22..24`。
+- `行动`：一方完成的一次普通行动、特殊行动、主动跳过、超时跳过或无合法行动被迫跳过；两类跳过同样消耗一次行动机会。`完整轮`：红黑双方各完成一次行动。红方固定先手。
 - 除将帅、士受各自九宫限制外，其他棋子不受河界或阵营半场限制。项目不存在将军、应将、将死、照面和飞将合法性检查。
 
-追溯：`stmt:veilfront-xiangqi-siege:board-and-fog`、`phase-gameplay`、`general-capture-rules`。
+### 初始阵型
+
+| 阵营 | 坐标 | 棋子 |
+|---|---|---|
+| 红 | `Y=1,X=1..9` | 车、马、相、士、帅、士、相、马、车 |
+| 红 | `(X,Y)=(2,3),(8,3)` | 炮、炮 |
+| 红 | `(X,Y)=(1,4),(3,4),(5,4),(7,4),(9,4)` | 兵、兵、兵、兵、兵 |
+| 黑 | `Y=24,X=1..9` | 车、马、象、士、将、士、象、马、车 |
+| 黑 | `(X,Y)=(2,22),(8,22)` | 炮、炮 |
+| 黑 | `(X,Y)=(1,21),(3,21),(5,21),(7,21),(9,21)` | 卒、卒、卒、卒、卒 |
+
+其余大本营格初始为空。单局系统随机分配玩家/机器人红黑阵营，但始终红方先手。若运行成对公平性实验，第二局交换阵营、仍由红方先手，并使用第一局旗位的棋盘中心镜像；这只是测试编排，不扩大 GATE-1 的单机范围。
+
+追溯：`stmt:veilfront-xiangqi-siege:board-and-fog`、`stmt:veilfront-xiangqi-siege:phase-gameplay`、`stmt:veilfront-xiangqi-siege:general-capture-rules`；`OWNER-FREEZE-2026-08-15 §1`。
 
 ## 2. 最小状态模型
 
-`FullState` 至少包含：棋盘占用；行动方；完整轮计数；每枚棋子的阵营、类型、存活、位置、永久资源；双方独立城墙状态与恢复计时；双方士替死合资格事件计数及左右士可用状态；三个公开旗帜位置、占领进度和占领方；各视野源；随机种子/消费序号；终局状态与胜因。
+`FullState` 至少包含：
 
-必须保持以下不变量：一格最多一枚棋子；阵亡棋子不在棋盘；炮区域弹药每门初始 2、只减不增；同一士至多替死一次且替死时被移除；双方城墙独立；终局后不再接受行动。
+- `MatchState { active_side, action_index, full_round_index, terminal, winner, win_reason }`；
+- `PieceState { piece_id, side, type, lifecycle: BOARD|RESERVE|DEAD, position?, reserve_queue_index?, hidden, bombard_ammo, permanent_resources, temporary_effects }`；
+- `WallState { status: INTACT|BREACHED|REPAIRING, repair_start_action_index?, acted_sides_since_start, invading_piece_count }`；
+- `FlagState { owner: NEUTRAL|RED|BLACK, occupier_piece_id?, capturing_side?, capture_progress: 0..3, contested }`；
+- 双方士替死合资格事件计数及左右士可用状态、各视野源、随机种子/消费序号，以及按阵营 FIFO 的后备部署队列；
+- `BombardmentResult { random_seed_ref, target_center, impact_cells[3], impact_order[3], simultaneous_resolution_id }`。
 
-追溯：`cannon-rules`、`wall-cycle`、`victory-and-flags`、`piece-rescue`。
+必须保持以下不变量：一格最多一枚棋子；`DEAD/RESERVE` 棋子不在棋盘；后备棋子不可行动、被攻击、提供视野、充当炮架/阻挡或计入墙/旗；炮区域弹药每门初始 2、只减不增；FullState 不得存在阵营共享轰炸冷却字段、计时或重置；同一士至多替死一次且替死时被移除；双方城墙独立；终局后不再接受行动。
+
+追溯：`stmt:veilfront-xiangqi-siege:cannon-rules`、`stmt:veilfront-xiangqi-siege:wall-cycle`、`stmt:veilfront-xiangqi-siege:victory-and-flags`、`stmt:veilfront-xiangqi-siege:piece-rescue`。
 
 ## 3. 普通行动
 
@@ -26,7 +54,7 @@
 - 任意大本营内使用默认规则：马受蹩马腿、相/象受堵象眼；车不得穿子；炮普通移动和精确吃子不变。
 - 将帅可以进入攻击范围；只有实际被吃掉才失败。
 
-追溯：`board-and-fog`、`phase-gameplay`、`horse-elephant-rules`、`cannon-rules`、`pawn-rules`、`general-capture-rules`。
+追溯：`stmt:veilfront-xiangqi-siege:board-and-fog`、`stmt:veilfront-xiangqi-siege:phase-gameplay`、`stmt:veilfront-xiangqi-siege:horse-elephant-rules`、`stmt:veilfront-xiangqi-siege:cannon-rules`、`stmt:veilfront-xiangqi-siege:pawn-rules`、`stmt:veilfront-xiangqi-siege:general-capture-rules`。
 
 ## 4. 特殊行动资格与效果
 
@@ -38,35 +66,55 @@
 | 相/象 | 合资格移动无视堵象眼；完成后以本棋子刷新田字显形区，区内隐身马显形，旧区立即失效。 |
 | 车 | 可沿同一直线路径穿过敌棋并按起点到终点顺序逐枚处理阵亡/替死；不可穿过己棋。若路径目标将帅实际死亡，立即终局并停止后续目标。该次路径形成视野，持续到此车下一次移动开始。 |
 | 兵/卒 | 可横向或纵向移动 1..5 格；可穿过一枚或多枚敌棋，不可穿己棋，终点必须为空，穿越不伤害、不吃子。 |
-| 炮 | 区域轰炸不需要炮架、不移动炮，与普通行动互斥；中心完整 `3x3` 必须全在 `Y=6..19`，从九格随机抽三个不同伤害格，允许友军伤害，消耗 1 发且无冷却。已消耗弹药不恢复。已确认的最低可用情形是炮位于己方大本营且敌方城墙完整。 |
+| 炮 | 区域轰炸不需要炮架、不移动炮，与普通行动互斥；资格条件且仅有：敌方墙为 `INTACT`、炮在己方大本营、该炮弹药至少 1。中心完整 `3x3` 必须全在 `Y=6..19`，从九格随机抽三个不同伤害格，允许友军伤害，消耗该炮 1 发且无冷却。炮离营即不可轰炸，回营且三项条件满足即可再次轰炸；弹药不恢复。不存在阵营共享冷却、等待轮数或墙/回营冷却重置。 |
 
 敌方城墙倒塌时，针对该敌方的马、相/象、车、兵/卒特殊能力立即失效并恢复对应默认限制；墙恢复后只影响后续行动资格，不恢复旧视野/显形区或永久资源。
 
-追溯：`phase-gameplay`、`horse-elephant-rules`、`cannon-rules`、`rook-rules`、`pawn-rules`。
+追溯：`stmt:veilfront-xiangqi-siege:phase-gameplay`、`stmt:veilfront-xiangqi-siege:horse-elephant-rules`、`stmt:veilfront-xiangqi-siege:cannon-rules`、`stmt:veilfront-xiangqi-siege:rook-rules`、`stmt:veilfront-xiangqi-siege:pawn-rules`；`OWNER-FREEZE-2026-08-15 §6.5`；`OWNER-CONFIRM-2026-08-15:BOMBARD-NO-COOLDOWN`。
 
 ## 5. 城墙状态机
 
-每方城墙独立为 `INTACT -> BREACHED -> RECOVERY_COUNTING -> INTACT`：
+每方城墙独立为 `INTACT -> BREACHED -> REPAIRING -> INTACT`：
 
 1. `INTACT` 阻止敌棋从该方缓冲区进入该方大本营。
 2. 该方缓冲区内同时存在至少 3 枚敌棋时，墙立即 `BREACHED`。
-3. 墙倒塌后，若该方缓冲区与大本营内敌棋总数少于 3，开始/维持恢复计时；该条件连续一个完整轮后恢复，否则计时清零。
-4. 恢复时，仅把该方大本营内的入侵棋子随机撤回各自大本营空格；清除位置关联临时状态，不恢复弹药、技能次数或永久资源，不附加行动惩罚。缓冲区敌棋不撤回。
+3. 仅在一次完整行动结算结束后检查恢复条件。墙已倒塌且该方缓冲区与大本营内敌棋总数少于 3 时进入 `REPAIRING`；触发该状态的行动不计时。
+4. `REPAIRING` 仍按倒塌墙处理。之后对方与己方必须各完成一次行动；每次行动后若入侵数回到至少 3，立即退回 `BREACHED` 并清零进度。双方均行动且条件仍成立时恢复 `INTACT`。
+5. 恢复时，仅把该方大本营内的入侵棋子随机撤回各自大本营；缓冲区敌棋不撤回。先移除整批待撤棋子，随机打乱真实空格，再按确定的结算顺序分配；清除位置临时状态，不恢复永久消耗，不附加行动惩罚。无空格者进入后备部署队列。
 
-追溯：`wall-cycle`、`phase-gameplay`。
+追溯：`stmt:veilfront-xiangqi-siege:wall-cycle`、`stmt:veilfront-xiangqi-siege:phase-gameplay`；`OWNER-FREEZE-2026-08-15 §5-6.4`。
 
 ## 6. 迷雾、旗帜、替死与胜负
 
 - 开局除己方大本营外均受迷雾。普通棋子以当前位置为中心提供裁剪到棋盘内的 `3x3` 动态视野，移动后旧区域重新入雾；车路径视野和相/象显形按第 4 节叠加。具体投影见 `information-boundary-v1.md`。
 - 开局先等概率选旗带 `Y=11..13` 或 `Y=12..14`，再从该 `3x9` 区域抽取三个不同格；不要求对称，位置向双方公开。
-- 棋子在旗格上承受对方三次行动后完成占领；同时占领三旗立即获胜。
+- 棋子行动后停在中立旗或敌方所有旗上时，以该 `piece_id` 开始 `0/3` 占领。之后每当对方完成一次行动机会（含三类跳过），若该棋子仍在旗格，进度加 1；第三次对方行动的伤亡、替死、撤回和离位先结算，棋子仍在才完成占领。
+- 占领进度绑定具体棋子，不可换子继承。占领者离开、死亡、替死回营、强制撤回或棋子实例变化时立即清零。
+- 占领完成后，所有权永久保持，棋子可以离开，直至敌方完成重新占领。敌方开始重占时，原所有权在进度期间仍保持但 `contested=true`：轮上限仍计给原所有者，却不计入三旗即时胜利；争夺中断则原所有权安全保留。单格旗同时最多一枚棋子，邻格不影响进度。
+- 同一阵营拥有三旗且三旗均非 `contested` 时立即获胜。
 - 每方本局最先两次合资格阵亡事件触发士替死。合资格目标为己方非将帅、非士棋子。随机移除一枚仍存活且未消耗能力的左士/右士，并将被救棋子随机部署到己方大本营空格；无可用士则正常阵亡。被救棋子的永久消耗不恢复。
-- 将帅实际死亡是同一结算窗口最高优先级，立即令所属方失败。否则依次检查三旗胜利；达到尚未冻结的完整轮上限时，以旗数判胜，同数平局。
+- 将帅实际死亡是同一结算窗口最高优先级：仅一方将帅死亡则该方失败；同一个同步伤害窗口内双方将帅均死亡则平局。否则依次检查三旗胜利；达到尚未冻结的完整轮上限时，以旗所有权数量判胜（`contested` 仍计原所有者），同数平局。
 
-追溯：`board-and-fog`、`rook-rules`、`victory-and-flags`、`piece-rescue`、`general-capture-rules`。
+追溯：`stmt:veilfront-xiangqi-siege:board-and-fog`、`stmt:veilfront-xiangqi-siege:rook-rules`、`stmt:veilfront-xiangqi-siege:victory-and-flags`、`stmt:veilfront-xiangqi-siege:piece-rescue`、`stmt:veilfront-xiangqi-siege:general-capture-rules`；`OWNER-FREEZE-2026-08-15 §2, §4`。
 
-## 7. `unknown` / 实现前决策请求
+## 7. 后备部署队列
 
-以下未被 confirmed 简报定义，首版实现不得静默冻结：初始阵型、九宫精确坐标与先手；旗帜进度中断/换子/完成后的保持和争夺规则；炮在己方大本营以外的完整起源资格；炮击三格的伤亡先后及同窗双方将帅死亡裁决；随机撤回/复活目的地空格不足时的处理；“完整轮”恢复计时从哪个行动边界起算；隐藏棋子或隐藏炮架影响移动/吃子时，行动试探、失败与公开信息的规则语义；单局完整轮上限；AI 搜索预算、随机性和难度。
+复活或撤回时，先把待返回棋子移出原位置，再以随机打乱的己方大本营真实空格按结算顺序分配。无法放置者进入本方 FIFO 后备队列：不视为死亡、不再次触发士替死，保留永久消耗，清除隐身、占旗进度和临时视野。
+
+在该阵营每次行动开始、生成可选行动之前，按入队顺序检查后备棋子；有空格时随机部署，重新计算视野。自动部署不消耗行动、不附加惩罚，刚部署棋子可在本次行动被选择。每次分配的空格列表、顺序与随机消费必须记入审计/回放。
+
+追溯：`stmt:veilfront-xiangqi-siege:wall-cycle`、`stmt:veilfront-xiangqi-siege:piece-rescue`；`OWNER-FREEZE-2026-08-15 §5`。
+
+## 8. 区域轰炸同步窗口
+
+提交轰炸后一次性锁定三个不同落点和抽取编号，读取轰炸开始前快照，三个格逻辑同时受击。动画可以按编号依次播放，但不得改变命中、墙、位置或后续落点。
+
+先基于同一快照判定将帅：一方死亡则对方胜，双方同窗死亡则平局，终止后续替死/墙/旗。若无将帅死亡，再处理其他伤亡；同方多个士替死候选按落点抽取编号排序，但所有本次同窗被命中的士均不得替其他棋子。抽取编号只决定替死处理顺序，不把同步伤害改为顺序伤害。
+
+追溯：`stmt:veilfront-xiangqi-siege:cannon-rules`、`stmt:veilfront-xiangqi-siege:piece-rescue`、`stmt:veilfront-xiangqi-siege:general-capture-rules`；`OWNER-FREEZE-2026-08-15 §4`。
+
+## 9. 剩余 `unknown`
+
+仍未冻结：单局完整轮上限；AI 搜索预算、决策随机性与难度。区域轰炸无冷却已经项目所有者确认，不再属于开放项。
 
 `stmt:veilfront-xiangqi-siege:implementation` 保持 `hypothesis`：规则核心/显示解耦、可复现种子、玩家投影与回放日志是待原型验证架构，不是正式架构批准。
