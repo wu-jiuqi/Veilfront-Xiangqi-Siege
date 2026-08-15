@@ -1,18 +1,19 @@
 # 规则—测试覆盖矩阵 v1
 
-状态：`prototype / iteration 1 / revision 3 coverage audit / owner-freeze revision 3`。本文件只建立冻结规格到测试的追溯，不改变规则、不验收实现，也不替代独立 QA 或 GATE-1。
+状态：`prototype / iteration 1 / revision 4 QA evidence reconciliation / owner-freeze revision 3`。本文件只建立冻结规格到测试的追溯，不改变规则、不自行验收实现，也不替代独立 QA 或 GATE-1。
 
 ## 变更摘要
 
 - 项目所有者冻结相/象显形区为合法移动起终点包围的 `3x3` 九格；关闭 `PENDING-OWNER-ELEPHANT-REVEAL-CELLS`。
-- 用 `RULE-ELEPHANT-REVEAL-001/002` 与 `INFO-ELEPHANT-PAIR-001` 替换 owner 决策阻塞；实现与独立 QA 状态仍为待验证。
+- Revision 4 独立 QA 已使 `RULE-ELEPHANT-REVEAL-001/002` 与 `INFO-ELEPHANT-PAIR-001` 获得实际 PASS 证据；本次只回填覆盖状态，不把技术 PASS 写成 GATE 通过。
+- `QA-P1-003` tooling blocker 与 `full_gate1=false` 保持不变；GATE-1 仍未作决定。
 
 ## 1. 审计基线与判读
 
 - 规则基线：`rules-spec-v1.md`、`settlement-order-v1.md`、`information-boundary-v1.md`，均为 `owner-freeze revision 3`；区域轰炸裁决为 `OWNER-CONFIRM-2026-08-15:BOMBARD-NO-COOLDOWN`，相/象显形裁决为 `OWNER-CONFIRM-2026-08-16:ELEPHANT-REVEAL-3X3`。
 - 验收基线：`gate1-observation-plan-v1.md`、`CTR-P1-001 v1`、`LOOP-CTR-GATE1-VERTICAL-SLICE-001 v1`。
-- 运行证据：`evidence/prototype/qa/iteration-1-revision-2-review.md` 与 `iteration-1-revision-2-command-output.txt`，审查 HEAD `c7fd75d84d171cfbe0943901cd3cd3b5c70d89e9`。
-- Revision 2 的 `run_all.gd` 明示 `focused_suites=5 full_gate1=false`。因此下表的 `PASS-R2` 仅表示对应定向断言通过；`PARTIAL-R2` 表示只覆盖该需求的一部分；`PENDING` 表示必须新增自动测试；`BLOCKED-MISSING` 表示 Contract 要求的执行入口不存在。
+- Revision 4 独立 QA 证据索引：`evidence/prototype/qa/gate1-evidence-index.yaml`；复核报告：`evidence/prototype/qa/iteration-1-revision-4-review.md`；命令输出：`evidence/prototype/qa/iteration-1-revision-4-command-output.txt`。QA 证据已推送至 HEAD `459d759`。
+- Revision 4 的 `run_elephant_reveal.gd`、`run_all.gd`、独立墙倒塌 runner 与 1000 fixed seeds 均实际通过；`run_all.gd` 同时明示 `focused_suites=10 full_gate1=false`。因此 `PASS-R4` 只表示对应自动验收获得独立 QA 证据，不表示 GATE-1 通过；`PENDING` 表示仍须补覆盖。
 - 下表 Test ID 是稳定追溯 ID。已有测试同时列出实际文件/函数；待新增 ID 只定义验收目标，不授权修改玩法或选择开放参数。
 
 ## 2. 棋盘、开局与传统移动几何
@@ -38,7 +39,7 @@
 |---|---|---|---|
 | SPC-QUALIFY-001 | 除炮击外，特殊行动要求敌墙 `INTACT` 且起点/全部经过格/终点均在 `Y=6..19`；边界外回默认规则 | `PENDING-SPC-QUALIFY-001`（覆盖 `5/6,8/9,16/17,19/20` 与三种墙状态） | PENDING |
 | SPC-HORSE-001 | 合资格马无视马腿并在行动后隐身；处于任一有效显形区时显形，离开全部显形区且无其他批准原因时重新隐身；敌墙倒塌/默认区恢复马腿限制及移除特殊能力 | `PENDING-SPC-HORSE-001`; `PENDING-SPC-HORSE-REHIDE-001` | PENDING |
-| SPC-ELEPHANT-001 | 合资格相/象无视象眼；起终点作为包围方形对角，显形源严格为含起点/象眼/终点的 `3x3` 九格；下次移动开始或离场/死亡/回营/入队/敌墙倒塌时清源；多源取并集 | `RULE-ELEPHANT-REVEAL-001`; `RULE-ELEPHANT-REVEAL-002`; `PENDING-SPC-ELEPHANT-001` | PENDING-IMPLEMENTATION |
+| SPC-ELEPHANT-001 | 合资格相/象无视象眼；起终点作为包围方形对角，显形源严格为含起点/象眼/终点的 `3x3` 九格；下次移动开始或离场/死亡/回营/入队/敌墙倒塌时清源；多源取并集 | `RULE-ELEPHANT-REVEAL-001`; `RULE-ELEPHANT-REVEAL-002`; `tests/prototype/run_elephant_reveal.gd` (`CHECK-ELEPHANT-REVEAL`); `evidence/prototype/qa/revision4_elephant_wall_breach_runner.gd` (`CHECK-ELEPHANT-WALL-BREACH-CLEAR`); `tests/prototype/run_all.gd` | PASS-R4（独立 QA） |
 | SPC-ROOK-001 | 特殊车可穿敌不可穿己；按路径顺序逐目标；逐目标替死；将帅实际死亡立即停止；路径视野持续到该车下次移动开始 | `PENDING-SPC-ROOK-PATH-001`; `PENDING-SPC-ROOK-VISION-001` | PENDING |
 | SPC-PAWN-001 | 特殊兵/卒可横纵 1..5 格；可穿一个或多个敌棋、不可穿己棋、终点空；穿越不伤害 | `PENDING-SPC-PAWN-001` | PENDING |
 | SPC-BOMB-ELIG-001 | 区域轰炸资格且仅有敌墙 `INTACT`、炮在己方大本营、该炮有弹药；中心完整 `3x3` 位于 `Y=6..19` | `RULE-CANNON-ORIGIN-001`; `test_rules_core.gd::_test_bombardment_origin_and_no_cooldown`; `PENDING-SPC-BOMB-CENTER-001` | PARTIAL-R2 |
@@ -61,7 +62,7 @@
 |---|---|---|---|
 | INFO-PROJECT-001 | 唯一流向 `FullState -> PlayerView`；UI/小地图/提示/公开日志/AI 无 FullState、完整棋盘、规则 RNG 或调试旁路 | `INFO-PAIR-001`; `test_player_view.gd::run_suite`; `test_ai_fairness.gd::_test_real_hidden_equivalent_pair`; `PENDING-INFO-CONSUMER-BOUNDARY-001` | PARTIAL-R2 |
 | INFO-VISION-001 | 己营公开；每枚己棋当前中心 `3x3` 裁边并集；移动后旧区无其他源即回雾 | `PENDING-INFO-VISION-3X3-001`; `PENDING-INFO-OLD-FOG-001`; `PENDING-INFO-VISION-UNION-001` | PENDING |
-| INFO-SPECIAL-VISION-001 | 车路径视野生命周期；隐身马在普通视野中仍隐藏；相/象严格九格显形、多源并集与旧源失效 | `PENDING-INFO-ROOK-VISION-001`; `PENDING-INFO-HIDDEN-HORSE-001`; `RULE-ELEPHANT-REVEAL-001`; `RULE-ELEPHANT-REVEAL-002`; `INFO-ELEPHANT-PAIR-001`; `PENDING-INFO-ELEPHANT-REVEAL-001` | PENDING-IMPLEMENTATION |
+| INFO-SPECIAL-VISION-001 | 车路径视野生命周期；隐身马在普通视野中仍隐藏；相/象严格九格显形、多源并集与旧源失效 | `RULE-ELEPHANT-REVEAL-001`; `RULE-ELEPHANT-REVEAL-002`; `INFO-ELEPHANT-PAIR-001`; `tests/prototype/run_elephant_reveal.gd`（区内/区外隐藏马与 FullState→PlayerView 隐藏等价配对）; `tests/prototype/run_all.gd` | PASS-R4（独立 QA） |
 | INFO-RANDOM-001 | 未公开炮击格、士/回营选择、RNG 状态和未来抽样在公开点前不可见 | 规则 RNG/未公开记录配对：`test_ai_fairness.gd::_test_real_hidden_equivalent_pair`; `PENDING-INFO-RANDOM-EACH-001` | PARTIAL-R2 |
 | INFO-PREVIEW-001 | 仅凭 PlayerView 分类 `KNOWN_LEGAL/TENTATIVE/KNOWN_ILLEGAL`；等价投影提示字节等价 | `INFO-INTENT-001`; `test_player_view.gd::run_suite`; `PENDING-INFO-PREVIEW-LEG-EYE-001`; `PENDING-INFO-PREVIEW-CANNON-001` | PARTIAL-R2 |
 | INFO-CONTACT-PATH-001 | 隐藏阻挡失败原地且耗行动，只给模糊路线信息；可见非法免费拒绝；不公开阻挡坐标/身份 | `INFO-INTENT-001`; `test_player_view.gd::run_suite` | PASS-R2 |
@@ -100,9 +101,9 @@
 | MATCH-FLAG-END-001 | 完整对局可因三个非争夺旗合法终止 | `PENDING-MATCH-FLAG-END-001` | PENDING |
 | MATCH-CAP-END-001 | 任意原型候选上限配置可进入旗数胜/负/平局出口；最终上限仍由项目所有者决定 | `PENDING-MATCH-CAP-END-001` | PENDING（参数开放） |
 | MATCH-LEGALITY-001 | 完整合法行动生成与执行无非法状态、非终止结算或终局后行动 | `PENDING-MATCH-LEGALITY-001` | PENDING |
-| MATCH-1000-001 | 至少 1000 个固定种子完整对局均合法终止且可复现 | Contract `CHECK-005`; `tests/prototype/run_seeded_matches.gd` | BLOCKED-MISSING |
-| MATCH-STATS-001 | 输出长度、胜因、先后手、旗分布、墙/炮/车/替死统计；只报告，不冻结平衡阈值 | `PENDING-MATCH-STATS-001`（由 `run_seeded_matches.gd` 产出） | BLOCKED-MISSING |
-| CHECK-RUNALL-001 | `run_all.gd` 必须覆盖完整规则、迷雾、回放和 AI 必要用例，并报告 `full_gate1=true` | 当前输出 `focused_suites=5 full_gate1=false`; `PENDING-RUNALL-FULL-GATE1-001` | PENDING / 当前不满足 CHECK-004 |
+| MATCH-1000-001 | 至少 1000 个固定种子完整对局均合法终止且可复现 | Contract `CHECK-005`; `tests/prototype/run_seeded_matches.gd`; `evidence/prototype/qa/iteration-1-revision-4-seeded-output.txt`; `evidence/prototype/qa/iteration-1-revision-4-seeded-manifest.jsonl`; 索引项 `CHECK-1000-SEEDED-MATCHES`：`1000/1000`、失败 `0`、确定性不一致 `0`、抽样回放 `10/10` | PASS-R4（独立 QA；轮上限 8 仅为可覆盖 hypothesis） |
+| MATCH-STATS-001 | 输出长度、胜因、先后手、旗分布、墙/炮/车/替死统计；只报告，不冻结平衡阈值 | `run_seeded_matches.gd` Revision 4 汇总及 `gate1-evidence-index.yaml` 的 `CHECK-1000-SEEDED-MATCHES` 记录 | PASS-R4（仅统计证据，不构成平衡结论） |
+| CHECK-RUNALL-001 | `run_all.gd` 聚合规则、迷雾、回放和 AI 必要用例；聚合测试通过与 Gate 状态分开报告 | Revision 4 输出 `focused_suites=10 full_gate1=false`; `evidence/prototype/qa/iteration-1-revision-4-review.md`; `gate1-evidence-index.yaml` | PASS-R4（技术聚合）/ `full_gate1=false` / 非 GATE 通过 |
 | GATE-HUMAN-001 | 自动与 QA 证据完成后，由项目所有者判断核心循环/反馈/成本，自动结果不得代批 | `GATE-1` | HUMAN-PENDING |
 
 ## 7. 未覆盖项、歧义与交接结论
@@ -115,14 +116,14 @@
 4. 完整 `3x3` 视野、旧视野回雾、事件/错误/UI/小地图投影矩阵。
 5. 墙倒塌/阻挡/修复中断/撤回、士替死配额及无士、旗转移/争夺计分等组合。
 6. 跨窗口胜负优先级、三种跳过、终局拒绝、完整轮上限出口。
-7. 完整对局生成、三类合法终止、全局回放、统计和 1000 fixed seeds；`run_seeded_matches.gd` 当前不存在。
+7. Revision 4 已覆盖 1000 fixed seeds、确定性抽样回放与统计输出；这些自动证据不替代真实体验、平衡判断或项目所有者 GATE-1 决策。
 
 ### 规则歧义审计
 
-`PENDING-OWNER-ELEPHANT-REVEAL-CELLS` 已由项目所有者关闭：精确集合为合法移动起终点包围方形的九格。当前未发现新的 frozen 规则歧义或实现与规格相反的证据。其余真实开放项仍为单局完整轮上限最终值，以及 AI 搜索预算、决策随机性与难度；上表只要求可注入候选配置并验证语义，不冻结数值。Revision 2 QA 报告的是实现/证据缺失，不是已实现行为与冻结规则冲突。
+`PENDING-OWNER-ELEPHANT-REVEAL-CELLS` 已由项目所有者关闭：精确集合为合法移动起终点包围方形的九格。Revision 4 独立 QA 未发现新的 frozen 规则歧义或实现与规格相反的证据。其余真实开放项仍为单局完整轮上限最终值，以及 AI 搜索预算、决策随机性与难度；上表只要求可注入候选配置并验证语义，不冻结数值。
 
 ### 下一交接
 
-技术岗位应优先建立 `test_piece_geometry.gd`、`test_special_rules.gd`、`test_information_boundary.gd`、`test_settlement_combinations.gd`、`test_match_termination.gd` 与 `run_seeded_matches.gd`，并在输出中采用本矩阵的 Test ID。完成后由独立 QA 重跑 Contract CHECK-004/005；本矩阵不能将 `full_gate1=false` 或缺失 runner 解释为通过。
+Revision 4 技术回归、相/象定向验收、独立墙倒塌清源 runner、`run_all.gd` 与 1000 fixed seeds 已取得独立 QA PASS。后续仍须解决管线工具阻塞并由项目所有者执行 GATE-1 决策；本矩阵不把 `full_gate1=false` 解释为 Gate 通过。
 
-非规则阻塞另行保留：Revision 2 的 `QA-P1-003`（官方 Loop CLI 将 active runtime Snapshot 按 draft 注册模板检查并 exit 1）属于项目经理/管线维护范围，本矩阵不将其改写为规则缺陷，也不修改 Registry。
+非规则阻塞继续保留：Revision 4 的 `QA-P1-003`（官方 Loop CLI 将 active runtime Snapshot 按 draft 注册模板检查并 exit 1）属于项目经理/管线维护范围；专业状态仍为 `blocked_by_tooling`，`current_submission_accepted=false`，`full_gate1=false`，GATE 决策为 `not_made`。本矩阵不将其改写为规则缺陷，也不修改 Registry。
