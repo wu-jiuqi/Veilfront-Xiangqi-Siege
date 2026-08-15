@@ -1,0 +1,213 @@
+loop_contract:
+  schema_version: "0.2"
+  contract_id: LOOP-CTR-GATE1-VERTICAL-SLICE-001
+  loop_type: gate1-risk-retirement-vertical-slice
+  title: 首个生产循环——规则、迷雾与 AI 公平性垂直切片
+  version: 1
+  status: draft
+
+purpose:
+  objective: >-
+    在不投入正式功能架构与资产生产的前提下，用一个可丢弃、可重复验证的
+    Godot 4.7.1 逻辑垂直切片验证《雾疆：九路烽棋》的核心循环、复杂结算顺序、
+    战争迷雾信息边界、确定性随机与只读取玩家等价可见信息的单机 AI 是否共同成立，
+    并为 GATE-1 提供独立证据。
+  required_deliverables:
+    - deliverable_id: DELIVERABLE-RULES-001
+      artifact_type: executable-rules-spec
+      description: 版本化规则规格、状态集合、合法行动定义与结算优先级。
+    - deliverable_id: DELIVERABLE-INFO-001
+      artifact_type: information-boundary-contract
+      description: 玩家视角迷雾投影、可见事件与 AI 输入权限契约。
+    - deliverable_id: DELIVERABLE-GODOT-001
+      artifact_type: disposable-godot-prototype
+      description: 可从种子开局运行至胜负或轮数上限结算的 Godot 4.7.1 逻辑原型。
+    - deliverable_id: DELIVERABLE-AI-001
+      artifact_type: auditable-baseline-ai
+      description: 仅依赖玩家等价可见投影的基线机器人、预算参数与决策审计日志。
+    - deliverable_id: DELIVERABLE-QA-001
+      artifact_type: independent-gate-evidence
+      description: 独立规则矩阵、确定性回放、信息泄露审计、AI 公平性与批量对局证据。
+    - deliverable_id: DELIVERABLE-GATE1-001
+      artifact_type: human-decision-package
+      description: 绑定当前产物摘要的 GATE-1 人工决策包。
+  out_of_scope:
+    - 正式美术、动画、音频、UI 皮肤与批量资产生产。
+    - 面向发布的正式架构冻结、性能优化、存档兼容和 Steam 导出。
+    - 在线联机、排位、专用服务器、机器学习 AI。
+    - 在原型证据形成前冻结单局轮数上限、AI 搜索预算、决策随机性或难度档位。
+    - 将可丢弃原型代码直接认定为正式功能实现。
+
+responsibility:
+  owner_role: pos:veilfront-xiangqi-siege:root:project-manager
+  reviewer_roles:
+    - pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
+    - pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+    - pos:veilfront-xiangqi-siege:quality:qa-release-lead
+    - project-owner
+  required_authority_scope:
+    - AUTH-VEILFRONT-PROJECT-MANAGER
+    - AUTH-VEILFRONT-SYSTEMS-EXPERIENCE
+    - AUTH-VEILFRONT-GODOT-TECHNOLOGY
+    - AUTH-VEILFRONT-SINGLE-PLAYER-AI
+    - AUTH-VEILFRONT-QA-RELEASE
+    - GATE-1 由 project-owner 保留
+  escalation_to: project-owner
+
+start:
+  triggers:
+    - trigger_id: TRIGGER-CONTRACT-APPROVED
+      description: 项目所有者批准本 Loop Contract 与绑定的 CTR-P1-001 v1。
+  entry_conditions:
+    - condition_id: ENTRY-INSTANCE-NORMAL
+      description: 项目实例校验为 normal，插件锁、组织 Registry 和生成 Agent 适配器无错误。
+      required_evidence: validate_project_instance.py 的退出码 0 与输出记录。
+    - condition_id: ENTRY-CONTRACT-APPROVED
+      description: Loop Contract 与垂直切片 Contract 已由项目所有者批准，摘要与待执行版本一致。
+      required_evidence: game-pipeline/approvals/ 下的不可变 approval 记录。
+    - condition_id: ENTRY-NO-PRODUCTION-BEFORE-APPROVAL
+      description: 批准前不得创建 project.godot、游戏源代码、场景、资源或资产。
+      required_evidence: 批准前 Git 基线与 Contract 审批记录。
+    - condition_id: ENTRY-INDEPENDENT-QA
+      description: QA 审查实例与规则、技术、AI 生产实例相互独立。
+      required_evidence: Organization Registry 任命与实例记录。
+  required_inputs:
+    - input_slot_id: INPUT-BRIEF-001
+      artifact_type: confirmed-project-brief
+      version_requirement: version 2，subject_digest=3cb9affedc6173dbe58ad9c630e0261c99eba706815f8d8fa9870f506b2f2599
+      required: true
+    - input_slot_id: INPUT-ORG-001
+      artifact_type: approved-organization-snapshot
+      version_requirement: organization_revision 2，snapshot_digest=9b193d9d99f7a541edc5aa5b285ee98127fb7684f4ee47e6b06c7c413a4c7fe9
+      required: true
+    - input_slot_id: INPUT-WORK-CTR-001
+      artifact_type: approved-pipeline-contract
+      version_requirement: CTR-P1-001 version 1，摘要与批准记录一致
+      required: true
+
+iteration:
+  task_sequence:
+    - task_id: TASK-SPEC-001
+      responsible_role: pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
+      action: 固化不改变已确认语义的可执行规则、状态、结算顺序、玩家行为闭环、迷雾投影与原型观测指标。
+      expected_output: 规则规格、结算顺序、信息边界契约和开放问题清单。
+    - task_id: TASK-MAP-001
+      responsible_role: pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+      action: 在实现前记录场景、资源、运行时数据、测试和证据的 Godot 路径映射，并说明所有动态生成例外。
+      expected_output: 技术方案与 Godot 场景资源映射。
+    - task_id: TASK-PROTOTYPE-001
+      responsible_role: pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+      action: 创建并实现可丢弃的逻辑原型、种子随机、行动日志、状态摘要与无头测试入口。
+      expected_output: 可运行原型、可复现回放与技术验证证据。
+    - task_id: TASK-AI-001
+      responsible_role: pos:veilfront-xiangqi-siege:technology:single-player-ai-engineer
+      action: 只通过 PlayerView 投影接口实现基线 AI，记录输入摘要、预算、候选动作与最终决策。
+      expected_output: AI 输入契约、基线机器人、参数和反作弊审计日志。
+    - task_id: TASK-QA-001
+      responsible_role: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+      action: 独立执行规则矩阵、随机性、回放、信息泄露、AI 公平性、边界状态和批量对局验证。
+      expected_output: 可复现缺陷、回归结果和 GATE-1 客观证据包。
+    - task_id: TASK-GATE1-001
+      responsible_role: pos:veilfront-xiangqi-siege:root:project-manager
+      action: 在全部必要客观检查通过后整理风险、开放问题与可逆选项，提交项目所有者进行 GATE-1 判断。
+      expected_output: 绑定当前证据摘要的 GATE-1 决策请求；不得代替人类批准。
+  carry_forward:
+    - 已确认项目简报及其事实、假设、未知项标签。
+    - 上一轮所有失败证据、随机种子、回放日志、缺陷与 Gate 反馈。
+    - 已通过且未受变更影响的测试证据；受影响项必须重检。
+  change_summary_required: true
+  review_rejection:
+    action: revise_same_loop
+    increment_iteration: true
+    create_new_loop: false
+
+budget:
+  iteration_limit: 3
+  time_limit: null
+  cost_limit: null
+  on_exhausted: pause_and_review
+
+acceptance:
+  automated_checks:
+    - check_id: CHECK-CONTRACT-001
+      description: 项目实例、CTR-P1-001 结构与全部 YAML 解析检查通过。
+      required: true
+    - check_id: CHECK-GODOT-001
+      description: Godot 4.7.1 能无错误导入项目，原型主场景与测试入口可无头加载。
+      required: true
+    - check_id: CHECK-RULES-001
+      description: CTR-P1-001 中列出的规则、结算优先级和边界测试全部通过且可由固定种子复现。
+      required: true
+    - check_id: CHECK-DETERMINISM-001
+      description: 同一版本、初始状态、随机种子与行动序列的最终状态摘要和事件日志摘要完全一致。
+      required: true
+    - check_id: CHECK-FOG-001
+      description: 隐藏状态不同但指定玩家可见投影相同的配对用例，不产生可区分的合法动作、事件、提示或查询结果。
+      required: true
+    - check_id: CHECK-AI-001
+      description: AI 只接收 PlayerView；可见投影与 AI 种子相同的配对用例产生相同决策与输入审计摘要。
+      required: true
+    - check_id: CHECK-SIMULATION-001
+      description: 至少 1000 个固定种子对局均以合法胜负、轮数上限判胜或平局结束，无崩溃、非法行动或无法解释的状态分歧。
+      required: true
+  professional_review:
+    required: true
+    reviewer_role: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+    criteria:
+      - 每项验收条件都有版本、执行命令、退出状态、随机种子和证据路径。
+      - 生产者没有作为自己交付物的唯一审查者。
+      - 规则规格、实现、AI 权限与黑盒观察结果互相一致。
+      - 失败没有通过删除用例、降低阈值或重写已确认规则被掩盖。
+      - 回合上限、AI 搜索预算、随机性与难度仍以证据建议呈现，未被自动冻结。
+  human_gate:
+    required: true
+    gate_id: GATE-1
+    question: 核心循环、玩家行为、胜负与反馈闭环是否值得进入正式功能开发，且剩余技术成本与风险是否可接受？
+  success_conditions:
+    - CTR-P1-001 的全部必要自动检查和独立专业审查通过。
+    - 原型能从种子化开局完整运行至三旗、将帅实际死亡、轮数上限判胜或平局结算。
+    - 批量对局与人工试玩形成单局轮数上限建议，但冻结该值仍由项目所有者决定。
+    - GATE-1 批准记录与当前 Contract、原型提交、构建和证据摘要完全匹配。
+
+state_machine:
+  state_machine_id: LOOP-SM-DEFAULT
+  version: "0.2"
+  allowed_overrides: []
+
+failure_and_exit:
+  blocking_conditions:
+    - Contract 或输入摘要与批准记录不匹配。
+    - 规则语义存在冲突且无法在既有确认范围内澄清。
+    - 缺少 Godot 4.7.1 可执行环境、独立 QA 或可靠的无头证据。
+    - 技术限制要求改变核心体验、信息边界、首版单机范围或目标平台。
+    - 任一必要自动检查失败且本轮预算不足以修订。
+  rollback:
+    return_to: TASK-SPEC-001；若问题改变范围则返回 P0
+    preserve:
+      - 失败种子、回放日志、状态摘要与最小复现。
+      - 所有版本化规格、测试矩阵、审计日志和评审反馈。
+      - 可验证但未被批准为正式架构的技术探索结果。
+  cancellation_conditions:
+    - 项目所有者取消垂直切片或改变项目范围。
+    - 证据证明核心闭环在批准边界内不可行，且项目所有者选择停止而非修订。
+  final_handoff:
+    receiver_role: pos:veilfront-xiangqi-siege:root:project-manager
+    required_contents:
+      - 通过的规则、迷雾、确定性、AI 公平与批量对局证据索引。
+      - GATE-1 人工批准记录及其 subject_digest。
+      - 可保留的规格与测试、必须丢弃或重写的原型代码清单。
+      - 正式功能开发与资产生产的准入条件、风险和未解决问题。
+
+coordination:
+  allowed_parent_loop_types:
+    - project-production
+  dependency_rules:
+    - 本循环启动依赖项目简报、组织、权限、Preset 与 Skill Binding 均已批准且摘要匹配。
+    - 正式功能开发循环和资产生产循环必须阻塞等待本循环完成且 GATE-1 获批。
+  child_loop_creation:
+    allowed: false
+    conditions: []
+    required_authority_scope: []
+  registry_binding:
+    store_runtime_relationships_in_registry: true
+

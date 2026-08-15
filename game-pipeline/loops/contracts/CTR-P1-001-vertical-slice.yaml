@@ -1,0 +1,232 @@
+contract:
+  schema_version: "0.1"
+  contract_id: CTR-P1-001
+  title: GATE-1 规则、迷雾与 AI 公平性垂直切片
+  stage: P1
+  status: draft
+  owner_agent: AGT-DIR
+  project_id: veilfront-xiangqi-siege
+  version: 1
+
+objective:
+  player_facing_outcome: >-
+    玩家能在无正式美术的逻辑界面中完成一局《雾疆：九路烽棋》，通过移动、侦察、
+    破城、炮击、三旗争夺和实际吃掉将帅形成清晰的胜负闭环，并面对一个不读取隐藏信息的机器人对手。
+  production_outcome: >-
+    交付一个可丢弃但可运行、可回放、可批量验证的 Godot 4.7.1 垂直切片，
+    以及足以支持 GATE-1 判断的规则、迷雾、确定性、AI 公平性、技术成本和原型观测证据。
+
+entry_conditions:
+  - id: ENTRY-001
+    description: 项目简报 version 2 已确认，subject_digest 与批准记录一致。
+    evidence: game-pipeline/project-definition/project-brief.yaml 与 game-pipeline/approvals/project-brief-3cb9affedc61.yaml
+  - id: ENTRY-002
+    description: 正式组织、Authority Policy、Preset 与 Skill Binding 已批准并应用，项目实例校验为 normal。
+    evidence: game-pipeline/organization/snapshot.yaml、game-pipeline/approvals/ 与 validate_project_instance.py 输出
+  - id: ENTRY-003
+    description: 本 Contract 与 LOOP-CTR-GATE1-VERTICAL-SLICE-001 v1 已由项目所有者批准且摘要匹配。
+    evidence: 待创建的不可变 Contract approval 记录；批准前不得开始实现
+  - id: ENTRY-004
+    description: QA 审查实例独立于规则、Godot 和 AI 生产实例。
+    evidence: Organization Registry 的实例任命与独立性检查
+
+inputs:
+  - artifact_id: artifact:veilfront-xiangqi-siege:project-brief@v2
+    path: game-pipeline/project-definition/project-brief.yaml
+    version: 2@3cb9affedc6173dbe58ad9c630e0261c99eba706815f8d8fa9870f506b2f2599
+    required: true
+    owner_agent: AGT-DIR
+  - artifact_id: registry:veilfront-xiangqi-siege:organization@revision-2
+    path: game-pipeline/organization/snapshot.yaml
+    version: revision-2@9b193d9d99f7a541edc5aa5b285ee98127fb7684f4ee47e6b06c7c413a4c7fe9
+    required: true
+    owner_agent: AGT-DIR
+  - artifact_id: artifact:veilfront-xiangqi-siege:loop-contract@gate1-v1
+    path: game-pipeline/loops/contracts/loop-contract-gate1-vertical-slice.yaml
+    version: 1@pending-approval
+    required: true
+    owner_agent: AGT-DIR
+
+constraints:
+  approved_decisions:
+    - 规则语义、棋盘分区、迷雾、棋子能力、独立城墙、三旗、士替死和将帅实际死亡优先级以已确认项目简报为准。
+    - 首版只做桌面单机，不包含在线服务、排位、专用服务器和机器学习。
+    - Godot 版本为 4.7.1；固定场景结构、UI 壳和可调配置优先使用预置 .tscn/.tres。
+    - AI 只能读取与当前玩家等价的 PlayerView，不得接触完整棋盘或未公开随机结果。
+  forbidden_changes:
+    - 未经项目所有者批准改变任何 confirmed 规则、核心体验、首版范围或目标平台。
+    - 在 Contract 获批前创建 project.godot、源代码、场景、资源或游戏资产。
+    - 在 GATE-1 前生产正式美术、正式 UI、音频、动画或把原型架构宣布为正式架构。
+    - 以合法落点、错误信息、日志、镜头、小地图、音效、计时差异或 AI 行为泄露隐藏状态。
+    - 由规则、Godot 或 AI 生产实例独立批准自己的交付。
+  engine_adapter: godot
+  assumptions:
+    - 规则核心与显示层解耦、可复现随机种子、玩家视角投影和行动日志能够在可接受复杂度内共同实现；这是待验证假设。
+    - 原型只要求逻辑可读性与测试可观察性，不代表最终主棋盘和小地图 UX。
+    - 运行时棋局状态、216 格数据、行动事件与批量对局由数据对象动态承载比预置 216 个节点更安全简单；固定原型壳仍必须预置。
+    - 单局轮数上限、AI 搜索预算、随机性和难度档位由原型给出证据建议，不在本 Contract 中冻结最终值。
+
+steps:
+  - step_id: STEP-001
+    action: 系统与体验负责人将 confirmed 规则转写为版本化规则规格、状态集合、合法行动、结算优先级和玩家行为闭环，不改动规则语义。
+    expected_artifact: docs/prototype/rules-spec-v1.md 与 docs/prototype/settlement-order-v1.md
+  - step_id: STEP-002
+    action: 系统与体验负责人定义 PlayerView、迷雾可见事件、UI/查询无泄露边界、原型反馈与 GATE-1 观测指标。
+    expected_artifact: docs/prototype/information-boundary-v1.md 与 docs/prototype/gate1-observation-plan-v1.md
+  - step_id: STEP-003
+    action: Godot 技术负责人先记录场景/资源/脚本/测试路径映射和动态生成例外，再创建 Godot 4.7.1 工程与预置原型壳。
+    expected_artifact: docs/prototype/godot-artifact-map-v1.md、project.godot、scenes/prototype/gate1_logic_lab.tscn
+  - step_id: STEP-004
+    action: 技术负责人实现可丢弃规则状态、合法行动、种子随机、结算、PlayerView、事件日志、状态摘要和回放入口。
+    expected_artifact: scripts/prototype/、resources/prototype/ 与 tests/prototype/ 中的实现和测试
+  - step_id: STEP-005
+    action: 单机 AI 工程师通过只能接收 PlayerView 的接口实现可配置基线 AI，并记录每次决策输入摘要、预算、候选动作和结果。
+    expected_artifact: scripts/prototype/ai/、resources/prototype/ai/ 与 evidence/prototype/ai-audit/
+  - step_id: STEP-006
+    action: QA 使用独立实例执行规则矩阵、回放、隐藏等价配对、AI 公平性、1000 种子批量对局和缺陷回归。
+    expected_artifact: evidence/prototype/qa/gate1-evidence-index.yaml 与可复现实验输出
+  - step_id: STEP-007
+    action: 项目经理只在所有必要自动检查和独立专业审查通过后整理 GATE-1 决策包，提交项目所有者判断。
+    expected_artifact: game-pipeline/loops/evidence/GATE-1-decision-package.md
+
+outputs:
+  - artifact_id: artifact:veilfront-xiangqi-siege:rules-spec@prototype-v1
+    path: docs/prototype/rules-spec-v1.md
+    type: spec
+    owner_agent: AGT-GD
+    acceptance:
+      - 覆盖 24×9 棋盘与区域、普通行动、特殊行动资格、每方独立城墙状态、迷雾、三旗、士替死、胜负与轮数上限结算。
+      - 明确同一结算窗口优先级，至少包含将帅实际死亡立即终局、车路径逐目标处理、士替死与后续目标停止条件。
+      - 每条规则可追溯到项目简报 statement_id；假设与开放问题没有写成 confirmed。
+  - artifact_id: artifact:veilfront-xiangqi-siege:information-contract@prototype-v1
+    path: docs/prototype/information-boundary-v1.md
+    type: spec
+    owner_agent: AGT-GD
+    acceptance:
+      - 定义 FullState 到 PlayerView 的单向投影、当前玩家可见棋子/格/事件/随机结果和不可见字段。
+      - 定义合法行动查询、错误、日志与 AI 输入不得因隐藏差异产生可观察泄露。
+      - 覆盖普通 3×3 动态视野、旧视野回雾、车路径视野、隐身马、相象田字显形、炮架与炮击未公开随机结果。
+  - artifact_id: artifact:veilfront-xiangqi-siege:godot-map@prototype-v1
+    path: docs/prototype/godot-artifact-map-v1.md
+    type: spec
+    owner_agent: AGT-GODOT
+    acceptance:
+      - 在实现前列出 project.godot、预置场景、资源、脚本、测试、日志和证据的具体路径与所有者。
+      - 固定节点树、原型 UI 壳和默认配置使用 .tscn/.tres；每个动态生成例外说明运行时必要性或更安全简单的理由。
+      - 明确原型可丢弃边界，不把探索代码视为正式架构承诺。
+  - artifact_id: source:veilfront-xiangqi-siege:godot-prototype@gate1-v1
+    path: scenes/prototype/gate1_logic_lab.tscn
+    type: scene
+    owner_agent: AGT-GODOT
+    acceptance:
+      - Godot 4.7.1 可导入并无头加载，固定原型壳由预置节点构成。
+      - 可从指定种子创建合法开局，通过玩家或 AI 行动运行到三旗、将帅死亡、轮数上限判胜或平局。
+      - 每步输出版本化行动事件、玩家视角事件、状态摘要和随机抽样记录，支持按种子与行动序列重放。
+      - 原型不依赖正式美术、在线服务或未批准第三方插件。
+  - artifact_id: source:veilfront-xiangqi-siege:ai-prototype@gate1-v1
+    path: scripts/prototype/ai/
+    type: code
+    owner_agent: SPECIALIST
+    acceptance:
+      - AI 决策入口参数只能是 PlayerView、公开规则配置、AI 自身记忆与独立 AI 种子，不能引用 FullState。
+      - 每次决策都有输入投影摘要、候选动作、搜索/时间预算、随机抽样与最终动作审计记录。
+      - 两个隐藏状态不同但 PlayerView、AI 记忆和 AI 种子相同的配对用例，输出动作与审计输入摘要相同。
+      - 使用人工编写的规则型或搜索型方法，不使用机器学习或在线服务。
+  - artifact_id: artifact:veilfront-xiangqi-siege:gate1-evidence@prototype-v1
+    path: evidence/prototype/qa/gate1-evidence-index.yaml
+    type: report
+    owner_agent: AGT-QA
+    acceptance:
+      - 每项必要检查记录 Contract/构建/提交版本、命令、退出状态、时间、环境、随机种子和证据路径。
+      - 规则矩阵包含基础规则与特殊规则、区域边界、城墙倒塌/恢复、随机撤回、炮击、车路径、士替死、隐身/显形、旗帜占领和胜负优先级组合。
+      - 至少 1000 个固定种子完整对局无崩溃、非法行动、非终止结算或不可复现状态分歧，并输出对局长度、胜因、先后手和旗帜分布统计。
+      - 信息泄露与 AI 公平性使用隐藏等价配对黑盒测试，不以代码审阅代替运行证据。
+      - 明确列出失败、豁免请求和未决风险；QA 不修改生产事实源或降低阈值。
+  - artifact_id: artifact:veilfront-xiangqi-siege:gate1-decision-package@v1
+    path: game-pipeline/loops/evidence/GATE-1-decision-package.md
+    type: report
+    owner_agent: AGT-DIR
+    acceptance:
+      - 索引所有必要原始证据，不以摘要替代要求的源产物。
+      - 分开记录观察事实、推论、未解决问题、可逆选项与建议。
+      - 包含核心循环人工试玩记录、技术成本、必须重写的原型部分、回合上限与 AI 参数建议。
+      - 生成绑定当前 Contract、原型提交、构建与证据集合的 subject_digest，等待项目所有者决定。
+
+automated_checks:
+  - check_id: CHECK-001
+    command: python "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/scripts/validate_project_instance.py" --project-root .
+    expected_result: 退出码 0，state=normal，errors=[]，warnings 不含阻断项
+    required: true
+  - check_id: CHECK-002
+    command: python "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/scripts/validate_pipeline_contract.py" game-pipeline/loops/contracts/CTR-P1-001-vertical-slice.yaml
+    expected_result: 退出码 0，输出 OK
+    required: true
+  - check_id: CHECK-003
+    command: godot --headless --path . --editor --quit-after 1
+    expected_result: 退出码 0，无解析、导入或资源加载错误
+    required: true
+  - check_id: CHECK-004
+    command: godot --headless --path . --script res://tests/prototype/run_all.gd
+    expected_result: 退出码 0，规则矩阵、确定性、回放、迷雾与 AI 公平性必要用例全部通过
+    required: true
+  - check_id: CHECK-005
+    command: godot --headless --path . --script res://tests/prototype/run_seeded_matches.gd -- --seeds 1000
+    expected_result: 退出码 0，1000 局全部合法终止且统计与逐局证据已写入 evidence/prototype/qa/
+    required: true
+
+human_gate:
+  required: true
+  gate_id: GATE-1
+  reviewer: human:project-owner
+  questions:
+    - 移动、侦察、破城、炮击、三旗争夺与实际吃掉将帅是否构成值得继续的核心循环？
+    - 胜利、失败、恢复、视野变化与行动反馈是否形成可理解、可测试的闭环？
+    - 该切片是否实际验证了复杂结算、迷雾泄露与 AI 公平性等最大风险，而非只展示容易实现的部分？
+    - Godot 技术可行性、需要重写的原型范围和后续成本是否可接受？
+    - 是否批准进入正式功能开发，并允许随后启动视觉基线与资产生产准备？
+  approval_record: null
+
+exit_conditions:
+  - 所有必要产物存在，版本与摘要可追溯，Contract 变更摘要完整。
+  - 所有必要自动检查通过，失败用例已修复并完成受影响回归。
+  - QA 独立专业审查通过且没有被生产岗位替代。
+  - 项目所有者对当前 subject_digest 作出 GATE-1 批准；在此之前状态只能为 review 或 waiting_approval。
+  - 已明确哪些规格和测试进入正式开发、哪些原型代码必须丢弃或重写。
+
+rollback:
+  triggers:
+    - 规则或结算语义矛盾，无法在 confirmed 基线内澄清。
+    - 自动检查、独立 QA 或 GATE-1 指出核心闭环、信息边界、AI 公平或技术成本不可接受。
+    - 实现需要改变项目范围、核心体验、首版单机边界或目标平台。
+  return_to_stage: P1
+  return_to_agent: AGT-GD
+  preserve:
+    - 失败随机种子、回放、最小复现、状态摘要与审计日志。
+    - 规则与信息规格、测试矩阵、批量对局统计和原始试玩记录。
+    - 技术探索证据和被否决方案，不保留其正式架构地位。
+
+handoff:
+  next_agent: AGT-DIR
+  summary: GATE-1 获批后，由项目经理基于证据拆分正式功能开发与视觉资产生产循环；未获批则按反馈返回 P1 或范围问题返回 P0。
+  changed_files: []
+  decisions: []
+  risks:
+    - 规则组合可能产生未枚举的优先级冲突。
+    - 玩家视角查询、错误和 AI 接口可能侧漏隐藏信息。
+    - 基线 AI 在公平信息约束下可能无法同时满足可解释性、挑战性与性能。
+    - 可丢弃原型可能被误用为正式架构，形成隐性技术债。
+  open_questions:
+    - 单局完整轮上限的最终值。
+    - AI 搜索预算、随机性与难度档位。
+    - GATE-1 后正式功能架构对原型代码的保留比例。
+  required_rechecks:
+    - 任何规则规格变化后重跑受影响规则矩阵、确定性、回放、迷雾与 AI 公平性用例。
+    - 任何 PlayerView 或 AI 接口变化后重跑全部隐藏等价配对测试。
+    - 任何随机消费顺序变化后重跑固定种子回放和 1000 局批量对局。
+
+evidence:
+  commits: []
+  test_results: []
+  screenshots: []
+  playtest_records: []
+  builds: []
