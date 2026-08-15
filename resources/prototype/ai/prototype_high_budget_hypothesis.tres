@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/prototype/ai/ai_difficulty_config.gd" id="1_config"]
+
+[resource]
+script = ExtResource("1_config")
+profile_id = "prototype-high-budget-hypothesis"
+conclusion_status = "hypothesis"
+candidate_limit = 96
+time_budget_ms_hint = 80
+random_score_span = 1
+reveal_weight = 4
+flag_weight = 24
+wall_pressure_weight = 10
+revisit_penalty = 3
