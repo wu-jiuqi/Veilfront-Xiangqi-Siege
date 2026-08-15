@@ -1,0 +1,206 @@
+schema_version: veilfront-qa-evidence-index/v1
+artifact_id: artifact:veilfront-xiangqi-siege:gate1-evidence@prototype-v1
+review_kind: iteration_1_initial_review
+reviewed_at: '2026-08-15T20:54:13.6204536+08:00'
+qa_instance:
+  instance_id: inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
+  position_id: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+  preset_digest: 118a9144280d31b0d96ee376fda0a86eb1e713971b4cf96836dadf2968c42018
+  independence_result: pass
+  evidence: game-pipeline/organization/snapshot.yaml:478
+loop_binding:
+  loop_id: 4cbb03b6-dd5a-41c5-a624-895c4b884bcb
+  display_key: LOOP-GATE1-001
+  state: active
+  iteration: 1
+  contract_id: LOOP-CTR-GATE1-VERTICAL-SLICE-001
+  contract_version: 1
+  contract_digest: a970c55fe068a1252251ee4d30dedff32bee9da1f8e7e7ef7dc0c501be416799
+pipeline_contract:
+  contract_id: CTR-P1-001
+  version: 1
+  subject_digest: 189b691e6c60b0c5c7b069081ebe34e726ff038211d60a33084eee5638499014
+  materialized_file_sha256: fe436181f039389658414032ff1370d2fc1bc896bc7d446e96d8fd0abea23b2e
+source_commits:
+  godot_phase_1: cbc89f50a0d72444b9b63beb0423c0594051a08f
+  ai_baseline: a46468d149691a74b1e70a76690e5f05c9cd9a23
+  ai_contract_fix: 737e90d8129e6b4361c5c1486a651f2fddcc5c4b
+  rules_information_specs: be8370a1784d0a636336c0718413316b11655a10
+  reviewed_head: be8370a1784d0a636336c0718413316b11655a10
+environment:
+  os: Microsoft Windows NT 10.0.26200.0
+  python: 3.11.5
+  powershell: 5.1.26100.9168
+  godot: 4.7.1.stable.official.a13da4feb
+  project_godot_sha256: 87ea184f1f162fd25b4f4efddb7c5b997ccec64a6274884579a777780331f80a
+raw_evidence:
+  command_output: evidence/prototype/qa/iteration-1-command-output.txt
+  review_report: evidence/prototype/qa/iteration-1-initial-review.md
+checks:
+  - id: CHECK-PROJECT-INSTANCE
+    required: true
+    command: python "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/scripts/validate_project_instance.py" --project-root .
+    started_at: '2026-08-15T20:50:40.9060562+08:00'
+    exit_code: 0
+    result: pass
+    observation: state=normal, errors=[], warnings=[]
+  - id: CHECK-PIPELINE-CONTRACT
+    required: true
+    command: python "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/scripts/validate_pipeline_contract.py" game-pipeline/loops/contracts/CTR-P1-001-vertical-slice.yaml
+    started_at: '2026-08-15T20:50:40.9441305+08:00'
+    exit_code: 0
+    result: pass
+  - id: CHECK-ORGANIZATION-REPLAY
+    required: true
+    command: python "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/scripts/validate_organization_registry.py" --snapshot game-pipeline/organization/snapshot.yaml --history game-pipeline/organization/event-history.yaml
+    started_at: '2026-08-15T20:51:04.3473391+08:00'
+    exit_code: 0
+    result: pass
+  - id: CHECK-LOOP-REPLAY
+    required: true
+    command: python "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/scripts/validate_loop_registry.py" --snapshot game-pipeline/loops/registry/first-production-loop/snapshot.yaml --event "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/contracts/loop-registry-event.template.yaml" --contract game-pipeline/loops/contracts/loop-contract-gate1-vertical-slice.yaml --state-machine "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/contracts/loop-state-machine.default.yaml" --history game-pipeline/loops/registry/first-production-loop/event-history.yaml
+    started_at: '2026-08-15T20:51:04.4058156+08:00'
+    exit_code: 1
+    result: fail
+    classification: blocked_by_validator_runtime_snapshot_mismatch
+    observation: validator applies draft registration-template invariants to active iteration-1 revision-8 snapshot; no event-chain or replayed-snapshot mismatch was reported
+  - id: CHECK-GODOT-IMPORT
+    required: true
+    command: godot --headless --path . --editor --quit-after 1
+    started_at: '2026-08-15T20:52:15.7082065+08:00'
+    exit_code: 0
+    result: pass_with_warning
+    observation: no parse/import/resource ERROR; forced one-frame exit emitted Scan thread aborted warning
+  - id: CHECK-GODOT-MAIN-SCENE
+    required: true
+    command: godot --headless --path . --quit-after 2
+    started_at: '2026-08-15T20:52:28.0642455+08:00'
+    exit_code: 0
+    result: pass_scaffold_only
+    observation: GATE1_PHASE1_READY seed=471001 cells=216 rules=not_implemented
+  - id: CHECK-RUN-ALL
+    contract_check: CHECK-004
+    required: true
+    command: godot --headless --path . --script res://tests/prototype/run_all.gd
+    started_at: '2026-08-15T20:52:38.3265869+08:00'
+    exit_code: 0
+    result: fail_acceptance_coverage
+    observation: nine scaffold checks pass, but output explicitly states rules=not_implemented; no rule matrix, determinism, replay, fog, or integrated AI fairness coverage
+  - id: CHECK-AI-PROTOTYPE-SELF-TEST
+    required: false
+    command: godot --headless --path . --script res://tests/prototype/test_ai_fairness.gd
+    started_at: '2026-08-15T20:52:46.4726018+08:00'
+    exit_code: 0
+    result: pass_limited_fixture
+    seeds: [424242, 101, 9001, 7]
+    observation: AI allowlist, canonical ordering, deterministic sampling, audit shape, and hypothesis resources self-test pass
+    limitation: hidden pair fixture extracts public_projection directly and does not exercise a real FullState-to-PlayerView projection
+  - id: CHECK-PRESET-NODES
+    required: true
+    command: PowerShell Select-String for dynamic fixed UI creation and preset node count
+    started_at: '2026-08-15T20:54:13.6204536+08:00'
+    exit_code: 0
+    result: pass
+    observation: no Control.new/Label.new/add_child in scene adapter; 34 fixed nodes are serialized across three tscn scenes; 216 cells are explicitly runtime data
+  - id: CHECK-AI-FULLSTATE-STATIC-ISOLATION
+    required: true
+    command: PowerShell Select-String over scripts/prototype/ai/*.gd
+    started_at: '2026-08-15T20:54:13.6204536+08:00'
+    exit_code: 0
+    result: pass_static_only
+    observation: AI decide signature accepts only PlayerView, PublicRules, Memory, ai_seed and DifficultyConfig; no FullState/full_state/scene-tree query token found
+    limitation: runtime access count and real projection isolation remain unverified
+  - id: CHECK-HYPOTHESIS-PARAMETERS
+    required: true
+    command: static review of resources/prototype/ai/*.tres and ai_difficulty_config.gd
+    result: pass
+    observation: all three profiles retain conclusion_status=hypothesis; budget/randomness/difficulty are not represented as confirmed or frozen
+  - id: CHECK-RULE-CONCLUSION-BOUNDARY
+    required: true
+    command: static trace review against game-pipeline/project-definition/project-brief.yaml
+    result: pass_with_blocked_unknowns
+    observation: confirmed rules are traced; unresolved semantics are explicitly labeled unknown/blocked and implementation hypothesis remains hypothesis
+  - id: CHECK-REAL-RULE-MATRIX
+    contract_check: CHECK-RULES-001
+    required: true
+    command: not_run
+    exit_code: null
+    result: not_run
+    classification: blocked_by_missing_artifact
+    missing_artifacts: [scripts/prototype/core, tests/prototype/rules]
+    seeds: []
+  - id: CHECK-DETERMINISM-REPLAY
+    contract_check: CHECK-DETERMINISM-001
+    required: true
+    command: not_run
+    exit_code: null
+    result: not_run
+    classification: blocked_by_missing_artifact
+    missing_artifacts: [real seeded rule core, versioned action events, state digest, replay entry]
+    seeds: []
+  - id: CHECK-FOG-BLACKBOX
+    contract_check: CHECK-FOG-001
+    required: true
+    command: not_run
+    exit_code: null
+    result: not_run
+    classification: blocked_by_missing_artifact
+    missing_artifacts: [real FullState-to-PlayerView projector, read-only query/error/player-event adapters]
+    seeds: []
+  - id: CHECK-AI-BLACKBOX-FAIRNESS
+    contract_check: CHECK-AI-001
+    required: true
+    command: not_run
+    exit_code: null
+    result: not_run
+    classification: blocked_by_missing_artifact
+    missing_artifacts: [real FullState-to-PlayerView integration, runtime AI audit evidence]
+    seeds: []
+  - id: CHECK-1000-SEEDED-MATCHES
+    contract_check: CHECK-005
+    required: true
+    command: godot --headless --path . --script res://tests/prototype/run_seeded_matches.gd -- --seeds 1000
+    exit_code: null
+    result: not_run
+    classification: blocked_by_missing_artifact
+    missing_artifacts: [tests/prototype/run_seeded_matches.gd, complete match simulator]
+    seeds: []
+  - id: CHECK-PERFORMANCE-STEAM-BUILD
+    required: false
+    command: not_run
+    exit_code: null
+    result: out_of_scope_for_current_loop
+    observation: Loop Contract explicitly excludes performance optimization, save compatibility, Steam/export release work from this GATE-1 disposable prototype iteration
+defects:
+  - defect_id: QA-P1-001
+    severity: blocker
+    title: Required executable rule, PlayerView, replay, and 1000-seed artifacts are absent
+    return_to: pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+  - defect_id: QA-P1-002
+    severity: high
+    title: AI fairness evidence bypasses the real FullState-to-PlayerView boundary
+    return_to: [pos:veilfront-xiangqi-siege:technology:godot-technical-lead, pos:veilfront-xiangqi-siege:technology:single-player-ai-engineer]
+  - defect_id: QA-P1-003
+    severity: high
+    title: Official Loop replay command exits 1 on the active runtime Snapshot
+    return_to: pos:veilfront-xiangqi-siege:root:project-manager
+unresolved_rule_decisions:
+  status: blocked_by_rule_decision
+  items:
+    - initial setup, palace coordinates, and first player
+    - flag interruption/replacement/completion/contest lifecycle
+    - bombardment eligibility outside own base and same-window casualty ordering
+    - simultaneous general deaths
+    - retreat/rescue destination shortage and allocation order
+    - wall recovery round-boundary start
+    - hidden blocker/screen interaction intent semantics
+    - complete-round limit
+    - AI budget, randomness, and difficulty freeze
+professional_result:
+  gate_decision: not_made
+  evidence_state: blocked
+  current_submission_accepted: false
+  allow_continue_iteration_1: true
+  legal_next_action: revise_same_loop
+  rationale: continue iteration 1 to produce missing artifacts and rerun failed/not-run checks; do not transition to review, waiting_approval, or GATE-1 package
+waivers: []

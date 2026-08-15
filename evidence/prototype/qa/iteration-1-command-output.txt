@@ -1,0 +1,117 @@
+Veilfront Xiangqi Siege - QA iteration 1 command output
+QA instance: inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
+Workspace: D:\Veilfront Xiangqi Siege
+HEAD: be8370a1784d0a636336c0718413316b11655a10
+
+=== ENVIRONMENT ===
+captured_at=2026-08-15T20:53:50.8976908+08:00
+os=Microsoft Windows NT 10.0.26200.0
+powershell=5.1.26100.9168
+Python 3.11.5
+Godot 4.7.1.stable.official.a13da4feb
+project.godot sha256=87ea184f1f162fd25b4f4efddb7c5b997ccec64a6274884579a777780331f80a
+CTR-P1-001 file sha256=fe436181f039389658414032ff1370d2fc1bc896bc7d446e96d8fd0abea23b2e
+LOOP-CTR-GATE1-VERTICAL-SLICE-001 file sha256=a0380db5819f9651bbb2b0fab243bb3489504b11ed808506f2ecb92a589ae1ad
+
+=== PROJECT INSTANCE ===
+started_at=2026-08-15T20:50:40.9060562+08:00
+command=python "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/scripts/validate_project_instance.py" --project-root .
+result={"state":"normal","project_id":"veilfront-xiangqi-siege","errors":[],"warnings":[],"locked_version":"0.4.0-alpha.2","installed_version":"0.4.0-alpha.2","framework_digest":"3589bce5cf4388f91a08f12acb5d90679256191d5085e65687d06a635bbdcd32"}
+exit_code=0
+
+=== PIPELINE CONTRACT ===
+started_at=2026-08-15T20:50:40.9441305+08:00
+command=python "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/scripts/validate_pipeline_contract.py" game-pipeline/loops/contracts/CTR-P1-001-vertical-slice.yaml
+output=OK: game-pipeline\loops\contracts\CTR-P1-001-vertical-slice.yaml
+exit_code=0
+
+=== ORGANIZATION EVENT HISTORY REPLAY ===
+started_at=2026-08-15T20:51:04.3473391+08:00
+command=python "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/scripts/validate_organization_registry.py" --snapshot game-pipeline/organization/snapshot.yaml --history game-pipeline/organization/event-history.yaml
+output=OK: Organization Registry 契约、摘要、审批基线与事件历史一致
+exit_code=0
+
+=== LOOP EVENT HISTORY REPLAY ===
+started_at=2026-08-15T20:51:04.4058156+08:00
+command=python "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/scripts/validate_loop_registry.py" --snapshot game-pipeline/loops/registry/first-production-loop/snapshot.yaml --event "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/contracts/loop-registry-event.template.yaml" --contract game-pipeline/loops/contracts/loop-contract-gate1-vertical-slice.yaml --state-machine "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/contracts/loop-state-machine.default.yaml" --history game-pipeline/loops/registry/first-production-loop/event-history.yaml
+output:
+  ERROR: Snapshot 模板初始状态必须等于状态机 initial_state
+  ERROR: Snapshot 模板 current_iteration 必须从 0 开始
+  ERROR: 注册后的 Snapshot 模板必须位于 sequence=1、record_revision=1
+  ERROR: draft 注册基线的 inputs 和 outputs 必须为空
+  ERROR: Snapshot input_slot_id 必须完整对应 Contract required_inputs
+  ERROR: Snapshot deliverable_id 必须完整对应 Contract required_deliverables
+exit_code=1
+note=错误均来自注册模板不变量被应用到 active/iteration=1/revision=8 运行时 Snapshot；输出未报告事件摘要链或 Snapshot 历史重建不一致。官方命令仍按失败记录。
+
+=== GODOT VERSION ===
+started_at=2026-08-15T20:52:04.0646494+08:00
+command=godot --version
+godot_path=D:\Godot\godot.cmd
+output=4.7.1.stable.official.a13da4feb
+exit_code=0
+
+=== GODOT IMPORT ===
+started_at=2026-08-15T20:52:15.7082065+08:00
+command=godot --headless --path . --editor --quit-after 1
+output:
+  Godot Engine v4.7.1.stable.official.a13da4feb
+  first_scan_filesystem DONE
+  WARNING: Scan thread aborted...
+exit_code=0
+note=强制在一帧后退出导致扫描线程警告；没有解析、导入或资源加载 ERROR。
+
+=== GODOT MAIN SCENE ===
+started_at=2026-08-15T20:52:28.0642455+08:00
+command=godot --headless --path . --quit-after 2
+output=GATE1_PHASE1_READY seed=471001 cells=216 rules=not_implemented
+exit_code=0
+
+=== GODOT RUN_ALL ===
+started_at=2026-08-15T20:52:38.3265869+08:00
+command=godot --headless --path . --script res://tests/prototype/run_all.gd
+output:
+  PASS: 主场景可作为 PackedScene 加载
+  GATE1_PHASE1_READY seed=471001 cells=216 rules=not_implemented
+  PASS: 场景暴露 Phase 1 棋盘数据计数接口
+  PASS: 场景暴露 Phase 1 种子读取接口
+  PASS: 预置 BoardShell 存在
+  PASS: 预置 StatusShell 存在
+  PASS: 预置种子 Label 存在
+  PASS: 运行时棋盘数据恰有 216 格
+  PASS: Phase 1 默认种子保持可读
+  PASS: 预置 Label 回显公开种子
+  PHASE1_SCAFFOLD_CHECKS_PASSED count=9 rules=not_implemented
+exit_code=0
+acceptance_note=仅 Phase 1 scaffold 自检通过；不满足 CTR-P1-001 CHECK-004 的规则矩阵、确定性、回放、迷雾和 AI 公平性预期。
+
+=== AI FAIRNESS PROTOTYPE SELF-TEST ===
+started_at=2026-08-15T20:52:46.4726018+08:00
+command=godot --headless --path . --script res://tests/prototype/test_ai_fairness.gd
+output=AI fairness prototype tests passed
+exit_code=0
+acceptance_note=仅手工测试字典和 AI 白名单/确定性基线自测；测试夹具直接返回 public_projection，不经过真实 FullState->PlayerView 投影，不能替代 Contract 黑盒公平性证据。
+
+=== REQUIRED ARTIFACT PRESENCE ===
+started_at=2026-08-15T20:53:12.5605620+08:00
+command=PowerShell Test-Path for required implementation/test artifacts
+scripts/prototype/core=false
+tests/prototype/run_seeded_matches.gd=false
+tests/prototype/replay=false
+scripts/prototype/player_view.gd=false
+evidence/prototype/ai-audit=false
+exit_code=0
+
+=== STATIC AUTHORITY/ARCHITECTURE BOUNDARY REVIEW ===
+started_at=2026-08-15T20:54:13.6204536+08:00
+command=PowerShell Select-String over scripts/prototype/ai and scripts/prototype/gate1_logic_lab.gd; count preset nodes in scenes/prototype/*.tscn
+AI forbidden-access token matches=0
+AI decide signature=PlayerView, PublicRules, Memory, int ai_seed, DifficultyConfig
+fixed UI dynamic creation matches=0
+preset nodes: board_shell.tscn=8, gate1_logic_lab.tscn=15, status_shell.tscn=11
+exit_code=0
+limitation=静态 token 检查不替代真实 PlayerView 集成后的运行时反作弊审计。
+
+=== WORKTREE BASELINE ===
+before_qa=?? tests/prototype/test_ai_fairness.gd.uid
+note=该未跟踪 UID 在 QA 首次命令前已经存在；QA 未修改或删除它。
