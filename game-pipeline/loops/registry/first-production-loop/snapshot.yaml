@@ -1,0 +1,149 @@
+registry_snapshot:
+  schema_version: "0.1"
+  identity:
+    loop_instance_id: 4cbb03b6-dd5a-41c5-a624-895c4b884bcb
+    project_id: veilfront-xiangqi-siege
+    display_key: LOOP-GATE1-001
+    title: 首个生产循环——规则、迷雾与 AI 公平性垂直切片
+    created_at: '2026-08-15T20:01:47.1921278+08:00'
+    created_by:
+      actor_id: inst:01M02M6X3Q8YWJXHY52K3V5AR2
+      role: pos:veilfront-xiangqi-siege:root:project-manager
+      authority_id: AUTH-VEILFRONT-PROJECT-MANAGER
+  contract_binding:
+    contract_id: LOOP-CTR-GATE1-VERTICAL-SLICE-001
+    contract_version: 1
+    contract_digest: a970c55fe068a1252251ee4d30dedff32bee9da1f8e7e7ef7dc0c501be416799
+  state_machine_binding:
+    state_machine_id: LOOP-SM-DEFAULT
+    state_machine_version: "0.2"
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  topology:
+    parent_loop_id: null
+    dependencies: []
+  responsibility:
+    owner:
+      actor_id: inst:01M02M6X3Q8YWJXHY52K3V5AR2
+      role: pos:veilfront-xiangqi-siege:root:project-manager
+      assignment_id: 250d8927-3b0d-4ac4-a2e5-5fbc6b3e94dd
+      authority_id: AUTH-VEILFRONT-PROJECT-MANAGER
+      assigned_by: project-owner
+      effective_from: '2026-08-15T20:01:47.1921278+08:00'
+    executors:
+      - actor_id: pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
+        role: pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
+        assignment_id: af4c8c05-ee80-4a99-adab-6d09a0f00811
+        authority_id: AUTH-VEILFRONT-SYSTEMS-EXPERIENCE
+        scope: [TASK-SPEC-001]
+      - actor_id: pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+        role: pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+        assignment_id: c48f53c7-3a02-4f6d-a7a1-aa4d344cf120
+        authority_id: AUTH-VEILFRONT-GODOT-TECHNOLOGY
+        scope: [TASK-MAP-001, TASK-PROTOTYPE-001]
+      - actor_id: pos:veilfront-xiangqi-siege:technology:single-player-ai-engineer
+        role: pos:veilfront-xiangqi-siege:technology:single-player-ai-engineer
+        assignment_id: bd4eb5b6-d931-4bd6-8b2d-3b31520d338b
+        authority_id: AUTH-VEILFRONT-SINGLE-PLAYER-AI
+        scope: [TASK-AI-001]
+      - actor_id: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+        role: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+        assignment_id: 3cdb296f-8cc8-4e4c-8038-79f184c7d05a
+        authority_id: AUTH-VEILFRONT-QA-RELEASE
+        scope: [TASK-QA-001]
+    reviewers:
+      - actor_id: pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
+        role: pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
+        assignment_id: f7593644-4e1c-481c-ab1c-c9587674357b
+        review_scope: [DELIVERABLE-RULES-001, DELIVERABLE-INFO-001]
+      - actor_id: pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+        role: pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+        assignment_id: ea8d5f37-f244-4db1-aeff-ae4f81d8484e
+        review_scope: [DELIVERABLE-GODOT-001, DELIVERABLE-AI-001]
+      - actor_id: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+        role: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+        assignment_id: 9589489a-be2a-436f-bde4-8488d684c0bb
+        review_scope: [CHECK-CONTRACT-001, CHECK-GODOT-001, CHECK-RULES-001, CHECK-DETERMINISM-001, CHECK-FOG-001, CHECK-AI-001, CHECK-SIMULATION-001]
+      - actor_id: project-owner
+        role: project-owner
+        assignment_id: ecc9367a-49ac-4114-b4a7-24ecb8985d16
+        review_scope: [GATE-1]
+  runtime:
+    current_state: ready
+    state_entered_at: '2026-08-15T20:01:47.1921278+08:00'
+    current_iteration: 0
+    last_transition_id: TR-DRAFT-READY
+    last_event_id: 38aa4f1c-4764-4fc0-8980-6e02149da710
+    last_event_digest: 3b39e443b3b6829628c6e49b93a3def73217bc2dd5681c3a469e25944a203163
+    last_event_sequence: 7
+    record_revision: 7
+  budget:
+    limits:
+      iteration_limit: 3
+      time_limit_seconds: null
+      cost_limit:
+        amount: null
+        unit: null
+    usage:
+      completed_iterations: 0
+      active_time_seconds: 0
+      cost:
+        amount: 0
+        unit: null
+    status: available
+    last_updated_at: '2026-08-15T20:01:47.1921278+08:00'
+  resources:
+    inputs:
+      - input_slot_id: INPUT-BRIEF-001
+        artifact:
+          artifact_id: artifact:veilfront-xiangqi-siege:project-brief@v2
+          artifact_type: confirmed-project-brief
+          version: 2
+          uri: game-pipeline/project-definition/project-brief.yaml
+          digest: {algorithm: sha256, value: 3cb9affedc6173dbe58ad9c630e0261c99eba706815f8d8fa9870f506b2f2599}
+        source_loop_id: null
+        bound_by_event_id: b2716148-237f-4b54-b7bf-1b06e98e5c16
+        bound_at: '2026-08-15T20:01:47.1921278+08:00'
+      - input_slot_id: INPUT-ORG-001
+        artifact:
+          artifact_id: registry:veilfront-xiangqi-siege:organization@revision-2
+          artifact_type: approved-organization-snapshot
+          version: revision-2
+          uri: git:veilfront-xiangqi-siege:623a438#game-pipeline/organization/snapshot.yaml
+          digest: {algorithm: sha256, value: 9b193d9d99f7a541edc5aa5b285ee98127fb7684f4ee47e6b06c7c413a4c7fe9}
+        source_loop_id: null
+        bound_by_event_id: c155c6f1-0a94-4772-93a1-52a4dea12300
+        bound_at: '2026-08-15T20:01:47.1921278+08:00'
+      - input_slot_id: INPUT-WORK-CTR-001
+        artifact:
+          artifact_id: artifact:veilfront-xiangqi-siege:pipeline-contract@CTR-P1-001-v1
+          artifact_type: approved-pipeline-contract
+          version: 1
+          uri: game-pipeline/loops/contracts/CTR-P1-001-vertical-slice.yaml
+          digest: {algorithm: sha256, value: 189b691e6c60b0c5c7b069081ebe34e726ff038211d60a33084eee5638499014}
+        source_loop_id: null
+        bound_by_event_id: 20ad323d-9a51-4380-8cc3-ae34c659dd26
+        bound_at: '2026-08-15T20:01:47.1921278+08:00'
+    outputs: []
+  acceptance_snapshot:
+    subject_digest: null
+    automated_checks: []
+    professional_reviews: []
+    human_gates: []
+    final_handoff_ref: null
+  interruption: null
+  pending_approvals: []
+
+storage_contract:
+  authoritative_history: event_history
+  snapshot_role: 可由完整事件历史重建的当前物化视图
+  artifact_storage: Registry 仅保存带版本和摘要的引用，不保存产物正文
+  transaction_rule: 一个 mutation_id 对应恰好一个 Event；Event 追加和 Snapshot 更新必须原子完成。
+  registration_baseline: Snapshot 首次持久化必须与 sequence=1 的 core.loop_registered 同时完成，record_revision=1。
+  topology_rules:
+    - parent_loop_id 与 dependency.target_loop_id 不得等于当前 loop_instance_id。
+    - 父 Loop 图必须无环；不在父 Snapshot 中重复保存 child_loop_ids。
+    - 同一依赖关系不得重复；所有 blocking=true 的依赖图必须无环。
+
+field_examples:
+  input_binding: {input_slot_id: INPUT-001}
+  output_registration: {deliverable_id: DELIVERABLE-001}
