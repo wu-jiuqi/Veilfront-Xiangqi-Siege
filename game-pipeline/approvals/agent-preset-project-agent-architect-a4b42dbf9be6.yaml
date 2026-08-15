@@ -1,0 +1,14 @@
+approval:
+  schema_version: game-production-approval/v1
+  approval_id: approval:veilfront-xiangqi-siege:agent-preset:project-agent-architect:a4b42dbf9be6
+  subject_kind: agent-preset
+  subject_id: preset:veilfront-xiangqi-siege:project-agent-architect
+  subject_digest: a4b42dbf9be6f84b56d186f652a20b71b01e31af8540a4f1d18bb3b630d8ddfa
+  decision: approved
+  decided_by: project-owner
+  decided_at: '2026-08-15T19:10:51.288827+08:00'
+  evidence:
+    source_refs:
+    - codex-thread://01a00501-2f51-7652-8d3f-cea912a96222#organization-approval-fdd6fec0a5f4
+    - chg:veilfront-xiangqi-siege:M9J6YVK5207WGBJNFKR7398DYX#fdd6fec0a5f4edfc198a5ae787d5d3676806d16e4166debe58270ee64b9449d2
+    - skill-binding-proposal:2b0a1b2f37b8a66a91da6ce75ec4907c6e22bd14918222e23d529d4e7d317b24

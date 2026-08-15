@@ -66,3 +66,523 @@ organization_event_history:
     digest_algorithm: sha256
     previous_event_digest: null
     event_digest: cd15e2161b655810c4cc0c6d22fd4f198532a4aa63f037e7c3823cca34e89550
+- schema_version: 0.2-alpha
+  event_id: evt:QFHA6TR0WEX5FQX5XG7BJPPND3
+  mutation_id: mut:G20XE0RXRA8ZW3ZJQPM3E64VRR
+  project_id: veilfront-xiangqi-siege
+  sequence: 2
+  event_type: core.change_set_applied
+  occurred_at: '2026-08-15T19:10:51.288827+08:00'
+  recorded_at: '2026-08-15T19:10:51.288827+08:00'
+  actor:
+    actor_kind: human
+    actor_id: project-owner
+    acting_position_id: null
+    role: project-owner
+  authorization:
+    authority_ref:
+      id: AUTHORITY-DELEGATION-CORE
+      version: 0.2-alpha
+      digest: a2a8a9a5cb01689db23d0dd7958748add339b43726bad38235f003a9c7f67df9
+    approval_refs:
+    - approval:veilfront-xiangqi-siege:organization-change-set:fdd6fec0a5f4
+    change_set_ref:
+      change_set_id: chg:veilfront-xiangqi-siege:M9J6YVK5207WGBJNFKR7398DYX
+      change_set_digest: fdd6fec0a5f4edfc198a5ae787d5d3676806d16e4166debe58270ee64b9449d2
+      base_organization_revision: 1
+      base_snapshot_digest: 27d954c36e2ff8db08bc85cff96876401585390b264ad5d4ca07712bbeb0e2c5
+      decision_basis_digest: 710aae3700484ce14113dd4bef9c0a5cb6f8e3bf830d90579e76ea6d9a15402e
+  causality:
+    correlation_id: organization-approval:fdd6fec0a5f4
+    causation_event_id: null
+    request_id: codex-thread://01a00501-2f51-7652-8d3f-cea912a96222#organization-approval-fdd6fec0a5f4
+  concurrency:
+    expected_organization_revision: 1
+    expected_snapshot_digest: 27d954c36e2ff8db08bc85cff96876401585390b264ad5d4ca07712bbeb0e2c5
+    resulting_organization_revision: 2
+  binding_snapshot:
+    organization_contract:
+      id: ORG-CONTRACT-CORE
+      version: 0.2-alpha
+      digest: a7f9a73911a8cb4ba71f1c35d382d7f2207e8ba1c0c3acf6e64a6f0ffbe5c065
+    lifecycle_contract:
+      id: ORG-LIFECYCLE-CORE
+      version: 0.2-alpha
+      digest: 99f59cae7eaa4e12cfbf5f22dde914568293ad7f78eb939ab08bee427c774240
+    authority_policy:
+      id: AUTHORITY-DELEGATION-CORE
+      version: 0.2-alpha
+      digest: a2a8a9a5cb01689db23d0dd7958748add339b43726bad38235f003a9c7f67df9
+  payload:
+    change_set_ref:
+      change_set_id: chg:veilfront-xiangqi-siege:M9J6YVK5207WGBJNFKR7398DYX
+      change_set_digest: fdd6fec0a5f4edfc198a5ae787d5d3676806d16e4166debe58270ee64b9449d2
+      base_organization_revision: 1
+      base_snapshot_digest: 27d954c36e2ff8db08bc85cff96876401585390b264ad5d4ca07712bbeb0e2c5
+      decision_basis_digest: 710aae3700484ce14113dd4bef9c0a5cb6f8e3bf830d90579e76ea6d9a15402e
+    approval_ref: approval:veilfront-xiangqi-siege:organization-change-set:fdd6fec0a5f4
+    operations:
+    - operation_id: op-001
+      operation_type: create_department
+      target_id: dept:veilfront-xiangqi-siege:design-experience
+      before: null
+      after:
+        department_id: dept:veilfront-xiangqi-siege:design-experience
+        display_name: 设计与体验部
+        purpose: 维护棋局规则、平衡、信息交互与视觉表达的一致性
+        parent_department_id: null
+        manager_position_id: pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
+        responsibilities:
+        - 可执行规则、状态转换、结算顺序与平衡目标
+        - 主棋盘、小地图、迷雾与行动反馈的无泄露信息体验
+        - 美术方向基线和视觉资产生产规范
+        ownership_refs:
+        - artifact:veilfront-xiangqi-siege:rules-spec@initial
+        - artifact:veilfront-xiangqi-siege:experience-spec@initial
+        - artifact:veilfront-xiangqi-siege:art-baseline@initial
+        authority_binding:
+          id: AUTH-VEILFRONT-SYSTEMS-EXPERIENCE
+          version: 0.1.0
+          digest: 53c54b867f2719ad8f614caf92eb8e476c4bf478b81199ff52f86f9fb569f42c
+        temporary_workforce_policy:
+          allowed: false
+          grant_ceiling_ref: null
+        lifecycle:
+          state: active
+          state_entered_at: '2026-08-15T19:10:51.288827+08:00'
+          transition_ref: evt:QFHA6TR0WEX5FQX5XG7BJPPND3
+        approval_binding:
+          approval_id: approval:veilfront-xiangqi-siege:organization-change-set:fdd6fec0a5f4
+          subject_digest: fdd6fec0a5f4edfc198a5ae787d5d3676806d16e4166debe58270ee64b9449d2
+        audit:
+          created_by_event_id: evt:QFHA6TR0WEX5FQX5XG7BJPPND3
+          last_changed_by_event_id: evt:QFHA6TR0WEX5FQX5XG7BJPPND3
+      reason: 规则、信息体验与视觉表达需要共享玩家体验基线；首版规模不足以为每个职能建立独立部门。
+    - operation_id: op-002
+      operation_type: create_department
+      target_id: dept:veilfront-xiangqi-siege:quality
+      before: null
+      after:
+        department_id: dept:veilfront-xiangqi-siege:quality
+        display_name: 质量与发布部
+        purpose: 独立验证规则、信息边界、AI 公平、性能和目标平台构建
+        parent_department_id: null
+        manager_position_id: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+        responsibilities:
+        - 自动化规则与边界状态验证
+        - 迷雾泄露、随机性和 AI 隐藏信息读取审计
+        - 缺陷回归、里程碑证据与 Steam 桌面构建验证
+        ownership_refs:
+        - artifact:veilfront-xiangqi-siege:test-matrix@initial
+        - artifact:veilfront-xiangqi-siege:defect-registry@initial
+        - artifact:veilfront-xiangqi-siege:gate-evidence@initial
+        authority_binding:
+          id: AUTH-VEILFRONT-QA-RELEASE
+          version: 0.1.0
+          digest: dcdd84e8469f2e349bbe12dc52914dba0f2a9ef04d759335b072ac5def7aeea6
+        temporary_workforce_policy:
+          allowed: false
+          grant_ceiling_ref: null
+        lifecycle:
+          state: active
+          state_entered_at: '2026-08-15T19:10:51.288827+08:00'
+          transition_ref: evt:QFHA6TR0WEX5FQX5XG7BJPPND3
+        approval_binding:
+          approval_id: approval:veilfront-xiangqi-siege:organization-change-set:fdd6fec0a5f4
+          subject_digest: fdd6fec0a5f4edfc198a5ae787d5d3676806d16e4166debe58270ee64b9449d2
+        audit:
+          created_by_event_id: evt:QFHA6TR0WEX5FQX5XG7BJPPND3
+          last_changed_by_event_id: evt:QFHA6TR0WEX5FQX5XG7BJPPND3
+      reason: 高风险规则组合、迷雾与 AI 公平要求生产者之外的独立验收边界。
+    - operation_id: op-003
+      operation_type: create_department
+      target_id: dept:veilfront-xiangqi-siege:technology
+      before: null
+      after:
+        department_id: dept:veilfront-xiangqi-siege:technology
+        display_name: 技术部
+        purpose: 维护 Godot 工程、运行时规则、AI、存档回放、性能和构建
+        parent_department_id: null
+        manager_position_id: pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+        responsibilities:
+        - Godot 4.7.1 工程、预置场景资源和构建
+        - 确定性规则核心假设、随机种子、存档回放与性能验证
+        - 等价可见信息约束下的单机机器人 AI
+        ownership_refs:
+        - artifact:veilfront-xiangqi-siege:technical-design@initial
+        - source:veilfront-xiangqi-siege:godot-project
+        - artifact:veilfront-xiangqi-siege:builds
+        authority_binding:
+          id: AUTH-VEILFRONT-GODOT-TECHNOLOGY
+          version: 0.1.0
+          digest: 4738e0389d391e27eec6d7692059b2b81a61d2ba0061b1fb731048eac8da6285
+        temporary_workforce_policy:
+          allowed: false
+          grant_ceiling_ref: null
+        lifecycle:
+          state: active
+          state_entered_at: '2026-08-15T19:10:51.288827+08:00'
+          transition_ref: evt:QFHA6TR0WEX5FQX5XG7BJPPND3
+        approval_binding:
+          approval_id: approval:veilfront-xiangqi-siege:organization-change-set:fdd6fec0a5f4
+          subject_digest: fdd6fec0a5f4edfc198a5ae787d5d3676806d16e4166debe58270ee64b9449d2
+        audit:
+          created_by_event_id: evt:QFHA6TR0WEX5FQX5XG7BJPPND3
+          last_changed_by_event_id: evt:QFHA6TR0WEX5FQX5XG7BJPPND3
+      reason: 运行时架构、Godot 生产方式与 AI 共享工程接口和性能约束，当前由一个技术部门承接更小且更清晰。
+    - operation_id: op-004
+      operation_type: create_position
+      target_id: pos:veilfront-xiangqi-siege:root:project-manager
+      before: null
+      after:
+        position_id: pos:veilfront-xiangqi-siege:root:project-manager
+        display_name: 项目经理
+        organization_scope: root
+        department_id: null
+        reports_to_position_id: null
+        preset_binding:
+          preset_id: preset:veilfront-xiangqi-siege:project-manager
+          version: 0.1.0
+          digest: 33b13d15eacf94fec9c32f034bb184e9b137315ecdb0caad9ef8fd5dadcff591
+        responsibilities:
+        - 协调跨部门优先级、依赖、循环、交接、风险与人工决策请求
+        - 维护项目状态但不替代领域判断、独立 QA 或人工 Gate
+        ownership_refs:
+        - registry:veilfront-xiangqi-siege:loops
+        - artifact:veilfront-xiangqi-siege:project-status
+        authority_binding:
+          id: AUTH-VEILFRONT-PROJECT-MANAGER
+          version: 0.1.0
+          digest: 713953e9f58fff95b9f7b56e5eb0a856a1538e4c443c9dcb88cbc541ac75e54c
+        concurrency_policy:
+          maximum_active_instances: 1
+        handoff_policy:
+          required_artifacts:
+          - status_summary
+          - dependency_record
+          - decision_requests
+          - validation_evidence
+        independence_policy:
+          must_not_report_to: []
+          must_not_share_instance_with:
+          - pos:veilfront-xiangqi-siege:root:project-agent-architect
+        lifecycle:
+          state: active
+          state_entered_at: '2026-08-15T19:10:51.288827+08:00'
+          transition_ref: evt:QFHA6TR0WEX5FQX5XG7BJPPND3
+        approval_binding:
+          approval_id: approval:veilfront-xiangqi-siege:organization-change-set:fdd6fec0a5f4
+          subject_digest: fdd6fec0a5f4edfc198a5ae787d5d3676806d16e4166debe58270ee64b9449d2
+        audit:
+          created_by_event_id: evt:QFHA6TR0WEX5FQX5XG7BJPPND3
+          last_changed_by_event_id: evt:QFHA6TR0WEX5FQX5XG7BJPPND3
+      reason: 三个部门和多个风险域需要持续的跨部门协调，且该职责不能由任一生产部门单方面拥有。
+    - operation_id: op-005
+      operation_type: create_position
+      target_id: pos:veilfront-xiangqi-siege:root:project-agent-architect
+      before: null
+      after:
+        position_id: pos:veilfront-xiangqi-siege:root:project-agent-architect
+        display_name: 项目编制设计
+        organization_scope: root
+        department_id: null
+        reports_to_position_id: pos:veilfront-xiangqi-siege:root:project-manager
+        preset_binding:
+          preset_id: preset:veilfront-xiangqi-siege:project-agent-architect
+          version: 0.1.0
+          digest: a4b42dbf9be6f84b56d186f652a20b71b01e31af8540a4f1d18bb3b630d8ddfa
+        responsibilities:
+        - 维护职责覆盖、组织变更集、Preset 与 Skill Binding 提案
+        - 生成组织校验和可视化，不批准或应用组织变化
+        ownership_refs:
+        - registry:veilfront-xiangqi-siege:organization
+        - artifact:veilfront-xiangqi-siege:responsibility-coverage
+        authority_binding:
+          id: AUTH-VEILFRONT-ORG-ARCHITECT
+          version: 0.1.0
+          digest: 4d57ca90443a5908322d7b378a67553801826faaaae949cdec07d97f4d8c2379
+        concurrency_policy:
+          maximum_active_instances: 1
+        handoff_policy:
+          required_artifacts:
+          - organization_change_set
+          - coverage_matrix
+          - validation_result
+          - organization_chart
+        independence_policy:
+          must_not_report_to: []
+          must_not_share_instance_with:
+          - pos:veilfront-xiangqi-siege:root:project-manager
+        lifecycle:
+          state: active
+          state_entered_at: '2026-08-15T19:10:51.288827+08:00'
+          transition_ref: evt:QFHA6TR0WEX5FQX5XG7BJPPND3
+        approval_binding:
+          approval_id: approval:veilfront-xiangqi-siege:organization-change-set:fdd6fec0a5f4
+          subject_digest: fdd6fec0a5f4edfc198a5ae787d5d3676806d16e4166debe58270ee64b9449d2
+        audit:
+          created_by_event_id: evt:QFHA6TR0WEX5FQX5XG7BJPPND3
+          last_changed_by_event_id: evt:QFHA6TR0WEX5FQX5XG7BJPPND3
+      reason: 编制需在里程碑变化和长期职责缺口出现时复审，且必须与日常调度和最终批准分离。
+    - operation_id: op-006
+      operation_type: create_position
+      target_id: pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
+      before: null
+      after:
+        position_id: pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
+        display_name: 系统与体验负责人
+        organization_scope: department
+        department_id: dept:veilfront-xiangqi-siege:design-experience
+        reports_to_position_id: pos:veilfront-xiangqi-siege:root:project-manager
+        preset_binding:
+          preset_id: preset:veilfront-xiangqi-siege:systems-experience-lead
+          version: 0.1.0
+          digest: cfd7b2042219dda407a5099e1d0210679506e6d3835d8ccfe93d04864bcbec5a
+        responsibilities:
+        - 规则规格、状态转换、结算顺序、平衡指标和试玩变更
+        - 主棋盘、小地图、迷雾、行动反馈和无泄露交互规格
+        - 管理并整合设计与体验部交付
+        ownership_refs:
+        - artifact:veilfront-xiangqi-siege:rules-spec@initial
+        - artifact:veilfront-xiangqi-siege:experience-spec@initial
+        - artifact:veilfront-xiangqi-siege:balance-log
+        authority_binding:
+          id: AUTH-VEILFRONT-SYSTEMS-EXPERIENCE
+          version: 0.1.0
+          digest: 53c54b867f2719ad8f614caf92eb8e476c4bf478b81199ff52f86f9fb569f42c
+        concurrency_policy:
+          maximum_active_instances: 1
+        handoff_policy:
+          required_artifacts:
+          - rules_spec
+          - state_settlement_order
+          - interaction_spec
+          - balance_evidence
+          - open_questions
+        independence_policy:
+          must_not_report_to: []
+          must_not_share_instance_with:
+          - pos:veilfront-xiangqi-siege:quality:qa-release-lead
+        lifecycle:
+          state: active
+          state_entered_at: '2026-08-15T19:10:51.288827+08:00'
+          transition_ref: evt:QFHA6TR0WEX5FQX5XG7BJPPND3
+        approval_binding:
+          approval_id: approval:veilfront-xiangqi-siege:organization-change-set:fdd6fec0a5f4
+          subject_digest: fdd6fec0a5f4edfc198a5ae787d5d3676806d16e4166debe58270ee64b9449d2
+        audit:
+          created_by_event_id: evt:QFHA6TR0WEX5FQX5XG7BJPPND3
+          last_changed_by_event_id: evt:QFHA6TR0WEX5FQX5XG7BJPPND3
+      reason: 规则与信息 UX 共享同一玩家行为和迷雾语义基线，首版合并可减少交接，同时以独立 QA 防止自证。
+    - operation_id: op-007
+      operation_type: create_position
+      target_id: pos:veilfront-xiangqi-siege:design-experience:visual-production-lead
+      before: null
+      after:
+        position_id: pos:veilfront-xiangqi-siege:design-experience:visual-production-lead
+        display_name: 视觉制作负责人
+        organization_scope: department
+        department_id: dept:veilfront-xiangqi-siege:design-experience
+        reports_to_position_id: pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
+        preset_binding:
+          preset_id: preset:veilfront-xiangqi-siege:visual-production-lead
+          version: 0.1.0
+          digest: 42156e275853b6a73611af1ec436e676c21b99f936130fb951ca75e23787daa5
+        responsibilities:
+        - 美术方向基线、资产清单、制作与许可规范
+        - 棋盘、棋子、城墙、迷雾、旗帜、特效和界面视觉样片
+        ownership_refs:
+        - artifact:veilfront-xiangqi-siege:art-baseline@initial
+        - artifact:veilfront-xiangqi-siege:asset-catalog
+        - source:veilfront-xiangqi-siege:visual-assets
+        authority_binding:
+          id: AUTH-VEILFRONT-VISUAL-PRODUCTION
+          version: 0.1.0
+          digest: 2ab64395ca2a88158298e841a1be9fd75dcf50d200ad16f8483f21481304beb5
+        concurrency_policy:
+          maximum_active_instances: 1
+        handoff_policy:
+          required_artifacts:
+          - art_baseline
+          - asset_catalog
+          - source_and_runtime_assets
+          - license_record
+          - in_game_sample
+        independence_policy:
+          must_not_report_to: []
+          must_not_share_instance_with:
+          - pos:veilfront-xiangqi-siege:quality:qa-release-lead
+        lifecycle:
+          state: active
+          state_entered_at: '2026-08-15T19:10:51.288827+08:00'
+          transition_ref: evt:QFHA6TR0WEX5FQX5XG7BJPPND3
+        approval_binding:
+          approval_id: approval:veilfront-xiangqi-siege:organization-change-set:fdd6fec0a5f4
+          subject_digest: fdd6fec0a5f4edfc198a5ae787d5d3676806d16e4166debe58270ee64b9449d2
+        audit:
+          created_by_event_id: evt:QFHA6TR0WEX5FQX5XG7BJPPND3
+          last_changed_by_event_id: evt:QFHA6TR0WEX5FQX5XG7BJPPND3
+      reason: 视觉资产具有独立工具链、许可和审美验收，不能由系统设计或技术岗位顺带长期拥有。
+    - operation_id: op-008
+      operation_type: create_position
+      target_id: pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+      before: null
+      after:
+        position_id: pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+        display_name: Godot 技术负责人
+        organization_scope: department
+        department_id: dept:veilfront-xiangqi-siege:technology
+        reports_to_position_id: pos:veilfront-xiangqi-siege:root:project-manager
+        preset_binding:
+          preset_id: preset:veilfront-xiangqi-siege:godot-technical-lead
+          version: 0.1.0
+          digest: f7d1108b3c7f3ee9e5c19d6566f0d78025d1945bb364664d77f196104a583a0b
+        responsibilities:
+        - Godot 工程、规则核心、预置场景资源映射、存档回放和构建
+        - 确定性、随机种子、性能和目标平台技术证据
+        - 管理并整合技术部交付
+        ownership_refs:
+        - artifact:veilfront-xiangqi-siege:technical-design@initial
+        - source:veilfront-xiangqi-siege:godot-project
+        - artifact:veilfront-xiangqi-siege:builds
+        authority_binding:
+          id: AUTH-VEILFRONT-GODOT-TECHNOLOGY
+          version: 0.1.0
+          digest: 4738e0389d391e27eec6d7692059b2b81a61d2ba0061b1fb731048eac8da6285
+        concurrency_policy:
+          maximum_active_instances: 1
+        handoff_policy:
+          required_artifacts:
+          - technical_design
+          - scene_resource_map
+          - runnable_build
+          - deterministic_evidence
+          - migration_notes
+        independence_policy:
+          must_not_report_to: []
+          must_not_share_instance_with:
+          - pos:veilfront-xiangqi-siege:quality:qa-release-lead
+        lifecycle:
+          state: active
+          state_entered_at: '2026-08-15T19:10:51.288827+08:00'
+          transition_ref: evt:QFHA6TR0WEX5FQX5XG7BJPPND3
+        approval_binding:
+          approval_id: approval:veilfront-xiangqi-siege:organization-change-set:fdd6fec0a5f4
+          subject_digest: fdd6fec0a5f4edfc198a5ae787d5d3676806d16e4166debe58270ee64b9449d2
+        audit:
+          created_by_event_id: evt:QFHA6TR0WEX5FQX5XG7BJPPND3
+          last_changed_by_event_id: evt:QFHA6TR0WEX5FQX5XG7BJPPND3
+      reason: Godot 架构、预置节点优先约束、规则实现和构建验证是跨里程碑长期工程责任。
+    - operation_id: op-009
+      operation_type: create_position
+      target_id: pos:veilfront-xiangqi-siege:technology:single-player-ai-engineer
+      before: null
+      after:
+        position_id: pos:veilfront-xiangqi-siege:technology:single-player-ai-engineer
+        display_name: 单机 AI 工程师
+        organization_scope: department
+        department_id: dept:veilfront-xiangqi-siege:technology
+        reports_to_position_id: pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+        preset_binding:
+          preset_id: preset:veilfront-xiangqi-siege:single-player-ai-engineer
+          version: 0.1.0
+          digest: 8f20e5bfe60eafb46a684150538a8dae91aadc51ded239a3bd9618ffdbd5da3d
+        responsibilities:
+        - 等价可见信息约束下的规则型或搜索型机器人 AI
+        - 难度、搜索预算、决策随机性、性能和反作弊证据
+        ownership_refs:
+        - artifact:veilfront-xiangqi-siege:ai-spec@initial
+        - source:veilfront-xiangqi-siege:ai-runtime
+        - artifact:veilfront-xiangqi-siege:ai-audit-log
+        authority_binding:
+          id: AUTH-VEILFRONT-SINGLE-PLAYER-AI
+          version: 0.1.0
+          digest: 667737aa3ae56ab617976478be8728c49d0ca65c523ceb8042eaaed5d60102d2
+        concurrency_policy:
+          maximum_active_instances: 1
+        handoff_policy:
+          required_artifacts:
+          - ai_information_contract
+          - difficulty_config
+          - search_budget_evidence
+          - anti_cheat_log
+        independence_policy:
+          must_not_report_to: []
+          must_not_share_instance_with:
+          - pos:veilfront-xiangqi-siege:quality:qa-release-lead
+        lifecycle:
+          state: active
+          state_entered_at: '2026-08-15T19:10:51.288827+08:00'
+          transition_ref: evt:QFHA6TR0WEX5FQX5XG7BJPPND3
+        approval_binding:
+          approval_id: approval:veilfront-xiangqi-siege:organization-change-set:fdd6fec0a5f4
+          subject_digest: fdd6fec0a5f4edfc198a5ae787d5d3676806d16e4166debe58270ee64b9449d2
+        audit:
+          created_by_event_id: evt:QFHA6TR0WEX5FQX5XG7BJPPND3
+          last_changed_by_event_id: evt:QFHA6TR0WEX5FQX5XG7BJPPND3
+      reason: AI 的不完全信息搜索、难度和反作弊证据具有独立判断边界，合并进技术负责人会增加隐藏信息污染和验收冲突。
+    - operation_id: op-010
+      operation_type: create_position
+      target_id: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+      before: null
+      after:
+        position_id: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+        display_name: 质量与发布负责人
+        organization_scope: department
+        department_id: dept:veilfront-xiangqi-siege:quality
+        reports_to_position_id: pos:veilfront-xiangqi-siege:root:project-manager
+        preset_binding:
+          preset_id: preset:veilfront-xiangqi-siege:qa-release-lead
+          version: 0.1.0
+          digest: 118a9144280d31b0d96ee376fda0a86eb1e713971b4cf96836dadf2968c42018
+        responsibilities:
+        - 独立验证规则组合、随机性、迷雾泄露、AI 公平、边界状态和性能
+        - 缺陷回归、里程碑验收证据和 Steam 桌面构建验证
+        ownership_refs:
+        - artifact:veilfront-xiangqi-siege:test-matrix@initial
+        - artifact:veilfront-xiangqi-siege:defect-registry@initial
+        - artifact:veilfront-xiangqi-siege:gate-evidence@initial
+        authority_binding:
+          id: AUTH-VEILFRONT-QA-RELEASE
+          version: 0.1.0
+          digest: dcdd84e8469f2e349bbe12dc52914dba0f2a9ef04d759335b072ac5def7aeea6
+        concurrency_policy:
+          maximum_active_instances: 1
+        handoff_policy:
+          required_artifacts:
+          - test_matrix
+          - reproducible_defect
+          - regression_result
+          - information_leak_audit
+          - gate_evidence
+        independence_policy:
+          must_not_report_to:
+          - pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
+          - pos:veilfront-xiangqi-siege:design-experience:visual-production-lead
+          - pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+          - pos:veilfront-xiangqi-siege:technology:single-player-ai-engineer
+          must_not_share_instance_with:
+          - pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
+          - pos:veilfront-xiangqi-siege:design-experience:visual-production-lead
+          - pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+          - pos:veilfront-xiangqi-siege:technology:single-player-ai-engineer
+        lifecycle:
+          state: active
+          state_entered_at: '2026-08-15T19:10:51.288827+08:00'
+          transition_ref: evt:QFHA6TR0WEX5FQX5XG7BJPPND3
+        approval_binding:
+          approval_id: approval:veilfront-xiangqi-siege:organization-change-set:fdd6fec0a5f4
+          subject_digest: fdd6fec0a5f4edfc198a5ae787d5d3676806d16e4166debe58270ee64b9449d2
+        audit:
+          created_by_event_id: evt:QFHA6TR0WEX5FQX5XG7BJPPND3
+          last_changed_by_event_id: evt:QFHA6TR0WEX5FQX5XG7BJPPND3
+      reason: QA 必须能独立拒收规则、代码、视觉和 AI 交付，并向项目经理提供不被生产岗位覆盖的 Gate 证据。
+  evidence_refs:
+  - game-pipeline/approvals/organization-change-set-fdd6fec0a5f4.yaml
+  - codex-thread://01a00501-2f51-7652-8d3f-cea912a96222#organization-approval-fdd6fec0a5f4
+  - game-pipeline/organization/validations/initial-organization.validation.yaml
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: cd15e2161b655810c4cc0c6d22fd4f198532a4aa63f037e7c3823cca34e89550
+    event_digest: c6a3fc3223dc800d772f6173e89a97802e6da4b85a594ea4c6dd14118cd6cb96

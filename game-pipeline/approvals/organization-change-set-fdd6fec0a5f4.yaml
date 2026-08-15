@@ -1,0 +1,15 @@
+approval:
+  schema_version: game-production-approval/v1
+  approval_id: approval:veilfront-xiangqi-siege:organization-change-set:fdd6fec0a5f4
+  subject_kind: organization-change-set
+  subject_id: chg:veilfront-xiangqi-siege:M9J6YVK5207WGBJNFKR7398DYX
+  subject_digest: fdd6fec0a5f4edfc198a5ae787d5d3676806d16e4166debe58270ee64b9449d2
+  decision: approved
+  decided_by: project-owner
+  decided_at: '2026-08-15T19:10:51.288827+08:00'
+  evidence:
+    source_refs:
+    - codex-thread://01a00501-2f51-7652-8d3f-cea912a96222#organization-approval-fdd6fec0a5f4
+    - game-pipeline/organization/proposals/initial-organization-plan.md
+    - game-pipeline/organization/proposals/initial-authority-policies.pending.yaml#c68e669295befba6b5346aba637fb2ef710ae63c2c6d703418912593818a7f9c
+    - game-pipeline/organization/proposals/initial-skill-bindings.pending.yaml#2b0a1b2f37b8a66a91da6ce75ec4907c6e22bd14918222e23d529d4e7d317b24

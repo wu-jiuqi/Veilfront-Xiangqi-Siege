@@ -1,0 +1,13 @@
+approval:
+  schema_version: game-production-approval/v1
+  approval_id: approval:veilfront-xiangqi-siege:authority-policy:initial:c68e669295be
+  subject_kind: authority-policy
+  subject_id: authority-policies:veilfront-xiangqi-siege:initial
+  subject_digest: c68e669295befba6b5346aba637fb2ef710ae63c2c6d703418912593818a7f9c
+  decision: approved
+  decided_by: project-owner
+  decided_at: '2026-08-15T19:10:51.288827+08:00'
+  evidence:
+    source_refs:
+    - codex-thread://01a00501-2f51-7652-8d3f-cea912a96222#organization-approval-fdd6fec0a5f4
+    - chg:veilfront-xiangqi-siege:M9J6YVK5207WGBJNFKR7398DYX#fdd6fec0a5f4edfc198a5ae787d5d3676806d16e4166debe58270ee64b9449d2

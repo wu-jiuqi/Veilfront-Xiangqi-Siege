@@ -1,4 +1,92 @@
 skill_bindings:
   schema_version: game-production-skill-bindings/v1
   project_id: veilfront-xiangqi-siege
-  bindings: []
+  bindings:
+  - preset_id: preset:veilfront-xiangqi-siege:project-manager
+    preset_digest: 33b13d15eacf94fec9c32f034bb184e9b137315ecdb0caad9ef8fd5dadcff591
+    skills:
+    - skill_id: game-production-pipeline:operate-game-production-loop
+      source: plugin
+      path: skills/operate-game-production-loop/SKILL.md
+      digest: fd7960071c03b60a0984a640dc89a8e2bfdbb7a9311b45c1e857abd885b4ae00
+    - skill_id: game-production-pipeline:review-game-gates
+      source: plugin
+      path: skills/review-game-gates/SKILL.md
+      digest: 917768bbb18a904fa444ca4881ba2e343d3c1a3db4d37754bd7a7a9c20bbb769
+    approval_id: approval:veilfront-xiangqi-siege:agent-preset:project-manager:33b13d15eacf
+  - preset_id: preset:veilfront-xiangqi-siege:project-agent-architect
+    preset_digest: a4b42dbf9be6f84b56d186f652a20b71b01e31af8540a4f1d18bb3b630d8ddfa
+    skills:
+    - skill_id: game-production-pipeline:design-game-organization
+      source: plugin
+      path: skills/design-game-organization/SKILL.md
+      digest: 9386e9c813f0935cd2936b92c9eceb666d3e7eeb2fa52beda6cff54434992979
+    approval_id: approval:veilfront-xiangqi-siege:agent-preset:project-agent-architect:a4b42dbf9be6
+  - preset_id: preset:veilfront-xiangqi-siege:systems-experience-lead
+    preset_digest: cfd7b2042219dda407a5099e1d0210679506e6d3835d8ccfe93d04864bcbec5a
+    skills:
+    - skill_id: game-production-pipeline:operate-game-production-loop
+      source: plugin
+      path: skills/operate-game-production-loop/SKILL.md
+      digest: fd7960071c03b60a0984a640dc89a8e2bfdbb7a9311b45c1e857abd885b4ae00
+    - skill_id: game-production-pipeline:review-game-gates
+      source: plugin
+      path: skills/review-game-gates/SKILL.md
+      digest: 917768bbb18a904fa444ca4881ba2e343d3c1a3db4d37754bd7a7a9c20bbb769
+    approval_id: approval:veilfront-xiangqi-siege:agent-preset:systems-experience-lead:cfd7b2042219
+  - preset_id: preset:veilfront-xiangqi-siege:visual-production-lead
+    preset_digest: 42156e275853b6a73611af1ec436e676c21b99f936130fb951ca75e23787daa5
+    skills:
+    - skill_id: game-production-pipeline:operate-game-production-loop
+      source: plugin
+      path: skills/operate-game-production-loop/SKILL.md
+      digest: fd7960071c03b60a0984a640dc89a8e2bfdbb7a9311b45c1e857abd885b4ae00
+    - skill_id: game-production-pipeline:review-game-gates
+      source: plugin
+      path: skills/review-game-gates/SKILL.md
+      digest: 917768bbb18a904fa444ca4881ba2e343d3c1a3db4d37754bd7a7a9c20bbb769
+    approval_id: approval:veilfront-xiangqi-siege:agent-preset:visual-production-lead:42156e275853
+  - preset_id: preset:veilfront-xiangqi-siege:godot-technical-lead
+    preset_digest: f7d1108b3c7f3ee9e5c19d6566f0d78025d1945bb364664d77f196104a583a0b
+    skills:
+    - skill_id: game-production-pipeline:adapt-godot-production
+      source: plugin
+      path: skills/adapt-godot-production/SKILL.md
+      digest: 2b3a44788a3fc126048bd8ac9ee18e4b2dbc11dd09e419fdecb7737d00870d8b
+    - skill_id: game-production-pipeline:operate-game-production-loop
+      source: plugin
+      path: skills/operate-game-production-loop/SKILL.md
+      digest: fd7960071c03b60a0984a640dc89a8e2bfdbb7a9311b45c1e857abd885b4ae00
+    approval_id: approval:veilfront-xiangqi-siege:agent-preset:godot-technical-lead:f7d1108b3c7f
+  - preset_id: preset:veilfront-xiangqi-siege:single-player-ai-engineer
+    preset_digest: 8f20e5bfe60eafb46a684150538a8dae91aadc51ded239a3bd9618ffdbd5da3d
+    skills:
+    - skill_id: game-production-pipeline:adapt-godot-production
+      source: plugin
+      path: skills/adapt-godot-production/SKILL.md
+      digest: 2b3a44788a3fc126048bd8ac9ee18e4b2dbc11dd09e419fdecb7737d00870d8b
+    - skill_id: game-production-pipeline:operate-game-production-loop
+      source: plugin
+      path: skills/operate-game-production-loop/SKILL.md
+      digest: fd7960071c03b60a0984a640dc89a8e2bfdbb7a9311b45c1e857abd885b4ae00
+    - skill_id: game-production-pipeline:review-game-gates
+      source: plugin
+      path: skills/review-game-gates/SKILL.md
+      digest: 917768bbb18a904fa444ca4881ba2e343d3c1a3db4d37754bd7a7a9c20bbb769
+    approval_id: approval:veilfront-xiangqi-siege:agent-preset:single-player-ai-engineer:8f20e5bfe60e
+  - preset_id: preset:veilfront-xiangqi-siege:qa-release-lead
+    preset_digest: 118a9144280d31b0d96ee376fda0a86eb1e713971b4cf96836dadf2968c42018
+    skills:
+    - skill_id: game-production-pipeline:review-game-gates
+      source: plugin
+      path: skills/review-game-gates/SKILL.md
+      digest: 917768bbb18a904fa444ca4881ba2e343d3c1a3db4d37754bd7a7a9c20bbb769
+    - skill_id: game-production-pipeline:adapt-godot-production
+      source: plugin
+      path: skills/adapt-godot-production/SKILL.md
+      digest: 2b3a44788a3fc126048bd8ac9ee18e4b2dbc11dd09e419fdecb7737d00870d8b
+    - skill_id: game-production-pipeline:operate-game-production-loop
+      source: plugin
+      path: skills/operate-game-production-loop/SKILL.md
+      digest: fd7960071c03b60a0984a640dc89a8e2bfdbb7a9311b45c1e857abd885b4ae00
+    approval_id: approval:veilfront-xiangqi-siege:agent-preset:qa-release-lead:118a9144280d
