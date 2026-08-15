@@ -1,0 +1,55 @@
+[gd_scene format=3]
+
+[node name="StatusShell" type="PanelContainer"]
+custom_minimum_size = Vector2(340, 500)
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
+
+[node name="StatusMargin" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 18
+
+[node name="StatusColumn" type="VBoxContainer" parent="StatusMargin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="StatusTitle" type="Label" parent="StatusMargin/StatusColumn"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "原型状态"
+
+[node name="PhaseValue" type="Label" parent="StatusMargin/StatusColumn"]
+layout_mode = 2
+text = "阶段：Phase 1 / 壳层"
+
+[node name="BoardStateValue" type="Label" parent="StatusMargin/StatusColumn"]
+layout_mode = 2
+text = "棋盘状态：等待运行时初始化"
+
+[node name="FlagValue" type="Label" parent="StatusMargin/StatusColumn"]
+layout_mode = 2
+text = "三旗：未实现"
+
+[node name="WallValue" type="Label" parent="StatusMargin/StatusColumn"]
+layout_mode = 2
+text = "城墙：未实现"
+
+[node name="Separator" type="HSeparator" parent="StatusMargin/StatusColumn"]
+layout_mode = 2
+
+[node name="EventTitle" type="Label" parent="StatusMargin/StatusColumn"]
+layout_mode = 2
+text = "事件日志占位"
+
+[node name="EventLog" type="RichTextLabel" parent="StatusMargin/StatusColumn"]
+custom_minimum_size = Vector2(0, 250)
+layout_mode = 2
+size_flags_vertical = 3
+bbcode_enabled = true
+text = "[color=#8fa4b8]等待 STEP-004 的版本化行动事件、玩家视角事件、状态摘要与随机抽样记录接口。[/color]"
+fit_content = true
+scroll_active = false

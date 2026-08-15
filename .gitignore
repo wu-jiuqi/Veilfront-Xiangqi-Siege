@@ -5,3 +5,17 @@ game-pipeline/tmp/
 game-pipeline/evidence/raw-temp/
 game-pipeline/organization/views/*.svg
 # game-production-pipeline:end
+
+# Godot editor/import cache
+.godot/
+
+# Local and exported build artifacts
+.mono/
+.import/
+bin/
+obj/
+export/
+*.pck
+*.exe
+*.x86_64
+*.x86_32

@@ -1,0 +1,25 @@
+; Engine configuration file.
+; Edit with Godot 4.7.1 when possible; manual changes are kept minimal for GATE-1.
+
+config_version=5
+
+[application]
+
+config/name="Veilfront: Xiangqi Siege - GATE-1 Logic Lab"
+run/main_scene="res://scenes/prototype/gate1_logic_lab.tscn"
+config/features=PackedStringArray("4.7", "GL Compatibility")
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/size/window_width_override=1280
+window/size/window_height_override=720
+window/stretch/mode="canvas_items"
+window/stretch/aspect="keep"
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+environment/defaults/default_clear_color=Color(0.025, 0.031, 0.04, 1)

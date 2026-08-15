@@ -1,0 +1,89 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/prototype/gate1_logic_lab.gd" id="1_script"]
+[ext_resource type="Theme" path="res://resources/prototype/gate1_logic_lab_theme.tres" id="2_theme"]
+[ext_resource type="PackedScene" path="res://scenes/prototype/board_shell.tscn" id="3_board"]
+[ext_resource type="PackedScene" path="res://scenes/prototype/status_shell.tscn" id="4_status"]
+
+[node name="Gate1LogicLab" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+script = ExtResource("1_script")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.025, 0.031, 0.04, 1)
+
+[node name="SafeMargin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="Page" type="VBoxContainer" parent="SafeMargin"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="HeaderPanel" type="PanelContainer" parent="SafeMargin/Page"]
+layout_mode = 2
+
+[node name="HeaderMargin" type="MarginContainer" parent="SafeMargin/Page/HeaderPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 12
+
+[node name="HeaderRow" type="HBoxContainer" parent="SafeMargin/Page/HeaderPanel/HeaderMargin"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Title" type="Label" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 25
+text = "《雾疆：九路烽棋》GATE-1 逻辑实验室"
+
+[node name="SeedGroup" type="HBoxContainer" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow"]
+layout_mode = 2
+
+[node name="SeedCaption" type="Label" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/SeedGroup"]
+layout_mode = 2
+text = "原型种子："
+
+[node name="SeedValue" type="Label" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/SeedGroup"]
+layout_mode = 2
+text = "等待初始化"
+
+[node name="Workspace" type="HBoxContainer" parent="SafeMargin/Page"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="BoardShell" parent="SafeMargin/Page/Workspace" instance=ExtResource("3_board")]
+layout_mode = 2
+
+[node name="StatusShell" parent="SafeMargin/Page/Workspace" instance=ExtResource("4_status")]
+layout_mode = 2
+
+[node name="Footer" type="Label" parent="SafeMargin/Page"]
+layout_mode = 2
+text = "可丢弃逻辑原型 · 无正式美术 / 无在线能力 / 无第三方 addon / 规则核心尚未实现"
+horizontal_alignment = 1

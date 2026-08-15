@@ -1,0 +1,42 @@
+[gd_scene format=3]
+
+[node name="BoardShell" type="PanelContainer"]
+custom_minimum_size = Vector2(720, 500)
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
+
+[node name="BoardMargin" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 18
+
+[node name="BoardColumn" type="VBoxContainer" parent="BoardMargin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="BoardTitle" type="Label" parent="BoardMargin/BoardColumn"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "24 × 9 逻辑棋盘"
+
+[node name="BoardViewportPlaceholder" type="PanelContainer" parent="BoardMargin/BoardColumn"]
+custom_minimum_size = Vector2(0, 390)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 1
+
+[node name="PlaceholderCenter" type="CenterContainer" parent="BoardMargin/BoardColumn/BoardViewportPlaceholder"]
+layout_mode = 2
+
+[node name="PlaceholderText" type="Label" parent="BoardMargin/BoardColumn/BoardViewportPlaceholder/PlaceholderCenter"]
+layout_mode = 2
+text = "Phase 1：216 格仅作为运行时状态数据承载\n固定棋盘显示节点将在交互规格确认后预置"
+horizontal_alignment = 1
+
+[node name="BoardBoundaryNote" type="Label" parent="BoardMargin/BoardColumn"]
+layout_mode = 2
+text = "当前仅验证工程、场景和数据接缝；尚无合法行动、迷雾或结算。"
+autowrap_mode = 2
