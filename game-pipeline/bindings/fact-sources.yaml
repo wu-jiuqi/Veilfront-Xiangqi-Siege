@@ -9,5 +9,5 @@ fact_sources:
   - fact_id: fact:veilfront-xiangqi-siege:project-brief
     path: game-pipeline/project-definition/project-brief.yaml
     owner: project-owner
-    authority: project.definition.revise
+    authority: project.definition.confirmed
     subject_digest: 3cb9affedc6173dbe58ad9c630e0261c99eba706815f8d8fa9870f506b2f2599

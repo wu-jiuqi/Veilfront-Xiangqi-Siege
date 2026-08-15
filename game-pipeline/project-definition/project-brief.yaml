@@ -306,10 +306,10 @@ project_brief:
     readiness: ready
     blocker_refs: []
   review:
-    status: revise
-    approval_id: null
-    confirmed_by: null
-    confirmed_at: null
+    status: confirmed
+    approval_id: approval:veilfront-xiangqi-siege:project-brief:3cb9affedc61
+    confirmed_by: project-owner
+    confirmed_at: '2026-08-15T18:37:19.7719396+08:00'
   integrity:
     canonicalization: project-brief-subject-canonical-json-v1
     digest_algorithm: sha256
