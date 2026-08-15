@@ -1,0 +1,12 @@
+approval:
+  schema_version: game-production-approval/v1
+  approval_id: approval:veilfront-xiangqi-siege:bootstrap:0713f7b5e5a8
+  subject_kind: bootstrap-plan
+  subject_id: veilfront-xiangqi-siege
+  subject_digest: 0713f7b5e5a8096f22932be4d4ffd42b600218e76dad4c263deedf3a38db265f
+  decision: approved
+  decided_by: project-owner
+  decided_at: '2026-08-15T00:00:00+08:00'
+  evidence:
+    plugin_version: 0.4.0-alpha.2
+    framework_digest: 3589bce5cf4388f91a08f12acb5d90679256191d5085e65687d06a635bbdcd32

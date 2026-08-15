@@ -1,0 +1,4 @@
+skill_bindings:
+  schema_version: game-production-skill-bindings/v1
+  project_id: veilfront-xiangqi-siege
+  bindings: []

@@ -1,0 +1,43 @@
+organization_snapshot:
+  schema_version: 0.2-alpha
+  identity:
+    project_id: veilfront-xiangqi-siege
+    organization_revision: 1
+    created_at: '2026-08-15T00:00:00+08:00'
+    updated_at: '2026-08-15T00:00:00+08:00'
+  governance_bindings:
+    organization_contract:
+      id: ORG-CONTRACT-CORE
+      version: 0.2-alpha
+      digest: a7f9a73911a8cb4ba71f1c35d382d7f2207e8ba1c0c3acf6e64a6f0ffbe5c065
+    lifecycle_contract:
+      id: ORG-LIFECYCLE-CORE
+      version: 0.2-alpha
+      digest: 99f59cae7eaa4e12cfbf5f22dde914568293ad7f78eb939ab08bee427c774240
+    authority_policy:
+      id: AUTHORITY-DELEGATION-CORE
+      version: 0.2-alpha
+      digest: a2a8a9a5cb01689db23d0dd7958748add339b43726bad38235f003a9c7f67df9
+  formal_structure:
+    departments: []
+    positions: []
+  runtime:
+    instances: []
+    temporary_grants: []
+  governance:
+    used_identity_index:
+      department_ids: []
+      position_ids: []
+      instance_ids: []
+      temporary_grant_ids: []
+    tombstones: []
+    pending_change_set_refs: []
+    latest_applied_change_set: null
+  event_watermark:
+    last_event_id: evt:JXN8Q6CATBKQAXZGM6Q9197VMH
+    last_event_sequence: 1
+    last_event_digest: cd15e2161b655810c4cc0c6d22fd4f198532a4aa63f037e7c3823cca34e89550
+  snapshot_integrity:
+    canonicalization: organization-snapshot-canonical-json-v1
+    digest_algorithm: sha256
+    snapshot_digest: 27d954c36e2ff8db08bc85cff96876401585390b264ad5d4ca07712bbeb0e2c5

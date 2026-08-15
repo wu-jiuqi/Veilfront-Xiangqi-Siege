@@ -1,0 +1,7 @@
+# game-production-pipeline:start schema=v1 digest=cfe15a6178094846c1a5427f3f8d295a73165507b8539e3b0351c624cf120ce8
+game-pipeline/.runtime/
+game-pipeline/.cache/
+game-pipeline/tmp/
+game-pipeline/evidence/raw-temp/
+game-pipeline/organization/views/*.svg
+# game-production-pipeline:end

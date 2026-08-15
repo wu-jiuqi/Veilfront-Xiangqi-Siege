@@ -1,0 +1,68 @@
+organization_event_history:
+- schema_version: 0.2-alpha
+  event_id: evt:JXN8Q6CATBKQAXZGM6Q9197VMH
+  mutation_id: mut:QJV33EPKG2NAMVC6ND7TTCRAYQ
+  project_id: veilfront-xiangqi-siege
+  sequence: 1
+  event_type: core.organization_initialized
+  occurred_at: '2026-08-15T00:00:00+08:00'
+  recorded_at: '2026-08-15T00:00:00+08:00'
+  actor:
+    actor_kind: human
+    actor_id: project-owner
+    acting_position_id: null
+    role: project-owner
+  authorization:
+    authority_ref: &id001
+      id: AUTHORITY-DELEGATION-CORE
+      version: 0.2-alpha
+      digest: a2a8a9a5cb01689db23d0dd7958748add339b43726bad38235f003a9c7f67df9
+    approval_refs: []
+    change_set_ref: null
+  causality:
+    correlation_id: bootstrap:veilfront-xiangqi-siege:JXN8Q6CATBKQ
+    causation_event_id: null
+    request_id: null
+  concurrency:
+    expected_organization_revision: 0
+    expected_snapshot_digest: null
+    resulting_organization_revision: 1
+  binding_snapshot: &id002
+    organization_contract:
+      id: ORG-CONTRACT-CORE
+      version: 0.2-alpha
+      digest: a7f9a73911a8cb4ba71f1c35d382d7f2207e8ba1c0c3acf6e64a6f0ffbe5c065
+    lifecycle_contract:
+      id: ORG-LIFECYCLE-CORE
+      version: 0.2-alpha
+      digest: 99f59cae7eaa4e12cfbf5f22dde914568293ad7f78eb939ab08bee427c774240
+    authority_policy: *id001
+  payload:
+    initial_organization:
+      identity:
+        project_id: veilfront-xiangqi-siege
+        organization_revision: 1
+        created_at: '2026-08-15T00:00:00+08:00'
+        updated_at: '2026-08-15T00:00:00+08:00'
+      governance_bindings: *id002
+      formal_structure:
+        departments: []
+        positions: []
+      runtime:
+        instances: []
+        temporary_grants: []
+      governance:
+        used_identity_index:
+          department_ids: []
+          position_ids: []
+          instance_ids: []
+          temporary_grant_ids: []
+        tombstones: []
+        pending_change_set_refs: []
+        latest_applied_change_set: null
+  evidence_refs: []
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: null
+    event_digest: cd15e2161b655810c4cc0c6d22fd4f198532a4aa63f037e7c3823cca34e89550

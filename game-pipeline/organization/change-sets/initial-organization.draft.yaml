@@ -1,0 +1,47 @@
+organization_change_set:
+  schema_version: 0.2-alpha
+  identity:
+    change_set_id: chg:veilfront-xiangqi-siege:M9J6YVK5207WGBJNFKR7398DYX
+    project_id: veilfront-xiangqi-siege
+    title: 建立项目初始多 Agent 编制
+    created_at: '2026-08-15T00:00:00+08:00'
+    created_by:
+      actor_kind: human
+      actor_id: project-owner
+      acting_position_id: null
+  base:
+    organization_revision: 1
+    snapshot_digest: 27d954c36e2ff8db08bc85cff96876401585390b264ad5d4ca07712bbeb0e2c5
+    decision_basis_digest: 710aae3700484ce14113dd4bef9c0a5cb6f8e3bf830d90579e76ea6d9a15402e
+  proposal:
+    rationale: 待项目需求分析后补充长期部门、岗位、Agent Preset 与授权边界；当前草案不创建任何 Agent。
+    operations: []
+  impact:
+    affected_department_ids: []
+    affected_position_ids: []
+    affected_grant_ids: []
+    responsibility_coverage:
+    - 项目管理
+    - 项目编制设计
+    - 后续部门责任分析
+    risk_level: low
+    reversibility: reversible
+    migration_refs: []
+  verification:
+    preconditions:
+    - 项目文档基线已由项目所有者确认
+    - 职责覆盖与授权边界已明确
+    automated_checks:
+    - Organization Change Set 校验通过
+    - 组织图可确定性渲染
+    reviewer_notes:
+    - 这是未提交的初始草案；补全 operations 后才可进入人工审批。
+  approval_requirement:
+    human_approval_required: true
+    required_approver_role: project-owner
+    required_authority_scope: organization.change.apply
+    decision_deadline: null
+  integrity:
+    canonicalization: organization-change-set-canonical-json-v1
+    digest_algorithm: sha256
+    change_set_digest: c671f863d6cac027c26e5e29c89eee5af12bec6ac8cb3fabc4d61004a9f071ca

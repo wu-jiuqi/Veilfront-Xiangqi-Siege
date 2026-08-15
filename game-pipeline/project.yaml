@@ -1,0 +1,7 @@
+game_pipeline_project:
+  schema_version: game-production-project/v1
+  project_id: veilfront-xiangqi-siege
+  display_name: '雾疆：九路烽棋 / Veilfront: Xiangqi Siege'
+  engine: Godot 4.7.1
+  created_at: '2026-08-15T00:00:00+08:00'
+  plugin_id: game-production-pipeline

@@ -1,0 +1,12 @@
+fact_sources:
+  schema_version: game-production-fact-sources/v1
+  project_id: veilfront-xiangqi-siege
+  sources:
+  - fact_id: fact:veilfront-xiangqi-siege:project-identity
+    path: game-pipeline/project.yaml
+    owner: project-owner
+    authority: project.identity
+  - fact_id: fact:veilfront-xiangqi-siege:project-brief
+    path: game-pipeline/project-definition/project-brief.yaml
+    owner: project-owner
+    authority: project.definition.draft
