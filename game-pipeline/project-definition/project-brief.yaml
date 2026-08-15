@@ -20,6 +20,11 @@ project_brief:
     version_or_digest: thread-updated-at:1786782653.366029
     supplied_by: project-owner
     authority: project.direction.input
+  - source_id: source:veilfront-xiangqi-siege:owner-scope-clarification
+    uri: codex-thread://01a0048b-e4d5-7611-8edc-1e4719666a13
+    version_or_digest: owner-clarification:2026-08-15:world-art-platform-scope
+    supplied_by: project-owner
+    authority: project.direction.input
   statements:
   - statement_id: stmt:veilfront-xiangqi-siege:project-goal
     domain: project-goal
@@ -94,10 +99,11 @@ project_brief:
     - source:veilfront-xiangqi-siege:owner-planning-conversation
   - statement_id: stmt:veilfront-xiangqi-siege:visual-direction
     domain: art-direction
-    text: 具体世界观、时代、视觉风格、棋子表现形式、色彩语言、动画与音频方向尚未由项目所有者确认。
-    status: unknown
+    text: 世界观确认为中国古代架空背景，同时存在朝代体系与修仙体系；游戏采用90°垂直俯视的top-down视角。2D或3D表现、写实程度、色彩语言、角色比例、动画与音频方向留待后续美术基线细化。
+    status: confirmed
     decision_owner: project-owner
-    source_refs: []
+    source_refs:
+    - source:veilfront-xiangqi-siege:owner-scope-clarification
   - statement_id: stmt:veilfront-xiangqi-siege:implementation
     domain: implementation
     text: 建议采用与显示层解耦的确定性规则核心、可复现随机种子、按玩家视角过滤的迷雾快照与可回放行动日志；若包含在线对战，则由权威服务器持有完整棋盘状态。该实现方向属于待技术原型验证的假设，并非已冻结架构。
@@ -105,6 +111,13 @@ project_brief:
     decision_owner: project-owner
     source_refs:
     - source:veilfront-xiangqi-siege:owner-planning-conversation
+  - statement_id: stmt:veilfront-xiangqi-siege:single-player-ai
+    domain: implementation
+    text: 首个版本只实现单机玩法，机器人对手采用人工设计和编写的规则型或搜索型AI，不使用机器学习，也不需要在线服务、排位或专用服务器。
+    status: confirmed
+    decision_owner: project-owner
+    source_refs:
+    - source:veilfront-xiangqi-siege:owner-scope-clarification
   - statement_id: stmt:veilfront-xiangqi-siege:godot-authoring
     domain: implementation
     text: Godot实现优先使用编辑器预置场景、节点和资源，只有运行时数据或生成方案明显更安全简单时才动态创建节点；当前仓库仅完成生产管线初始化，尚未创建project.godot或游戏资产。
@@ -114,48 +127,58 @@ project_brief:
     - source:veilfront-xiangqi-siege:project-identity
   - statement_id: stmt:veilfront-xiangqi-siege:platform-engine
     domain: platform-engine
-    text: 游戏引擎确认为Godot 4.7.1；首发平台、输入设备、是否包含单机模式、在线PvP、排位与专用服务器尚未确认。
+    text: 游戏引擎确认为Godot 4.7.1，首发平台为Steam，首个版本以桌面端单机对战为范围；具体支持的操作系统与输入设备组合留待技术基线细化。
     status: confirmed
     decision_owner: project-owner
     source_refs:
     - source:veilfront-xiangqi-siege:project-identity
     - source:veilfront-xiangqi-siege:owner-planning-conversation
+    - source:veilfront-xiangqi-siege:owner-scope-clarification
   - statement_id: stmt:veilfront-xiangqi-siege:scope-constraints
     domain: scope-constraints
-    text: 预算、团队规模、目标发布日期、原型周期、首发内容量、商业模式、联网服务范围与本地化范围尚未由项目所有者确认。
-    status: unknown
+    text: 首个版本边界确认为单机版，不包含在线联机、排位和专用服务器；当前规划阶段不设置团队规模、预算或周期约束。该表述不代表资源无限，任何实际里程碑承诺仍需在进入生产规划时单独确认。
+    status: confirmed
     decision_owner: project-owner
-    source_refs: []
+    source_refs:
+    - source:veilfront-xiangqi-siege:owner-scope-clarification
   open_questions:
-  - question_id: question:veilfront-xiangqi-siege:visual-direction
-    question: 请确认世界观与美术方向，包括古战场、东方奇幻或其他风格，以及棋子采用传统棋子、角色单位或混合表现。
+  - question_id: question:veilfront-xiangqi-siege:traditional-board-rules
+    question: 请冻结24×9棋盘上的九宫、河界与前进方向定义，并明确城墙倒塌后兵卒过河、相象不过河、将帅照面、飞将、将军和应将如何处理。
     decision_owner: project-owner
-    blocks_staffing: true
-  - question_id: question:veilfront-xiangqi-siege:platform-and-modes
-    question: 请确认首发平台与核心模式：是否以PC为首发平台，以及首个可交付版本需要本地对战、单机AI、在线PvP、排位或专用服务器中的哪些能力。
+    blocks_staffing: false
+  - question_id: question:veilfront-xiangqi-siege:hidden-command
+    question: 请冻结棋子路径或目标格存在隐藏单位时的指令结算与反馈，确保玩家不能通过合法落点提示、报错差异、镜头或音效扫描迷雾。
     decision_owner: project-owner
-    blocks_staffing: true
-  - question_id: question:veilfront-xiangqi-siege:scope
-    question: 请确认可用于首个可玩版本的团队规模、预算或资源上限、期望完成时间，以及首个版本必须包含的内容边界。
+    blocks_staffing: false
+  - question_id: question:veilfront-xiangqi-siege:wall-timing
+    question: 请用明确行动序列冻结城墙倒塌、修复中、恢复、强制撤回、迷雾恢复和战前能力重新启用的判定时点，并规定撤回时己方大本营空格不足的处理。
     decision_owner: project-owner
-    blocks_staffing: true
-  - question_id: question:veilfront-xiangqi-siege:session-rules
-    question: 请确认单局时长或回合上限、旗帜占领中断规则、隐藏阻挡下的非法指令反馈，以及将军、应将、将帅照面和飞将规则是否取消。
+    blocks_staffing: false
+  - question_id: question:veilfront-xiangqi-siege:flag-and-victory
+    question: 请确认单局计时或回合上限、占旗三回合的精确定义、占领中断与争夺规则、旗点随机生成约束，以及同一结算窗口触发斩将、三旗和时间结束时的优先级。
     decision_owner: project-owner
     blocks_staffing: false
   - question_id: question:veilfront-xiangqi-siege:piece-edge-cases
-    question: 请确认士替死的完整边界规则，以及炮击弹药、冷却、友军伤害、随机落点边界和马隐身反制是否采用规划对话中的建议方案。
+    question: 请确认兵卒长距离移动能否穿子和吃子、马隐身反制、相象与车的特殊视野范围、士替死边界，以及炮击弹药、冷却、友军伤害和边界落点规则。
+    decision_owner: project-owner
+    blocks_staffing: false
+  - question_id: question:veilfront-xiangqi-siege:ai-information
+    question: 请规定机器人AI只能读取与玩家同等的可见状态，并确定AI搜索预算、随机性、难度档位与不得作弊的验收方式。
+    decision_owner: project-owner
+    blocks_staffing: false
+  - question_id: question:veilfront-xiangqi-siege:visual-production
+    question: 请在美术制作开始前确认2D或3D技术路线、棋子采用传统棋子或角色单位、修仙体系的视觉强度，以及目标画面规格。
     decision_owner: project-owner
     blocks_staffing: false
   open_questions_note: 非阻断玩法问题可在编制获批后由相应责任范围形成规则规格，但在进入实现前必须冻结。
   risks:
   - risk_id: risk:veilfront-xiangqi-siege:scope-uncertainty
-    description: 平台、模式、预算、周期与首发范围未知，当前无法判断联网、AI、美术、内容与发布职责的真实规模。
+    description: 首版单机范围已经确定，但团队、预算与周期暂不设约束，当前不能形成有日期和资源承诺的生产预测。
     evidence_refs:
     - stmt:veilfront-xiangqi-siege:platform-engine
     - stmt:veilfront-xiangqi-siege:scope-constraints
-    impact: high
-    staffing_implication: 在核心模式和资源边界确认前，长期职责规模与独立验收关系不能可靠设计。
+    impact: medium
+    staffing_implication: 可以按能力覆盖设计职责，但不能把组织建议解读为已批准人数、成本或交付日期。
   - risk_id: risk:veilfront-xiangqi-siege:rules-complexity
     description: 迷雾、独立城墙阶段、棋子特殊能力、随机炮击、强制撤回和多重胜利条件叠加，容易出现结算顺序歧义与状态组合缺陷。
     evidence_refs:
@@ -181,11 +204,18 @@ project_brief:
     impact: medium
     staffing_implication: 需要可观测的平衡指标、对局日志、批量模拟或结构化试玩，不应在纸面阶段宣布平衡完成。
   - risk_id: risk:veilfront-xiangqi-siege:art-unknown
-    description: 美术与世界观方向未定，无法估算棋子、棋盘、迷雾、城墙、特效、界面和音频的资产成本。
+    description: 世界观与俯视视角已确定，但2D或3D、资产精度、角色表现和修仙视觉强度未定，仍无法准确估算资产成本。
     evidence_refs:
     - stmt:veilfront-xiangqi-siege:visual-direction
+    impact: medium
+    staffing_implication: 可以建立视觉方向与资产管线职责，但具体产能和外包需求要等待美术基线。
+  - risk_id: risk:veilfront-xiangqi-siege:ai-fairness
+    description: 战争迷雾下的机器人AI如果直接读取完整棋盘，会破坏侦察、隐身与欺骗玩法；若只读取可见信息，又需要处理不完全信息搜索与可解释难度。
+    evidence_refs:
+    - stmt:veilfront-xiangqi-siege:board-and-fog
+    - stmt:veilfront-xiangqi-siege:single-player-ai
     impact: high
-    staffing_implication: 在视觉方向确认前不能形成可信的资产职责与产能方案。
+    staffing_implication: AI实现与QA必须共享明确的信息权限契约，并以可审计对局日志证明AI未读取隐藏状态。
   staffing_input:
     responsibility_needs:
     - need_id: need:veilfront-xiangqi-siege:rules-and-balance
@@ -239,11 +269,18 @@ project_brief:
       - 可复现缺陷报告
       - 里程碑验收证据包
       acceptance_owner_kind: human
-    readiness: blocked
-    blocker_refs:
-    - question:veilfront-xiangqi-siege:visual-direction
-    - question:veilfront-xiangqi-siege:platform-and-modes
-    - question:veilfront-xiangqi-siege:scope
+    - need_id: need:veilfront-xiangqi-siege:single-player-ai
+      responsibility: 设计与实现只使用玩家等价可见信息的人工编写机器人AI，并维护难度、搜索预算、决策随机性和反作弊验收标准。
+      rationale_statement_refs:
+      - stmt:veilfront-xiangqi-siege:single-player-ai
+      - stmt:veilfront-xiangqi-siege:board-and-fog
+      expected_artifacts:
+      - AI决策与信息权限规格
+      - 可配置难度的机器人对手
+      - 无隐藏信息读取的对局证据
+      acceptance_owner_kind: human
+    readiness: ready
+    blocker_refs: []
   review:
     status: draft
     approval_id: null
@@ -252,4 +289,4 @@ project_brief:
   integrity:
     canonicalization: project-brief-subject-canonical-json-v1
     digest_algorithm: sha256
-    subject_digest: f51d8c5eaf350ebb218ffd9d3ed1f28f8f8558afe3dc911700b8071e3f6b7674
+    subject_digest: 965d2adb724eedb2293a61b0989b3e8194f9c4cdba068c31095ab61917ea5b47
