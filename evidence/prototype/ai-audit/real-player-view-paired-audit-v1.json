@@ -1,0 +1,122 @@
+{
+  "schema_version": "ai-real-player-view-paired-audit-v1",
+  "execution": {
+    "engine": "Godot 4.7.1 stable official a13da4feb",
+    "command": "Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/prototype/test_ai_fairness.gd",
+    "exit_code": 0,
+    "result": "AI fairness prototype tests passed"
+  },
+  "fixture": {
+    "full_state_seed": 80123,
+    "viewer_side": "red",
+    "hidden_difference": [
+      "black-pawn-1 position and hidden flag",
+      "rule RNG internal state and unpublished records"
+    ],
+    "full_state_digests_differ": true
+  },
+  "real_player_view": {
+    "schema_version": "player-view-v1",
+    "projection_digest": "7253088ca5fa00b15a5b1f19a7e1924f3584eb897ef65c136636cfa4b6519175",
+    "action_preview_digest": "3cf6b0d9b48cafcc76529d48ac4178666dbed5434eeb88f44b0b18c2bb27f68d",
+    "ai_projection_digest": "7e2f8c7cb6603a863ac6ef6fb0e24faf64143d0e72cb2a47cc6cf2c190056ed3"
+  },
+  "ai_seed_derivation": {
+    "schema_version": "ai-seed-derivation-v1",
+    "algorithm": "sha256-domain-separated-prefix60",
+    "inputs": {
+      "match_ai_seed": 909001,
+      "decision_id": "turn-0-red"
+    },
+    "derived_ai_seed": 254111128171952226,
+    "forbidden_inputs": [
+      "rule_rng",
+      "rule_rng_state",
+      "unpublished_random_result"
+    ]
+  },
+  "selected_action": {
+    "actor_id": "red-rook-1",
+    "attacks_wall": false,
+    "id": "move:red-rook-1:1,12:",
+    "kind": "move",
+    "occupies_flag": true,
+    "origin": [0, 8],
+    "path_length": 3,
+    "reveal_cell_count": 6,
+    "target": [0, 11],
+    "visible_captures": []
+  },
+  "decision_audit": {
+    "audit_schema_version": "ai-decision-audit-v1",
+    "input_projection_summary": {
+      "schema_version": "player-view-ai-v1",
+      "decision_id": "turn-0-red",
+      "viewer_side": "red",
+      "turn_index": 0,
+      "visible_piece_count": 16,
+      "public_flag_count": 3,
+      "public_event_count": 0,
+      "legal_action_count": 2,
+      "projection_digest": "024d2590371438e21e6c0c09f7c0fef78cc4a29c5ea235989b8a6aeceaa6575d"
+    },
+    "public_rules_digest": "6411a18822700dbf82fd141fcaa5ec5385a34067116bccf420f287d817afb59f",
+    "memory_summary": {
+      "digest": "593b61b9f7ee9faf050a78a314c7296ee37d3542b1d04f3c0a7fc66db9999b21",
+      "entry_count": 0
+    },
+    "decision_input_digest": "5827305db0e2e8224c0adda187d3cad20b623e51448b6728678ead354d2a3809",
+    "budget": {
+      "candidate_limit_hypothesis": 32,
+      "time_budget_ms_hint_hypothesis": 25,
+      "time_budget_enforcement": "not_wall_clock_in_deterministic_prototype",
+      "available_candidates": 2,
+      "evaluated_candidates": 2
+    },
+    "candidate_sampling": {
+      "ai_seed": 254111128171952226,
+      "draws": [
+        {"draw_index": 0, "range_start": 0, "range_end": 1, "selected_index": 0},
+        {"draw_index": 1, "range_start": 1, "range_end": 1, "selected_index": 1}
+      ]
+    },
+    "candidates": [
+      {
+        "action_id": "move:red-rook-1:1,12:",
+        "base_score": 38,
+        "random_adjustment": -3,
+        "final_score": 35
+      },
+      {
+        "action_id": "move:red-rook-1:2,9:",
+        "base_score": 9,
+        "random_adjustment": -3,
+        "final_score": 6
+      }
+    ],
+    "random_sampling": {
+      "score_span_hypothesis": 4,
+      "candidate_score_draw_count": 2
+    },
+    "final_action": {
+      "action_id": "move:red-rook-1:1,12:",
+      "final_score": 35
+    },
+    "profile": {
+      "profile_id": "prototype-default-hypothesis",
+      "conclusion_status": "hypothesis",
+      "candidate_limit": 32,
+      "time_budget_ms_hint": 25,
+      "random_score_span": 4,
+      "reveal_weight": 3,
+      "flag_weight": 20,
+      "wall_pressure_weight": 8,
+      "revisit_penalty": 2
+    }
+  },
+  "paired_equality": {
+    "action": true,
+    "input_projection_summary": true,
+    "all_public_audit_fields": true
+  }
+}

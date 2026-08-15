@@ -1,173 +1,296 @@
 extends SceneTree
 
-const PlayerView = preload("res://scripts/prototype/ai/ai_player_view.gd")
+const CoreCanonical = preload("res://scripts/prototype/core/canonical.gd")
+const MatchState = preload("res://scripts/prototype/core/match_state.gd")
+const Projector = preload("res://scripts/prototype/view/player_view_projector.gd")
+const AiPlayerView = preload("res://scripts/prototype/ai/ai_player_view.gd")
 const PublicRules = preload("res://scripts/prototype/ai/ai_public_rules.gd")
 const Memory = preload("res://scripts/prototype/ai/ai_memory.gd")
 const DecisionEngine = preload("res://scripts/prototype/ai/ai_decision_engine.gd")
 const DifficultyConfig = preload("res://scripts/prototype/ai/ai_difficulty_config.gd")
+const AiSeedDeriver = preload("res://scripts/prototype/ai/ai_seed_deriver.gd")
+
+const FULL_STATE_SEED: int = 80123
+const MATCH_AI_SEED: int = 909001
 
 
 func _initialize() -> void:
-	run_suite()
-	print("AI fairness prototype tests passed")
-	quit(0)
+	var force_failure: bool = OS.get_cmdline_user_args().has("--force-failure")
+	var result: Dictionary = run_suite(force_failure)
+	if result.ok:
+		print("AI_REAL_AUDIT_JSON=", CoreCanonical.json(result.evidence))
+		print("AI fairness prototype tests passed")
+		quit(0)
+		return
+	for failure: String in result.failures:
+		push_error("AI FAIRNESS FAIL: %s" % failure)
+	print("AI fairness prototype tests failed count=%d" % result.failures.size())
+	quit(1)
 
 
-static func run_suite() -> void:
-	_test_hidden_equivalent_pair_is_indistinguishable()
-	_test_unknown_player_view_field_is_rejected()
-	_test_semantic_collection_order_is_canonical()
-	_test_seed_change_is_auditable()
-	_test_hypothesis_resources_load()
-
-
-static func _test_hidden_equivalent_pair_is_indistinguishable() -> void:
-	var hidden_state_a: Dictionary = {
-		"public_projection": _base_projection(),
-		"hidden_enemy_pieces": [{"id": "enemy-hidden-a", "position": [8, 23]}],
-		"unpublished_bombardment_cells": [[1, 7], [2, 7], [3, 7]],
+static func run_suite(force_failure: bool = false) -> Dictionary:
+	var failures: Array[String] = []
+	var evidence: Dictionary = _test_real_hidden_equivalent_pair(failures)
+	_test_real_projection_unknown_field_is_rejected(failures)
+	_test_real_projection_collection_order_is_canonical(failures)
+	_test_seed_derivation_is_independent_from_rule_rng(failures)
+	_test_hypothesis_resources_load(failures)
+	if force_failure:
+		failures.append("deliberate negative-path sentinel")
+	return {
+		"ok": failures.is_empty(),
+		"evidence": evidence,
+		"failures": failures,
 	}
-	var hidden_state_b: Dictionary = {
-		"public_projection": _base_projection(),
-		"hidden_enemy_pieces": [{"id": "enemy-hidden-b", "position": [4, 18]}],
-		"unpublished_bombardment_cells": [[6, 12], [7, 12], [8, 12]],
-	}
-	var view_a: RefCounted = PlayerView.new(_test_projection_boundary(hidden_state_a))
-	var view_b: RefCounted = PlayerView.new(_test_projection_boundary(hidden_state_b))
-	var rules: RefCounted = PublicRules.new(_public_rules())
+
+
+static func _test_real_hidden_equivalent_pair(failures: Array[String]) -> Dictionary:
+	var pair: Array[Dictionary] = _real_hidden_equivalent_pair()
+	var full_state_a: Dictionary = pair[0]
+	var full_state_b: Dictionary = pair[1]
+	_check(
+		CoreCanonical.digest(full_state_a) != CoreCanonical.digest(full_state_b),
+		"black-box pair must contain genuinely different FullState values",
+		failures
+	)
+
+	var player_view_a: Dictionary = Projector.project(full_state_a, MatchState.RED)
+	var player_view_b: Dictionary = Projector.project(full_state_b, MatchState.RED)
+	_check(
+		CoreCanonical.digest(player_view_a) == CoreCanonical.digest(player_view_b),
+		"hidden FullState differences changed the real PlayerView",
+		failures
+	)
+	_check(
+		not player_view_a.has("rng") and not player_view_a.has("board"),
+		"real PlayerView exposed RNG or complete board",
+		failures
+	)
+
+	var intents: Array = _public_intents()
+	var preview_a: Array = Projector.list_action_intents(player_view_a, intents)
+	var preview_b: Array = Projector.list_action_intents(player_view_b, intents)
+	_check(preview_a == preview_b, "public action previews broke hidden equivalence", failures)
+	_check(
+		preview_a.any(func(preview: Dictionary) -> bool: return preview.classification == Projector.TENTATIVE),
+		"real pair did not exercise a TENTATIVE public intent",
+		failures
+	)
+
+	var projection_a: Dictionary = Projector.export_ai_projection(player_view_a, intents)
+	var projection_b: Dictionary = Projector.export_ai_projection(player_view_b, intents)
+	_check(
+		CoreCanonical.digest(projection_a) == CoreCanonical.digest(projection_b),
+		"real AI projections broke hidden equivalence",
+		failures
+	)
+	var ai_view_a: RefCounted = AiPlayerView.new(projection_a)
+	var ai_view_b: RefCounted = AiPlayerView.new(projection_b)
+	if not _check(
+		ai_view_a.is_valid() and ai_view_b.is_valid(),
+		"real projector export did not satisfy the AI whitelist",
+		failures
+	):
+		return {}
+
+	var public_rules: RefCounted = PublicRules.new(_public_rules())
 	var memory: RefCounted = Memory.new(_empty_memory())
 	var config: Resource = DifficultyConfig.new()
-	var result_a: Dictionary = DecisionEngine.new().decide(view_a, rules, memory, 424242, config)
-	var result_b: Dictionary = DecisionEngine.new().decide(view_b, rules, memory, 424242, config)
-	assert(result_a.ok and result_b.ok, "paired AI decisions must both succeed")
-	assert(result_a.action == result_b.action, "hidden differences must not change the action")
-	assert(
+	var decision_id: String = str(projection_a.get("decision_id", ""))
+	var ai_seed: int = AiSeedDeriver.derive(MATCH_AI_SEED, decision_id)
+	var result_a: Dictionary = DecisionEngine.new().decide(
+		ai_view_a, public_rules, memory, ai_seed, config
+	)
+	var result_b: Dictionary = DecisionEngine.new().decide(
+		ai_view_b, public_rules, memory, ai_seed, config
+	)
+	if not _check(
+		bool(result_a.get("ok", false)) and bool(result_b.get("ok", false)),
+		"real paired AI decision returned an error",
+		failures
+	):
+		return {}
+	_check(result_a.action == result_b.action, "hidden differences changed the AI action", failures)
+	_check(
 		result_a.audit.input_projection_summary == result_b.audit.input_projection_summary,
-		"hidden differences must not change the AI input projection summary"
+		"hidden differences changed the AI input summary",
+		failures
 	)
-	assert(
-		result_a.audit.decision_input_digest == result_b.audit.decision_input_digest,
-		"the complete decision input digest must match for the paired case"
+	_check(
+		result_a.audit == result_b.audit,
+		"hidden differences changed public AI audit fields",
+		failures
 	)
 
+	return {
+		"schema_version": "ai-real-player-view-paired-audit-v1",
+		"fixture": {
+			"full_state_seed": FULL_STATE_SEED,
+			"viewer_side": MatchState.RED,
+			"hidden_difference": [
+				"black-pawn-1 position and hidden flag",
+				"rule RNG internal state and unpublished records",
+			],
+			"full_state_digests_differ": true,
+		},
+		"real_player_view": {
+			"schema_version": player_view_a.schema_version,
+			"projection_digest": CoreCanonical.digest(player_view_a),
+			"action_preview_digest": CoreCanonical.digest(preview_a),
+			"ai_projection_digest": CoreCanonical.digest(projection_a),
+		},
+		"ai_seed_derivation": AiSeedDeriver.audit_record(MATCH_AI_SEED, decision_id),
+		"selected_action": result_a.action,
+		"decision_audit": result_a.audit,
+		"paired_equality": {
+			"action": true,
+			"input_projection_summary": true,
+			"all_public_audit_fields": true,
+		},
+	}
 
-static func _test_unknown_player_view_field_is_rejected() -> void:
-	var projection: Dictionary = _base_projection()
+
+static func _test_real_projection_unknown_field_is_rejected(failures: Array[String]) -> void:
+	var state: Dictionary = MatchState.create(FULL_STATE_SEED)
+	var player_view: Dictionary = Projector.project(state, MatchState.RED)
+	var projection: Dictionary = Projector.export_ai_projection(player_view, _public_intents())
 	projection["hidden_enemy_pieces"] = []
-	var view: RefCounted = PlayerView.new(projection)
-	assert(not view.is_valid(), "PlayerView must reject fields outside its public allowlist")
+	var ai_view: RefCounted = AiPlayerView.new(projection)
+	_check(not ai_view.is_valid(), "AI whitelist accepted an injected hidden field", failures)
 	var result: Dictionary = DecisionEngine.new().decide(
-		view,
+		ai_view,
 		PublicRules.new(_public_rules()),
 		Memory.new(_empty_memory()),
-		7,
+		AiSeedDeriver.derive(MATCH_AI_SEED, "invalid-input-check"),
 		DifficultyConfig.new()
 	)
-	assert(not result.ok and result.error_code == "invalid_ai_input")
+	_check(
+		not bool(result.get("ok", true)) and result.get("error_code", "") == "invalid_ai_input",
+		"decision engine did not reject an invalid real projection",
+		failures
+	)
 
 
-static func _test_semantic_collection_order_is_canonical() -> void:
-	var projection_a: Dictionary = _base_projection()
-	var projection_b: Dictionary = _base_projection()
+static func _test_real_projection_collection_order_is_canonical(failures: Array[String]) -> void:
+	var state: Dictionary = MatchState.create(FULL_STATE_SEED)
+	MatchState.relocate_piece(state, "red-rook-1", Vector2i(1, 9))
+	var player_view: Dictionary = Projector.project(state, MatchState.RED)
+	var projection_a: Dictionary = Projector.export_ai_projection(player_view, _public_intents())
+	var projection_b: Dictionary = projection_a.duplicate(true)
 	projection_b.legal_actions.reverse()
 	projection_b.visible_pieces.reverse()
-	var view_a: RefCounted = PlayerView.new(projection_a)
-	var view_b: RefCounted = PlayerView.new(projection_b)
-	assert(view_a.input_summary().projection_digest == view_b.input_summary().projection_digest)
-	var engine: RefCounted = DecisionEngine.new()
-	var rules: RefCounted = PublicRules.new(_public_rules())
+	var ai_view_a: RefCounted = AiPlayerView.new(projection_a)
+	var ai_view_b: RefCounted = AiPlayerView.new(projection_b)
+	if not _check(
+		ai_view_a.is_valid() and ai_view_b.is_valid(),
+		"canonical-order fixtures were invalid",
+		failures
+	):
+		return
+	_check(
+		ai_view_a.input_summary().projection_digest == ai_view_b.input_summary().projection_digest,
+		"real export collection order changed projection digest",
+		failures
+	)
+	var public_rules: RefCounted = PublicRules.new(_public_rules())
 	var memory: RefCounted = Memory.new(_empty_memory())
 	var config: Resource = DifficultyConfig.new()
-	var result_a: Dictionary = engine.decide(view_a, rules, memory, 101, config)
-	var result_b: Dictionary = engine.decide(view_b, rules, memory, 101, config)
-	assert(result_a.action == result_b.action, "serialization order must not change the decision")
-
-
-static func _test_seed_change_is_auditable() -> void:
-	var result: Dictionary = DecisionEngine.new().decide(
-		PlayerView.new(_base_projection()),
-		PublicRules.new(_public_rules()),
-		Memory.new(_empty_memory()),
-		9001,
-		DifficultyConfig.new()
+	var ai_seed: int = AiSeedDeriver.derive(MATCH_AI_SEED, projection_a.decision_id)
+	var result_a: Dictionary = DecisionEngine.new().decide(
+		ai_view_a, public_rules, memory, ai_seed, config
 	)
-	assert(result.ok)
-	assert(result.audit.candidate_sampling.ai_seed == 9001)
-	assert(result.audit.has("candidates") and result.audit.has("random_sampling"))
-	assert(result.audit.has("budget") and result.audit.has("final_action"))
+	var result_b: Dictionary = DecisionEngine.new().decide(
+		ai_view_b, public_rules, memory, ai_seed, config
+	)
+	_check(
+		bool(result_a.get("ok", false)) and bool(result_b.get("ok", false)),
+		"canonical-order decisions returned an error",
+		failures
+	)
+	if result_a.get("ok", false) and result_b.get("ok", false):
+		_check(
+			result_a.action == result_b.action,
+			"real export serialization order changed the decision",
+			failures
+		)
 
 
-static func _test_hypothesis_resources_load() -> void:
+static func _test_seed_derivation_is_independent_from_rule_rng(failures: Array[String]) -> void:
+	var pair: Array[Dictionary] = _real_hidden_equivalent_pair()
+	_check(pair[0].rng.state != pair[1].rng.state, "negative fixture lacks a rule RNG difference", failures)
+	var decision_id: String = "turn-0-red"
+	var seed_a: int = AiSeedDeriver.derive(MATCH_AI_SEED, decision_id)
+	var seed_b: int = AiSeedDeriver.derive(MATCH_AI_SEED, decision_id)
+	_check(seed_a == seed_b, "AI seed derivation is not deterministic", failures)
+	var method: Dictionary = AiSeedDeriver.audit_record(MATCH_AI_SEED, decision_id)
+	_check(method.forbidden_inputs.has("rule_rng"), "AI seed audit omits the forbidden rule RNG", failures)
+	_check(
+		not method.inputs.has("rule_rng") and not method.inputs.has("rule_rng_state"),
+		"AI seed derivation accepted rule RNG input",
+		failures
+	)
+
+
+static func _test_hypothesis_resources_load(failures: Array[String]) -> void:
 	for path: String in [
 		"res://resources/prototype/ai/prototype_low_budget_hypothesis.tres",
 		"res://resources/prototype/ai/prototype_default_hypothesis.tres",
 		"res://resources/prototype/ai/prototype_high_budget_hypothesis.tres",
 	]:
 		var config: Resource = ResourceLoader.load(path)
-		assert(config != null, "AI prototype config must load: %s" % path)
-		assert(config.conclusion_status == "hypothesis")
+		if not _check(config != null, "AI prototype config failed to load: %s" % path, failures):
+			continue
+		_check(
+			config.conclusion_status == "hypothesis",
+			"AI prototype config is no longer marked hypothesis: %s" % path,
+			failures
+		)
 
 
-static func _test_projection_boundary(state_fixture: Dictionary) -> Dictionary:
-	# This fixture stands in for the technology-owned one-way projection. The AI is
-	# handed only this value; the hidden sibling fields are intentionally unreachable.
-	return state_fixture.public_projection.duplicate(true)
+static func _check(condition: bool, description: String, failures: Array[String]) -> bool:
+	if not condition:
+		failures.append(description)
+	return condition
 
 
-static func _base_projection() -> Dictionary:
-	return {
-		"schema_version": "player-view-ai-v1",
-		"decision_id": "turn-12-red",
-		"viewer_side": "red",
-		"turn_index": 12,
-		"visible_pieces": [
-			{"id": "red-rook-1", "side": "red", "piece_type": "rook", "position": [4, 10], "status_tags": []},
-			{"id": "black-pawn-2", "side": "black", "piece_type": "pawn", "position": [4, 12], "status_tags": ["visible"]},
-		],
-		"public_flags": [
-			{"id": "flag-a", "position": [3, 12], "owner": "neutral", "capture_progress": 0},
-		],
-		"public_walls": [
-			{"side": "red", "status": "intact"},
-			{"side": "black", "status": "intact"},
-		],
-		"legal_actions": [
-			{
-				"id": "move:red-rook-1:4,10:4,12",
-				"kind": "move",
-				"actor_id": "red-rook-1",
-				"origin": [4, 10],
-				"target": [4, 12],
-				"visible_captures": [{"piece_id": "black-pawn-2", "piece_type": "pawn"}],
-				"reveal_cell_count": 3,
-				"occupies_flag": false,
-				"attacks_wall": false,
-				"path_length": 2,
-			},
-			{
-				"id": "move:red-rook-1:4,10:3,12",
-				"kind": "move",
-				"actor_id": "red-rook-1",
-				"origin": [4, 10],
-				"target": [3, 12],
-				"visible_captures": [],
-				"reveal_cell_count": 5,
-				"occupies_flag": true,
-				"attacks_wall": false,
-				"path_length": 3,
-			},
-		],
-		"public_events": [
-			{"id": "event-11", "event_type": "move", "actor_side": "black", "position": [4, 12]},
-		],
-	}
+static func _real_hidden_equivalent_pair() -> Array[Dictionary]:
+	var full_state_a: Dictionary = MatchState.create(FULL_STATE_SEED)
+	var full_state_b: Dictionary = MatchState.clone(full_state_a)
+	MatchState.relocate_piece(full_state_a, "red-rook-1", Vector2i(1, 9))
+	MatchState.relocate_piece(full_state_b, "red-rook-1", Vector2i(1, 9))
+	MatchState.relocate_piece(full_state_a, "black-pawn-1", Vector2i(1, 11))
+	full_state_a.pieces["black-pawn-1"].hidden = true
+	full_state_b.rng.state = int(full_state_b.rng.state) + 17
+	full_state_b.rng.records.append({
+		"draw_index": 999,
+		"reason": "unpublished-test-only",
+		"result": 2,
+	})
+	return [full_state_a, full_state_b]
+
+
+static func _public_intents() -> Array:
+	return [
+		{
+			"piece_id": "red-rook-1",
+			"action_type": "move",
+			"target_cell": [1, 12],
+			"skill_type": "",
+		},
+		{
+			"piece_id": "red-rook-1",
+			"action_type": "move",
+			"target_cell": [2, 9],
+			"skill_type": "",
+		},
+	]
 
 
 static func _public_rules() -> Dictionary:
 	return {
 		"schema_version": "public-ai-rules-v1",
-		"board_width": 9,
-		"board_height": 24,
+		"board_width": MatchState.BOARD_WIDTH,
+		"board_height": MatchState.BOARD_HEIGHT,
 		"piece_values": {"pawn": 10, "rook": 50, "general": 10000},
 		"action_kind_bias": {"move": 0, "bombard": 4},
 	}
