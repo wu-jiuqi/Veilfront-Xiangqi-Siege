@@ -193,17 +193,15 @@ static func movement_path(origin: Vector2i, target: Vector2i) -> Array:
 
 
 static func reveal_cells_for_elephant_move(origin: Vector2i, target: Vector2i) -> Array:
-	# Prototype hypothesis only: the last special elephant move exposes the 3x3
-	# bounding square of its diagonal. The frozen source says "田字显形区" but
-	# does not enumerate cells, so this strategy is intentionally replaceable.
+	# Owner-frozen rule: the move's opposite corners define one complete 3x3
+	# reveal source, including origin, elephant eye, and target. Legal move
+	# validation owns board bounds; this geometry helper does not clip the nine.
 	var result: Array = []
 	var min_x: int = mini(origin.x, target.x)
 	var min_y: int = mini(origin.y, target.y)
 	for y: int in range(min_y, min_y + 3):
 		for x: int in range(min_x, min_x + 3):
-			var cell := Vector2i(x, y)
-			if MatchState.is_inside_board(cell):
-				result.append([cell.x, cell.y])
+			result.append([x, y])
 	return result
 
 

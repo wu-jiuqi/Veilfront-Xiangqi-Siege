@@ -9,6 +9,7 @@ const RulesCoreTests = preload("res://tests/prototype/test_rules_core.gd")
 const ReplayTests = preload("res://tests/prototype/test_replay.gd")
 const MoveRulesTests = preload("res://tests/prototype/test_move_rules.gd")
 const Revision3RulesTests = preload("res://tests/prototype/test_revision3_rules.gd")
+const ElephantRevealTests = preload("res://tests/prototype/test_elephant_reveal.gd")
 const SimulationTests = preload("res://tests/prototype/test_simulation.gd")
 const PreparedActionTests = preload("res://tests/prototype/test_prepared_action.gd")
 const AiFairnessTests = preload("res://tests/prototype/test_ai_fairness.gd")
@@ -62,6 +63,7 @@ func _run_phase1_checks() -> void:
 	_check(ReplayTests.run_suite(), "同 seed + 行动意图的事件日志与最终状态摘要重放一致")
 	_check(MoveRulesTests.run_suite(), "传统棋子几何、特殊资格、炮架与完整墙线约束")
 	_check(Revision3RulesTests.run_suite(), "车逐目标、隐藏马/炮架、显形策略生命周期与玩家事件过滤")
+	_check(ElephantRevealTests.run_suite(), "冻结田字九格、相象多源并集、刷新与全离场清源")
 	_check(SimulationTests.run_suite(), "可配置轮上限整局终止、确定性与完整对局重放")
 	_check(PreparedActionTests.run_suite(), "后备部署准备 token、当回合可选、事件记录与状态回放")
 	var ai_result: Dictionary = AiFairnessTests.run_suite()
@@ -88,7 +90,7 @@ func _check(condition: bool, description: String) -> void:
 
 func _finish() -> void:
 	if failures.is_empty():
-		print("PROTOTYPE_BASIS_CHECKS_PASSED scaffold=9 focused_suites=9 full_gate1=false")
+		print("PROTOTYPE_BASIS_CHECKS_PASSED scaffold=9 focused_suites=10 full_gate1=false")
 		quit(0)
 		return
 	print("PHASE1_SCAFFOLD_CHECKS_FAILED count=%d" % failures.size())

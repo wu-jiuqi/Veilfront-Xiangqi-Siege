@@ -30,6 +30,7 @@
 | `resources/prototype/rules/**` | `.tres` 配置 | 后续可调但需序列化的原型规则默认值 | Godot 技术负责人；规则语义由系统与体验负责人验收 | 未创建；等待规则规格 |
 | `tests/prototype/test_match_state.gd`、`test_rules_core.gd` | GDScript / 行为测试 | 冻结开局、旗生命周期、炮击、士替死、后备队列、墙修复时序 | Godot 技术负责人；QA 独立验收 | Iteration 1 定向覆盖已创建 |
 | `tests/prototype/test_player_view.gd`、`test_replay.gd` | GDScript / 黑盒与确定性测试 | 隐藏等价投影/查询/错误/AI DTO 与 seed+意图重放一致性 | Godot 技术负责人；QA 独立验收 | Iteration 1 定向覆盖已创建 |
+| `tests/prototype/test_elephant_reveal.gd`、`run_elephant_reveal.gd` | GDScript / 冻结显形规则定向测试 | 精确九格、不裁切、隐藏马区内外、多相象并集、刷新、离场清源与 PlayerView 隐藏等价 | Godot 技术负责人；QA 独立验收 | Iteration 1 revision 25 已创建 |
 | `scripts/prototype/ai/**`、`resources/prototype/ai/**` | AI 脚本与配置 | 仅接收 `PlayerView` 的基线 AI 与参数 | 单机 AI 工程师 | 本岗位禁止编辑 |
 | `user://prototype/gate1/**` | 运行时 JSONL/摘要 | 后续本机行动日志、玩家视角事件、随机抽样与回放输出 | Godot 技术负责人生成；QA 消费 | 未创建；只允许运行时写入 |
 | `evidence/prototype/qa/**` | QA 原始证据与索引 | 独立命令、退出码、种子、批量对局与缺陷证据 | QA 与发布负责人 | 本岗位不写生产事实 |
@@ -75,18 +76,17 @@ Gate1LogicLab (Control, 组合根；预置 Theme)
 - `scripts/prototype/**` 与 `scenes/prototype/**` 是 GATE-1 探索产物；进入正式功能开发前必须依据证据决定重写或保留，不能因为可运行就升级为正式架构。
 - “确定性规则核心与显示层解耦”仍是 `hypothesis`。Iteration 1 revision 3 已增加传统棋子几何、特殊规则、投影白名单、完整行动真值生成、行动准备事务、整局终止模拟与抽样回放证据，仍需独立 QA 复核。
 - `full_round_limit_hypothesis=8` 只是为了让固定批量命令在原型预算内终止的 CLI 可覆盖技术假设，不是平衡建议或冻结规则。
-- `reveal_cells_for_elephant_move` 是独立可替换技术策略；冻结输入只写“田字显形区”而未枚举精确格，因此定向测试只证明确定性、旧区失效与投影边界，不把当前格集合标为 RULE 通过。
+- 项目所有者已冻结“田字显形”为每次合法相象移动的起终点包围完整 3×3 九格（含起点、象眼、终点）；`reveal_cells_for_elephant_move` 不裁切该几何，投影对多枚相象的当前九格源取并集。
 - 规则压力模拟明确使用 `rules_stress_full_state_policy`，只证明规则终止、状态不变量、统计与抽样回放，不作为 PlayerView AI 公平证据。
 - 炮击采用项目所有者确认的无冷却规则。FullState、PlayerView、日志和摘要均没有共享冷却字段；资格只读取敌墙 `INTACT`、炮在己方大本营和该炮剩余弹药。
 - `.tres` Theme 和三个 `.tscn` 只服务逻辑可读性，不代表正式 UI、主棋盘/小地图 UX 或视觉基线。
 
 ## 后续接口需求
 
-1. 系统与体验负责人或项目所有者需裁决“田字显形区”的精确格集合；当前实现保持可替换 hypothesis，不得冒充冻结规则。
-2. 单机 AI 通过 `PlayerViewProjector.export_ai_projection_from_view()` 消费公开候选；核心为 1-based 冻结坐标，AI DTO 明确转换为 0-based。AI 整局证据由 AI 岗位独立提供。
-3. QA 需要独立复核隐藏等价配对、事件/摘要重放、定向规则矩阵及固定 1000 seeds；技术岗位的 FullState 压力策略不替代 AI 公平性检查。
-4. 项目经理需要继续处理 QA-P1-003 的 Loop 官方 runtime Snapshot validator 不匹配；本岗位不修改 Registry 或插件。
-5. 项目所有者仍保留 GATE-1、回合上限冻结、显著长期架构取舍与平台承诺的批准权。
+1. 单机 AI 通过 `PlayerViewProjector.export_ai_projection_from_view()` 消费公开候选；核心为 1-based 冻结坐标，AI DTO 明确转换为 0-based。AI 整局证据由 AI 岗位独立提供。
+2. QA 需要独立复核隐藏等价配对、事件/摘要重放、定向规则矩阵及固定 1000 seeds；技术岗位的 FullState 压力策略不替代 AI 公平性检查。
+3. 项目经理需要继续处理 QA-P1-003 的 Loop 官方 runtime Snapshot validator 不匹配；本岗位不修改 Registry 或插件。
+4. 项目所有者仍保留 GATE-1、回合上限冻结、显著长期架构取舍与平台承诺的批准权。
 
 ## Phase 1 验证记录
 
@@ -126,3 +126,16 @@ Gate1LogicLab (Control, 组合根；预置 Theme)
 | `godot --headless --path . --quit-after 2` | 0 | 主场景输出 `core=prototype_core_revision3 full_gate1=false`。 |
 
 这些仅是技术生产者自检，不替代 QA 固定 1000 seeds、最终 manifest 保存或 GATE 决定。
+
+## Iteration 1 revision 25 田字显形修订自检
+
+| 命令 | 退出码 | 结果 |
+|---|---:|---|
+| `godot --headless --path . --script res://tests/prototype/run_elephant_reveal.gd`（修订前） | 1 | 定向红灯确认旧实现会裁切九格，且普通相象移动、多源并集与刷新未满足冻结语义；失败由进程退出码传播。 |
+| 同上（修订后） | 0 | 精确九格、不裁切、区内/区外隐藏马、多相象并集、移动刷新、受阻移动开始清旧源、死亡/救援/回营/撤回/入队清源及隐藏 FullState 投影等价通过。 |
+| `godot --headless --path . --check-only --script res://scripts/prototype/core/move_rules.gd`、`rule_engine.gd`、`run_elephant_reveal.gd`、`run_all.gd` | 0 | 所有本轮变更脚本在 Godot 4.7.1 下解析通过。 |
+| `godot --headless --path . --script res://tests/prototype/run_all.gd` | 0 | 10 个 focused suites 全部通过；含规则、PlayerView、重放、显形、模拟、prepared action 与 AI 公平套件，无 `SCRIPT ERROR`。 |
+| `godot --headless --path . --script res://tests/prototype/test_ai_fairness.gd` | 0 | 真实 PlayerView 隐藏等价、多决策公开审计与小轮上限整局复核通过。 |
+| `godot --headless --path . --script res://tests/prototype/run_seeded_matches.gd -- --seeds 10 --replay-samples 2 --manifest-path user://prototype/test-output/elephant_reveal_revision25_smoke.jsonl` | 0 | 10/10 完成且双跑确定性 10/10、差异 0；完整行动重放样本 2/2，`records_digest=e6f8dfccdccb68f12733368c47fc5ef18c37396d5e2f555c8323c6f179b0703e`。 |
+
+本轮按授权暂不运行 1000 seeds；固定批次和最终证据仍由独立 QA 执行并保存，不将上述小样本升级为 GATE 结论。

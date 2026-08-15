@@ -78,13 +78,13 @@ static func _test_elephant_reveal_strategy_lifecycle(failures: Array[String]) ->
 	var first: Dictionary = RuleEngine.submit_action(state, _move("red-elephant-1", Vector2i(7, 12)))
 	_expect(first.get("ok", false), "相象显形策略首个特殊移动可执行", failures)
 	var first_view: Dictionary = Projector.project(state, MatchState.RED)
-	_expect(_view_has_piece(first_view, "black-horse-1"), "当前技术假设显形区能投影隐身马", failures)
+	_expect(_view_has_piece(first_view, "black-horse-1"), "冻结田字显形区能投影隐身马", failures)
 	state["active_side"] = MatchState.RED
 	var second: Dictionary = RuleEngine.submit_action(state, _move("red-elephant-1", Vector2i(9, 14)))
 	_expect(second.get("ok", false), "相象第二次特殊移动可刷新显形区", failures)
 	var second_view: Dictionary = Projector.project(state, MatchState.RED)
 	_expect(not _view_has_piece(second_view, "black-horse-1"), "旧田字显形区立即失效", failures)
-	_expect(state["vision_sources"][MatchState.RED]["elephant_reveal_zones"].size() == 1, "每枚相象只保留最新可替换策略区", failures)
+	_expect(state["vision_sources"][MatchState.RED]["elephant_reveal_zones"].size() == 1, "每枚相象只保留最新冻结九格源", failures)
 
 
 static func _test_hidden_cannon_screens(failures: Array[String]) -> void:

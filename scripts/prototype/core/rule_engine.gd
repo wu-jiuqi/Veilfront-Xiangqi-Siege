@@ -324,6 +324,8 @@ static func _resolve_move(
 	var target := Canonical.coordinate(intent.get("target_cell", []))
 	if piece["piece_type"] == "rook":
 		state["vision_sources"][actor_side]["rook_paths"].erase(piece_id)
+	if piece["piece_type"] == "elephant":
+		state["vision_sources"][actor_side]["elephant_reveal_zones"].erase(piece_id)
 	var evaluation: Dictionary = MoveRules.evaluate_move(
 		state, intent, actor_side, visibility_context
 	)
@@ -702,9 +704,7 @@ static func _apply_move_vision_effects(
 		if move_kind == "rook_special":
 			state["vision_sources"][side]["rook_paths"][piece_id] = evaluation["path"].duplicate(true)
 	if piece["piece_type"] == "elephant":
-		state["vision_sources"][side]["elephant_reveal_zones"].erase(piece_id)
-		if move_kind == "elephant_special":
-			state["vision_sources"][side]["elephant_reveal_zones"][piece_id] = \
+		state["vision_sources"][side]["elephant_reveal_zones"][piece_id] = \
 				MoveRules.reveal_cells_for_elephant_move(origin, target)
 	if piece["piece_type"] == "horse" and move_kind == "horse_special":
 		piece["hidden"] = true
