@@ -2,21 +2,57 @@ extends RefCounted
 
 const Canonical = preload("res://scripts/prototype/core/canonical.gd")
 const MatchState = preload("res://scripts/prototype/core/match_state.gd")
+const MoveRules = preload("res://scripts/prototype/core/move_rules.gd")
 const SeededRandom = preload("res://scripts/prototype/core/seeded_random.gd")
 const PlayerViewProjector = preload("res://scripts/prototype/view/player_view_projector.gd")
 
 
-static func create_match(seed_value: int) -> Dictionary:
-	return MatchState.create(seed_value)
+static func create_match(seed_value: int, configuration: Dictionary = {}) -> Dictionary:
+	return MatchState.create(seed_value, configuration)
 
 
-static func submit_action(state: Dictionary, intent: Dictionary) -> Dictionary:
+static func list_legal_actions(state: Dictionary, side: String = "") -> Array:
+	var actor_side: String = str(state["active_side"]) if side.is_empty() else side
+	return MoveRules.generate_legal_actions(
+		state, actor_side, PlayerViewProjector.visibility_context(state, actor_side)
+	)
+
+
+static func prepare_action(state: Dictionary) -> Dictionary:
+	if state["terminal"]:
+		return _rejected("terminal", "match_already_terminal")
+	var existing: Dictionary = state.get("prepared_action", {})
+	if not existing.is_empty() and int(existing["action_index"]) == int(state["action_index"]) \
+	and str(existing["actor_side"]) == str(state["active_side"]):
+		return {"ok": true, "preparation": existing.duplicate(true)}
+	var random_record_start: int = state["rng"]["records"].size()
+	var deployments: Array = begin_action(state)
+	var preparation: Dictionary = {
+		"schema_version": "prepared-action-v1",
+		"token": "prepared-%d-%s" % [state["action_index"], state["active_side"]],
+		"action_index": state["action_index"],
+		"actor_side": state["active_side"],
+		"deployments": deployments.duplicate(true),
+		"random_samples": state["rng"]["records"].slice(random_record_start).duplicate(true),
+	}
+	state["prepared_action"] = preparation
+	return {"ok": true, "preparation": preparation.duplicate(true)}
+
+
+static func submit_action(state: Dictionary, intent: Dictionary, options: Dictionary = {}) -> Dictionary:
 	if state["terminal"]:
 		return _rejected("terminal", "match_already_terminal")
 	var actor_side: String = state["active_side"]
 	var action_index: int = state["action_index"]
+	var prepared_result: Dictionary = prepare_action(state)
+	if not prepared_result.get("ok", false):
+		return prepared_result
+	var preparation: Dictionary = prepared_result["preparation"]
+	var provided_token: String = str(options.get("preparation_token", ""))
+	if not provided_token.is_empty() and provided_token != str(preparation["token"]):
+		return _rejected("known_illegal", "stale_or_invalid_preparation_token")
+	var deployments: Array = preparation["deployments"].duplicate(true)
 	var random_record_start: int = state["rng"]["records"].size()
-	var deployments: Array = begin_action(state)
 	var action_type: String = str(intent.get("action_type", ""))
 	var outcome: Dictionary
 	match action_type:
@@ -28,21 +64,23 @@ static func submit_action(state: Dictionary, intent: Dictionary) -> Dictionary:
 				"position": [],
 			}
 		"move":
-			outcome = _resolve_move(state, intent, actor_side)
+			outcome = _resolve_move(
+				state, intent, actor_side, bool(options.get("trusted_generated_action", false))
+			)
 		"bombard":
 			outcome = _resolve_bombardment(state, intent, actor_side)
 		_:
 			outcome = _rejected("known_illegal", "unsupported_action_type")
 	if not outcome.get("consumed", false):
 		return outcome
+	state.erase("prepared_action")
 
 	if not state["terminal"]:
 		_update_walls_after_action(state, actor_side)
 	if not state["terminal"]:
 		_update_flags_after_action(state, actor_side)
+	_complete_action_clock(state, actor_side)
 	_publish_player_event(state, actor_side, action_index, outcome)
-	if not state["terminal"]:
-		_advance_turn(state, actor_side)
 
 	var event: Dictionary = {
 		"schema_version": "action-event-v1",
@@ -52,15 +90,18 @@ static func submit_action(state: Dictionary, intent: Dictionary) -> Dictionary:
 		"intent": _normalized_intent(intent),
 		"deployments_before_action": deployments,
 		"outcome": outcome.duplicate(true),
-		"random_samples": state["rng"]["records"].slice(random_record_start).duplicate(true),
+		"random_samples": preparation.get("random_samples", []).duplicate(true) \
+			+ state["rng"]["records"].slice(random_record_start).duplicate(true),
 	}
 	state["events"].append(event)
-	return {
+	var response: Dictionary = {
 		"ok": true,
 		"consumed": true,
 		"event": event.duplicate(true),
-		"state_summary": MatchState.summary(state),
 	}
+	if bool(options.get("include_state_summary", true)):
+		response["state_summary"] = MatchState.summary(state)
+	return response
 
 
 static func can_bombard(state: Dictionary, cannon_id: String) -> bool:
@@ -104,10 +145,9 @@ static func return_pieces_to_base(state: Dictionary, side: String, piece_ids: Ar
 	for piece_id_value: Variant in ordered_ids:
 		var piece_id: String = str(piece_id_value)
 		_cancel_flag_capture_for_piece(state, piece_id)
+		_clear_piece_transient_sources(state, piece_id)
 		MatchState.remove_piece_from_board(state, piece_id)
 		var piece: Dictionary = state["pieces"][piece_id]
-		piece["hidden"] = false
-		piece["temporary_effects"] = []
 		piece["in_reserve"] = false
 	var empty_cells: Array = MatchState.base_empty_cells(state, side)
 	for piece_id_value: Variant in ordered_ids:
@@ -161,12 +201,21 @@ static func resolve_bombardment_window(
 	var dead_generals: Dictionary = {}
 	var impacted_piece_ids: Dictionary = {}
 	var casualties: Array = []
+	var general_targets: Array = []
 	for target: Dictionary in snapshot_targets:
+		if target["piece_type"] == "general":
+			general_targets.append(target)
+
+	# Frozen bombardment ordering: a snapshot hit on either general ends the
+	# simultaneous window before any non-general casualty or side effect.
+	var resolved_targets: Array = general_targets if not general_targets.is_empty() else snapshot_targets
+	for target: Dictionary in resolved_targets:
 		if target["piece_id"].is_empty():
 			continue
 		var piece: Dictionary = state["pieces"][target["piece_id"]]
 		impacted_piece_ids[piece["id"]] = true
 		_cancel_flag_capture_for_piece(state, piece["id"])
+		_clear_piece_transient_sources(state, piece["id"])
 		MatchState.remove_piece_from_board(state, piece["id"])
 		piece["alive"] = false
 		var casualty: Dictionary = target.duplicate(true)
@@ -183,7 +232,7 @@ static func resolve_bombardment_window(
 		_set_terminal(state, MatchState.RED, "general_destroyed")
 
 	var rescue_records: Array = []
-	if dead_generals.is_empty():
+	if general_targets.is_empty():
 		for casualty: Dictionary in casualties:
 			if casualty["piece_type"] == "general" or casualty["piece_type"] == "advisor":
 				continue
@@ -200,6 +249,7 @@ static func resolve_bombardment_window(
 			var advisor_id: String = str(selected[0])
 			var advisor: Dictionary = state["pieces"][advisor_id]
 			_cancel_flag_capture_for_piece(state, advisor_id)
+			_clear_piece_transient_sources(state, advisor_id)
 			MatchState.remove_piece_from_board(state, advisor_id)
 			advisor["alive"] = false
 			advisor["rescue_available"] = false
@@ -254,71 +304,68 @@ static func _available_rescue_advisors(
 	return result
 
 
-static func _resolve_move(state: Dictionary, intent: Dictionary, actor_side: String) -> Dictionary:
-	var player_view: Dictionary = PlayerViewProjector.project(state, actor_side)
-	var preview: Dictionary = PlayerViewProjector.preview_intent(player_view, intent)
-	if preview["classification"] == PlayerViewProjector.KNOWN_ILLEGAL:
-		return _rejected("known_illegal", "visible_rule_rejection")
+static func _resolve_move(
+	state: Dictionary,
+	intent: Dictionary,
+	actor_side: String,
+	trusted_generated_action: bool = false
+) -> Dictionary:
+	var visibility_context: Dictionary = PlayerViewProjector.visibility_context(state, actor_side)
+	if not trusted_generated_action:
+		var player_view: Dictionary = PlayerViewProjector.project(state, actor_side)
+		var preview: Dictionary = PlayerViewProjector.preview_intent(player_view, intent)
+		if preview["classification"] == PlayerViewProjector.KNOWN_ILLEGAL:
+			return _rejected("known_illegal", "visible_rule_rejection")
 	var piece_id: String = str(intent.get("piece_id", ""))
 	if not state["pieces"].has(piece_id):
 		return _rejected("known_illegal", "unknown_piece")
 	var piece: Dictionary = state["pieces"][piece_id]
-	if piece["side"] != actor_side or not piece["alive"] or piece["in_reserve"]:
-		return _rejected("known_illegal", "piece_unavailable")
 	var origin := Canonical.coordinate(piece["position"])
 	var target := Canonical.coordinate(intent.get("target_cell", []))
-	if not MatchState.is_inside_board(target):
-		return _rejected("known_illegal", "target_out_of_bounds")
-	var path: Array = _orthogonal_path(origin, target)
-	if path.is_empty():
-		return _rejected("known_illegal", "prototype_move_geometry")
-	for index: int in path.size() - 1:
-		if not MatchState.piece_at(state, path[index]).is_empty():
-			state["contact_intel"][actor_side].append({
-				"schema_version": "contact-intel-v1",
-				"kind": "route_unknown_blocked",
-				"cell": [],
-				"revealed_identity": "",
-				"created_at_action_index": state["action_index"],
-				"persistent_tracking": false,
-			})
-			return {
-				"ok": true,
-				"consumed": true,
-				"result_code": "route_unknown_blocked",
-				"position": [origin.x, origin.y],
-			}
-	var target_piece: Dictionary = MatchState.piece_at(state, target)
-	if not target_piece.is_empty() and target_piece["side"] == actor_side:
-		return _rejected("known_illegal", "known_own_piece_target")
+	if piece["piece_type"] == "rook":
+		state["vision_sources"][actor_side]["rook_paths"].erase(piece_id)
+	var evaluation: Dictionary = MoveRules.evaluate_move(
+		state, intent, actor_side, visibility_context
+	)
+	if not evaluation.get("legal", false):
+		return _consumed_hidden_failure(state, actor_side, piece, origin, target, evaluation)
 	_cancel_flag_capture_for_piece(state, piece_id)
-	var captured_piece_id: String = ""
-	if not target_piece.is_empty():
-		captured_piece_id = target_piece["id"]
-		_cancel_flag_capture_for_piece(state, captured_piece_id)
-		MatchState.remove_piece_from_board(state, captured_piece_id)
-		target_piece["alive"] = false
-		if target_piece["piece_type"] == "general":
-			_set_terminal(state, actor_side, "general_destroyed")
-	MatchState.relocate_piece(state, piece_id, target)
+	piece["revealed_to"] = []
+	var casualties: Array = []
+	var resolved_position: Vector2i = target
+	for target_piece_id_value: Variant in evaluation["target_piece_ids"]:
+		var target_piece_id: String = str(target_piece_id_value)
+		if not state["pieces"].has(target_piece_id):
+			continue
+		var target_piece: Dictionary = state["pieces"][target_piece_id]
+		if not target_piece["alive"] or target_piece["in_reserve"]:
+			continue
+		var casualty: Dictionary = _resolve_single_casualty(state, target_piece_id, actor_side)
+		casualties.append(casualty)
+		if state["terminal"]:
+			break
+	MatchState.relocate_piece(state, piece_id, resolved_position)
+	if not state["terminal"]:
+		_apply_move_vision_effects(state, piece_id, origin, target, evaluation)
 	if not state["terminal"]:
 		_start_flag_capture(state, piece_id)
 	return {
 		"ok": true,
 		"consumed": true,
 		"result_code": "move_resolved",
-		"position": [target.x, target.y],
-		"captured_piece_id": captured_piece_id,
+		"position": [resolved_position.x, resolved_position.y],
+		"move_kind": evaluation["move_kind"],
+		"path": evaluation["path"].duplicate(true),
+		"casualties": casualties,
 	}
 
 
 static func _resolve_bombardment(state: Dictionary, intent: Dictionary, actor_side: String) -> Dictionary:
 	var cannon_id: String = str(intent.get("piece_id", ""))
-	if not can_bombard(state, cannon_id) or state["pieces"][cannon_id]["side"] != actor_side:
-		return _rejected("known_illegal", "bombardment_not_available")
+	var evaluation: Dictionary = MoveRules.evaluate_bombard(state, intent, actor_side)
+	if not evaluation.get("legal", false):
+		return _rejected("known_illegal", str(evaluation.get("reason", "bombardment_not_available")))
 	var center := Canonical.coordinate(intent.get("target_cell", []))
-	if center.x < 2 or center.x > 8 or center.y < 7 or center.y > 18:
-		return _rejected("known_illegal", "bombardment_area_out_of_bounds")
 	var candidates: Array = []
 	for y: int in range(center.y - 1, center.y + 2):
 		for x: int in range(center.x - 1, center.x + 2):
@@ -345,6 +392,7 @@ static func _update_walls_after_action(state: Dictionary, actor_side: String) ->
 			wall["status"] = "BREACHED"
 			wall["repair_start_action_index"] = -1
 			wall["sides_acted_since_repair_start"] = []
+			_disable_special_sources_against_wall(state, wall_side)
 			continue
 		if wall["status"] == "BREACHED" and region_invaders < 3:
 			wall["status"] = "REPAIRING"
@@ -454,8 +502,54 @@ static func _publish_player_event(state: Dictionary, actor_side: String, action_
 		"actor_side": actor_side,
 		"position": outcome.get("position", []).duplicate(),
 		"public_code": outcome["result_code"],
+		"authorized_captures": _authorized_captures(state, outcome, actor_side, true),
 	}
 	state["player_events"][actor_side].append(event)
+	var opponent_side: String = MatchState.opponent(actor_side)
+	var public_to_opponent: bool = outcome["result_code"] in ["pass", "skip", "timeout", "bombardment_resolved"] \
+		or state["terminal"]
+	var position := Canonical.coordinate(outcome.get("position", []))
+	if MatchState.is_inside_board(position):
+		public_to_opponent = public_to_opponent or PlayerViewProjector.is_cell_visible(
+			state, opponent_side, position
+		)
+	if public_to_opponent:
+		var opponent_event: Dictionary = event.duplicate(true)
+		opponent_event["authorized_captures"] = _authorized_captures(
+			state, outcome, opponent_side, false
+		)
+		state["player_events"][opponent_side].append(opponent_event)
+
+
+static func _authorized_captures(
+	state: Dictionary,
+	outcome: Dictionary,
+	viewer_side: String,
+	allow_all: bool
+) -> Array:
+	var casualty_records: Array = outcome.get("casualties", [])
+	if outcome.get("result_code", "") == "bombardment_resolved":
+		casualty_records = outcome.get("bombardment_result", {}).get("casualties", [])
+	var captures: Array = []
+	var seen: Dictionary = {}
+	for casualty: Dictionary in casualty_records:
+		var piece_id: String = str(casualty.get("piece_id", ""))
+		if piece_id.is_empty() or seen.has(piece_id) or not state["pieces"].has(piece_id):
+			continue
+		var piece: Dictionary = state["pieces"][piece_id]
+		var allowed: bool = allow_all or piece["side"] == viewer_side
+		var casualty_cell := Canonical.coordinate(casualty.get("position", outcome.get("position", [])))
+		if not allowed and MatchState.is_inside_board(casualty_cell):
+			allowed = PlayerViewProjector.is_cell_visible(state, viewer_side, casualty_cell)
+		if not allowed:
+			continue
+		seen[piece_id] = true
+		captures.append({
+			"piece_id": piece_id,
+			"piece_type": str(piece["piece_type"]),
+			"rescued": bool(casualty.get("rescued", false)),
+		})
+	return captures
 
 
 static func _set_terminal(state: Dictionary, winner: String, reason: String) -> void:
@@ -464,11 +558,14 @@ static func _set_terminal(state: Dictionary, winner: String, reason: String) -> 
 	state["win_reason"] = reason
 
 
-static func _advance_turn(state: Dictionary, actor_side: String) -> void:
+static func _complete_action_clock(state: Dictionary, actor_side: String) -> void:
 	state["action_index"] = int(state["action_index"]) + 1
 	if actor_side == MatchState.BLACK:
 		state["full_round_index"] = int(state["full_round_index"]) + 1
-	state["active_side"] = MatchState.opponent(actor_side)
+	if not state["terminal"] and actor_side == MatchState.BLACK:
+		_check_round_limit(state)
+	if not state["terminal"]:
+		state["active_side"] = MatchState.opponent(actor_side)
 
 
 static func _normalized_intent(intent: Dictionary) -> Dictionary:
@@ -479,18 +576,6 @@ static func _normalized_intent(intent: Dictionary) -> Dictionary:
 		"target_cell": [target.x, target.y] if MatchState.is_inside_board(target) else [],
 		"skill_type": str(intent.get("skill_type", "")),
 	}
-
-
-static func _orthogonal_path(origin: Vector2i, target: Vector2i) -> Array:
-	if origin == target or (origin.x != target.x and origin.y != target.y):
-		return []
-	var direction := Vector2i(signi(target.x - origin.x), signi(target.y - origin.y))
-	var path: Array = []
-	var cursor: Vector2i = origin + direction
-	while cursor != target + direction:
-		path.append(cursor)
-		cursor += direction
-	return path
 
 
 static func _update_reserve_indexes(state: Dictionary, side: String) -> void:
@@ -504,3 +589,168 @@ static func _rejected(category: String, code: String) -> Dictionary:
 		"consumed": false,
 		"error": {"category": category, "code": code, "fields": []},
 	}
+
+
+static func _consumed_hidden_failure(
+	state: Dictionary,
+	actor_side: String,
+	piece: Dictionary,
+	origin: Vector2i,
+	target: Vector2i,
+	evaluation: Dictionary
+) -> Dictionary:
+	var reason: String = str(evaluation.get("reason", ""))
+	var result_code: String = "route_unknown_blocked"
+	var contact_cell: Array = []
+	if bool(evaluation.get("contact_reached_target", false)):
+		result_code = "target_unknown_occupied"
+		contact_cell = [target.x, target.y]
+	elif reason.begins_with("cannon_"):
+		result_code = "cannon_path_invalid"
+	elif reason == "pawn_special_blocked" or reason == "route_blocked" \
+	or reason in ["horse_leg_blocked", "elephant_eye_blocked"]:
+		result_code = "route_unknown_blocked"
+	else:
+		result_code = "target_unknown_occupied"
+		contact_cell = [target.x, target.y]
+	var revealed_identity: String = ""
+	# Identity is only eligible when the evaluator explicitly proves the
+	# mover reached the target contact. Route/leg/eye/cannon failures must
+	# never inspect the target occupant as a side channel.
+	var target_piece: Dictionary = {}
+	if result_code == "target_unknown_occupied" \
+	and bool(evaluation.get("contact_reached_target", false)):
+		target_piece = MatchState.piece_at(state, target)
+	if not target_piece.is_empty() and target_piece["side"] != actor_side \
+	and target_piece["piece_type"] == "horse" and target_piece["hidden"]:
+		target_piece["revealed_to"] = target_piece.get("revealed_to", [])
+		if not target_piece["revealed_to"].has(actor_side):
+			target_piece["revealed_to"].append(actor_side)
+		revealed_identity = target_piece["id"]
+	state["contact_intel"][actor_side].append({
+		"schema_version": "contact-intel-v1",
+		"kind": result_code,
+		"cell": contact_cell,
+		"revealed_identity": revealed_identity,
+		"created_at_action_index": state["action_index"],
+		"persistent_tracking": false,
+	})
+	return {
+		"ok": true,
+		"consumed": true,
+		"result_code": result_code,
+		"position": [origin.x, origin.y],
+	}
+
+
+static func _resolve_single_casualty(
+	state: Dictionary,
+	piece_id: String,
+	attacker_side: String
+) -> Dictionary:
+	var piece: Dictionary = state["pieces"][piece_id]
+	var record: Dictionary = {
+		"piece_id": piece_id,
+		"piece_type": piece["piece_type"],
+		"side": piece["side"],
+		"rescued": false,
+		"sacrificed_advisor_id": "",
+	}
+	_cancel_flag_capture_for_piece(state, piece_id)
+	_clear_piece_transient_sources(state, piece_id)
+	MatchState.remove_piece_from_board(state, piece_id)
+	piece["alive"] = false
+	if piece["piece_type"] == "general":
+		_set_terminal(state, attacker_side, "general_destroyed")
+		return record
+	if piece["piece_type"] == "advisor":
+		return record
+	var side: String = piece["side"]
+	if int(state["rescue_eligible_events"][side]) >= 2:
+		return record
+	state["rescue_eligible_events"][side] = int(state["rescue_eligible_events"][side]) + 1
+	var advisors: Array = _available_rescue_advisors(state, side, {piece_id: true})
+	if advisors.is_empty():
+		return record
+	var selected: Array = SeededRandom.draw_unique(state["rng"], advisors, 1, "advisor_rescue:%s" % piece_id)
+	var advisor_id: String = str(selected[0])
+	var advisor: Dictionary = state["pieces"][advisor_id]
+	_cancel_flag_capture_for_piece(state, advisor_id)
+	_clear_piece_transient_sources(state, advisor_id)
+	MatchState.remove_piece_from_board(state, advisor_id)
+	advisor["alive"] = false
+	advisor["rescue_available"] = false
+	piece["alive"] = true
+	record["rescued"] = true
+	record["sacrificed_advisor_id"] = advisor_id
+	record["base_return"] = return_pieces_to_base(state, side, [piece_id], "advisor_rescue_return")
+	return record
+
+
+static func _apply_move_vision_effects(
+	state: Dictionary,
+	piece_id: String,
+	origin: Vector2i,
+	target: Vector2i,
+	evaluation: Dictionary
+) -> void:
+	var piece: Dictionary = state["pieces"][piece_id]
+	var side: String = piece["side"]
+	var move_kind: String = str(evaluation["move_kind"])
+	if piece["piece_type"] == "rook":
+		state["vision_sources"][side]["rook_paths"].erase(piece_id)
+		if move_kind == "rook_special":
+			state["vision_sources"][side]["rook_paths"][piece_id] = evaluation["path"].duplicate(true)
+	if piece["piece_type"] == "elephant":
+		state["vision_sources"][side]["elephant_reveal_zones"].erase(piece_id)
+		if move_kind == "elephant_special":
+			state["vision_sources"][side]["elephant_reveal_zones"][piece_id] = \
+				MoveRules.reveal_cells_for_elephant_move(origin, target)
+	if piece["piece_type"] == "horse" and move_kind == "horse_special":
+		piece["hidden"] = true
+
+
+static func _disable_special_sources_against_wall(state: Dictionary, wall_side: String) -> void:
+	var attacker_side: String = MatchState.opponent(wall_side)
+	state["vision_sources"][attacker_side]["rook_paths"].clear()
+	state["vision_sources"][attacker_side]["elephant_reveal_zones"].clear()
+	for piece_value: Variant in state["pieces"].values():
+		var piece: Dictionary = piece_value
+		if piece["side"] == attacker_side and piece["piece_type"] == "horse":
+			piece["hidden"] = false
+			piece["revealed_to"] = []
+
+
+static func _clear_piece_transient_sources(state: Dictionary, piece_id: String) -> void:
+	if not state["pieces"].has(piece_id):
+		return
+	var piece: Dictionary = state["pieces"][piece_id]
+	piece["hidden"] = false
+	piece["revealed_to"] = []
+	piece["temporary_effects"] = []
+	for vision_side: String in [MatchState.RED, MatchState.BLACK]:
+		state["vision_sources"][vision_side]["rook_paths"].erase(piece_id)
+		state["vision_sources"][vision_side]["elephant_reveal_zones"].erase(piece_id)
+
+
+static func _check_round_limit(state: Dictionary) -> void:
+	var limit: int = int(state["configuration"]["full_round_limit_hypothesis"])
+	if int(state["full_round_index"]) < limit:
+		return
+	var counts: Dictionary = {MatchState.RED: 0, MatchState.BLACK: 0}
+	for flag: Dictionary in state["flags"]:
+		if counts.has(flag["owner"]):
+			counts[flag["owner"]] = int(counts[flag["owner"]]) + 1
+	if counts[MatchState.RED] > counts[MatchState.BLACK]:
+		_set_terminal(state, MatchState.RED, "round_limit_flags")
+	elif counts[MatchState.BLACK] > counts[MatchState.RED]:
+		_set_terminal(state, MatchState.BLACK, "round_limit_flags")
+	else:
+		_set_terminal(state, "draw", "round_limit_draw")
+
+
+static func _cell_array_has(cells: Array, target: Vector2i) -> bool:
+	for cell_value: Variant in cells:
+		if Canonical.coordinate(cell_value) == target:
+			return true
+	return false

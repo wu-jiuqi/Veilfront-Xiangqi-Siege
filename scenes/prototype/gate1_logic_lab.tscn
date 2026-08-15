@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scripts/prototype/gate1_logic_lab.gd" id="1_script"]
 [ext_resource type="Theme" path="res://resources/prototype/gate1_logic_lab_theme.tres" id="2_theme"]
 [ext_resource type="PackedScene" path="res://scenes/prototype/board_shell.tscn" id="3_board"]
 [ext_resource type="PackedScene" path="res://scenes/prototype/status_shell.tscn" id="4_status"]
+[ext_resource type="PackedScene" path="res://scenes/prototype/match_controller.tscn" id="5_controller"]
 
 [node name="Gate1LogicLab" type="Control"]
 layout_mode = 3
@@ -14,6 +15,8 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_theme")
 script = ExtResource("1_script")
+
+[node name="MatchController" parent="." instance=ExtResource("5_controller")]
 
 [node name="Background" type="ColorRect" parent="."]
 layout_mode = 1
@@ -85,5 +88,7 @@ layout_mode = 2
 
 [node name="Footer" type="Label" parent="SafeMargin/Page"]
 layout_mode = 2
-text = "可丢弃逻辑原型 · 无正式美术 / 无在线能力 / 无第三方 addon / 规则核心尚未实现"
+text = "可丢弃逻辑原型 · 无正式美术 / 无在线能力 / 无第三方 addon / Revision 3 技术验证中"
 horizontal_alignment = 1
+
+[connection signal="human_view_updated" from="MatchController" to="." method="_on_match_controller_human_view_updated"]

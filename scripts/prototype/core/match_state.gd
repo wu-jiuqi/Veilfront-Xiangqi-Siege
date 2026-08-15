@@ -8,12 +8,22 @@ const BOARD_HEIGHT: int = 24
 const RED: String = "red"
 const BLACK: String = "black"
 const NEUTRAL: String = "neutral"
+const DEFAULT_FULL_ROUND_LIMIT_HYPOTHESIS: int = 8
 
 
-static func create(seed_value: int) -> Dictionary:
+static func create(seed_value: int, configuration: Dictionary = {}) -> Dictionary:
+	var round_limit: int = int(configuration.get(
+		"full_round_limit_hypothesis", DEFAULT_FULL_ROUND_LIMIT_HYPOTHESIS
+	))
+	assert(round_limit > 0)
 	var state: Dictionary = {
 		"schema_version": "full-state-v1",
 		"rules_revision": "owner-freeze-revision-2",
+		"implementation_revision": "prototype-core-revision-3",
+		"configuration": {
+			"full_round_limit_hypothesis": round_limit,
+			"round_limit_status": "hypothesis_cli_overridable",
+		},
 		"board_width": BOARD_WIDTH,
 		"board_height": BOARD_HEIGHT,
 		"active_side": RED,
@@ -32,6 +42,10 @@ static func create(seed_value: int) -> Dictionary:
 		"reserve_queues": {RED: [], BLACK: []},
 		"rescue_eligible_events": {RED: 0, BLACK: 0},
 		"contact_intel": {RED: [], BLACK: []},
+		"vision_sources": {
+			RED: {"rook_paths": {}, "elephant_reveal_zones": {}},
+			BLACK: {"rook_paths": {}, "elephant_reveal_zones": {}},
+		},
 		"events": [],
 		"player_events": {RED: [], BLACK: []},
 		"rng": SeededRandom.create_state(seed_value),
@@ -117,6 +131,8 @@ static func summary(state: Dictionary) -> Dictionary:
 	var snapshot: Dictionary = {
 		"schema_version": state["schema_version"],
 		"rules_revision": state["rules_revision"],
+		"implementation_revision": state["implementation_revision"],
+		"configuration": state["configuration"],
 		"active_side": state["active_side"],
 		"action_index": state["action_index"],
 		"full_round_index": state["full_round_index"],
@@ -130,6 +146,7 @@ static func summary(state: Dictionary) -> Dictionary:
 		"reserve_queues": state["reserve_queues"],
 		"rescue_eligible_events": state["rescue_eligible_events"],
 		"contact_intel": state["contact_intel"],
+		"vision_sources": state["vision_sources"],
 		"rng": {
 			"seed": state["rng"]["seed"],
 			"state": state["rng"]["state"],
@@ -192,6 +209,7 @@ static func _add_piece(
 		"in_reserve": false,
 		"reserve_queue_index": -1,
 		"hidden": false,
+		"revealed_to": [],
 		"bombard_ammo": 2 if piece_type == "cannon" else 0,
 		"rescue_available": piece_type == "advisor",
 		"temporary_effects": [],
