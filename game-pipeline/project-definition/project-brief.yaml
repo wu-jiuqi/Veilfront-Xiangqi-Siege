@@ -25,6 +25,11 @@ project_brief:
     version_or_digest: owner-clarification:2026-08-15:world-art-platform-scope
     supplied_by: project-owner
     authority: project.direction.input
+  - source_id: source:veilfront-xiangqi-siege:owner-rules-revision
+    uri: codex-thread://01a0048b-e4d5-7611-8edc-1e4719666a13
+    version_or_digest: owner-clarification:2026-08-15:flags-zones-rook-pawn
+    supplied_by: project-owner
+    authority: project.direction.input
   statements:
   - statement_id: stmt:veilfront-xiangqi-siege:project-goal
     domain: project-goal
@@ -43,25 +48,28 @@ project_brief:
     - source:veilfront-xiangqi-siege:owner-planning-conversation
   - statement_id: stmt:veilfront-xiangqi-siege:board-and-fog
     domain: gameplay
-    text: 棋盘为24×9格，按双方各5线大本营、各3线缓冲区与中央8线战区划分；开局除己方大本营外均受战争迷雾影响，普通棋子以当前位置为中心提供3×3动态视野，移动后旧区域重新进入迷雾。
+    text: 棋盘为24×9格，按双方各5线大本营、各3线缓冲区与中央8线战区划分；项目取消楚河汉界与河界概念，除将帅和士受九宫限制外，其他棋子可在全棋盘行动。开局除己方大本营外均受战争迷雾影响，普通棋子以当前位置为中心提供3×3动态视野，移动后旧区域重新进入迷雾。
     status: confirmed
     decision_owner: project-owner
     source_refs:
     - source:veilfront-xiangqi-siege:owner-planning-conversation
+    - source:veilfront-xiangqi-siege:owner-rules-revision
   - statement_id: stmt:veilfront-xiangqi-siege:phase-gameplay
     domain: gameplay
-    text: 双方城墙状态独立结算；敌方城墙完整时，进攻方棋子使用战前能力，城墙倒塌后恢复对应的传统象棋规则。战前能力包括兵卒在战区与缓冲区横竖移动1至5格、马隐身、相象田字侦察视野、车的路径直线视野，以及位于己方大本营的炮对战区和缓冲区实施3×3范围随机三格轰炸。
+    text: 双方城墙状态独立结算。除炮的区域轰炸外，所有特殊规则仅在两个缓冲区与中央战区内生效，且一次特殊行动的起点、经过格和终点必须全部位于该区域；任意大本营内的棋子使用默认象棋规则。炮是唯一例外，位于己方大本营且敌方城墙完整时仍可对缓冲区和战区实施3×3范围随机三格轰炸。
     status: confirmed
     decision_owner: project-owner
     source_refs:
     - source:veilfront-xiangqi-siege:owner-planning-conversation
+    - source:veilfront-xiangqi-siege:owner-rules-revision
   - statement_id: stmt:veilfront-xiangqi-siege:horse-elephant-rules
     domain: gameplay
-    text: 在所面对的敌方城墙倒塌前，马与相象全局不受蹩马腿和堵象眼限制；敌方城墙倒塌后恢复传统限制。该规则按双方独立结算，马的具体强度需要通过原型验证。
+    text: 马与相象可在全棋盘行动，但无视蹩马腿、无视堵象眼、隐身和田字侦察只在敌方城墙完整且行动完全发生于两个缓冲区或战区时生效；在任意大本营内，马受到蹩马腿限制，相象受到堵象眼限制。敌方城墙倒塌后，两者在全棋盘恢复对应默认限制并移除特殊能力。
     status: confirmed
     decision_owner: project-owner
     source_refs:
     - source:veilfront-xiangqi-siege:owner-planning-conversation
+    - source:veilfront-xiangqi-siege:owner-rules-revision
   - statement_id: stmt:veilfront-xiangqi-siege:cannon-rules
     domain: gameplay
     text: 炮的区域轰炸属于不需要炮架、不会移动炮的特殊行动；炮的常规移动与精确吃子继续遵守传统象棋规则，精确吃子必须隔一枚炮架并移动至目标格。区域轰炸与常规行动互斥。
@@ -69,6 +77,21 @@ project_brief:
     decision_owner: project-owner
     source_refs:
     - source:veilfront-xiangqi-siege:owner-planning-conversation
+    - source:veilfront-xiangqi-siege:owner-rules-revision
+  - statement_id: stmt:veilfront-xiangqi-siege:rook-rules
+    domain: gameplay
+    text: 当敌方城墙完整且整段行动位于两个缓冲区或战区时，车可以穿过并依次消灭移动路径上的所有敌方棋子，但不能穿过己方棋子；本次移动路径形成特殊视野，持续到该车下一次移动开始。车在大本营内、敌方城墙倒塌后或不满足完整区域条件时使用默认象棋规则。
+    status: confirmed
+    decision_owner: project-owner
+    source_refs:
+    - source:veilfront-xiangqi-siege:owner-rules-revision
+  - statement_id: stmt:veilfront-xiangqi-siege:pawn-rules
+    domain: gameplay
+    text: 项目取消兵卒的过河判定，兵卒默认始终按已过河状态，可向前、左或右移动一格。在敌方城墙完整且整段行动位于两个缓冲区或战区时，兵卒可横竖行军1至5格并穿过一枚或多枚敌方棋子，但不能穿过己方棋子、不能停在被占用格，穿越不会造成伤害或吃子。
+    status: confirmed
+    decision_owner: project-owner
+    source_refs:
+    - source:veilfront-xiangqi-siege:owner-rules-revision
   - statement_id: stmt:veilfront-xiangqi-siege:wall-cycle
     domain: gameplay
     text: 完整城墙阻挡敌方棋子从缓冲区进入大本营；至少3枚敌方棋子同时进入缓冲区时城墙倒塌。缓冲区与大本营内敌军少于3枚并持续一个完整回合后城墙恢复；恢复时只将大本营内入侵棋子随机撤回各自大本营空格，清除位置关联临时状态但不恢复已消耗的永久资源，也不附加行动惩罚。
@@ -78,11 +101,12 @@ project_brief:
     - source:veilfront-xiangqi-siege:owner-planning-conversation
   - statement_id: stmt:veilfront-xiangqi-siege:victory-and-flags
     domain: gameplay
-    text: 战区随机生成3面旗帜，棋子需在旗点持续占领3回合；同时占领三旗立即获胜。对局时间结束时以旗帜数量判胜，同数为平局；直接击杀敌方将帅具有最高胜利优先级。
+    text: 三个单格旗帜只在中央8×9战区内随机生成，占据三个不同合法格，不要求中心对称或镜像模板，并在开局时向双方公开。棋子需在旗点持续占领3回合；同时占领三旗立即获胜。对局时间结束时以旗帜数量判胜，同数为平局；直接击杀敌方将帅具有最高胜利优先级。
     status: confirmed
     decision_owner: project-owner
     source_refs:
     - source:veilfront-xiangqi-siege:owner-planning-conversation
+    - source:veilfront-xiangqi-siege:owner-rules-revision
   - statement_id: stmt:veilfront-xiangqi-siege:piece-rescue
     domain: gameplay
     text: 每方两枚士承担本局最先阵亡两枚棋子的替死职责，被救回的棋子返回初始位置；替死触发顺序、目标格占用与将帅是否可被替死仍需详细规则确认。
@@ -143,7 +167,7 @@ project_brief:
     - source:veilfront-xiangqi-siege:owner-scope-clarification
   open_questions:
   - question_id: question:veilfront-xiangqi-siege:traditional-board-rules
-    question: 请冻结24×9棋盘上的九宫、河界与前进方向定义，并明确城墙倒塌后兵卒过河、相象不过河、将帅照面、飞将、将军和应将如何处理。
+    question: 河界与兵卒过河状态已经解决；仍需冻结九宫的绝对坐标，并明确将帅照面、飞将、将军、应将和将死是否取消。
     decision_owner: project-owner
     blocks_staffing: false
   - question_id: question:veilfront-xiangqi-siege:hidden-command
@@ -159,7 +183,7 @@ project_brief:
     decision_owner: project-owner
     blocks_staffing: false
   - question_id: question:veilfront-xiangqi-siege:piece-edge-cases
-    question: 请确认兵卒长距离移动能否穿子和吃子、马隐身反制、相象与车的特殊视野范围、士替死边界，以及炮击弹药、冷却、友军伤害和边界落点规则。
+    question: 请继续确认马隐身反制、相象田字视野的精确格集合、车多目标歼灭与士替死的交互，以及炮击弹药、冷却、友军伤害和边界落点规则。
     decision_owner: project-owner
     blocks_staffing: false
   - question_id: question:veilfront-xiangqi-siege:ai-information
@@ -196,11 +220,13 @@ project_brief:
     impact: high
     staffing_implication: 需要从规则、客户端表现、网络协议与QA四个角度独立验收信息边界。
   - risk_id: risk:veilfront-xiangqi-siege:balance
-    description: 兵卒长距离机动、马的隐身与无蹩腿、远程随机炮击可能压缩其他棋子的战略价值或放大先手和随机优势。
+    description: 兵卒穿敌长距离机动、马的隐身与区域内无蹩腿、车的路径多目标歼灭及远程随机炮击可能压缩其他棋子的战略价值，或放大先手和随机优势。
     evidence_refs:
     - stmt:veilfront-xiangqi-siege:phase-gameplay
     - stmt:veilfront-xiangqi-siege:horse-elephant-rules
     - stmt:veilfront-xiangqi-siege:cannon-rules
+    - stmt:veilfront-xiangqi-siege:rook-rules
+    - stmt:veilfront-xiangqi-siege:pawn-rules
     impact: medium
     staffing_implication: 需要可观测的平衡指标、对局日志、批量模拟或结构化试玩，不应在纸面阶段宣布平衡完成。
   - risk_id: risk:veilfront-xiangqi-siege:art-unknown
@@ -289,4 +315,4 @@ project_brief:
   integrity:
     canonicalization: project-brief-subject-canonical-json-v1
     digest_algorithm: sha256
-    subject_digest: 965d2adb724eedb2293a61b0989b3e8194f9c4cdba068c31095ab61917ea5b47
+    subject_digest: 5f63b92a8ca6e8b51775d0300bdb5ac3d45d1a16de57c66ba9c8ca9361bafc8a
