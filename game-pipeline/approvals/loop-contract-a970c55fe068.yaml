@@ -1,0 +1,19 @@
+approval:
+  schema_version: game-production-approval/v1
+  approval_id: approval:veilfront-xiangqi-siege:loop-contract:a970c55fe068
+  subject_kind: loop-contract
+  subject_id: LOOP-CTR-GATE1-VERTICAL-SLICE-001@v1
+  subject_digest: a970c55fe068a1252251ee4d30dedff32bee9da1f8e7e7ef7dc0c501be416799
+  decision: approved
+  decided_by: project-owner
+  decided_at: '2026-08-15T19:46:15.3916447+08:00'
+  evidence:
+    source_refs:
+      - codex-thread://01a00528-24e2-79c0-a77c-14aa0d7b9f81#contract-approval-a970c55fe068
+      - git:veilfront-xiangqi-siege:623a438#game-pipeline/loops/contracts/loop-contract-gate1-vertical-slice.yaml
+  application:
+    materialized_path: game-pipeline/loops/contracts/loop-contract-gate1-vertical-slice.yaml
+    materialized_status: approved
+    materialized_digest: a0380db5819f9651bbb2b0fab243bb3489504b11ed808506f2ecb92a589ae1ad
+    applied_at: '2026-08-15T19:46:15.3916447+08:00'
+

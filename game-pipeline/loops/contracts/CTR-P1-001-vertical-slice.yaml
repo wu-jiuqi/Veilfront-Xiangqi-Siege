@@ -3,10 +3,17 @@ contract:
   contract_id: CTR-P1-001
   title: GATE-1 规则、迷雾与 AI 公平性垂直切片
   stage: P1
-  status: draft
+  status: approved
   owner_agent: AGT-DIR
   project_id: veilfront-xiangqi-siege
   version: 1
+
+approval_binding:
+  approval_id: approval:veilfront-xiangqi-siege:pipeline-contract:189b691e6c60
+  subject_digest: 189b691e6c60b0c5c7b069081ebe34e726ff038211d60a33084eee5638499014
+  approved_by: project-owner
+  approved_at: '2026-08-15T19:46:15.3916447+08:00'
+  source_ref: codex-thread://01a00528-24e2-79c0-a77c-14aa0d7b9f81#contract-approval-189b691e6c60
 
 objective:
   player_facing_outcome: >-
@@ -25,7 +32,7 @@ entry_conditions:
     evidence: game-pipeline/organization/snapshot.yaml、game-pipeline/approvals/ 与 validate_project_instance.py 输出
   - id: ENTRY-003
     description: 本 Contract 与 LOOP-CTR-GATE1-VERTICAL-SLICE-001 v1 已由项目所有者批准且摘要匹配。
-    evidence: 待创建的不可变 Contract approval 记录；批准前不得开始实现
+    evidence: game-pipeline/approvals/loop-contract-a970c55fe068.yaml 与 game-pipeline/approvals/pipeline-contract-189b691e6c60.yaml
   - id: ENTRY-004
     description: QA 审查实例独立于规则、Godot 和 AI 生产实例。
     evidence: Organization Registry 的实例任命与独立性检查
@@ -43,7 +50,7 @@ inputs:
     owner_agent: AGT-DIR
   - artifact_id: artifact:veilfront-xiangqi-siege:loop-contract@gate1-v1
     path: game-pipeline/loops/contracts/loop-contract-gate1-vertical-slice.yaml
-    version: 1@pending-approval
+    version: 1@a970c55fe068a1252251ee4d30dedff32bee9da1f8e7e7ef7dc0c501be416799
     required: true
     owner_agent: AGT-DIR
 

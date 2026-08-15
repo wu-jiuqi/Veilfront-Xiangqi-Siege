@@ -1,0 +1,18 @@
+approval:
+  schema_version: game-production-approval/v1
+  approval_id: approval:veilfront-xiangqi-siege:pipeline-contract:189b691e6c60
+  subject_kind: pipeline-contract
+  subject_id: CTR-P1-001@v1
+  subject_digest: 189b691e6c60b0c5c7b069081ebe34e726ff038211d60a33084eee5638499014
+  decision: approved
+  decided_by: project-owner
+  decided_at: '2026-08-15T19:46:15.3916447+08:00'
+  evidence:
+    source_refs:
+      - codex-thread://01a00528-24e2-79c0-a77c-14aa0d7b9f81#contract-approval-189b691e6c60
+      - git:veilfront-xiangqi-siege:623a438#game-pipeline/loops/contracts/CTR-P1-001-vertical-slice.yaml
+  application:
+    materialized_path: game-pipeline/loops/contracts/CTR-P1-001-vertical-slice.yaml
+    materialized_status: approved
+    materialized_digest: fe436181f039389658414032ff1370d2fc1bc896bc7d446e96d8fd0abea23b2e
+    applied_at: '2026-08-15T19:46:15.3916447+08:00'

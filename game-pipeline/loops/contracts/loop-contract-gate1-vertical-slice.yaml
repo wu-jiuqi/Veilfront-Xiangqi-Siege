@@ -4,7 +4,14 @@ loop_contract:
   loop_type: gate1-risk-retirement-vertical-slice
   title: 首个生产循环——规则、迷雾与 AI 公平性垂直切片
   version: 1
-  status: draft
+  status: approved
+
+approval_binding:
+  approval_id: approval:veilfront-xiangqi-siege:loop-contract:a970c55fe068
+  subject_digest: a970c55fe068a1252251ee4d30dedff32bee9da1f8e7e7ef7dc0c501be416799
+  approved_by: project-owner
+  approved_at: '2026-08-15T19:46:15.3916447+08:00'
+  source_ref: codex-thread://01a00528-24e2-79c0-a77c-14aa0d7b9f81#contract-approval-a970c55fe068
 
 purpose:
   objective: >-
@@ -210,4 +217,3 @@ coordination:
     required_authority_scope: []
   registry_binding:
     store_runtime_relationships_in_registry: true
-

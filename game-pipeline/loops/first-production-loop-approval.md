@@ -2,7 +2,7 @@
 
 ## 当前结论
 
-本次只提交两个 `draft` Contract，不创建 Loop Registry 实例，也不创建 Godot 工程：
+两个 Contract 已由项目所有者按下列待审批摘要批准；本次批准允许进入 Loop Registry 登记与准入，但不等于 GATE-1：
 
 - `LOOP-CTR-GATE1-VERTICAL-SLICE-001 v1`：定义可复用的首个生产循环、责任边界、3 轮预算、独立审查、失败回退与 GATE-1。
 - `CTR-P1-001 v1`：定义本项目首个垂直切片的具体产物、Godot 映射、自动检查、原型验收标准和人工判断问题。
@@ -12,7 +12,7 @@
 - `loop-contract-gate1-vertical-slice.yaml`：`a970c55fe068a1252251ee4d30dedff32bee9da1f8e7e7ef7dc0c501be416799`
 - `CTR-P1-001-vertical-slice.yaml`：`189b691e6c60b0c5c7b069081ebe34e726ff038211d60a33084eee5638499014`
 
-项目所有者批准并绑定两个 Contract 的当前摘要后，下一合法动作才是登记 Loop 实例并进入 `draft -> ready -> active`；届时才可创建 `project.godot` 和原型源文件。
+批准记录落盘并通过实例校验后，下一合法动作是登记 Loop 实例并进入 `draft -> ready -> active`；进入 `active` 后才可按 Contract 创建 `project.godot` 和原型源文件。
 
 ## 这次原型要回答的问题
 
@@ -38,9 +38,9 @@
 - 不在证据形成前冻结单局轮数上限、AI 搜索预算、随机性或难度档位。
 - 不引入在线联机、排位、专用服务器或机器学习。
 
-## 需要项目所有者批准的决定
+## 项目所有者批准结果
 
-请批准或要求修订以下绑定内容：
+项目所有者已于 `2026-08-15T19:46:15.3916447+08:00` 批准以下绑定内容：
 
 1. 首个循环范围是否只覆盖规则核心、迷雾、确定性与 AI 公平性，不包含正式资产生产；
 2. 是否接受最多 3 轮修订，耗尽后暂停复审；
@@ -49,3 +49,8 @@
 5. 是否确认只有通过 `GATE-1` 后，才能进入正式功能开发与资产生产。
 
 批准动作本身不是 `GATE-1`。它只允许启动原型生产循环；`GATE-1` 必须等原型和独立证据完成后另行判断。
+
+不可变批准记录：
+
+- `game-pipeline/approvals/loop-contract-a970c55fe068.yaml`
+- `game-pipeline/approvals/pipeline-contract-189b691e6c60.yaml`
