@@ -1,7 +1,7 @@
 # TASK-AI-001：AI 输入与审计契约 v1
 
-状态：`prototype / hypothesis-bearing`  
-适用：GATE-1 可丢弃逻辑原型  
+状态：`prototype / hypothesis-bearing`
+适用：GATE-1 可丢弃逻辑原型
 事实依据：CTR-P1-001 v1、`stmt:veilfront-xiangqi-siege:single-player-ai`、`stmt:veilfront-xiangqi-siege:board-and-fog`
 
 ## 1. 结论与边界
