@@ -1,0 +1,172 @@
+REVISION 3 QA RAW COMMAND OUTPUT
+project=veilfront-xiangqi-siege
+qa_instance=inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
+environment=Windows NT 10.0.26200.0; PowerShell 5.1.26100.9168; Python 3.11.5; Godot 4.7.1.stable.official.a13da4feb
+commit=ed8ebe1ba9b10d34680194f8630c46ad00b2f81b
+branch=main...origin/main
+production_worktree_at_start=clean
+
+===== PROJECT INSTANCE =====
+start=2026-08-16T01:05:45.2457782+08:00
+command=python "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/scripts/validate_project_instance.py" --project-root .
+output={"state":"normal","project_id":"veilfront-xiangqi-siege","plugin_lock":{"state":"normal","errors":[],"warnings":[],"locked_version":"0.4.0-alpha.2","installed_version":"0.4.0-alpha.2","locked_framework_digest":"3589bce5cf4388f91a08f12acb5d90679256191d5085e65687d06a635bbdcd32","installed_framework_digest":"3589bce5cf4388f91a08f12acb5d90679256191d5085e65687d06a635bbdcd32"},"errors":[],"warnings":[]}
+exit=0
+end=2026-08-16T01:06:03.0427654+08:00
+
+===== PIPELINE CONTRACT =====
+start=2026-08-16T01:05:45.5090856+08:00
+command=python "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/scripts/validate_pipeline_contract.py" game-pipeline/loops/contracts/CTR-P1-001-vertical-slice.yaml
+output=OK: game-pipeline\loops\contracts\CTR-P1-001-vertical-slice.yaml
+exit=0
+end=2026-08-16T01:05:53.2362159+08:00
+
+===== ORGANIZATION HISTORY =====
+start=2026-08-16T01:05:47.0249875+08:00
+command=python "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/scripts/validate_organization_registry.py" --snapshot game-pipeline/organization/snapshot.yaml --history game-pipeline/organization/event-history.yaml
+output=OK: Organization Registry contract/digest/snapshot/event history consistent (console Chinese text was mojibake)
+exit=0
+end=2026-08-16T01:06:00.5240494+08:00
+
+===== LOOP OFFICIAL CLI =====
+start=2026-08-16T01:05:47.3417315+08:00
+command=python "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/scripts/validate_loop_registry.py" --snapshot game-pipeline/loops/registry/first-production-loop/snapshot.yaml --event "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/contracts/loop-registry-event.template.yaml" --contract game-pipeline/loops/contracts/loop-contract-gate1-vertical-slice.yaml --state-machine "$env:USERPROFILE/.codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2/contracts/loop-state-machine.default.yaml" --history game-pipeline/loops/registry/first-production-loop/event-history.yaml
+output:
+ERROR: Snapshot template initial state must equal state machine initial_state
+ERROR: Snapshot template current_iteration must start at 0
+ERROR: Registry Snapshot template watermark must be sequence=1, record_revision=1
+ERROR: draft registry item's inputs and outputs must be empty
+ERROR: Snapshot input_slot_id must fully correspond to Contract required_inputs
+ERROR: Snapshot deliverable_id must fully correspond to Contract required_deliverables
+exit=1
+end=2026-08-16T01:06:00.8070721+08:00
+note=Official CLI failure retained. The English render above is a faithful translation of the six mojibake console lines; the locked CLI itself was not modified.
+
+===== LOOP HISTORY FUNCTION, SAME UNMODIFIED SCRIPT =====
+start=2026-08-16T01:06:43.1184135+08:00
+command=python -c "load locked validate_loop_registry.py; read the same snapshot/history/state-machine/event-contract; call validate_history(snapshot, history, state_machine, event_contract); exit nonzero iff errors"
+output=history_error_count=0
+exit=0
+end=2026-08-16T01:06:51.0807321+08:00
+note=This proves only history-chain replay. It does not replace the failed official CLI.
+
+===== GODOT VERSION =====
+start=2026-08-16T01:07:55.6451567+08:00
+command=godot --version
+output=4.7.1.stable.official.a13da4feb
+exit=0
+end=2026-08-16T01:07:59.5807733+08:00
+
+===== GODOT IMPORT =====
+start=2026-08-16T01:08:14.9467836+08:00
+command=godot --headless --path . --editor --quit-after 1
+output=Godot Engine v4.7.1.stable.official.a13da4feb; first_scan_filesystem DONE; WARNING: Scan thread aborted at forced editor exit
+exit=0
+end=2026-08-16T01:09:37.5721096+08:00
+
+===== GODOT MAIN =====
+start=2026-08-16T01:10:04.8107251+08:00
+command=godot --headless --path . --quit-after 2
+output=GATE1_PROTOTYPE_READY seed=471001 cells=216 core=prototype_core_revision3 full_gate1=false
+exit=0
+end=2026-08-16T01:10:12.0489589+08:00
+
+===== RUN ALL =====
+start=2026-08-16T01:10:27.6362642+08:00
+command=godot --headless --path . --script res://tests/prototype/run_all.gd
+output:
+PASS: main scene loads as PackedScene
+PASS: preset MatchController, BoardShell, StatusShell and SeedValue nodes exist
+PASS: UI controller exposes only the human-side PlayerView entry and no FullState route
+PASS: 216-cell runtime board and seed 471001
+PASS: FullState frozen setup, red first, deterministic flags and no cooldown fields
+PASS: FullState to PlayerView hidden-equivalent projection, query/error and AI DTO
+PASS: flag lifecycle, no-cooldown bombard qualification, simultaneous-general draw, rescue, reserve FIFO and wall timing
+PASS: same seed plus intents replay with identical event log and final state summary
+PASS: traditional geometry, special qualification, cannon screen and wall-line constraints
+PASS: rook sequential targets, hidden horse/cannon screen, reveal-policy lifecycle and player-event filtering
+PASS: configurable round-limit full-match termination, determinism and full-match replay
+PASS: prepared-action token, same-turn choice, event record and replay
+PASS: real PlayerView AI hidden-equivalence, independent seed and public audit equality
+PROTOTYPE_BASIS_CHECKS_PASSED scaffold=9 focused_suites=9 full_gate1=false
+exit=0
+end=2026-08-16T01:11:27.4603962+08:00
+
+===== AI POSITIVE =====
+start=2026-08-16T01:35:54.3702141+08:00
+command=godot --headless --path . --script res://tests/prototype/test_ai_fairness.gd
+raw_output=evidence/prototype/qa/iteration-1-revision-3-ai-positive-output.txt
+raw_output_sha256=eb4ede6abe1a4c6219f32b62a976c99fd0cf8fcfda9812b19a6ceb381a9ae2ad
+terminal_output=AI fairness prototype tests passed
+exit=0
+end=2026-08-16T01:36:43.1697069+08:00
+
+===== AI FORCE-FAILURE NEGATIVE CONTROL =====
+start=2026-08-16T01:12:53.2694791+08:00
+command=godot --headless --path . --script res://tests/prototype/test_ai_fairness.gd -- --force-failure
+output=ERROR: AI FAIRNESS FAIL: deliberate negative-path sentinel; AI fairness prototype tests failed count=1
+exit=1
+expected_exit=1
+end=2026-08-16T01:13:35.2527813+08:00
+
+===== MOVE ORACLE =====
+start=2026-08-16T01:13:51.1543771+08:00
+command=godot --headless --path . --script res://tests/prototype/run_move_rules.gd
+output=MOVE_RULES_SUITE_PASSED elapsed_msec=3572
+exit=0
+end=2026-08-16T01:14:04.3173758+08:00
+
+===== REPLAY AND TAMPER =====
+start=2026-08-16T01:14:39.6603495+08:00
+command=godot --headless --path . --script res://evidence/prototype/qa/revision3_replay_runner.gd
+output=REVISION3_REPLAY_TAMPER_SUITE_PASSED
+exit=0
+end=2026-08-16T01:14:52.9248180+08:00
+covered_tamper_cases=intent target, event id, final-state digest, execution result
+
+===== 1000 FIXED SEEDS =====
+start=2026-08-16T01:15:33.7077211+08:00
+command=godot --headless --path . --script res://tests/prototype/run_seeded_matches.gd -- --seeds 1000 --manifest-path evidence/prototype/qa/iteration-1-revision-3-seeded-manifest.jsonl
+raw_output=evidence/prototype/qa/iteration-1-revision-3-seeded-output.txt
+raw_output_sha256=5cb6735490c26b55900aabf9ed23a357684b0d171bcf58b2e9eddb38313c7c59
+manifest=evidence/prototype/qa/iteration-1-revision-3-seeded-manifest.jsonl
+manifest_sha256=09ddfbe602c818308daf0ecd7b43fe61116a24b6ca1be0ac247a07f634f959a5
+manifest_lines=1002
+output=SEEDED_MATCHES_SUMMARY completed_matches=1000 requested_seeds=1000 failure_count=0 determinism_checked_count=1000 determinism_mismatch_count=0 replay_sample_count=10 replay_verified_count=10 records_count=1000 records_digest=8ee5bcc23af9538ea0abc6b3c36f85f86d195f46533bb2eba811139e2c94cce3 full_round_limit_hypothesis=8 round_limit_status=hypothesis_cli_overridable winner_counts(red=5,black=9,draw=986) reason_counts(round_limit_flags=14,round_limit_draw=986) rounds(min=8,p50=8,p90=8,p95=8,max=8) metrics(bombardments=3793,candidate_evaluations=55152,flag_captures=14,rescues=18,rook_multi_targets=0,wall_breaches=1,wall_repairs=0)
+exit=0
+end=2026-08-16T01:31:58.9665541+08:00
+
+===== MANIFEST POSITIVE VERIFIER =====
+start=2026-08-16T01:32:40.1660221+08:00
+command=godot --headless --path . --script res://tests/prototype/verify_seeded_manifest.gd -- --path evidence/prototype/qa/iteration-1-revision-3-seeded-manifest.jsonl
+output=SEEDED_MANIFEST_VERIFIED records=1000 digest=8ee5bcc23af9538ea0abc6b3c36f85f86d195f46533bb2eba811139e2c94cce3
+exit=0
+end=2026-08-16T01:32:49.8214001+08:00
+
+===== MANIFEST FORCED-TAMPER NEGATIVE CONTROL =====
+start=2026-08-16T01:32:39.9079444+08:00
+command=godot --headless --path . --script res://tests/prototype/verify_seeded_manifest.gd -- --path evidence/prototype/qa/iteration-1-revision-3-seeded-manifest.jsonl --force-record-tamper
+output=ERROR: SEEDED_MANIFEST_VERIFY_FAILED: manifest_count_or_digest_mismatch
+exit=1
+expected_exit=1
+end=2026-08-16T01:32:48.5274003+08:00
+
+===== SOURCE AUDIT: NO COOLDOWN =====
+command=Select-String over scripts/prototype and resources/prototype for case-insensitive cooldown or 冷却
+output=NO_PRODUCTION_COOLDOWN_TOKEN_HITS
+exit=0
+
+===== SOURCE AUDIT: FULLSTATE TO PLAYERVIEW TO AI =====
+observation=AI engine accepts typed ai_player_view.gd DTO; test_ai_fairness constructs genuinely different FullState values, projects both through PlayerViewProjector.project and export_ai_projection_from_view, validates identical DTO digests, actions, input summaries and public audits, and rejects an injected hidden_enemy_pieces field.
+runtime_result=pass; see AI POSITIVE and RUN ALL
+
+===== OWNER-PENDING ELEPHANT REVEAL CELLS =====
+command=Select-String approved specs/brief/approvals for 田字显形, PENDING-OWNER-ELEPHANT-REVEAL-CELLS and 相/象
+output=No approved artifact enumerates the exact reveal-cell set. rules-test-coverage-matrix-v1.md and godot-artifact-map-v1.md explicitly retain PENDING-OWNER-ELEPHANT-REVEAL-CELLS and treat reveal_cells_for_elephant_move as a replaceable hypothesis.
+result=blocked/pending-owner
+
+===== FINAL BASELINE RECHECK =====
+checked_at=2026-08-16T01:37:29.6300355+08:00
+head=ed8ebe1ba9b10d34680194f8630c46ad00b2f81b
+loop=current_state=active,current_iteration=1,record_revision=20,last_event_sequence=20
+production_changes=none
+qa_untracked_at_check=iteration-1-revision-3-seeded-manifest.jsonl, iteration-1-revision-3-seeded-output.txt, revision3_replay_runner.gd
