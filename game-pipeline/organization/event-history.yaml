@@ -586,3 +586,114 @@ organization_event_history:
     digest_algorithm: sha256
     previous_event_digest: cd15e2161b655810c4cc0c6d22fd4f198532a4aa63f037e7c3823cca34e89550
     event_digest: c6a3fc3223dc800d772f6173e89a97802e6da4b85a594ea4c6dd14118cd6cb96
+- schema_version: 0.2-alpha
+  event_id: evt:01M02M6X3RWNC61XSE25569YM9
+  mutation_id: mut:01M02M6X3SJZRZE8GKP1BSVHJ8
+  project_id: veilfront-xiangqi-siege
+  sequence: 3
+  event_type: core.instance_registered
+  occurred_at: '2026-08-15T19:51:41.943479+08:00'
+  recorded_at: '2026-08-15T19:51:41.943479+08:00'
+  actor: &id004
+    actor_kind: system
+    actor_id: codex-runtime
+    acting_position_id: null
+    role: organization-instance-coordinator
+  authorization: &id005
+    authority_ref: &id003
+      id: AUTHORITY-DELEGATION-CORE
+      version: 0.2-alpha
+      digest: a2a8a9a5cb01689db23d0dd7958748add339b43726bad38235f003a9c7f67df9
+    approval_refs:
+    - approval:veilfront-xiangqi-siege:loop-contract:a970c55fe068
+    - approval:veilfront-xiangqi-siege:pipeline-contract:189b691e6c60
+    change_set_ref: null
+  causality:
+    correlation_id: loop-bootstrap:01M02M6X3W72XJ08T5HH92BKY6
+    causation_event_id: null
+    request_id: codex-thread://01a00528-24e2-79c0-a77c-14aa0d7b9f81#contract-approval-189b691e6c60
+  concurrency:
+    expected_organization_revision: 2
+    expected_snapshot_digest: 9b193d9d99f7a541edc5aa5b285ee98127fb7684f4ee47e6b06c7c413a4c7fe9
+    resulting_organization_revision: 3
+  binding_snapshot: &id006
+    organization_contract:
+      id: ORG-CONTRACT-CORE
+      version: 0.2-alpha
+      digest: a7f9a73911a8cb4ba71f1c35d382d7f2207e8ba1c0c3acf6e64a6f0ffbe5c065
+    lifecycle_contract:
+      id: ORG-LIFECYCLE-CORE
+      version: 0.2-alpha
+      digest: 99f59cae7eaa4e12cfbf5f22dde914568293ad7f78eb939ab08bee427c774240
+    authority_policy: *id003
+  payload:
+    instance:
+      instance_id: inst:01M02M6X3Q8YWJXHY52K3V5AR2
+      instance_kind: position
+      preset_binding:
+        preset_id: preset:veilfront-xiangqi-siege:project-manager
+        version: 0.1.0
+        digest: 33b13d15eacf94fec9c32f034bb184e9b137315ecdb0caad9ef8fd5dadcff591
+      position_binding:
+        position_id: pos:veilfront-xiangqi-siege:root:project-manager
+        definition_digest: dad0ef8a87fa5e66804b720fcfc6651c6e4f4a4aa4522777f74200d71d6b21f6
+      temporary_binding: null
+      lifecycle:
+        state: starting
+        state_entered_at: '2026-08-15T19:51:41.943479+08:00'
+        transition_ref: evt:01M02M6X3RWNC61XSE25569YM9
+      started_at: '2026-08-15T19:51:41.943479+08:00'
+      expires_at: null
+      audit:
+        registered_by_event_id: evt:01M02M6X3RWNC61XSE25569YM9
+        last_changed_by_event_id: evt:01M02M6X3RWNC61XSE25569YM9
+    reservation: null
+  evidence_refs:
+  - game-pipeline/approvals/loop-contract-a970c55fe068.yaml
+  - game-pipeline/approvals/pipeline-contract-189b691e6c60.yaml
+  - .codex/agents/project-manager.toml
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: c6a3fc3223dc800d772f6173e89a97802e6da4b85a594ea4c6dd14118cd6cb96
+    event_digest: b77fd41680017ee87e35e792707fd8681ca26958a712847158ff5542a2495d3c
+- schema_version: 0.2-alpha
+  event_id: evt:01M02M6X3TNN3CC025BTKZ8P9C
+  mutation_id: mut:01M02M6X3VPPXASB744WPMJ360
+  project_id: veilfront-xiangqi-siege
+  sequence: 4
+  event_type: core.instance_lifecycle_transitioned
+  occurred_at: '2026-08-15T19:51:41.943479+08:00'
+  recorded_at: '2026-08-15T19:51:41.943479+08:00'
+  actor: *id004
+  authorization: *id005
+  causality:
+    correlation_id: loop-bootstrap:01M02M6X3W72XJ08T5HH92BKY6
+    causation_event_id: evt:01M02M6X3RWNC61XSE25569YM9
+    request_id: codex-thread://01a00528-24e2-79c0-a77c-14aa0d7b9f81#contract-approval-189b691e6c60
+  concurrency:
+    expected_organization_revision: 3
+    expected_snapshot_digest: cc3344d463507fd8c9c92162cdd1d55b79a40f1e708872d2e07c26afbfe9fdd6
+    resulting_organization_revision: 4
+  binding_snapshot: *id006
+  payload:
+    instance_id: inst:01M02M6X3Q8YWJXHY52K3V5AR2
+    from_state: starting
+    to_state: active
+    reason:
+      code: startup-validation-passed
+      checks:
+      - Position active
+      - Preset id/version/digest matches approved binding
+      - maximum_active_instances=1 not exceeded
+      - generated Codex adapter digest-matched
+    release_reservation: null
+  evidence_refs:
+  - game-pipeline/organization/snapshot.yaml@revision-3
+  - .codex/agents/project-manager.toml
+  - validate_project_instance.py:state=normal
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: b77fd41680017ee87e35e792707fd8681ca26958a712847158ff5542a2495d3c
+    event_digest: 8bb9ffb1a0c93d00a6a7349b3719bee692374313dd061218cf6f5ce1d49db88f

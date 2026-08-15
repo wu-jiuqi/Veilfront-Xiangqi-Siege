@@ -2,9 +2,9 @@ organization_snapshot:
   schema_version: 0.2-alpha
   identity:
     project_id: veilfront-xiangqi-siege
-    organization_revision: 2
+    organization_revision: 4
     created_at: '2026-08-15T00:00:00+08:00'
-    updated_at: '2026-08-15T19:10:51.288827+08:00'
+    updated_at: '2026-08-15T19:51:41.943479+08:00'
   governance_bindings:
     organization_contract:
       id: ORG-CONTRACT-CORE
@@ -417,7 +417,26 @@ organization_snapshot:
         created_by_event_id: evt:QFHA6TR0WEX5FQX5XG7BJPPND3
         last_changed_by_event_id: evt:QFHA6TR0WEX5FQX5XG7BJPPND3
   runtime:
-    instances: []
+    instances:
+    - instance_id: inst:01M02M6X3Q8YWJXHY52K3V5AR2
+      instance_kind: position
+      preset_binding:
+        preset_id: preset:veilfront-xiangqi-siege:project-manager
+        version: 0.1.0
+        digest: 33b13d15eacf94fec9c32f034bb184e9b137315ecdb0caad9ef8fd5dadcff591
+      position_binding:
+        position_id: pos:veilfront-xiangqi-siege:root:project-manager
+        definition_digest: dad0ef8a87fa5e66804b720fcfc6651c6e4f4a4aa4522777f74200d71d6b21f6
+      temporary_binding: null
+      lifecycle:
+        state: active
+        state_entered_at: '2026-08-15T19:51:41.943479+08:00'
+        transition_ref: evt:01M02M6X3TNN3CC025BTKZ8P9C
+      started_at: '2026-08-15T19:51:41.943479+08:00'
+      expires_at: null
+      audit:
+        registered_by_event_id: evt:01M02M6X3RWNC61XSE25569YM9
+        last_changed_by_event_id: evt:01M02M6X3RWNC61XSE25569YM9
     temporary_grants: []
   governance:
     used_identity_index:
@@ -433,7 +452,8 @@ organization_snapshot:
       - pos:veilfront-xiangqi-siege:root:project-manager
       - pos:veilfront-xiangqi-siege:technology:godot-technical-lead
       - pos:veilfront-xiangqi-siege:technology:single-player-ai-engineer
-      instance_ids: []
+      instance_ids:
+      - inst:01M02M6X3Q8YWJXHY52K3V5AR2
       temporary_grant_ids: []
     tombstones: []
     pending_change_set_refs: []
@@ -446,10 +466,10 @@ organization_snapshot:
       approval_ref: approval:veilfront-xiangqi-siege:organization-change-set:fdd6fec0a5f4
       applied_by_event_id: evt:QFHA6TR0WEX5FQX5XG7BJPPND3
   event_watermark:
-    last_event_id: evt:QFHA6TR0WEX5FQX5XG7BJPPND3
-    last_event_sequence: 2
-    last_event_digest: c6a3fc3223dc800d772f6173e89a97802e6da4b85a594ea4c6dd14118cd6cb96
+    last_event_id: evt:01M02M6X3TNN3CC025BTKZ8P9C
+    last_event_sequence: 4
+    last_event_digest: 8bb9ffb1a0c93d00a6a7349b3719bee692374313dd061218cf6f5ce1d49db88f
   snapshot_integrity:
     canonicalization: organization-snapshot-canonical-json-v1
     digest_algorithm: sha256
-    snapshot_digest: 9b193d9d99f7a541edc5aa5b285ee98127fb7684f4ee47e6b06c7c413a4c7fe9
+    snapshot_digest: 7fff90e196e1070395d2b82ac60ad731c1418afe66554349987635cb69295bd3
