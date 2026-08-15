@@ -1,0 +1,255 @@
+project_brief:
+  schema_version: game-production-project-brief/v1
+  identity:
+    brief_id: brief:veilfront-xiangqi-siege:initial
+    project_id: veilfront-xiangqi-siege
+    version: 1
+  coordination:
+    project_owner: project-owner
+    coordinator_role_id: AGT-DIR
+    execution_mode: bootstrap-workflow
+    coordinator_position_id: null
+  sources:
+  - source_id: source:veilfront-xiangqi-siege:project-identity
+    uri: game-pipeline/project.yaml
+    version_or_digest: bootstrap:2026-08-15T00:00:00+08:00
+    supplied_by: project-owner
+    authority: project.identity
+  - source_id: source:veilfront-xiangqi-siege:owner-planning-conversation
+    uri: chatgpt-conversation://6a8012ad-ea04-83ec-b396-2f024894ec1c
+    version_or_digest: thread-updated-at:1786782653.366029
+    supplied_by: project-owner
+    authority: project.direction.input
+  statements:
+  - statement_id: stmt:veilfront-xiangqi-siege:project-goal
+    domain: project-goal
+    text: 将中国象棋改造成一款回合制战役型棋类游戏，以战争迷雾、侦察、破城、兵种阶段能力与三旗争夺构成区别于传统象棋的核心体验。
+    status: confirmed
+    decision_owner: project-owner
+    source_refs:
+    - source:veilfront-xiangqi-siege:owner-planning-conversation
+  - statement_id: stmt:veilfront-xiangqi-siege:project-name
+    domain: project-goal
+    text: "正式项目名为《雾疆：九路烽棋》，英文名为 Veilfront: Xiangqi Siege，日常简称可使用‘雾疆 / Veilfront’。"
+    status: confirmed
+    decision_owner: project-owner
+    source_refs:
+    - source:veilfront-xiangqi-siege:project-identity
+    - source:veilfront-xiangqi-siege:owner-planning-conversation
+  - statement_id: stmt:veilfront-xiangqi-siege:board-and-fog
+    domain: gameplay
+    text: 棋盘为24×9格，按双方各5线大本营、各3线缓冲区与中央8线战区划分；开局除己方大本营外均受战争迷雾影响，普通棋子以当前位置为中心提供3×3动态视野，移动后旧区域重新进入迷雾。
+    status: confirmed
+    decision_owner: project-owner
+    source_refs:
+    - source:veilfront-xiangqi-siege:owner-planning-conversation
+  - statement_id: stmt:veilfront-xiangqi-siege:phase-gameplay
+    domain: gameplay
+    text: 双方城墙状态独立结算；敌方城墙完整时，进攻方棋子使用战前能力，城墙倒塌后恢复对应的传统象棋规则。战前能力包括兵卒在战区与缓冲区横竖移动1至5格、马隐身、相象田字侦察视野、车的路径直线视野，以及位于己方大本营的炮对战区和缓冲区实施3×3范围随机三格轰炸。
+    status: confirmed
+    decision_owner: project-owner
+    source_refs:
+    - source:veilfront-xiangqi-siege:owner-planning-conversation
+  - statement_id: stmt:veilfront-xiangqi-siege:horse-elephant-rules
+    domain: gameplay
+    text: 在所面对的敌方城墙倒塌前，马与相象全局不受蹩马腿和堵象眼限制；敌方城墙倒塌后恢复传统限制。该规则按双方独立结算，马的具体强度需要通过原型验证。
+    status: confirmed
+    decision_owner: project-owner
+    source_refs:
+    - source:veilfront-xiangqi-siege:owner-planning-conversation
+  - statement_id: stmt:veilfront-xiangqi-siege:cannon-rules
+    domain: gameplay
+    text: 炮的区域轰炸属于不需要炮架、不会移动炮的特殊行动；炮的常规移动与精确吃子继续遵守传统象棋规则，精确吃子必须隔一枚炮架并移动至目标格。区域轰炸与常规行动互斥。
+    status: confirmed
+    decision_owner: project-owner
+    source_refs:
+    - source:veilfront-xiangqi-siege:owner-planning-conversation
+  - statement_id: stmt:veilfront-xiangqi-siege:wall-cycle
+    domain: gameplay
+    text: 完整城墙阻挡敌方棋子从缓冲区进入大本营；至少3枚敌方棋子同时进入缓冲区时城墙倒塌。缓冲区与大本营内敌军少于3枚并持续一个完整回合后城墙恢复；恢复时只将大本营内入侵棋子随机撤回各自大本营空格，清除位置关联临时状态但不恢复已消耗的永久资源，也不附加行动惩罚。
+    status: confirmed
+    decision_owner: project-owner
+    source_refs:
+    - source:veilfront-xiangqi-siege:owner-planning-conversation
+  - statement_id: stmt:veilfront-xiangqi-siege:victory-and-flags
+    domain: gameplay
+    text: 战区随机生成3面旗帜，棋子需在旗点持续占领3回合；同时占领三旗立即获胜。对局时间结束时以旗帜数量判胜，同数为平局；直接击杀敌方将帅具有最高胜利优先级。
+    status: confirmed
+    decision_owner: project-owner
+    source_refs:
+    - source:veilfront-xiangqi-siege:owner-planning-conversation
+  - statement_id: stmt:veilfront-xiangqi-siege:piece-rescue
+    domain: gameplay
+    text: 每方两枚士承担本局最先阵亡两枚棋子的替死职责，被救回的棋子返回初始位置；替死触发顺序、目标格占用与将帅是否可被替死仍需详细规则确认。
+    status: preference
+    decision_owner: project-owner
+    source_refs:
+    - source:veilfront-xiangqi-siege:owner-planning-conversation
+  - statement_id: stmt:veilfront-xiangqi-siege:presentation
+    domain: art-direction
+    text: 24×9棋盘采用局部主战场视图与受战争迷雾约束的鸟瞰战术小地图；主视图应完整呈现九路宽度并沿24线长轴移动，普通行动与炮击最终确认均在主棋盘完成。
+    status: confirmed
+    decision_owner: project-owner
+    source_refs:
+    - source:veilfront-xiangqi-siege:owner-planning-conversation
+  - statement_id: stmt:veilfront-xiangqi-siege:visual-direction
+    domain: art-direction
+    text: 具体世界观、时代、视觉风格、棋子表现形式、色彩语言、动画与音频方向尚未由项目所有者确认。
+    status: unknown
+    decision_owner: project-owner
+    source_refs: []
+  - statement_id: stmt:veilfront-xiangqi-siege:implementation
+    domain: implementation
+    text: 建议采用与显示层解耦的确定性规则核心、可复现随机种子、按玩家视角过滤的迷雾快照与可回放行动日志；若包含在线对战，则由权威服务器持有完整棋盘状态。该实现方向属于待技术原型验证的假设，并非已冻结架构。
+    status: hypothesis
+    decision_owner: project-owner
+    source_refs:
+    - source:veilfront-xiangqi-siege:owner-planning-conversation
+  - statement_id: stmt:veilfront-xiangqi-siege:godot-authoring
+    domain: implementation
+    text: Godot实现优先使用编辑器预置场景、节点和资源，只有运行时数据或生成方案明显更安全简单时才动态创建节点；当前仓库仅完成生产管线初始化，尚未创建project.godot或游戏资产。
+    status: confirmed
+    decision_owner: project-owner
+    source_refs:
+    - source:veilfront-xiangqi-siege:project-identity
+  - statement_id: stmt:veilfront-xiangqi-siege:platform-engine
+    domain: platform-engine
+    text: 游戏引擎确认为Godot 4.7.1；首发平台、输入设备、是否包含单机模式、在线PvP、排位与专用服务器尚未确认。
+    status: confirmed
+    decision_owner: project-owner
+    source_refs:
+    - source:veilfront-xiangqi-siege:project-identity
+    - source:veilfront-xiangqi-siege:owner-planning-conversation
+  - statement_id: stmt:veilfront-xiangqi-siege:scope-constraints
+    domain: scope-constraints
+    text: 预算、团队规模、目标发布日期、原型周期、首发内容量、商业模式、联网服务范围与本地化范围尚未由项目所有者确认。
+    status: unknown
+    decision_owner: project-owner
+    source_refs: []
+  open_questions:
+  - question_id: question:veilfront-xiangqi-siege:visual-direction
+    question: 请确认世界观与美术方向，包括古战场、东方奇幻或其他风格，以及棋子采用传统棋子、角色单位或混合表现。
+    decision_owner: project-owner
+    blocks_staffing: true
+  - question_id: question:veilfront-xiangqi-siege:platform-and-modes
+    question: 请确认首发平台与核心模式：是否以PC为首发平台，以及首个可交付版本需要本地对战、单机AI、在线PvP、排位或专用服务器中的哪些能力。
+    decision_owner: project-owner
+    blocks_staffing: true
+  - question_id: question:veilfront-xiangqi-siege:scope
+    question: 请确认可用于首个可玩版本的团队规模、预算或资源上限、期望完成时间，以及首个版本必须包含的内容边界。
+    decision_owner: project-owner
+    blocks_staffing: true
+  - question_id: question:veilfront-xiangqi-siege:session-rules
+    question: 请确认单局时长或回合上限、旗帜占领中断规则、隐藏阻挡下的非法指令反馈，以及将军、应将、将帅照面和飞将规则是否取消。
+    decision_owner: project-owner
+    blocks_staffing: false
+  - question_id: question:veilfront-xiangqi-siege:piece-edge-cases
+    question: 请确认士替死的完整边界规则，以及炮击弹药、冷却、友军伤害、随机落点边界和马隐身反制是否采用规划对话中的建议方案。
+    decision_owner: project-owner
+    blocks_staffing: false
+  open_questions_note: 非阻断玩法问题可在编制获批后由相应责任范围形成规则规格，但在进入实现前必须冻结。
+  risks:
+  - risk_id: risk:veilfront-xiangqi-siege:scope-uncertainty
+    description: 平台、模式、预算、周期与首发范围未知，当前无法判断联网、AI、美术、内容与发布职责的真实规模。
+    evidence_refs:
+    - stmt:veilfront-xiangqi-siege:platform-engine
+    - stmt:veilfront-xiangqi-siege:scope-constraints
+    impact: high
+    staffing_implication: 在核心模式和资源边界确认前，长期职责规模与独立验收关系不能可靠设计。
+  - risk_id: risk:veilfront-xiangqi-siege:rules-complexity
+    description: 迷雾、独立城墙阶段、棋子特殊能力、随机炮击、强制撤回和多重胜利条件叠加，容易出现结算顺序歧义与状态组合缺陷。
+    evidence_refs:
+    - stmt:veilfront-xiangqi-siege:phase-gameplay
+    - stmt:veilfront-xiangqi-siege:wall-cycle
+    - stmt:veilfront-xiangqi-siege:victory-and-flags
+    impact: high
+    staffing_implication: 需要独立的规则规格、确定性测试矩阵与可复现对局证据，不能只依靠手工试玩验收。
+  - risk_id: risk:veilfront-xiangqi-siege:hidden-information
+    description: 合法落点提示、镜头、音效、小地图、炮架判定或网络同步都可能无意泄露迷雾内信息。
+    evidence_refs:
+    - stmt:veilfront-xiangqi-siege:board-and-fog
+    - stmt:veilfront-xiangqi-siege:presentation
+    - stmt:veilfront-xiangqi-siege:implementation
+    impact: high
+    staffing_implication: 需要从规则、客户端表现、网络协议与QA四个角度独立验收信息边界。
+  - risk_id: risk:veilfront-xiangqi-siege:balance
+    description: 兵卒长距离机动、马的隐身与无蹩腿、远程随机炮击可能压缩其他棋子的战略价值或放大先手和随机优势。
+    evidence_refs:
+    - stmt:veilfront-xiangqi-siege:phase-gameplay
+    - stmt:veilfront-xiangqi-siege:horse-elephant-rules
+    - stmt:veilfront-xiangqi-siege:cannon-rules
+    impact: medium
+    staffing_implication: 需要可观测的平衡指标、对局日志、批量模拟或结构化试玩，不应在纸面阶段宣布平衡完成。
+  - risk_id: risk:veilfront-xiangqi-siege:art-unknown
+    description: 美术与世界观方向未定，无法估算棋子、棋盘、迷雾、城墙、特效、界面和音频的资产成本。
+    evidence_refs:
+    - stmt:veilfront-xiangqi-siege:visual-direction
+    impact: high
+    staffing_implication: 在视觉方向确认前不能形成可信的资产职责与产能方案。
+  staffing_input:
+    responsibility_needs:
+    - need_id: need:veilfront-xiangqi-siege:rules-and-balance
+      responsibility: 维护完整规则规格、状态转换、结算顺序、平衡目标与原型调参依据。
+      rationale_statement_refs:
+      - stmt:veilfront-xiangqi-siege:phase-gameplay
+      - stmt:veilfront-xiangqi-siege:wall-cycle
+      - stmt:veilfront-xiangqi-siege:victory-and-flags
+      expected_artifacts:
+      - 可执行规则规格
+      - 状态机与结算顺序表
+      - 平衡指标和试玩变更记录
+      acceptance_owner_kind: human
+    - need_id: need:veilfront-xiangqi-siege:godot-technology
+      responsibility: 负责Godot工程结构、确定性规则核心、场景与资源映射、存档回放以及批准模式所需的联网或AI能力。
+      rationale_statement_refs:
+      - stmt:veilfront-xiangqi-siege:implementation
+      - stmt:veilfront-xiangqi-siege:godot-authoring
+      - stmt:veilfront-xiangqi-siege:platform-engine
+      expected_artifacts:
+      - 技术方案与Godot场景资源映射
+      - 可运行原型和构建产物
+      - 确定性、重连或回放验证证据
+      acceptance_owner_kind: human
+    - need_id: need:veilfront-xiangqi-siege:information-ux
+      responsibility: 设计局部棋盘、小地图、迷雾、行动反馈与无信息泄露的交互体验。
+      rationale_statement_refs:
+      - stmt:veilfront-xiangqi-siege:board-and-fog
+      - stmt:veilfront-xiangqi-siege:presentation
+      expected_artifacts:
+      - 信息架构与交互流程
+      - 主棋盘和小地图原型
+      - 迷雾信息边界验收清单
+      acceptance_owner_kind: human
+    - need_id: need:veilfront-xiangqi-siege:visual-production
+      responsibility: 在项目所有者确认方向后定义视觉语言并生产棋盘、棋子、城墙、迷雾、旗帜、特效与界面资产。
+      rationale_statement_refs:
+      - stmt:veilfront-xiangqi-siege:visual-direction
+      expected_artifacts:
+      - 美术方向基线
+      - 资产清单与制作规范
+      - 可审查的游戏内视觉样片
+      acceptance_owner_kind: human
+    - need_id: need:veilfront-xiangqi-siege:quality-validation
+      responsibility: 建立规则组合、随机性、迷雾泄露、边界状态、性能与目标平台构建的独立验证体系。
+      rationale_statement_refs:
+      - stmt:veilfront-xiangqi-siege:implementation
+      - stmt:veilfront-xiangqi-siege:scope-constraints
+      expected_artifacts:
+      - 自动化规则测试矩阵
+      - 可复现缺陷报告
+      - 里程碑验收证据包
+      acceptance_owner_kind: human
+    readiness: blocked
+    blocker_refs:
+    - question:veilfront-xiangqi-siege:visual-direction
+    - question:veilfront-xiangqi-siege:platform-and-modes
+    - question:veilfront-xiangqi-siege:scope
+  review:
+    status: draft
+    approval_id: null
+    confirmed_by: null
+    confirmed_at: null
+  integrity:
+    canonicalization: project-brief-subject-canonical-json-v1
+    digest_algorithm: sha256
+    subject_digest: f51d8c5eaf350ebb218ffd9d3ed1f28f8f8558afe3dc911700b8071e3f6b7674
