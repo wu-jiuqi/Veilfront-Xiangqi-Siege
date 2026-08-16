@@ -280,6 +280,13 @@ static func _visible_cell_set(full_state: Dictionary, viewer_side: String) -> Di
 	for y: int in range(first_y, last_y + 1):
 		for x: int in range(1, MatchState.BOARD_WIDTH + 1):
 			result[Canonical.cell_key(Vector2i(x, y))] = true
+	var enemy_side: String = MatchState.opponent(viewer_side)
+	if str(full_state["walls"][enemy_side]["status"]) != "INTACT":
+		for y: int in range(1, MatchState.BOARD_HEIGHT + 1):
+			for x: int in range(1, MatchState.BOARD_WIDTH + 1):
+				var breached_region_cell := Vector2i(x, y)
+				if MatchState.is_in_buffer_or_base(breached_region_cell, enemy_side):
+					result[Canonical.cell_key(breached_region_cell)] = true
 	for piece_value: Variant in full_state["pieces"].values():
 		var piece: Dictionary = piece_value
 		if piece["side"] != viewer_side or not piece["alive"] or piece["in_reserve"]:

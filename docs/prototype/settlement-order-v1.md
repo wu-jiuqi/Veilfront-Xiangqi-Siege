@@ -6,7 +6,7 @@
 
 ## 变更摘要
 
-补入行动前后备部署、三级意图提交、炮击同步窗口、旗帜争夺、精确修墙计时；关闭原炮击/撤回/旗帜冲突窗。项目所有者确认区域轰炸无冷却，并冻结相/象起终点包围 `3x3` 九格显形区及其清除时点。
+补入行动前后备部署、三级意图提交、炮击同步窗口、旗帜争夺、精确修墙计时；关闭原炮击/撤回/旗帜冲突窗。项目所有者确认区域轰炸无冷却，并冻结相/象起终点包围 `3x3` 九格显形区及其清除时点；新增城墙倒塌期间敌方缓冲区与大本营全域视野。
 
 ## 行动事务
 
@@ -20,12 +20,12 @@
 | 5 | 最高优先终局 | 每个车目标后立即检查将帅；炮击则对整个同步窗口先检查将帅。仅一方死亡则其失败；同步窗口双方死亡则平局。终局后停止替死、墙、旗和轮上限。 |
 | 6 | 士替死/回营 | 无将帅终局才处理合资格替死。炮击多目标按落点编号处理，且本窗口被命中的士不可替死。无回营空格者进入后备队列。 |
 | 7 | 临时状态 | 合资格相/象移动成功后，以本次起点与终点包围的严格 `3x3` 九格建立该棋新显形区；所有有效相/象源取并集。棋子离场、死亡、回营、入队或敌墙倒塌移除其能力时清除该源。随后更新接触情报、马隐身/显形、车路径视野；离开旗点的占领进度先清零。棋子新停在中立旗或敌有旗时以该 `piece_id` 建立 `0/3`；原所有方重新站回己旗只取消敌方争夺，不建立己方进度。 |
-| 8 | 城墙 | 行动全部效果后计算两墙。倒塌或中断修复；少于 3 时启动修复但本行动不计时；启动后的双方各行动一次且条件持续成立才恢复、执行撤回，无法落位者进入后备队列。 |
+| 8 | 城墙 | 行动全部效果后计算两墙。倒塌或中断修复；少于 3 时启动修复但本行动不计时；启动后的双方各行动一次且条件持续成立才恢复、执行撤回，无法落位者进入后备队列。墙进入 `BREACHED/REPAIRING` 后，对方下一次投影加入守方缓冲区与大本营全视野；恢复 `INTACT` 的同次结算完成撤回后，下一次投影移除该额外视野。 |
 | 9 | 旗帜 | 先确认占领棋子仍存在，再为“本次行动方的对手”累计进度。完成占领/争夺或取消争夺后，检查同一方是否拥有三个非争夺旗。 |
 | 10 | 完整轮上限 | 仅在完整轮边界检查。达到配置值时按旗所有权计数，争夺旗仍归原所有者；同数平局。上限值仍为 `unknown`。 |
 | 11 | 投影与换手 | 生成分玩家事件/摘要，随后切换行动方；终局不换手。主动/超时/被迫跳过直接进入阶段 8，并计为一次行动机会。 |
 
-追溯：`stmt:veilfront-xiangqi-siege:rook-rules`、`stmt:veilfront-xiangqi-siege:piece-rescue`、`stmt:veilfront-xiangqi-siege:general-capture-rules`、`stmt:veilfront-xiangqi-siege:wall-cycle`、`stmt:veilfront-xiangqi-siege:victory-and-flags`、`stmt:veilfront-xiangqi-siege:cannon-rules`、`stmt:veilfront-xiangqi-siege:horse-elephant-rules`；`OWNER-FREEZE-2026-08-15 §2-6`；`OWNER-CONFIRM-2026-08-16:ELEPHANT-REVEAL-3X3`。
+追溯：`stmt:veilfront-xiangqi-siege:rook-rules`、`stmt:veilfront-xiangqi-siege:piece-rescue`、`stmt:veilfront-xiangqi-siege:general-capture-rules`、`stmt:veilfront-xiangqi-siege:wall-cycle`、`stmt:veilfront-xiangqi-siege:victory-and-flags`、`stmt:veilfront-xiangqi-siege:cannon-rules`、`stmt:veilfront-xiangqi-siege:horse-elephant-rules`；`OWNER-FREEZE-2026-08-15 §2-6`；`OWNER-CONFIRM-2026-08-16:ELEPHANT-REVEAL-3X3`；`OWNER-CONFIRM-2026-08-16:BREACHED-WALL-REGION-VISION`。
 
 ## 特殊窗口
 
@@ -34,6 +34,7 @@
 - **炮击同步窗口**：先锁定快照和三格；将帅裁决优先于全部替死。无将帅死亡时，同方多个替死候选按落点抽取编号处理；编号不改变伤害的同步性。
 - **士替死**：左右士候选仅限仍存活、能力未消费且未被同一炮击窗口命中者；随机选择及回营/入队分别留记录。复活不回滚永久消耗。
 - **城墙恢复**：启动行动排除；以 `acted_sides_since_start` 收集之后红黑各一次行动。恢复批次先移除大本营入侵者，再随机分配空格，余者入队。
+- **城墙区域视野**：阶段 8 的最终墙状态决定阶段 11 的投影。`BREACHED/REPAIRING` 均开放守方缓冲区与大本营全部格子给对方；`INTACT` 移除该额外视野。它不驱散隐身马。
 - **旗帜**：位置变化/死亡/替死/撤回均先于本次进度增加。完成后的所有权不因棋子离开而消失；争夺未完成时轮上限仍计原所有者，但即时三旗排除该旗。
 - **终局竞争**：将帅实际死亡（含同窗双亡平局）`>` 非将帅替死 `>` 城墙 `>` 三旗 `>` 轮上限。
 

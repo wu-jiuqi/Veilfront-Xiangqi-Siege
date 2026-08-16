@@ -6,7 +6,7 @@
 
 ## 变更摘要
 
-行动提示冻结为 `KNOWN_LEGAL / TENTATIVE / KNOWN_ILLEGAL`，玩家提交行动意图；隐藏路径、腿眼、目标棋和炮架的解析与最小披露已有唯一规则。只读等价保持不变，已提交 `TENTATIVE` 的规则授权接触结果允许在结算点打破等价。区域轰炸无冷却已确认；相/象显形区精确冻结为起终点包围的 `3x3` 九格。
+行动提示冻结为 `KNOWN_LEGAL / TENTATIVE / KNOWN_ILLEGAL`，玩家提交行动意图；隐藏路径、腿眼、目标棋和炮架的解析与最小披露已有唯一规则。只读等价保持不变，已提交 `TENTATIVE` 的规则授权接触结果允许在结算点打破等价。区域轰炸无冷却已确认；相/象显形区精确冻结为起终点包围的 `3x3` 九格；敌墙倒塌期间的敌方缓冲区与大本营全域视野已确认。
 
 ## 1. 单向投影
 
@@ -16,13 +16,15 @@
 
 - 公开：棋盘尺寸/区域、当前行动方、完整轮计数、双方城墙公开状态、三个公开旗位及已公开占领状态、终局结果。
 - 自有：己方全部棋子（含后备队列）状态/永久资源及可见的己方临时状态；后备棋子无位置、无视野。
-- 可见棋盘：己方大本营、己方棋子当前 `3x3` 动态视野、仍有效的己方车路径视野的并集；越界裁剪。移动后旧 `3x3` 立即从并集中移除，无其他视野源即回雾。
+- 可见棋盘：己方大本营、己方棋子当前 `3x3` 动态视野、仍有效的己方车路径视野，以及“敌方城墙处于 `BREACHED` 或 `REPAIRING` 时敌方缓冲区与大本营全部格子”的并集；越界裁剪。移动后旧 `3x3` 立即移除，敌墙恢复 `INTACT` 后立即移除对应区域视野；无其他视野源即回雾。
 - 敌方实体：只包含处于可见格且未隐身的敌棋；隐身马在任一有效己方相/象田字显形区内显形。多个相/象显形源取格集合并集。
 - 可见事件：只包含公开事件、己方事件，或其全部必要实体/格在投影时可见的事件。
 
 相/象显形源的投影定义为：对本次合资格合法移动起点 `O` 和终点 `D`，输出 `RevealCells(O,D)={ (x,y) | min(ox,dx) <= x <= max(ox,dx), min(oy,dy) <= y <= max(oy,dy) }`。该集合严格为九格，含 `O`、象眼 `(O+D)/2`、`D`；不得裁切或加入集合外格。该棋下次移动开始或离场、死亡、回营、入队时旧源消失；敌墙倒塌移除能力时亦消失。其他有效源仍保留。
 
-追溯：`stmt:veilfront-xiangqi-siege:board-and-fog`、`stmt:veilfront-xiangqi-siege:horse-elephant-rules`、`stmt:veilfront-xiangqi-siege:rook-rules`、`stmt:veilfront-xiangqi-siege:victory-and-flags`、`stmt:veilfront-xiangqi-siege:single-player-ai`；`OWNER-CONFIRM-2026-08-16:ELEPHANT-REVEAL-3X3`。
+城墙区域视野严格按守方区域投影：红墙倒塌向黑方加入 `X=1..9,Y=1..8`，黑墙倒塌向红方加入 `X=1..9,Y=17..24`。`REPAIRING` 仍按倒塌处理；恢复 `INTACT` 后不保留记忆视野。该视野只令格子可见，不改变棋子的 `hidden` 状态，也不创建相/象显形源。
+
+追溯：`stmt:veilfront-xiangqi-siege:board-and-fog`、`stmt:veilfront-xiangqi-siege:horse-elephant-rules`、`stmt:veilfront-xiangqi-siege:rook-rules`、`stmt:veilfront-xiangqi-siege:victory-and-flags`、`stmt:veilfront-xiangqi-siege:single-player-ai`；`OWNER-CONFIRM-2026-08-16:ELEPHANT-REVEAL-3X3`；`OWNER-CONFIRM-2026-08-16:BREACHED-WALL-REGION-VISION`。
 
 ## 2. 必须隐藏
 

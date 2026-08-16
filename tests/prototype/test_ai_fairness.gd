@@ -398,7 +398,9 @@ static func _real_hidden_equivalent_pair() -> Array[Dictionary]:
 	MatchState.relocate_piece(full_state_a, "red-rook-1", Vector2i(1, 9))
 	MatchState.relocate_piece(full_state_b, "red-rook-1", Vector2i(1, 9))
 	MatchState.relocate_piece(full_state_a, "black-pawn-1", Vector2i(1, 11))
+	MatchState.relocate_piece(full_state_b, "black-pawn-1", Vector2i(2, 12))
 	full_state_a.pieces["black-pawn-1"].hidden = true
+	full_state_b.pieces["black-pawn-1"].hidden = true
 	full_state_a.walls[MatchState.BLACK].status = "BREACHED"
 	full_state_b.walls[MatchState.BLACK].status = "BREACHED"
 	full_state_b.rng.state = int(full_state_b.rng.state) + 17

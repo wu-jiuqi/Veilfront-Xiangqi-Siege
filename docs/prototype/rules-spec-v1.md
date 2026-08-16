@@ -9,6 +9,7 @@
 - 关闭初始坐标/阵型/九宫/先手、旗帜生命周期、隐藏阻挡与行动意图、同步炮击、后备部署、城墙修复时序、炮击起源位置七组 `unknown`。
 - 项目所有者再次确认区域轰炸“无冷却”，关闭附件中的共享冷却冲突：不存在阵营共享冷却字段、计时、启动或重置；资格只由敌墙、炮位置与该炮弹药决定。
 - 项目所有者冻结相/象田字显形区为本次合法移动起点与终点包围的 `3x3` 九格，关闭精确格集合歧义并补齐生命周期与多源并集。
+- 项目所有者确认城墙倒塌视野：一方城墙处于 `BREACHED` 或 `REPAIRING` 时，对方获得该方缓冲区与大本营全部格子的视野；恢复 `INTACT` 后该额外视野立即移除。该规则双方对称，不额外驱散隐身马。
 
 ## 1. 坐标、区域与回合术语
 
@@ -73,7 +74,7 @@
 
 敌方城墙倒塌时，针对该敌方的马、相/象、车、兵/卒特殊能力立即失效并恢复对应默认限制；墙恢复后只影响后续行动资格，不恢复旧视野/显形区或永久资源。
 
-追溯：`stmt:veilfront-xiangqi-siege:phase-gameplay`、`stmt:veilfront-xiangqi-siege:horse-elephant-rules`、`stmt:veilfront-xiangqi-siege:cannon-rules`、`stmt:veilfront-xiangqi-siege:rook-rules`、`stmt:veilfront-xiangqi-siege:pawn-rules`；`OWNER-FREEZE-2026-08-15 §6.5`；`OWNER-CONFIRM-2026-08-15:BOMBARD-NO-COOLDOWN`；`OWNER-CONFIRM-2026-08-16:ELEPHANT-REVEAL-3X3`。
+追溯：`stmt:veilfront-xiangqi-siege:phase-gameplay`、`stmt:veilfront-xiangqi-siege:horse-elephant-rules`、`stmt:veilfront-xiangqi-siege:cannon-rules`、`stmt:veilfront-xiangqi-siege:rook-rules`、`stmt:veilfront-xiangqi-siege:pawn-rules`；`OWNER-FREEZE-2026-08-15 §6.5`；`OWNER-CONFIRM-2026-08-15:BOMBARD-NO-COOLDOWN`；`OWNER-CONFIRM-2026-08-16:ELEPHANT-REVEAL-3X3`；`OWNER-CONFIRM-2026-08-16:BREACHED-WALL-REGION-VISION`。
 
 ## 5. 城墙状态机
 
@@ -84,12 +85,13 @@
 3. 仅在一次完整行动结算结束后检查恢复条件。墙已倒塌且该方缓冲区与大本营内敌棋总数少于 3 时进入 `REPAIRING`；触发该状态的行动不计时。
 4. `REPAIRING` 仍按倒塌墙处理。之后对方与己方必须各完成一次行动；每次行动后若入侵数回到至少 3，立即退回 `BREACHED` 并清零进度。双方均行动且条件仍成立时恢复 `INTACT`。
 5. 恢复时，仅把该方大本营内的入侵棋子随机撤回各自大本营；缓冲区敌棋不撤回。先移除整批待撤棋子，随机打乱真实空格，再按确定的结算顺序分配；清除位置临时状态，不恢复永久消耗，不附加行动惩罚。无空格者进入后备部署队列。
+6. 城墙处于 `BREACHED` 或 `REPAIRING` 时，对方获得该方缓冲区与大本营全部格子的视野；双方城墙独立、规则对称。城墙恢复 `INTACT` 后，该区域额外视野从下一次 PlayerView 投影起立即移除，无其他视野源覆盖的格重新入雾。区域全视野只解除战争迷雾，不等同于反隐，隐身马仍须由既有显形原因公开。
 
-追溯：`stmt:veilfront-xiangqi-siege:wall-cycle`、`stmt:veilfront-xiangqi-siege:phase-gameplay`；`OWNER-FREEZE-2026-08-15 §5-6.4`。
+追溯：`stmt:veilfront-xiangqi-siege:wall-cycle`、`stmt:veilfront-xiangqi-siege:phase-gameplay`；`OWNER-FREEZE-2026-08-15 §5-6.4`；`OWNER-CONFIRM-2026-08-16:BREACHED-WALL-REGION-VISION`。
 
 ## 6. 迷雾、旗帜、替死与胜负
 
-- 开局除己方大本营外均受迷雾。普通棋子以当前位置为中心提供裁剪到棋盘内的 `3x3` 动态视野，移动后旧区域重新入雾；车路径视野和相/象显形按第 4 节叠加。具体投影见 `information-boundary-v1.md`。
+- 开局除己方大本营外均受迷雾。普通棋子以当前位置为中心提供裁剪到棋盘内的 `3x3` 动态视野，移动后旧区域重新入雾；车路径视野和相/象显形按第 4 节叠加；敌墙倒塌期间按第 5 节叠加敌方缓冲区与大本营全域视野。具体投影见 `information-boundary-v1.md`。
 - 开局先等概率选旗带 `Y=11..13` 或 `Y=12..14`，再从该 `3x9` 区域抽取三个不同格；不要求对称，位置向双方公开。
 - 棋子行动后停在中立旗或敌方所有旗上时，以该 `piece_id` 开始 `0/3` 占领。之后每当对方完成一次行动机会（含三类跳过），若该棋子仍在旗格，进度加 1；第三次对方行动的伤亡、替死、撤回和离位先结算，棋子仍在才完成占领。
 - 占领进度绑定具体棋子，不可换子继承。占领者离开、死亡、替死回营、强制撤回或棋子实例变化时立即清零。
