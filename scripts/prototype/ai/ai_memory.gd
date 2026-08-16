@@ -2,7 +2,8 @@ extends RefCounted
 
 const Canonical = preload("res://scripts/prototype/ai/ai_canonical.gd")
 const ROOT_KEYS: Array[String] = [
-	"schema_version", "recent_action_ids", "action_visit_counts", "last_visible_piece_turns",
+	"schema_version", "recent_action_ids", "action_visit_counts", "actor_visit_counts",
+	"last_visible_piece_turns",
 ]
 
 var _data: Dictionary = {}
@@ -28,11 +29,16 @@ func digest() -> String:
 func entry_count() -> int:
 	return _data.get("recent_action_ids", []).size() \
 		+ _data.get("action_visit_counts", {}).size() \
+		+ _data.get("actor_visit_counts", {}).size() \
 		+ _data.get("last_visible_piece_turns", {}).size()
 
 
 func action_visit_count(action_id: String) -> int:
 	return int(_data.get("action_visit_counts", {}).get(action_id, 0))
+
+
+func actor_visit_count(actor_id: String) -> int:
+	return int(_data.get("actor_visit_counts", {}).get(actor_id, 0))
 
 
 func _validate(memory_data: Dictionary) -> void:
@@ -48,7 +54,7 @@ func _validate(memory_data: Dictionary) -> void:
 		for action_id: Variant in memory_data.recent_action_ids:
 			if not action_id is String:
 				_validation_errors.append("AI memory recent_action_ids must contain only String")
-	for key: String in ["action_visit_counts", "last_visible_piece_turns"]:
+	for key: String in ["action_visit_counts", "actor_visit_counts", "last_visible_piece_turns"]:
 		if not memory_data.get(key) is Dictionary:
 			_validation_errors.append("AI memory %s must be Dictionary[String, int]" % key)
 			continue

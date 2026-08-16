@@ -33,6 +33,14 @@ func action_bias(action_kind: String) -> int:
 	return int(_data.get("action_kind_bias", {}).get(action_kind, 0))
 
 
+func board_width() -> int:
+	return int(_data.get("board_width", 0))
+
+
+func board_height() -> int:
+	return int(_data.get("board_height", 0))
+
+
 func board_contains(coordinate: Array) -> bool:
 	return coordinate[0] >= 0 and coordinate[0] < _data.board_width \
 		and coordinate[1] >= 0 and coordinate[1] < _data.board_height

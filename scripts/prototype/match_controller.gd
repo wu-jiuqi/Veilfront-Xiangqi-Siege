@@ -176,7 +176,7 @@ func step_ai() -> Dictionary:
 	})
 	if not bool(result.get("consumed", false)):
 		return {"ok": false, "consumed": false, "error": "ai_intent_not_consumed"}
-	_update_ai_memory(ai_player_view, selected_id)
+	_update_ai_memory(ai_player_view, selected_id, str(decision.get("action", {}).get("actor_id", "")))
 	_prepared_token = ""
 	_prepare_active_action()
 	_publish_human_view()
@@ -266,17 +266,26 @@ func _empty_ai_memory() -> Dictionary:
 		"schema_version": "ai-memory-v1",
 		"recent_action_ids": [],
 		"action_visit_counts": {},
+		"actor_visit_counts": {},
 		"last_visible_piece_turns": {},
 	}
 
 
-func _update_ai_memory(ai_player_view: Dictionary, selected_action_id: String) -> void:
+func _update_ai_memory(
+	ai_player_view: Dictionary,
+	selected_action_id: String,
+	selected_actor_id: String
+) -> void:
 	_ai_memory["recent_action_ids"].append(selected_action_id)
 	if _ai_memory["recent_action_ids"].size() > 8:
 		_ai_memory["recent_action_ids"].pop_front()
 	_ai_memory["action_visit_counts"][selected_action_id] = int(
 		_ai_memory["action_visit_counts"].get(selected_action_id, 0)
 	) + 1
+	if not selected_actor_id.is_empty():
+		_ai_memory["actor_visit_counts"][selected_actor_id] = int(
+			_ai_memory["actor_visit_counts"].get(selected_actor_id, 0)
+		) + 1
 	for piece: Dictionary in ai_player_view["pieces"]:
 		if piece["side"] != ai_player_view["viewer_side"]:
 			_ai_memory["last_visible_piece_turns"][str(piece["id"])] = int(ai_player_view["action_index"])

@@ -12,7 +12,7 @@ AI 决策入口固定为：
 decide(AiPlayerView, AiPublicRules, AiMemory, ai_seed, AiDifficultyConfig) -> DecisionResult
 ```
 
-入口不得增加完整棋局状态、规则随机流、场景树、规则核心节点、调试后门或任意状态查询回调。`AiPlayerView` 是技术负责人所拥有的单向玩家投影经 AI 白名单校验后的不可变副本；AI 层不实现、持有或反向查询完整状态。`AiPublicRules` 只含公开棋盘尺寸、公开棋子估值与公开行动类型偏置。`AiMemory` 只含该 AI 先前已知的行动 ID、行动访问次数和曾经可见棋子的观测回合。
+入口不得增加完整棋局状态、规则随机流、场景树、规则核心节点、调试后门或任意状态查询回调。`AiPlayerView` 是技术负责人所拥有的单向玩家投影经 AI 白名单校验后的不可变副本；AI 层不实现、持有或反向查询完整状态。`AiPublicRules` 只含公开棋盘尺寸、公开棋子估值与公开行动类型偏置。`AiMemory` 只含该 AI 先前已知的行动 ID、行动访问次数、己方行动棋子的访问次数和曾经可见棋子的观测回合。
 
 机器学习、在线服务以及读取迷雾内敌棋、隐身马、隐藏炮架、未公开炮击格、未公开撤回格或规则随机流，均不在接口可达范围内。
 
@@ -30,18 +30,20 @@ decide(AiPlayerView, AiPublicRules, AiMemory, ai_seed, AiDifficultyConfig) -> De
 
 所有数组在构造时按公开稳定 ID 排序，字典按键规范化并深拷贝。输入投影摘要使用规范 JSON 的 SHA-256；调用者后续修改原始字典不会改变已构造视图。
 
-## 3. 决策基线与专家档
+## 3. 可见局面评价基线
 
-首轮基线是人工编写的有界单层规则评分，不预测不可见单位：
+当前基线是人工编写的有界可见局面评价，不预测不可见单位：
 
-1. 只在 `legal_actions` 白名单内选动作；候选超过预算时用独立 AI 种子确定性抽样。
-2. 评分只使用可见吃子公开估值、公开侦察格数、公开占旗、公开攻墙、公开动作类型和 AI 自身行动访问次数。
-3. 使用独立 AI 随机流加入可配置整数扰动；同分时以公开动作 ID 稳定决胜。
-4. 不用墙钟截止驱动候选数量。墙钟时间在不同机器上会改变动作，本原型只审计时间预算提示，实际硬边界使用候选数。
+1. 只在 `legal_actions` 白名单内选动作；先对全部公开动作快速预评分，不在评分前使用随机数淘汰候选。
+2. 吃将、高价值可见吃子、占旗、守旗和解除可见将帅威胁属于受保护候选；其余动作按预评分执行确定性的 actor/kind 分层 Top K。
+3. 入选动作模拟公开可见结果，以 Material、GeneralSafety、FlagControl、WallState、Territory、Mobility、Vision、Threat 八维增量评价局面。Territory 的单次推进收益和 Vision 的单次格数收益均设上限，避免长程棋子仅凭移动距离重复兑现线性分；Threat 同时计入高价值棋子离开己方区域后的无支援深入风险。
+4. 对同一动作和同一行动棋子的累计访问分别施加可配置节奏惩罚；吃子、占旗、解将等真实局面收益仍可覆盖该惩罚，因而它不是棋种轮换配额。
+5. 使用独立 AI 随机流加入可配置整数扰动；随机性只发生在策略候选已确定之后，同分时以公开动作 ID 稳定决胜。
+6. 不用墙钟截止驱动候选数量。墙钟时间在不同机器上会改变动作，本原型只审计时间预算提示，实际硬边界使用候选数。
 
 规则随机种子和 AI 种子必须是不同随机流。建议技术集成层从“对局 AI 主种子 + 决策序号”派生本次 `ai_seed`，并把派生结果写入对局日志；不得把规则系统下一次随机结果或 RNG 对象传给 AI。
 
-专家档仍使用完全相同的 `AiPlayerView` 白名单，不增加真值查询。它在完整公开候选集合上执行确定性的“可见战术一层评估”：模拟己方候选落点与已公开吃子，依据当前可见棋子估算落点攻击者/保护者、将帅暴露变化、前进与中心控制、旗点紧迫度，以及敌墙倒塌后的可见区域施压。不可见棋子不进入局面模型；因此该评估是公平的公开信息策略增强，不声称拥有完整信息极小化搜索。
+四档均使用完全相同的 `AiPlayerView` 白名单和 `visible-state-evaluation-v1`。档位差异只来自候选上限、最终随机扰动和可配置权重；专家档覆盖更宽候选且随机扰动为零。不可见棋子不进入局面模型；因此该评价是公平的公开信息策略增强，不声称拥有完整信息极小化搜索。
 
 ## 4. 审计记录
 
@@ -50,8 +52,8 @@ decide(AiPlayerView, AiPublicRules, AiMemory, ai_seed, AiDifficultyConfig) -> De
 - `input_projection_summary`：投影视角、回合、公开对象计数、合法动作数、投影 SHA-256；
 - `public_rules_digest`、`memory_summary`、`decision_input_digest`；
 - `budget`：候选预算、时间预算提示、可用数、实际评估数与策略模式；
-- `candidate_sampling`：AI 种子与候选抽样记录；
-- `candidates`：动作 ID、基础分、可见战术调整/分解、随机调整和最终分；
+- `candidate_sampling`：为兼容 v1 schema 保留字段名，记录全量预评分数、受保护原因和确定性 Top K 选择轨迹，并明确 `randomized_before_scoring=false`；
+- `candidates`：动作 ID、预评分、动作调整、八维可见局面增量、随机调整和最终分；
 - `random_sampling`：随机扰动范围与抽样次数；
 - `final_action`：最终动作 ID 和得分；
 - `profile`：完整原型配置快照与 `conclusion_status=hypothesis`。
@@ -64,7 +66,7 @@ decide(AiPlayerView, AiPublicRules, AiMemory, ai_seed, AiDifficultyConfig) -> De
 
 - `input_projection_summary` 完全相同；
 - `decision_input_digest` 完全相同；
-- 候选抽样、逐候选评分与随机抽样完全相同；
+- 候选预评分、关键保护、Top K 选择、逐候选局面评价与最终随机抽样完全相同；
 - 最终动作完全相同。
 
 对应首轮内置断言位于 `tests/prototype/test_ai_fairness.gd`。独立 QA 仍须从真实规则核心构造隐藏等价配对黑盒测试，本测试不能替代 QA 验收。
@@ -80,7 +82,7 @@ decide(AiPlayerView, AiPublicRules, AiMemory, ai_seed, AiDifficultyConfig) -> De
 | high-budget | 96 | 80 ms | ±1 | hypothesis |
 | expert-tactical | 512 | 200 ms | 0 | hypothesis |
 
-`expert-tactical` 额外启用 `visible-tactical-one-ply`，评估完整公开候选并记录每个候选的战术分解。四档均不是已冻结难度曲线；搜索预算、随机性、权重和难度命名必须由批量对局、性能证据、系统与体验负责人评审及 GATE-1 决策后另行确定。
+四档均启用 `visible-state-evaluation-v1`；专家档使用最宽候选上限并记录同样的八维分解。四档均不是已冻结难度曲线；候选预算、随机性、权重和难度命名必须由批量对局、性能证据、系统与体验负责人评审及 GATE-1 决策后另行确定。
 
 ## 7. 技术对接要求
 

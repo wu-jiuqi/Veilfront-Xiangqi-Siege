@@ -328,5 +328,6 @@ func _empty_memory() -> Dictionary:
 		"schema_version": "ai-memory-v1",
 		"recent_action_ids": [],
 		"action_visit_counts": {},
+		"actor_visit_counts": {},
 		"last_visible_piece_turns": {},
 	}

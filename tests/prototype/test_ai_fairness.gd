@@ -159,6 +159,11 @@ static func _test_real_hidden_equivalent_multi_decision_pair(failures: Array[Str
 		var action_id: String = str(result_a.action.id)
 		memory_data.recent_action_ids.append(action_id)
 		memory_data.action_visit_counts[action_id] = int(memory_data.action_visit_counts.get(action_id, 0)) + 1
+		var actor_id: String = str(result_a.action.get("actor_id", ""))
+		if not actor_id.is_empty():
+			memory_data.actor_visit_counts[actor_id] = int(
+				memory_data.actor_visit_counts.get(actor_id, 0)
+			) + 1
 		var red_a: Dictionary = RuleEngine.submit_action(full_state_a, _pass_intent())
 		var red_b: Dictionary = RuleEngine.submit_action(full_state_b, _pass_intent())
 		var black_a: Dictionary = RuleEngine.submit_action(full_state_a, _pass_intent())
@@ -429,6 +434,7 @@ static func _empty_memory() -> Dictionary:
 		"schema_version": "ai-memory-v1",
 		"recent_action_ids": [],
 		"action_visit_counts": {},
+		"actor_visit_counts": {},
 		"last_visible_piece_turns": {},
 	}
 
@@ -465,6 +471,12 @@ static func _update_memory_from_public_decision(
 	memory_data.action_visit_counts[selected_action_id] = int(
 		memory_data.action_visit_counts.get(selected_action_id, 0)
 	) + 1
+	var action_parts: PackedStringArray = selected_action_id.split(":")
+	var actor_id: String = action_parts[1] if action_parts.size() > 1 else ""
+	if not actor_id.is_empty():
+		memory_data.actor_visit_counts[actor_id] = int(
+			memory_data.actor_visit_counts.get(actor_id, 0)
+		) + 1
 	for piece: Dictionary in player_view.pieces:
 		if piece.side != player_view.viewer_side:
 			memory_data.last_visible_piece_turns[str(piece.id)] = int(player_view.action_index)

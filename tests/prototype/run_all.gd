@@ -14,6 +14,7 @@ const SimulationTests = preload("res://tests/prototype/test_simulation.gd")
 const PreparedActionTests = preload("res://tests/prototype/test_prepared_action.gd")
 const AiFairnessTests = preload("res://tests/prototype/test_ai_fairness.gd")
 const AiDifficultyProfileTests = preload("res://tests/prototype/test_ai_difficulty_profiles.gd")
+const AiPieceDiversityTests = preload("res://tests/prototype/test_ai_piece_diversity.gd")
 
 var failures: Array[String] = []
 
@@ -76,6 +77,9 @@ func _run_phase1_checks() -> void:
 			failures.append(description)
 			push_error("FAIL: %s" % description)
 	_check(AiDifficultyProfileTests.run_suite(), "简单/中等/困难/专家四档 PlayerView AI 配置差异、战术审计与固定种子复现")
+	await process_frame
+	_check(AiPieceDiversityTests.run_suite(), "专家 AI 固定种子开局会发展兵、马、车且不再由炮垄断")
+	await process_frame
 
 	scene.queue_free()
 	await process_frame
@@ -92,7 +96,7 @@ func _check(condition: bool, description: String) -> void:
 
 func _finish() -> void:
 	if failures.is_empty():
-		print("PROTOTYPE_BASIS_CHECKS_PASSED scaffold=9 focused_suites=11 full_gate1=false")
+		print("PROTOTYPE_BASIS_CHECKS_PASSED scaffold=9 focused_suites=12 full_gate1=false")
 		quit(0)
 		return
 	print("PHASE1_SCAFFOLD_CHECKS_FAILED count=%d" % failures.size())

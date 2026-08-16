@@ -5,7 +5,7 @@ const PlayerView = preload("res://scripts/prototype/ai/ai_player_view.gd")
 const PublicRules = preload("res://scripts/prototype/ai/ai_public_rules.gd")
 const Memory = preload("res://scripts/prototype/ai/ai_memory.gd")
 const DifficultyConfig = preload("res://scripts/prototype/ai/ai_difficulty_config.gd")
-const VisibleTacticalEvaluator = preload("res://scripts/prototype/ai/ai_visible_tactical_evaluator.gd")
+const VisibleStateEvaluator = preload("res://scripts/prototype/ai/ai_visible_state_evaluator.gd")
 
 
 func decide(
@@ -40,24 +40,34 @@ func decide(
 
 	var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 	rng.seed = ai_seed
-	var sampling_audit: Array[Dictionary] = []
-	var sampled_actions: Array[Dictionary] = _sample_candidates(
-		actions, mini(config.candidate_limit, actions.size()), rng, sampling_audit
+	var player_data: Dictionary = player_view.to_canonical_data()
+	var selection_metadata: Dictionary = {}
+	var selected_actions: Array[Dictionary] = _select_candidates(
+		actions,
+		mini(config.candidate_limit, actions.size()),
+		player_data,
+		public_rules,
+		memory,
+		config,
+		selection_metadata
 	)
 	var candidate_audit: Array[Dictionary] = []
 	var best_action: Dictionary = {}
 	var best_score: int = -2147483648
-	var player_data: Dictionary = player_view.to_canonical_data()
-	for action: Dictionary in sampled_actions:
-		var base_score: int = _score(action, public_rules, memory, config)
-		var strategic_result: Dictionary = VisibleTacticalEvaluator.evaluate(
-			action, player_data, public_rules, config
+	var state_baseline: Dictionary = VisibleStateEvaluator.build_baseline(
+		player_data, public_rules, config
+	)
+	for action: Dictionary in selected_actions:
+		var base_score: int = _final_action_adjustment(action, public_rules, memory, config)
+		var strategic_result: Dictionary = VisibleStateEvaluator.evaluate(
+			action, player_data, public_rules, config, state_baseline
 		)
 		var strategic_adjustment: int = int(strategic_result.get("adjustment", 0))
 		var random_adjustment: int = rng.randi_range(-config.random_score_span, config.random_score_span)
 		var final_score: int = base_score + strategic_adjustment + random_adjustment
 		candidate_audit.append({
 			"action_id": action.id,
+			"pre_score": int(selection_metadata.get("pre_scores_by_action", {}).get(str(action.id), 0)),
 			"base_score": base_score,
 			"strategic_adjustment": strategic_adjustment,
 			"strategic_breakdown": strategic_result.get("breakdown", {}).duplicate(true),
@@ -87,13 +97,15 @@ func decide(
 			"time_budget_ms_hint_hypothesis": config.time_budget_ms_hint,
 			"time_budget_enforcement": "not_wall_clock_in_deterministic_prototype",
 			"available_candidates": actions.size(),
-			"evaluated_candidates": sampled_actions.size(),
+			"evaluated_candidates": selected_actions.size(),
 			"strategy_mode_hypothesis": str(config.strategy_mode),
 		},
 		"candidate_sampling": {
-			"strategy": "actor-kind-stratified-v1",
-			"ai_seed": ai_seed,
-			"draws": sampling_audit,
+			"strategy": "strategic-top-k-v1",
+			"randomized_before_scoring": false,
+			"pre_scored_candidates": actions.size(),
+			"critical_reasons_by_action": selection_metadata.get("critical_reasons_by_action", {}).duplicate(true),
+			"draws": selection_metadata.get("draws", []).duplicate(true),
 		},
 		"candidates": candidate_audit,
 		"random_sampling": {
@@ -106,56 +118,93 @@ func decide(
 	return {"ok": true, "action": best_action.duplicate(true), "audit": audit}
 
 
-func _sample_candidates(
+func _select_candidates(
 	actions: Array[Dictionary],
 	count: int,
-	rng: RandomNumberGenerator,
-	audit: Array[Dictionary]
+	player_data: Dictionary,
+	public_rules: PublicRules,
+	memory: Memory,
+	config: DifficultyConfig,
+	metadata: Dictionary
 ) -> Array[Dictionary]:
-	var buckets: Dictionary = {}
+	var ranked: Array[Dictionary] = []
+	var critical_reasons_by_action: Dictionary = {}
+	var current_general_attackers: int = VisibleStateEvaluator.general_visible_attacker_count(player_data)
 	for action: Dictionary in actions:
-		var bucket_key: String = "%s|%s" % [str(action.kind), str(action.actor_id)]
-		if not buckets.has(bucket_key):
-			buckets[bucket_key] = []
-		buckets[bucket_key].append(action.duplicate(true))
-	var bucket_keys: Array = buckets.keys()
-	bucket_keys.sort()
+		var action_id: String = str(action.id)
+		var reasons: Array[String] = VisibleStateEvaluator.critical_reasons(
+			action, player_data, public_rules, config, current_general_attackers
+		)
+		if not reasons.is_empty():
+			critical_reasons_by_action[action_id] = reasons.duplicate()
+		ranked.append({
+			"action": action.duplicate(true),
+			"action_id": action_id,
+			"bucket": "%s|%s" % [str(action.kind), str(action.actor_id)],
+			"pre_score": _pre_score(action, public_rules, memory, config),
+			"critical": not reasons.is_empty(),
+		})
+	ranked.sort_custom(_ranked_candidate_before)
 	var result: Array[Dictionary] = []
 	var selected_action_ids: Dictionary = {}
-	while result.size() < count and not bucket_keys.is_empty():
-		var selected_bucket_index: int = rng.randi_range(0, bucket_keys.size() - 1)
-		var selected_bucket_key: String = str(bucket_keys.pop_at(selected_bucket_index))
-		var bucket: Array = buckets[selected_bucket_key]
-		var selected_action_index: int = rng.randi_range(0, bucket.size() - 1)
-		var selected_action: Dictionary = bucket[selected_action_index]
-		audit.append({
-			"draw_index": result.size(),
-			"phase": "actor_kind_bucket",
-			"bucket_count_before_draw": bucket_keys.size() + 1,
-			"selected_bucket_index": selected_bucket_index,
-			"selected_bucket": selected_bucket_key,
-			"bucket_size": bucket.size(),
-			"selected_action_index": selected_action_index,
-		})
-		result.append(selected_action)
-		selected_action_ids[str(selected_action.id)] = true
-	var remaining_pool: Array[Dictionary] = []
-	for action: Dictionary in actions:
-		if not selected_action_ids.has(str(action.id)):
-			remaining_pool.append(action.duplicate(true))
-	while result.size() < count and not remaining_pool.is_empty():
-		var selected_index: int = rng.randi_range(0, remaining_pool.size() - 1)
-		audit.append({
-			"draw_index": result.size(),
-			"phase": "remaining_pool",
-			"pool_size_before_draw": remaining_pool.size(),
-			"selected_index": selected_index,
-		})
-		result.append(remaining_pool.pop_at(selected_index))
+	var draws: Array[Dictionary] = []
+	var pre_scores_by_action: Dictionary = {}
+	for entry: Dictionary in ranked:
+		pre_scores_by_action[str(entry.action_id)] = int(entry.pre_score)
+		if bool(entry.critical):
+			_append_selected(entry, "critical", result, selected_action_ids, draws)
+	var effective_limit: int = maxi(count, result.size())
+	var bucket_best: Dictionary = {}
+	for entry: Dictionary in ranked:
+		if selected_action_ids.has(str(entry.action_id)) or bucket_best.has(str(entry.bucket)):
+			continue
+		bucket_best[str(entry.bucket)] = entry
+	var bucket_representatives: Array = bucket_best.values()
+	bucket_representatives.sort_custom(_ranked_candidate_before)
+	for entry: Dictionary in bucket_representatives:
+		if result.size() >= effective_limit:
+			break
+		_append_selected(entry, "actor_kind_best", result, selected_action_ids, draws)
+	for entry: Dictionary in ranked:
+		if result.size() >= effective_limit:
+			break
+		if selected_action_ids.has(str(entry.action_id)):
+			continue
+		_append_selected(entry, "global_top_k", result, selected_action_ids, draws)
+	metadata["critical_reasons_by_action"] = critical_reasons_by_action
+	metadata["pre_scores_by_action"] = pre_scores_by_action
+	metadata["draws"] = draws
 	return result
 
 
-func _score(
+func _append_selected(
+	entry: Dictionary,
+	phase: String,
+	result: Array[Dictionary],
+	selected_action_ids: Dictionary,
+	draws: Array[Dictionary]
+) -> void:
+	var action_id: String = str(entry.action_id)
+	if selected_action_ids.has(action_id):
+		return
+	draws.append({
+		"draw_index": result.size(),
+		"phase": phase,
+		"action_id": action_id,
+		"bucket": str(entry.bucket),
+		"pre_score": int(entry.pre_score),
+	})
+	result.append(entry.action.duplicate(true))
+	selected_action_ids[action_id] = true
+
+
+func _ranked_candidate_before(a: Dictionary, b: Dictionary) -> bool:
+	if int(a.pre_score) != int(b.pre_score):
+		return int(a.pre_score) > int(b.pre_score)
+	return str(a.action_id) < str(b.action_id)
+
+
+func _pre_score(
 	action: Dictionary,
 	public_rules: PublicRules,
 	memory: Memory,
@@ -164,13 +213,26 @@ func _score(
 	var score: int = public_rules.action_bias(action.kind)
 	for capture: Dictionary in action.visible_captures:
 		score += public_rules.piece_value(capture.piece_type)
-	score += action.reveal_cell_count * config.reveal_weight
+	score += mini(int(action.reveal_cell_count), int(config.vision_cell_cap)) \
+		* int(config.reveal_weight)
 	if action.occupies_flag:
 		score += config.flag_weight
 	if action.attacks_wall:
 		score += config.wall_pressure_weight
 	score -= memory.action_visit_count(action.id) * config.revisit_penalty
+	score -= memory.actor_visit_count(action.actor_id) * config.actor_revisit_penalty
 	return score
+
+
+func _final_action_adjustment(
+	action: Dictionary,
+	public_rules: PublicRules,
+	memory: Memory,
+	config: DifficultyConfig
+) -> int:
+	return public_rules.action_bias(action.kind) \
+		- memory.action_visit_count(action.id) * config.revisit_penalty \
+		- memory.actor_visit_count(action.actor_id) * config.actor_revisit_penalty
 
 
 func _no_action_result(
@@ -205,8 +267,10 @@ func _no_action_result(
 				"strategy_mode_hypothesis": str(config.strategy_mode),
 			},
 			"candidate_sampling": {
-				"strategy": "actor-kind-stratified-v1",
-				"ai_seed": ai_seed,
+				"strategy": "strategic-top-k-v1",
+				"randomized_before_scoring": false,
+				"pre_scored_candidates": 0,
+				"critical_reasons_by_action": {},
 				"draws": [],
 			},
 			"candidates": [],

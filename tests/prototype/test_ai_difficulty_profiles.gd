@@ -16,25 +16,28 @@ const EXPECTED: Dictionary = {
 		"path": "res://resources/prototype/ai/prototype_low_budget_hypothesis.tres",
 		"candidate_limit_hypothesis": 8,
 		"random_score_span_hypothesis": 12,
+		"strategy_mode_hypothesis": "visible-state-evaluation-v1",
 	},
 	"medium": {
 		"profile_id": "prototype-default-hypothesis",
 		"path": "res://resources/prototype/ai/prototype_default_hypothesis.tres",
 		"candidate_limit_hypothesis": 32,
 		"random_score_span_hypothesis": 4,
+		"strategy_mode_hypothesis": "visible-state-evaluation-v1",
 	},
 	"hard": {
 		"profile_id": "prototype-high-budget-hypothesis",
 		"path": "res://resources/prototype/ai/prototype_high_budget_hypothesis.tres",
 		"candidate_limit_hypothesis": 96,
 		"random_score_span_hypothesis": 1,
+		"strategy_mode_hypothesis": "visible-state-evaluation-v1",
 	},
 	"expert": {
 		"profile_id": "prototype-expert-tactical-hypothesis",
 		"path": "res://resources/prototype/ai/prototype_expert_tactical_hypothesis.tres",
 		"candidate_limit_hypothesis": 512,
 		"random_score_span_hypothesis": 0,
-		"strategy_mode_hypothesis": "visible-tactical-one-ply",
+		"strategy_mode_hypothesis": "visible-state-evaluation-v1",
 	},
 }
 
@@ -108,11 +111,20 @@ static func run_suite() -> bool:
 	_expect(int(tactical_result.get("visible_attackers", 0)) >= 1, "专家档审计记录危险候选的可见攻击者", failures)
 	_expect(int(tactical_result.get("strategic_adjustment", 0)) < 0, "专家档对可见送车候选施加负向战术调整", failures)
 	var bombard_heavy: Dictionary = _bombard_heavy_sampling_fixture()
-	_expect(bombard_heavy.get("sampling_strategy", "") == "actor-kind-stratified-v1",
-		"炮击落点密集时使用按棋子和行动类型分层的候选抽样", failures)
+	_expect(bombard_heavy.get("sampling_strategy", "") == "strategic-top-k-v1",
+		"炮击落点密集时使用关键行动保护与确定性分层 Top K", failures)
 	_expect(int(bombard_heavy.get("move_candidates", 0)) >= 1 \
 		and int(bombard_heavy.get("distinct_actors", 0)) >= 4,
 		"低预算候选仍覆盖移动动作及多枚棋子，不被炮击落点淹没", failures)
+	_expect(int(bombard_heavy.get("pre_scored_candidates", 0)) == 180,
+		"候选预算应用前全量预评分全部 180 个公开行动", failures)
+	var strategic_top_k: Dictionary = _strategic_top_k_fixture()
+	_expect(strategic_top_k.get("selected_action_id", "") == "critical-capture-general",
+		"预算为 1 时吃将行动仍受关键候选保护", failures)
+	_expect(strategic_top_k.get("critical_reasons", []).has("capture_general"),
+		"关键候选审计说明吃将保护原因", failures)
+	_expect(strategic_top_k.get("state_dimensions", []).size() == 8,
+		"最终候选公开八维可见局面评价审计", failures)
 	_expect(not controller.set_ai_difficulty("unsupported"), "未知难度被拒绝", failures)
 	controller.queue_free()
 	for failure: String in failures:
@@ -278,8 +290,57 @@ static func _bombard_heavy_sampling_fixture() -> Dictionary:
 			actor_ids[parts[1]] = true
 	return {
 		"sampling_strategy": str(audit.get("candidate_sampling", {}).get("strategy", "")),
+		"pre_scored_candidates": int(audit.get("candidate_sampling", {}).get("pre_scored_candidates", 0)),
 		"move_candidates": move_candidates,
 		"distinct_actors": actor_ids.size(),
+	}
+
+
+static func _strategic_top_k_fixture() -> Dictionary:
+	var actions: Array = []
+	for index: int in 24:
+		actions.append({
+			"id": "distractor-%02d" % index,
+			"kind": "move", "actor_id": "red-pawn",
+			"origin": [0, 10], "target": [index % 9, 11 + index % 4],
+			"visible_captures": [], "reveal_cell_count": 8,
+			"occupies_flag": false, "attacks_wall": false, "path_length": 1,
+		})
+	actions.append({
+		"id": "critical-capture-general", "kind": "move", "actor_id": "red-rook",
+		"origin": [4, 10], "target": [4, 12],
+		"visible_captures": [{"piece_id": "black-general", "piece_type": "general"}],
+		"reveal_cell_count": 0, "occupies_flag": false, "attacks_wall": false, "path_length": 2,
+	})
+	var projection: Dictionary = {
+		"schema_version": "player-view-ai-v1", "decision_id": "fixture-strategic-top-k",
+		"viewer_side": "red", "turn_index": 9,
+		"visible_pieces": [
+			{"id": "red-general", "side": "red", "piece_type": "general", "position": [4, 1], "status_tags": ["owned"]},
+			{"id": "red-rook", "side": "red", "piece_type": "rook", "position": [4, 10], "status_tags": ["owned"]},
+			{"id": "red-pawn", "side": "red", "piece_type": "pawn", "position": [0, 10], "status_tags": ["owned"]},
+			{"id": "black-general", "side": "black", "piece_type": "general", "position": [4, 12], "status_tags": ["visible"]},
+		],
+		"public_flags": [],
+		"public_walls": [{"side": "red", "status": "INTACT"}, {"side": "black", "status": "INTACT"}],
+		"legal_actions": actions, "public_events": [],
+	}
+	var profile: Resource = load(str(EXPECTED["easy"]["path"])).duplicate(true)
+	profile.candidate_limit = 1
+	profile.random_score_span = 0
+	var decision: Dictionary = DecisionEngine.new().decide(
+		AiPlayerView.new(projection), PublicRules.new(_public_rules()),
+		Memory.new(_empty_memory()), 190771, profile
+	)
+	var audit: Dictionary = decision.get("audit", {})
+	var candidate: Dictionary = audit.get("candidates", [])[0] if not audit.get("candidates", []).is_empty() else {}
+	var breakdown: Dictionary = candidate.get("strategic_breakdown", {})
+	return {
+		"selected_action_id": str(decision.get("action", {}).get("id", "")),
+		"critical_reasons": audit.get("candidate_sampling", {}).get("critical_reasons_by_action", {}).get(
+			"critical-capture-general", []
+		),
+		"state_dimensions": breakdown.get("dimensions", {}).keys(),
 	}
 
 
@@ -352,6 +413,7 @@ static func _empty_memory() -> Dictionary:
 		"schema_version": "ai-memory-v1",
 		"recent_action_ids": [],
 		"action_visit_counts": {},
+		"actor_visit_counts": {},
 		"last_visible_piece_turns": {},
 	}
 
