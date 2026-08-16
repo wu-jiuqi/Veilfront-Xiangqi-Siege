@@ -6,7 +6,7 @@
 
 ## 变更摘要
 
-规则矩阵新增初始阵型、旗帜完整生命周期、三级意图、同步炮击、后备队列、精确修墙时序和炮击位置验收；项目所有者已确认无共享冷却，并冻结相/象起终点包围 `3x3` 九格显形区、清除时点与多源并集。
+规则矩阵新增初始阵型、旗帜完整生命周期、三级意图、同步炮击、后备队列、精确修墙时序和炮击位置验收；项目所有者已确认无共享冷却，冻结相/象起终点包围 `3x3` 九格显形区，并确认敌墙倒塌期间敌方缓冲区与大本营全域视野。
 
 ## 自动指标与硬检查
 
@@ -41,7 +41,9 @@
 | RULE-ELEPHANT-REVEAL-001 | 相/象从 `(4,10)` 合资格移动到 `(6,12)` | 新显形源严格等于 `X=4..6,Y=10..12` 九格，包含起点 `(4,10)`、象眼 `(5,11)`、终点 `(6,12)`，不含任何集合外格。 |
 | RULE-ELEPHANT-REVEAL-002 | 建立两个有重叠格的相/象源；随后分别触发源棋下次移动开始、离场/死亡/回营/入队、敌墙倒塌 | 可见格为源并集；清除一个源后，其他源覆盖格仍有效；每种清除事件均不残留该源，墙恢复不恢复旧源。 |
 | INFO-ELEPHANT-PAIR-001 | 两个 FullState 仅让隐身马分别位于九格内/九格外，并在公开前保持其他 PlayerView 条件一致 | 九格内马按规则显形、九格外马保持隐藏；投影不得使用扩大、裁切或上一次已清除的显形集合。 |
+| INFO-WALL-VISION-001 | 分别令红墙/黑墙处于 `INTACT → BREACHED → REPAIRING → INTACT`，检查双方 PlayerView | `BREACHED/REPAIRING` 时进攻方看见守方缓冲区与大本营全部格子及非隐身棋子；恢复后额外视野立即消失；双方对称；隐身马不因区域全视野自动显形。 |
 | INFO-PAIR-001 | 隐藏等价状态、相同 PlayerView/AI记忆/AI种子 | 只读查询、三级提示、AI意图和公开前事件摘要一致；仅在授权接触点后可分叉。 |
+| AI-EXPERT-001 | 专家档在同一公开局面面对“立即吃兵但会被可见车反吃”与安全移动；再对隐藏等价 PlayerView 固定 AI seed 复跑 | 专家档选择安全移动；审计记录可见攻击者和负向战术调整；隐藏等价动作与完整审计一致，FullState 访问为 0。 |
 
 ## 人工试玩问题
 
@@ -65,7 +67,7 @@
 
 证据包应支持项目所有者判断：核心循环是否值得继续；胜负/恢复/视野/行动反馈是否闭环；最大风险是否真的被验证；技术成本与需重写范围是否可接受；是否进入正式功能开发及后续视觉准备。自动通过、QA 专业审查或本计划作者均不得代替该人工决定。
 
-追溯：`CTR-P1-001`、`LOOP-CTR-GATE1-VERTICAL-SLICE-001`，以及 `stmt:veilfront-xiangqi-siege:project-goal`、`stmt:veilfront-xiangqi-siege:victory-and-flags`、`stmt:veilfront-xiangqi-siege:single-player-ai`、`stmt:veilfront-xiangqi-siege:implementation`、`OWNER-FREEZE-2026-08-15`、`OWNER-CONFIRM-2026-08-16:ELEPHANT-REVEAL-3X3`。
+追溯：`CTR-P1-001`、`LOOP-CTR-GATE1-VERTICAL-SLICE-001`，以及 `stmt:veilfront-xiangqi-siege:project-goal`、`stmt:veilfront-xiangqi-siege:victory-and-flags`、`stmt:veilfront-xiangqi-siege:single-player-ai`、`stmt:veilfront-xiangqi-siege:implementation`、`OWNER-FREEZE-2026-08-15`、`OWNER-CONFIRM-2026-08-16:ELEPHANT-REVEAL-3X3`、`OWNER-CONFIRM-2026-08-16:BREACHED-WALL-REGION-VISION`。
 
 ## 剩余开放项
 

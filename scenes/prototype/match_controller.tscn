@@ -1,12 +1,14 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scripts/prototype/match_controller.gd" id="1_controller"]
 [ext_resource type="Resource" path="res://resources/prototype/ai/prototype_low_budget_hypothesis.tres" id="2_easy"]
 [ext_resource type="Resource" path="res://resources/prototype/ai/prototype_default_hypothesis.tres" id="3_medium"]
 [ext_resource type="Resource" path="res://resources/prototype/ai/prototype_high_budget_hypothesis.tres" id="4_hard"]
+[ext_resource type="Resource" path="res://resources/prototype/ai/prototype_expert_tactical_hypothesis.tres" id="5_expert"]
 
 [node name="MatchController" type="Node"]
 script = ExtResource("1_controller")
 ai_easy_profile = ExtResource("2_easy")
 ai_medium_profile = ExtResource("3_medium")
 ai_hard_profile = ExtResource("4_hard")
+ai_expert_profile = ExtResource("5_expert")

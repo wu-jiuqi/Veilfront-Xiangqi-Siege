@@ -14,7 +14,9 @@ const DIFFICULTIES: Dictionary = {
 	"easy": "res://resources/prototype/ai/prototype_low_budget_hypothesis.tres",
 	"medium": "res://resources/prototype/ai/prototype_default_hypothesis.tres",
 	"hard": "res://resources/prototype/ai/prototype_high_budget_hypothesis.tres",
+	"expert": "res://resources/prototype/ai/prototype_expert_tactical_hypothesis.tres",
 }
+const DIFFICULTY_IDS: Array[String] = ["easy", "medium", "hard", "expert"]
 
 var failures: Array[Dictionary] = []
 
@@ -30,7 +32,7 @@ func _run() -> void:
 	var records: Array = []
 	var actions_by_seed: Dictionary = {}
 	var per_difficulty: Dictionary = {}
-	for difficulty_id: String in ["easy", "medium", "hard"]:
+	for difficulty_id: String in DIFFICULTY_IDS:
 		per_difficulty[difficulty_id] = {
 			"records": 0,
 			"determinism_mismatches": 0,
@@ -48,7 +50,7 @@ func _run() -> void:
 	for seed_offset: int in requested_seeds:
 		var seed_value: int = start_seed + seed_offset
 		actions_by_seed[seed_value] = {}
-		for difficulty_id: String in ["easy", "medium", "hard"]:
+		for difficulty_id: String in DIFFICULTY_IDS:
 			var record: Dictionary = _run_record(seed_value, difficulty_id)
 			records.append(record)
 			_accumulate(per_difficulty[difficulty_id], record)
@@ -66,7 +68,7 @@ func _run() -> void:
 		"simulation_mode": "player_view_ai_one_decision_fairness_matrix",
 		"start_seed": start_seed,
 		"requested_seeds_per_difficulty": requested_seeds,
-		"difficulty_count": 3,
+		"difficulty_count": DIFFICULTY_IDS.size(),
 		"records_count": records.size(),
 		"failure_count": failures.size(),
 		"failures": failures.duplicate(true),
@@ -223,7 +225,7 @@ func _accumulate(stats: Dictionary, record: Dictionary) -> void:
 
 func _finalize_difficulty_stats(per_difficulty: Dictionary) -> Dictionary:
 	var result: Dictionary = {}
-	for difficulty_id: String in ["easy", "medium", "hard"]:
+	for difficulty_id: String in DIFFICULTY_IDS:
 		var stats: Dictionary = per_difficulty[difficulty_id].duplicate(true)
 		var count: int = int(stats["records"])
 		stats["evaluated_candidates_average"] = (
@@ -240,20 +242,27 @@ func _difference_statistics(actions_by_seed: Dictionary) -> Dictionary:
 		"easy_vs_medium_different": 0,
 		"medium_vs_hard_different": 0,
 		"easy_vs_hard_different": 0,
-		"all_three_same": 0,
+		"hard_vs_expert_different": 0,
+		"medium_vs_expert_different": 0,
+		"all_four_same": 0,
 	}
 	for actions: Dictionary in actions_by_seed.values():
 		var easy: String = str(actions.get("easy", ""))
 		var medium: String = str(actions.get("medium", ""))
 		var hard: String = str(actions.get("hard", ""))
+		var expert: String = str(actions.get("expert", ""))
 		if easy != medium:
 			result["easy_vs_medium_different"] = int(result["easy_vs_medium_different"]) + 1
 		if medium != hard:
 			result["medium_vs_hard_different"] = int(result["medium_vs_hard_different"]) + 1
 		if easy != hard:
 			result["easy_vs_hard_different"] = int(result["easy_vs_hard_different"]) + 1
-		if easy == medium and medium == hard:
-			result["all_three_same"] = int(result["all_three_same"]) + 1
+		if hard != expert:
+			result["hard_vs_expert_different"] = int(result["hard_vs_expert_different"]) + 1
+		if medium != expert:
+			result["medium_vs_expert_different"] = int(result["medium_vs_expert_different"]) + 1
+		if easy == medium and medium == hard and hard == expert:
+			result["all_four_same"] = int(result["all_four_same"]) + 1
 	return result
 
 

@@ -68,19 +68,21 @@ func _run() -> void:
 		await process_frame
 
 	var difficulty_select := scene.get_node("SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/DifficultyGroup/DifficultySelect") as OptionButton
-	_check(difficulty_select.item_count == 3, "灰盒预置简单/中等/困难三档选择")
+	_check(difficulty_select.item_count == 4, "灰盒预置简单/中等/困难/专家四档选择")
 	var expected_profiles: Dictionary = {
 		"easy": "prototype-low-budget-hypothesis",
 		"medium": "prototype-default-hypothesis",
 		"hard": "prototype-high-budget-hypothesis",
+		"expert": "prototype-expert-tactical-hypothesis",
 	}
 	var expected_candidate_limits: Dictionary = {
 		"easy": 8,
 		"medium": 32,
 		"hard": 96,
+		"expert": 512,
 	}
 	var match_controller := scene.get_node("MatchController")
-	for difficulty_id: String in ["easy", "medium", "hard"]:
+	for difficulty_id: String in ["easy", "medium", "hard", "expert"]:
 		scene.set_ai_difficulty_for_test(difficulty_id)
 		await process_frame
 		var difficulty_snapshot: Dictionary = scene.get_ai_difficulty_snapshot()
@@ -145,7 +147,7 @@ func _run() -> void:
 	scene.queue_free()
 	await process_frame
 	if failures.is_empty():
-		print("PLAYTEST_GRAYBOX_SMOKE_PASSED cells=216 round_limit=50 human_move=true ai_step=true pass=true bombard=true ai_difficulties=3 ai_audit_test_only=true")
+		print("PLAYTEST_GRAYBOX_SMOKE_PASSED cells=216 round_limit=50 human_move=true ai_step=true pass=true bombard=true ai_difficulties=4 ai_audit_test_only=true")
 		quit(0)
 		return
 	print("PLAYTEST_GRAYBOX_SMOKE_FAILED count=%d" % failures.size())

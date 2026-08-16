@@ -18,6 +18,7 @@ signal action_feedback(feedback: Dictionary)
 @export var ai_easy_profile: Resource
 @export var ai_medium_profile: Resource
 @export var ai_hard_profile: Resource
+@export var ai_expert_profile: Resource
 
 var _full_state: Dictionary = {}
 var _prepared_token: String = ""
@@ -63,7 +64,7 @@ func get_human_action_previews() -> Array:
 
 
 func set_ai_difficulty(difficulty_id: String) -> bool:
-	if difficulty_id not in ["easy", "medium", "hard"]:
+	if difficulty_id not in ["easy", "medium", "hard", "expert"]:
 		return false
 	_ai_difficulty_id = difficulty_id
 	return _profile_for_difficulty() != null
@@ -79,6 +80,7 @@ func get_ai_difficulty_snapshot() -> Dictionary:
 		"conclusion_status": str(profile.conclusion_status),
 		"candidate_limit_hypothesis": int(profile.candidate_limit),
 		"random_score_span_hypothesis": int(profile.random_score_span),
+		"strategy_mode_hypothesis": str(profile.strategy_mode),
 	}
 
 
@@ -255,6 +257,7 @@ func _profile_for_difficulty() -> Resource:
 	match _ai_difficulty_id:
 		"easy": return ai_easy_profile
 		"hard": return ai_hard_profile
+		"expert": return ai_expert_profile
 	return ai_medium_profile
 
 

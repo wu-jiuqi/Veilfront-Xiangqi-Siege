@@ -106,7 +106,7 @@ func restart_match_for_test(seed_override: int = 0) -> void:
 
 
 func set_ai_difficulty_for_test(difficulty_id: String) -> void:
-	var index: int = ["easy", "medium", "hard"].find(difficulty_id)
+	var index: int = ["easy", "medium", "hard", "expert"].find(difficulty_id)
 	if index < 0:
 		return
 	difficulty_select.select(index)
@@ -255,7 +255,7 @@ func _on_restart_pressed() -> void:
 
 
 func _on_ai_difficulty_selected(index: int) -> void:
-	var ids: Array[String] = ["easy", "medium", "hard"]
+	var ids: Array[String] = ["easy", "medium", "hard", "expert"]
 	if index < 0 or index >= ids.size():
 		return
 	_apply_ai_difficulty(ids[index])
@@ -493,4 +493,4 @@ func _piece_mark(piece_type: String) -> String:
 
 
 func _difficulty_name(difficulty_id: String) -> String:
-	return {"easy": "简单", "medium": "中等", "hard": "困难"}.get(difficulty_id, difficulty_id)
+	return {"easy": "简单", "medium": "中等", "hard": "困难", "expert": "专家"}.get(difficulty_id, difficulty_id)

@@ -1,16 +1,17 @@
 # 规则—测试覆盖矩阵 v1
 
-状态：`prototype / iteration 1 / revision 4 QA evidence reconciliation / owner-freeze revision 3`。本文件只建立冻结规格到测试的追溯，不改变规则、不自行验收实现，也不替代独立 QA 或 GATE-1。
+状态：`prototype / iteration 2 / revision 5 producer verification / owner-confirmed wall-region vision`。本文件只建立冻结规格到测试的追溯，不改变规则、不自行验收实现，也不替代独立 QA 或 GATE-1。
 
 ## 变更摘要
 
 - 项目所有者冻结相/象显形区为合法移动起终点包围的 `3x3` 九格；关闭 `PENDING-OWNER-ELEPHANT-REVEAL-CELLS`。
 - Revision 4 独立 QA 已使 `RULE-ELEPHANT-REVEAL-001/002` 与 `INFO-ELEPHANT-PAIR-001` 获得实际 PASS 证据；本次只回填覆盖状态，不把技术 PASS 写成 GATE 通过。
+- Revision 5 按项目所有者确认新增敌墙倒塌区域视野与专家 AI hypothesis；当前只有生产者自检，尚未升级为独立 QA 证据。
 - `QA-P1-003` tooling blocker 与 `full_gate1=false` 保持不变；GATE-1 仍未作决定。
 
 ## 1. 审计基线与判读
 
-- 规则基线：`rules-spec-v1.md`、`settlement-order-v1.md`、`information-boundary-v1.md`，均为 `owner-freeze revision 3`；区域轰炸裁决为 `OWNER-CONFIRM-2026-08-15:BOMBARD-NO-COOLDOWN`，相/象显形裁决为 `OWNER-CONFIRM-2026-08-16:ELEPHANT-REVEAL-3X3`。
+- 规则基线：`rules-spec-v1.md`、`settlement-order-v1.md`、`information-boundary-v1.md`；区域轰炸裁决为 `OWNER-CONFIRM-2026-08-15:BOMBARD-NO-COOLDOWN`，相/象显形裁决为 `OWNER-CONFIRM-2026-08-16:ELEPHANT-REVEAL-3X3`，敌墙区域视野裁决为 `OWNER-CONFIRM-2026-08-16:BREACHED-WALL-REGION-VISION`。
 - 验收基线：`gate1-observation-plan-v1.md`、`CTR-P1-001 v1`、`LOOP-CTR-GATE1-VERTICAL-SLICE-001 v1`。
 - Revision 4 独立 QA 证据索引：`evidence/prototype/qa/gate1-evidence-index.yaml`；复核报告：`evidence/prototype/qa/iteration-1-revision-4-review.md`；命令输出：`evidence/prototype/qa/iteration-1-revision-4-command-output.txt`。QA 证据已推送至 HEAD `459d759`。
 - Revision 4 的 `run_elephant_reveal.gd`、`run_all.gd`、独立墙倒塌 runner 与 1000 fixed seeds 均实际通过；`run_all.gd` 同时明示 `focused_suites=10 full_gate1=false`。因此 `PASS-R4` 只表示对应自动验收获得独立 QA 证据，不表示 GATE-1 通过；`PENDING` 表示仍须补覆盖。
@@ -62,6 +63,7 @@
 |---|---|---|---|
 | INFO-PROJECT-001 | 唯一流向 `FullState -> PlayerView`；UI/小地图/提示/公开日志/AI 无 FullState、完整棋盘、规则 RNG 或调试旁路 | `INFO-PAIR-001`; `test_player_view.gd::run_suite`; `test_ai_fairness.gd::_test_real_hidden_equivalent_pair`; `PENDING-INFO-CONSUMER-BOUNDARY-001` | PARTIAL-R2 |
 | INFO-VISION-001 | 己营公开；每枚己棋当前中心 `3x3` 裁边并集；移动后旧区无其他源即回雾 | `PENDING-INFO-VISION-3X3-001`; `PENDING-INFO-OLD-FOG-001`; `PENDING-INFO-VISION-UNION-001` | PENDING |
+| INFO-WALL-VISION-001 | 敌墙为 `BREACHED` 或 `REPAIRING` 时，本方获得敌方缓冲区与大本营全部格子视野；恢复 `INTACT` 后立即移除；双方对称；该格子视野不自动驱散隐身马 | `test_player_view.gd::_test_breached_wall_region_visibility`; `tests/prototype/run_all.gd` | PASS-R5（生产者自检；待独立 QA） |
 | INFO-SPECIAL-VISION-001 | 车路径视野生命周期；隐身马在普通视野中仍隐藏；相/象严格九格显形、多源并集与旧源失效 | `RULE-ELEPHANT-REVEAL-001`; `RULE-ELEPHANT-REVEAL-002`; `INFO-ELEPHANT-PAIR-001`; `tests/prototype/run_elephant_reveal.gd`（区内/区外隐藏马与 FullState→PlayerView 隐藏等价配对）; `tests/prototype/run_all.gd` | PASS-R4（独立 QA） |
 | INFO-RANDOM-001 | 未公开炮击格、士/回营选择、RNG 状态和未来抽样在公开点前不可见 | 规则 RNG/未公开记录配对：`test_ai_fairness.gd::_test_real_hidden_equivalent_pair`; `PENDING-INFO-RANDOM-EACH-001` | PARTIAL-R2 |
 | INFO-PREVIEW-001 | 仅凭 PlayerView 分类 `KNOWN_LEGAL/TENTATIVE/KNOWN_ILLEGAL`；等价投影提示字节等价 | `INFO-INTENT-001`; `test_player_view.gd::run_suite`; `PENDING-INFO-PREVIEW-LEG-EYE-001`; `PENDING-INFO-PREVIEW-CANNON-001` | PARTIAL-R2 |
@@ -74,8 +76,9 @@
 | AI-BOUNDARY-001 | AI 仅收 PlayerView、公开规则、自身记忆、独立 AI 种子；白名单拒绝额外字段；不收规则 RNG | `test_ai_fairness.gd::_test_real_projection_unknown_field_is_rejected`; `_test_seed_derivation_is_independent_from_rule_rng` | PASS-R2 |
 | AI-EQUIV-001 | 等价 PlayerView+记忆+AI种子产生相同候选、摘要、审计和动作；集合顺序不影响决定 | `INFO-PAIR-001`; `test_ai_fairness.gd::_test_real_hidden_equivalent_pair`; `_test_real_projection_collection_order_is_canonical`；负控 `--force-failure` exit 1 | PASS-R2（单一配对） |
 | AI-MATRIX-001 | 隐藏马、炮架、路径阻挡、未公开随机等多类等价配对均满足 AI 公平 | `PENDING-AI-EQUIV-HORSE-001`; `PENDING-AI-EQUIV-SCREEN-001`; `PENDING-AI-EQUIV-RANDOM-001` | PENDING |
+| AI-EXPERT-001 | 专家档仍只消费 PlayerView；覆盖全部公开候选，在可见信息上做一层战术风险/支援/将帅安全评估，随机调整为 0，并保持确定性与隐藏等价 | `test_ai_difficulty_profiles.gd::_expert_tactical_fixture_decision`; `run_ai_difficulty_seed_matrix.gd` 3 seed × 4 档生产者烟测 | PASS-R5（生产者自检；待独立 QA） |
 
-追溯：`information-boundary-v1.md §1-§7`；`stmt:veilfront-xiangqi-siege:board-and-fog`、`single-player-ai`、`presentation`。
+追溯：`information-boundary-v1.md §1-§7`；`stmt:veilfront-xiangqi-siege:board-and-fog`、`single-player-ai`、`presentation`；`OWNER-CONFIRM-2026-08-16:BREACHED-WALL-REGION-VISION`。
 
 ## 5. 结算组合与终止
 

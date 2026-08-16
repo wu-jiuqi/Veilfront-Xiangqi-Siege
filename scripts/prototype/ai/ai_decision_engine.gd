@@ -5,6 +5,7 @@ const PlayerView = preload("res://scripts/prototype/ai/ai_player_view.gd")
 const PublicRules = preload("res://scripts/prototype/ai/ai_public_rules.gd")
 const Memory = preload("res://scripts/prototype/ai/ai_memory.gd")
 const DifficultyConfig = preload("res://scripts/prototype/ai/ai_difficulty_config.gd")
+const VisibleTacticalEvaluator = preload("res://scripts/prototype/ai/ai_visible_tactical_evaluator.gd")
 
 
 func decide(
@@ -46,13 +47,20 @@ func decide(
 	var candidate_audit: Array[Dictionary] = []
 	var best_action: Dictionary = {}
 	var best_score: int = -2147483648
+	var player_data: Dictionary = player_view.to_canonical_data()
 	for action: Dictionary in sampled_actions:
 		var base_score: int = _score(action, public_rules, memory, config)
+		var strategic_result: Dictionary = VisibleTacticalEvaluator.evaluate(
+			action, player_data, public_rules, config
+		)
+		var strategic_adjustment: int = int(strategic_result.get("adjustment", 0))
 		var random_adjustment: int = rng.randi_range(-config.random_score_span, config.random_score_span)
-		var final_score: int = base_score + random_adjustment
+		var final_score: int = base_score + strategic_adjustment + random_adjustment
 		candidate_audit.append({
 			"action_id": action.id,
 			"base_score": base_score,
+			"strategic_adjustment": strategic_adjustment,
+			"strategic_breakdown": strategic_result.get("breakdown", {}).duplicate(true),
 			"random_adjustment": random_adjustment,
 			"final_score": final_score,
 		})
@@ -80,6 +88,7 @@ func decide(
 			"time_budget_enforcement": "not_wall_clock_in_deterministic_prototype",
 			"available_candidates": actions.size(),
 			"evaluated_candidates": sampled_actions.size(),
+			"strategy_mode_hypothesis": str(config.strategy_mode),
 		},
 		"candidate_sampling": {"ai_seed": ai_seed, "draws": sampling_audit},
 		"candidates": candidate_audit,
@@ -163,6 +172,7 @@ func _no_action_result(
 				"time_budget_enforcement": "not_wall_clock_in_deterministic_prototype",
 				"available_candidates": 0,
 				"evaluated_candidates": 0,
+				"strategy_mode_hypothesis": str(config.strategy_mode),
 			},
 			"candidate_sampling": {"ai_seed": ai_seed, "draws": []},
 			"candidates": [],

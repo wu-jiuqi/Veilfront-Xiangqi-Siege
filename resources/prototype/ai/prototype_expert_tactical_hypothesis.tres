@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/prototype/ai/ai_difficulty_config.gd" id="1_config"]
+
+[resource]
+script = ExtResource("1_config")
+profile_id = "prototype-expert-tactical-hypothesis"
+conclusion_status = "hypothesis"
+candidate_limit = 512
+time_budget_ms_hint = 200
+random_score_span = 0
+reveal_weight = 5
+flag_weight = 32
+wall_pressure_weight = 16
+revisit_penalty = 4
+strategy_mode = "visible-tactical-one-ply"
+capture_priority_multiplier = 3
+advance_weight = 2
+center_control_weight = 1
+threat_penalty_percent = 140
+support_bonus_percent = 30
+general_safety_penalty = 20000

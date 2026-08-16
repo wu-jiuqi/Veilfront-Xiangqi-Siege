@@ -19,22 +19,22 @@
 | `scenes/prototype/status_shell.tscn` | `PackedScene` / `PanelContainer` | 预置行动/选择、墙、旗、棋子、模式按钮、AI 单步和玩家事件面板 | Godot 技术负责人 | Iteration 2 灰盒已实现 |
 | `resources/prototype/gate1_logic_lab_theme.tres` | `Theme` | 原型壳共享颜色、字号和 `StyleBoxFlat` 样式 | Godot 技术负责人 | 本轮创建 |
 | `scripts/prototype/gate1_logic_lab.gd` | GDScript / Control 场景适配器 | 只消费深复制 PlayerView 与公开候选；渲染迷雾/棋/旗/墙/事件，驱动移动、炮击、跳过、AI 单步与固定种子重开 | Godot 技术负责人 | Iteration 2 灰盒已实现；无 FullState 旁路 |
-| `scripts/prototype/match_controller.gd` | GDScript / 非 UI 控制器 | 私有持有 FullState 和 prepare token；投影 human/AI PlayerView，提交人类 intent，并以确定性独立 AI seed 驱动三档公平 AI 单步；最近一次完整 decision audit 仅由返回深复制的受控非 UI 测试接口读取，action id 无法映射时 fail-closed | Godot 技术负责人 | Iteration 2 灰盒已实现；审计不进入 PlayerView/UI/玩家日志 |
+| `scripts/prototype/match_controller.gd` | GDScript / 非 UI 控制器 | 私有持有 FullState 和 prepare token；投影 human/AI PlayerView，提交人类 intent，并以确定性独立 AI seed 驱动四档公平 AI 单步；最近一次完整 decision audit 仅由返回深复制的受控非 UI 测试接口读取，action id 无法映射时 fail-closed | Godot 技术负责人 | Iteration 2 灰盒已实现；审计不进入 PlayerView/UI/玩家日志 |
 | `tests/prototype/run_all.gd` | GDScript / 无头自检入口 | 验证工程入口可实例化、固定节点路径存在、216 格数据容器和种子回显一致 | Godot 技术负责人；结果由 QA 独立复核 | 本轮创建 |
 | `scripts/prototype/*.gd.uid`、`tests/prototype/*.gd.uid` | Godot UID sidecar | Godot 4.7.1 首次扫描生成的脚本稳定资源标识；随对应脚本版本管理 | 对应脚本所有者 | 本轮由引擎生成 |
 | `scripts/prototype/core/**` | GDScript / 纯规则探索 | `FullState`、完整行动真值生成、确定性随机、规则事务、版本化事件与状态摘要 | Godot 技术负责人 | Iteration 1 revision 3 已创建；可丢弃原型 |
-| `scripts/prototype/view/player_view_projector.gd` | GDScript / 单向投影 | 白名单 `FullState -> PlayerView`、公开候选三级意图、AI DTO 导出 | Godot 技术负责人 | Iteration 1 revision 3 已创建 |
+| `scripts/prototype/view/player_view_projector.gd` | GDScript / 单向投影 | 白名单 `FullState -> PlayerView`、敌墙倒塌区域视野、公开候选三级意图、AI DTO 导出 | Godot 技术负责人 | Revision 5 增加双方对称城墙倒塌视野；无 UI/AI 真值旁路 |
 | `scripts/prototype/replay/replay_runner.gd` | GDScript / 重放入口 | 以 seed 或受控 FullState 快照 + 行动意图重建事件日志并核对最终摘要 | Godot 技术负责人 | Iteration 1 revision 3 已创建 |
 | `scripts/prototype/simulation/match_simulator.gd` | GDScript / 规则压力模拟 | 仅内部 FullState 真值策略的确定性整局推进；不属于 AI 公平证据 | Godot 技术负责人 | Iteration 1 revision 3 已创建，模式固定标记为 `rules_stress_full_state_policy` |
 | `tests/prototype/run_seeded_matches.gd` | GDScript / 批量入口 | `--seeds`、`--start-seed`、`--round-limit`、`--replay-samples`、`--manifest-path`；逐 seed 输出版本化 JSONL、双跑确定性、终局不变量与旗位分布 | Godot 技术负责人；QA 独立验收 | Iteration 1 revision 3 已创建 |
 | `tests/prototype/run_playtest_graybox.gd` | GDScript / 程序化交互烟测 | 实例化主场景并验证 216 个预置格、50 回合元数据、PlayerView 边界、人类移动、AI 单步、跳过、炮击、同种子重开，以及 AI audit 深复制与 PlayerView/UI/事件日志隔离 | Godot 技术负责人；QA 独立复核 | Iteration 2 灰盒已创建 |
-| `tests/prototype/test_ai_difficulty_profiles.gd` | GDScript / 聚焦测试 | 逐档验证真实隐藏等价 PlayerView 配对产生同动作/同完整 audit、同 seed 完整 audit 复现、128 个纯公开候选夹具下实际评估上限精确为 8/32/96，并验证 profile config/audit digest 可观察差异与无法映射 fail-closed | Godot 技术负责人；QA 独立复核 | Iteration 2 灰盒已创建 |
-| `tests/prototype/run_ai_difficulty_seed_matrix.gd` | GDScript / PlayerView AI 批量入口 | 100 固定 seed × 三档直接调用 `AiDecisionEngine`；逐记录验证公开候选映射/提交、完整 audit 确定复跑、真实隐藏等价公平性和档位差异，输出可审计 JSONL manifest/summary | Godot 技术负责人；QA 可独立复核 | Iteration 2 生产者公平性矩阵已创建；不是合同 1000 seeds |
+| `tests/prototype/test_ai_difficulty_profiles.gd` | GDScript / 聚焦测试 | 逐档验证真实隐藏等价 PlayerView 配对产生同动作/同完整 audit、同 seed 完整 audit 复现、128 个公开候选夹具下实际评估数为 8/32/96/128，并验证专家档可见战术风险审计与无法映射 fail-closed | Godot 技术负责人；QA 独立复核 | Revision 5 新增专家档聚焦覆盖 |
+| `tests/prototype/run_ai_difficulty_seed_matrix.gd` | GDScript / PlayerView AI 批量入口 | 100 固定 seed × 四档直接调用 `AiDecisionEngine`；逐记录验证公开候选映射/提交、完整 audit 确定复跑、真实隐藏等价公平性和档位差异，输出可审计 JSONL manifest/summary | Godot 技术负责人；QA 可独立复核 | Revision 5 扩展为四档；不是合同 1000 seeds |
 | `resources/prototype/rules/**` | `.tres` 配置 | 后续可调但需序列化的原型规则默认值 | Godot 技术负责人；规则语义由系统与体验负责人验收 | 未创建；等待规则规格 |
 | `tests/prototype/test_match_state.gd`、`test_rules_core.gd` | GDScript / 行为测试 | 冻结开局、旗生命周期、炮击、士替死、后备队列、墙修复时序 | Godot 技术负责人；QA 独立验收 | Iteration 1 定向覆盖已创建 |
 | `tests/prototype/test_player_view.gd`、`test_replay.gd` | GDScript / 黑盒与确定性测试 | 隐藏等价投影/查询/错误/AI DTO 与 seed+意图重放一致性 | Godot 技术负责人；QA 独立验收 | Iteration 1 定向覆盖已创建 |
 | `tests/prototype/test_elephant_reveal.gd`、`run_elephant_reveal.gd` | GDScript / 冻结显形规则定向测试 | 精确九格、不裁切、隐藏马区内外、多相象并集、刷新、离场清源与 PlayerView 隐藏等价 | Godot 技术负责人；QA 独立验收 | Iteration 1 revision 25 已创建 |
-| `scripts/prototype/ai/**`、`resources/prototype/ai/**` | AI 脚本与配置 | 仅接收 `PlayerView` 的基线 AI 与参数 | 单机 AI 工程师 | 本岗位禁止编辑 |
+| `scripts/prototype/ai/**`、`resources/prototype/ai/**` | AI 脚本与配置 | 仅接收 `PlayerView` 的基线评分 AI、专家可见战术一层评估与四档 hypothesis 参数 | 单机 AI 工程师 | Revision 5 新增专家档；仍禁止 FullState/隐藏真值输入 |
 | `user://prototype/gate1/**` | 运行时 JSONL/摘要 | 后续本机行动日志、玩家视角事件、随机抽样与回放输出 | Godot 技术负责人生成；QA 消费 | 未创建；只允许运行时写入 |
 | `evidence/prototype/qa/**` | QA 原始证据与索引 | 独立命令、退出码、种子、批量对局与缺陷证据 | QA 与发布负责人 | 本岗位不写生产事实 |
 
@@ -53,7 +53,7 @@ Gate1LogicLab (Control, 组合根；预置 Theme)
       │     └─ HeaderRow (HBoxContainer)
       │        ├─ Title (Label)
       │        ├─ SeedGroup (LineEdit / SeedValue / RestartButton)
-      │        ├─ DifficultyGroup (预置简单 / 中等 / 困难 OptionButton)
+      │        ├─ DifficultyGroup (预置简单 / 中等 / 困难 / 专家 OptionButton)
       │        └─ MatchMeta (玩家 / 行动方 / 完整轮 / hypothesis)
       ├─ Workspace (HBoxContainer)
       │  ├─ BoardShell (OverviewStrip / BoardScroll / 24×9 BoardGrid / ActionConfirm)
@@ -172,3 +172,16 @@ Gate1LogicLab (Control, 组合根；预置 Theme)
 项目所有者现将最终人工试玩版的随机回归工作目标调整为 `100` 个固定种子；这不修改 LOOP Contract v2 和 QA-P1-003 仍明确要求的 `1000` seeds。因此，即使后续 100/100 且确定性差异为 0，也只能形成 Iteration 2 试玩回归证据，不能声称满足合同、不能据此返回 `review`，更不能批准 GATE-1。Contract 修订或继续执行 1000 seeds 仍需另行处理。
 
 当前生产者侧已完成 100 固定种子规则压力回归和 100×三档 PlayerView AI 单决策公平性矩阵。剩余必须项仍包括项目所有者人工试玩与独立 QA；若目标仍是按现有 Contract v2 返回 `review`，还必须补齐合同要求的 1000 seeds、确定性差异 0 等全部证据。灰盒自检不允许自动返回 `review` 或批准 GATE-1。
+
+## Revision 5 城墙区域视野与专家 AI 生产者自检
+
+本修订新增 `OWNER-CONFIRM-2026-08-16:BREACHED-WALL-REGION-VISION`：敌墙为 `BREACHED` 或 `REPAIRING` 时，进攻方 PlayerView 叠加守方缓冲区与大本营全部格子；墙恢复 `INTACT` 后立即移除，双方对称。区域格子视野不自动驱散隐身马。专家档是新的可逆 hypothesis：仍只消费 `AiPlayerView`，候选上限 512、随机分跨度 0，并在可见信息上增加一层战术风险、支援、将帅安全、推进与中心控制评估。
+
+| 命令 | 退出码 | 结果 |
+|---|---:|---|
+| `godot --headless --path . --script res://tests/prototype/run_all.gd` | 0 | 11 个 focused suites 全部通过；新增墙倒塌/修复中/恢复/双方对称/隐身马边界，以及四档 AI 配置、确定性、隐藏等价和专家可见反吃夹具；输出仍为 `full_gate1=false`。 |
+| `godot --headless --path . --script res://tests/prototype/run_playtest_graybox.gd` | 0 | 216 个预置交互格与人类行动、AI、跳过、炮击、重开通过；简单/中等/困难/专家四档 UI 绑定与单步均通过，audit 仍未进入人类 PlayerView、玩家事件日志或 UI。 |
+| `godot --headless --path . --script res://tests/prototype/run_ai_difficulty_seed_matrix.gd -- --seeds 3 --start-seed 471001 --manifest-path user://prototype/test-output/player_view_ai_seed_matrix_smoke_3x4.jsonl` | 0 | 3 seed × 四档共 12 条记录；非法映射、提交失败、确定性差异、隐藏等价动作/audit 差异均为 0。专家档每 seed 评估全部 243 个公开候选，hard/expert 动作差异为 3/3；`records_digest=a8c501be31e371f2784e15bd4aecc12ee75c6fc3d653aec036e33796c651a6bd`。 |
+| `godot --headless --path . --script res://tests/prototype/run_seeded_matches.gd -- --seeds 10 --start-seed 471001 --round-limit 50 --replay-samples 2 --manifest-path user://prototype/test-output/revision5_rules_smoke_10.jsonl` | 0 | 10/10 完成、失败 0、确定性差异 0、完整重放 2/2；墙倒塌 1 次、恢复 1 次，`records_digest=63d01e80eef39ace98849da5c57c41430b9b8821e528dad72198beed1fa0d7a1`。该入口是 FullState 规则压力策略，不属于 AI 公平证据。 |
+
+以上仅是生产者小样本和聚合回归，不是独立 QA、合同 1000 seeds、正式 AI 强度/平衡结论或 GATE-1 通过。专家档实际挑战度仍需项目所有者试玩和后续胜率/决策耗时证据验证。

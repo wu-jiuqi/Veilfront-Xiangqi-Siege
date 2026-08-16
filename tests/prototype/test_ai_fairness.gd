@@ -375,6 +375,7 @@ static func _test_hypothesis_resources_load(failures: Array[String]) -> void:
 		"res://resources/prototype/ai/prototype_low_budget_hypothesis.tres",
 		"res://resources/prototype/ai/prototype_default_hypothesis.tres",
 		"res://resources/prototype/ai/prototype_high_budget_hypothesis.tres",
+		"res://resources/prototype/ai/prototype_expert_tactical_hypothesis.tres",
 	]:
 		var config: Resource = ResourceLoader.load(path)
 		if not _check(config != null, "AI prototype config failed to load: %s" % path, failures):

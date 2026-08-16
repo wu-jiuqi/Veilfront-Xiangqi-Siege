@@ -30,7 +30,7 @@ decide(AiPlayerView, AiPublicRules, AiMemory, ai_seed, AiDifficultyConfig) -> De
 
 所有数组在构造时按公开稳定 ID 排序，字典按键规范化并深拷贝。输入投影摘要使用规范 JSON 的 SHA-256；调用者后续修改原始字典不会改变已构造视图。
 
-## 3. 决策基线
+## 3. 决策基线与专家档
 
 首轮基线是人工编写的有界单层规则评分，不预测不可见单位：
 
@@ -41,15 +41,17 @@ decide(AiPlayerView, AiPublicRules, AiMemory, ai_seed, AiDifficultyConfig) -> De
 
 规则随机种子和 AI 种子必须是不同随机流。建议技术集成层从“对局 AI 主种子 + 决策序号”派生本次 `ai_seed`，并把派生结果写入对局日志；不得把规则系统下一次随机结果或 RNG 对象传给 AI。
 
+专家档仍使用完全相同的 `AiPlayerView` 白名单，不增加真值查询。它在完整公开候选集合上执行确定性的“可见战术一层评估”：模拟己方候选落点与已公开吃子，依据当前可见棋子估算落点攻击者/保护者、将帅暴露变化、前进与中心控制、旗点紧迫度，以及敌墙倒塌后的可见区域施压。不可见棋子不进入局面模型；因此该评估是公平的公开信息策略增强，不声称拥有完整信息极小化搜索。
+
 ## 4. 审计记录
 
 每次成功决策返回 `ai-decision-audit-v1`：
 
 - `input_projection_summary`：投影视角、回合、公开对象计数、合法动作数、投影 SHA-256；
 - `public_rules_digest`、`memory_summary`、`decision_input_digest`；
-- `budget`：候选预算、时间预算提示、可用数和实际评估数；
+- `budget`：候选预算、时间预算提示、可用数、实际评估数与策略模式；
 - `candidate_sampling`：AI 种子与候选抽样记录；
-- `candidates`：动作 ID、基础分、随机调整和最终分；
+- `candidates`：动作 ID、基础分、可见战术调整/分解、随机调整和最终分；
 - `random_sampling`：随机扰动范围与抽样次数；
 - `final_action`：最终动作 ID 和得分；
 - `profile`：完整原型配置快照与 `conclusion_status=hypothesis`。
@@ -69,15 +71,16 @@ decide(AiPlayerView, AiPublicRules, AiMemory, ai_seed, AiDifficultyConfig) -> De
 
 ## 6. 原型参数（非项目事实）
 
-三个 `.tres` 仅为采证起点：
+四个 `.tres` 仅为采证起点：
 
 | 配置 | 候选上限 | 时间提示 | 随机分幅度 | 状态 |
 |---|---:|---:|---:|---|
 | low-budget | 8 | 8 ms | ±12 | hypothesis |
 | default | 32 | 25 ms | ±4 | hypothesis |
 | high-budget | 96 | 80 ms | ±1 | hypothesis |
+| expert-tactical | 512 | 200 ms | 0 | hypothesis |
 
-这些不是已冻结难度档位，也不表示体验强度一定递增。搜索预算、随机性和难度命名必须由批量对局、性能证据、系统与体验负责人评审及 GATE-1 决策后另行确定。
+`expert-tactical` 额外启用 `visible-tactical-one-ply`，评估完整公开候选并记录每个候选的战术分解。四档均不是已冻结难度曲线；搜索预算、随机性、权重和难度命名必须由批量对局、性能证据、系统与体验负责人评审及 GATE-1 决策后另行确定。
 
 ## 7. 技术对接要求
 

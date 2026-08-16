@@ -29,7 +29,16 @@ const EXPECTED: Dictionary = {
 		"candidate_limit_hypothesis": 96,
 		"random_score_span_hypothesis": 1,
 	},
+	"expert": {
+		"profile_id": "prototype-expert-tactical-hypothesis",
+		"path": "res://resources/prototype/ai/prototype_expert_tactical_hypothesis.tres",
+		"candidate_limit_hypothesis": 512,
+		"random_score_span_hypothesis": 0,
+		"strategy_mode_hypothesis": "visible-tactical-one-ply",
+	},
 }
+
+const DIFFICULTY_IDS: Array[String] = ["easy", "medium", "hard", "expert"]
 
 
 static func run_suite() -> bool:
@@ -40,13 +49,19 @@ static func run_suite() -> bool:
 	var profile_config_digests: Dictionary = {}
 	var budget_audit_digests: Dictionary = {}
 
-	for difficulty_id: String in ["easy", "medium", "hard"]:
+	for difficulty_id: String in DIFFICULTY_IDS:
 		_expect(controller.set_ai_difficulty(difficulty_id), "%s 档可被控制器选择" % difficulty_id, failures)
 		var snapshot: Dictionary = controller.get_ai_difficulty_snapshot()
 		_expect(snapshot.get("profile_id", "") == EXPECTED[difficulty_id]["profile_id"], "%s 档绑定正确 hypothesis profile" % difficulty_id, failures)
 		_expect(snapshot.get("conclusion_status", "") == "hypothesis", "%s 档不冻结为正式结论" % difficulty_id, failures)
 		_expect(snapshot.get("candidate_limit_hypothesis", -1) == EXPECTED[difficulty_id]["candidate_limit_hypothesis"], "%s 档候选预算配置正确" % difficulty_id, failures)
 		_expect(snapshot.get("random_score_span_hypothesis", -1) == EXPECTED[difficulty_id]["random_score_span_hypothesis"], "%s 档随机分差配置正确" % difficulty_id, failures)
+		_expect(
+			str(snapshot.get("strategy_mode_hypothesis", "weighted-one-ply"))
+			== str(EXPECTED[difficulty_id].get("strategy_mode_hypothesis", "weighted-one-ply")),
+			"%s 档策略模式配置正确" % difficulty_id,
+			failures
+		)
 
 		var first: Dictionary = _run_one_controller_ai_turn(controller, difficulty_id)
 		var second: Dictionary = _run_one_controller_ai_turn(controller, difficulty_id)
@@ -68,8 +83,9 @@ static func run_suite() -> bool:
 
 		var budget_result: Dictionary = _budget_fixture_decision(difficulty_id)
 		var expected_limit: int = int(EXPECTED[difficulty_id]["candidate_limit_hypothesis"])
+		var expected_evaluated: int = mini(expected_limit, 128)
 		_expect(int(budget_result.get("available_candidates", 0)) == 128, "%s 档公开预算夹具有 128 个候选" % difficulty_id, failures)
-		_expect(int(budget_result.get("evaluated_candidates", -1)) == expected_limit, "%s 档实际评估上限精确为 %d" % [difficulty_id, expected_limit], failures)
+		_expect(int(budget_result.get("evaluated_candidates", -1)) == expected_evaluated, "%s 档实际评估数精确为 min(%d, 128)" % [difficulty_id, expected_limit], failures)
 		_expect(bool(budget_result.get("deterministic_audit", false)), "%s 档公开预算夹具 audit 可确定复现" % difficulty_id, failures)
 		budget_audit_digests[budget_result.get("audit_digest", "")] = true
 
@@ -85,8 +101,12 @@ static func run_suite() -> bool:
 		"无法映射的 AI action_id 走 step_ai 共用映射路径并 fail-closed",
 		failures
 	)
-	_expect(profile_config_digests.size() == 3, "三档 profile/config digest 可观察且互异", failures)
-	_expect(budget_audit_digests.size() == 3, "三档预算 audit 可观察且互异", failures)
+	_expect(profile_config_digests.size() == 4, "四档 profile/config digest 可观察且互异", failures)
+	_expect(budget_audit_digests.size() == 4, "四档预算 audit 可观察且互异", failures)
+	var tactical_result: Dictionary = _expert_tactical_fixture_decision()
+	_expect(tactical_result.get("selected_action_id", "") == "expert-safe", "专家档避开可见车的一步反吃", failures)
+	_expect(int(tactical_result.get("visible_attackers", 0)) >= 1, "专家档审计记录危险候选的可见攻击者", failures)
+	_expect(int(tactical_result.get("strategic_adjustment", 0)) < 0, "专家档对可见送车候选施加负向战术调整", failures)
 	_expect(not controller.set_ai_difficulty("unsupported"), "未知难度被拒绝", failures)
 	controller.queue_free()
 	for failure: String in failures:
@@ -162,6 +182,52 @@ static func _budget_fixture_decision(difficulty_id: String) -> Dictionary:
 		"deterministic_audit": Canonical.digest(audit)
 			== Canonical.digest(second.get("audit", {}))
 			and first.get("action", {}) == second.get("action", {}),
+	}
+
+
+static func _expert_tactical_fixture_decision() -> Dictionary:
+	var projection: Dictionary = {
+		"schema_version": "player-view-ai-v1",
+		"decision_id": "fixture-expert-visible-tactic",
+		"viewer_side": "red",
+		"turn_index": 7,
+		"visible_pieces": [
+			{"id": "red-rook", "side": "red", "piece_type": "rook", "position": [4, 10], "status_tags": ["owned"]},
+			{"id": "red-general", "side": "red", "piece_type": "general", "position": [4, 1], "status_tags": ["owned"]},
+			{"id": "black-pawn", "side": "black", "piece_type": "pawn", "position": [4, 12], "status_tags": ["visible"]},
+			{"id": "black-rook", "side": "black", "piece_type": "rook", "position": [4, 14], "status_tags": ["visible"]},
+		],
+		"public_flags": [],
+		"public_walls": [
+			{"side": "black", "status": "INTACT"},
+			{"side": "red", "status": "INTACT"},
+		],
+		"legal_actions": [
+			{
+				"id": "expert-greedy-capture", "kind": "move", "actor_id": "red-rook",
+				"origin": [4, 10], "target": [4, 12],
+				"visible_captures": [{"piece_id": "black-pawn", "piece_type": "pawn"}],
+				"reveal_cell_count": 0, "occupies_flag": false, "attacks_wall": false, "path_length": 2,
+			},
+			{
+				"id": "expert-safe", "kind": "move", "actor_id": "red-rook",
+				"origin": [4, 10], "target": [3, 10], "visible_captures": [],
+				"reveal_cell_count": 0, "occupies_flag": false, "attacks_wall": false, "path_length": 1,
+			},
+		],
+		"public_events": [],
+	}
+	var decision: Dictionary = _decide(projection, "expert", 991337)
+	var dangerous_audit: Dictionary = {}
+	for candidate: Dictionary in decision.get("audit", {}).get("candidates", []):
+		if str(candidate.get("action_id", "")) == "expert-greedy-capture":
+			dangerous_audit = candidate
+			break
+	var breakdown: Dictionary = dangerous_audit.get("strategic_breakdown", {})
+	return {
+		"selected_action_id": str(decision.get("action", {}).get("id", "")),
+		"visible_attackers": int(breakdown.get("visible_attackers", 0)),
+		"strategic_adjustment": int(dangerous_audit.get("strategic_adjustment", 0)),
 	}
 
 

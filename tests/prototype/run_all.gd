@@ -75,7 +75,7 @@ func _run_phase1_checks() -> void:
 			var description: String = "AI 公平性：%s" % ai_failure
 			failures.append(description)
 			push_error("FAIL: %s" % description)
-	_check(AiDifficultyProfileTests.run_suite(), "简单/中等/困难三档 PlayerView AI 配置差异与固定种子复现")
+	_check(AiDifficultyProfileTests.run_suite(), "简单/中等/困难/专家四档 PlayerView AI 配置差异、战术审计与固定种子复现")
 
 	scene.queue_free()
 	await process_frame
