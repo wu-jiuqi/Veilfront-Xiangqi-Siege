@@ -248,6 +248,24 @@ static func _test_pawn_public_candidates_and_special_contact(failures: Array[Str
 		_expect(target.y >= 4 and absi(target.x - 1) + absi(target.y - 4) == 1,
 			"普通兵公开候选无后退或多格非法动作", failures)
 
+	var one_step_empty: Dictionary = _empty_state(425)
+	_place(one_step_empty, "red-pawn-1", Vector2i(5, 10))
+	var one_step_hidden: Dictionary = MatchState.clone(one_step_empty)
+	_place(one_step_hidden, "black-horse-1", Vector2i(5, 11))
+	one_step_hidden["pieces"]["black-horse-1"]["hidden"] = true
+	var one_step_intent: Dictionary = _move("red-pawn-1", Vector2i(5, 11))
+	_expect(Canonical.digest(Projector.project(one_step_empty, MatchState.RED)) \
+		== Canonical.digest(Projector.project(one_step_hidden, MatchState.RED)),
+		"普通兵一格目标在空位/隐藏敌棋时保持决策前投影等价", failures)
+	var one_step_empty_result: Dictionary = RuleEngine.submit_action(one_step_empty, one_step_intent)
+	var one_step_capture_result: Dictionary = RuleEngine.submit_action(one_step_hidden, one_step_intent)
+	var authorized_captures: Array = one_step_hidden["player_events"][MatchState.RED].back()["authorized_captures"]
+	_expect(one_step_empty_result["event"]["outcome"]["move_kind"] == "pawn_standard" \
+		and one_step_capture_result["event"]["outcome"]["move_kind"] == "pawn_standard" \
+		and not one_step_hidden["pieces"]["black-horse-1"]["alive"] \
+		and authorized_captures == [{"piece_id": "black-horse-1", "piece_type": "horse", "rescued": false}],
+		"兵在迷雾战区普通一格可移动并吃掉隐藏敌棋", failures)
+
 	var empty_target: Dictionary = _empty_state(415)
 	_place(empty_target, "red-pawn-1", Vector2i(5, 10))
 	var hidden_target: Dictionary = MatchState.clone(empty_target)
@@ -276,6 +294,18 @@ static func _test_pawn_public_candidates_and_special_contact(failures: Array[Str
 	var evaluation: Dictionary = MoveRules.evaluate_move(blocked, intent, MatchState.RED, _all_visible(blocked))
 	_expect(not evaluation.get("legal", true) and not evaluation.get("contact_reached_target", false),
 		"特殊兵更早路径阻挡不得授权终点接触", failures)
+	var path_vision: Dictionary = _empty_state(426)
+	_place(path_vision, "red-pawn-1", Vector2i(5, 10))
+	_place(path_vision, "black-horse-1", Vector2i(5, 12))
+	path_vision["pieces"]["black-horse-1"]["hidden"] = true
+	var origin_view: Dictionary = Projector.project(path_vision, MatchState.RED)
+	var path_result: Dictionary = RuleEngine.submit_action(path_vision, intent)
+	var target_view: Dictionary = Projector.project(path_vision, MatchState.RED)
+	_expect(origin_view["visible_cells"].has([5, 10]) and target_view["visible_cells"].has([5, 15]) \
+		and not target_view["visible_cells"].has([5, 12]) \
+		and not _view_has_piece(target_view, "black-horse-1") \
+		and path_result["event"]["outcome"]["move_kind"] == "pawn_special",
+		"特殊兵2至5格穿敌只开启起点/终点观察，不开启路径视野且不吃子", failures)
 
 
 static func _test_cannon_target_contact_boundary(failures: Array[String]) -> void:

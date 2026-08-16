@@ -36,8 +36,8 @@ static func run_suite() -> bool:
 	_expect(view_a["match_seed"] == 80123, "PlayerView 只公开本局 seed 引用而非 RNG 状态", failures)
 	_expect(view_a["full_round_limit_hypothesis"] == 50, "PlayerView 公开实际 50 回合试玩假设", failures)
 	_expect(view_a["round_limit_status"] == "hypothesis_cli_overridable", "PlayerView 保留回合上限假设状态", failures)
-	_expect(view_a["rules_revision"] == "owner-confirm-2026-08-16-breached-wall-vision" \
-		and view_a["implementation_revision"] == "prototype-core-revision-5", "PlayerView 公开规则与实现 revision", failures)
+	_expect(view_a["rules_revision"] == "owner-confirm-2026-08-16-pawn-move-split" \
+		and view_a["implementation_revision"] == "prototype-core-revision-6", "PlayerView 公开规则与实现 revision", failures)
 	for wall: Dictionary in view_a["walls"]:
 		_expect(wall.size() == 2 and wall.has("side") and wall.has("status"), "墙投影仅公开阵营与状态", failures)
 	_expect(view_a["flags"][0]["occupier_piece_id"] == "", "不可见敌方占旗棋子 ID 必须匿名", failures)

@@ -264,7 +264,7 @@ static func _evaluate_general(state: Dictionary, piece: Dictionary, origin: Vect
 
 static func _evaluate_pawn(state: Dictionary, piece: Dictionary, origin: Vector2i, target: Vector2i) -> Dictionary:
 	var path: Array = movement_path(origin, target)
-	var special: bool = not path.is_empty() and path.size() <= 5 \
+	var special: bool = path.size() >= 2 and path.size() <= 5 \
 		and _special_eligible(state, piece["side"], origin, path)
 	if special:
 		for cell: Vector2i in path:

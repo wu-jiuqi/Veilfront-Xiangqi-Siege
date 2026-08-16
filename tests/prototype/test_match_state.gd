@@ -26,8 +26,8 @@ static func run_suite() -> bool:
 		failures
 	)
 	_expect(state["schema_version"] == "full-state-v1", "FullState schema版本", failures)
-	_expect(state["rules_revision"] == "owner-confirm-2026-08-16-breached-wall-vision", "规则冻结水位", failures)
-	_expect(state["implementation_revision"] == "prototype-core-revision-5", "实现修订水位", failures)
+	_expect(state["rules_revision"] == "owner-confirm-2026-08-16-pawn-move-split", "规则冻结水位", failures)
+	_expect(state["implementation_revision"] == "prototype-core-revision-6", "实现修订水位", failures)
 	_expect(state["active_side"] == MatchState.RED, "红方必须固定先手", failures)
 	_expect(state["pieces"].size() == 32, "冻结阵型必须包含 32 枚棋", failures)
 	_expect_piece(state, "red-general-1", Vector2i(5, 1), failures)

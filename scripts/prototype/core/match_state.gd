@@ -18,8 +18,8 @@ static func create(seed_value: int, configuration: Dictionary = {}) -> Dictionar
 	assert(round_limit > 0)
 	var state: Dictionary = {
 		"schema_version": "full-state-v1",
-		"rules_revision": "owner-confirm-2026-08-16-breached-wall-vision",
-		"implementation_revision": "prototype-core-revision-5",
+		"rules_revision": "owner-confirm-2026-08-16-pawn-move-split",
+		"implementation_revision": "prototype-core-revision-6",
 		"configuration": {
 			"full_round_limit_hypothesis": round_limit,
 			"round_limit_status": "hypothesis_cli_overridable",

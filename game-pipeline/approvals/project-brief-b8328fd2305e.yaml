@@ -1,0 +1,17 @@
+approval:
+  schema_version: game-production-approval/v1
+  approval_id: approval:veilfront-xiangqi-siege:project-brief:b8328fd2305e
+  subject_kind: project-brief
+  subject_id: brief:veilfront-xiangqi-siege:initial
+  subject_digest: b8328fd2305e90d26c7854b7a9335c54c9e6647ae049e462780132edce44ea28
+  decision: approved
+  decided_by: project-owner
+  decided_at: '2026-08-16T21:02:06.7133897+08:00'
+  evidence:
+    source_refs:
+    - source:veilfront-xiangqi-siege:project-identity
+    - source:veilfront-xiangqi-siege:owner-planning-conversation
+    - source:veilfront-xiangqi-siege:owner-scope-clarification
+    - source:veilfront-xiangqi-siege:owner-rules-revision
+    - source:veilfront-xiangqi-siege:owner-rules-finalization
+    - source:veilfront-xiangqi-siege:owner-pawn-ai-clarification

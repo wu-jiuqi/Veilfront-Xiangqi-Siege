@@ -492,7 +492,7 @@ static func _preview_pawn(
 	visible_set: Dictionary
 ) -> String:
 	var path: Array = MoveRules.movement_path(origin, target)
-	if not path.is_empty() and path.size() <= 5 \
+	if path.size() >= 2 and path.size() <= 5 \
 	and _public_special_eligible(player_view, piece["side"], origin, path):
 		for cell: Vector2i in path:
 			var occupant: Dictionary = _visible_piece_at(player_view, cell)

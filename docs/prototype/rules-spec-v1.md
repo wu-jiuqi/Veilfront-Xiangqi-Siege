@@ -67,14 +67,14 @@
 | 马 | 合资格移动无视蹩马腿；完成后处于隐身，除非落在任一有效相/象田字显形区或存在其他公开显形原因。离开全部显形区且无其他原因时恢复隐身。 |
 | 相/象 | 合资格移动无视堵象眼；完成后以本棋子刷新田字显形区。设本次合法移动起点 `O=(ox,oy)`、终点 `D=(dx,dy)`，二者为包围方形的对角，显形区严格为 `x=min(ox,dx)..max(ox,dx)` 与 `y=min(oy,dy)..max(oy,dy)` 的笛卡尔积，共 `3x3` 九格；包含起点 `O`、象眼 `(O+D)/2`、终点 `D` 及其余六格，不裁切、不扩展。区内隐身马显形。 |
 | 车 | 可沿同一直线路径穿过敌棋并按起点到终点顺序逐枚处理阵亡/替死；不可穿过己棋。若路径目标将帅实际死亡，立即终局并停止后续目标。该次路径形成视野，持续到此车下一次移动开始。 |
-| 兵/卒 | 可横向或纵向移动 1..5 格；可穿过一枚或多枚敌棋，不可穿己棋，终点必须为空，穿越不伤害、不吃子。 |
+| 兵/卒 | 普通行动仍为前/左/右一格且可吃终点敌棋；特殊行动可横向或纵向移动 2..5 格，可穿过一枚或多枚敌棋，不可穿己棋，终点必须为空，穿越不伤害、不吃子，也不产生路径视野。 |
 | 炮 | 区域轰炸不需要炮架、不移动炮，与普通行动互斥；资格条件且仅有：敌方墙为 `INTACT`、炮在己方大本营、该炮弹药至少 1。中心完整 `3x3` 必须全在 `Y=6..19`，从九格随机抽三个不同伤害格，允许友军伤害，消耗该炮 1 发且无冷却。炮离营即不可轰炸，回营且三项条件满足即可再次轰炸；弹药不恢复。不存在阵营共享冷却、等待轮数或墙/回营冷却重置。 |
 
 每枚相/象至多维护一个自己的田字显形区。该棋子下次移动开始时先清除旧区；该棋子任何离场、死亡、回营或进入后备队列时立即清除旧区。敌方城墙倒塌使其特殊能力失效时也清除旧区。多个仍有效相/象源取格集合并集；某源清除后，仍被其他源覆盖的格继续有效。
 
 敌方城墙倒塌时，针对该敌方的马、相/象、车、兵/卒特殊能力立即失效并恢复对应默认限制；墙恢复后只影响后续行动资格，不恢复旧视野/显形区或永久资源。
 
-追溯：`stmt:veilfront-xiangqi-siege:phase-gameplay`、`stmt:veilfront-xiangqi-siege:horse-elephant-rules`、`stmt:veilfront-xiangqi-siege:cannon-rules`、`stmt:veilfront-xiangqi-siege:rook-rules`、`stmt:veilfront-xiangqi-siege:pawn-rules`；`OWNER-FREEZE-2026-08-15 §6.5`；`OWNER-CONFIRM-2026-08-15:BOMBARD-NO-COOLDOWN`；`OWNER-CONFIRM-2026-08-16:ELEPHANT-REVEAL-3X3`；`OWNER-CONFIRM-2026-08-16:BREACHED-WALL-REGION-VISION`。
+追溯：`stmt:veilfront-xiangqi-siege:phase-gameplay`、`stmt:veilfront-xiangqi-siege:horse-elephant-rules`、`stmt:veilfront-xiangqi-siege:cannon-rules`、`stmt:veilfront-xiangqi-siege:rook-rules`、`stmt:veilfront-xiangqi-siege:pawn-rules`；`OWNER-FREEZE-2026-08-15 §6.5`；`OWNER-CONFIRM-2026-08-15:BOMBARD-NO-COOLDOWN`；`OWNER-CONFIRM-2026-08-16:ELEPHANT-REVEAL-3X3`；`OWNER-CONFIRM-2026-08-16:BREACHED-WALL-REGION-VISION`；`OWNER-CONFIRM-2026-08-16:PAWN-MOVE-SPLIT`。
 
 ## 5. 城墙状态机
 

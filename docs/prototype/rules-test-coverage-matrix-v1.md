@@ -42,7 +42,7 @@
 | SPC-HORSE-001 | 合资格马无视马腿并在行动后隐身；处于任一有效显形区时显形，离开全部显形区且无其他批准原因时重新隐身；敌墙倒塌/默认区恢复马腿限制及移除特殊能力 | `PENDING-SPC-HORSE-001`; `PENDING-SPC-HORSE-REHIDE-001` | PENDING |
 | SPC-ELEPHANT-001 | 合资格相/象无视象眼；起终点作为包围方形对角，显形源严格为含起点/象眼/终点的 `3x3` 九格；下次移动开始或离场/死亡/回营/入队/敌墙倒塌时清源；多源取并集 | `RULE-ELEPHANT-REVEAL-001`; `RULE-ELEPHANT-REVEAL-002`; `tests/prototype/run_elephant_reveal.gd` (`CHECK-ELEPHANT-REVEAL`); `evidence/prototype/qa/revision4_elephant_wall_breach_runner.gd` (`CHECK-ELEPHANT-WALL-BREACH-CLEAR`); `tests/prototype/run_all.gd` | PASS-R4（独立 QA） |
 | SPC-ROOK-001 | 特殊车可穿敌不可穿己；按路径顺序逐目标；逐目标替死；将帅实际死亡立即停止；路径视野持续到该车下次移动开始 | `PENDING-SPC-ROOK-PATH-001`; `PENDING-SPC-ROOK-VISION-001` | PENDING |
-| SPC-PAWN-001 | 特殊兵/卒可横纵 1..5 格；可穿一个或多个敌棋、不可穿己棋、终点空；穿越不伤害 | `PENDING-SPC-PAWN-001` | PENDING |
+| SPC-PAWN-001 | 普通兵/卒前左/右一格可吃终点敌棋；特殊兵/卒可横纵 2..5 格，可穿一个或多个敌棋、不可穿己棋、终点空；穿越不伤害且不打开路径视野 | `test_revision3_rules.gd::_test_pawn_public_candidates_and_special_contact` | PASS-R6（生产者自检；待独立 QA） |
 | SPC-BOMB-ELIG-001 | 区域轰炸资格且仅有敌墙 `INTACT`、炮在己方大本营、该炮有弹药；中心完整 `3x3` 位于 `Y=6..19` | `RULE-CANNON-ORIGIN-001`; `test_rules_core.gd::_test_bombardment_origin_and_no_cooldown`; `PENDING-SPC-BOMB-CENTER-001` | PARTIAL-R2 |
 | SPC-BOMB-NOCD-001 | 每炮初始两发、只减不增；无阵营共享冷却字段/计时/重置，前次轰炸不锁另一炮或后续资格 | `RULE-CANNON-COOLDOWN-001`; `test_match_state.gd::run_suite`; `test_rules_core.gd::_test_bombardment_origin_and_no_cooldown`; 尚需 `PENDING-SPC-BOMB-NOCD-CROSS-CANNON-001` 与 `PENDING-INFO-NOCD-FIELDS-001` | PARTIAL-R2 |
 | SPC-BOMB-WINDOW-001 | 锁定三个不同格和前快照；三格逻辑同步、动画顺序无语义；允许友伤；落点编号仅排替死 | `RULE-BOMB-001`; `test_replay.gd::run_suite` 覆盖三抽样；`test_rules_core.gd::_test_bombardment_rescue_uses_impact_order_and_excludes_hit_advisor`; `PENDING-SPC-BOMB-SNAPSHOT-001` | PARTIAL-R2 |

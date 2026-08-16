@@ -3,7 +3,7 @@ project_brief:
   identity:
     brief_id: brief:veilfront-xiangqi-siege:initial
     project_id: veilfront-xiangqi-siege
-    version: 2
+    version: 3
   coordination:
     project_owner: project-owner
     coordinator_role_id: AGT-DIR
@@ -33,6 +33,11 @@ project_brief:
   - source_id: source:veilfront-xiangqi-siege:owner-rules-finalization
     uri: codex-thread://01a0048b-e4d5-7611-8edc-1e4719666a13
     version_or_digest: owner-clarification:2026-08-15:p0-rules-and-art-finalization
+    supplied_by: project-owner
+    authority: project.direction.input
+  - source_id: source:veilfront-xiangqi-siege:owner-pawn-ai-clarification
+    uri: codex-thread://01a00a4b-bb4a-7d13-b261-62bccbcea28c
+    version_or_digest: owner-clarification:2026-08-16:pawn-2-5-and-ai-diversity
     supplied_by: project-owner
     authority: project.direction.input
   statements:
@@ -95,11 +100,12 @@ project_brief:
     - source:veilfront-xiangqi-siege:owner-rules-finalization
   - statement_id: stmt:veilfront-xiangqi-siege:pawn-rules
     domain: gameplay
-    text: 项目取消兵卒的过河判定，兵卒默认始终按已过河状态，可向前、左或右移动一格。在敌方城墙完整且整段行动位于两个缓冲区或战区时，兵卒可横竖行军1至5格并穿过一枚或多枚敌方棋子，但不能穿过己方棋子、不能停在被占用格，穿越不会造成伤害或吃子。
+    text: 项目取消兵卒的过河判定，兵卒默认始终按已过河状态，可向前、左或右移动一格并吃掉终点敌棋。在敌方城墙完整且整段行动位于两个缓冲区或战区时，兵卒可改为横竖行军2至5格并穿过一枚或多枚敌方棋子，但不能穿过己方棋子、不能停在被占用格，穿越不会造成伤害或吃子；该长距离行动不打开路径视野，只按移动前起点与抵达后终点的普通动态视野投影。
     status: confirmed
     decision_owner: project-owner
     source_refs:
     - source:veilfront-xiangqi-siege:owner-rules-revision
+    - source:veilfront-xiangqi-siege:owner-pawn-ai-clarification
   - statement_id: stmt:veilfront-xiangqi-siege:wall-cycle
     domain: gameplay
     text: 完整城墙阻挡敌方棋子从缓冲区进入大本营；至少3枚敌方棋子同时进入缓冲区时城墙倒塌。缓冲区与大本营内敌军少于3枚并持续一个完整回合后城墙恢复；恢复时只将大本营内入侵棋子随机撤回各自大本营空格，清除位置关联临时状态但不恢复已消耗的永久资源，也不附加行动惩罚。
@@ -307,10 +313,10 @@ project_brief:
     blocker_refs: []
   review:
     status: confirmed
-    approval_id: approval:veilfront-xiangqi-siege:project-brief:3cb9affedc61
+    approval_id: approval:veilfront-xiangqi-siege:project-brief:b8328fd2305e
     confirmed_by: project-owner
-    confirmed_at: '2026-08-15T18:37:19.7719396+08:00'
+    confirmed_at: '2026-08-16T21:02:06.7133897+08:00'
   integrity:
     canonicalization: project-brief-subject-canonical-json-v1
     digest_algorithm: sha256
-    subject_digest: 3cb9affedc6173dbe58ad9c630e0261c99eba706815f8d8fa9870f506b2f2599
+    subject_digest: b8328fd2305e90d26c7854b7a9335c54c9e6647ae049e462780132edce44ea28
