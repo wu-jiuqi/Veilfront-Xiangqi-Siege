@@ -1,0 +1,47 @@
+approval:
+  schema_version: game-production-approval/v1
+  approval_id: approval:veilfront-xiangqi-siege:iteration-2-playtest-scope:fd4864af7fb7
+  subject_kind: iteration-execution-scope
+  subject_id: LOOP-GATE1-001@iteration-2-owner-playtest
+  subject_digest: fd4864af7fb756aeecf0a6cfbd0577a9c8a02d1165b2144cec4b492279f1b692
+  decision: approved
+  decided_by: project-owner
+  decided_at: '2026-08-16T17:04:08.273264+08:00'
+  evidence:
+    source_refs:
+    - codex-thread://01a008aa-c77f-7060-9e11-1a6d95e41441#owner-iteration2-playtest-100-seeds-three-ai
+    immutable_subject:
+      subject: iteration-2-owner-playtest-scope-100-seeds-three-ai
+      loop_instance_id: 4cbb03b6-dd5a-41c5-a624-895c4b884bcb
+      baseline:
+        record_revision: 38
+        last_event_sequence: 38
+        last_event_digest: fbc96e54b834e9c1188a513a5fe29c76fb89c7ff1b9187b7870018566546af97
+        contract_digest: 7b7fcf36920109d379aa0e230cf70a378ed7ec228ff6a88bccf35cf481fcf09c
+      owner_direction:
+        default_full_round_limit_hypothesis: 50
+        fixed_seed_count_for_owner_playtest_build: 100
+        ai_difficulties:
+        - easy
+        - medium
+        - hard
+        playtest_build: disposable_graybox
+      evidence_scope:
+        player_view_ai: 100 fixed seeds x 3 profiles, one decision per record
+        rules_stress: 100 fixed seeds, full matches at 50 full rounds
+        manual_playtest: owner plays complete human-vs-AI sessions per difficulty
+      contract_effect: none
+      review_transition: blocked_until_contract_v2_1000_or_separate_contract_revision
+      gate_1_decision: not_made
+      formal_production: forbidden
+  authorized_action:
+    summary: 交付含三档公平 AI 的 50 回合可丢弃灰盒，并以 100 固定种子形成试玩版证据。
+    allowed:
+    - 运行并登记 100 固定种子的试玩版回归与独立 QA。
+    - 交付简单、中等、困难三档 PlayerView 公平 AI 供项目所有者人工试玩。
+    - 在 Iteration 2 active 状态下登记试玩版产物和受限 QA 结论。
+    forbidden:
+    - 把 100 固定种子记录为满足 Contract v2 的 1000/1000。
+    - 执行或推荐 active -> review。
+    - 把官方 Loop CLI 记录为通过。
+    - 批准 GATE-1 或开始正式生产。
