@@ -1,6 +1,6 @@
 # Loop 运行态 Snapshot 校验器缺陷证据
 
-状态：`open / tooling / non-registry-corruption`
+状态：`awaiting_owner_decision / tooling / non-registry-corruption`
 
 ## 适用基线
 
@@ -8,8 +8,9 @@
 - Loop：`LOOP-GATE1-001`
 - 锁定插件：`game-production-pipeline@0.4.0-alpha.2`
 - 框架摘要：`3589bce5cf4388f91a08f12acb5d90679256191d5085e65687d06a635bbdcd32`
-- 复现 Snapshot：`active / current_iteration=1 / record_revision=20 / last_event_sequence=20`
-- 复现日期：`2026-08-15`
+- 最新复现 Snapshot：`active / current_iteration=1 / record_revision=30 / last_event_sequence=30`
+- 首次复现日期：`2026-08-15`
+- 最新复检日期：`2026-08-16`
 
 ## 官方命令与实际结果
 
@@ -45,3 +46,10 @@ exit_code=0
 - 官方 CLI 的非零结果继续如实记为工具缺陷，不能标记为自动检查通过。
 - `validate_history(...)` 的零错误只证明当前历史链可重放，不替代官方 CLI 的整体通过状态。
 - QA-P1-003 保持开放，直到插件提供区分模板校验与运行态历史校验的正式入口，或项目所有者批准对应的管线迁移/豁免。
+
+## 当前决策路由
+
+- 当前环境只安装锁定的 `0.4.0-alpha.2`，没有可直接迁移的修复候选版本。
+- 正式修复需要修改外部框架 CLI 或升级插件；按权限边界，项目侧不修改锁定插件缓存。
+- 项目所有者决策包：`game-pipeline/loops/evidence/QA-P1-003-decision-package.md`。
+- 在项目所有者决定前，不接受当前 submission，不进入 `review`，不作出 GATE-1 决定。
