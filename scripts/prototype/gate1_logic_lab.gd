@@ -19,6 +19,7 @@ var pending_preview: Dictionary = {}
 var action_mode: String = "move"
 var cell_buttons: Dictionary = {}
 var ai_difficulty_id: String = "medium"
+var ai_turn_pending: bool = false
 
 @onready var match_controller: Node = $MatchController
 @onready var seed_value: Label = $SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/SeedGroup/SeedValue
@@ -45,9 +46,12 @@ var ai_difficulty_id: String = "medium"
 @onready var bombard_button: Button = $SafeMargin/Page/Workspace/StatusShell/StatusMargin/StatusColumn/ActionMode/BombardButton
 @onready var pass_button: Button = $SafeMargin/Page/Workspace/StatusShell/StatusMargin/StatusColumn/ActionMode/PassButton
 @onready var ai_step_button: Button = $SafeMargin/Page/Workspace/StatusShell/StatusMargin/StatusColumn/ActionMode/AiStepButton
+@onready var red_casualties: Label = $SafeMargin/Page/Workspace/StatusShell/StatusMargin/StatusColumn/CasualtyGrid/RedCasualties
+@onready var black_casualties: Label = $SafeMargin/Page/Workspace/StatusShell/StatusMargin/StatusColumn/CasualtyGrid/BlackCasualties
 @onready var event_log: RichTextLabel = $SafeMargin/Page/Workspace/StatusShell/StatusMargin/StatusColumn/EventLog
 @onready var terminal_overlay: CenterContainer = $TerminalOverlay
 @onready var terminal_value: Label = $TerminalOverlay/TerminalPanel/TerminalMargin/TerminalColumn/TerminalValue
+@onready var ai_turn_timer: Timer = $AiTurnTimer
 
 
 func _ready() -> void:
@@ -63,8 +67,11 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_cancel"):
+	var right_click := event as InputEventMouseButton
+	if event.is_action_pressed("ui_cancel") \
+	or (right_click != null and right_click.button_index == MOUSE_BUTTON_RIGHT and right_click.pressed):
 		_clear_selection()
+		message_value.text = "已取消选择。左键可重新选择己方棋子。"
 		get_viewport().set_input_as_handled()
 
 
@@ -124,8 +131,10 @@ func _register_cell_buttons() -> void:
 			continue
 		var x: int = int(button.get_meta("board_x"))
 		var y: int = int(button.get_meta("board_y"))
+		button.custom_minimum_size = Vector2(48.0, 48.0)
 		cell_buttons[_cell_key(x, y)] = button
 		button.pressed.connect(_on_board_cell_pressed.bind(x, y))
+		button.gui_input.connect(_on_board_cell_gui_input.bind(button))
 
 
 func _connect_controls() -> void:
@@ -135,6 +144,7 @@ func _connect_controls() -> void:
 	bombard_button.pressed.connect(_set_action_mode.bind("bombard"))
 	pass_button.pressed.connect(_on_pass_pressed)
 	ai_step_button.pressed.connect(_on_ai_step_pressed)
+	ai_turn_timer.timeout.connect(_on_ai_turn_timer_timeout)
 	difficulty_select.item_selected.connect(_on_ai_difficulty_selected)
 	$SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/SeedGroup/RestartButton.pressed.connect(_on_restart_pressed)
 	$TerminalOverlay/TerminalPanel/TerminalMargin/TerminalColumn/TerminalButtons/SameSeedButton.pressed.connect(_restart_same_seed)
@@ -142,10 +152,22 @@ func _connect_controls() -> void:
 
 
 func _on_match_controller_human_view_updated(updated_view: Dictionary) -> void:
+	var previous_view: Dictionary = player_view.duplicate(true)
 	player_view = updated_view.duplicate(true)
 	action_previews = match_controller.get_human_action_previews()
 	_clear_selection(false)
 	_refresh_all()
+	_refresh_notifications(previous_view, player_view)
+	_schedule_ai_turn()
+
+
+func _on_board_cell_gui_input(event: InputEvent, button: Button) -> void:
+	var mouse_event := event as InputEventMouseButton
+	if mouse_event == null or mouse_event.button_index != MOUSE_BUTTON_RIGHT or not mouse_event.pressed:
+		return
+	_clear_selection()
+	message_value.text = "已取消选择。左键可重新选择己方棋子。"
+	button.accept_event()
 
 
 func _on_board_cell_pressed(x: int, y: int) -> void:
@@ -235,8 +257,28 @@ func _submit_pending_action() -> Dictionary:
 
 
 func _on_ai_step_pressed() -> void:
+	_perform_ai_turn()
+
+
+func _on_ai_turn_timer_timeout() -> void:
+	_perform_ai_turn()
+
+
+func _schedule_ai_turn() -> void:
 	if not match_controller.can_step_ai():
-		message_value.text = "当前没有可执行的 AI 行动。"
+		ai_turn_pending = false
+		ai_turn_timer.stop()
+		return
+	if ai_turn_pending:
+		return
+	ai_turn_pending = true
+	message_value.text = "AI 正在思考，将自动行动……"
+	ai_turn_timer.start()
+
+
+func _perform_ai_turn() -> void:
+	ai_turn_pending = false
+	if not match_controller.can_step_ai():
 		return
 	ai_step_button.disabled = true
 	message_value.text = "AI 行动中（仅使用 AI PlayerView）……"
@@ -274,6 +316,8 @@ func _restart_same_seed() -> void:
 func _start_match(seed_to_use: int) -> void:
 	initial_seed = seed_to_use
 	seed_input.text = str(seed_to_use)
+	ai_turn_pending = false
+	ai_turn_timer.stop()
 	selected_piece_id = ""
 	selected_origin = []
 	pending_preview = {}
@@ -299,10 +343,9 @@ func _refresh_all() -> void:
 	side_value.text = "玩家：%s" % _side_name(str(player_view["viewer_side"]))
 	active_value.text = "行动方：%s" % _side_name(str(player_view["active_side"]))
 	round_value.text = "完整轮：%d / %d" % [player_view["full_round_index"], player_view["full_round_limit_hypothesis"]]
-	config_value.text = "%s · %s · %s · AI %s" % [
-		str(player_view["implementation_revision"]),
+	config_value.text = "规则 %s · %s 回合 · AI %s" % [
+		str(player_view["implementation_revision"]).trim_prefix("prototype-core-"),
 		str(player_view["full_round_limit_hypothesis"]),
-		str(player_view["round_limit_status"]),
 		_difficulty_name(ai_difficulty_id),
 	]
 	_refresh_board()
@@ -334,40 +377,58 @@ func _refresh_board() -> void:
 		var x: int = int(button.get_meta("board_x"))
 		var y: int = int(button.get_meta("board_y"))
 		var lines: Array[String] = ["%d,%d" % [x, y]]
-		var color := Color(0.30, 0.34, 0.39, 1.0)
+		var tooltip_lines: Array[String] = ["坐标 (%d,%d) · %s" % [x, y, _region_name(y)]]
+		button.theme_type_variation = StringName(_region_theme(y))
+		var color := Color(0.58, 0.61, 0.65, 1.0)
 		if visible_set.has(key):
-			color = Color(0.78, 0.82, 0.86, 1.0)
+			color = Color.WHITE
 		if detection_set.has(key):
-			color = Color(0.35, 0.75, 0.78, 1.0)
+			color = Color(0.62, 0.92, 0.95, 1.0)
+			tooltip_lines.append("象眼侦测范围")
 		if contact_set.has(key):
-			lines.append("接触")
-			color = Color(0.95, 0.58, 0.22, 1.0)
+			lines = ["敌?"]
+			color = Color(1.0, 0.62, 0.28, 1.0)
+			tooltip_lines.append("未知敌情接触")
 		if flags_by_cell.has(key):
 			var flag: Dictionary = flags_by_cell[key]
-			lines.append("旗%s %d/3" % [_owner_mark(str(flag["owner"])), int(flag["capture_progress"])])
-			color = Color(0.77, 0.54, 0.95, 1.0)
+			lines = ["旗%d" % int(flag["capture_progress"])]
+			button.theme_type_variation = &"FlagCell"
+			tooltip_lines.append("旗帜：%s · 占领进度 %d/3" % [
+				_owner_mark(str(flag["owner"])), int(flag["capture_progress"]),
+			])
 		if pieces_by_cell.has(key):
 			var piece: Dictionary = pieces_by_cell[key]
-			lines.append("%s%s%s" % [
-				_side_mark(str(piece["side"])), _piece_mark(str(piece["piece_type"])),
-				"隐" if piece.get("status_tags", []).has("hidden") else "",
+			var piece_side: String = str(piece["side"])
+			lines = [_piece_mark(str(piece["piece_type"]), piece_side)]
+			button.theme_type_variation = &"RedPiece" if piece_side == "red" else &"BlackPiece"
+			color = Color.WHITE
+			tooltip_lines.append("%s%s%s" % [
+				_side_name(piece_side), _piece_mark(str(piece["piece_type"]), piece_side),
+				" · 隐匿" if piece.get("status_tags", []).has("hidden") else "",
 			])
-			if piece["side"] == player_view["viewer_side"]:
-				color = Color(0.42, 0.78, 1.0, 1.0)
-			else:
-				color = Color(1.0, 0.48, 0.48, 1.0)
 		if preview_by_cell.has(key):
 			var preview: Dictionary = preview_by_cell[key]
 			match str(preview["classification"]):
-				KNOWN_LEGAL: color = Color(0.42, 0.92, 0.52, 1.0)
-				TENTATIVE: color = Color(1.0, 0.82, 0.28, 1.0)
-				KNOWN_ILLEGAL: color = Color(0.42, 0.42, 0.45, 1.0)
+				KNOWN_LEGAL:
+					color = Color(0.48, 1.0, 0.55, 1.0)
+					tooltip_lines.append("已知合法落点")
+				TENTATIVE:
+					color = Color(1.0, 0.82, 0.28, 1.0)
+					tooltip_lines.append("迷雾影响：结果未知")
+				KNOWN_ILLEGAL:
+					color = Color(0.42, 0.42, 0.45, 1.0)
 		if selected_origin.size() == 2 and x == int(selected_origin[0]) and y == int(selected_origin[1]):
-			color = Color(0.35, 1.0, 1.0, 1.0)
+			var selected_piece: Dictionary = pieces_by_cell.get(key, {})
+			if not selected_piece.is_empty():
+				button.theme_type_variation = &"RedPieceSelected" \
+					if str(selected_piece["side"]) == "red" else &"BlackPieceSelected"
+			color = Color.WHITE
+			tooltip_lines.append("当前选中；右键取消")
 		button.text = "\n".join(lines)
+		button.tooltip_text = "\n".join(tooltip_lines)
 		button.self_modulate = color
 		button.disabled = not match_controller.can_human_submit()
-	overview_strip.text = "导航概览（同一 PlayerView）：可见 %d / %d 格 · 接触标记 %d · 检测格 %d" % [
+	overview_strip.text = "红方区域 1–8 · 中央战场 9–16 · 黑方区域 17–24 | 可见 %d/%d · 接触 %d · 侦测 %d" % [
 		visible_set.size(), BOARD_CELL_COUNT, contact_set.size(), detection_set.size(),
 	]
 
@@ -394,21 +455,131 @@ func _refresh_status() -> void:
 		piece_status.text = "棋子：请选择己方在场棋子"
 	else:
 		piece_status.text = "棋子：%s · %s%s" % [
-			selected_piece_id, str(selected["piece_type"]),
+			selected_piece_id, _piece_mark(str(selected["piece_type"]), str(selected["side"])),
 			" · 弹药 %d" % int(selected.get("bombard_ammo", 0)) if selected["piece_type"] == "cannon" else "",
 		]
-	mode_status.text = "模式：%s · 50 为试玩假设，可覆盖" % ("区域炮击" if action_mode == "bombard" else "普通移动")
+	mode_status.text = "模式：%s · 左键操作 / 右键取消" % ("区域炮击" if action_mode == "bombard" else "普通移动")
 	move_button.disabled = not match_controller.can_human_submit()
 	bombard_button.disabled = not match_controller.can_human_submit() or not _selected_has_bombardment()
 	pass_button.disabled = not match_controller.can_human_submit()
 	ai_step_button.disabled = not match_controller.can_step_ai()
+	var casualty_counts: Dictionary = _casualty_counts_from_events()
+	red_casualties.text = "红方：%s" % _format_casualties("red", casualty_counts["red"])
+	black_casualties.text = "黑方：%s" % _format_casualties("black", casualty_counts["black"])
 	var event_lines: Array[String] = []
 	for event: Dictionary in player_view.get("player_events", []):
-		event_lines.append("[%s] %s %s" % [
-			str(event.get("id", "")), _side_name(str(event.get("actor_side", ""))),
-			str(event.get("public_code", event.get("event_type", ""))),
-		])
+		event_lines.append("[%s] %s" % [str(event.get("id", "")), _event_summary(event)])
 	event_log.text = "\n".join(event_lines) if not event_lines.is_empty() else "尚无玩家可见事件。"
+
+
+func _refresh_notifications(previous_view: Dictionary, current_view: Dictionary) -> void:
+	if int(current_view.get("action_index", 0)) == 0:
+		message_value.text = "对局开始：左键选择己方圆形棋子，右键取消选择。"
+		return
+	var notifications: Array[String] = []
+	var previous_event_ids: Dictionary = {}
+	for event: Dictionary in previous_view.get("player_events", []):
+		previous_event_ids[str(event.get("id", ""))] = true
+	for event: Dictionary in current_view.get("player_events", []):
+		if previous_event_ids.has(str(event.get("id", ""))):
+			continue
+		var capture_summary: String = _event_capture_summary(event)
+		if not capture_summary.is_empty():
+			notifications.append(capture_summary)
+	var previous_walls: Dictionary = _wall_status_by_side(previous_view)
+	for wall: Dictionary in current_view.get("walls", []):
+		var wall_side: String = str(wall.get("side", ""))
+		var new_status: String = str(wall.get("status", ""))
+		var old_status: String = str(previous_walls.get(wall_side, new_status))
+		if new_status == old_status:
+			continue
+		match new_status:
+			"INTACT": notifications.append("%s城墙恢复完成" % _side_name(wall_side))
+			"BREACHED": notifications.append("%s城墙已被攻破" % _side_name(wall_side))
+			"REPAIRING": notifications.append("%s城墙开始恢复" % _side_name(wall_side))
+	var previous_flags: Dictionary = _flag_owner_by_id(previous_view)
+	for flag: Dictionary in current_view.get("flags", []):
+		var flag_id: String = str(flag.get("id", ""))
+		var new_owner: String = str(flag.get("owner", "neutral"))
+		var old_owner: String = str(previous_flags.get(flag_id, new_owner))
+		if new_owner != old_owner and new_owner != "neutral":
+			notifications.append("%s占领%s成功" % [_side_name(new_owner), flag_id])
+	if notifications.is_empty() and str(previous_view.get("active_side", "")) == "black" \
+	and str(current_view.get("active_side", "")) == str(current_view.get("viewer_side", "")):
+		notifications.append("AI 已行动，轮到你")
+	if not notifications.is_empty():
+		message_value.text = "提示：%s" % " · ".join(notifications)
+
+
+func _event_summary(event: Dictionary) -> String:
+	var actor_side: String = str(event.get("actor_side", ""))
+	var code: String = str(event.get("public_code", event.get("event_type", "")))
+	var action_text: String = {
+		"move_resolved": "完成移动",
+		"bombardment_resolved": "完成区域炮击",
+		"pass": "主动跳过",
+		"skip": "跳过行动",
+		"timeout": "行动超时",
+		"route_unknown_blocked": "路线受迷雾阻挡",
+		"target_unknown_occupied": "目标格存在未知棋子",
+		"cannon_path_invalid": "炮路受迷雾影响",
+	}.get(code, code)
+	var capture_summary: String = _event_capture_summary(event)
+	if capture_summary.is_empty():
+		return "%s%s" % [_side_name(actor_side), action_text]
+	return "%s%s；%s" % [_side_name(actor_side), action_text, capture_summary]
+
+
+func _event_capture_summary(event: Dictionary) -> String:
+	var actor_side: String = str(event.get("actor_side", ""))
+	var casualty_side: String = _opponent_side(actor_side)
+	var parts: Array[String] = []
+	for capture: Dictionary in event.get("authorized_captures", []):
+		var captured_mark: String = _piece_mark(str(capture.get("piece_type", "")), casualty_side)
+		if bool(capture.get("rescued", false)):
+			parts.append("%s士替死，保住%s" % [_side_name(casualty_side), captured_mark])
+		else:
+			parts.append("%s吃掉%s%s" % [
+				_side_name(actor_side), _side_name(casualty_side), captured_mark,
+			])
+	return "；".join(parts)
+
+
+func _casualty_counts_from_events() -> Dictionary:
+	var result: Dictionary = {"red": {}, "black": {}}
+	for event: Dictionary in player_view.get("player_events", []):
+		var casualty_side: String = _opponent_side(str(event.get("actor_side", "")))
+		if not result.has(casualty_side):
+			continue
+		for capture: Dictionary in event.get("authorized_captures", []):
+			var piece_type: String = "advisor" if bool(capture.get("rescued", false)) \
+				else str(capture.get("piece_type", ""))
+			result[casualty_side][piece_type] = int(result[casualty_side].get(piece_type, 0)) + 1
+	return result
+
+
+func _format_casualties(side: String, counts: Dictionary) -> String:
+	var entries: Array[String] = []
+	for piece_type: String in ["general", "advisor", "elephant", "horse", "rook", "cannon", "pawn"]:
+		var count: int = int(counts.get(piece_type, 0))
+		if count <= 0:
+			continue
+		entries.append("%s×%d" % [_piece_mark(piece_type, side), count])
+	return "  ".join(entries) if not entries.is_empty() else "无"
+
+
+func _wall_status_by_side(view: Dictionary) -> Dictionary:
+	var result: Dictionary = {}
+	for wall: Dictionary in view.get("walls", []):
+		result[str(wall.get("side", ""))] = str(wall.get("status", ""))
+	return result
+
+
+func _flag_owner_by_id(view: Dictionary) -> Dictionary:
+	var result: Dictionary = {}
+	for flag: Dictionary in view.get("flags", []):
+		result[str(flag.get("id", ""))] = str(flag.get("owner", "neutral"))
+	return result
 
 
 func _refresh_terminal() -> void:
@@ -479,17 +650,47 @@ func _side_mark(side: String) -> String:
 	return "红" if side == "red" else "黑"
 
 
+func _opponent_side(side: String) -> String:
+	return "black" if side == "red" else "red"
+
+
 func _owner_mark(owner: String) -> String:
 	if owner == "neutral":
 		return "中立"
 	return _side_name(owner)
 
 
-func _piece_mark(piece_type: String) -> String:
+func _piece_mark(piece_type: String, side: String = "") -> String:
+	if side == "red":
+		return {
+			"rook": "车", "horse": "马", "elephant": "相", "advisor": "仕",
+			"general": "帅", "cannon": "炮", "pawn": "兵",
+		}.get(piece_type, "?")
+	if side == "black":
+		return {
+			"rook": "车", "horse": "马", "elephant": "象", "advisor": "士",
+			"general": "将", "cannon": "炮", "pawn": "卒",
+		}.get(piece_type, "?")
 	return {
-		"rook": "车", "horse": "马", "elephant": "相", "advisor": "士",
+		"rook": "车", "horse": "马", "elephant": "象", "advisor": "士",
 		"general": "将", "cannon": "炮", "pawn": "兵",
 	}.get(piece_type, "?")
+
+
+func _region_theme(y: int) -> String:
+	if y <= 8:
+		return "RedZoneCell"
+	if y <= 16:
+		return "BattlefieldCell"
+	return "BlackZoneCell"
+
+
+func _region_name(y: int) -> String:
+	if y <= 8:
+		return "红方区域"
+	if y <= 16:
+		return "中央战场"
+	return "黑方区域"
 
 
 func _difficulty_name(difficulty_id: String) -> String:

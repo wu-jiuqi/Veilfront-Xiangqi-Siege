@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=3 format=3]
+[gd_resource type="Theme" load_steps=11 format=3]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
 bg_color = Color(0.071, 0.086, 0.11, 0.96)
@@ -24,6 +24,110 @@ corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_red_zone"]
+bg_color = Color(0.29, 0.105, 0.075, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.56, 0.24, 0.16, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_battlefield"]
+bg_color = Color(0.18, 0.235, 0.16, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.36, 0.43, 0.27, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_black_zone"]
+bg_color = Color(0.115, 0.145, 0.19, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.26, 0.33, 0.43, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_flag"]
+bg_color = Color(0.31, 0.22, 0.42, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.74, 0.56, 0.93, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_red_piece"]
+bg_color = Color(0.91, 0.82, 0.64, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.72, 0.08, 0.06, 1)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_right = 24
+corner_radius_bottom_left = 24
+shadow_color = Color(0, 0, 0, 0.45)
+shadow_size = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_black_piece"]
+bg_color = Color(0.91, 0.82, 0.64, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.045, 0.05, 0.06, 1)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_right = 24
+corner_radius_bottom_left = 24
+shadow_color = Color(0, 0, 0, 0.45)
+shadow_size = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_red_selected"]
+bg_color = Color(0.98, 0.88, 0.64, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(1, 0.78, 0.18, 1)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_right = 24
+corner_radius_bottom_left = 24
+shadow_color = Color(0.95, 0.62, 0.08, 0.7)
+shadow_size = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_black_selected"]
+bg_color = Color(0.98, 0.88, 0.64, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(1, 0.78, 0.18, 1)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_right = 24
+corner_radius_bottom_left = 24
+shadow_color = Color(0.95, 0.62, 0.08, 0.7)
+shadow_size = 4
+
 [resource]
 default_font_size = 17
 Label/colors/font_color = Color(0.86, 0.89, 0.92, 1)
@@ -33,3 +137,52 @@ Label/constants/shadow_offset_y = 1
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_panel")
 RichTextLabel/colors/default_color = Color(0.76, 0.81, 0.86, 1)
 RichTextLabel/styles/focus = SubResource("StyleBoxFlat_focus")
+RedZoneCell/base_type = &"Button"
+RedZoneCell/styles/normal = SubResource("StyleBoxFlat_red_zone")
+RedZoneCell/styles/hover = SubResource("StyleBoxFlat_red_zone")
+RedZoneCell/styles/pressed = SubResource("StyleBoxFlat_red_zone")
+RedZoneCell/styles/disabled = SubResource("StyleBoxFlat_red_zone")
+BattlefieldCell/base_type = &"Button"
+BattlefieldCell/styles/normal = SubResource("StyleBoxFlat_battlefield")
+BattlefieldCell/styles/hover = SubResource("StyleBoxFlat_battlefield")
+BattlefieldCell/styles/pressed = SubResource("StyleBoxFlat_battlefield")
+BattlefieldCell/styles/disabled = SubResource("StyleBoxFlat_battlefield")
+BlackZoneCell/base_type = &"Button"
+BlackZoneCell/styles/normal = SubResource("StyleBoxFlat_black_zone")
+BlackZoneCell/styles/hover = SubResource("StyleBoxFlat_black_zone")
+BlackZoneCell/styles/pressed = SubResource("StyleBoxFlat_black_zone")
+BlackZoneCell/styles/disabled = SubResource("StyleBoxFlat_black_zone")
+FlagCell/base_type = &"Button"
+FlagCell/colors/font_color = Color(0.95, 0.9, 1, 1)
+FlagCell/styles/normal = SubResource("StyleBoxFlat_flag")
+FlagCell/styles/hover = SubResource("StyleBoxFlat_flag")
+FlagCell/styles/pressed = SubResource("StyleBoxFlat_flag")
+FlagCell/styles/disabled = SubResource("StyleBoxFlat_flag")
+RedPiece/base_type = &"Button"
+RedPiece/colors/font_color = Color(0.72, 0.04, 0.035, 1)
+RedPiece/colors/font_hover_color = Color(0.82, 0.04, 0.035, 1)
+RedPiece/colors/font_pressed_color = Color(0.72, 0.04, 0.035, 1)
+RedPiece/colors/font_disabled_color = Color(0.72, 0.04, 0.035, 1)
+RedPiece/font_sizes/font_size = 25
+RedPiece/styles/normal = SubResource("StyleBoxFlat_red_piece")
+RedPiece/styles/hover = SubResource("StyleBoxFlat_red_piece")
+RedPiece/styles/pressed = SubResource("StyleBoxFlat_red_piece")
+RedPiece/styles/disabled = SubResource("StyleBoxFlat_red_piece")
+BlackPiece/base_type = &"Button"
+BlackPiece/colors/font_color = Color(0.035, 0.04, 0.045, 1)
+BlackPiece/colors/font_hover_color = Color(0.035, 0.04, 0.045, 1)
+BlackPiece/colors/font_pressed_color = Color(0.035, 0.04, 0.045, 1)
+BlackPiece/colors/font_disabled_color = Color(0.035, 0.04, 0.045, 1)
+BlackPiece/font_sizes/font_size = 25
+BlackPiece/styles/normal = SubResource("StyleBoxFlat_black_piece")
+BlackPiece/styles/hover = SubResource("StyleBoxFlat_black_piece")
+BlackPiece/styles/pressed = SubResource("StyleBoxFlat_black_piece")
+BlackPiece/styles/disabled = SubResource("StyleBoxFlat_black_piece")
+RedPieceSelected/base_type = &"RedPiece"
+RedPieceSelected/styles/normal = SubResource("StyleBoxFlat_red_selected")
+RedPieceSelected/styles/hover = SubResource("StyleBoxFlat_red_selected")
+RedPieceSelected/styles/pressed = SubResource("StyleBoxFlat_red_selected")
+BlackPieceSelected/base_type = &"BlackPiece"
+BlackPieceSelected/styles/normal = SubResource("StyleBoxFlat_black_selected")
+BlackPieceSelected/styles/hover = SubResource("StyleBoxFlat_black_selected")
+BlackPieceSelected/styles/pressed = SubResource("StyleBoxFlat_black_selected")

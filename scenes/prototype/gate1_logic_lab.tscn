@@ -18,6 +18,10 @@ script = ExtResource("1_script")
 
 [node name="MatchController" parent="." instance=ExtResource("5_controller")]
 
+[node name="AiTurnTimer" type="Timer" parent="."]
+wait_time = 0.45
+one_shot = true
+
 [node name="Background" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
@@ -138,7 +142,7 @@ layout_mode = 2
 
 [node name="Footer" type="Label" parent="SafeMargin/Page"]
 layout_mode = 2
-text = "可丢弃灰盒 · 无正式 UI / 美术 / 音频 / 动画 · GATE-1 尚未批准"
+text = "可丢弃试玩灰盒 · 左键选择 / 右键取消 · 玩家行动后 AI 自动行动"
 horizontal_alignment = 1
 
 [node name="TerminalOverlay" type="CenterContainer" parent="."]

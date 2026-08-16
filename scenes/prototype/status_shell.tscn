@@ -19,7 +19,7 @@ theme_override_constants/separation = 8
 [node name="StatusTitle" type="Label" parent="StatusMargin/StatusColumn"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "试玩状态（仅 human PlayerView）"
+text = "战局信息（仅玩家可见内容）"
 
 [node name="TurnAndSelection" type="Label" parent="StatusMargin/StatusColumn"]
 layout_mode = 2
@@ -47,32 +47,57 @@ autowrap_mode = 2
 
 [node name="ActionMode" type="GridContainer" parent="StatusMargin/StatusColumn"]
 layout_mode = 2
-columns = 2
+columns = 3
 
 [node name="MoveButton" type="Button" parent="StatusMargin/StatusColumn/ActionMode"]
-custom_minimum_size = Vector2(145, 44)
+custom_minimum_size = Vector2(98, 42)
 layout_mode = 2
 text = "普通移动"
 
 [node name="BombardButton" type="Button" parent="StatusMargin/StatusColumn/ActionMode"]
-custom_minimum_size = Vector2(145, 44)
+custom_minimum_size = Vector2(98, 42)
 layout_mode = 2
 text = "区域炮击"
 
 [node name="PassButton" type="Button" parent="StatusMargin/StatusColumn/ActionMode"]
-custom_minimum_size = Vector2(145, 44)
+custom_minimum_size = Vector2(98, 42)
 layout_mode = 2
 text = "主动跳过"
 
 [node name="AiStepButton" type="Button" parent="StatusMargin/StatusColumn/ActionMode"]
+visible = false
 custom_minimum_size = Vector2(145, 44)
 layout_mode = 2
-text = "执行 AI 行动"
+text = "AI 自动行动"
 
 [node name="MessageValue" type="Label" parent="StatusMargin/StatusColumn"]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
-text = "先选择己方棋子，再选择公开候选。"
+theme_override_colors/font_color = Color(1, 0.82, 0.38, 1)
+text = "提示：左键选择棋子与落点，右键取消选择。"
+autowrap_mode = 2
+
+[node name="CasualtyTitle" type="Label" parent="StatusMargin/StatusColumn"]
+layout_mode = 2
+text = "阵亡棋子"
+
+[node name="CasualtyGrid" type="GridContainer" parent="StatusMargin/StatusColumn"]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+columns = 2
+
+[node name="RedCasualties" type="Label" parent="StatusMargin/StatusColumn/CasualtyGrid"]
+custom_minimum_size = Vector2(150, 50)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.42, 0.38, 1)
+text = "红方：无"
+autowrap_mode = 2
+
+[node name="BlackCasualties" type="Label" parent="StatusMargin/StatusColumn/CasualtyGrid"]
+custom_minimum_size = Vector2(150, 50)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.78, 0.82, 0.88, 1)
+text = "黑方：无"
 autowrap_mode = 2
 
 [node name="Separator" type="HSeparator" parent="StatusMargin/StatusColumn"]
@@ -83,7 +108,7 @@ layout_mode = 2
 text = "玩家可见事件"
 
 [node name="EventLog" type="RichTextLabel" parent="StatusMargin/StatusColumn"]
-custom_minimum_size = Vector2(0, 150)
+custom_minimum_size = Vector2(0, 90)
 layout_mode = 2
 size_flags_vertical = 3
 text = "尚无玩家可见事件。"

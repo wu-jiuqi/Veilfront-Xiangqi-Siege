@@ -1,7 +1,7 @@
 [gd_scene format=3]
 
 [node name="BoardShell" type="PanelContainer"]
-custom_minimum_size = Vector2(640, 560)
+custom_minimum_size = Vector2(620, 560)
 size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 1
@@ -20,7 +20,7 @@ theme_override_constants/separation = 8
 [node name="BoardTitle" type="Label" parent="BoardMargin/BoardColumn"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "24 × 9 灰盒主棋盘（固定 1-based 坐标）"
+text = "九路烽棋 · 红方区域 / 中央战场 / 黑方区域"
 
 [node name="OverviewStrip" type="Label" parent="BoardMargin/BoardColumn"]
 layout_mode = 2

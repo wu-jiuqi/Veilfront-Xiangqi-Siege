@@ -19,6 +19,25 @@ func _run() -> void:
 	_check(scene.get_board_cell_count() == 216, "灰盒预置 24×9 共 216 个交互格")
 	var grid := scene.get_node_or_null("SafeMargin/Page/Workspace/BoardShell/BoardMargin/BoardColumn/BoardScroll/BoardGrid") as GridContainer
 	_check(grid != null and grid.get_child_count() == 216, "BoardGrid 固定节点数为 216")
+	var red_piece_cell := grid.get_node("Cell_1_1") as Button
+	var red_region_cell := grid.get_node("Cell_2_2") as Button
+	var battlefield_cell := grid.get_node("Cell_1_9") as Button
+	var black_region_cell := grid.get_node("Cell_1_24") as Button
+	_check(
+		red_piece_cell.theme_type_variation == &"RedPiece" and red_piece_cell.text == "车",
+		"红方棋子使用传统圆形棋子主题与中文棋名"
+	)
+	_check(
+		red_region_cell.theme_type_variation == &"RedZoneCell"
+		and battlefield_cell.theme_type_variation == &"BattlefieldCell"
+		and black_region_cell.theme_type_variation == &"BlackZoneCell",
+		"红方区域、中央战场、黑方区域使用三种背景主题"
+	)
+	_check(red_piece_cell.custom_minimum_size.x <= 48.0, "九路棋盘格宽保证横向完整进入 1280 视口")
+	_check(
+		scene.get_node_or_null("SafeMargin/Page/Workspace/StatusShell/StatusMargin/StatusColumn/CasualtyGrid") != null,
+		"状态栏预置红黑双方阵亡棋子记录格"
+	)
 	var initial_view: Dictionary = scene.get_player_view_snapshot()
 	var initial_digest: String = Canonical.digest(initial_view)
 	_check(int(initial_view.get("full_round_limit_hypothesis", -1)) == 50, "默认完整回合上限为 50")
@@ -26,6 +45,15 @@ func _run() -> void:
 	_check(not initial_view.has("board") and not initial_view.has("rng"), "UI PlayerView 不含 FullState board/rng")
 	_check(not scene.get_node("MatchController").has_method("get_full_state"), "控制器不暴露 FullState getter")
 	_check(not scene.get_action_preview_snapshot().is_empty(), "人类公开候选已生成")
+	scene.select_cell_for_test([1, 1])
+	var cancel_event := InputEventMouseButton.new()
+	cancel_event.button_index = MOUSE_BUTTON_RIGHT
+	cancel_event.pressed = true
+	red_piece_cell.gui_input.emit(cancel_event)
+	var turn_selection := scene.get_node(
+		"SafeMargin/Page/Workspace/StatusShell/StatusMargin/StatusColumn/TurnAndSelection"
+	) as Label
+	_check(turn_selection.text.contains("选择：无"), "棋盘右键可取消当前选择")
 
 	var move_preview: Dictionary = _first_preview(scene.get_action_preview_snapshot(), "move")
 	_check(not move_preview.is_empty(), "存在可提交的人类移动候选")
@@ -66,6 +94,16 @@ func _run() -> void:
 		var bombarded: Dictionary = scene.confirm_action_for_test()
 		_check(bool(bombarded.get("consumed", false)), "区域炮击不预演命中格并可确认消费")
 		await process_frame
+
+	scene.restart_match_for_test()
+	await process_frame
+	scene.choose_pass_for_test()
+	var auto_pass: Dictionary = scene.confirm_action_for_test()
+	_check(bool(auto_pass.get("consumed", false)), "自动 AI 验证前的人类行动已消费")
+	var ai_timer := scene.get_node("AiTurnTimer") as Timer
+	await ai_timer.timeout
+	await process_frame
+	_check(int(scene.get_player_view_snapshot()["action_index"]) == 2, "玩家行动后 AI 无需点击即可自动完成行动")
 
 	var difficulty_select := scene.get_node("SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/DifficultyGroup/DifficultySelect") as OptionButton
 	_check(difficulty_select.item_count == 4, "灰盒预置简单/中等/困难/专家四档选择")
@@ -147,7 +185,7 @@ func _run() -> void:
 	scene.queue_free()
 	await process_frame
 	if failures.is_empty():
-		print("PLAYTEST_GRAYBOX_SMOKE_PASSED cells=216 round_limit=50 human_move=true ai_step=true pass=true bombard=true ai_difficulties=4 ai_audit_test_only=true")
+		print("PLAYTEST_GRAYBOX_SMOKE_PASSED cells=216 round_limit=50 traditional_pieces=true regions=3 right_click_cancel=true auto_ai=true casualties=true")
 		quit(0)
 		return
 	print("PLAYTEST_GRAYBOX_SMOKE_FAILED count=%d" % failures.size())
