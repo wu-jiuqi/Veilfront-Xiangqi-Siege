@@ -68,14 +68,14 @@ registry_snapshot:
         assignment_id: ecc9367a-49ac-4114-b4a7-24ecb8985d16
         review_scope: [GATE-1]
   runtime:
-    current_state: review
-    state_entered_at: '2026-08-16T12:41:03.067977+08:00'
-    current_iteration: 1
-    last_transition_id: TR-ACTIVE-REVIEW
-    last_event_id: 1ce93009-3d8e-48e1-a893-557ded2deb26
-    last_event_digest: b6439553ec00daf4284ccaa33067af2058e8f8b2806763ed02bc557c74acc328
-    last_event_sequence: 36
-    record_revision: 36
+    current_state: active
+    state_entered_at: '2026-08-16T13:37:41.394234+08:00'
+    current_iteration: 2
+    last_transition_id: TR-REVIEW-ACTIVE
+    last_event_id: 9ee0e479-7f25-480b-9943-9184b78004f0
+    last_event_digest: fbc96e54b834e9c1188a513a5fe29c76fb89c7ff1b9187b7870018566546af97
+    last_event_sequence: 38
+    record_revision: 38
   budget:
     limits:
       iteration_limit: 3
@@ -401,7 +401,18 @@ registry_snapshot:
       new_defects: []
       formal_production: forbidden_until_separate_gate_1_approval
       legal_next_action: transition_active_to_review_then_prepare_gate_1_decision_package
-    human_gates: []
+    human_gates:
+    - gate_record_id: fd1cd71c-e70a-4dbd-b945-3c86c52f7a20
+      gate_id: GATE-1
+      decision: revise
+      decided_by: project-owner
+      decision_ref: game-pipeline/approvals/gate-1-revision-b67377e497d8.yaml@subject-digest:b67377e497d847aed0ae61759ba590be7229141a89829906981ffdd2796a4c3b
+      subject_digest: b67377e497d847aed0ae61759ba590be7229141a89829906981ffdd2796a4c3b
+      evidence_state: revision_required
+      iteration_reviewed: 1
+      revision_iteration: 2
+      full_gate1: false
+      formal_production: forbidden_until_separate_gate_1_approval
     final_handoff_ref: null
   interruption: null
   pending_approvals: []

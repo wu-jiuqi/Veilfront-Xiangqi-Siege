@@ -1,0 +1,57 @@
+approval:
+  schema_version: game-production-approval/v1
+  approval_id: approval:veilfront-xiangqi-siege:gate-1-revision:b67377e497d8
+  subject_kind: human-gate-decision
+  subject_id: GATE-1@iteration-1-review
+  subject_digest: b67377e497d847aed0ae61759ba590be7229141a89829906981ffdd2796a4c3b
+  decision: revise
+  decided_by: project-owner
+  decided_at: '2026-08-16T13:37:41.394234+08:00'
+  evidence:
+    source_refs:
+    - codex-thread://01a008aa-c77f-7060-9e11-1a6d95e41441#owner-gate1-revision-iteration2-50-round-graybox
+    - game-pipeline/loops/evidence/GATE-1-decision-package.md@sha256:d24207e5e53509d09374e3870df744c21090554f77ad819f0e61a4aa6f2d54fd
+    immutable_subject:
+      subject: GATE-1-revision-request-iteration-2
+      gate_id: GATE-1
+      loop_instance_id: 4cbb03b6-dd5a-41c5-a624-895c4b884bcb
+      decision: revise
+      baseline:
+        record_revision: 36
+        last_event_sequence: 36
+        last_event_digest: b6439553ec00daf4284ccaa33067af2058e8f8b2806763ed02bc557c74acc328
+        contract_digest: 7b7fcf36920109d379aa0e230cf70a378ed7ec228ff6a88bccf35cf481fcf09c
+        gate_1_package_digest: d24207e5e53509d09374e3870df744c21090554f77ad819f0e61a4aa6f2d54fd
+      revision_requirements:
+        default_full_round_limit_hypothesis: 50
+        round_limit_status: hypothesis_cli_overridable
+        playable_graybox:
+          required: true
+          classification: disposable_playtest_harness
+          human_information_source: PlayerView_only
+        required_revalidation:
+        - Godot 4.7.1 import/main/playable graybox
+        - rules/fog/AI fairness/replay regression
+        - 1000 fixed seeds at 50 full rounds
+        - determinism mismatch count equals 0
+        - independent QA
+        - Registry and QA-P1-003 compatibility recheck
+      formal_production: forbidden_until_separate_gate_1_approval
+  authorized_action:
+    summary: 返回同一 Loop 的 Iteration 2，补齐 50 回合假设与可丢弃灰盒试玩证据。
+    allowed:
+    - 追加 GATE-1 revise 验收记录和 TR-REVIEW-ACTIVE 状态事件。
+    - 把默认完整回合上限临时调整为 50，并保留 CLI 覆盖能力。
+    - 实现仅供 GATE-1 人工试玩的可丢弃灰盒入口。
+    - 完成全量回归和独立 QA 后重新进入 review 并重建 GATE-1 决策包。
+    forbidden:
+    - 把 50 回合冻结为正式平衡规则。
+    - 开始正式 UI、美术、音频、动画或资产生产。
+    - 把官方 Loop CLI 记录为通过。
+    - 自动批准 GATE-1。
+  application:
+    from_state: review
+    to_state: active
+    iteration_before: 1
+    iteration_after: 2
+    application_event_sequence: 38

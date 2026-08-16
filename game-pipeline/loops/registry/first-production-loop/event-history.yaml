@@ -1405,3 +1405,89 @@ event_history:
       digest_algorithm: sha256
       previous_event_digest: 5fc2de832c8cc726d50819ad77ecced2cbe7c11a6bce9cc42d4df4685389bc0e
       event_digest: b6439553ec00daf4284ccaa33067af2058e8f8b2806763ed02bc557c74acc328
+
+  - schema_version: '0.1'
+    event_id: 4a2b1348-a01f-48ce-897b-551da3bb9f71
+    mutation_id: bba5da69-b91d-4277-a660-49caa9239f60
+    loop_instance_id: 4cbb03b6-dd5a-41c5-a624-895c4b884bcb
+    sequence: 37
+    event_type: core.acceptance_recorded
+    occurred_at: '2026-08-16T13:37:41.394234+08:00'
+    recorded_at: '2026-08-16T13:37:41.394234+08:00'
+    actor:
+      actor_id: project-owner
+      role: project-owner
+      authority_id: GATE-1
+    causality:
+      correlation_id: e2013c16-78b8-48e8-8f22-9fef6a62585f
+      causation_event_id: 1ce93009-3d8e-48e1-a893-557ded2deb26
+      request_id: owner-gate-1-revision-iteration-2
+    concurrency:
+      expected_record_revision: 36
+      resulting_record_revision: 37
+    binding_snapshot:
+      contract_digest: 7b7fcf36920109d379aa0e230cf70a378ed7ec228ff6a88bccf35cf481fcf09c
+      state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+    payload:
+      acceptance_kind: human_gate
+      record_id: fd1cd71c-e70a-4dbd-b945-3c86c52f7a20
+      subject_digest: b67377e497d847aed0ae61759ba590be7229141a89829906981ffdd2796a4c3b
+      record:
+        gate_record_id: fd1cd71c-e70a-4dbd-b945-3c86c52f7a20
+        gate_id: GATE-1
+        decision: revise
+        decided_by: project-owner
+        decision_ref: game-pipeline/approvals/gate-1-revision-b67377e497d8.yaml@subject-digest:b67377e497d847aed0ae61759ba590be7229141a89829906981ffdd2796a4c3b
+        subject_digest: b67377e497d847aed0ae61759ba590be7229141a89829906981ffdd2796a4c3b
+        evidence_state: revision_required
+        iteration_reviewed: 1
+        revision_iteration: 2
+        full_gate1: false
+        formal_production: forbidden_until_separate_gate_1_approval
+    evidence_refs:
+    - game-pipeline/approvals/gate-1-revision-b67377e497d8.yaml@subject-digest:b67377e497d847aed0ae61759ba590be7229141a89829906981ffdd2796a4c3b
+    integrity:
+      canonicalization: registry-event-canonical-json-v1
+      digest_algorithm: sha256
+      previous_event_digest: b6439553ec00daf4284ccaa33067af2058e8f8b2806763ed02bc557c74acc328
+      event_digest: 2371144dbce62f4522961637ccf878abd5faccf26536d5c6331c4dfdc3e8cb6d
+
+  - schema_version: '0.1'
+    event_id: 9ee0e479-7f25-480b-9943-9184b78004f0
+    mutation_id: 2df45e1b-b0b8-4c89-820f-5fc805f1367a
+    loop_instance_id: 4cbb03b6-dd5a-41c5-a624-895c4b884bcb
+    sequence: 38
+    event_type: core.state_transitioned
+    occurred_at: '2026-08-16T13:37:41.394234+08:00'
+    recorded_at: '2026-08-16T13:37:41.394234+08:00'
+    actor:
+      actor_id: inst:01M02M6X3Q8YWJXHY52K3V5AR2
+      role: pos:veilfront-xiangqi-siege:root:project-manager
+      authority_id: AUTH-VEILFRONT-PROJECT-MANAGER
+    causality:
+      correlation_id: e2013c16-78b8-48e8-8f22-9fef6a62585f
+      causation_event_id: 4a2b1348-a01f-48ce-897b-551da3bb9f71
+      request_id: owner-gate-1-revision-iteration-2
+    concurrency:
+      expected_record_revision: 37
+      resulting_record_revision: 38
+    binding_snapshot:
+      contract_digest: 7b7fcf36920109d379aa0e230cf70a378ed7ec228ff6a88bccf35cf481fcf09c
+      state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+    payload:
+      transition_id: TR-REVIEW-ACTIVE
+      from_state: review
+      to_state: active
+      iteration:
+        before: 1
+        after: 2
+      reason: project_owner_revision_required_round_limit_50_and_disposable_playable_graybox
+      subject_digest: b67377e497d847aed0ae61759ba590be7229141a89829906981ffdd2796a4c3b
+    evidence_refs:
+    - game-pipeline/approvals/gate-1-revision-b67377e497d8.yaml@subject-digest:b67377e497d847aed0ae61759ba590be7229141a89829906981ffdd2796a4c3b
+    - event:4a2b1348-a01f-48ce-897b-551da3bb9f71@digest:2371144dbce62f4522961637ccf878abd5faccf26536d5c6331c4dfdc3e8cb6d
+    integrity:
+      canonicalization: registry-event-canonical-json-v1
+      digest_algorithm: sha256
+      previous_event_digest: 2371144dbce62f4522961637ccf878abd5faccf26536d5c6331c4dfdc3e8cb6d
+      event_digest: fbc96e54b834e9c1188a513a5fe29c76fb89c7ff1b9187b7870018566546af97
