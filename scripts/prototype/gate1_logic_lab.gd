@@ -18,6 +18,7 @@ var selected_origin: Array = []
 var pending_preview: Dictionary = {}
 var action_mode: String = "move"
 var cell_buttons: Dictionary = {}
+var ai_difficulty_id: String = "medium"
 
 @onready var match_controller: Node = $MatchController
 @onready var seed_value: Label = $SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/SeedGroup/SeedValue
@@ -26,6 +27,7 @@ var cell_buttons: Dictionary = {}
 @onready var active_value: Label = $SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/MatchMeta/ActiveSideValue
 @onready var round_value: Label = $SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/MatchMeta/RoundValue
 @onready var config_value: Label = $SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/MatchMeta/ConfigValue
+@onready var difficulty_select: OptionButton = $SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/DifficultyGroup/DifficultySelect
 @onready var board_grid: GridContainer = $SafeMargin/Page/Workspace/BoardShell/BoardMargin/BoardColumn/BoardScroll/BoardGrid
 @onready var overview_strip: Label = $SafeMargin/Page/Workspace/BoardShell/BoardMargin/BoardColumn/OverviewStrip
 @onready var confirm_panel: PanelContainer = $SafeMargin/Page/Workspace/BoardShell/BoardMargin/BoardColumn/ActionConfirm
@@ -54,7 +56,7 @@ func _ready() -> void:
 	_register_cell_buttons()
 	_connect_controls()
 	seed_input.text = str(initial_seed)
-	match_controller.initialize(initial_seed, full_round_limit_hypothesis)
+	match_controller.initialize(initial_seed, full_round_limit_hypothesis, ai_difficulty_id)
 	print("GATE1_PLAYTEST_GRAYBOX_READY seed=%d cells=%d round_limit=%d status=hypothesis_cli_overridable" % [
 		initial_seed, board_state.size(), full_round_limit_hypothesis,
 	])
@@ -103,6 +105,18 @@ func restart_match_for_test(seed_override: int = 0) -> void:
 	_start_match(seed_to_use)
 
 
+func set_ai_difficulty_for_test(difficulty_id: String) -> void:
+	var index: int = ["easy", "medium", "hard"].find(difficulty_id)
+	if index < 0:
+		return
+	difficulty_select.select(index)
+	_apply_ai_difficulty(difficulty_id)
+
+
+func get_ai_difficulty_snapshot() -> Dictionary:
+	return match_controller.get_ai_difficulty_snapshot()
+
+
 func _register_cell_buttons() -> void:
 	for button_value: Variant in board_grid.get_children():
 		var button := button_value as Button
@@ -121,6 +135,7 @@ func _connect_controls() -> void:
 	bombard_button.pressed.connect(_set_action_mode.bind("bombard"))
 	pass_button.pressed.connect(_on_pass_pressed)
 	ai_step_button.pressed.connect(_on_ai_step_pressed)
+	difficulty_select.item_selected.connect(_on_ai_difficulty_selected)
 	$SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/SeedGroup/RestartButton.pressed.connect(_on_restart_pressed)
 	$TerminalOverlay/TerminalPanel/TerminalMargin/TerminalColumn/TerminalButtons/SameSeedButton.pressed.connect(_restart_same_seed)
 	$TerminalOverlay/TerminalPanel/TerminalMargin/TerminalColumn/TerminalButtons/NewSeedButton.pressed.connect(_on_restart_pressed)
@@ -239,6 +254,19 @@ func _on_restart_pressed() -> void:
 	_start_match(int(raw_seed))
 
 
+func _on_ai_difficulty_selected(index: int) -> void:
+	var ids: Array[String] = ["easy", "medium", "hard"]
+	if index < 0 or index >= ids.size():
+		return
+	_apply_ai_difficulty(ids[index])
+
+
+func _apply_ai_difficulty(difficulty_id: String) -> void:
+	ai_difficulty_id = difficulty_id
+	message_value.text = "AI 难度已切换为%s；按当前种子重新开局。" % _difficulty_name(difficulty_id)
+	_start_match(int(player_view.get("match_seed", initial_seed)))
+
+
 func _restart_same_seed() -> void:
 	_start_match(int(player_view.get("match_seed", initial_seed)))
 
@@ -250,7 +278,7 @@ func _start_match(seed_to_use: int) -> void:
 	selected_origin = []
 	pending_preview = {}
 	action_mode = "move"
-	match_controller.initialize(seed_to_use, full_round_limit_hypothesis)
+	match_controller.initialize(seed_to_use, full_round_limit_hypothesis, ai_difficulty_id)
 
 
 func _clear_selection(refresh: bool = true) -> void:
@@ -271,10 +299,11 @@ func _refresh_all() -> void:
 	side_value.text = "玩家：%s" % _side_name(str(player_view["viewer_side"]))
 	active_value.text = "行动方：%s" % _side_name(str(player_view["active_side"]))
 	round_value.text = "完整轮：%d / %d" % [player_view["full_round_index"], player_view["full_round_limit_hypothesis"]]
-	config_value.text = "%s · %s · %s" % [
+	config_value.text = "%s · %s · %s · AI %s" % [
 		str(player_view["implementation_revision"]),
 		str(player_view["full_round_limit_hypothesis"]),
 		str(player_view["round_limit_status"]),
+		_difficulty_name(ai_difficulty_id),
 	]
 	_refresh_board()
 	_refresh_status()
@@ -461,3 +490,7 @@ func _piece_mark(piece_type: String) -> String:
 		"rook": "车", "horse": "马", "elephant": "相", "advisor": "士",
 		"general": "将", "cannon": "炮", "pawn": "兵",
 	}.get(piece_type, "?")
+
+
+func _difficulty_name(difficulty_id: String) -> String:
+	return {"easy": "简单", "medium": "中等", "hard": "困难"}.get(difficulty_id, difficulty_id)

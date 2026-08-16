@@ -67,10 +67,85 @@ func _run() -> void:
 		_check(bool(bombarded.get("consumed", false)), "区域炮击不预演命中格并可确认消费")
 		await process_frame
 
+	var difficulty_select := scene.get_node("SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/DifficultyGroup/DifficultySelect") as OptionButton
+	_check(difficulty_select.item_count == 3, "灰盒预置简单/中等/困难三档选择")
+	var expected_profiles: Dictionary = {
+		"easy": "prototype-low-budget-hypothesis",
+		"medium": "prototype-default-hypothesis",
+		"hard": "prototype-high-budget-hypothesis",
+	}
+	var expected_candidate_limits: Dictionary = {
+		"easy": 8,
+		"medium": 32,
+		"hard": 96,
+	}
+	var match_controller := scene.get_node("MatchController")
+	for difficulty_id: String in ["easy", "medium", "hard"]:
+		scene.set_ai_difficulty_for_test(difficulty_id)
+		await process_frame
+		var difficulty_snapshot: Dictionary = scene.get_ai_difficulty_snapshot()
+		_check(
+			str(difficulty_snapshot.get("profile_id", "")) == expected_profiles[difficulty_id],
+			"灰盒 %s 档绑定正确 PlayerView AI profile" % difficulty_id
+		)
+		scene.choose_pass_for_test()
+		var difficulty_pass: Dictionary = scene.confirm_action_for_test()
+		var difficulty_ai: Dictionary = scene.step_ai_for_test()
+		_check(
+			bool(difficulty_pass.get("consumed", false)) and bool(difficulty_ai.get("consumed", false)),
+			"灰盒 %s 档可完成一次 AI 单步" % difficulty_id
+		)
+		await process_frame
+		var decision_audit: Dictionary = match_controller.get_last_ai_decision_audit_for_test()
+		var controller_context: Dictionary = decision_audit.get("controller_context", {})
+		var budget_audit: Dictionary = decision_audit.get("budget", {})
+		_check(
+			not decision_audit.is_empty()
+			and str(controller_context.get("profile_id", "")) == expected_profiles[difficulty_id]
+			and not str(controller_context.get("profile_config_digest", "")).is_empty()
+			and not str(controller_context.get("input_projection_digest", "")).is_empty()
+			and int(controller_context.get("ai_seed", -1)) >= 0
+			and bool(controller_context.get("action_id_mapped", false)),
+			"灰盒 %s 档受控测试接口保留完整 AI 决策上下文" % difficulty_id
+		)
+		_check(
+			int(budget_audit.get("candidate_limit_hypothesis", -1)) == expected_candidate_limits[difficulty_id]
+			and int(budget_audit.get("evaluated_candidates", -1)) > 0
+			and int(budget_audit.get("evaluated_candidates", -1)) <= expected_candidate_limits[difficulty_id],
+			"灰盒 %s 档审计记录实际候选评估数与预算" % difficulty_id
+		)
+		var internal_audit_digest: String = Canonical.digest(decision_audit)
+		decision_audit["controller_context"]["profile_config_digest"] = "mutated-test-copy"
+		_check(
+			Canonical.digest(match_controller.get_last_ai_decision_audit_for_test()) == internal_audit_digest,
+			"灰盒 %s 档 AI 审计测试接口返回深复制" % difficulty_id
+		)
+		var public_view_after_ai: Dictionary = scene.get_player_view_snapshot()
+		_check(
+			not public_view_after_ai.has("ai_decision_audit")
+			and not public_view_after_ai.has("controller_context")
+			and not public_view_after_ai.has("profile_config_digest"),
+			"灰盒 %s 档 AI 审计未进入人类 PlayerView" % difficulty_id
+		)
+		var event_log := scene.get_node("SafeMargin/Page/Workspace/StatusShell/StatusMargin/StatusColumn/EventLog") as RichTextLabel
+		_check(
+			not event_log.text.contains("profile_config_digest")
+			and not event_log.text.contains("input_projection_digest")
+			and not event_log.text.contains(internal_audit_digest),
+			"灰盒 %s 档 AI 审计未进入玩家事件日志" % difficulty_id
+		)
+
+	var ui_source: String = FileAccess.get_file_as_string("res://scripts/prototype/gate1_logic_lab.gd")
+	_check(
+		not ui_source.contains("get_last_ai_decision_audit_for_test")
+		and not ui_source.contains("controller_context"),
+		"灰盒 UI 脚本没有接入受控 AI 审计接口"
+	)
+
 	scene.queue_free()
 	await process_frame
 	if failures.is_empty():
-		print("PLAYTEST_GRAYBOX_SMOKE_PASSED cells=216 round_limit=50 human_move=true ai_step=true pass=true bombard=true")
+		print("PLAYTEST_GRAYBOX_SMOKE_PASSED cells=216 round_limit=50 human_move=true ai_step=true pass=true bombard=true ai_difficulties=3 ai_audit_test_only=true")
 		quit(0)
 		return
 	print("PLAYTEST_GRAYBOX_SMOKE_FAILED count=%d" % failures.size())

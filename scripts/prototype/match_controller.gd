@@ -1,5 +1,6 @@
 extends Node
 
+const Canonical = preload("res://scripts/prototype/core/canonical.gd")
 const MatchState = preload("res://scripts/prototype/core/match_state.gd")
 const RuleEngine = preload("res://scripts/prototype/core/rule_engine.gd")
 const PlayerViewProjector = preload("res://scripts/prototype/view/player_view_projector.gd")
@@ -14,7 +15,9 @@ signal action_feedback(feedback: Dictionary)
 
 @export var human_side: String = MatchState.RED
 @export var default_full_round_limit_hypothesis: int = MatchState.DEFAULT_FULL_ROUND_LIMIT_HYPOTHESIS
-@export var ai_profile: Resource
+@export var ai_easy_profile: Resource
+@export var ai_medium_profile: Resource
+@export var ai_hard_profile: Resource
 
 var _full_state: Dictionary = {}
 var _prepared_token: String = ""
@@ -22,15 +25,20 @@ var _human_view: Dictionary = {}
 var _human_previews: Array = []
 var _match_ai_seed: int = 0
 var _ai_memory: Dictionary = {}
+var _ai_difficulty_id: String = "medium"
+var _last_ai_decision_audit: Dictionary = {}
 
 
-func initialize(seed_value: int, round_limit: int = -1) -> void:
+func initialize(seed_value: int, round_limit: int = -1, difficulty_id: String = "") -> void:
+	if not difficulty_id.is_empty():
+		assert(set_ai_difficulty(difficulty_id))
 	var effective_limit: int = default_full_round_limit_hypothesis if round_limit <= 0 else round_limit
 	_full_state = MatchState.create(seed_value, {
 		"full_round_limit_hypothesis": effective_limit,
 	})
 	_match_ai_seed = seed_value + 880021
 	_ai_memory = _empty_ai_memory()
+	_last_ai_decision_audit = {}
 	_prepared_token = ""
 	_prepare_active_action()
 	_publish_human_view()
@@ -41,7 +49,8 @@ func restart_same_seed() -> void:
 		return
 	initialize(
 		int(_human_view["match_seed"]),
-		int(_human_view["full_round_limit_hypothesis"])
+		int(_human_view["full_round_limit_hypothesis"]),
+		_ai_difficulty_id
 	)
 
 
@@ -51,6 +60,32 @@ func get_human_player_view() -> Dictionary:
 
 func get_human_action_previews() -> Array:
 	return _human_previews.duplicate(true)
+
+
+func set_ai_difficulty(difficulty_id: String) -> bool:
+	if difficulty_id not in ["easy", "medium", "hard"]:
+		return false
+	_ai_difficulty_id = difficulty_id
+	return _profile_for_difficulty() != null
+
+
+func get_ai_difficulty_snapshot() -> Dictionary:
+	var profile: Resource = _profile_for_difficulty()
+	if profile == null:
+		return {}
+	return {
+		"difficulty_id": _ai_difficulty_id,
+		"profile_id": str(profile.profile_id),
+		"conclusion_status": str(profile.conclusion_status),
+		"candidate_limit_hypothesis": int(profile.candidate_limit),
+		"random_score_span_hypothesis": int(profile.random_score_span),
+	}
+
+
+# Controlled non-UI test evidence. The UI adapter must never call this method
+# or forward the returned audit into PlayerView, signals, screenshots or logs.
+func get_last_ai_decision_audit_for_test() -> Dictionary:
+	return _last_ai_decision_audit.duplicate(true)
 
 
 func can_human_submit() -> bool:
@@ -101,23 +136,38 @@ func step_ai() -> Dictionary:
 	var ai_view: RefCounted = AiPlayerView.new(projection)
 	var public_rules: RefCounted = AiPublicRules.new(_public_ai_rules())
 	var memory: RefCounted = AiMemory.new(_ai_memory)
-	var config: Resource = ai_profile
+	var config: Resource = _profile_for_difficulty()
 	if config == null:
-		config = load("res://resources/prototype/ai/prototype_default_hypothesis.tres").duplicate(true)
+		return {"ok": false, "consumed": false, "error": "ai_profile_missing"}
 	var decision_id: String = str(projection["decision_id"])
+	var ai_seed: int = AiSeedDeriver.derive(_match_ai_seed, decision_id)
 	var decision: Dictionary = AiDecisionEngine.new().decide(
 		ai_view,
 		public_rules,
 		memory,
-		AiSeedDeriver.derive(_match_ai_seed, decision_id),
+		ai_seed,
 		config
 	)
 	if not bool(decision.get("ok", false)):
 		return {"ok": false, "consumed": false, "error": "ai_decision_failed"}
 	var selected_id: String = str(decision.get("action", {}).get("id", ""))
-	var intent: Dictionary = _intent_for_public_action(previews, selected_id)
-	if intent.is_empty():
-		intent = {"piece_id": "", "action_type": "pass", "target_cell": [], "skill_type": ""}
+	_last_ai_decision_audit = decision["audit"].duplicate(true)
+	_last_ai_decision_audit["controller_context"] = {
+		"difficulty_id": _ai_difficulty_id,
+		"profile_id": str(config.profile_id),
+		"profile_config_digest": Canonical.digest(config.audit_snapshot()),
+		"input_projection_digest": str(
+			decision["audit"].get("input_projection_summary", {}).get("projection_digest", "")
+		),
+		"ai_seed": ai_seed,
+		"selected_action_id": selected_id,
+		"action_id_mapped": false,
+	}
+	var mapping: Dictionary = _map_ai_action_or_error(previews, selected_id)
+	if not bool(mapping.get("ok", false)):
+		return mapping
+	var intent: Dictionary = mapping["intent"]
+	_last_ai_decision_audit["controller_context"]["action_id_mapped"] = true
 	var result: Dictionary = RuleEngine.submit_action(_full_state, intent, {
 		"preparation_token": _prepared_token,
 		"include_state_summary": false,
@@ -128,7 +178,12 @@ func step_ai() -> Dictionary:
 	_prepared_token = ""
 	_prepare_active_action()
 	_publish_human_view()
-	var feedback: Dictionary = {"ok": true, "consumed": true, "source": "ai"}
+	var feedback: Dictionary = {
+		"ok": true,
+		"consumed": true,
+		"source": "ai",
+		"difficulty_id": _ai_difficulty_id,
+	}
 	action_feedback.emit(feedback.duplicate(true))
 	return feedback
 
@@ -176,6 +231,13 @@ func _intent_for_public_action(previews: Array, selected_id: String) -> Dictiona
 	return {}
 
 
+func _map_ai_action_or_error(previews: Array, selected_id: String) -> Dictionary:
+	var intent: Dictionary = _intent_for_public_action(previews, selected_id)
+	if intent.is_empty():
+		return {"ok": false, "consumed": false, "error": "ai_action_id_unmapped"}
+	return {"ok": true, "intent": intent}
+
+
 func _public_ai_rules() -> Dictionary:
 	return {
 		"schema_version": "public-ai-rules-v1",
@@ -187,6 +249,13 @@ func _public_ai_rules() -> Dictionary:
 		},
 		"action_kind_bias": {"move": 0, "bombard": 4, "pass": -100},
 	}
+
+
+func _profile_for_difficulty() -> Resource:
+	match _ai_difficulty_id:
+		"easy": return ai_easy_profile
+		"hard": return ai_hard_profile
+	return ai_medium_profile
 
 
 func _empty_ai_memory() -> Dictionary:

@@ -1,0 +1,243 @@
+extends RefCounted
+
+const Canonical = preload("res://scripts/prototype/core/canonical.gd")
+const MatchState = preload("res://scripts/prototype/core/match_state.gd")
+const Projector = preload("res://scripts/prototype/view/player_view_projector.gd")
+const AiPlayerView = preload("res://scripts/prototype/ai/ai_player_view.gd")
+const PublicRules = preload("res://scripts/prototype/ai/ai_public_rules.gd")
+const Memory = preload("res://scripts/prototype/ai/ai_memory.gd")
+const DecisionEngine = preload("res://scripts/prototype/ai/ai_decision_engine.gd")
+const AiSeedDeriver = preload("res://scripts/prototype/ai/ai_seed_deriver.gd")
+const ControllerScene = preload("res://scenes/prototype/match_controller.tscn")
+
+const EXPECTED: Dictionary = {
+	"easy": {
+		"profile_id": "prototype-low-budget-hypothesis",
+		"path": "res://resources/prototype/ai/prototype_low_budget_hypothesis.tres",
+		"candidate_limit_hypothesis": 8,
+		"random_score_span_hypothesis": 12,
+	},
+	"medium": {
+		"profile_id": "prototype-default-hypothesis",
+		"path": "res://resources/prototype/ai/prototype_default_hypothesis.tres",
+		"candidate_limit_hypothesis": 32,
+		"random_score_span_hypothesis": 4,
+	},
+	"hard": {
+		"profile_id": "prototype-high-budget-hypothesis",
+		"path": "res://resources/prototype/ai/prototype_high_budget_hypothesis.tres",
+		"candidate_limit_hypothesis": 96,
+		"random_score_span_hypothesis": 1,
+	},
+}
+
+
+static func run_suite() -> bool:
+	var failures: Array[String] = []
+	var controller: Node = ControllerScene.instantiate()
+	var tree := Engine.get_main_loop() as SceneTree
+	tree.root.add_child(controller)
+	var profile_config_digests: Dictionary = {}
+	var budget_audit_digests: Dictionary = {}
+
+	for difficulty_id: String in ["easy", "medium", "hard"]:
+		_expect(controller.set_ai_difficulty(difficulty_id), "%s 档可被控制器选择" % difficulty_id, failures)
+		var snapshot: Dictionary = controller.get_ai_difficulty_snapshot()
+		_expect(snapshot.get("profile_id", "") == EXPECTED[difficulty_id]["profile_id"], "%s 档绑定正确 hypothesis profile" % difficulty_id, failures)
+		_expect(snapshot.get("conclusion_status", "") == "hypothesis", "%s 档不冻结为正式结论" % difficulty_id, failures)
+		_expect(snapshot.get("candidate_limit_hypothesis", -1) == EXPECTED[difficulty_id]["candidate_limit_hypothesis"], "%s 档候选预算配置正确" % difficulty_id, failures)
+		_expect(snapshot.get("random_score_span_hypothesis", -1) == EXPECTED[difficulty_id]["random_score_span_hypothesis"], "%s 档随机分差配置正确" % difficulty_id, failures)
+
+		var first: Dictionary = _run_one_controller_ai_turn(controller, difficulty_id)
+		var second: Dictionary = _run_one_controller_ai_turn(controller, difficulty_id)
+		_expect(bool(first.get("ok", false)) and bool(second.get("ok", false)), "%s 档均可完成受控 AI 单步" % difficulty_id, failures)
+		_expect(first.get("audit_digest", "") == second.get("audit_digest", ""), "%s 档同 seed 完整 audit 一致" % difficulty_id, failures)
+		_expect(first.get("view_digest", "") == second.get("view_digest", ""), "%s 档同 seed 最终 PlayerView 一致" % difficulty_id, failures)
+		_expect(first.get("difficulty_id", "") == difficulty_id, "%s 档 audit 绑定所选难度" % difficulty_id, failures)
+		_expect(first.get("profile_id", "") == EXPECTED[difficulty_id]["profile_id"], "%s 档 audit 含 profile id" % difficulty_id, failures)
+		_expect(first.get("profile_config_digest", "") != "", "%s 档 audit 含 profile/config digest" % difficulty_id, failures)
+		_expect(first.get("input_projection_digest", "") != "", "%s 档 audit 含 input projection digest" % difficulty_id, failures)
+		_expect(int(first.get("ai_seed", -1)) >= 0, "%s 档 audit 含 AI seed" % difficulty_id, failures)
+		_expect(int(first.get("evaluated_candidates", 0)) > 0, "%s 档 audit 含实际候选评估数" % difficulty_id, failures)
+		profile_config_digests[first.get("profile_config_digest", "")] = true
+
+		var hidden_pair: Dictionary = _hidden_equivalent_decisions(difficulty_id, 661701)
+		_expect(bool(hidden_pair.get("views_equal", false)), "%s 档真实隐藏差异保持 PlayerView 等价" % difficulty_id, failures)
+		_expect(bool(hidden_pair.get("actions_equal", false)), "%s 档隐藏等价配对选择相同动作" % difficulty_id, failures)
+		_expect(bool(hidden_pair.get("audits_equal", false)), "%s 档隐藏等价配对产生相同完整 audit" % difficulty_id, failures)
+
+		var budget_result: Dictionary = _budget_fixture_decision(difficulty_id)
+		var expected_limit: int = int(EXPECTED[difficulty_id]["candidate_limit_hypothesis"])
+		_expect(int(budget_result.get("available_candidates", 0)) == 128, "%s 档公开预算夹具有 128 个候选" % difficulty_id, failures)
+		_expect(int(budget_result.get("evaluated_candidates", -1)) == expected_limit, "%s 档实际评估上限精确为 %d" % [difficulty_id, expected_limit], failures)
+		_expect(bool(budget_result.get("deterministic_audit", false)), "%s 档公开预算夹具 audit 可确定复现" % difficulty_id, failures)
+		budget_audit_digests[budget_result.get("audit_digest", "")] = true
+
+	var unmapped: Dictionary = controller.call(
+		"_map_ai_action_or_error",
+		controller.get_human_action_previews(),
+		"fixture:unmapped-action-id"
+	)
+	_expect(
+		not bool(unmapped.get("ok", true))
+		and not bool(unmapped.get("consumed", true))
+		and str(unmapped.get("error", "")) == "ai_action_id_unmapped",
+		"无法映射的 AI action_id 走 step_ai 共用映射路径并 fail-closed",
+		failures
+	)
+	_expect(profile_config_digests.size() == 3, "三档 profile/config digest 可观察且互异", failures)
+	_expect(budget_audit_digests.size() == 3, "三档预算 audit 可观察且互异", failures)
+	_expect(not controller.set_ai_difficulty("unsupported"), "未知难度被拒绝", failures)
+	controller.queue_free()
+	for failure: String in failures:
+		push_error("AI_DIFFICULTY_FAIL: %s" % failure)
+	return failures.is_empty()
+
+
+static func _run_one_controller_ai_turn(controller: Node, difficulty_id: String) -> Dictionary:
+	controller.initialize(553311, 3, difficulty_id)
+	var initial_view: Dictionary = controller.get_human_player_view()
+	if initial_view.has("board") or initial_view.has("rng") or initial_view.has("ai_decision_audit"):
+		return {"ok": false, "stage": "player_view_boundary"}
+	var pass_intent: Dictionary = _pass_intent(controller.get_human_action_previews())
+	if pass_intent.is_empty():
+		return {"ok": false, "stage": "pass_missing"}
+	var human_result: Dictionary = controller.submit_human_intent(pass_intent)
+	if not bool(human_result.get("consumed", false)):
+		return {"ok": false, "stage": "human_pass", "result": human_result}
+	var ai_result: Dictionary = controller.step_ai()
+	if not bool(ai_result.get("consumed", false)):
+		return {"ok": false, "stage": "ai_step", "result": ai_result}
+	var final_view: Dictionary = controller.get_human_player_view()
+	var audit: Dictionary = controller.get_last_ai_decision_audit_for_test()
+	if audit.is_empty() or final_view.has("ai_decision_audit"):
+		return {"ok": false, "stage": "audit_boundary"}
+	var context: Dictionary = audit.get("controller_context", {})
+	var copied_audit: Dictionary = audit.duplicate(true)
+	copied_audit["controller_context"]["difficulty_id"] = "tampered-copy"
+	if controller.get_last_ai_decision_audit_for_test()["controller_context"]["difficulty_id"] != difficulty_id:
+		return {"ok": false, "stage": "audit_not_deep_copy"}
+	return {
+		"ok": true,
+		"difficulty_id": str(context.get("difficulty_id", "")),
+		"profile_id": str(context.get("profile_id", "")),
+		"profile_config_digest": str(context.get("profile_config_digest", "")),
+		"input_projection_digest": str(context.get("input_projection_digest", "")),
+		"ai_seed": int(context.get("ai_seed", -1)),
+		"evaluated_candidates": int(audit.get("budget", {}).get("evaluated_candidates", 0)),
+		"audit_digest": Canonical.digest(audit),
+		"view_digest": Canonical.digest(final_view),
+	}
+
+
+static func _hidden_equivalent_decisions(difficulty_id: String, seed_value: int) -> Dictionary:
+	var state_a: Dictionary = MatchState.create(seed_value)
+	var state_b: Dictionary = MatchState.clone(state_a)
+	MatchState.relocate_piece(state_b, "black-pawn-1", Vector2i(2, 18))
+	var view_a: Dictionary = Projector.project(state_a, MatchState.RED)
+	var view_b: Dictionary = Projector.project(state_b, MatchState.RED)
+	var projection_a: Dictionary = Projector.export_ai_projection_from_view(view_a)
+	var projection_b: Dictionary = Projector.export_ai_projection_from_view(view_b)
+	var ai_seed: int = AiSeedDeriver.derive(seed_value + 880021, str(projection_a["decision_id"]))
+	var decision_a: Dictionary = _decide(projection_a, difficulty_id, ai_seed)
+	var decision_b: Dictionary = _decide(projection_b, difficulty_id, ai_seed)
+	return {
+		"views_equal": Canonical.digest(view_a) == Canonical.digest(view_b)
+			and Canonical.digest(projection_a) == Canonical.digest(projection_b),
+		"actions_equal": decision_a.get("action", {}) == decision_b.get("action", {}),
+		"audits_equal": Canonical.digest(decision_a.get("audit", {}))
+			== Canonical.digest(decision_b.get("audit", {})),
+	}
+
+
+static func _budget_fixture_decision(difficulty_id: String) -> Dictionary:
+	var projection: Dictionary = _public_budget_fixture(128)
+	var first: Dictionary = _decide(projection, difficulty_id, 771991)
+	var second: Dictionary = _decide(projection, difficulty_id, 771991)
+	var audit: Dictionary = first.get("audit", {})
+	return {
+		"available_candidates": int(audit.get("budget", {}).get("available_candidates", 0)),
+		"evaluated_candidates": int(audit.get("budget", {}).get("evaluated_candidates", 0)),
+		"audit_digest": Canonical.digest(audit),
+		"deterministic_audit": Canonical.digest(audit)
+			== Canonical.digest(second.get("audit", {}))
+			and first.get("action", {}) == second.get("action", {}),
+	}
+
+
+static func _decide(projection: Dictionary, difficulty_id: String, ai_seed: int) -> Dictionary:
+	var profile: Resource = load(str(EXPECTED[difficulty_id]["path"])).duplicate(true)
+	return DecisionEngine.new().decide(
+		AiPlayerView.new(projection),
+		PublicRules.new(_public_rules()),
+		Memory.new(_empty_memory()),
+		ai_seed,
+		profile
+	)
+
+
+static func _public_budget_fixture(candidate_count: int) -> Dictionary:
+	var actions: Array = []
+	for index: int in candidate_count:
+		actions.append({
+			"id": "public-fixture-%03d" % index,
+			"kind": "pass",
+			"actor_id": "",
+			"origin": [0, 0],
+			"target": [0, 0],
+			"visible_captures": [],
+			"reveal_cell_count": index % 5,
+			"occupies_flag": index % 7 == 0,
+			"attacks_wall": index % 11 == 0,
+			"path_length": 0,
+		})
+	return {
+		"schema_version": "player-view-ai-v1",
+		"decision_id": "fixture-turn-0-red",
+		"viewer_side": "red",
+		"turn_index": 0,
+		"visible_pieces": [],
+		"public_flags": [],
+		"public_walls": [],
+		"legal_actions": actions,
+		"public_events": [],
+	}
+
+
+static func _pass_intent(previews: Array) -> Dictionary:
+	for preview: Dictionary in previews:
+		if preview["action_type"] == "pass":
+			return {
+				"piece_id": str(preview["piece_id"]),
+				"action_type": str(preview["action_type"]),
+				"target_cell": preview["target_cell"].duplicate(),
+				"skill_type": str(preview["skill_type"]),
+			}
+	return {}
+
+
+static func _public_rules() -> Dictionary:
+	return {
+		"schema_version": "public-ai-rules-v1",
+		"board_width": MatchState.BOARD_WIDTH,
+		"board_height": MatchState.BOARD_HEIGHT,
+		"piece_values": {
+			"pawn": 10, "rook": 50, "horse": 30, "elephant": 25,
+			"advisor": 25, "cannon": 45, "general": 10000,
+		},
+		"action_kind_bias": {"move": 0, "bombard": 4, "pass": -100},
+	}
+
+
+static func _empty_memory() -> Dictionary:
+	return {
+		"schema_version": "ai-memory-v1",
+		"recent_action_ids": [],
+		"action_visit_counts": {},
+		"last_visible_piece_turns": {},
+	}
+
+
+static func _expect(condition: bool, description: String, failures: Array[String]) -> void:
+	if not condition:
+		failures.append(description)

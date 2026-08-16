@@ -13,6 +13,7 @@ const ElephantRevealTests = preload("res://tests/prototype/test_elephant_reveal.
 const SimulationTests = preload("res://tests/prototype/test_simulation.gd")
 const PreparedActionTests = preload("res://tests/prototype/test_prepared_action.gd")
 const AiFairnessTests = preload("res://tests/prototype/test_ai_fairness.gd")
+const AiDifficultyProfileTests = preload("res://tests/prototype/test_ai_difficulty_profiles.gd")
 
 var failures: Array[String] = []
 
@@ -74,6 +75,7 @@ func _run_phase1_checks() -> void:
 			var description: String = "AI 公平性：%s" % ai_failure
 			failures.append(description)
 			push_error("FAIL: %s" % description)
+	_check(AiDifficultyProfileTests.run_suite(), "简单/中等/困难三档 PlayerView AI 配置差异与固定种子复现")
 
 	scene.queue_free()
 	await process_frame
@@ -90,7 +92,7 @@ func _check(condition: bool, description: String) -> void:
 
 func _finish() -> void:
 	if failures.is_empty():
-		print("PROTOTYPE_BASIS_CHECKS_PASSED scaffold=9 focused_suites=10 full_gate1=false")
+		print("PROTOTYPE_BASIS_CHECKS_PASSED scaffold=9 focused_suites=11 full_gate1=false")
 		quit(0)
 		return
 	print("PHASE1_SCAFFOLD_CHECKS_FAILED count=%d" % failures.size())
