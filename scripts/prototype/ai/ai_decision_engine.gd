@@ -90,7 +90,11 @@ func decide(
 			"evaluated_candidates": sampled_actions.size(),
 			"strategy_mode_hypothesis": str(config.strategy_mode),
 		},
-		"candidate_sampling": {"ai_seed": ai_seed, "draws": sampling_audit},
+		"candidate_sampling": {
+			"strategy": "actor-kind-stratified-v1",
+			"ai_seed": ai_seed,
+			"draws": sampling_audit,
+		},
 		"candidates": candidate_audit,
 		"random_sampling": {
 			"score_span_hypothesis": config.random_score_span,
@@ -108,20 +112,46 @@ func _sample_candidates(
 	rng: RandomNumberGenerator,
 	audit: Array[Dictionary]
 ) -> Array[Dictionary]:
-	var pool: Array[Dictionary] = actions.duplicate(true)
+	var buckets: Dictionary = {}
+	for action: Dictionary in actions:
+		var bucket_key: String = "%s|%s" % [str(action.kind), str(action.actor_id)]
+		if not buckets.has(bucket_key):
+			buckets[bucket_key] = []
+		buckets[bucket_key].append(action.duplicate(true))
+	var bucket_keys: Array = buckets.keys()
+	bucket_keys.sort()
 	var result: Array[Dictionary] = []
-	for index: int in count:
-		var selected_index: int = rng.randi_range(index, pool.size() - 1)
+	var selected_action_ids: Dictionary = {}
+	while result.size() < count and not bucket_keys.is_empty():
+		var selected_bucket_index: int = rng.randi_range(0, bucket_keys.size() - 1)
+		var selected_bucket_key: String = str(bucket_keys.pop_at(selected_bucket_index))
+		var bucket: Array = buckets[selected_bucket_key]
+		var selected_action_index: int = rng.randi_range(0, bucket.size() - 1)
+		var selected_action: Dictionary = bucket[selected_action_index]
 		audit.append({
-			"draw_index": index,
-			"range_start": index,
-			"range_end": pool.size() - 1,
+			"draw_index": result.size(),
+			"phase": "actor_kind_bucket",
+			"bucket_count_before_draw": bucket_keys.size() + 1,
+			"selected_bucket_index": selected_bucket_index,
+			"selected_bucket": selected_bucket_key,
+			"bucket_size": bucket.size(),
+			"selected_action_index": selected_action_index,
+		})
+		result.append(selected_action)
+		selected_action_ids[str(selected_action.id)] = true
+	var remaining_pool: Array[Dictionary] = []
+	for action: Dictionary in actions:
+		if not selected_action_ids.has(str(action.id)):
+			remaining_pool.append(action.duplicate(true))
+	while result.size() < count and not remaining_pool.is_empty():
+		var selected_index: int = rng.randi_range(0, remaining_pool.size() - 1)
+		audit.append({
+			"draw_index": result.size(),
+			"phase": "remaining_pool",
+			"pool_size_before_draw": remaining_pool.size(),
 			"selected_index": selected_index,
 		})
-		var temporary: Dictionary = pool[index]
-		pool[index] = pool[selected_index]
-		pool[selected_index] = temporary
-		result.append(pool[index])
+		result.append(remaining_pool.pop_at(selected_index))
 	return result
 
 
@@ -174,7 +204,11 @@ func _no_action_result(
 				"evaluated_candidates": 0,
 				"strategy_mode_hypothesis": str(config.strategy_mode),
 			},
-			"candidate_sampling": {"ai_seed": ai_seed, "draws": []},
+			"candidate_sampling": {
+				"strategy": "actor-kind-stratified-v1",
+				"ai_seed": ai_seed,
+				"draws": [],
+			},
 			"candidates": [],
 			"random_sampling": {"score_span_hypothesis": config.random_score_span, "candidate_score_draw_count": 0},
 			"final_action": {"action_id": "", "reason": "no_public_legal_action"},

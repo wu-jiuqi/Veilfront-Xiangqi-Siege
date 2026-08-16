@@ -319,7 +319,7 @@ func _public_rules() -> Dictionary:
 			"pawn": 10, "rook": 50, "horse": 30, "elephant": 25,
 			"advisor": 25, "cannon": 45, "general": 10000,
 		},
-		"action_kind_bias": {"move": 0, "bombard": 4, "pass": -100},
+		"action_kind_bias": {"move": 0, "bombard": 0, "pass": -100},
 	}
 
 

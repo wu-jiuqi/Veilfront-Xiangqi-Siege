@@ -107,6 +107,12 @@ static func run_suite() -> bool:
 	_expect(tactical_result.get("selected_action_id", "") == "expert-safe", "专家档避开可见车的一步反吃", failures)
 	_expect(int(tactical_result.get("visible_attackers", 0)) >= 1, "专家档审计记录危险候选的可见攻击者", failures)
 	_expect(int(tactical_result.get("strategic_adjustment", 0)) < 0, "专家档对可见送车候选施加负向战术调整", failures)
+	var bombard_heavy: Dictionary = _bombard_heavy_sampling_fixture()
+	_expect(bombard_heavy.get("sampling_strategy", "") == "actor-kind-stratified-v1",
+		"炮击落点密集时使用按棋子和行动类型分层的候选抽样", failures)
+	_expect(int(bombard_heavy.get("move_candidates", 0)) >= 1 \
+		and int(bombard_heavy.get("distinct_actors", 0)) >= 4,
+		"低预算候选仍覆盖移动动作及多枚棋子，不被炮击落点淹没", failures)
 	_expect(not controller.set_ai_difficulty("unsupported"), "未知难度被拒绝", failures)
 	controller.queue_free()
 	for failure: String in failures:
@@ -231,6 +237,52 @@ static func _expert_tactical_fixture_decision() -> Dictionary:
 	}
 
 
+static func _bombard_heavy_sampling_fixture() -> Dictionary:
+	var actions: Array = []
+	for cannon_index: int in 2:
+		for target_index: int in 84:
+			actions.append({
+				"id": "bombard:black-cannon-%d:%03d" % [cannon_index + 1, target_index],
+				"kind": "bombard", "actor_id": "black-cannon-%d" % (cannon_index + 1),
+				"origin": [cannon_index, 23], "target": [target_index % 7 + 1, target_index % 12 + 6],
+				"visible_captures": [], "reveal_cell_count": 0, "occupies_flag": false,
+				"attacks_wall": false, "path_length": 0,
+			})
+	for actor_index: int in 12:
+		actions.append({
+			"id": "move:black-piece-%02d" % actor_index,
+			"kind": "move", "actor_id": "black-piece-%02d" % actor_index,
+			"origin": [actor_index % 9, 22], "target": [actor_index % 9, 21],
+			"visible_captures": [], "reveal_cell_count": 0, "occupies_flag": false,
+			"attacks_wall": false, "path_length": 1,
+		})
+	var projection: Dictionary = {
+		"schema_version": "player-view-ai-v1", "decision_id": "fixture-bombard-heavy",
+		"viewer_side": "black", "turn_index": 1, "visible_pieces": [],
+		"public_flags": [], "public_walls": [], "legal_actions": actions, "public_events": [],
+	}
+	var profile: Resource = load(str(EXPECTED["easy"]["path"])).duplicate(true)
+	var decision: Dictionary = DecisionEngine.new().decide(
+		AiPlayerView.new(projection), PublicRules.new(_public_rules()),
+		Memory.new(_empty_memory()), 551903, profile
+	)
+	var audit: Dictionary = decision.get("audit", {})
+	var actor_ids: Dictionary = {}
+	var move_candidates: int = 0
+	for candidate: Dictionary in audit.get("candidates", []):
+		var action_id: String = str(candidate.get("action_id", ""))
+		if action_id.begins_with("move:"):
+			move_candidates += 1
+		var parts: PackedStringArray = action_id.split(":")
+		if parts.size() >= 2:
+			actor_ids[parts[1]] = true
+	return {
+		"sampling_strategy": str(audit.get("candidate_sampling", {}).get("strategy", "")),
+		"move_candidates": move_candidates,
+		"distinct_actors": actor_ids.size(),
+	}
+
+
 static func _decide(projection: Dictionary, difficulty_id: String, ai_seed: int) -> Dictionary:
 	var profile: Resource = load(str(EXPECTED[difficulty_id]["path"])).duplicate(true)
 	return DecisionEngine.new().decide(
@@ -291,7 +343,7 @@ static func _public_rules() -> Dictionary:
 			"pawn": 10, "rook": 50, "horse": 30, "elephant": 25,
 			"advisor": 25, "cannon": 45, "general": 10000,
 		},
-		"action_kind_bias": {"move": 0, "bombard": 4, "pass": -100},
+		"action_kind_bias": {"move": 0, "bombard": 0, "pass": -100},
 	}
 
 
