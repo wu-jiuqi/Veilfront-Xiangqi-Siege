@@ -12,8 +12,8 @@ registry_snapshot:
       authority_id: AUTH-VEILFRONT-PROJECT-MANAGER
   contract_binding:
     contract_id: LOOP-CTR-GATE1-VERTICAL-SLICE-001
-    contract_version: 1
-    contract_digest: a970c55fe068a1252251ee4d30dedff32bee9da1f8e7e7ef7dc0c501be416799
+    contract_version: 2
+    contract_digest: 7b7fcf36920109d379aa0e230cf70a378ed7ec228ff6a88bccf35cf481fcf09c
   state_machine_binding:
     state_machine_id: LOOP-SM-DEFAULT
     state_machine_version: "0.2"
@@ -68,14 +68,14 @@ registry_snapshot:
         assignment_id: ecc9367a-49ac-4114-b4a7-24ecb8985d16
         review_scope: [GATE-1]
   runtime:
-    current_state: active
-    state_entered_at: '2026-08-15T20:15:17.6009401+08:00'
+    current_state: review
+    state_entered_at: '2026-08-16T12:41:03.067977+08:00'
     current_iteration: 1
-    last_transition_id: TR-READY-ACTIVE
-    last_event_id: 947ef717-8f6a-4199-8fab-de9bfe02110a
-    last_event_digest: 1c4508c725c900959f649e6761bd0e54d3c1fcb5e14f35089b320fa43fe32e89
-    last_event_sequence: 30
-    record_revision: 30
+    last_transition_id: TR-ACTIVE-REVIEW
+    last_event_id: 1ce93009-3d8e-48e1-a893-557ded2deb26
+    last_event_digest: b6439553ec00daf4284ccaa33067af2058e8f8b2806763ed02bc557c74acc328
+    last_event_sequence: 36
+    record_revision: 36
   budget:
     limits:
       iteration_limit: 3
@@ -84,7 +84,7 @@ registry_snapshot:
         amount: null
         unit: null
     usage:
-      completed_iterations: 0
+      completed_iterations: 1
       active_time_seconds: 0
       cost:
         amount: 0
@@ -187,106 +187,220 @@ registry_snapshot:
         artifact:
           artifact_id: artifact:veilfront-xiangqi-siege:gate1-evidence@prototype-v1
           artifact_type: independent-gate-evidence
-          version: iteration-1-revision-4@459d759b144ae8ad4b2129e50ffb8177ec0612a0
-          uri: git:veilfront-xiangqi-siege:459d759b144ae8ad4b2129e50ffb8177ec0612a0#evidence/prototype/qa/
+          version: iteration-1-qa-p1-003-contract-v2-recheck@83616cc6cb2e56d19b3ec401ec105baf9ef49dd4
+          uri: git:veilfront-xiangqi-siege:83616cc6cb2e56d19b3ec401ec105baf9ef49dd4#evidence/prototype/qa/iteration-1-qa-p1-003-contract-v2-recheck.md
           manifest_paths:
-            - evidence/prototype/qa/gate1-evidence-index.yaml
-            - evidence/prototype/qa/iteration-1-revision-4-ai-positive-output.txt
-            - evidence/prototype/qa/iteration-1-revision-4-command-output.txt
-            - evidence/prototype/qa/iteration-1-revision-4-review.md
-            - evidence/prototype/qa/iteration-1-revision-4-seeded-manifest.jsonl
-            - evidence/prototype/qa/iteration-1-revision-4-seeded-output.txt
-            - evidence/prototype/qa/revision4_elephant_wall_breach_runner.gd
-          digest: {algorithm: sha256, value: 48ed264647dda787513f89d6d47843f7d0db17126df4f7636c9a138160a5c940}
+          - evidence/prototype/qa/iteration-1-qa-p1-003-contract-v2-recheck.md
+          digest:
+            algorithm: sha256
+            value: 62bceb167f35bd87f3b1d996dc3635689004dc99509b824d88a2c2e7674cc7b5
         produced_in_iteration: 1
         lifecycle_status: submitted
-        registered_by_event_id: ff884885-44fc-40b2-94fb-f5439c50a34b
+        registered_by_event_id: 72820fbb-899b-4aeb-9193-65582005f69d
+      - deliverable_id: DELIVERABLE-GATE1-001
+        artifact:
+          artifact_id: artifact:veilfront-xiangqi-siege:gate1-decision-package@v1
+          artifact_type: human-decision-package
+          version: awaiting-human@sha256:d24207e5e53509d09374e3870df744c21090554f77ad819f0e61a4aa6f2d54fd
+          uri: game-pipeline/loops/evidence/GATE-1-decision-package.md
+          manifest_paths:
+          - game-pipeline/loops/evidence/GATE-1-decision-package.md
+          digest:
+            algorithm: sha256
+            value: d24207e5e53509d09374e3870df744c21090554f77ad819f0e61a4aa6f2d54fd
+        produced_in_iteration: 1
+        lifecycle_status: submitted
+        registered_by_event_id: 1ce93009-3d8e-48e1-a893-557ded2deb26
   acceptance_snapshot:
-    subject_digest: 808a34f1fe96baef8fce3c2a89c8d6cbe340e8fc271ab7b4b2a986028cfc245e
-    automated_checks: []
+    subject_digest: cff3c765f16e2d7fa65af0ef704c9e0b6bb5bb4a2cf025f9c80f60e7731361c4
+    automated_checks:
+    - check_set_id: 217138ce-efa6-405f-a2fd-7ac49a1fd107
+      result: pass_with_owner_approved_tooling_exception
+      evidence_ref: git:veilfront-xiangqi-siege:83616cc6cb2e56d19b3ec401ec105baf9ef49dd4#evidence/prototype/qa/iteration-1-qa-p1-003-contract-v2-recheck.md
+      subject_digest: cff3c765f16e2d7fa65af0ef704c9e0b6bb5bb4a2cf025f9c80f60e7731361c4
+      project_instance:
+        exit_code: 0
+        state: normal
+      pipeline_contract:
+        exit_code: 0
+        result: pass
+      organization_history:
+        exit_code: 0
+        result: pass
+      official_cli:
+        exit_code: 1
+        result: failed
+        error_count: 6
+        errors:
+        - Snapshot 模板初始状态必须等于状态机 initial_state
+        - Snapshot 模板 current_iteration 必须从 0 开始
+        - 注册后的 Snapshot 模板必须位于 sequence=1、record_revision=1
+        - draft 注册基线的 inputs 和 outputs 必须为空
+        - Snapshot input_slot_id 必须完整对应 Contract required_inputs
+        - Snapshot deliverable_id 必须完整对应 Contract required_deliverables
+      validate_history:
+        exit_code: 0
+        error_count: 0
+        result: pass_limited_scope
+      registry_consistency:
+        result: pass
+        revision: 31
+        sequence: 31
+      godot_regression:
+        result: pass
+        version: 4.7.1
+      seeded_matches:
+        completed: 1000
+        passed: 1000
+        failure_count: 0
+        determinism_mismatch_count: 0
+        records_digest: dcc6947442ee14d05636953095d07c19ebd093ff616449598612082baa03575d
+      new_defects: []
     professional_reviews:
-      - review_id: d5390e38-3c12-4018-99ba-0a2788d69dff
-        reviewer_assignment_id: 9589489a-be2a-436f-bde4-8488d684c0bb
-        reviewer_instance_id: inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
-        verdict: revision_required
-        evidence_state: blocked
-        current_submission_accepted: false
-        allow_continue_iteration_1: true
-        evidence_ref: git:veilfront-xiangqi-siege:d0fe80355986cdd9ab65928e5fd0aeb75c7532ee#evidence/prototype/qa/gate1-evidence-index.yaml
-        subject_digest: a8270cdc7b0519cb2ad63200b978dd3dff6f1b1c72ce668a92791110d28f665b
-        defects:
-          - {defect_id: QA-P1-001, severity: blocker, return_to: 'pos:veilfront-xiangqi-siege:technology:godot-technical-lead'}
-          - {defect_id: QA-P1-002, severity: high, return_to: ['pos:veilfront-xiangqi-siege:technology:godot-technical-lead', 'pos:veilfront-xiangqi-siege:technology:single-player-ai-engineer']}
-          - {defect_id: QA-P1-003, severity: high, return_to: 'pos:veilfront-xiangqi-siege:root:project-manager'}
-        legal_next_action: continue_active_iteration_1
-      - review_id: 7bde4107-51b6-4325-8a3c-914028a6ff1f
-        reviewer_assignment_id: 9589489a-be2a-436f-bde4-8488d684c0bb
-        reviewer_instance_id: inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
-        verdict: revision_required
-        evidence_state: blocked
-        current_submission_accepted: false
-        allow_continue_iteration_1: true
-        evidence_ref: git:veilfront-xiangqi-siege:47e26693cd6c89d1e6c5ca7f325dedccbb5c6c1f#evidence/prototype/qa/gate1-evidence-index.yaml
-        subject_digest: 6c4e18e8c66242cf399516d710432a9fe2986279af521e182737ef391e961326
-        defect_regression:
-          - {defect_id: QA-P1-001, status: retained_partially_mitigated, severity: blocker}
-          - {defect_id: QA-P1-002, status: closed}
-          - {defect_id: QA-P1-003, status: retained, severity: high, classification: template_cli_issue_not_observed_history_corruption}
-        new_defects: []
-        legal_next_action: continue_active_iteration_1
-      - review_id: fb45373c-4583-46c4-8b7b-d8348cea07b4
-        reviewer_assignment_id: 9589489a-be2a-436f-bde4-8488d684c0bb
-        reviewer_instance_id: inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
-        verdict: revision_required
-        evidence_state: blocked
-        current_submission_accepted: false
-        allow_continue_iteration_1: true
-        full_gate1: false
-        transition_to_review_allowed: false
-        evidence_ref: git:veilfront-xiangqi-siege:2f3c69f15af4d7cfb912673bebb604d2f8acc0fc#evidence/prototype/qa/gate1-evidence-index.yaml
-        subject_digest: e0e34dbce9abf950fb0667587fb81e1e3c243fc7b005607b6016b7c1ad621563
-        defect_regression:
-          - {defect_id: QA-P1-001, status: closed}
-          - {defect_id: QA-P1-003, status: retained, severity: high, classification: template_cli_issue_not_observed_history_corruption}
-        owner_blockers:
-          - {blocker_id: PENDING-OWNER-ELEPHANT-REVEAL-CELLS, status: open, severity: blocker, classification: missing_approved_rule_value, return_to: project-owner}
-        new_defects: []
-        validator_observation:
-          official_cli: {exit_code: 1, result: blocked_by_template_cli_runtime_snapshot_mismatch}
-          validate_history: {error_count: 0}
-        legal_next_action: remain_active_and_revise_same_loop
-      - review_id: 6e31a795-34df-4066-b9f4-40f5400aced7
-        reviewer_assignment_id: 9589489a-be2a-436f-bde4-8488d684c0bb
-        reviewer_instance_id: inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
-        verdict: revision_required
-        technical_regression: pass
-        professional_result: blocked_by_tooling
-        evidence_state: blocked
-        current_submission_accepted: false
-        allow_continue_iteration_1: true
-        full_gate1: false
-        gate_decision: not_made
-        transition_to_review_allowed: false
-        evidence_ref: git:veilfront-xiangqi-siege:459d759b144ae8ad4b2129e50ffb8177ec0612a0#evidence/prototype/qa/gate1-evidence-index.yaml
-        subject_digest: 808a34f1fe96baef8fce3c2a89c8d6cbe340e8fc271ab7b4b2a986028cfc245e
-        regression_summary:
-          completed_matches: 1000
-          passed_matches: 1000
-          failure_count: 0
-          determinism_checked_count: 1000
-          determinism_mismatch_count: 0
-          records_digest: dcc6947442ee14d05636953095d07c19ebd093ff616449598612082baa03575d
-        defect_regression:
-          - {defect_id: QA-P1-001, status: closed}
-          - {defect_id: QA-P1-002, status: closed}
-          - {defect_id: QA-P1-003, status: retained, severity: high, classification: template_cli_issue_not_observed_history_corruption}
-        owner_blocker_regression:
-          - {blocker_id: PENDING-OWNER-ELEPHANT-REVEAL-CELLS, status: closed, evidence: owner-freeze-revision-3-and-independent-regression}
-        new_defects: []
-        validator_observation:
-          official_cli: {exit_code: 1, result: blocked_by_template_cli_runtime_snapshot_mismatch}
-          validate_history: {exit_code: 0, error_count: 0, result: pass_limited_scope}
-        legal_next_action: resolve_or_formally_waive_QA-P1-003_then_recheck
+    - review_id: d5390e38-3c12-4018-99ba-0a2788d69dff
+      reviewer_assignment_id: 9589489a-be2a-436f-bde4-8488d684c0bb
+      reviewer_instance_id: inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
+      verdict: revision_required
+      evidence_state: blocked
+      current_submission_accepted: false
+      allow_continue_iteration_1: true
+      evidence_ref: git:veilfront-xiangqi-siege:d0fe80355986cdd9ab65928e5fd0aeb75c7532ee#evidence/prototype/qa/gate1-evidence-index.yaml
+      subject_digest: a8270cdc7b0519cb2ad63200b978dd3dff6f1b1c72ce668a92791110d28f665b
+      defects:
+      - defect_id: QA-P1-001
+        severity: blocker
+        return_to: pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+      - defect_id: QA-P1-002
+        severity: high
+        return_to:
+        - pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+        - pos:veilfront-xiangqi-siege:technology:single-player-ai-engineer
+      - defect_id: QA-P1-003
+        severity: high
+        return_to: pos:veilfront-xiangqi-siege:root:project-manager
+      legal_next_action: continue_active_iteration_1
+    - review_id: 7bde4107-51b6-4325-8a3c-914028a6ff1f
+      reviewer_assignment_id: 9589489a-be2a-436f-bde4-8488d684c0bb
+      reviewer_instance_id: inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
+      verdict: revision_required
+      evidence_state: blocked
+      current_submission_accepted: false
+      allow_continue_iteration_1: true
+      evidence_ref: git:veilfront-xiangqi-siege:47e26693cd6c89d1e6c5ca7f325dedccbb5c6c1f#evidence/prototype/qa/gate1-evidence-index.yaml
+      subject_digest: 6c4e18e8c66242cf399516d710432a9fe2986279af521e182737ef391e961326
+      defect_regression:
+      - defect_id: QA-P1-001
+        status: retained_partially_mitigated
+        severity: blocker
+      - defect_id: QA-P1-002
+        status: closed
+      - defect_id: QA-P1-003
+        status: retained
+        severity: high
+        classification: template_cli_issue_not_observed_history_corruption
+      new_defects: []
+      legal_next_action: continue_active_iteration_1
+    - review_id: fb45373c-4583-46c4-8b7b-d8348cea07b4
+      reviewer_assignment_id: 9589489a-be2a-436f-bde4-8488d684c0bb
+      reviewer_instance_id: inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
+      verdict: revision_required
+      evidence_state: blocked
+      current_submission_accepted: false
+      allow_continue_iteration_1: true
+      full_gate1: false
+      transition_to_review_allowed: false
+      evidence_ref: git:veilfront-xiangqi-siege:2f3c69f15af4d7cfb912673bebb604d2f8acc0fc#evidence/prototype/qa/gate1-evidence-index.yaml
+      subject_digest: e0e34dbce9abf950fb0667587fb81e1e3c243fc7b005607b6016b7c1ad621563
+      defect_regression:
+      - defect_id: QA-P1-001
+        status: closed
+      - defect_id: QA-P1-003
+        status: retained
+        severity: high
+        classification: template_cli_issue_not_observed_history_corruption
+      owner_blockers:
+      - blocker_id: PENDING-OWNER-ELEPHANT-REVEAL-CELLS
+        status: open
+        severity: blocker
+        classification: missing_approved_rule_value
+        return_to: project-owner
+      new_defects: []
+      validator_observation:
+        official_cli:
+          exit_code: 1
+          result: blocked_by_template_cli_runtime_snapshot_mismatch
+        validate_history:
+          error_count: 0
+      legal_next_action: remain_active_and_revise_same_loop
+    - review_id: 6e31a795-34df-4066-b9f4-40f5400aced7
+      reviewer_assignment_id: 9589489a-be2a-436f-bde4-8488d684c0bb
+      reviewer_instance_id: inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
+      verdict: revision_required
+      technical_regression: pass
+      professional_result: blocked_by_tooling
+      evidence_state: blocked
+      current_submission_accepted: false
+      allow_continue_iteration_1: true
+      full_gate1: false
+      gate_decision: not_made
+      transition_to_review_allowed: false
+      evidence_ref: git:veilfront-xiangqi-siege:459d759b144ae8ad4b2129e50ffb8177ec0612a0#evidence/prototype/qa/gate1-evidence-index.yaml
+      subject_digest: 808a34f1fe96baef8fce3c2a89c8d6cbe340e8fc271ab7b4b2a986028cfc245e
+      regression_summary:
+        completed_matches: 1000
+        passed_matches: 1000
+        failure_count: 0
+        determinism_checked_count: 1000
+        determinism_mismatch_count: 0
+        records_digest: dcc6947442ee14d05636953095d07c19ebd093ff616449598612082baa03575d
+      defect_regression:
+      - defect_id: QA-P1-001
+        status: closed
+      - defect_id: QA-P1-002
+        status: closed
+      - defect_id: QA-P1-003
+        status: retained
+        severity: high
+        classification: template_cli_issue_not_observed_history_corruption
+      owner_blocker_regression:
+      - blocker_id: PENDING-OWNER-ELEPHANT-REVEAL-CELLS
+        status: closed
+        evidence: owner-freeze-revision-3-and-independent-regression
+      new_defects: []
+      validator_observation:
+        official_cli:
+          exit_code: 1
+          result: blocked_by_template_cli_runtime_snapshot_mismatch
+        validate_history:
+          exit_code: 0
+          error_count: 0
+          result: pass_limited_scope
+      legal_next_action: resolve_or_formally_waive_QA-P1-003_then_recheck
+    - review_id: 63ab6f89-36d8-4f5f-9352-7a6a6d78d9eb
+      reviewer_assignment_id: 9589489a-be2a-436f-bde4-8488d684c0bb
+      reviewer_instance_id: inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
+      verdict: pass_with_owner_approved_tooling_exception
+      technical_regression: pass
+      professional_result: owner-approved tooling exception
+      evidence_state: sufficient
+      current_submission_accepted: true
+      full_gate1: false
+      gate_decision: not_made
+      transition_to_review_allowed: true
+      evidence_ref: git:veilfront-xiangqi-siege:83616cc6cb2e56d19b3ec401ec105baf9ef49dd4#evidence/prototype/qa/iteration-1-qa-p1-003-contract-v2-recheck.md
+      subject_digest: cff3c765f16e2d7fa65af0ef704c9e0b6bb5bb4a2cf025f9c80f60e7731361c4
+      defect_regression:
+      - defect_id: QA-P1-001
+        status: closed
+      - defect_id: QA-P1-002
+        status: closed
+      - defect_id: QA-P1-003
+        status: controlled_temporary_exception
+        classification: owner-approved tooling exception
+        official_cli: failed
+      new_defects: []
+      formal_production: forbidden_until_separate_gate_1_approval
+      legal_next_action: transition_active_to_review_then_prepare_gate_1_decision_package
     human_gates: []
     final_handoff_ref: null
   interruption: null
