@@ -35,50 +35,79 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 24
-theme_override_constants/margin_top = 24
-theme_override_constants/margin_right = 24
-theme_override_constants/margin_bottom = 24
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
 
 [node name="Page" type="VBoxContainer" parent="SafeMargin"]
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 10
 
 [node name="HeaderPanel" type="PanelContainer" parent="SafeMargin/Page"]
 layout_mode = 2
 
 [node name="HeaderMargin" type="MarginContainer" parent="SafeMargin/Page/HeaderPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 18
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 18
-theme_override_constants/margin_bottom = 12
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 8
 
 [node name="HeaderRow" type="HBoxContainer" parent="SafeMargin/Page/HeaderPanel/HeaderMargin"]
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 12
 
 [node name="Title" type="Label" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 25
-text = "《雾疆：九路烽棋》GATE-1 逻辑实验室"
+theme_override_font_sizes/font_size = 22
+text = "《雾疆：九路烽棋》Iteration 2 灰盒"
 
 [node name="SeedGroup" type="HBoxContainer" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow"]
 layout_mode = 2
 
 [node name="SeedCaption" type="Label" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/SeedGroup"]
 layout_mode = 2
-text = "原型种子："
+text = "种子"
+
+[node name="SeedInput" type="LineEdit" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/SeedGroup"]
+custom_minimum_size = Vector2(100, 40)
+layout_mode = 2
+placeholder_text = "整数种子"
 
 [node name="SeedValue" type="Label" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/SeedGroup"]
 layout_mode = 2
 text = "等待初始化"
 
+[node name="RestartButton" type="Button" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/SeedGroup"]
+custom_minimum_size = Vector2(90, 40)
+layout_mode = 2
+text = "开始/重开"
+
+[node name="MatchMeta" type="VBoxContainer" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow"]
+layout_mode = 2
+
+[node name="HumanSideValue" type="Label" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/MatchMeta"]
+layout_mode = 2
+text = "玩家：—"
+
+[node name="ActiveSideValue" type="Label" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/MatchMeta"]
+layout_mode = 2
+text = "行动方：—"
+
+[node name="RoundValue" type="Label" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/MatchMeta"]
+layout_mode = 2
+text = "完整轮：0 / 50"
+
+[node name="ConfigValue" type="Label" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/MatchMeta"]
+layout_mode = 2
+text = "prototype · 50 · hypothesis_cli_overridable"
+
 [node name="Workspace" type="HBoxContainer" parent="SafeMargin/Page"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/separation = 16
+theme_override_constants/separation = 10
 
 [node name="BoardShell" parent="SafeMargin/Page/Workspace" instance=ExtResource("3_board")]
 layout_mode = 2
@@ -88,7 +117,52 @@ layout_mode = 2
 
 [node name="Footer" type="Label" parent="SafeMargin/Page"]
 layout_mode = 2
-text = "可丢弃逻辑原型 · 无正式美术 / 无在线能力 / 无第三方 addon / Revision 3 技术验证中"
+text = "可丢弃灰盒 · 无正式 UI / 美术 / 音频 / 动画 · GATE-1 尚未批准"
 horizontal_alignment = 1
+
+[node name="TerminalOverlay" type="CenterContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+
+[node name="TerminalPanel" type="PanelContainer" parent="TerminalOverlay"]
+custom_minimum_size = Vector2(440, 260)
+layout_mode = 2
+
+[node name="TerminalMargin" type="MarginContainer" parent="TerminalOverlay/TerminalPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="TerminalColumn" type="VBoxContainer" parent="TerminalOverlay/TerminalPanel/TerminalMargin"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="TerminalValue" type="Label" parent="TerminalOverlay/TerminalPanel/TerminalMargin/TerminalColumn"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "对局结束"
+horizontal_alignment = 1
+
+[node name="TerminalButtons" type="HBoxContainer" parent="TerminalOverlay/TerminalPanel/TerminalMargin/TerminalColumn"]
+layout_mode = 2
+alignment = 1
+
+[node name="SameSeedButton" type="Button" parent="TerminalOverlay/TerminalPanel/TerminalMargin/TerminalColumn/TerminalButtons"]
+custom_minimum_size = Vector2(150, 44)
+layout_mode = 2
+text = "同种子重开"
+
+[node name="NewSeedButton" type="Button" parent="TerminalOverlay/TerminalPanel/TerminalMargin/TerminalColumn/TerminalButtons"]
+custom_minimum_size = Vector2(150, 44)
+layout_mode = 2
+text = "输入新种子"
 
 [connection signal="human_view_updated" from="MatchController" to="." method="_on_match_controller_human_view_updated"]

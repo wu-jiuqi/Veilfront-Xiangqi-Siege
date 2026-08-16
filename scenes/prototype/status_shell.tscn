@@ -1,55 +1,91 @@
 [gd_scene format=3]
 
 [node name="StatusShell" type="PanelContainer"]
-custom_minimum_size = Vector2(340, 500)
-size_flags_horizontal = 3
+custom_minimum_size = Vector2(360, 560)
 size_flags_vertical = 3
 mouse_filter = 1
 
 [node name="StatusMargin" type="MarginContainer" parent="."]
 layout_mode = 2
-theme_override_constants/margin_left = 18
-theme_override_constants/margin_top = 18
-theme_override_constants/margin_right = 18
-theme_override_constants/margin_bottom = 18
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 14
 
 [node name="StatusColumn" type="VBoxContainer" parent="StatusMargin"]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 8
 
 [node name="StatusTitle" type="Label" parent="StatusMargin/StatusColumn"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 22
-text = "原型状态"
+theme_override_font_sizes/font_size = 20
+text = "试玩状态（仅 human PlayerView）"
 
-[node name="PhaseValue" type="Label" parent="StatusMargin/StatusColumn"]
+[node name="TurnAndSelection" type="Label" parent="StatusMargin/StatusColumn"]
 layout_mode = 2
-text = "阶段：Phase 1 / 壳层"
+text = "行动与选择：等待初始化"
+autowrap_mode = 2
 
-[node name="BoardStateValue" type="Label" parent="StatusMargin/StatusColumn"]
+[node name="WallStatus" type="Label" parent="StatusMargin/StatusColumn"]
 layout_mode = 2
-text = "棋盘状态：等待运行时初始化"
+text = "城墙：等待初始化"
 
-[node name="FlagValue" type="Label" parent="StatusMargin/StatusColumn"]
+[node name="FlagStatus" type="Label" parent="StatusMargin/StatusColumn"]
 layout_mode = 2
-text = "三旗：未实现"
+text = "三旗：等待初始化"
+autowrap_mode = 2
 
-[node name="WallValue" type="Label" parent="StatusMargin/StatusColumn"]
+[node name="PieceStatus" type="Label" parent="StatusMargin/StatusColumn"]
 layout_mode = 2
-text = "城墙：未实现"
+text = "棋子：无"
+autowrap_mode = 2
+
+[node name="ModeStatus" type="Label" parent="StatusMargin/StatusColumn"]
+layout_mode = 2
+text = "模式：普通移动"
+autowrap_mode = 2
+
+[node name="ActionMode" type="GridContainer" parent="StatusMargin/StatusColumn"]
+layout_mode = 2
+columns = 2
+
+[node name="MoveButton" type="Button" parent="StatusMargin/StatusColumn/ActionMode"]
+custom_minimum_size = Vector2(145, 44)
+layout_mode = 2
+text = "普通移动"
+
+[node name="BombardButton" type="Button" parent="StatusMargin/StatusColumn/ActionMode"]
+custom_minimum_size = Vector2(145, 44)
+layout_mode = 2
+text = "区域炮击"
+
+[node name="PassButton" type="Button" parent="StatusMargin/StatusColumn/ActionMode"]
+custom_minimum_size = Vector2(145, 44)
+layout_mode = 2
+text = "主动跳过"
+
+[node name="AiStepButton" type="Button" parent="StatusMargin/StatusColumn/ActionMode"]
+custom_minimum_size = Vector2(145, 44)
+layout_mode = 2
+text = "执行 AI 行动"
+
+[node name="MessageValue" type="Label" parent="StatusMargin/StatusColumn"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+text = "先选择己方棋子，再选择公开候选。"
+autowrap_mode = 2
 
 [node name="Separator" type="HSeparator" parent="StatusMargin/StatusColumn"]
 layout_mode = 2
 
 [node name="EventTitle" type="Label" parent="StatusMargin/StatusColumn"]
 layout_mode = 2
-text = "事件日志占位"
+text = "玩家可见事件"
 
 [node name="EventLog" type="RichTextLabel" parent="StatusMargin/StatusColumn"]
-custom_minimum_size = Vector2(0, 250)
+custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
 size_flags_vertical = 3
-bbcode_enabled = true
-text = "[color=#8fa4b8]等待 STEP-004 的版本化行动事件、玩家视角事件、状态摘要与随机抽样记录接口。[/color]"
-fit_content = true
-scroll_active = false
+text = "尚无玩家可见事件。"
+scroll_active = true
+scroll_following = true

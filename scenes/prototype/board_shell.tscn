@@ -1,42 +1,2025 @@
 [gd_scene format=3]
 
 [node name="BoardShell" type="PanelContainer"]
-custom_minimum_size = Vector2(720, 500)
+custom_minimum_size = Vector2(640, 560)
 size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 1
 
 [node name="BoardMargin" type="MarginContainer" parent="."]
 layout_mode = 2
-theme_override_constants/margin_left = 18
-theme_override_constants/margin_top = 18
-theme_override_constants/margin_right = 18
-theme_override_constants/margin_bottom = 18
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
 
 [node name="BoardColumn" type="VBoxContainer" parent="BoardMargin"]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 8
 
 [node name="BoardTitle" type="Label" parent="BoardMargin/BoardColumn"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 22
-text = "24 × 9 逻辑棋盘"
+theme_override_font_sizes/font_size = 20
+text = "24 × 9 灰盒主棋盘（固定 1-based 坐标）"
 
-[node name="BoardViewportPlaceholder" type="PanelContainer" parent="BoardMargin/BoardColumn"]
+[node name="OverviewStrip" type="Label" parent="BoardMargin/BoardColumn"]
+layout_mode = 2
+text = "导航概览：等待 PlayerView"
+autowrap_mode = 2
+
+[node name="BoardScroll" type="ScrollContainer" parent="BoardMargin/BoardColumn"]
 custom_minimum_size = Vector2(0, 390)
 layout_mode = 2
 size_flags_vertical = 3
-mouse_filter = 1
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 1
 
-[node name="PlaceholderCenter" type="CenterContainer" parent="BoardMargin/BoardColumn/BoardViewportPlaceholder"]
+[node name="BoardGrid" type="GridContainer" parent="BoardMargin/BoardColumn/BoardScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 2
+theme_override_constants/v_separation = 2
+columns = 9
+
+[node name="Cell_1_24" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "1,24"
+tooltip_text = "固定坐标 (1,24)"
+metadata/board_x = 1
+metadata/board_y = 24
+
+[node name="Cell_2_24" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "2,24"
+tooltip_text = "固定坐标 (2,24)"
+metadata/board_x = 2
+metadata/board_y = 24
+
+[node name="Cell_3_24" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "3,24"
+tooltip_text = "固定坐标 (3,24)"
+metadata/board_x = 3
+metadata/board_y = 24
+
+[node name="Cell_4_24" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "4,24"
+tooltip_text = "固定坐标 (4,24)"
+metadata/board_x = 4
+metadata/board_y = 24
+
+[node name="Cell_5_24" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "5,24"
+tooltip_text = "固定坐标 (5,24)"
+metadata/board_x = 5
+metadata/board_y = 24
+
+[node name="Cell_6_24" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "6,24"
+tooltip_text = "固定坐标 (6,24)"
+metadata/board_x = 6
+metadata/board_y = 24
+
+[node name="Cell_7_24" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "7,24"
+tooltip_text = "固定坐标 (7,24)"
+metadata/board_x = 7
+metadata/board_y = 24
+
+[node name="Cell_8_24" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "8,24"
+tooltip_text = "固定坐标 (8,24)"
+metadata/board_x = 8
+metadata/board_y = 24
+
+[node name="Cell_9_24" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "9,24"
+tooltip_text = "固定坐标 (9,24)"
+metadata/board_x = 9
+metadata/board_y = 24
+
+[node name="Cell_1_23" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "1,23"
+tooltip_text = "固定坐标 (1,23)"
+metadata/board_x = 1
+metadata/board_y = 23
+
+[node name="Cell_2_23" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "2,23"
+tooltip_text = "固定坐标 (2,23)"
+metadata/board_x = 2
+metadata/board_y = 23
+
+[node name="Cell_3_23" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "3,23"
+tooltip_text = "固定坐标 (3,23)"
+metadata/board_x = 3
+metadata/board_y = 23
+
+[node name="Cell_4_23" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "4,23"
+tooltip_text = "固定坐标 (4,23)"
+metadata/board_x = 4
+metadata/board_y = 23
+
+[node name="Cell_5_23" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "5,23"
+tooltip_text = "固定坐标 (5,23)"
+metadata/board_x = 5
+metadata/board_y = 23
+
+[node name="Cell_6_23" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "6,23"
+tooltip_text = "固定坐标 (6,23)"
+metadata/board_x = 6
+metadata/board_y = 23
+
+[node name="Cell_7_23" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "7,23"
+tooltip_text = "固定坐标 (7,23)"
+metadata/board_x = 7
+metadata/board_y = 23
+
+[node name="Cell_8_23" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "8,23"
+tooltip_text = "固定坐标 (8,23)"
+metadata/board_x = 8
+metadata/board_y = 23
+
+[node name="Cell_9_23" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "9,23"
+tooltip_text = "固定坐标 (9,23)"
+metadata/board_x = 9
+metadata/board_y = 23
+
+[node name="Cell_1_22" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "1,22"
+tooltip_text = "固定坐标 (1,22)"
+metadata/board_x = 1
+metadata/board_y = 22
+
+[node name="Cell_2_22" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "2,22"
+tooltip_text = "固定坐标 (2,22)"
+metadata/board_x = 2
+metadata/board_y = 22
+
+[node name="Cell_3_22" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "3,22"
+tooltip_text = "固定坐标 (3,22)"
+metadata/board_x = 3
+metadata/board_y = 22
+
+[node name="Cell_4_22" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "4,22"
+tooltip_text = "固定坐标 (4,22)"
+metadata/board_x = 4
+metadata/board_y = 22
+
+[node name="Cell_5_22" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "5,22"
+tooltip_text = "固定坐标 (5,22)"
+metadata/board_x = 5
+metadata/board_y = 22
+
+[node name="Cell_6_22" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "6,22"
+tooltip_text = "固定坐标 (6,22)"
+metadata/board_x = 6
+metadata/board_y = 22
+
+[node name="Cell_7_22" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "7,22"
+tooltip_text = "固定坐标 (7,22)"
+metadata/board_x = 7
+metadata/board_y = 22
+
+[node name="Cell_8_22" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "8,22"
+tooltip_text = "固定坐标 (8,22)"
+metadata/board_x = 8
+metadata/board_y = 22
+
+[node name="Cell_9_22" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "9,22"
+tooltip_text = "固定坐标 (9,22)"
+metadata/board_x = 9
+metadata/board_y = 22
+
+[node name="Cell_1_21" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "1,21"
+tooltip_text = "固定坐标 (1,21)"
+metadata/board_x = 1
+metadata/board_y = 21
+
+[node name="Cell_2_21" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "2,21"
+tooltip_text = "固定坐标 (2,21)"
+metadata/board_x = 2
+metadata/board_y = 21
+
+[node name="Cell_3_21" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "3,21"
+tooltip_text = "固定坐标 (3,21)"
+metadata/board_x = 3
+metadata/board_y = 21
+
+[node name="Cell_4_21" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "4,21"
+tooltip_text = "固定坐标 (4,21)"
+metadata/board_x = 4
+metadata/board_y = 21
+
+[node name="Cell_5_21" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "5,21"
+tooltip_text = "固定坐标 (5,21)"
+metadata/board_x = 5
+metadata/board_y = 21
+
+[node name="Cell_6_21" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "6,21"
+tooltip_text = "固定坐标 (6,21)"
+metadata/board_x = 6
+metadata/board_y = 21
+
+[node name="Cell_7_21" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "7,21"
+tooltip_text = "固定坐标 (7,21)"
+metadata/board_x = 7
+metadata/board_y = 21
+
+[node name="Cell_8_21" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "8,21"
+tooltip_text = "固定坐标 (8,21)"
+metadata/board_x = 8
+metadata/board_y = 21
+
+[node name="Cell_9_21" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "9,21"
+tooltip_text = "固定坐标 (9,21)"
+metadata/board_x = 9
+metadata/board_y = 21
+
+[node name="Cell_1_20" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "1,20"
+tooltip_text = "固定坐标 (1,20)"
+metadata/board_x = 1
+metadata/board_y = 20
+
+[node name="Cell_2_20" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "2,20"
+tooltip_text = "固定坐标 (2,20)"
+metadata/board_x = 2
+metadata/board_y = 20
+
+[node name="Cell_3_20" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "3,20"
+tooltip_text = "固定坐标 (3,20)"
+metadata/board_x = 3
+metadata/board_y = 20
+
+[node name="Cell_4_20" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "4,20"
+tooltip_text = "固定坐标 (4,20)"
+metadata/board_x = 4
+metadata/board_y = 20
+
+[node name="Cell_5_20" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "5,20"
+tooltip_text = "固定坐标 (5,20)"
+metadata/board_x = 5
+metadata/board_y = 20
+
+[node name="Cell_6_20" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "6,20"
+tooltip_text = "固定坐标 (6,20)"
+metadata/board_x = 6
+metadata/board_y = 20
+
+[node name="Cell_7_20" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "7,20"
+tooltip_text = "固定坐标 (7,20)"
+metadata/board_x = 7
+metadata/board_y = 20
+
+[node name="Cell_8_20" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "8,20"
+tooltip_text = "固定坐标 (8,20)"
+metadata/board_x = 8
+metadata/board_y = 20
+
+[node name="Cell_9_20" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "9,20"
+tooltip_text = "固定坐标 (9,20)"
+metadata/board_x = 9
+metadata/board_y = 20
+
+[node name="Cell_1_19" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "1,19"
+tooltip_text = "固定坐标 (1,19)"
+metadata/board_x = 1
+metadata/board_y = 19
+
+[node name="Cell_2_19" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "2,19"
+tooltip_text = "固定坐标 (2,19)"
+metadata/board_x = 2
+metadata/board_y = 19
+
+[node name="Cell_3_19" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "3,19"
+tooltip_text = "固定坐标 (3,19)"
+metadata/board_x = 3
+metadata/board_y = 19
+
+[node name="Cell_4_19" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "4,19"
+tooltip_text = "固定坐标 (4,19)"
+metadata/board_x = 4
+metadata/board_y = 19
+
+[node name="Cell_5_19" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "5,19"
+tooltip_text = "固定坐标 (5,19)"
+metadata/board_x = 5
+metadata/board_y = 19
+
+[node name="Cell_6_19" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "6,19"
+tooltip_text = "固定坐标 (6,19)"
+metadata/board_x = 6
+metadata/board_y = 19
+
+[node name="Cell_7_19" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "7,19"
+tooltip_text = "固定坐标 (7,19)"
+metadata/board_x = 7
+metadata/board_y = 19
+
+[node name="Cell_8_19" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "8,19"
+tooltip_text = "固定坐标 (8,19)"
+metadata/board_x = 8
+metadata/board_y = 19
+
+[node name="Cell_9_19" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "9,19"
+tooltip_text = "固定坐标 (9,19)"
+metadata/board_x = 9
+metadata/board_y = 19
+
+[node name="Cell_1_18" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "1,18"
+tooltip_text = "固定坐标 (1,18)"
+metadata/board_x = 1
+metadata/board_y = 18
+
+[node name="Cell_2_18" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "2,18"
+tooltip_text = "固定坐标 (2,18)"
+metadata/board_x = 2
+metadata/board_y = 18
+
+[node name="Cell_3_18" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "3,18"
+tooltip_text = "固定坐标 (3,18)"
+metadata/board_x = 3
+metadata/board_y = 18
+
+[node name="Cell_4_18" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "4,18"
+tooltip_text = "固定坐标 (4,18)"
+metadata/board_x = 4
+metadata/board_y = 18
+
+[node name="Cell_5_18" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "5,18"
+tooltip_text = "固定坐标 (5,18)"
+metadata/board_x = 5
+metadata/board_y = 18
+
+[node name="Cell_6_18" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "6,18"
+tooltip_text = "固定坐标 (6,18)"
+metadata/board_x = 6
+metadata/board_y = 18
+
+[node name="Cell_7_18" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "7,18"
+tooltip_text = "固定坐标 (7,18)"
+metadata/board_x = 7
+metadata/board_y = 18
+
+[node name="Cell_8_18" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "8,18"
+tooltip_text = "固定坐标 (8,18)"
+metadata/board_x = 8
+metadata/board_y = 18
+
+[node name="Cell_9_18" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "9,18"
+tooltip_text = "固定坐标 (9,18)"
+metadata/board_x = 9
+metadata/board_y = 18
+
+[node name="Cell_1_17" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "1,17"
+tooltip_text = "固定坐标 (1,17)"
+metadata/board_x = 1
+metadata/board_y = 17
+
+[node name="Cell_2_17" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "2,17"
+tooltip_text = "固定坐标 (2,17)"
+metadata/board_x = 2
+metadata/board_y = 17
+
+[node name="Cell_3_17" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "3,17"
+tooltip_text = "固定坐标 (3,17)"
+metadata/board_x = 3
+metadata/board_y = 17
+
+[node name="Cell_4_17" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "4,17"
+tooltip_text = "固定坐标 (4,17)"
+metadata/board_x = 4
+metadata/board_y = 17
+
+[node name="Cell_5_17" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "5,17"
+tooltip_text = "固定坐标 (5,17)"
+metadata/board_x = 5
+metadata/board_y = 17
+
+[node name="Cell_6_17" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "6,17"
+tooltip_text = "固定坐标 (6,17)"
+metadata/board_x = 6
+metadata/board_y = 17
+
+[node name="Cell_7_17" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "7,17"
+tooltip_text = "固定坐标 (7,17)"
+metadata/board_x = 7
+metadata/board_y = 17
+
+[node name="Cell_8_17" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "8,17"
+tooltip_text = "固定坐标 (8,17)"
+metadata/board_x = 8
+metadata/board_y = 17
+
+[node name="Cell_9_17" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "9,17"
+tooltip_text = "固定坐标 (9,17)"
+metadata/board_x = 9
+metadata/board_y = 17
+
+[node name="Cell_1_16" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "1,16"
+tooltip_text = "固定坐标 (1,16)"
+metadata/board_x = 1
+metadata/board_y = 16
+
+[node name="Cell_2_16" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "2,16"
+tooltip_text = "固定坐标 (2,16)"
+metadata/board_x = 2
+metadata/board_y = 16
+
+[node name="Cell_3_16" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "3,16"
+tooltip_text = "固定坐标 (3,16)"
+metadata/board_x = 3
+metadata/board_y = 16
+
+[node name="Cell_4_16" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "4,16"
+tooltip_text = "固定坐标 (4,16)"
+metadata/board_x = 4
+metadata/board_y = 16
+
+[node name="Cell_5_16" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "5,16"
+tooltip_text = "固定坐标 (5,16)"
+metadata/board_x = 5
+metadata/board_y = 16
+
+[node name="Cell_6_16" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "6,16"
+tooltip_text = "固定坐标 (6,16)"
+metadata/board_x = 6
+metadata/board_y = 16
+
+[node name="Cell_7_16" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "7,16"
+tooltip_text = "固定坐标 (7,16)"
+metadata/board_x = 7
+metadata/board_y = 16
+
+[node name="Cell_8_16" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "8,16"
+tooltip_text = "固定坐标 (8,16)"
+metadata/board_x = 8
+metadata/board_y = 16
+
+[node name="Cell_9_16" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "9,16"
+tooltip_text = "固定坐标 (9,16)"
+metadata/board_x = 9
+metadata/board_y = 16
+
+[node name="Cell_1_15" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "1,15"
+tooltip_text = "固定坐标 (1,15)"
+metadata/board_x = 1
+metadata/board_y = 15
+
+[node name="Cell_2_15" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "2,15"
+tooltip_text = "固定坐标 (2,15)"
+metadata/board_x = 2
+metadata/board_y = 15
+
+[node name="Cell_3_15" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "3,15"
+tooltip_text = "固定坐标 (3,15)"
+metadata/board_x = 3
+metadata/board_y = 15
+
+[node name="Cell_4_15" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "4,15"
+tooltip_text = "固定坐标 (4,15)"
+metadata/board_x = 4
+metadata/board_y = 15
+
+[node name="Cell_5_15" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "5,15"
+tooltip_text = "固定坐标 (5,15)"
+metadata/board_x = 5
+metadata/board_y = 15
+
+[node name="Cell_6_15" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "6,15"
+tooltip_text = "固定坐标 (6,15)"
+metadata/board_x = 6
+metadata/board_y = 15
+
+[node name="Cell_7_15" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "7,15"
+tooltip_text = "固定坐标 (7,15)"
+metadata/board_x = 7
+metadata/board_y = 15
+
+[node name="Cell_8_15" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "8,15"
+tooltip_text = "固定坐标 (8,15)"
+metadata/board_x = 8
+metadata/board_y = 15
+
+[node name="Cell_9_15" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "9,15"
+tooltip_text = "固定坐标 (9,15)"
+metadata/board_x = 9
+metadata/board_y = 15
+
+[node name="Cell_1_14" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "1,14"
+tooltip_text = "固定坐标 (1,14)"
+metadata/board_x = 1
+metadata/board_y = 14
+
+[node name="Cell_2_14" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "2,14"
+tooltip_text = "固定坐标 (2,14)"
+metadata/board_x = 2
+metadata/board_y = 14
+
+[node name="Cell_3_14" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "3,14"
+tooltip_text = "固定坐标 (3,14)"
+metadata/board_x = 3
+metadata/board_y = 14
+
+[node name="Cell_4_14" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "4,14"
+tooltip_text = "固定坐标 (4,14)"
+metadata/board_x = 4
+metadata/board_y = 14
+
+[node name="Cell_5_14" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "5,14"
+tooltip_text = "固定坐标 (5,14)"
+metadata/board_x = 5
+metadata/board_y = 14
+
+[node name="Cell_6_14" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "6,14"
+tooltip_text = "固定坐标 (6,14)"
+metadata/board_x = 6
+metadata/board_y = 14
+
+[node name="Cell_7_14" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "7,14"
+tooltip_text = "固定坐标 (7,14)"
+metadata/board_x = 7
+metadata/board_y = 14
+
+[node name="Cell_8_14" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "8,14"
+tooltip_text = "固定坐标 (8,14)"
+metadata/board_x = 8
+metadata/board_y = 14
+
+[node name="Cell_9_14" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "9,14"
+tooltip_text = "固定坐标 (9,14)"
+metadata/board_x = 9
+metadata/board_y = 14
+
+[node name="Cell_1_13" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "1,13"
+tooltip_text = "固定坐标 (1,13)"
+metadata/board_x = 1
+metadata/board_y = 13
+
+[node name="Cell_2_13" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "2,13"
+tooltip_text = "固定坐标 (2,13)"
+metadata/board_x = 2
+metadata/board_y = 13
+
+[node name="Cell_3_13" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "3,13"
+tooltip_text = "固定坐标 (3,13)"
+metadata/board_x = 3
+metadata/board_y = 13
+
+[node name="Cell_4_13" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "4,13"
+tooltip_text = "固定坐标 (4,13)"
+metadata/board_x = 4
+metadata/board_y = 13
+
+[node name="Cell_5_13" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "5,13"
+tooltip_text = "固定坐标 (5,13)"
+metadata/board_x = 5
+metadata/board_y = 13
+
+[node name="Cell_6_13" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "6,13"
+tooltip_text = "固定坐标 (6,13)"
+metadata/board_x = 6
+metadata/board_y = 13
+
+[node name="Cell_7_13" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "7,13"
+tooltip_text = "固定坐标 (7,13)"
+metadata/board_x = 7
+metadata/board_y = 13
+
+[node name="Cell_8_13" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "8,13"
+tooltip_text = "固定坐标 (8,13)"
+metadata/board_x = 8
+metadata/board_y = 13
+
+[node name="Cell_9_13" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "9,13"
+tooltip_text = "固定坐标 (9,13)"
+metadata/board_x = 9
+metadata/board_y = 13
+
+[node name="Cell_1_12" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "1,12"
+tooltip_text = "固定坐标 (1,12)"
+metadata/board_x = 1
+metadata/board_y = 12
+
+[node name="Cell_2_12" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "2,12"
+tooltip_text = "固定坐标 (2,12)"
+metadata/board_x = 2
+metadata/board_y = 12
+
+[node name="Cell_3_12" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "3,12"
+tooltip_text = "固定坐标 (3,12)"
+metadata/board_x = 3
+metadata/board_y = 12
+
+[node name="Cell_4_12" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "4,12"
+tooltip_text = "固定坐标 (4,12)"
+metadata/board_x = 4
+metadata/board_y = 12
+
+[node name="Cell_5_12" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "5,12"
+tooltip_text = "固定坐标 (5,12)"
+metadata/board_x = 5
+metadata/board_y = 12
+
+[node name="Cell_6_12" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "6,12"
+tooltip_text = "固定坐标 (6,12)"
+metadata/board_x = 6
+metadata/board_y = 12
+
+[node name="Cell_7_12" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "7,12"
+tooltip_text = "固定坐标 (7,12)"
+metadata/board_x = 7
+metadata/board_y = 12
+
+[node name="Cell_8_12" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "8,12"
+tooltip_text = "固定坐标 (8,12)"
+metadata/board_x = 8
+metadata/board_y = 12
+
+[node name="Cell_9_12" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "9,12"
+tooltip_text = "固定坐标 (9,12)"
+metadata/board_x = 9
+metadata/board_y = 12
+
+[node name="Cell_1_11" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "1,11"
+tooltip_text = "固定坐标 (1,11)"
+metadata/board_x = 1
+metadata/board_y = 11
+
+[node name="Cell_2_11" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "2,11"
+tooltip_text = "固定坐标 (2,11)"
+metadata/board_x = 2
+metadata/board_y = 11
+
+[node name="Cell_3_11" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "3,11"
+tooltip_text = "固定坐标 (3,11)"
+metadata/board_x = 3
+metadata/board_y = 11
+
+[node name="Cell_4_11" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "4,11"
+tooltip_text = "固定坐标 (4,11)"
+metadata/board_x = 4
+metadata/board_y = 11
+
+[node name="Cell_5_11" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "5,11"
+tooltip_text = "固定坐标 (5,11)"
+metadata/board_x = 5
+metadata/board_y = 11
+
+[node name="Cell_6_11" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "6,11"
+tooltip_text = "固定坐标 (6,11)"
+metadata/board_x = 6
+metadata/board_y = 11
+
+[node name="Cell_7_11" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "7,11"
+tooltip_text = "固定坐标 (7,11)"
+metadata/board_x = 7
+metadata/board_y = 11
+
+[node name="Cell_8_11" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "8,11"
+tooltip_text = "固定坐标 (8,11)"
+metadata/board_x = 8
+metadata/board_y = 11
+
+[node name="Cell_9_11" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "9,11"
+tooltip_text = "固定坐标 (9,11)"
+metadata/board_x = 9
+metadata/board_y = 11
+
+[node name="Cell_1_10" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "1,10"
+tooltip_text = "固定坐标 (1,10)"
+metadata/board_x = 1
+metadata/board_y = 10
+
+[node name="Cell_2_10" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "2,10"
+tooltip_text = "固定坐标 (2,10)"
+metadata/board_x = 2
+metadata/board_y = 10
+
+[node name="Cell_3_10" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "3,10"
+tooltip_text = "固定坐标 (3,10)"
+metadata/board_x = 3
+metadata/board_y = 10
+
+[node name="Cell_4_10" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "4,10"
+tooltip_text = "固定坐标 (4,10)"
+metadata/board_x = 4
+metadata/board_y = 10
+
+[node name="Cell_5_10" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "5,10"
+tooltip_text = "固定坐标 (5,10)"
+metadata/board_x = 5
+metadata/board_y = 10
+
+[node name="Cell_6_10" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "6,10"
+tooltip_text = "固定坐标 (6,10)"
+metadata/board_x = 6
+metadata/board_y = 10
+
+[node name="Cell_7_10" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "7,10"
+tooltip_text = "固定坐标 (7,10)"
+metadata/board_x = 7
+metadata/board_y = 10
+
+[node name="Cell_8_10" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "8,10"
+tooltip_text = "固定坐标 (8,10)"
+metadata/board_x = 8
+metadata/board_y = 10
+
+[node name="Cell_9_10" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "9,10"
+tooltip_text = "固定坐标 (9,10)"
+metadata/board_x = 9
+metadata/board_y = 10
+
+[node name="Cell_1_9" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "1,9"
+tooltip_text = "固定坐标 (1,9)"
+metadata/board_x = 1
+metadata/board_y = 9
+
+[node name="Cell_2_9" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "2,9"
+tooltip_text = "固定坐标 (2,9)"
+metadata/board_x = 2
+metadata/board_y = 9
+
+[node name="Cell_3_9" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "3,9"
+tooltip_text = "固定坐标 (3,9)"
+metadata/board_x = 3
+metadata/board_y = 9
+
+[node name="Cell_4_9" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "4,9"
+tooltip_text = "固定坐标 (4,9)"
+metadata/board_x = 4
+metadata/board_y = 9
+
+[node name="Cell_5_9" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "5,9"
+tooltip_text = "固定坐标 (5,9)"
+metadata/board_x = 5
+metadata/board_y = 9
+
+[node name="Cell_6_9" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "6,9"
+tooltip_text = "固定坐标 (6,9)"
+metadata/board_x = 6
+metadata/board_y = 9
+
+[node name="Cell_7_9" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "7,9"
+tooltip_text = "固定坐标 (7,9)"
+metadata/board_x = 7
+metadata/board_y = 9
+
+[node name="Cell_8_9" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "8,9"
+tooltip_text = "固定坐标 (8,9)"
+metadata/board_x = 8
+metadata/board_y = 9
+
+[node name="Cell_9_9" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "9,9"
+tooltip_text = "固定坐标 (9,9)"
+metadata/board_x = 9
+metadata/board_y = 9
+
+[node name="Cell_1_8" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "1,8"
+tooltip_text = "固定坐标 (1,8)"
+metadata/board_x = 1
+metadata/board_y = 8
+
+[node name="Cell_2_8" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "2,8"
+tooltip_text = "固定坐标 (2,8)"
+metadata/board_x = 2
+metadata/board_y = 8
+
+[node name="Cell_3_8" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "3,8"
+tooltip_text = "固定坐标 (3,8)"
+metadata/board_x = 3
+metadata/board_y = 8
+
+[node name="Cell_4_8" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "4,8"
+tooltip_text = "固定坐标 (4,8)"
+metadata/board_x = 4
+metadata/board_y = 8
+
+[node name="Cell_5_8" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "5,8"
+tooltip_text = "固定坐标 (5,8)"
+metadata/board_x = 5
+metadata/board_y = 8
+
+[node name="Cell_6_8" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "6,8"
+tooltip_text = "固定坐标 (6,8)"
+metadata/board_x = 6
+metadata/board_y = 8
+
+[node name="Cell_7_8" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "7,8"
+tooltip_text = "固定坐标 (7,8)"
+metadata/board_x = 7
+metadata/board_y = 8
+
+[node name="Cell_8_8" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "8,8"
+tooltip_text = "固定坐标 (8,8)"
+metadata/board_x = 8
+metadata/board_y = 8
+
+[node name="Cell_9_8" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "9,8"
+tooltip_text = "固定坐标 (9,8)"
+metadata/board_x = 9
+metadata/board_y = 8
+
+[node name="Cell_1_7" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "1,7"
+tooltip_text = "固定坐标 (1,7)"
+metadata/board_x = 1
+metadata/board_y = 7
+
+[node name="Cell_2_7" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "2,7"
+tooltip_text = "固定坐标 (2,7)"
+metadata/board_x = 2
+metadata/board_y = 7
+
+[node name="Cell_3_7" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "3,7"
+tooltip_text = "固定坐标 (3,7)"
+metadata/board_x = 3
+metadata/board_y = 7
+
+[node name="Cell_4_7" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "4,7"
+tooltip_text = "固定坐标 (4,7)"
+metadata/board_x = 4
+metadata/board_y = 7
+
+[node name="Cell_5_7" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "5,7"
+tooltip_text = "固定坐标 (5,7)"
+metadata/board_x = 5
+metadata/board_y = 7
+
+[node name="Cell_6_7" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "6,7"
+tooltip_text = "固定坐标 (6,7)"
+metadata/board_x = 6
+metadata/board_y = 7
+
+[node name="Cell_7_7" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "7,7"
+tooltip_text = "固定坐标 (7,7)"
+metadata/board_x = 7
+metadata/board_y = 7
+
+[node name="Cell_8_7" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "8,7"
+tooltip_text = "固定坐标 (8,7)"
+metadata/board_x = 8
+metadata/board_y = 7
+
+[node name="Cell_9_7" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "9,7"
+tooltip_text = "固定坐标 (9,7)"
+metadata/board_x = 9
+metadata/board_y = 7
+
+[node name="Cell_1_6" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "1,6"
+tooltip_text = "固定坐标 (1,6)"
+metadata/board_x = 1
+metadata/board_y = 6
+
+[node name="Cell_2_6" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "2,6"
+tooltip_text = "固定坐标 (2,6)"
+metadata/board_x = 2
+metadata/board_y = 6
+
+[node name="Cell_3_6" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "3,6"
+tooltip_text = "固定坐标 (3,6)"
+metadata/board_x = 3
+metadata/board_y = 6
+
+[node name="Cell_4_6" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "4,6"
+tooltip_text = "固定坐标 (4,6)"
+metadata/board_x = 4
+metadata/board_y = 6
+
+[node name="Cell_5_6" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "5,6"
+tooltip_text = "固定坐标 (5,6)"
+metadata/board_x = 5
+metadata/board_y = 6
+
+[node name="Cell_6_6" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "6,6"
+tooltip_text = "固定坐标 (6,6)"
+metadata/board_x = 6
+metadata/board_y = 6
+
+[node name="Cell_7_6" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "7,6"
+tooltip_text = "固定坐标 (7,6)"
+metadata/board_x = 7
+metadata/board_y = 6
+
+[node name="Cell_8_6" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "8,6"
+tooltip_text = "固定坐标 (8,6)"
+metadata/board_x = 8
+metadata/board_y = 6
+
+[node name="Cell_9_6" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "9,6"
+tooltip_text = "固定坐标 (9,6)"
+metadata/board_x = 9
+metadata/board_y = 6
+
+[node name="Cell_1_5" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "1,5"
+tooltip_text = "固定坐标 (1,5)"
+metadata/board_x = 1
+metadata/board_y = 5
+
+[node name="Cell_2_5" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "2,5"
+tooltip_text = "固定坐标 (2,5)"
+metadata/board_x = 2
+metadata/board_y = 5
+
+[node name="Cell_3_5" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "3,5"
+tooltip_text = "固定坐标 (3,5)"
+metadata/board_x = 3
+metadata/board_y = 5
+
+[node name="Cell_4_5" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "4,5"
+tooltip_text = "固定坐标 (4,5)"
+metadata/board_x = 4
+metadata/board_y = 5
+
+[node name="Cell_5_5" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "5,5"
+tooltip_text = "固定坐标 (5,5)"
+metadata/board_x = 5
+metadata/board_y = 5
+
+[node name="Cell_6_5" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "6,5"
+tooltip_text = "固定坐标 (6,5)"
+metadata/board_x = 6
+metadata/board_y = 5
+
+[node name="Cell_7_5" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "7,5"
+tooltip_text = "固定坐标 (7,5)"
+metadata/board_x = 7
+metadata/board_y = 5
+
+[node name="Cell_8_5" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "8,5"
+tooltip_text = "固定坐标 (8,5)"
+metadata/board_x = 8
+metadata/board_y = 5
+
+[node name="Cell_9_5" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "9,5"
+tooltip_text = "固定坐标 (9,5)"
+metadata/board_x = 9
+metadata/board_y = 5
+
+[node name="Cell_1_4" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "1,4"
+tooltip_text = "固定坐标 (1,4)"
+metadata/board_x = 1
+metadata/board_y = 4
+
+[node name="Cell_2_4" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "2,4"
+tooltip_text = "固定坐标 (2,4)"
+metadata/board_x = 2
+metadata/board_y = 4
+
+[node name="Cell_3_4" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "3,4"
+tooltip_text = "固定坐标 (3,4)"
+metadata/board_x = 3
+metadata/board_y = 4
+
+[node name="Cell_4_4" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "4,4"
+tooltip_text = "固定坐标 (4,4)"
+metadata/board_x = 4
+metadata/board_y = 4
+
+[node name="Cell_5_4" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "5,4"
+tooltip_text = "固定坐标 (5,4)"
+metadata/board_x = 5
+metadata/board_y = 4
+
+[node name="Cell_6_4" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "6,4"
+tooltip_text = "固定坐标 (6,4)"
+metadata/board_x = 6
+metadata/board_y = 4
+
+[node name="Cell_7_4" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "7,4"
+tooltip_text = "固定坐标 (7,4)"
+metadata/board_x = 7
+metadata/board_y = 4
+
+[node name="Cell_8_4" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "8,4"
+tooltip_text = "固定坐标 (8,4)"
+metadata/board_x = 8
+metadata/board_y = 4
+
+[node name="Cell_9_4" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "9,4"
+tooltip_text = "固定坐标 (9,4)"
+metadata/board_x = 9
+metadata/board_y = 4
+
+[node name="Cell_1_3" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "1,3"
+tooltip_text = "固定坐标 (1,3)"
+metadata/board_x = 1
+metadata/board_y = 3
+
+[node name="Cell_2_3" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "2,3"
+tooltip_text = "固定坐标 (2,3)"
+metadata/board_x = 2
+metadata/board_y = 3
+
+[node name="Cell_3_3" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "3,3"
+tooltip_text = "固定坐标 (3,3)"
+metadata/board_x = 3
+metadata/board_y = 3
+
+[node name="Cell_4_3" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "4,3"
+tooltip_text = "固定坐标 (4,3)"
+metadata/board_x = 4
+metadata/board_y = 3
+
+[node name="Cell_5_3" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "5,3"
+tooltip_text = "固定坐标 (5,3)"
+metadata/board_x = 5
+metadata/board_y = 3
+
+[node name="Cell_6_3" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "6,3"
+tooltip_text = "固定坐标 (6,3)"
+metadata/board_x = 6
+metadata/board_y = 3
+
+[node name="Cell_7_3" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "7,3"
+tooltip_text = "固定坐标 (7,3)"
+metadata/board_x = 7
+metadata/board_y = 3
+
+[node name="Cell_8_3" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "8,3"
+tooltip_text = "固定坐标 (8,3)"
+metadata/board_x = 8
+metadata/board_y = 3
+
+[node name="Cell_9_3" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "9,3"
+tooltip_text = "固定坐标 (9,3)"
+metadata/board_x = 9
+metadata/board_y = 3
+
+[node name="Cell_1_2" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "1,2"
+tooltip_text = "固定坐标 (1,2)"
+metadata/board_x = 1
+metadata/board_y = 2
+
+[node name="Cell_2_2" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "2,2"
+tooltip_text = "固定坐标 (2,2)"
+metadata/board_x = 2
+metadata/board_y = 2
+
+[node name="Cell_3_2" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "3,2"
+tooltip_text = "固定坐标 (3,2)"
+metadata/board_x = 3
+metadata/board_y = 2
+
+[node name="Cell_4_2" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "4,2"
+tooltip_text = "固定坐标 (4,2)"
+metadata/board_x = 4
+metadata/board_y = 2
+
+[node name="Cell_5_2" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "5,2"
+tooltip_text = "固定坐标 (5,2)"
+metadata/board_x = 5
+metadata/board_y = 2
+
+[node name="Cell_6_2" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "6,2"
+tooltip_text = "固定坐标 (6,2)"
+metadata/board_x = 6
+metadata/board_y = 2
+
+[node name="Cell_7_2" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "7,2"
+tooltip_text = "固定坐标 (7,2)"
+metadata/board_x = 7
+metadata/board_y = 2
+
+[node name="Cell_8_2" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "8,2"
+tooltip_text = "固定坐标 (8,2)"
+metadata/board_x = 8
+metadata/board_y = 2
+
+[node name="Cell_9_2" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "9,2"
+tooltip_text = "固定坐标 (9,2)"
+metadata/board_x = 9
+metadata/board_y = 2
+
+[node name="Cell_1_1" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "1,1"
+tooltip_text = "固定坐标 (1,1)"
+metadata/board_x = 1
+metadata/board_y = 1
+
+[node name="Cell_2_1" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "2,1"
+tooltip_text = "固定坐标 (2,1)"
+metadata/board_x = 2
+metadata/board_y = 1
+
+[node name="Cell_3_1" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "3,1"
+tooltip_text = "固定坐标 (3,1)"
+metadata/board_x = 3
+metadata/board_y = 1
+
+[node name="Cell_4_1" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "4,1"
+tooltip_text = "固定坐标 (4,1)"
+metadata/board_x = 4
+metadata/board_y = 1
+
+[node name="Cell_5_1" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "5,1"
+tooltip_text = "固定坐标 (5,1)"
+metadata/board_x = 5
+metadata/board_y = 1
+
+[node name="Cell_6_1" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "6,1"
+tooltip_text = "固定坐标 (6,1)"
+metadata/board_x = 6
+metadata/board_y = 1
+
+[node name="Cell_7_1" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "7,1"
+tooltip_text = "固定坐标 (7,1)"
+metadata/board_x = 7
+metadata/board_y = 1
+
+[node name="Cell_8_1" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "8,1"
+tooltip_text = "固定坐标 (8,1)"
+metadata/board_x = 8
+metadata/board_y = 1
+
+[node name="Cell_9_1" type="Button" parent="BoardMargin/BoardColumn/BoardScroll/BoardGrid"]
+custom_minimum_size = Vector2(64, 42)
+layout_mode = 2
+focus_mode = 1
+text = "9,1"
+tooltip_text = "固定坐标 (9,1)"
+metadata/board_x = 9
+metadata/board_y = 1
+
+[node name="ActionConfirm" type="PanelContainer" parent="BoardMargin/BoardColumn"]
+visible = false
 layout_mode = 2
 
-[node name="PlaceholderText" type="Label" parent="BoardMargin/BoardColumn/BoardViewportPlaceholder/PlaceholderCenter"]
+[node name="ConfirmMargin" type="MarginContainer" parent="BoardMargin/BoardColumn/ActionConfirm"]
 layout_mode = 2
-text = "Phase 1：216 格仅作为运行时状态数据承载\n固定棋盘显示节点将在交互规格确认后预置"
-horizontal_alignment = 1
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 8
 
-[node name="BoardBoundaryNote" type="Label" parent="BoardMargin/BoardColumn"]
+[node name="ConfirmColumn" type="VBoxContainer" parent="BoardMargin/BoardColumn/ActionConfirm/ConfirmMargin"]
 layout_mode = 2
-text = "当前仅验证工程、场景和数据接缝；尚无合法行动、迷雾或结算。"
+theme_override_constants/separation = 4
+
+[node name="ConfirmSummary" type="Label" parent="BoardMargin/BoardColumn/ActionConfirm/ConfirmMargin/ConfirmColumn"]
+layout_mode = 2
+text = "等待行动"
 autowrap_mode = 2
+
+[node name="ConfirmWarning" type="Label" parent="BoardMargin/BoardColumn/ActionConfirm/ConfirmMargin/ConfirmColumn"]
+layout_mode = 2
+text = "确认后消耗本次行动"
+autowrap_mode = 2
+
+[node name="ConfirmButtons" type="HBoxContainer" parent="BoardMargin/BoardColumn/ActionConfirm/ConfirmMargin/ConfirmColumn"]
+layout_mode = 2
+alignment = 2
+
+[node name="CancelButton" type="Button" parent="BoardMargin/BoardColumn/ActionConfirm/ConfirmMargin/ConfirmColumn/ConfirmButtons"]
+custom_minimum_size = Vector2(100, 44)
+layout_mode = 2
+text = "取消"
+
+[node name="ConfirmButton" type="Button" parent="BoardMargin/BoardColumn/ActionConfirm/ConfirmMargin/ConfirmColumn/ConfirmButtons"]
+custom_minimum_size = Vector2(120, 44)
+layout_mode = 2
+text = "确认行动"

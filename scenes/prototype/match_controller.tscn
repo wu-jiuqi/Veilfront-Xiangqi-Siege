@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/prototype/match_controller.gd" id="1_controller"]
+[ext_resource type="Resource" path="res://resources/prototype/ai/prototype_default_hypothesis.tres" id="2_ai"]
 
 [node name="MatchController" type="Node"]
 script = ExtResource("1_controller")
+ai_profile = ExtResource("2_ai")

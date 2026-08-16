@@ -31,6 +31,11 @@ static func run_suite() -> bool:
 	var view_b: Dictionary = Projector.project(state_b, MatchState.RED)
 	_expect(Canonical.digest(view_a) == Canonical.digest(view_b), "隐藏差异不得改变 PlayerView", failures)
 	_expect(not view_a.has("rng") and not view_a.has("board"), "PlayerView 不得携带 RNG 或完整棋盘", failures)
+	_expect(view_a["match_seed"] == 80123, "PlayerView 只公开本局 seed 引用而非 RNG 状态", failures)
+	_expect(view_a["full_round_limit_hypothesis"] == 50, "PlayerView 公开实际 50 回合试玩假设", failures)
+	_expect(view_a["round_limit_status"] == "hypothesis_cli_overridable", "PlayerView 保留回合上限假设状态", failures)
+	_expect(view_a["rules_revision"] == "owner-freeze-revision-2" \
+		and view_a["implementation_revision"] == "prototype-core-revision-3", "PlayerView 公开规则与实现 revision", failures)
 	for wall: Dictionary in view_a["walls"]:
 		_expect(wall.size() == 2 and wall.has("side") and wall.has("status"), "墙投影仅公开阵营与状态", failures)
 	_expect(view_a["flags"][0]["occupier_piece_id"] == "", "不可见敌方占旗棋子 ID 必须匿名", failures)

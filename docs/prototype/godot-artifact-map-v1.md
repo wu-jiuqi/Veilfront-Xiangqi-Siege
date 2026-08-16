@@ -13,13 +13,13 @@
 | 路径 | Godot/产物类型 | 用途 | 所有者 | Phase 1 状态 |
 |---|---|---|---|---|
 | `project.godot` | 工程设置 | Godot 4.7.1 最小工程、原型主场景、窗口与渲染器设置 | Godot 技术负责人 | 本轮创建 |
-| `scenes/prototype/gate1_logic_lab.tscn` | `PackedScene` / `Control` | 逻辑实验室组合根；只连接预置 UI 壳和最小运行时状态适配脚本 | Godot 技术负责人 | 本轮创建 |
-| `scenes/prototype/match_controller.tscn` | `PackedScene` / `Node` | 预置非 UI 对局控制器；隔离 FullState，向 Control 仅返回深复制 PlayerView | Godot 技术负责人 | Iteration 1 revision 3 已创建 |
-| `scenes/prototype/board_shell.tscn` | `PackedScene` / `PanelContainer` | 棋盘逻辑占位区；固定标题、尺寸与说明，不预置 216 个数据格节点 | Godot 技术负责人 | 本轮创建 |
-| `scenes/prototype/status_shell.tscn` | `PackedScene` / `PanelContainer` | 阶段、状态、旗帜、城墙和事件日志的固定占位 UI | Godot 技术负责人 | 本轮创建 |
+| `scenes/prototype/gate1_logic_lab.tscn` | `PackedScene` / `Control` | Iteration 2 可丢弃试玩组合根；预置种子、配置、工作区与终局反馈节点 | Godot 技术负责人 | Iteration 2 灰盒已实现 |
+| `scenes/prototype/match_controller.tscn` | `PackedScene` / `Node` | 预置非 UI 对局控制器；私有隔离 FullState/prepare token，并绑定现有 PlayerView 基线 AI hypothesis 资源 | Godot 技术负责人 | Iteration 2 灰盒已实现 |
+| `scenes/prototype/board_shell.tscn` | `PackedScene` / `PanelContainer` | 预置 `ScrollContainer + GridContainer + 216 Button` 的 24×9 主棋盘、只读概览与行动确认区 | Godot 技术负责人 | Iteration 2 灰盒已实现 |
+| `scenes/prototype/status_shell.tscn` | `PackedScene` / `PanelContainer` | 预置行动/选择、墙、旗、棋子、模式按钮、AI 单步和玩家事件面板 | Godot 技术负责人 | Iteration 2 灰盒已实现 |
 | `resources/prototype/gate1_logic_lab_theme.tres` | `Theme` | 原型壳共享颜色、字号和 `StyleBoxFlat` 样式 | Godot 技术负责人 | 本轮创建 |
-| `scripts/prototype/gate1_logic_lab.gd` | GDScript / Control 场景适配器 | 承载 216 格空白运行时数据并只消费 PlayerView；不引用 MatchState、board 或 rng | Godot 技术负责人 | Iteration 1 revision 3 信息边界已收紧 |
-| `scripts/prototype/match_controller.gd` | GDScript / 非 UI 控制器 | 私有持有 FullState，绑定预置 `human_side=red`，通过预置信号推送深复制 PlayerView；UI 无 side 选择入口 | Godot 技术负责人 | Iteration 1 revision 3 已创建 |
+| `scripts/prototype/gate1_logic_lab.gd` | GDScript / Control 场景适配器 | 只消费深复制 PlayerView 与公开候选；渲染迷雾/棋/旗/墙/事件，驱动移动、炮击、跳过、AI 单步与固定种子重开 | Godot 技术负责人 | Iteration 2 灰盒已实现；无 FullState 旁路 |
+| `scripts/prototype/match_controller.gd` | GDScript / 非 UI 控制器 | 私有持有 FullState 和 prepare token；投影 human/AI PlayerView，提交人类 intent 并驱动现有公平 AI 单步 | Godot 技术负责人 | Iteration 2 灰盒已实现 |
 | `tests/prototype/run_all.gd` | GDScript / 无头自检入口 | 验证工程入口可实例化、固定节点路径存在、216 格数据容器和种子回显一致 | Godot 技术负责人；结果由 QA 独立复核 | 本轮创建 |
 | `scripts/prototype/*.gd.uid`、`tests/prototype/*.gd.uid` | Godot UID sidecar | Godot 4.7.1 首次扫描生成的脚本稳定资源标识；随对应脚本版本管理 | 对应脚本所有者 | 本轮由引擎生成 |
 | `scripts/prototype/core/**` | GDScript / 纯规则探索 | `FullState`、完整行动真值生成、确定性随机、规则事务、版本化事件与状态摘要 | Godot 技术负责人 | Iteration 1 revision 3 已创建；可丢弃原型 |
@@ -27,6 +27,7 @@
 | `scripts/prototype/replay/replay_runner.gd` | GDScript / 重放入口 | 以 seed 或受控 FullState 快照 + 行动意图重建事件日志并核对最终摘要 | Godot 技术负责人 | Iteration 1 revision 3 已创建 |
 | `scripts/prototype/simulation/match_simulator.gd` | GDScript / 规则压力模拟 | 仅内部 FullState 真值策略的确定性整局推进；不属于 AI 公平证据 | Godot 技术负责人 | Iteration 1 revision 3 已创建，模式固定标记为 `rules_stress_full_state_policy` |
 | `tests/prototype/run_seeded_matches.gd` | GDScript / 批量入口 | `--seeds`、`--start-seed`、`--round-limit`、`--replay-samples`、`--manifest-path`；逐 seed 输出版本化 JSONL、双跑确定性、终局不变量与旗位分布 | Godot 技术负责人；QA 独立验收 | Iteration 1 revision 3 已创建 |
+| `tests/prototype/run_playtest_graybox.gd` | GDScript / 程序化交互烟测 | 实例化主场景并验证 216 个预置格、50 回合元数据、PlayerView 边界、人类移动、AI 单步、跳过、炮击和同种子重开 | Godot 技术负责人；QA 独立复核 | Iteration 2 灰盒已创建 |
 | `resources/prototype/rules/**` | `.tres` 配置 | 后续可调但需序列化的原型规则默认值 | Godot 技术负责人；规则语义由系统与体验负责人验收 | 未创建；等待规则规格 |
 | `tests/prototype/test_match_state.gd`、`test_rules_core.gd` | GDScript / 行为测试 | 冻结开局、旗生命周期、炮击、士替死、后备队列、墙修复时序 | Godot 技术负责人；QA 独立验收 | Iteration 1 定向覆盖已创建 |
 | `tests/prototype/test_player_view.gd`、`test_replay.gd` | GDScript / 黑盒与确定性测试 | 隐藏等价投影/查询/错误/AI DTO 与 seed+意图重放一致性 | Godot 技术负责人；QA 独立验收 | Iteration 1 定向覆盖已创建 |
@@ -43,28 +44,28 @@
 Gate1LogicLab (Control, 组合根；预置 Theme)
 ├─ MatchController (预置非 UI Node 场景实例；私有 FullState → PlayerView)
 ├─ Background (ColorRect)
-└─ SafeMargin (MarginContainer)
+├─ SafeMargin (MarginContainer)
    └─ Page (VBoxContainer)
       ├─ HeaderPanel (PanelContainer)
       │  └─ HeaderMargin (MarginContainer)
       │     └─ HeaderRow (HBoxContainer)
       │        ├─ Title (Label)
-      │        └─ SeedGroup (HBoxContainer)
-      │           ├─ SeedCaption (Label)
-      │           └─ SeedValue (Label)
+      │        ├─ SeedGroup (LineEdit / SeedValue / RestartButton)
+      │        └─ MatchMeta (玩家 / 行动方 / 完整轮 / hypothesis)
       ├─ Workspace (HBoxContainer)
-      │  ├─ BoardShell (预置场景实例)
-      │  └─ StatusShell (预置场景实例)
+      │  ├─ BoardShell (OverviewStrip / BoardScroll / 24×9 BoardGrid / ActionConfirm)
+      │  └─ StatusShell (墙 / 旗 / 选择 / 行动模式 / AI 单步 / PlayerEventLog)
       └─ Footer (Label)
+└─ TerminalOverlay (胜者 / 胜因 / 完整轮 / 同种子或新种子重开)
 ```
 
-`BoardShell` 与 `StatusShell` 各自封装一个清楚概念，固定结构全部写入 `.tscn`；主场景脚本不得调用 `Control.new()`、`Label.new()` 或 `add_child()` 生成固定 UI。
+`BoardShell` 与 `StatusShell` 各自封装一个清楚概念，含 216 个格子在内的固定结构全部写入 `.tscn`；主场景脚本只连接预置节点、更新 PlayerView 驱动的数据和样式，不调用 `Control.new()`、`Label.new()` 或 `add_child()` 生成固定 UI。
 
 ## 动态生成例外
 
 | 动态内容 | 允许形式 | 理由与限制 |
 |---|---|---|
-| 24×9 共 216 格棋局状态 | `Array[int]` 或后续明确类型的数据对象 | 格状态是密集运行时数据，也是无头批量模拟输入；预置 216 个 UI 节点会把规则状态和显示树耦合，增加回放与测试风险。本轮只验证数据承载，不证明解耦架构已成立。 |
+| 24×9 共 216 格棋局状态 | `Array[int]` 或后续明确类型的数据对象 | 规则状态仍是密集运行时数据；Iteration 2 按批准灰盒规格另行预置 216 个纯显示/输入 Button，但 Button 不持有规则真值，不能进入摘要或回放事实源。 |
 | 棋子、行动事件、玩家视角事件、随机消费记录 | 后续纯数据对象/值对象 | 数量、内容与生命周期由对局决定，需进入状态摘要与回放；不因数据动态而允许动态生成固定 UI。 |
 | 测试中的场景实例 | 测试脚本从 `PackedScene` 临时实例化 | 无头测试必须创建并释放被测场景；这是测试生命周期，不是生产 UI 生成方案。 |
 | `user://prototype/gate1/**` 输出 | 运行时按局生成日志文件 | 日志由种子与行动序列决定，不能作为预置资源；不得把未公开随机结果写入玩家可见日志。 |
@@ -139,3 +140,16 @@ Gate1LogicLab (Control, 组合根；预置 Theme)
 | `godot --headless --path . --script res://tests/prototype/run_seeded_matches.gd -- --seeds 10 --replay-samples 2 --manifest-path user://prototype/test-output/elephant_reveal_revision25_smoke.jsonl` | 0 | 10/10 完成且双跑确定性 10/10、差异 0；完整行动重放样本 2/2，`records_digest=e6f8dfccdccb68f12733368c47fc5ef18c37396d5e2f555c8323c6f179b0703e`。 |
 
 本轮按授权暂不运行 1000 seeds；固定批次和最终证据仍由独立 QA 执行并保存，不将上述小样本升级为 GATE 结论。
+
+## Iteration 2 可丢弃试玩灰盒生产者自检
+
+| 命令 | 退出码 | 结果 |
+|---|---:|---|
+| `godot --headless --path . --quit-after 3` | 0 | 主场景加载并报告 216 个预置交互格、默认回合上限 50、`hypothesis_cli_overridable`。 |
+| `godot --headless --path . --editor --quit-after 3` | 0 | Godot 4.7.1 首次扫描完成；短退仍报告既有 `Scan thread aborted`，并为四个既有脚本提示/重建缺失 UID 缓存。自动生成且不属本任务的 sidecar 已移除，不将警告记为无警告通过。 |
+| `godot --headless --path . --script res://tests/prototype/run_playtest_graybox.gd` | 0 | PlayerView 元数据/信息边界、人类移动、AI 单步、主动跳过、区域炮击及同种子重开均通过。 |
+| `godot --headless --path . --script res://tests/prototype/run_all.gd` | 0 | 既有 10 个规则、迷雾、重放、模拟、准备事务和公平 AI 聚焦套件全部通过。 |
+| `godot --headless --path . --script res://tests/prototype/run_seeded_matches.gd -- --seeds 3 --start-seed 471001 --round-limit 50 --replay-samples 1 --manifest-path user://prototype/test-output/iteration2_graybox_smoke_50.jsonl` | 0 | 3/3 完成，确定性差异 0，1/1 完整重放；这是生产者小样本，不是 1000 seeds 门禁证据。 |
+| 同一批量入口使用 `--seeds 1 --round-limit 2 --replay-samples 0` | 0 | 输出实际 `full_round_limit_hypothesis=2` 且在第 2 完整轮终止，证明 CLI 覆盖仍有效。 |
+
+当前剩余必须项：Godot 编辑器导入复核、50 回合固定 1000 seeds、确定性差异 0 的完整批次、独立 QA 与项目所有者人工试玩。灰盒自检不允许自动返回 `review` 或批准 GATE-1。

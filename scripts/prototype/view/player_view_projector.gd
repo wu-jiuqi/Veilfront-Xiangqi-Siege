@@ -75,6 +75,11 @@ static func project(full_state: Dictionary, viewer_side: String) -> Dictionary:
 
 	return {
 		"schema_version": "player-view-v1",
+		"match_seed": int(full_state["rng"]["seed"]),
+		"rules_revision": str(full_state["rules_revision"]),
+		"implementation_revision": str(full_state["implementation_revision"]),
+		"full_round_limit_hypothesis": int(full_state["configuration"]["full_round_limit_hypothesis"]),
+		"round_limit_status": str(full_state["configuration"]["round_limit_status"]),
 		"viewer_side": viewer_side,
 		"board_width": full_state["board_width"],
 		"board_height": full_state["board_height"],
