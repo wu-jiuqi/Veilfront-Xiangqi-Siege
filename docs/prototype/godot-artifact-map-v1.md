@@ -75,7 +75,7 @@ Gate1LogicLab (Control, 组合根；预置 Theme)
 
 - `scripts/prototype/**` 与 `scenes/prototype/**` 是 GATE-1 探索产物；进入正式功能开发前必须依据证据决定重写或保留，不能因为可运行就升级为正式架构。
 - “确定性规则核心与显示层解耦”仍是 `hypothesis`。Iteration 1 revision 3 已增加传统棋子几何、特殊规则、投影白名单、完整行动真值生成、行动准备事务、整局终止模拟与抽样回放证据，仍需独立 QA 复核。
-- `full_round_limit_hypothesis=8` 只是为了让固定批量命令在原型预算内终止的 CLI 可覆盖技术假设，不是平衡建议或冻结规则。
+- `full_round_limit_hypothesis=50` 是项目所有者为 Iteration 2 人工试玩指定的临时默认值，仍属于 CLI 可覆盖技术假设，不是平衡建议或冻结规则；批量验证仍可通过 `--round-limit` 显式覆盖。
 - 项目所有者已冻结“田字显形”为每次合法相象移动的起终点包围完整 3×3 九格（含起点、象眼、终点）；`reveal_cells_for_elephant_move` 不裁切该几何，投影对多枚相象的当前九格源取并集。
 - 规则压力模拟明确使用 `rules_stress_full_state_policy`，只证明规则终止、状态不变量、统计与抽样回放，不作为 PlayerView AI 公平证据。
 - 炮击采用项目所有者确认的无冷却规则。FullState、PlayerView、日志和摘要均没有共享冷却字段；资格只读取敌墙 `INTACT`、炮在己方大本营和该炮剩余弹药。

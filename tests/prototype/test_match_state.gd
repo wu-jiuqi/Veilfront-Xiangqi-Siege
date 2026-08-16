@@ -7,6 +7,24 @@ const MatchState = preload("res://scripts/prototype/core/match_state.gd")
 static func run_suite() -> bool:
 	var failures: Array[String] = []
 	var state: Dictionary = MatchState.create(471001)
+	_expect(
+		state["configuration"]["full_round_limit_hypothesis"] == 50,
+		"默认完整回合上限临时调整为 50",
+		failures
+	)
+	_expect(
+		state["configuration"]["round_limit_status"] == "hypothesis_cli_overridable",
+		"回合上限保持 CLI 可覆盖假设状态",
+		failures
+	)
+	var overridden_state: Dictionary = MatchState.create(471001, {
+		"full_round_limit_hypothesis": 7,
+	})
+	_expect(
+		overridden_state["configuration"]["full_round_limit_hypothesis"] == 7,
+		"显式回合上限继续覆盖默认假设",
+		failures
+	)
 	_expect(state["schema_version"] == "full-state-v1", "FullState schema版本", failures)
 	_expect(state["rules_revision"] == "owner-freeze-revision-2", "规则冻结水位", failures)
 	_expect(state["active_side"] == MatchState.RED, "红方必须固定先手", failures)

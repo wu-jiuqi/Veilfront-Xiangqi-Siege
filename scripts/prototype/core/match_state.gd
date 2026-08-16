@@ -8,7 +8,7 @@ const BOARD_HEIGHT: int = 24
 const RED: String = "red"
 const BLACK: String = "black"
 const NEUTRAL: String = "neutral"
-const DEFAULT_FULL_ROUND_LIMIT_HYPOTHESIS: int = 8
+const DEFAULT_FULL_ROUND_LIMIT_HYPOTHESIS: int = 50
 
 
 static func create(seed_value: int, configuration: Dictionary = {}) -> Dictionary:
