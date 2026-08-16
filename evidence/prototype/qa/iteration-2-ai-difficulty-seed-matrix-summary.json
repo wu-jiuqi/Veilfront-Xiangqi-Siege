@@ -1,0 +1,64 @@
+{
+  "schema_version": "independent-qa-ai-difficulty-summary-v1",
+  "tested_commit": "e5963e229c05557d668316531779e406cc9e801d",
+  "qa_instance": "inst:01M02NJ3JFHVZ5C4SP5MTJFJR6",
+  "simulation_mode": "player_view_ai_one_decision_fairness_matrix",
+  "start_seed": 471001,
+  "requested_fixed_seeds": 100,
+  "difficulty_count": 3,
+  "records_count": 300,
+  "failure_count": 0,
+  "determinism_mismatch_count": 0,
+  "hidden_equivalence_mismatch_count": 0,
+  "mapping_failure_count": 0,
+  "submit_failure_count": 0,
+  "per_difficulty": {
+    "easy": {
+      "records": 100,
+      "profile_id": "prototype-low-budget-hypothesis",
+      "profile_config_digest": "2b4a6dfd884f1466b9352da4f4238716b313b8e1305e0710025e2c17f25b0e7b",
+      "candidate_limit_hypothesis": 8,
+      "evaluated_candidates_min": 8,
+      "evaluated_candidates_max": 8,
+      "evaluated_candidates_average": 8.0,
+      "evaluated_candidates_total": 800,
+      "selected_kind_counts": {"bombard": 46, "move": 54},
+      "unique_selected_action_count": 68
+    },
+    "medium": {
+      "records": 100,
+      "profile_id": "prototype-default-hypothesis",
+      "profile_config_digest": "07b2c4cffdc324a90ade47a0c682c49f75bb1960bd5bf43c91b317367a36aad0",
+      "candidate_limit_hypothesis": 32,
+      "evaluated_candidates_min": 32,
+      "evaluated_candidates_max": 32,
+      "evaluated_candidates_average": 32.0,
+      "evaluated_candidates_total": 3200,
+      "selected_kind_counts": {"move": 100},
+      "unique_selected_action_count": 26
+    },
+    "hard": {
+      "records": 100,
+      "profile_id": "prototype-high-budget-hypothesis",
+      "profile_config_digest": "5eb533539610bcf0825c197be7b7a5159cd53e447a011d2e41f126290c8351e2",
+      "candidate_limit_hypothesis": 96,
+      "evaluated_candidates_min": 96,
+      "evaluated_candidates_max": 96,
+      "evaluated_candidates_average": 96.0,
+      "evaluated_candidates_total": 9600,
+      "selected_kind_counts": {"move": 100},
+      "unique_selected_action_count": 18
+    }
+  },
+  "difference_statistics": {
+    "easy_vs_medium_different": 84,
+    "medium_vs_hard_different": 86,
+    "easy_vs_hard_different": 92,
+    "all_three_same": 5
+  },
+  "records_digest": "a5d4f6235a8652cd86eb7d303f568a50409a8b83f07e600fc4da275073f9e02a",
+  "manifest_line_count": 301,
+  "manifest_sha256": "ed54d426ad22bf6332c513dec78ec3bfdfb7becd85ebd9dd2ee2e566a00bfefa",
+  "contract_1000_seeds_satisfied": false,
+  "scope_note": "每个 seed/难度只验证一次 PlayerView AI 决策及其确定性、隐藏等价、映射与提交；这不是 300 局完整对局，也没有胜负、胜因或局长统计。"
+}

@@ -1,0 +1,93 @@
+QA Instance: inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
+执行时间: 2026-08-16T16:32:45.5275682+08:00
+受测提交: e5963e229c05557d668316531779e406cc9e801d
+Loop: active / Iteration 2 / revision 38 / sequence 38
+
+=== 项目实例 ===
+COMMAND: D:\Python\Anaconda3\python.exe ...\validate_project_instance.py --project-root .
+EXIT: 0
+RESULT: state=normal; errors=[]; warnings=[]; plugin lock=normal; locked/installed version=0.4.0-alpha.2; framework digest=3589bce5cf4388f91a08f12acb5d90679256191d5085e65687d06a635bbdcd32
+
+=== Pipeline Contract ===
+COMMAND: D:\Python\Anaconda3\python.exe ...\validate_pipeline_contract.py game-pipeline\loops\contracts\CTR-P1-001-vertical-slice.yaml
+EXIT: 0
+OUTPUT: OK: game-pipeline\loops\contracts\CTR-P1-001-vertical-slice.yaml
+
+=== Organization Registry ===
+COMMAND: D:\Python\Anaconda3\python.exe ...\validate_organization_registry.py --snapshot game-pipeline\organization\snapshot.yaml --history game-pipeline\organization\event-history.yaml
+EXIT: 0
+OUTPUT: OK: Organization Registry 合同、摘要、运行时状态与 Event History 一致
+
+=== 未修改 validate_history() ===
+COMMAND: D:\Python\Anaconda3\python.exe -B game-pipeline\loops\tools\qa_p1_003_migration.py verify-history
+EXIT: 0
+OUTPUT: validator_sha256=90804f2221af1973d099f4fc531fd39e8aaaaca7bf101922ee63c9c67f909633; history_error_count=0; errors=[]
+
+=== Iteration 2 rev38 摘要链 ===
+COMMAND: D:\Python\Anaconda3\python.exe -B game-pipeline\loops\tools\iteration2_playtest.py verify-active
+EXIT: 0
+OUTPUT: result=OK; current_state=active; current_iteration=2; record_revision=38; last_event_sequence=38; last_event_digest=fbc96e54b834e9c1188a513a5fe29c76fb89c7ff1b9187b7870018566546af97; gate_1_decision=revise; formal_production=forbidden
+
+=== 官方 Loop CLI 原始失败结果 ===
+COMMAND: D:\Python\Anaconda3\python.exe ...\validate_loop_registry.py --snapshot game-pipeline\loops\registry\first-production-loop\snapshot.yaml --event ...\loop-registry-event.template.yaml --contract game-pipeline\loops\contracts\loop-contract-gate1-vertical-slice-v2.yaml --state-machine ...\loop-state-machine.default.yaml --history game-pipeline\loops\registry\first-production-loop\event-history.yaml
+EXIT: 1
+RESULT: failed
+STDERR（按 validator UTF-8 文本解码）:
+ERROR: Snapshot 模板初始状态必须等于状态机 initial_state
+ERROR: Snapshot 模板 current_iteration 必须从 0 开始
+ERROR: 注册后的 Snapshot 模板必须位于 sequence=1、record_revision=1
+ERROR: draft 注册基线的 inputs 和 outputs 必须为空
+ERROR: Snapshot input_slot_id 必须完整对应 Contract required_inputs
+ERROR: Snapshot deliverable_id 必须完整对应 Contract required_deliverables
+PROGRAMMATIC RECHECK: error_count=6; errors 与 Contract v2 required_error_set 完全相同；没有第七项错误。
+严禁表述为“官方 CLI 通过”。
+
+=== Godot 4.7.1 ===
+COMMAND: D:\Godot\godot.cmd --version
+EXIT: 0
+OUTPUT: 4.7.1.stable.official.a13da4feb
+
+COMMAND: D:\Godot\godot.cmd --headless --path . --editor --quit-after 3
+EXIT: 0
+OUTPUT: first_scan_filesystem DONE；四个既有脚本缺失 .uid 的重建提示；短退 WARNING: Scan thread aborted。无解析、导入或资源加载 ERROR。四个自动 sidecar 已在 QA 后清理。
+
+COMMAND: D:\Godot\godot.cmd --headless --path . --quit-after 3
+EXIT: 0
+OUTPUT: GATE1_PLAYTEST_GRAYBOX_READY seed=471001 cells=216 round_limit=50 status=hypothesis_cli_overridable
+
+COMMAND: D:\Godot\godot.cmd --headless --path . --script res://tests/prototype/run_playtest_graybox.gd
+EXIT: 0
+OUTPUT: PLAYTEST_GRAYBOX_SMOKE_PASSED cells=216 round_limit=50 human_move=true ai_step=true pass=true bombard=true ai_difficulties=3 ai_audit_test_only=true
+DETAIL: easy/medium/hard 均绑定正确 profile、可 AI 单步、记录候选预算；审计 getter 深复制；审计未进入 human PlayerView、玩家事件日志或 UI 脚本。
+
+COMMAND: D:\Godot\godot.cmd --headless --path . --script res://tests/prototype/run_all.gd
+EXIT: 0
+OUTPUT: PROTOTYPE_BASIS_CHECKS_PASSED scaffold=9 focused_suites=11 full_gate1=false
+DETAIL: 规则、迷雾、PlayerView、回放、结算、后备准备、AI 公平性、三档配置/固定种子/8-32-96 预算夹具全部通过。
+
+=== 100 固定 seed × 三档 PlayerView AI 单决策矩阵 ===
+COMMAND: D:\Godot\godot.cmd --headless --path . --script res://tests/prototype/run_ai_difficulty_seed_matrix.gd -- --seeds 100 --start-seed 471001 --manifest-path res://evidence/prototype/qa/iteration-2-ai-difficulty-seed-matrix-100x3.jsonl
+EXIT: 0
+OUTPUT: records_count=300; failure_count=0; determinism_mismatch_count=0; hidden_equivalence_mismatch_count=0; mapping_failure_count=0; submit_failure_count=0; records_digest=a5d4f6235a8652cd86eb7d303f568a50409a8b83f07e600fc4da275073f9e02a
+BUDGET: easy=8/8/8; medium=32/32/32; hard=96/96/96 (min/avg/max)
+DIFFERENCE: easy_vs_medium=84; medium_vs_hard=86; easy_vs_hard=92; all_three_same=5
+MANIFEST: 301 lines; sha256=ed54d426ad22bf6332c513dec78ec3bfdfb7becd85ebd9dd2ee2e566a00bfefa
+SCOPE: 每个 seed/档只执行一次 PlayerView AI 决策及复跑/隐藏等价验证，不是 300 局完整对局。
+
+=== 50 回合、100 seed 完整规则压力 ===
+COMMAND: D:\Godot\godot.cmd --headless --path . --script res://tests/prototype/run_seeded_matches.gd -- --seeds 100 --start-seed 471001 --round-limit 50 --replay-samples 10 --manifest-path evidence/prototype/qa/iteration-2-rules-stress-100-seeds-round50.jsonl
+EXIT: 0
+OUTPUT: completed_matches=100; failure_count=0; determinism_checked_count=100; determinism_mismatch_count=0; replay_verified_count=10/10; records_digest=68c6a92f7fad4091b0e5353a04fa08b3617950dad3958cdcbff754546f85b2e8
+WINNERS: red=6; black=6; draw=88
+REASONS: round_limit_flags=12; round_limit_draw=88
+ROUNDS: min/p50/p90/p95/max=50
+MANIFEST: 102 lines; sha256=b958d68191134a8a5c02122f8028a9417b67675dced1de5a905a176c3ac1ee18
+SCOPE: simulation_mode=rules_stress_full_state_policy；不是三档 PlayerView AI 完整对局。
+
+=== 独立 manifest 复核 ===
+EXIT: 0
+OUTPUT: result=OK；两份文件行数、seed 集合、records 数、每条零失败布尔、8/32/96 预算、summary 字段、records digest 与文件 SHA-256 均重算一致。
+
+=== 静态信息泄漏审计 ===
+EXIT: 0
+OUTPUT: gate1_logic_lab.gd 对 MatchState、FullState、get_last_ai_decision_audit_for_test、controller_context、profile_config_digest、input_projection_digest、full_audit_event 的命中数为 0；事件日志只遍历 player_view.player_events。受控审计引用只存在于非 UI MatchController。
