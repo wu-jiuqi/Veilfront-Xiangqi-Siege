@@ -1,0 +1,49 @@
+approval:
+  schema_version: game-production-approval/v1
+  approval_id: approval:veilfront-xiangqi-siege:loop-contract:7b7fcf369201
+  subject_kind: loop-contract
+  subject_id: LOOP-CTR-GATE1-VERTICAL-SLICE-001@v2
+  subject_digest: 7b7fcf36920109d379aa0e230cf70a378ed7ec228ff6a88bccf35cf481fcf09c
+  decision: approved
+  decided_by: project-owner
+  decided_at: '2026-08-16T11:57:48.4700000+08:00'
+  evidence:
+    source_refs:
+    - codex-thread://01a008aa-c77f-7060-9e11-1a6d95e41441#owner-approval-qa-p1-003-contract-v2
+    - game-pipeline/loops/evidence/QA-P1-003-decision-package.md@subject-digest:b1eef2e3b99673a5070b0aa4d73c7d27eca8b5e315796f596e07757acbc1c210
+    immutable_baseline:
+      plugin_version: 0.4.0-alpha.2
+      framework_digest: 3589bce5cf4388f91a08f12acb5d90679256191d5085e65687d06a635bbdcd32
+      validator_digest: 90804f2221af1973d099f4fc531fd39e8aaaaca7bf101922ee63c9c67f909633
+      decision_package_digest: b1eef2e3b99673a5070b0aa4d73c7d27eca8b5e315796f596e07757acbc1c210
+      contract_v1_subject_digest: a970c55fe068a1252251ee4d30dedff32bee9da1f8e7e7ef7dc0c501be416799
+      contract_v1_file_digest: a0380db5819f9651bbb2b0fab243bb3489504b11ed808506f2ecb92a589ae1ad
+      snapshot_rev30_file_digest: 4b1c2ab9d224e4e91e076a2f7f08e42dbdafed88e6f2564b01f20461be88d291
+      event_history_rev30_file_digest: 17a75a74da3a3314353351d22dc0fb6d7f8c4b941ae8f617b4e3b7c2f97b83e8
+      event_history_rev30_tail_digest: 1c4508c725c900959f649e6761bd0e54d3c1fcb5e14f35089b320fa43fe32e89
+      record_revision: 30
+      last_event_sequence: 30
+  authorized_action:
+    summary: 为 QA-P1-003 建立一次性、精确绑定、可撤销的临时工具兼容迁移。
+    allowed:
+    - 创建 Contract v2，不覆盖 v1。
+    - 追加 core.contract_migrated 事件并原子更新 Snapshot。
+    - 独立 QA 接受且全部条件满足后允许 active -> review。
+    - review 后仅准备 GATE-1 决策包。
+    forbidden:
+    - 把官方 CLI 记录为通过。
+    - 自动作出 GATE-1 决定。
+    - 在 GATE-1 单独批准前开始正式功能或资产生产。
+    - 修改锁定插件缓存、重写历史或伪造 draft Snapshot。
+    revocation:
+    - 插件版本、框架摘要或校验器摘要变化。
+    - 官方 CLI 出现六项之外的任何错误，或退出码不再恰好为 1。
+    - rev30 历史前缀文件摘要或 rev30 尾事件摘要变化。
+    - Contract v2 被替换或撤销。
+    - 正式修复版本可用并完成迁移。
+    - 独立 QA 发现新的历史、摘要、权限或一致性问题。
+  application:
+    materialized_path: game-pipeline/loops/contracts/loop-contract-gate1-vertical-slice-v2.yaml
+    materialized_status: approved
+    materialized_digest: 5a9ed8f5854865adfecbcff808f8dc96af52abecb371dbd18bb8fd137a775e62
+    applied_at: '2026-08-16T11:57:48.4700000+08:00'
