@@ -1,0 +1,370 @@
+extends Control
+
+signal point_pressed(cell: Array)
+signal annotation_changed(cell: Array, marker: String)
+
+const BOARD_WIDTH: int = 9
+const BOARD_HEIGHT: int = 24
+const RED: String = "red"
+const BLACK: String = "black"
+
+@export var point_spacing: Vector2 = Vector2(58.0, 40.0)
+@export var board_padding: Vector2 = Vector2(34.0, 28.0)
+
+var _player_view: Dictionary = {}
+var _action_previews: Array = []
+var _selected_piece_id: String = ""
+var _selected_origin: Array = []
+var _action_mode: String = "move"
+var _can_interact: bool = false
+var _annotations: Dictionary = {}
+var _annotation_cell: Array = []
+
+@onready var annotation_menu: PopupMenu = $AnnotationMenu
+
+
+func _ready() -> void:
+	custom_minimum_size = Vector2(
+		board_padding.x * 2.0 + point_spacing.x * float(BOARD_WIDTH - 1),
+		board_padding.y * 2.0 + point_spacing.y * float(BOARD_HEIGHT - 1)
+	)
+	annotation_menu.id_pressed.connect(_on_annotation_menu_id_pressed)
+	mouse_filter = Control.MOUSE_FILTER_STOP
+	queue_redraw()
+
+
+func set_board_data(
+	player_view: Dictionary,
+	action_previews: Array,
+	selected_piece_id: String,
+	selected_origin: Array,
+	action_mode: String,
+	can_interact: bool
+) -> void:
+	_player_view = player_view.duplicate(true)
+	_action_previews = action_previews.duplicate(true)
+	_selected_piece_id = selected_piece_id
+	_selected_origin = selected_origin.duplicate()
+	_action_mode = action_mode
+	_can_interact = can_interact
+	queue_redraw()
+
+
+func clear_annotations() -> void:
+	_annotations.clear()
+	queue_redraw()
+
+
+func annotation_snapshot() -> Dictionary:
+	return _annotations.duplicate(true)
+
+
+func logical_to_local(cell: Vector2i) -> Vector2:
+	var display := _logical_to_display(cell)
+	return board_padding + Vector2(display.x * point_spacing.x, display.y * point_spacing.y)
+
+
+func local_to_logical(local_position: Vector2) -> Vector2i:
+	var relative: Vector2 = local_position - board_padding
+	var display := Vector2i(
+		roundi(relative.x / point_spacing.x),
+		roundi(relative.y / point_spacing.y)
+	)
+	if display.x < 0 or display.x >= BOARD_WIDTH or display.y < 0 or display.y >= BOARD_HEIGHT:
+		return Vector2i.ZERO
+	var center: Vector2 = board_padding + Vector2(display.x * point_spacing.x, display.y * point_spacing.y)
+	if absf(local_position.x - center.x) > point_spacing.x * 0.46 \
+	or absf(local_position.y - center.y) > point_spacing.y * 0.46:
+		return Vector2i.ZERO
+	return _display_to_logical(display)
+
+
+func _gui_input(event: InputEvent) -> void:
+	var mouse_event := event as InputEventMouseButton
+	if mouse_event == null or not mouse_event.pressed:
+		return
+	var cell: Vector2i = local_to_logical(mouse_event.position)
+	if cell == Vector2i.ZERO:
+		return
+	if mouse_event.button_index == MOUSE_BUTTON_LEFT:
+		point_pressed.emit([cell.x, cell.y])
+		accept_event()
+	elif mouse_event.button_index == MOUSE_BUTTON_RIGHT:
+		_annotation_cell = [cell.x, cell.y]
+		annotation_menu.position = Vector2i(get_viewport().get_mouse_position())
+		annotation_menu.popup()
+		accept_event()
+
+
+func _on_annotation_menu_id_pressed(id: int) -> void:
+	if _annotation_cell.size() != 2:
+		return
+	var key: String = _cell_key(Vector2i(int(_annotation_cell[0]), int(_annotation_cell[1])))
+	var marker: String = {1: "circle", 2: "cross", 3: "square", 4: ""}.get(id, "")
+	if marker.is_empty():
+		_annotations.erase(key)
+	else:
+		_annotations[key] = marker
+	annotation_changed.emit(_annotation_cell.duplicate(), marker)
+	queue_redraw()
+
+
+func _draw() -> void:
+	_draw_region_bands()
+	_draw_grid_lines()
+	_draw_region_dividers()
+	_draw_vision_overlays()
+	_draw_annotations()
+	_draw_fog_and_contacts()
+	_draw_capture_ghosts()
+	_draw_action_highlights()
+	_draw_discovered_flags()
+	_draw_pieces()
+	_draw_coordinate_labels()
+
+
+func _draw_region_bands() -> void:
+	var left: float = board_padding.x - point_spacing.x * 0.5
+	var width: float = point_spacing.x * float(BOARD_WIDTH)
+	for logical_y: int in range(1, BOARD_HEIGHT + 1):
+		var center_y: float = logical_to_local(Vector2i(1, logical_y)).y
+		var band := Rect2(
+			Vector2(left, center_y - point_spacing.y * 0.5),
+			Vector2(width, point_spacing.y)
+		)
+		draw_rect(band, _region_color(logical_y), true)
+
+
+func _draw_grid_lines() -> void:
+	var top: float = logical_to_local(_display_to_logical(Vector2i(0, 0))).y
+	var bottom: float = logical_to_local(_display_to_logical(Vector2i(0, BOARD_HEIGHT - 1))).y
+	for display_x: int in BOARD_WIDTH:
+		var x: float = board_padding.x + display_x * point_spacing.x
+		draw_line(Vector2(x, top), Vector2(x, bottom), Color(0.54, 0.57, 0.62, 0.72), 1.4, true)
+	for display_y: int in BOARD_HEIGHT:
+		var y: float = board_padding.y + display_y * point_spacing.y
+		draw_line(
+			Vector2(board_padding.x, y),
+			Vector2(board_padding.x + point_spacing.x * float(BOARD_WIDTH - 1), y),
+			Color(0.54, 0.57, 0.62, 0.72), 1.4, true
+		)
+
+
+func _draw_region_dividers() -> void:
+	var left: float = board_padding.x - point_spacing.x * 0.5
+	var right: float = board_padding.x + point_spacing.x * 8.5
+	for boundary: Array in [[3, 4], [8, 9], [16, 17], [21, 22]]:
+		var y: float = (
+			logical_to_local(Vector2i(1, int(boundary[0]))).y
+			+ logical_to_local(Vector2i(1, int(boundary[1]))).y
+		) * 0.5
+		draw_line(Vector2(left, y), Vector2(right, y), Color(0.78, 0.8, 0.84, 0.9), 2.4, true)
+	for wall_y: int in [4, 21]:
+		var wall_color: Color = Color(0.95, 0.34, 0.27, 0.96) if wall_y == 4 \
+			else Color(0.38, 0.68, 1.0, 0.96)
+		var y: float = logical_to_local(Vector2i(1, wall_y)).y
+		draw_line(Vector2(left, y), Vector2(right, y), wall_color, 6.0, true)
+
+
+func _draw_vision_overlays() -> void:
+	var overlays: Dictionary = _player_view.get("vision_overlays", {})
+	for source: Dictionary in overlays.get("rook_paths", []):
+		_draw_point_set_outline(source.get("cells", []), Color(0.31, 0.88, 1.0, 0.9), 3.0, 0.31)
+	for source: Dictionary in overlays.get("elephant_reveal_zones", []):
+		_draw_point_set_outline(source.get("cells", []), Color(0.35, 1.0, 0.72, 0.9), 2.6, 0.36)
+	for source: Dictionary in overlays.get("elephant_block_fields", []):
+		_draw_point_set_outline(source.get("cells", []), Color(1.0, 0.72, 0.2, 0.98), 4.4, 0.3)
+
+
+func _draw_point_set_outline(cells: Array, color: Color, width: float, scale: float) -> void:
+	var cell_set: Dictionary = {}
+	for cell_value: Variant in cells:
+		if not cell_value is Array or cell_value.size() != 2:
+			continue
+		var cell := Vector2i(int(cell_value[0]), int(cell_value[1]))
+		cell_set[_cell_key(cell)] = true
+	var half := Vector2(point_spacing.x * scale, point_spacing.y * scale)
+	for key: String in cell_set.keys():
+		var parts: PackedStringArray = key.split(",")
+		var cell := Vector2i(int(parts[0]), int(parts[1]))
+		var center: Vector2 = logical_to_local(cell)
+		var neighbors: Array[Vector2i] = [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]
+		for direction: Vector2i in neighbors:
+			if cell_set.has(_cell_key(cell + direction)):
+				continue
+			if direction == Vector2i.LEFT:
+				draw_line(center + Vector2(-half.x, -half.y), center + Vector2(-half.x, half.y), color, width, true)
+			elif direction == Vector2i.RIGHT:
+				draw_line(center + Vector2(half.x, -half.y), center + Vector2(half.x, half.y), color, width, true)
+			elif direction == Vector2i.UP:
+				draw_line(center + Vector2(-half.x, -half.y), center + Vector2(half.x, -half.y), color, width, true)
+			else:
+				draw_line(center + Vector2(-half.x, half.y), center + Vector2(half.x, half.y), color, width, true)
+
+
+func _draw_annotations() -> void:
+	var color := Color(0.72, 0.5, 1.0, 0.5)
+	for key: String in _annotations.keys():
+		var parts: PackedStringArray = key.split(",")
+		var center: Vector2 = logical_to_local(Vector2i(int(parts[0]), int(parts[1])))
+		match str(_annotations[key]):
+			"circle":
+				draw_arc(center, 10.0, 0.0, TAU, 24, color, 2.0, true)
+			"cross":
+				draw_line(center + Vector2(-7, -7), center + Vector2(7, 7), color, 2.0, true)
+				draw_line(center + Vector2(-7, 7), center + Vector2(7, -7), color, 2.0, true)
+			"square":
+				draw_rect(Rect2(center - Vector2(8, 8), Vector2(16, 16)), color, false, 2.0)
+
+
+func _draw_fog_and_contacts() -> void:
+	var visible: Dictionary = _coordinate_set(_player_view.get("visible_cells", []))
+	for y: int in range(1, BOARD_HEIGHT + 1):
+		for x: int in range(1, BOARD_WIDTH + 1):
+			var cell := Vector2i(x, y)
+			if not visible.has(_cell_key(cell)):
+				draw_circle(logical_to_local(cell), 4.2, Color(0.02, 0.025, 0.04, 0.72))
+	for contact: Dictionary in _player_view.get("contact_intel", []):
+		var cell_value: Array = contact.get("cell", [])
+		if cell_value.size() == 2:
+			var center: Vector2 = logical_to_local(Vector2i(int(cell_value[0]), int(cell_value[1])))
+			draw_arc(center, 13.0, 0.0, TAU, 24, Color(1.0, 0.46, 0.18, 0.95), 3.0, true)
+
+
+func _draw_capture_ghosts() -> void:
+	for ghost: Dictionary in _player_view.get("capture_ghosts", []):
+		var value: Array = ghost.get("position", [])
+		if value.size() != 2:
+			continue
+		var center: Vector2 = logical_to_local(Vector2i(int(value[0]), int(value[1])))
+		var side: String = str(ghost.get("side", ""))
+		var color: Color = Color(0.95, 0.3, 0.25, 0.25) if side == RED else Color(0.55, 0.7, 0.95, 0.25)
+		draw_circle(center, 15.0, color)
+		draw_arc(center, 15.0, 0.0, TAU, 28, Color(color, 0.46), 2.0, true)
+		_draw_piece_text(center, _piece_mark(str(ghost.get("piece_type", "")), side), Color(1, 1, 1, 0.38))
+
+
+func _draw_action_highlights() -> void:
+	if _selected_piece_id.is_empty():
+		return
+	for preview: Dictionary in _action_previews:
+		if str(preview.get("piece_id", "")) != _selected_piece_id \
+		or str(preview.get("action_type", "")) != _action_mode:
+			continue
+		var value: Array = preview.get("target_cell", [])
+		if value.size() != 2:
+			continue
+		var color: Color
+		match str(preview.get("classification", "")):
+			"KNOWN_LEGAL": color = Color(0.3, 1.0, 0.48, 0.96)
+			"TENTATIVE": color = Color(1.0, 0.78, 0.18, 0.96)
+			_: color = Color(0.42, 0.44, 0.48, 0.45)
+		var center: Vector2 = logical_to_local(Vector2i(int(value[0]), int(value[1])))
+		draw_circle(center, 7.0, Color(color, 0.24))
+		draw_arc(center, 9.0, 0.0, TAU, 20, color, 2.5, true)
+	if _selected_origin.size() == 2:
+		var selected_center: Vector2 = logical_to_local(Vector2i(int(_selected_origin[0]), int(_selected_origin[1])))
+		draw_arc(selected_center, 19.0, 0.0, TAU, 32, Color(1.0, 0.9, 0.35, 1.0), 3.5, true)
+
+
+func _draw_discovered_flags() -> void:
+	for flag: Dictionary in _player_view.get("flags", []):
+		if not bool(flag.get("discovered", false)):
+			continue
+		var value: Array = flag.get("position", [])
+		if value.size() != 2:
+			continue
+		var center: Vector2 = logical_to_local(Vector2i(int(value[0]), int(value[1]))) + Vector2(11, -16)
+		var owner: String = str(flag.get("owner", "neutral"))
+		var color: Color = Color(0.95, 0.82, 0.28, 1.0)
+		if owner == RED:
+			color = Color(1.0, 0.34, 0.28, 1.0)
+		elif owner == BLACK:
+			color = Color(0.38, 0.68, 1.0, 1.0)
+		draw_line(center + Vector2(-5, -4), center + Vector2(-5, 9), color, 2.0, true)
+		draw_colored_polygon(PackedVector2Array([
+			center + Vector2(-4, -4), center + Vector2(8, 0), center + Vector2(-4, 5)
+		]), color)
+
+
+func _draw_pieces() -> void:
+	for piece: Dictionary in _player_view.get("pieces", []):
+		if not bool(piece.get("alive", false)) or bool(piece.get("in_reserve", false)):
+			continue
+		var value: Array = piece.get("position", [])
+		if value.size() != 2:
+			continue
+		var center: Vector2 = logical_to_local(Vector2i(int(value[0]), int(value[1])))
+		var side: String = str(piece.get("side", ""))
+		var fill: Color = Color(0.62, 0.12, 0.1, 0.98) if side == RED else Color(0.11, 0.2, 0.34, 0.98)
+		var border: Color = Color(1.0, 0.55, 0.4, 1.0) if side == RED else Color(0.55, 0.78, 1.0, 1.0)
+		draw_circle(center, 15.5, fill)
+		draw_arc(center, 15.5, 0.0, TAU, 30, border, 2.3, true)
+		_draw_piece_text(center, _piece_mark(str(piece.get("piece_type", "")), side), Color.WHITE)
+
+
+func _draw_piece_text(center: Vector2, text: String, color: Color) -> void:
+	draw_string(
+		ThemeDB.fallback_font,
+		center + Vector2(-15, 6),
+		text,
+		HORIZONTAL_ALIGNMENT_CENTER,
+		30.0,
+		18,
+		color
+	)
+
+
+func _draw_coordinate_labels() -> void:
+	for display_x: int in BOARD_WIDTH:
+		var logical: Vector2i = _display_to_logical(Vector2i(display_x, BOARD_HEIGHT - 1))
+		var center: Vector2 = board_padding + Vector2(display_x * point_spacing.x, (BOARD_HEIGHT - 1) * point_spacing.y)
+		draw_string(ThemeDB.fallback_font, center + Vector2(-10, 24), str(logical.x), HORIZONTAL_ALIGNMENT_CENTER, 20, 12, Color(0.8, 0.82, 0.86, 0.9))
+
+
+func _logical_to_display(cell: Vector2i) -> Vector2i:
+	if str(_player_view.get("viewer_side", RED)) == BLACK:
+		return Vector2i(BOARD_WIDTH - cell.x, cell.y - 1)
+	return Vector2i(cell.x - 1, BOARD_HEIGHT - cell.y)
+
+
+func _display_to_logical(display: Vector2i) -> Vector2i:
+	if str(_player_view.get("viewer_side", RED)) == BLACK:
+		return Vector2i(BOARD_WIDTH - display.x, display.y + 1)
+	return Vector2i(display.x + 1, BOARD_HEIGHT - display.y)
+
+
+func _coordinate_set(cells: Array) -> Dictionary:
+	var result: Dictionary = {}
+	for value: Variant in cells:
+		if value is Array and value.size() == 2:
+			result[_cell_key(Vector2i(int(value[0]), int(value[1])))] = true
+	return result
+
+
+func _cell_key(cell: Vector2i) -> String:
+	return "%d,%d" % [cell.x, cell.y]
+
+
+func _region_color(y: int) -> Color:
+	if y <= 3:
+		return Color(0.24, 0.055, 0.055, 0.95)
+	if y <= 8:
+		return Color(0.17, 0.075, 0.065, 0.95)
+	if y <= 16:
+		return Color(0.105, 0.115, 0.135, 0.98)
+	if y <= 21:
+		return Color(0.055, 0.105, 0.17, 0.95)
+	return Color(0.045, 0.075, 0.19, 0.95)
+
+
+func _piece_mark(piece_type: String, side: String) -> String:
+	if side == RED:
+		return {
+			"rook": "车", "horse": "马", "elephant": "相", "advisor": "仕",
+			"general": "帅", "cannon": "炮", "pawn": "兵",
+		}.get(piece_type, "?")
+	return {
+		"rook": "车", "horse": "马", "elephant": "象", "advisor": "士",
+		"general": "将", "cannon": "炮", "pawn": "卒",
+	}.get(piece_type, "?")

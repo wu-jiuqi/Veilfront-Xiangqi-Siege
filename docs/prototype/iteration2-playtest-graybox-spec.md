@@ -52,7 +52,7 @@ Gate1LogicLab
    ├─ BoardShell
    │  ├─ OverviewStrip：同一 PlayerView 的只读导航概览
    │  ├─ BoardScroll：九路完整可见、沿 24 线长轴滚动
-   │  │  └─ BoardGrid：24 × 9 可交互格
+│  │  └─ BoardSurface：24 × 9 可交互交点、区域底色、城墙/视野边框与本地标注
    │  └─ ActionConfirm：行动类型、公开分类、目标、确认/取消
    └─ StatusShell
       ├─ TurnAndSelection

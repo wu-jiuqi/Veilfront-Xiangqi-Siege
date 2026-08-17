@@ -19,7 +19,6 @@ var selected_piece_id: String = ""
 var selected_origin: Array = []
 var pending_preview: Dictionary = {}
 var action_mode: String = "move"
-var cell_buttons: Dictionary = {}
 var ai_difficulty_id: String = "medium"
 var ai_turn_pending: bool = false
 var network_session: Node
@@ -32,7 +31,7 @@ var network_session: Node
 @onready var round_value: Label = $SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/MatchMeta/RoundValue
 @onready var config_value: Label = $SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/MatchMeta/ConfigValue
 @onready var difficulty_select: OptionButton = $SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/DifficultyGroup/DifficultySelect
-@onready var board_grid: GridContainer = $SafeMargin/Page/Workspace/BoardShell/BoardMargin/BoardColumn/BoardScroll/BoardGrid
+@onready var board_surface: Control = $SafeMargin/Page/Workspace/BoardShell/BoardMargin/BoardColumn/BoardScroll/BoardSurface
 @onready var overview_strip: Label = $SafeMargin/Page/Workspace/BoardShell/BoardMargin/BoardColumn/OverviewStrip
 @onready var confirm_panel: PanelContainer = $SafeMargin/Page/Workspace/BoardShell/BoardMargin/BoardColumn/ActionConfirm
 @onready var confirm_summary: Label = $SafeMargin/Page/Workspace/BoardShell/BoardMargin/BoardColumn/ActionConfirm/ConfirmMargin/ConfirmColumn/ConfirmSummary
@@ -56,12 +55,13 @@ var network_session: Node
 @onready var terminal_overlay: CenterContainer = $TerminalOverlay
 @onready var terminal_value: Label = $TerminalOverlay/TerminalPanel/TerminalMargin/TerminalColumn/TerminalValue
 @onready var ai_turn_timer: Timer = $AiTurnTimer
+@onready var footer: Label = $SafeMargin/Page/Footer
 
 
 func _ready() -> void:
 	board_state.resize(BOARD_CELL_COUNT)
 	board_state.fill(0)
-	_register_cell_buttons()
+	footer.text = "交点棋盘 · 左键选择 / Esc取消 / 右键圆、叉、方形标注"
 	_connect_controls()
 	if network_mode:
 		network_session = get_node_or_null(network_session_path)
@@ -83,16 +83,14 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	var right_click := event as InputEventMouseButton
-	if event.is_action_pressed("ui_cancel") \
-	or (right_click != null and right_click.button_index == MOUSE_BUTTON_RIGHT and right_click.pressed):
+	if event.is_action_pressed("ui_cancel"):
 		_clear_selection()
-		message_value.text = "已取消选择。左键可重新选择己方棋子。"
+		message_value.text = "已取消选择。左键可重新选择己方棋子；右键用于添加棋盘标注。"
 		get_viewport().set_input_as_handled()
 
 
 func get_board_cell_count() -> int:
-	return cell_buttons.size()
+	return BOARD_CELL_COUNT
 
 
 func get_initial_seed() -> int:
@@ -108,7 +106,7 @@ func get_action_preview_snapshot() -> Array:
 
 
 func select_cell_for_test(cell: Array) -> void:
-	_on_board_cell_pressed(int(cell[0]), int(cell[1]))
+	_on_board_point_pressed(cell)
 
 
 func confirm_action_for_test() -> Dictionary:
@@ -164,20 +162,9 @@ func _on_network_connection_state_changed(snapshot: Dictionary) -> void:
 		message_value.text = "局域网连接状态：%s；本版不支持重连，请返回大厅重开房间。" % state
 
 
-func _register_cell_buttons() -> void:
-	for button_value: Variant in board_grid.get_children():
-		var button := button_value as Button
-		if button == null:
-			continue
-		var x: int = int(button.get_meta("board_x"))
-		var y: int = int(button.get_meta("board_y"))
-		button.custom_minimum_size = Vector2(48.0, 48.0)
-		cell_buttons[_cell_key(x, y)] = button
-		button.pressed.connect(_on_board_cell_pressed.bind(x, y))
-		button.gui_input.connect(_on_board_cell_gui_input.bind(button))
-
-
 func _connect_controls() -> void:
+	board_surface.point_pressed.connect(_on_board_point_pressed)
+	board_surface.annotation_changed.connect(_on_board_annotation_changed)
 	confirm_button.pressed.connect(_submit_pending_action)
 	cancel_button.pressed.connect(_clear_selection)
 	move_button.pressed.connect(_set_action_mode.bind("move"))
@@ -202,20 +189,10 @@ func _on_match_controller_human_view_updated(updated_view: Dictionary) -> void:
 	_schedule_ai_turn()
 
 
-func _on_board_cell_gui_input(event: InputEvent, button: Button) -> void:
-	var mouse_event := event as InputEventMouseButton
-	if mouse_event == null or mouse_event.button_index != MOUSE_BUTTON_RIGHT or not mouse_event.pressed:
-		return
-	_clear_selection()
-	message_value.text = "已取消选择。左键可重新选择己方棋子。"
-	button.accept_event()
-
-
-func _on_board_cell_pressed(x: int, y: int) -> void:
+func _on_board_point_pressed(cell: Array) -> void:
 	if not _can_submit():
 		message_value.text = "当前不是人类行动阶段；可查看公开信息或执行 AI 单步。"
 		return
-	var cell: Array = [x, y]
 	var own_piece: Dictionary = _own_piece_at(cell)
 	if not selected_piece_id.is_empty():
 		var preview: Dictionary = _preview_for_target(cell)
@@ -229,6 +206,13 @@ func _on_board_cell_pressed(x: int, y: int) -> void:
 		_select_piece(own_piece)
 	else:
 		message_value.text = "先选择一枚己方在场棋子。"
+
+
+func _on_board_annotation_changed(cell: Array, marker: String) -> void:
+	var action_text: String = "清除" if marker.is_empty() else "添加"
+	message_value.text = "已在交点(%d,%d)%s标注；标注仅保存在本机，不影响走子高亮。" % [
+		int(cell[0]), int(cell[1]), action_text,
+	]
 
 
 func _select_piece(piece: Dictionary) -> void:
@@ -387,6 +371,7 @@ func _start_match(seed_to_use: int) -> void:
 	selected_origin = []
 	pending_preview = {}
 	action_mode = "move"
+	board_surface.clear_annotations()
 	match_controller.initialize(seed_to_use, full_round_limit_hypothesis, ai_difficulty_id)
 
 
@@ -419,72 +404,26 @@ func _refresh_all() -> void:
 
 
 func _refresh_board() -> void:
-	var visible_set: Dictionary = _coordinate_set(player_view.get("visible_cells", []))
-	var detection_set: Dictionary = _coordinate_set(player_view.get("hidden_detection_cells", []))
-	var contact_set: Dictionary = {}
+	board_surface.set_board_data(
+		player_view,
+		action_previews,
+		selected_piece_id,
+		selected_origin,
+		action_mode,
+		_can_submit()
+	)
+	var visible_count: int = player_view.get("visible_cells", []).size()
+	var contact_count: int = 0
 	for contact: Dictionary in player_view.get("contact_intel", []):
 		if contact.get("cell", []).size() == 2:
-			contact_set[_cell_key(int(contact["cell"][0]), int(contact["cell"][1]))] = true
-	var pieces_by_cell: Dictionary = {}
-	for piece: Dictionary in player_view.get("pieces", []):
-		if piece.get("position", []).size() == 2:
-			pieces_by_cell[_cell_key(int(piece["position"][0]), int(piece["position"][1]))] = piece
-	var preview_by_cell: Dictionary = {}
-	if not selected_piece_id.is_empty():
-		for preview: Dictionary in action_previews:
-			if str(preview["piece_id"]) == selected_piece_id 			and str(preview["action_type"]) == action_mode 			and preview["target_cell"].size() == 2:
-				preview_by_cell[_cell_key(int(preview["target_cell"][0]), int(preview["target_cell"][1]))] = preview
-	for key: String in cell_buttons.keys():
-		var button: Button = cell_buttons[key]
-		var x: int = int(button.get_meta("board_x"))
-		var y: int = int(button.get_meta("board_y"))
-		var lines: Array[String] = ["%d,%d" % [x, y]]
-		var tooltip_lines: Array[String] = ["坐标 (%d,%d) · %s" % [x, y, _region_name(y)]]
-		button.theme_type_variation = StringName(_region_theme(y))
-		var color := Color(0.58, 0.61, 0.65, 1.0)
-		if visible_set.has(key):
-			color = Color.WHITE
-		if detection_set.has(key):
-			color = Color(0.62, 0.92, 0.95, 1.0)
-			tooltip_lines.append("象眼侦测范围")
-		if contact_set.has(key):
-			lines = ["敌?"]
-			color = Color(1.0, 0.62, 0.28, 1.0)
-			tooltip_lines.append("未知敌情接触")
-		if pieces_by_cell.has(key):
-			var piece: Dictionary = pieces_by_cell[key]
-			var piece_side: String = str(piece["side"])
-			lines = [_piece_mark(str(piece["piece_type"]), piece_side)]
-			button.theme_type_variation = &"RedPiece" if piece_side == "red" else &"BlackPiece"
-			color = Color.WHITE
-			tooltip_lines.append("%s%s%s" % [
-				_side_name(piece_side), _piece_mark(str(piece["piece_type"]), piece_side),
-				" · 隐匿" if piece.get("status_tags", []).has("hidden") else "",
-			])
-		if preview_by_cell.has(key):
-			var preview: Dictionary = preview_by_cell[key]
-			match str(preview["classification"]):
-				KNOWN_LEGAL:
-					color = Color(0.48, 1.0, 0.55, 1.0)
-					tooltip_lines.append("已知合法落点")
-				TENTATIVE:
-					color = Color(1.0, 0.82, 0.28, 1.0)
-					tooltip_lines.append("迷雾影响：结果未知")
-				KNOWN_ILLEGAL:
-					color = Color(0.42, 0.42, 0.45, 1.0)
-		if selected_origin.size() == 2 and x == int(selected_origin[0]) and y == int(selected_origin[1]):
-			var selected_piece: Dictionary = pieces_by_cell.get(key, {})
-			if not selected_piece.is_empty():
-				button.theme_type_variation = &"RedPieceSelected" \
-					if str(selected_piece["side"]) == "red" else &"BlackPieceSelected"
-			color = Color.WHITE
-			tooltip_lines.append("当前选中；右键取消")
-		button.text = "\n".join(lines)
-		button.tooltip_text = "\n".join(tooltip_lines)
-		button.self_modulate = color
-		button.disabled = not _can_submit()
-	overview_strip.text = "红营 1–3 · 红墙/缓冲 4–8 · 战区 9–16 · 黑墙/缓冲 17–21 · 黑营 22–24 | 可见 %d/%d · 接触 %d · 侦测 %d" % [
-		visible_set.size(), BOARD_CELL_COUNT, contact_set.size(), detection_set.size(),
+			contact_count += 1
+	var discovered_flags: int = 0
+	for flag: Dictionary in player_view.get("flags", []):
+		if bool(flag.get("discovered", false)):
+			discovered_flags += 1
+	overview_strip.text = "交点棋盘 · 己方%s在下 · 红营1–3 / 红墙4 / 战区9–16 / 黑墙21 / 黑营22–24 | 可见 %d/%d · 已发现旗 %d/3 · 接触 %d" % [
+		_side_name(str(player_view.get("viewer_side", ""))),
+		visible_count, BOARD_CELL_COUNT, discovered_flags, contact_count,
 	]
 
 
@@ -499,15 +438,20 @@ func _refresh_status() -> void:
 	wall_status.text = "\n".join(wall_lines)
 	var flag_lines: Array[String] = []
 	var owned_flags: Dictionary = {"red": 0, "black": 0}
+	var discovered_flags: int = 0
 	for flag: Dictionary in player_view.get("flags", []):
 		var owner: String = str(flag.get("owner", "neutral"))
 		if owned_flags.has(owner):
 			owned_flags[owner] = int(owned_flags[owner]) + 1
+		if bool(flag.get("discovered", false)):
+			discovered_flags += 1
 		var capturing_side: String = str(flag.get("capturing_side", ""))
 		var progress: int = int(flag.get("capture_progress", 0))
 		if not capturing_side.is_empty() and progress > 0:
 			flag_lines.append("%s正在夺旗(%d/3)" % [_side_name(capturing_side), progress])
-	flag_lines.push_front("三旗位置隐匿 · 红方已得 %d · 黑方已得 %d" % [owned_flags["red"], owned_flags["black"]])
+	flag_lines.push_front("三旗受迷雾影响 · 我方已发现 %d/3 · 红方已得 %d · 黑方已得 %d" % [
+		discovered_flags, owned_flags["red"], owned_flags["black"],
+	])
 	flag_status.text = "\n".join(flag_lines)
 	var selected: Dictionary = _piece_by_id(selected_piece_id)
 	if selected.is_empty():
@@ -518,13 +462,13 @@ func _refresh_status() -> void:
 			" · 弹药 %d" % int(selected.get("bombard_ammo", 0)) if selected["piece_type"] == "cannon" else "",
 		]
 	var mode_name: String = {"bombard": "区域炮击", "resurrect": "献祭复活", "move": "普通移动"}.get(action_mode, action_mode)
-	mode_status.text = "模式：%s · 左键操作 / 右键取消" % mode_name
+	mode_status.text = "模式：%s · 左键走子 / Esc取消 / 右键标注" % mode_name
 	move_button.disabled = not _can_submit()
 	bombard_button.disabled = not _can_submit() or not _selected_has_bombardment()
 	resurrect_button.disabled = not _can_submit() or not _selected_has_resurrection()
 	pass_button.disabled = not _can_submit()
 	ai_step_button.disabled = network_mode or not match_controller.can_step_ai()
-	var casualty_counts: Dictionary = _casualty_counts_from_events()
+	var casualty_counts: Dictionary = _casualty_counts_from_public_pool()
 	red_casualties.text = "红方：%s" % _format_casualties("red", casualty_counts["red"])
 	black_casualties.text = "黑方：%s" % _format_casualties("black", casualty_counts["black"])
 	var event_lines: Array[String] = []
@@ -535,7 +479,7 @@ func _refresh_status() -> void:
 
 func _refresh_notifications(previous_view: Dictionary, current_view: Dictionary) -> void:
 	if int(current_view.get("action_index", 0)) == 0:
-		message_value.text = "对局开始：左键选择己方圆形棋子，右键取消选择。"
+		message_value.text = "对局开始：棋子落在交点上；左键走子，Esc取消，右键添加圆/叉/方形标注。"
 		return
 	var notifications: Array[String] = []
 	var previous_event_ids: Dictionary = {}
@@ -616,15 +560,14 @@ func _event_capture_summary(event: Dictionary) -> String:
 	return "；".join(parts)
 
 
-func _casualty_counts_from_events() -> Dictionary:
+func _casualty_counts_from_public_pool() -> Dictionary:
 	var result: Dictionary = {"red": {}, "black": {}}
-	for event: Dictionary in player_view.get("player_events", []):
-		var casualty_side: String = _opponent_side(str(event.get("actor_side", "")))
+	for casualty: Dictionary in player_view.get("casualties", []):
+		var casualty_side: String = str(casualty.get("side", ""))
 		if not result.has(casualty_side):
 			continue
-		for capture: Dictionary in event.get("authorized_captures", []):
-			var piece_type: String = str(capture.get("piece_type", ""))
-			result[casualty_side][piece_type] = int(result[casualty_side].get(piece_type, 0)) + 1
+		var piece_type: String = str(casualty.get("piece_type", ""))
+		result[casualty_side][piece_type] = int(result[casualty_side].get(piece_type, 0)) + 1
 	return result
 
 

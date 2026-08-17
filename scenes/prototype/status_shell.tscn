@@ -79,7 +79,7 @@ text = "AI 自动行动"
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.82, 0.38, 1)
-text = "提示：左键选择棋子与落点，右键取消选择。"
+text = "提示：左键选择棋子与交点，Esc取消；右键可添加圆、叉或方形标注。"
 autowrap_mode = 2
 
 [node name="CasualtyTitle" type="Label" parent="StatusMargin/StatusColumn"]

@@ -17,28 +17,27 @@ func _run() -> void:
 	await process_frame
 
 	_check(scene.get_board_cell_count() == 216, "灰盒预置 24×9 共 216 个交互格")
-	var grid := scene.get_node_or_null("SafeMargin/Page/Workspace/BoardShell/BoardMargin/BoardColumn/BoardScroll/BoardGrid") as GridContainer
-	_check(grid != null and grid.get_child_count() == 216, "BoardGrid 固定节点数为 216")
-	var red_piece_cell := grid.get_node("Cell_1_1") as Button
-	var red_region_cell := grid.get_node("Cell_2_2") as Button
-	var battlefield_cell := grid.get_node("Cell_1_9") as Button
-	var black_region_cell := grid.get_node("Cell_1_24") as Button
-	_check(
-		red_piece_cell.theme_type_variation == &"RedPiece" and red_piece_cell.text == "车",
-		"红方棋子使用传统圆形棋子主题与中文棋名"
-	)
-	_check(
-		red_region_cell.theme_type_variation == &"RedZoneCell"
-		and battlefield_cell.theme_type_variation == &"BattlefieldCell"
-		and black_region_cell.theme_type_variation == &"BlackZoneCell",
-		"红方区域、中央战场、黑方区域使用三种背景主题"
-	)
-	_check(red_piece_cell.custom_minimum_size.x <= 48.0, "九路棋盘格宽保证横向完整进入 1280 视口")
+	var surface := scene.get_node_or_null("SafeMargin/Page/Workspace/BoardShell/BoardMargin/BoardColumn/BoardScroll/BoardSurface") as Control
+	_check(surface != null, "BoardSurface 预置交点棋盘节点存在")
+	_check(surface != null and surface.has_method("logical_to_local") \
+		and surface.has_method("local_to_logical"), "交点棋盘统一提供逻辑坐标与本地坐标互转")
+	_check(surface != null and surface.custom_minimum_size.x <= 540.0, "九路交点棋盘宽度可完整进入 1280 视口")
+	var initial_view: Dictionary = scene.get_player_view_snapshot()
+	if surface != null:
+		var red_bottom_y: float = surface.logical_to_local(Vector2i(5, 1)).y
+		var red_far_y: float = surface.logical_to_local(Vector2i(5, 24)).y
+		_check(red_bottom_y > red_far_y, "红方视角以红方大本营置底")
+		var black_view: Dictionary = initial_view.duplicate(true) if not initial_view.is_empty() else {}
+		black_view["viewer_side"] = "black"
+		surface.set_board_data(black_view, [], "", [], "move", false)
+		var black_bottom_y: float = surface.logical_to_local(Vector2i(5, 24)).y
+		var black_far_y: float = surface.logical_to_local(Vector2i(5, 1)).y
+		_check(black_bottom_y > black_far_y, "黑方视角镜像后以黑方大本营置底")
+		surface.set_board_data(initial_view, scene.get_action_preview_snapshot(), "", [], "move", true)
 	_check(
 		scene.get_node_or_null("SafeMargin/Page/Workspace/StatusShell/StatusMargin/StatusColumn/CasualtyGrid") != null,
 		"状态栏预置红黑双方阵亡棋子记录格"
 	)
-	var initial_view: Dictionary = scene.get_player_view_snapshot()
 	var initial_digest: String = Canonical.digest(initial_view)
 	_check(int(initial_view.get("full_round_limit_hypothesis", -1)) == 50, "默认完整回合上限为 50")
 	_check(str(initial_view.get("round_limit_status", "")) == "hypothesis_cli_overridable", "回合上限保持可覆盖假设")
@@ -46,14 +45,22 @@ func _run() -> void:
 	_check(not scene.get_node("MatchController").has_method("get_full_state"), "控制器不暴露 FullState getter")
 	_check(not scene.get_action_preview_snapshot().is_empty(), "人类公开候选已生成")
 	scene.select_cell_for_test([1, 1])
-	var cancel_event := InputEventMouseButton.new()
-	cancel_event.button_index = MOUSE_BUTTON_RIGHT
+	var cancel_event := InputEventAction.new()
+	cancel_event.action = "ui_cancel"
 	cancel_event.pressed = true
-	red_piece_cell.gui_input.emit(cancel_event)
+	scene._unhandled_input(cancel_event)
 	var turn_selection := scene.get_node(
 		"SafeMargin/Page/Workspace/StatusShell/StatusMargin/StatusColumn/TurnAndSelection"
 	) as Label
-	_check(turn_selection.text.contains("选择：无"), "棋盘右键可取消当前选择")
+	_check(turn_selection.text.contains("选择：无"), "Esc可取消当前选择")
+	if surface != null:
+		var marker_event := InputEventMouseButton.new()
+		marker_event.button_index = MOUSE_BUTTON_RIGHT
+		marker_event.pressed = true
+		marker_event.position = surface.logical_to_local(Vector2i(3, 9))
+		surface._gui_input(marker_event)
+		surface.get_node("AnnotationMenu").id_pressed.emit(1)
+		_check(surface.annotation_snapshot().get("3,9", "") == "circle", "右键菜单可在交点添加圆形本地标注")
 
 	var move_preview: Dictionary = _first_preview(scene.get_action_preview_snapshot(), "move")
 	_check(not move_preview.is_empty(), "存在可提交的人类移动候选")
