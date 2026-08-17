@@ -1,0 +1,41 @@
+approval:
+  schema_version: game-production-approval/v1
+  approval_id: approval:veilfront-xiangqi-siege:loop-contract:ce51fe2b9122
+  subject_kind: loop-contract
+  subject_id: LOOP-CTR-GATE1-VERTICAL-SLICE-001@v3
+  subject_digest: ce51fe2b91220a618cc81d22e7685f9bb06caa2fc15fa36b2cca83d51a235410
+  decision: approved
+  decided_by: project-owner
+  decided_at: '2026-08-17T16:18:12.489447+08:00'
+  evidence:
+    source_refs:
+    - codex-thread://current#owner-approval-lan-playtest-tool-2026-08-17
+    - D:/NOTE/NOTE/Veilfront Xiangqi Siege/项目决策/2026-08-17-局域网真人对战可行性与最小架构.md
+    immutable_baseline:
+      plugin_version: 0.4.0-alpha.2
+      framework_digest: 3589bce5cf4388f91a08f12acb5d90679256191d5085e65687d06a635bbdcd32
+      validator_digest: 90804f2221af1973d099f4fc531fd39e8aaaaca7bf101922ee63c9c67f909633
+      contract_v2_subject_digest: 7b7fcf36920109d379aa0e230cf70a378ed7ec228ff6a88bccf35cf481fcf09c
+      contract_v2_file_digest: 5a9ed8f5854865adfecbcff808f8dc96af52abecb371dbd18bb8fd137a775e62
+      snapshot_rev48_file_digest: 6f9648f514be14b5b777b7b38f0d79c9ec34848e99cb6cac36db572f807545e5
+      event_history_rev48_file_digest: 7ab40f1d81fadf706f55e956a6fe85adbf35850cff3f86eaebe0e98d2db1c5c9
+      record_revision: 48
+      last_event_sequence: 48
+  authorized_action:
+    summary: 在 GATE-1 单机核心验证循环内增加可丢弃的局域网真人测试工具，以采集双人对战体验证据。
+    allowed:
+    - 创建 Contract v3，不覆盖 v1 或 v2。
+    - 追加 core.contract_migrated 事件并原子更新 Snapshot 的 Contract 绑定。
+    - 在独立 Git worktree 中新增网络会话、局域网大厅和网络测试目录。
+    - 以房主权威、客户端仅接收自身 PlayerView 的方式进行可信局域网双人测试。
+    - 保留 Contract v2 已批准的 QA-P1-003 临时工具兼容例外，并以 v3 重新绑定其失效条件。
+    forbidden:
+    - 修改规则语义、迷雾信息边界、单机核心范围、GATE-1 权限或正式生产准入条件。
+    - 将该工具解释为正式联网架构、互联网联机、发布承诺或 GATE-1 通过结论。
+    - 向客户端发送 FullState、RNG 内部状态、未来随机结果或完整审计日志。
+    - 自动发现、NAT 穿透、公开匹配、观战、聊天、断线重连、房主迁移和专用服务器。
+  application:
+    materialized_path: game-pipeline/loops/contracts/loop-contract-gate1-vertical-slice-v3.yaml
+    materialized_status: approved
+    materialized_digest: 2a0dd3487aa46504244dc420d495ae0ae7b30da180034f3242a3b5f793b16706
+    applied_at: '2026-08-17T16:18:12.489447+08:00'

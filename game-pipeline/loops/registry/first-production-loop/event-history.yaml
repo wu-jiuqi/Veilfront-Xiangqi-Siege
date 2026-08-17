@@ -2225,3 +2225,47 @@ event_history:
       digest_algorithm: sha256
       previous_event_digest: adb5959e1a521b652c81f06d709227809a0e4450e985ee939b77d01541faa07a
       event_digest: b3f92a4ee26c5800cd951f4912a29a9ffd18924e30fdf2fede7cfcc6a7229ebe
+
+  - schema_version: '0.1'
+    event_id: 95663858-bcf3-4723-8a2f-62b14fd15d3f
+    mutation_id: 1e0c1aad-bbf2-45eb-9ac7-8d92f4f3f26c
+    loop_instance_id: 4cbb03b6-dd5a-41c5-a624-895c4b884bcb
+    sequence: 49
+    event_type: core.contract_migrated
+    occurred_at: '2026-08-17T16:19:29.7838888+08:00'
+    recorded_at: '2026-08-17T16:19:29.7838888+08:00'
+    actor:
+      actor_id: inst:01M02M6X3Q8YWJXHY52K3V5AR2
+      role: pos:veilfront-xiangqi-siege:root:project-manager
+      authority_id: AUTH-VEILFRONT-PROJECT-MANAGER
+    causality:
+      correlation_id: 277f4564-558c-493a-90d7-b554064585be
+      causation_event_id: 3331ea6d-93a2-4f4e-a846-8a94ac9a9532
+      request_id: approval:veilfront-xiangqi-siege:loop-contract:ce51fe2b9122
+    concurrency:
+      expected_record_revision: 48
+      resulting_record_revision: 49
+    binding_snapshot:
+      contract_digest: 7b7fcf36920109d379aa0e230cf70a378ed7ec228ff6a88bccf35cf481fcf09c
+      state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+    payload:
+      contract_before:
+        contract_id: LOOP-CTR-GATE1-VERTICAL-SLICE-001
+        contract_version: 2
+        contract_digest: 7b7fcf36920109d379aa0e230cf70a378ed7ec228ff6a88bccf35cf481fcf09c
+      contract_after:
+        contract_id: LOOP-CTR-GATE1-VERTICAL-SLICE-001
+        contract_version: 3
+        contract_digest: ce51fe2b91220a618cc81d22e7685f9bb06caa2fc15fa36b2cca83d51a235410
+      migration_check_ref: game-pipeline/loops/evidence/LAN-PLAYTEST-TOOL-contract-v3-migration-check.md@sha256:0bbc72f605f2bfeb91db7f475f8bbc1b1df7e12781b4947b6653ecc62acac29b
+      approval_id: approval:veilfront-xiangqi-siege:loop-contract:ce51fe2b9122
+    evidence_refs:
+    - game-pipeline/approvals/loop-contract-v3-ce51fe2b9122.yaml
+    - game-pipeline/loops/contracts/loop-contract-gate1-vertical-slice-v3.yaml@sha256:2a0dd3487aa46504244dc420d495ae0ae7b30da180034f3242a3b5f793b16706
+    - game-pipeline/loops/evidence/LAN-PLAYTEST-TOOL-contract-v3-migration-check.md@sha256:0bbc72f605f2bfeb91db7f475f8bbc1b1df7e12781b4947b6653ecc62acac29b
+    - codex-thread://current#owner-approval-lan-playtest-tool-2026-08-17
+    integrity:
+      canonicalization: registry-event-canonical-json-v1
+      digest_algorithm: sha256
+      previous_event_digest: b3f92a4ee26c5800cd951f4912a29a9ffd18924e30fdf2fede7cfcc6a7229ebe
+      event_digest: cc95e540af4e5e51c152baa51343522a5bb751e538b111226d037caf5aa990aa
