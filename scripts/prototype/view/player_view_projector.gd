@@ -69,13 +69,8 @@ static func project(full_state: Dictionary, viewer_side: String) -> Dictionary:
 		visible_cells.append([int(parts[0]), int(parts[1])])
 	visible_cells.sort_custom(_coordinate_less)
 	var hidden_detection_cells: Array = _hidden_detection_cells(full_state, viewer_side)
-	var visible_piece_ids: Dictionary = {}
-	for piece: Dictionary in pieces:
-		visible_piece_ids[piece["id"]] = true
-
 	return {
 		"schema_version": "player-view-v1",
-		"match_seed": int(full_state["rng"]["seed"]),
 		"rules_revision": str(full_state["rules_revision"]),
 		"implementation_revision": str(full_state["implementation_revision"]),
 		"full_round_limit_hypothesis": int(full_state["configuration"]["full_round_limit_hypothesis"]),
@@ -92,7 +87,7 @@ static func project(full_state: Dictionary, viewer_side: String) -> Dictionary:
 		"visible_cells": visible_cells,
 		"hidden_detection_cells": hidden_detection_cells,
 		"pieces": pieces,
-		"flags": _public_flags(full_state, viewer_side, visible_piece_ids),
+		"flags": _public_flags(full_state),
 		"walls": _public_walls(full_state),
 		"player_events": full_state["player_events"][viewer_side].duplicate(true),
 		"contact_intel": full_state["contact_intel"][viewer_side].duplicate(true),
@@ -116,7 +111,7 @@ static func generate_action_intents(player_view: Dictionary) -> Array:
 		for intent: Dictionary in _geometry_intents_for_piece(piece):
 			intents.append(intent)
 		if piece["piece_type"] == "cannon":
-			for y: int in range(7, 19):
+			for y: int in range(5, 21):
 				for x: int in range(2, 9):
 					intents.append({
 						"piece_id": piece["id"],
@@ -124,6 +119,13 @@ static func generate_action_intents(player_view: Dictionary) -> Array:
 						"target_cell": [x, y],
 						"skill_type": "area_bombardment",
 					})
+		if piece["piece_type"] == "advisor" and _public_resurrection_available(player_view, piece):
+			intents.append({
+				"piece_id": piece["id"],
+				"action_type": "resurrect",
+				"target_cell": [],
+				"skill_type": "advisor_resurrection",
+			})
 	intents.append({"piece_id": "", "action_type": "pass", "target_cell": [], "skill_type": ""})
 	return list_action_intents(player_view, intents)
 
@@ -147,6 +149,9 @@ static func preview_intent(player_view: Dictionary, intent: Dictionary) -> Dicti
 		elif action_type == "move" and MatchState.is_inside_board(target):
 			classification = _preview_move(player_view, piece, target)
 			public_code = "known_illegal" if classification == KNOWN_ILLEGAL else ""
+		elif action_type == "resurrect" and _public_resurrection_available(player_view, piece):
+			classification = KNOWN_LEGAL
+			public_code = ""
 	return {
 		"schema_version": "action-preview-v1",
 		"id": _action_id(piece_id, action_type, target, skill_type),
@@ -176,8 +181,6 @@ static func export_ai_projection(player_view: Dictionary, intents: Array) -> Dic
 				"target": [0, 0],
 				"visible_captures": [],
 				"reveal_cell_count": 0,
-				"flag_vicinity_reveal_count": 0,
-				"occupies_flag": false,
 				"attacks_wall": false,
 				"path_length": 0,
 			})
@@ -202,7 +205,7 @@ static func export_ai_projection(player_view: Dictionary, intents: Array) -> Dic
 				visible_captures.append({"piece_id": target_piece["id"], "piece_type": target_piece["piece_type"]})
 		elif is_move and not target_piece.is_empty() and target_piece["side"] != piece["side"]:
 			visible_captures.append({"piece_id": target_piece["id"], "piece_type": target_piece["piece_type"]})
-		actions.append({
+		var action: Dictionary = {
 			"id": preview["id"],
 			"kind": preview["action_type"],
 			"actor_id": preview["piece_id"],
@@ -210,11 +213,14 @@ static func export_ai_projection(player_view: Dictionary, intents: Array) -> Dic
 			"target": [target.x - 1, target.y - 1],
 			"visible_captures": visible_captures,
 			"reveal_cell_count": _newly_revealed_cell_count(player_view, target) if is_move else 0,
-			"flag_vicinity_reveal_count": _newly_revealed_flag_vicinity_count(player_view, target) if is_move else 0,
-			"occupies_flag": (_flag_at(player_view, target) != {}) if is_move else false,
 			"attacks_wall": false,
 			"path_length": absi(target.x - origin.x) + absi(target.y - origin.y) if is_move else 0,
-		})
+		}
+		if preview["action_type"] == "resurrect":
+			var resurrection_summary: Dictionary = _public_resurrection_summary(player_view)
+			action["resurrection_candidate_count"] = int(resurrection_summary["candidate_count"])
+			action["resurrection_average_piece_value"] = int(resurrection_summary["average_piece_value"])
+		actions.append(action)
 	var visible_pieces: Array = []
 	for piece: Dictionary in player_view["pieces"]:
 		if piece["position"].is_empty():
@@ -229,10 +235,8 @@ static func export_ai_projection(player_view: Dictionary, intents: Array) -> Dic
 		})
 	var public_flags: Array = []
 	for flag: Dictionary in player_view["flags"]:
-		var position := Canonical.coordinate(flag["position"])
 		public_flags.append({
 			"id": flag["id"],
-			"position": [position.x - 1, position.y - 1],
 			"owner": flag["owner"],
 			"capturing_side": str(flag.get("capturing_side", "")),
 			"capture_progress": flag["capture_progress"],
@@ -284,8 +288,8 @@ static func canonical_surface(player_view: Dictionary, intents: Array) -> Dictio
 
 static func _visible_cell_set(full_state: Dictionary, viewer_side: String) -> Dictionary:
 	var result: Dictionary = {}
-	var first_y: int = 1 if viewer_side == MatchState.RED else 20
-	var last_y: int = 5 if viewer_side == MatchState.RED else 24
+	var first_y: int = 1 if viewer_side == MatchState.RED else 22
+	var last_y: int = 3 if viewer_side == MatchState.RED else 24
 	for y: int in range(first_y, last_y + 1):
 		for x: int in range(1, MatchState.BOARD_WIDTH + 1):
 			result[Canonical.cell_key(Vector2i(x, y))] = true
@@ -309,6 +313,12 @@ static func _visible_cell_set(full_state: Dictionary, viewer_side: String) -> Di
 	var rook_paths: Dictionary = full_state.get("vision_sources", {}).get(viewer_side, {}).get("rook_paths", {})
 	for path_value: Variant in rook_paths.values():
 		for cell_value: Variant in path_value:
+			var cell := Canonical.coordinate(cell_value)
+			if MatchState.is_inside_board(cell):
+				result[Canonical.cell_key(cell)] = true
+	var elephant_zones: Dictionary = full_state.get("vision_sources", {}).get(viewer_side, {}).get("elephant_reveal_zones", {})
+	for zone_value: Variant in elephant_zones.values():
+		for cell_value: Variant in zone_value:
 			var cell := Canonical.coordinate(cell_value)
 			if MatchState.is_inside_board(cell):
 				result[Canonical.cell_key(cell)] = true
@@ -364,13 +374,6 @@ static func _coordinate_less(a: Array, b: Array) -> bool:
 	return a[1] < b[1] or (a[1] == b[1] and a[0] < b[0])
 
 
-static func _flag_at(player_view: Dictionary, cell: Vector2i) -> Dictionary:
-	for flag: Dictionary in player_view["flags"]:
-		if Canonical.coordinate(flag["position"]) == cell:
-			return flag
-	return {}
-
-
 static func _newly_revealed_cell_count(player_view: Dictionary, target: Vector2i) -> int:
 	var visible_set: Dictionary = _coordinate_set(player_view["visible_cells"])
 	var count: int = 0
@@ -379,24 +382,6 @@ static func _newly_revealed_cell_count(player_view: Dictionary, target: Vector2i
 			var cell := Vector2i(x, y)
 			if MatchState.is_inside_board(cell) and not visible_set.has(Canonical.cell_key(cell)):
 				count += 1
-	return count
-
-
-static func _newly_revealed_flag_vicinity_count(player_view: Dictionary, target: Vector2i) -> int:
-	var visible_set: Dictionary = _coordinate_set(player_view["visible_cells"])
-	var flag_positions: Array[Vector2i] = []
-	for flag: Dictionary in player_view["flags"]:
-		flag_positions.append(Canonical.coordinate(flag["position"]))
-	var count: int = 0
-	for y: int in range(target.y - 1, target.y + 2):
-		for x: int in range(target.x - 1, target.x + 2):
-			var cell := Vector2i(x, y)
-			if not MatchState.is_inside_board(cell) or visible_set.has(Canonical.cell_key(cell)):
-				continue
-			for flag_position: Vector2i in flag_positions:
-				if maxi(absi(cell.x - flag_position.x), absi(cell.y - flag_position.y)) <= 2:
-					count += 1
-					break
 	return count
 
 
@@ -461,6 +446,10 @@ static func _preview_rook(
 	var tentative: bool = false
 	for index: int in path.size():
 		var cell: Vector2i = path[index]
+		if cell.y >= 4 and cell.y <= 21 and not visible_set.has(Canonical.cell_key(cell)):
+			# Hidden enemy elephant fields are host-authoritative. Crossing fog is
+			# tentative without exposing whether a field actually exists.
+			tentative = true
 		var occupant: Dictionary = _visible_piece_at(player_view, cell)
 		if not occupant.is_empty():
 			if occupant["side"] == piece["side"] or (not special and index < path.size() - 1):
@@ -578,10 +567,10 @@ static func _public_special_eligible(
 		if wall["side"] == enemy_side:
 			enemy_wall = wall
 			break
-	if enemy_wall.get("status", "") != "INTACT" or origin.y < 6 or origin.y > 19:
+	if enemy_wall.get("status", "") != "INTACT" or origin.y < 4 or origin.y > 21:
 		return false
 	for cell: Vector2i in path:
-		if cell.y < 6 or cell.y > 19:
+		if cell.y < 4 or cell.y > 21:
 			return false
 	return true
 
@@ -597,8 +586,8 @@ static func _public_wall_blocks(
 		if wall["side"] != enemy_side or wall["status"] != "INTACT":
 			continue
 		if enemy_side == MatchState.RED:
-			return origin.y >= 6 and target.y <= 5
-		return origin.y <= 19 and target.y >= 20
+			return origin.y >= 4 and target.y <= 3
+		return origin.y <= 21 and target.y >= 22
 	return false
 
 
@@ -606,7 +595,7 @@ static func _public_bombard_available(player_view: Dictionary, piece: Dictionary
 	if piece["piece_type"] != "cannon" or int(piece["bombard_ammo"]) <= 0 \
 	or not MatchState.is_in_base(Canonical.coordinate(piece["position"]), piece["side"]):
 		return false
-	if target.x < 2 or target.x > 8 or target.y < 7 or target.y > 18:
+	if target.x < 2 or target.x > 8 or target.y < 5 or target.y > 20:
 		return false
 	var enemy_side: String = MatchState.opponent(piece["side"])
 	for wall: Dictionary in player_view["walls"]:
@@ -714,26 +703,68 @@ static func _public_walls(full_state: Dictionary) -> Array:
 	return result
 
 
-static func _public_flags(
-	full_state: Dictionary,
-	viewer_side: String,
-	visible_piece_ids: Dictionary
-) -> Array:
+static func _public_flags(full_state: Dictionary) -> Array:
 	var result: Array = []
 	for flag: Dictionary in full_state["flags"]:
-		var occupier_id: String = str(flag["occupier_piece_id"])
-		var public_occupier_id: String = ""
-		if not occupier_id.is_empty() and full_state["pieces"].has(occupier_id):
-			var occupier: Dictionary = full_state["pieces"][occupier_id]
-			if occupier["side"] == viewer_side or visible_piece_ids.has(occupier_id):
-				public_occupier_id = occupier_id
 		result.append({
 			"id": str(flag["id"]),
-			"position": flag["position"].duplicate(),
 			"owner": str(flag["owner"]),
-			"occupier_piece_id": public_occupier_id,
 			"capturing_side": str(flag["capturing_side"]),
 			"capture_progress": int(flag["capture_progress"]),
 			"contested": bool(flag["contested"]),
 		})
+	return result
+
+
+static func _public_resurrection_available(player_view: Dictionary, advisor: Dictionary) -> bool:
+	if advisor.get("piece_type", "") != "advisor" or not bool(advisor.get("alive", false)) \
+	or bool(advisor.get("in_reserve", false)):
+		return false
+	var summary: Dictionary = _public_resurrection_summary(player_view)
+	if int(summary["candidate_count"]) <= 0:
+		return false
+	if not _public_base_empty_cells(player_view).is_empty():
+		return true
+	return MatchState.is_in_base(Canonical.coordinate(advisor.get("position", [])), str(advisor["side"]))
+
+
+static func _public_resurrection_summary(player_view: Dictionary) -> Dictionary:
+	var count: int = 0
+	var total_value: int = 0
+	var values: Dictionary = {
+		"rook": 90, "cannon": 50, "horse": 45, "elephant": 40, "pawn": 20,
+	}
+	for piece: Dictionary in player_view.get("pieces", []):
+		if piece.get("side", "") != player_view.get("viewer_side", "") \
+		or bool(piece.get("alive", false)) or bool(piece.get("in_reserve", false)):
+			continue
+		var piece_type: String = str(piece.get("piece_type", ""))
+		# Dead advisors and generals are explicitly excluded from the random pool.
+		if piece_type in ["advisor", "general"]:
+			continue
+		count += 1
+		total_value += int(values.get(piece_type, 0))
+	return {
+		"candidate_count": count,
+		"average_piece_value": roundi(float(total_value) / float(count)) if count > 0 else 0,
+	}
+
+
+static func _public_base_empty_cells(player_view: Dictionary) -> Array:
+	var occupied: Dictionary = {}
+	for piece: Dictionary in player_view.get("pieces", []):
+		if not bool(piece.get("alive", false)) or bool(piece.get("in_reserve", false)):
+			continue
+		var cell := Canonical.coordinate(piece.get("position", []))
+		if MatchState.is_inside_board(cell):
+			occupied[Canonical.cell_key(cell)] = true
+	var result: Array = []
+	var side: String = str(player_view["viewer_side"])
+	var first_y: int = 1 if side == MatchState.RED else 22
+	var last_y: int = 3 if side == MatchState.RED else 24
+	for y: int in range(first_y, last_y + 1):
+		for x: int in range(1, MatchState.BOARD_WIDTH + 1):
+			var cell := Vector2i(x, y)
+			if not occupied.has(Canonical.cell_key(cell)):
+				result.append([x, y])
 	return result

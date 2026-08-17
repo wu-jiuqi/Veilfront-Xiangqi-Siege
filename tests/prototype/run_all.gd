@@ -10,6 +10,7 @@ const ReplayTests = preload("res://tests/prototype/test_replay.gd")
 const MoveRulesTests = preload("res://tests/prototype/test_move_rules.gd")
 const Revision3RulesTests = preload("res://tests/prototype/test_revision3_rules.gd")
 const ElephantRevealTests = preload("res://tests/prototype/test_elephant_reveal.gd")
+const OwnerRuleRevisionV4Tests = preload("res://tests/prototype/test_owner_rule_revision_v4.gd")
 const SimulationTests = preload("res://tests/prototype/test_simulation.gd")
 const PreparedActionTests = preload("res://tests/prototype/test_prepared_action.gd")
 const AiFairnessTests = preload("res://tests/prototype/test_ai_fairness.gd")
@@ -62,11 +63,12 @@ func _run_phase1_checks() -> void:
 
 	_check(MatchStateTests.run_suite(), "FullState 冻结开局、红先、确定性旗帜与无冷却字段")
 	_check(PlayerViewTests.run_suite(), "FullState→PlayerView 隐藏等价投影、查询、错误与 AI DTO")
-	_check(RulesCoreTests.run_suite(), "旗帜生命周期、无冷却炮击资格、同步双将平局、士替死、后备队列与修墙时序")
+	_check(RulesCoreTests.run_suite(), "旗帜生命周期、无冷却炮击资格、同步双将平局、主动士复活、后备队列与修墙时序")
 	_check(ReplayTests.run_suite(), "同 seed + 行动意图的事件日志与最终状态摘要重放一致")
 	_check(MoveRulesTests.run_suite(), "传统棋子几何、特殊资格、炮架与完整墙线约束")
 	_check(Revision3RulesTests.run_suite(), "车逐目标、隐藏马/炮架、显形策略生命周期与玩家事件过滤")
-	_check(ElephantRevealTests.run_suite(), "冻结田字九格、相象多源并集、刷新与全离场清源")
+	_check(ElephantRevealTests.run_suite(), "相象19格视野、田字阻挡源、刷新与全离场清源")
+	_check(OwnerRuleRevisionV4Tests.run_suite(), "规则v4墙线、相视野与敌车阻挡、暗旗进度、主动士复活")
 	_check(SimulationTests.run_suite(), "可配置轮上限整局终止、确定性与完整对局重放")
 	_check(PreparedActionTests.run_suite(), "后备部署准备 token、当回合可选、事件记录与状态回放")
 	var ai_result: Dictionary = AiFairnessTests.run_suite()
@@ -98,7 +100,7 @@ func _check(condition: bool, description: String) -> void:
 
 func _finish() -> void:
 	if failures.is_empty():
-		print("PROTOTYPE_BASIS_CHECKS_PASSED scaffold=9 focused_suites=13 full_gate1=false")
+		print("PROTOTYPE_BASIS_CHECKS_PASSED scaffold=9 focused_suites=14 full_gate1=false")
 		quit(0)
 		return
 	print("PHASE1_SCAFFOLD_CHECKS_FAILED count=%d" % failures.size())

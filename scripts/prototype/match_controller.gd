@@ -25,6 +25,8 @@ var _prepared_token: String = ""
 var _human_view: Dictionary = {}
 var _human_previews: Array = []
 var _match_ai_seed: int = 0
+var _match_seed: int = 0
+var _round_limit: int = 50
 var _ai_memory: Dictionary = {}
 var _ai_difficulty_id: String = "medium"
 var _last_ai_decision_audit: Dictionary = {}
@@ -34,6 +36,8 @@ func initialize(seed_value: int, round_limit: int = -1, difficulty_id: String = 
 	if not difficulty_id.is_empty():
 		assert(set_ai_difficulty(difficulty_id))
 	var effective_limit: int = default_full_round_limit_hypothesis if round_limit <= 0 else round_limit
+	_match_seed = seed_value
+	_round_limit = effective_limit
 	_full_state = MatchState.create(seed_value, {
 		"full_round_limit_hypothesis": effective_limit,
 	})
@@ -49,8 +53,8 @@ func restart_same_seed() -> void:
 	if _human_view.is_empty():
 		return
 	initialize(
-		int(_human_view["match_seed"]),
-		int(_human_view["full_round_limit_hypothesis"]),
+		_match_seed,
+		_round_limit,
 		_ai_difficulty_id
 	)
 

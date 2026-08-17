@@ -13,12 +13,13 @@ static func run_suite() -> bool:
 	})
 	_expect(first.get("ok", false), "完整种子对局合法终止", failures)
 	_expect(first.get("simulation_mode", "") == "rules_stress_full_state_policy", "整局模拟明确标记为 FullState 规则压力模式", failures)
-	var band_start: int = int(first.get("initial_flag_band_start", 0))
-	var band_positions_valid: bool = band_start in [11, 12]
+	var band_positions_valid: bool = first.get("initial_flag_region", {}) == {
+		"x_min": 1, "x_max": 9, "y_min": 9, "y_max": 16,
+	}
 	for position: Array in first.get("initial_flag_positions", []):
-		band_positions_valid = band_positions_valid and int(position[1]) >= band_start \
-			and int(position[1]) <= band_start + 2
-	_expect(band_positions_valid, "旗带统计来自准确随机记录且三旗位于对应三行", failures)
+		band_positions_valid = band_positions_valid and int(position[0]) >= 1 and int(position[0]) <= 9 \
+			and int(position[1]) >= 9 and int(position[1]) <= 16
+	_expect(band_positions_valid, "三旗随机位置覆盖完整8x9战区", failures)
 	_expect(first.get("terminal", false), "完整种子对局到达终局", failures)
 	_expect(first.get("replay_verified", false), "完整对局逐行动重放摘要一致", failures)
 	_expect(int(first.get("action_count", 0)) <= 24, "可配置12完整轮假设约束终止", failures)

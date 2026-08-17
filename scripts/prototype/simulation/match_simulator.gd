@@ -18,11 +18,6 @@ static func run_match(seed_value: int, options: Dictionary = {}) -> Dictionary:
 		return _failed(seed_value, "round_limit_must_be_positive")
 	var configuration: Dictionary = {"full_round_limit_hypothesis": round_limit}
 	var state: Dictionary = RuleEngine.create_match(seed_value, configuration)
-	var initial_flag_band_start: int = 0
-	for random_record: Dictionary in state["rng"]["records"]:
-		if random_record["reason"] == "flag_band":
-			initial_flag_band_start = 11 + int(random_record["result"])
-			break
 	var initial_flag_positions: Array = []
 	for flag: Dictionary in state["flags"]:
 		initial_flag_positions.append(flag["position"].duplicate())
@@ -130,7 +125,7 @@ static func run_match(seed_value: int, options: Dictionary = {}) -> Dictionary:
 		"full_round_count": state["full_round_index"],
 		"flag_counts": flag_counts,
 		"initial_flag_positions": initial_flag_positions,
-		"initial_flag_band_start": initial_flag_band_start,
+		"initial_flag_region": {"x_min": 1, "x_max": 9, "y_min": 9, "y_max": 16},
 		"metrics": metrics,
 		"replay_verified": replay_ok,
 		"replay_verification_requested": verify_replay,

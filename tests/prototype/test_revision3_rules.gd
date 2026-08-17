@@ -21,7 +21,7 @@ static func run_suite() -> bool:
 	_test_pawn_public_candidates_and_special_contact(failures)
 	_test_cannon_target_contact_boundary(failures)
 	_test_transient_sources_clear_on_exit(failures)
-	_test_rescued_hidden_contact_authorization(failures)
+	_test_hidden_contact_has_no_passive_rescue(failures)
 	for failure: String in failures:
 		push_error("REVISION3_RULE_FAIL: %s" % failure)
 	return failures.is_empty()
@@ -39,11 +39,11 @@ static func _test_rook_path_resolution(failures: Array[String]) -> void:
 	_expect(result.get("ok", false) and casualties.size() == 2, "特殊车逐目标结算两枚敌棋", failures)
 	_expect(casualties.size() == 2 and casualties[0]["piece_id"] == "black-pawn-1" \
 		and casualties[1]["piece_id"] == "black-pawn-2", "特殊车保持起点到终点顺序", failures)
-	_expect(casualties.size() == 2 and casualties[0]["rescued"] and casualties[1]["rescued"], "普通吃子同样执行前两次士替死", failures)
+	_expect(casualties.size() == 2 and not casualties[0]["rescued"] and not casualties[1]["rescued"], "普通吃子不再触发强制士替死", failures)
 	var base_entry: Dictionary = _empty_state(409)
 	base_entry["walls"][MatchState.BLACK]["status"] = "BREACHED"
-	_place(base_entry, "red-rook-1", Vector2i(5, 19))
-	_place(base_entry, "black-pawn-1", Vector2i(5, 20))
+	_place(base_entry, "red-rook-1", Vector2i(5, 21))
+	_place(base_entry, "black-pawn-1", Vector2i(5, 22))
 	_place(base_entry, "black-general-1", Vector2i(5, 24))
 	var blocked: Dictionary = MoveRules.evaluate_move(base_entry, _move("red-rook-1", Vector2i(5, 24)), MatchState.RED, _all_visible(base_entry))
 	_expect(not blocked.get("legal", true) and blocked.get("reason", "") == "route_blocked", "跨入大本营的车恢复普通路径阻挡", failures)
@@ -73,7 +73,7 @@ static func _test_horse_hidden_contact(failures: Array[String]) -> void:
 static func _test_elephant_reveal_strategy_lifecycle(failures: Array[String]) -> void:
 	var state: Dictionary = _empty_state(404)
 	_place(state, "red-elephant-1", Vector2i(5, 10))
-	_place(state, "black-horse-1", Vector2i(6, 11))
+	_place(state, "black-horse-1", Vector2i(4, 9))
 	state["pieces"]["black-horse-1"]["hidden"] = true
 	var first: Dictionary = RuleEngine.submit_action(state, _move("red-elephant-1", Vector2i(7, 12)))
 	_expect(first.get("ok", false), "相象显形策略首个特殊移动可执行", failures)
@@ -83,8 +83,8 @@ static func _test_elephant_reveal_strategy_lifecycle(failures: Array[String]) ->
 	var second: Dictionary = RuleEngine.submit_action(state, _move("red-elephant-1", Vector2i(9, 14)))
 	_expect(second.get("ok", false), "相象第二次特殊移动可刷新显形区", failures)
 	var second_view: Dictionary = Projector.project(state, MatchState.RED)
-	_expect(not _view_has_piece(second_view, "black-horse-1"), "旧田字显形区立即失效", failures)
-	_expect(state["vision_sources"][MatchState.RED]["elephant_reveal_zones"].size() == 1, "每枚相象只保留最新冻结九格源", failures)
+	_expect(not _view_has_piece(second_view, "black-horse-1"), "旧相视野并集立即失效", failures)
+	_expect(state["vision_sources"][MatchState.RED]["elephant_reveal_zones"].size() == 1, "每枚相象只保留最新19格视野源", failures)
 
 
 static func _test_hidden_cannon_screens(failures: Array[String]) -> void:
@@ -146,12 +146,12 @@ static func _test_public_flag_wall_whitelist(failures: Array[String]) -> void:
 	_expect(Canonical.digest(view_a) == Canonical.digest(view_b), "隐藏旗占领者与墙内部计时差异不改变投影", failures)
 	_expect(view_a["walls"][1].size() == 2 and view_a["walls"][1].has("side") \
 		and view_a["walls"][1].has("status"), "墙投影严格白名单 side/status", failures)
-	_expect(view_a["flags"][0]["occupier_piece_id"].is_empty(), "不可见敌占领者ID匿名", failures)
+	_expect(not view_a["flags"][0].has("occupier_piece_id"), "公开旗状态不包含占领者ID", failures)
 	var own_state: Dictionary = _empty_state(408)
 	var own_flag_cell := Canonical.coordinate(own_state["flags"][0]["position"])
 	_place(own_state, "red-pawn-1", own_flag_cell)
 	own_state["flags"][0]["occupier_piece_id"] = "red-pawn-1"
-	_expect(Projector.project(own_state, MatchState.RED)["flags"][0]["occupier_piece_id"] == "red-pawn-1", "自有占领者ID可见", failures)
+	_expect(not Projector.project(own_state, MatchState.RED)["flags"][0].has("occupier_piece_id"), "己方占领者ID同样不得间接泄漏旗位", failures)
 
 
 static func _test_ai_action_semantics(failures: Array[String]) -> void:
@@ -169,8 +169,9 @@ static func _test_ai_action_semantics(failures: Array[String]) -> void:
 	)
 	var bombard_action: Dictionary = bombard_dto["legal_actions"][0]
 	_expect(bombard_action["visible_captures"].is_empty() and bombard_action["reveal_cell_count"] == 0 \
-		and not bombard_action["occupies_flag"] and bombard_action["path_length"] == 0,
-		"炮击 DTO 不伪造移动式捕获/显形/占旗/路径评分", failures)
+		and not bombard_action.has("occupies_flag") and not bombard_action.has("flag_vicinity_reveal_count") \
+		and bombard_action["path_length"] == 0,
+		"炮击 DTO 不伪造移动式捕获/显形/暗旗推断/路径评分", failures)
 
 	var rook_state: Dictionary = _empty_state(411)
 	_place(rook_state, "red-rook-1", Vector2i(5, 10))
@@ -241,12 +242,7 @@ static func _test_route_failure_target_identity_boundary(failures: Array[String]
 static func _test_pawn_public_candidates_and_special_contact(failures: Array[String]) -> void:
 	var initial_view: Dictionary = Projector.project(MatchState.create(414), MatchState.RED)
 	var generated: Array = Projector.generate_action_intents(initial_view)
-	for preview: Dictionary in generated:
-		if preview["piece_id"] != "red-pawn-1" or preview["classification"] == Projector.KNOWN_ILLEGAL:
-			continue
-		var target := Canonical.coordinate(preview["target_cell"])
-		_expect(target.y >= 4 and absi(target.x - 1) + absi(target.y - 4) == 1,
-			"普通兵公开候选无后退或多格非法动作", failures)
+	_expect(not generated.is_empty(), "城墙线上的兵生成缓冲区特殊行动候选", failures)
 
 	var one_step_empty: Dictionary = _empty_state(425)
 	_place(one_step_empty, "red-pawn-1", Vector2i(5, 10))
@@ -354,16 +350,21 @@ static func _test_transient_sources_clear_on_exit(failures: Array[String]) -> vo
 	_expect(not bombed["vision_sources"][MatchState.BLACK]["elephant_reveal_zones"].has("black-elephant-1"),
 		"炮击直接阵亡清除相象旧显形源", failures)
 
-	var rescued: Dictionary = _empty_state(421)
-	_place(rescued, "red-pawn-1", Vector2i(4, 12))
-	_place(rescued, "red-advisor-1", Vector2i(4, 1))
-	rescued["vision_sources"][MatchState.RED]["elephant_reveal_zones"]["red-advisor-1"] = [[4, 12]]
-	RuleEngine.resolve_bombardment_window(rescued, "black-cannon-1", Vector2i(5, 12), [
-		Vector2i(4, 12), Vector2i(5, 12), Vector2i(6, 12),
-	])
-	_expect(not rescued["pieces"]["red-advisor-1"]["alive"] \
-		and not rescued["vision_sources"][MatchState.RED]["elephant_reveal_zones"].has("red-advisor-1"),
-		"士替死牺牲清除其旧视野源", failures)
+	var resurrected: Dictionary = _empty_state(421)
+	_place(resurrected, "red-advisor-1", Vector2i(4, 1))
+	for piece_value: Variant in resurrected["pieces"].values():
+		var pool_piece: Dictionary = piece_value
+		if pool_piece["side"] == MatchState.RED and pool_piece["piece_type"] not in ["advisor", "general"] \
+		and pool_piece["id"] != "red-pawn-1":
+			pool_piece["in_reserve"] = true
+	resurrected["vision_sources"][MatchState.RED]["elephant_reveal_zones"]["red-advisor-1"] = [[4, 12]]
+	RuleEngine.submit_action(resurrected, {
+		"piece_id": "red-advisor-1", "action_type": "resurrect", "target_cell": [],
+		"skill_type": "advisor_resurrection",
+	})
+	_expect(not resurrected["pieces"]["red-advisor-1"]["alive"] \
+		and not resurrected["vision_sources"][MatchState.RED]["elephant_reveal_zones"].has("red-advisor-1"),
+		"士主动献祭清除其旧临时视野源", failures)
 
 	var reserve: Dictionary = MatchState.create(422)
 	MatchState.relocate_piece(reserve, "red-rook-1", Vector2i(5, 10))
@@ -387,7 +388,7 @@ static func _test_transient_sources_clear_on_exit(failures: Array[String]) -> vo
 		"墙修复撤回清除旧相象显形源", failures)
 
 
-static func _test_rescued_hidden_contact_authorization(failures: Array[String]) -> void:
+static func _test_hidden_contact_has_no_passive_rescue(failures: Array[String]) -> void:
 	var state: Dictionary = _empty_state(424)
 	_place(state, "red-rook-1", Vector2i(5, 10))
 	_place(state, "black-horse-1", Vector2i(5, 12))
@@ -395,9 +396,10 @@ static func _test_rescued_hidden_contact_authorization(failures: Array[String]) 
 	state["pieces"]["black-horse-1"]["hidden"] = true
 	var result: Dictionary = RuleEngine.submit_action(state, _move("red-rook-1", Vector2i(5, 12)))
 	var captures: Array = state["player_events"][MatchState.RED].back()["authorized_captures"]
-	_expect(result.get("consumed", false) and state["pieces"]["black-horse-1"]["alive"] \
-		and captures == [{"piece_id": "black-horse-1", "piece_type": "horse", "rescued": true}],
-		"盲吃触发士替死时actor仍获知实际接触目标及rescued结果", failures)
+	_expect(result.get("consumed", false) and not state["pieces"]["black-horse-1"]["alive"] \
+		and state["pieces"]["black-advisor-1"]["alive"] \
+		and captures == [{"piece_id": "black-horse-1", "piece_type": "horse", "rescued": false}],
+		"盲吃不再触发强制士替死，接触目标正常阵亡", failures)
 
 
 static func _cannon_pair_state(seed_value: int, screen_count: int) -> Dictionary:

@@ -106,10 +106,10 @@ static func _test_cannon_screen_and_wall(failures: Array[String]) -> void:
 	result = _move(state, "red-cannon-1", Vector2i(2, 14), _all_cells())
 	_expect(not result.get("legal", true), "炮多炮架不可吃子", failures)
 	var wall_state: Dictionary = _empty_state(307)
-	_place(wall_state, "red-rook-1", Vector2i(5, 19))
-	_expect(not _move(wall_state, "red-rook-1", Vector2i(5, 20), _all_cells()).get("legal", true), "完整敌墙阻止进入敌营", failures)
+	_place(wall_state, "red-rook-1", Vector2i(5, 21))
+	_expect(not _move(wall_state, "red-rook-1", Vector2i(5, 22), _all_cells()).get("legal", true), "完整敌墙阻止进入敌营", failures)
 	wall_state["walls"][MatchState.BLACK]["status"] = "BREACHED"
-	_expect(_move(wall_state, "red-rook-1", Vector2i(5, 20), _all_cells()).get("legal", false), "敌墙倒塌后允许进入敌营", failures)
+	_expect(_move(wall_state, "red-rook-1", Vector2i(5, 22), _all_cells()).get("legal", false), "敌墙倒塌后允许进入敌营", failures)
 
 
 static func _test_complete_generator(failures: Array[String]) -> void:

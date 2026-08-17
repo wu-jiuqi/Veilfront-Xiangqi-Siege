@@ -58,7 +58,7 @@ project_brief:
     - source:veilfront-xiangqi-siege:owner-planning-conversation
   - statement_id: stmt:veilfront-xiangqi-siege:board-and-fog
     domain: gameplay
-    text: 棋盘为24×9格，按双方各5线大本营、各3线缓冲区与中央8线战区划分；项目取消楚河汉界与河界概念，除将帅和士受九宫限制外，其他棋子可在全棋盘行动。开局除己方大本营外均受战争迷雾影响，普通棋子以当前位置为中心提供3×3动态视野，移动后旧区域重新进入迷雾。
+    text: 棋盘为24×9格，红方大本营Y=1～3、缓冲区Y=4～8，中央战区Y=9～16，黑方缓冲区Y=17～21、大本营Y=22～24；两条城墙分别位于Y=3/4与Y=21/22边界，兵卒初始格就在墙外第一线。项目取消楚河汉界与河界概念，除将帅和士受九宫限制外，其他棋子可在全棋盘行动。开局除己方大本营外均受战争迷雾影响，普通棋子以当前位置为中心提供3×3动态视野，移动后旧区域重新进入迷雾。
     status: confirmed
     decision_owner: project-owner
     source_refs:
@@ -74,7 +74,7 @@ project_brief:
     - source:veilfront-xiangqi-siege:owner-rules-revision
   - statement_id: stmt:veilfront-xiangqi-siege:horse-elephant-rules
     domain: gameplay
-    text: 马与相象可在全棋盘行动，但无视蹩马腿、无视堵象眼、隐身和田字侦察只在敌方城墙完整且行动完全发生于两个缓冲区或战区时生效；在任意大本营内，马受到蹩马腿限制，相象受到堵象眼限制。相象每次完成合资格移动后刷新该棋子的田字显形区域，区域内的隐身马显形；当相象移动导致旧区域失效，或马移动后不再处于任一有效田字显形区域时，若无其他显形原因则马恢复隐身。敌方城墙倒塌后，两者在全棋盘恢复对应默认限制并移除特殊能力。
+    text: 马与相象可在全棋盘行动，但无视蹩马腿、无视堵象眼、隐身和相视野只在敌方城墙完整且行动完全发生于Y=4～21时生效；在任意大本营内，马受到蹩马腿限制，相象受到堵象眼限制。相象合资格移动后的视野为起点中心3×3、起终点组成的田字格九点与终点中心3×3的并集；田字格九点仅阻挡敌方车从格外进入或穿过，使其停在路径首个交点，己方车不受影响，已在格内的敌车下一次可正常离开。敌方城墙倒塌后，两者恢复默认限制并移除特殊能力。
     status: confirmed
     decision_owner: project-owner
     source_refs:
@@ -83,7 +83,7 @@ project_brief:
     - source:veilfront-xiangqi-siege:owner-rules-finalization
   - statement_id: stmt:veilfront-xiangqi-siege:cannon-rules
     domain: gameplay
-    text: 炮的区域轰炸属于不需要炮架、不会移动炮的特殊行动；每门炮初始拥有两发区域轰炸弹药，没有冷却，允许友军伤害，弹药消耗后不恢复。轰炸中心的完整3×3九格范围必须全部位于两个缓冲区和战区（Y=6～19），再从九格内随机抽取三个不同伤害格。炮的常规移动与精确吃子继续遵守传统象棋规则，精确吃子必须隔一枚炮架并移动至目标格。区域轰炸与常规行动互斥。
+    text: 炮的区域轰炸属于不需要炮架、不会移动炮的特殊行动；每门炮初始拥有两发区域轰炸弹药，没有冷却，允许友军伤害，弹药消耗后不恢复。轰炸中心的完整3×3九格范围必须全部位于两个缓冲区和战区（Y=4～21），再从九格内随机抽取三个不同伤害格。炮的常规移动与精确吃子继续遵守传统象棋规则，精确吃子必须隔一枚炮架并移动至目标格。区域轰炸与常规行动互斥。
     status: confirmed
     decision_owner: project-owner
     source_refs:
@@ -92,7 +92,7 @@ project_brief:
     - source:veilfront-xiangqi-siege:owner-rules-finalization
   - statement_id: stmt:veilfront-xiangqi-siege:rook-rules
     domain: gameplay
-    text: 当敌方城墙完整且整段行动位于两个缓冲区或战区时，车可以穿过并按从起点到终点的路径顺序依次消灭全部敌方棋子，但不能穿过己方棋子；每个目标先结算阵亡与士替死，若将帅实际死亡则立即以最高优先级结束游戏，不再处理路径上的后续目标。本次移动路径形成特殊视野，持续到该车下一次移动开始。车在大本营内、敌方城墙倒塌后或不满足完整区域条件时使用默认象棋规则。
+    text: 当敌方城墙完整且整段行动位于两个缓冲区或战区时，车可以穿过并按从起点到终点的路径顺序依次消灭全部敌方棋子，但不能穿过己方棋子；不再触发任何被动士替死，若将帅实际死亡则立即以最高优先级结束游戏，不再处理路径上的后续目标。本次移动路径形成特殊视野，持续到该车下一次移动开始。车从有效敌方相田字格外进入或穿过时停在首个交点；己方相不阻挡己方车，从田字格内离开不再次触发。
     status: confirmed
     decision_owner: project-owner
     source_refs:
@@ -115,7 +115,7 @@ project_brief:
     - source:veilfront-xiangqi-siege:owner-planning-conversation
   - statement_id: stmt:veilfront-xiangqi-siege:victory-and-flags
     domain: gameplay
-    text: 三个单格旗帜只在战区中央3×9区域内随机生成：每局先等概率选择Y=11～13或Y=12～14作为三行带，再于X=1～9范围抽取三个不同合法格；不要求中心对称或镜像模板，并在开局时向双方公开。棋子需承受对方三次行动后完成占领；同时占领三旗立即获胜。单局完整轮上限待逻辑原型测试后确定；达到上限时以旗帜数量判胜，同数为平局。将帅实际死亡具有最高胜利优先级。
+    text: 三个单格旗帜在完整战区X=1～9、Y=9～16内随机生成三个不同格，旗帜位置永不进入PlayerView、AI输入或LAN下行，规则种子也不得下发到可反推旗位的客户端。棋子踏入隐藏旗后立即公开“红方/黑方正在夺旗(1/3)”，之后按对方行动机会推进，完成时只公开“红方/黑方成功夺得一面旗帜”，始终不公开具体位置；同时占领三旗立即获胜。
     status: confirmed
     decision_owner: project-owner
     source_refs:
@@ -124,7 +124,7 @@ project_brief:
     - source:veilfront-xiangqi-siege:owner-rules-finalization
   - statement_id: stmt:veilfront-xiangqi-siege:piece-rescue
     domain: gameplay
-    text: 每方本局最先发生的两次合资格阵亡事件触发士替死，合资格目标为除将帅和士之外的己方棋子；触发时从仍存活且未消耗替死能力的左士或右士中随机选择一枚移除，并将被救棋子随机部署到己方大本营空格。若无可用士则正常阵亡；复活不会恢复已经消耗的弹药、技能次数或永久资源。
+    text: 取消最先两次阵亡强制士替死。活着且在场的士可以主动消耗一次行动，以自己阵亡为代价，从己方阵亡区随机选择一枚非士、非帅/将棋子，随机复活到己方大本营空格；阵亡士与帅/将明确不进入随机池，无合资格目标或牺牲后仍无空格时动作非法。复活不会恢复已经消耗的弹药、技能次数或永久资源。
     status: confirmed
     decision_owner: project-owner
     source_refs:

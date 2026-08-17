@@ -33,14 +33,16 @@ static func run_suite() -> bool:
 	var view_b: Dictionary = Projector.project(state_b, MatchState.RED)
 	_expect(Canonical.digest(view_a) == Canonical.digest(view_b), "隐藏差异不得改变 PlayerView", failures)
 	_expect(not view_a.has("rng") and not view_a.has("board"), "PlayerView 不得携带 RNG 或完整棋盘", failures)
-	_expect(view_a["match_seed"] == 80123, "PlayerView 只公开本局 seed 引用而非 RNG 状态", failures)
+	_expect(not view_a.has("match_seed"), "PlayerView不公开可反推暗旗位置的规则种子", failures)
 	_expect(view_a["full_round_limit_hypothesis"] == 50, "PlayerView 公开实际 50 回合试玩假设", failures)
 	_expect(view_a["round_limit_status"] == "hypothesis_cli_overridable", "PlayerView 保留回合上限假设状态", failures)
-	_expect(view_a["rules_revision"] == "owner-confirm-2026-08-16-pawn-move-split" \
-		and view_a["implementation_revision"] == "prototype-core-revision-6", "PlayerView 公开规则与实现 revision", failures)
+	_expect(view_a["rules_revision"] == "owner-confirm-2026-08-17-gate1-rule-v4" \
+		and view_a["implementation_revision"] == "prototype-core-revision-7", "PlayerView 公开规则与实现 revision", failures)
+	for flag: Dictionary in view_a["flags"]:
+		_expect(not flag.has("position"), "PlayerView永久隐藏旗帜坐标", failures)
 	for wall: Dictionary in view_a["walls"]:
 		_expect(wall.size() == 2 and wall.has("side") and wall.has("status"), "墙投影仅公开阵营与状态", failures)
-	_expect(view_a["flags"][0]["occupier_piece_id"] == "", "不可见敌方占旗棋子 ID 必须匿名", failures)
+	_expect(not view_a["flags"][0].has("occupier_piece_id"), "占旗棋子ID不得间接泄漏旗位", failures)
 	_expect(not view_a["flags"][0].has("repair_start_action_index"), "旗投影不携带墙修复内部计数", failures)
 	_test_breached_wall_region_visibility(failures)
 

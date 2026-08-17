@@ -69,6 +69,8 @@ static func submit_action(state: Dictionary, intent: Dictionary, options: Dictio
 			)
 		"bombard":
 			outcome = _resolve_bombardment(state, intent, actor_side)
+		"resurrect":
+			outcome = _resolve_advisor_resurrection(state, intent, actor_side)
 		_:
 			outcome = _rejected("known_illegal", "unsupported_action_type")
 	if not outcome.get("consumed", false):
@@ -231,41 +233,6 @@ static func resolve_bombardment_window(
 	elif dead_generals.has(MatchState.BLACK):
 		_set_terminal(state, MatchState.RED, "general_destroyed")
 
-	var rescue_records: Array = []
-	if general_targets.is_empty():
-		for casualty: Dictionary in casualties:
-			if casualty["piece_type"] == "general" or casualty["piece_type"] == "advisor":
-				continue
-			var side: String = casualty["side"]
-			if int(state["rescue_eligible_events"][side]) >= 2:
-				continue
-			state["rescue_eligible_events"][side] = int(state["rescue_eligible_events"][side]) + 1
-			var advisors: Array = _available_rescue_advisors(state, side, impacted_piece_ids)
-			if advisors.is_empty():
-				continue
-			var selected: Array = SeededRandom.draw_unique(
-				state["rng"], advisors, 1, "advisor_rescue:%s" % casualty["piece_id"]
-			)
-			var advisor_id: String = str(selected[0])
-			var advisor: Dictionary = state["pieces"][advisor_id]
-			_cancel_flag_capture_for_piece(state, advisor_id)
-			_clear_piece_transient_sources(state, advisor_id)
-			MatchState.remove_piece_from_board(state, advisor_id)
-			advisor["alive"] = false
-			advisor["rescue_available"] = false
-			var rescued_piece: Dictionary = state["pieces"][casualty["piece_id"]]
-			rescued_piece["alive"] = true
-			var base_return: Dictionary = return_pieces_to_base(
-				state, side, [casualty["piece_id"]], "advisor_rescue_return"
-			)
-			casualty["rescued"] = true
-			rescue_records.append({
-				"impact_number": casualty["impact_number"],
-				"rescued_piece_id": casualty["piece_id"],
-				"sacrificed_advisor_id": advisor_id,
-				"base_return": base_return,
-			})
-
 	var normalized_cells: Array = []
 	for cell_value: Variant in impact_cells:
 		var cell := Canonical.coordinate(cell_value)
@@ -278,7 +245,7 @@ static func resolve_bombardment_window(
 		"impact_order": [1, 2, 3],
 		"simultaneous_resolution_id": "bombard-window-%d-%s" % [state["action_index"], cannon_id],
 		"casualties": casualties,
-		"rescue_records": rescue_records,
+		"rescue_records": [],
 		"general_resolution": {
 			"red_destroyed": dead_generals.has(MatchState.RED),
 			"black_destroyed": dead_generals.has(MatchState.BLACK),
@@ -286,22 +253,6 @@ static func resolve_bombardment_window(
 			"win_reason": state["win_reason"],
 		},
 	}
-
-
-static func _available_rescue_advisors(
-	state: Dictionary,
-	side: String,
-	impacted_piece_ids: Dictionary
-) -> Array:
-	var result: Array = []
-	for piece_value: Variant in state["pieces"].values():
-		var piece: Dictionary = piece_value
-		if piece["side"] == side and piece["piece_type"] == "advisor" \
-		and piece["alive"] and piece["rescue_available"] \
-		and not impacted_piece_ids.has(piece["id"]):
-			result.append(piece["id"])
-	result.sort()
-	return result
 
 
 static func _resolve_move(
@@ -326,6 +277,7 @@ static func _resolve_move(
 		state["vision_sources"][actor_side]["rook_paths"].erase(piece_id)
 	if piece["piece_type"] == "elephant":
 		state["vision_sources"][actor_side]["elephant_reveal_zones"].erase(piece_id)
+		state["vision_sources"][actor_side]["elephant_block_fields"].erase(piece_id)
 	var evaluation: Dictionary = MoveRules.evaluate_move(
 		state, intent, actor_side, visibility_context
 	)
@@ -334,7 +286,7 @@ static func _resolve_move(
 	_cancel_flag_capture_for_piece(state, piece_id)
 	piece["revealed_to"] = []
 	var casualties: Array = []
-	var resolved_position: Vector2i = target
+	var resolved_position := Canonical.coordinate(evaluation.get("resolved_target", [target.x, target.y]))
 	for target_piece_id_value: Variant in evaluation["target_piece_ids"]:
 		var target_piece_id: String = str(target_piece_id_value)
 		if not state["pieces"].has(target_piece_id):
@@ -348,7 +300,7 @@ static func _resolve_move(
 			break
 	MatchState.relocate_piece(state, piece_id, resolved_position)
 	if not state["terminal"]:
-		_apply_move_vision_effects(state, piece_id, origin, target, evaluation)
+		_apply_move_vision_effects(state, piece_id, origin, resolved_position, evaluation)
 	if not state["terminal"]:
 		_start_flag_capture(state, piece_id)
 	return {
@@ -358,6 +310,7 @@ static func _resolve_move(
 		"position": [resolved_position.x, resolved_position.y],
 		"move_kind": evaluation["move_kind"],
 		"path": evaluation["path"].duplicate(true),
+		"elephant_field_intercepted": bool(evaluation.get("elephant_field_intercepted", false)),
 		"casualties": casualties,
 	}
 
@@ -381,6 +334,44 @@ static func _resolve_bombardment(state: Dictionary, intent: Dictionary, actor_si
 		"result_code": "bombardment_resolved",
 		"position": [center.x, center.y],
 		"bombardment_result": result,
+	}
+
+
+static func _resolve_advisor_resurrection(
+	state: Dictionary,
+	intent: Dictionary,
+	actor_side: String
+) -> Dictionary:
+	var evaluation: Dictionary = MoveRules.evaluate_resurrection(state, intent, actor_side)
+	if not evaluation.get("legal", false):
+		return _rejected("known_illegal", str(evaluation.get("reason", "resurrection_not_available")))
+	var advisor_id: String = str(intent.get("piece_id", ""))
+	var advisor: Dictionary = state["pieces"][advisor_id]
+	var sacrifice_position: Array = advisor["position"].duplicate()
+	_cancel_flag_capture_for_piece(state, advisor_id)
+	_clear_piece_transient_sources(state, advisor_id)
+	MatchState.remove_piece_from_board(state, advisor_id)
+	advisor["alive"] = false
+	var candidates: Array = evaluation["candidate_piece_ids"]
+	var selected: Array = SeededRandom.draw_unique(
+		state["rng"], candidates, 1, "advisor_resurrection:%s" % advisor_id
+	)
+	var revived_piece_id: String = str(selected[0])
+	var revived_piece: Dictionary = state["pieces"][revived_piece_id]
+	revived_piece["alive"] = true
+	revived_piece["in_reserve"] = false
+	var base_return: Dictionary = return_pieces_to_base(
+		state, actor_side, [revived_piece_id], "advisor_resurrection_return"
+	)
+	return {
+		"ok": true,
+		"consumed": true,
+		"result_code": "advisor_resurrection_resolved",
+		"position": sacrifice_position,
+		"sacrificed_advisor_id": advisor_id,
+		"revived_piece_id": revived_piece_id,
+		"revived_piece_type": str(revived_piece["piece_type"]),
+		"base_return": base_return,
 	}
 
 
@@ -453,7 +444,7 @@ static func _start_flag_capture(state: Dictionary, piece_id: String) -> void:
 			continue
 		flag["occupier_piece_id"] = piece_id
 		flag["capturing_side"] = piece["side"]
-		flag["capture_progress"] = 0
+		flag["capture_progress"] = 1
 		flag["contested"] = flag["owner"] != MatchState.NEUTRAL
 
 
@@ -506,6 +497,12 @@ static func _publish_player_event(state: Dictionary, actor_side: String, action_
 		"public_code": outcome["result_code"],
 		"authorized_captures": _authorized_captures(state, outcome, actor_side, true),
 	}
+	if outcome["result_code"] == "advisor_resurrection_resolved":
+		event["resurrection"] = {
+			"sacrificed_advisor_id": str(outcome["sacrificed_advisor_id"]),
+			"revived_piece_id": str(outcome["revived_piece_id"]),
+			"revived_piece_type": str(outcome["revived_piece_type"]),
+		}
 	state["player_events"][actor_side].append(event)
 	var opponent_side: String = MatchState.opponent(actor_side)
 	var public_to_opponent: bool = outcome["result_code"] in ["pass", "skip", "timeout", "bombardment_resolved"] \
@@ -517,6 +514,7 @@ static func _publish_player_event(state: Dictionary, actor_side: String, action_
 		)
 	if public_to_opponent:
 		var opponent_event: Dictionary = event.duplicate(true)
+		opponent_event.erase("resurrection")
 		opponent_event["authorized_captures"] = _authorized_captures(
 			state, outcome, opponent_side, false
 		)
@@ -665,27 +663,6 @@ static func _resolve_single_casualty(
 	if piece["piece_type"] == "general":
 		_set_terminal(state, attacker_side, "general_destroyed")
 		return record
-	if piece["piece_type"] == "advisor":
-		return record
-	var side: String = piece["side"]
-	if int(state["rescue_eligible_events"][side]) >= 2:
-		return record
-	state["rescue_eligible_events"][side] = int(state["rescue_eligible_events"][side]) + 1
-	var advisors: Array = _available_rescue_advisors(state, side, {piece_id: true})
-	if advisors.is_empty():
-		return record
-	var selected: Array = SeededRandom.draw_unique(state["rng"], advisors, 1, "advisor_rescue:%s" % piece_id)
-	var advisor_id: String = str(selected[0])
-	var advisor: Dictionary = state["pieces"][advisor_id]
-	_cancel_flag_capture_for_piece(state, advisor_id)
-	_clear_piece_transient_sources(state, advisor_id)
-	MatchState.remove_piece_from_board(state, advisor_id)
-	advisor["alive"] = false
-	advisor["rescue_available"] = false
-	piece["alive"] = true
-	record["rescued"] = true
-	record["sacrificed_advisor_id"] = advisor_id
-	record["base_return"] = return_pieces_to_base(state, side, [piece_id], "advisor_rescue_return")
 	return record
 
 
@@ -704,8 +681,13 @@ static func _apply_move_vision_effects(
 		if move_kind == "rook_special":
 			state["vision_sources"][side]["rook_paths"][piece_id] = evaluation["path"].duplicate(true)
 	if piece["piece_type"] == "elephant":
-		state["vision_sources"][side]["elephant_reveal_zones"][piece_id] = \
-				MoveRules.reveal_cells_for_elephant_move(origin, target)
+		state["vision_sources"][side]["elephant_reveal_zones"].erase(piece_id)
+		state["vision_sources"][side]["elephant_block_fields"].erase(piece_id)
+		if move_kind == "elephant_special":
+			state["vision_sources"][side]["elephant_reveal_zones"][piece_id] = \
+					MoveRules.reveal_cells_for_elephant_move(origin, target)
+			state["vision_sources"][side]["elephant_block_fields"][piece_id] = \
+					MoveRules.elephant_block_cells_for_move(origin, target)
 	if piece["piece_type"] == "horse" and move_kind == "horse_special":
 		piece["hidden"] = true
 
@@ -714,6 +696,7 @@ static func _disable_special_sources_against_wall(state: Dictionary, wall_side: 
 	var attacker_side: String = MatchState.opponent(wall_side)
 	state["vision_sources"][attacker_side]["rook_paths"].clear()
 	state["vision_sources"][attacker_side]["elephant_reveal_zones"].clear()
+	state["vision_sources"][attacker_side]["elephant_block_fields"].clear()
 	for piece_value: Variant in state["pieces"].values():
 		var piece: Dictionary = piece_value
 		if piece["side"] == attacker_side and piece["piece_type"] == "horse":
@@ -731,6 +714,7 @@ static func _clear_piece_transient_sources(state: Dictionary, piece_id: String) 
 	for vision_side: String in [MatchState.RED, MatchState.BLACK]:
 		state["vision_sources"][vision_side]["rook_paths"].erase(piece_id)
 		state["vision_sources"][vision_side]["elephant_reveal_zones"].erase(piece_id)
+		state["vision_sources"][vision_side]["elephant_block_fields"].erase(piece_id)
 
 
 static func _check_round_limit(state: Dictionary) -> void:

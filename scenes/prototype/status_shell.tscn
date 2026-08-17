@@ -47,7 +47,7 @@ autowrap_mode = 2
 
 [node name="ActionMode" type="GridContainer" parent="StatusMargin/StatusColumn"]
 layout_mode = 2
-columns = 3
+columns = 2
 
 [node name="MoveButton" type="Button" parent="StatusMargin/StatusColumn/ActionMode"]
 custom_minimum_size = Vector2(98, 42)
@@ -58,6 +58,11 @@ text = "普通移动"
 custom_minimum_size = Vector2(98, 42)
 layout_mode = 2
 text = "区域炮击"
+
+[node name="ResurrectButton" type="Button" parent="StatusMargin/StatusColumn/ActionMode"]
+custom_minimum_size = Vector2(98, 42)
+layout_mode = 2
+text = "献祭复活"
 
 [node name="PassButton" type="Button" parent="StatusMargin/StatusColumn/ActionMode"]
 custom_minimum_size = Vector2(98, 42)

@@ -19,7 +19,7 @@ static func run_suite() -> bool:
 		return false
 	if not _test_general_hit_stops_non_general_window():
 		return false
-	if not _test_bombardment_rescue_uses_impact_order_and_excludes_hit_advisor():
+	if not _test_bombardment_has_no_passive_advisor_rescue():
 		return false
 	if not _test_reserve_queue_and_free_deployment():
 		return false
@@ -39,10 +39,7 @@ static func _test_flag_lifecycle() -> bool:
 	]
 	MatchState.relocate_piece(state, "red-rook-1", Vector2i(5, 11))
 	_test_assert(_assert_consumed(RuleEngine.submit_action(state, _move("red-rook-1", Vector2i(5, 12)))))
-	_test_assert(state["flags"][0]["capture_progress"] == 0)
-	_test_assert(_assert_consumed(RuleEngine.submit_action(state, _pass())))
 	_test_assert(state["flags"][0]["capture_progress"] == 1)
-	_test_assert(_assert_consumed(RuleEngine.submit_action(state, _pass())))
 	_test_assert(_assert_consumed(RuleEngine.submit_action(state, _pass())))
 	_test_assert(state["flags"][0]["capture_progress"] == 2)
 	_test_assert(_assert_consumed(RuleEngine.submit_action(state, _pass())))
@@ -56,7 +53,7 @@ static func _test_flag_lifecycle() -> bool:
 	_test_assert(_assert_consumed(RuleEngine.submit_action(state, _move("black-rook-1", Vector2i(5, 12)))))
 	_test_assert(state["flags"][0]["contested"])
 	_test_assert(_assert_consumed(RuleEngine.submit_action(state, _pass())))
-	_test_assert(state["flags"][0]["capture_progress"] == 1)
+	_test_assert(state["flags"][0]["capture_progress"] == 2)
 	_test_assert(_assert_consumed(RuleEngine.submit_action(state, _move("black-rook-1", Vector2i(5, 11)))))
 	_test_assert(state["flags"][0]["owner"] == MatchState.RED)
 	_test_assert(not state["flags"][0]["contested"] and state["flags"][0]["capture_progress"] == 0)
@@ -102,7 +99,7 @@ static func _test_flag_third_opportunity_resolves_death_first() -> bool:
 	_test_assert(state["flags"][0]["owner"] == MatchState.NEUTRAL)
 	_test_assert(state["flags"][0]["occupier_piece_id"] == "black-rook-1")
 	_test_assert(state["flags"][0]["capturing_side"] == MatchState.BLACK)
-	_test_assert(state["flags"][0]["capture_progress"] == 0)
+	_test_assert(state["flags"][0]["capture_progress"] == 1)
 	return true
 
 
@@ -135,7 +132,6 @@ static func _test_general_hit_stops_non_general_window() -> bool:
 	state["flags"][0]["occupier_piece_id"] = "black-pawn-1"
 	state["flags"][0]["capturing_side"] = MatchState.BLACK
 	state["flags"][0]["capture_progress"] = 2
-	var rescue_before: Dictionary = state["rescue_eligible_events"].duplicate(true)
 	var walls_before: Dictionary = state["walls"].duplicate(true)
 	var result: Dictionary = RuleEngine.resolve_bombardment_window(
 		state,
@@ -150,14 +146,13 @@ static func _test_general_hit_stops_non_general_window() -> bool:
 	if not state["pieces"]["black-pawn-1"]["alive"] or result["casualties"].size() != 1:
 		push_error("RULES_CORE_FAIL: 单将命中窗错误处理了普通棋")
 		return false
-	if state["flags"][0]["capture_progress"] != 2 or state["rescue_eligible_events"] != rescue_before \
-	or state["walls"] != walls_before:
+	if state["flags"][0]["capture_progress"] != 2 or state["walls"] != walls_before:
 		push_error("RULES_CORE_FAIL: 将帅终局窗产生旗/替死/墙副作用")
 		return false
 	return true
 
 
-static func _test_bombardment_rescue_uses_impact_order_and_excludes_hit_advisor() -> bool:
+static func _test_bombardment_has_no_passive_advisor_rescue() -> bool:
 	var state: Dictionary = RuleEngine.create_match(3355)
 	MatchState.relocate_piece(state, "red-pawn-1", Vector2i(4, 12))
 	MatchState.relocate_piece(state, "red-advisor-1", Vector2i(5, 12))
@@ -167,12 +162,10 @@ static func _test_bombardment_rescue_uses_impact_order_and_excludes_hit_advisor(
 		Vector2i(5, 12),
 		[Vector2i(4, 12), Vector2i(5, 12), Vector2i(6, 12)]
 	)
-	_test_assert(result["rescue_records"].size() == 1)
-	_test_assert(result["rescue_records"][0]["impact_number"] == 1)
-	_test_assert(result["rescue_records"][0]["sacrificed_advisor_id"] == "red-advisor-2")
-	_test_assert(state["pieces"]["red-pawn-1"]["alive"])
+	_test_assert(result["rescue_records"].is_empty(), "区域炮击不再触发被动士替死")
+	_test_assert(not state["pieces"]["red-pawn-1"]["alive"])
 	_test_assert(not state["pieces"]["red-advisor-1"]["alive"], "本窗被命中的士不得救援")
-	_test_assert(not state["pieces"]["red-advisor-2"]["alive"])
+	_test_assert(state["pieces"]["red-advisor-2"]["alive"], "未被命中的士不会被强制牺牲")
 	return true
 
 

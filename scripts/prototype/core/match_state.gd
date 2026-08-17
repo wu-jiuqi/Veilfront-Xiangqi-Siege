@@ -18,8 +18,8 @@ static func create(seed_value: int, configuration: Dictionary = {}) -> Dictionar
 	assert(round_limit > 0)
 	var state: Dictionary = {
 		"schema_version": "full-state-v1",
-		"rules_revision": "owner-confirm-2026-08-16-pawn-move-split",
-		"implementation_revision": "prototype-core-revision-6",
+		"rules_revision": "owner-confirm-2026-08-17-gate1-rule-v4",
+		"implementation_revision": "prototype-core-revision-7",
 		"configuration": {
 			"full_round_limit_hypothesis": round_limit,
 			"round_limit_status": "hypothesis_cli_overridable",
@@ -40,11 +40,10 @@ static func create(seed_value: int, configuration: Dictionary = {}) -> Dictionar
 		},
 		"flags": [],
 		"reserve_queues": {RED: [], BLACK: []},
-		"rescue_eligible_events": {RED: 0, BLACK: 0},
 		"contact_intel": {RED: [], BLACK: []},
 		"vision_sources": {
-			RED: {"rook_paths": {}, "elephant_reveal_zones": {}},
-			BLACK: {"rook_paths": {}, "elephant_reveal_zones": {}},
+			RED: {"rook_paths": {}, "elephant_reveal_zones": {}, "elephant_block_fields": {}},
+			BLACK: {"rook_paths": {}, "elephant_reveal_zones": {}, "elephant_block_fields": {}},
 		},
 		"events": [],
 		"player_events": {RED: [], BLACK: []},
@@ -70,8 +69,8 @@ static func is_inside_board(cell: Vector2i) -> bool:
 
 static func is_in_base(cell: Vector2i, side: String) -> bool:
 	if side == RED:
-		return cell.y >= 1 and cell.y <= 5
-	return cell.y >= 20 and cell.y <= 24
+		return cell.y >= 1 and cell.y <= 3
+	return cell.y >= 22 and cell.y <= 24
 
 
 static func is_in_buffer_or_base(cell: Vector2i, side: String) -> bool:
@@ -82,8 +81,8 @@ static func is_in_buffer_or_base(cell: Vector2i, side: String) -> bool:
 
 static func is_in_buffer(cell: Vector2i, side: String) -> bool:
 	if side == RED:
-		return cell.y >= 6 and cell.y <= 8
-	return cell.y >= 17 and cell.y <= 19
+		return cell.y >= 4 and cell.y <= 8
+	return cell.y >= 17 and cell.y <= 21
 
 
 static func piece_at(state: Dictionary, cell: Vector2i) -> Dictionary:
@@ -117,8 +116,8 @@ static func remove_piece_from_board(state: Dictionary, piece_id: String) -> void
 
 static func base_empty_cells(state: Dictionary, side: String) -> Array:
 	var result: Array = []
-	var first_y: int = 1 if side == RED else 20
-	var last_y: int = 5 if side == RED else 24
+	var first_y: int = 1 if side == RED else 22
+	var last_y: int = 3 if side == RED else 24
 	for y: int in range(first_y, last_y + 1):
 		for x: int in range(1, BOARD_WIDTH + 1):
 			var cell := Vector2i(x, y)
@@ -144,7 +143,6 @@ static func summary(state: Dictionary) -> Dictionary:
 		"walls": state["walls"],
 		"flags": state["flags"],
 		"reserve_queues": state["reserve_queues"],
-		"rescue_eligible_events": state["rescue_eligible_events"],
 		"contact_intel": state["contact_intel"],
 		"vision_sources": state["vision_sources"],
 		"rng": {
@@ -211,7 +209,6 @@ static func _add_piece(
 		"hidden": false,
 		"revealed_to": [],
 		"bombard_ammo": 2 if piece_type == "cannon" else 0,
-		"rescue_available": piece_type == "advisor",
 		"temporary_effects": [],
 	}
 	state["pieces"][piece_id] = piece
@@ -219,9 +216,8 @@ static func _add_piece(
 
 
 static func _create_flags(state: Dictionary) -> Array:
-	var band_start: int = 11 if SeededRandom.draw_range(state["rng"], 0, 1, "flag_band") == 0 else 12
 	var candidates: Array = []
-	for y: int in range(band_start, band_start + 3):
+	for y: int in range(9, 17):
 		for x: int in range(1, BOARD_WIDTH + 1):
 			candidates.append(Vector2i(x, y))
 	var cells: Array = SeededRandom.draw_unique(state["rng"], candidates, 3, "flag_cell")
