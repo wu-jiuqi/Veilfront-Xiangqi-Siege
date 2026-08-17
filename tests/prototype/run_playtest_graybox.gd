@@ -2,6 +2,7 @@ extends SceneTree
 
 const MAIN_SCENE := preload("res://scenes/prototype/gate1_logic_lab.tscn")
 const Canonical := preload("res://scripts/prototype/core/canonical.gd")
+const Projector := preload("res://scripts/prototype/view/player_view_projector.gd")
 
 var failures: Array[String] = []
 
@@ -67,6 +68,38 @@ func _run() -> void:
 	_check(not initial_view.has("board") and not initial_view.has("rng"), "UI PlayerView 不含 FullState board/rng")
 	_check(not scene.get_node("MatchController").has_method("get_full_state"), "控制器不暴露 FullState getter")
 	_check(not scene.get_action_preview_snapshot().is_empty(), "人类公开候选已生成")
+	var resurrect_button := scene.get_node(
+		"SafeMargin/Page/Workspace/StatusShell/StatusMargin/StatusColumn/ActionMode/ResurrectButton"
+	) as Button
+	_check(not resurrect_button.disabled, "人类行动阶段献祭复活入口可点击并提供不可用原因")
+	resurrect_button.pressed.emit()
+	var message_value := scene.get_node(
+		"SafeMargin/Page/Workspace/StatusShell/StatusMargin/StatusColumn/MessageValue"
+	) as Label
+	_check(message_value.text.contains("没有可复活棋子"), "无合格阵亡棋子时明确说明献祭不可用原因")
+	var resurrection_view: Dictionary = initial_view.duplicate(true)
+	for piece: Dictionary in resurrection_view["pieces"]:
+		if str(piece.get("id", "")) == "red-rook-1":
+			piece["alive"] = false
+			piece["position"] = []
+			break
+	resurrection_view["casualties"].append({
+		"piece_id": "red-rook-1", "piece_type": "rook", "side": "red",
+	})
+	scene.player_view = resurrection_view
+	scene.action_previews = Projector.generate_action_intents(resurrection_view)
+	scene._clear_selection(false)
+	scene._refresh_all()
+	resurrect_button.pressed.emit()
+	_check(str(scene.action_mode) == "resurrect" and str(scene.selected_piece_id).is_empty(),
+		"有复活候选时点击入口进入选择献祭士模式")
+	scene.select_cell_for_test([4, 1])
+	_check(str(scene.selected_piece_id) == "red-advisor-1" \
+		and str(scene.pending_preview.get("action_type", "")) == "resurrect",
+		"选择在场士后直接登记献祭复活确认动作")
+	scene.restart_match_for_test()
+	await process_frame
+	initial_view = scene.get_player_view_snapshot()
 	scene.select_cell_for_test([1, 1])
 	var cancel_event := InputEventAction.new()
 	cancel_event.action = "ui_cancel"

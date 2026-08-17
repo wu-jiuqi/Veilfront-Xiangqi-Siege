@@ -205,6 +205,12 @@ func _on_board_point_pressed(cell: Array) -> void:
 		message_value.text = "当前不是人类行动阶段；可查看公开信息或执行 AI 单步。"
 		return
 	var own_piece: Dictionary = _own_piece_at(cell)
+	if action_mode == "resurrect":
+		if own_piece.is_empty() or str(own_piece.get("piece_type", "")) != "advisor":
+			message_value.text = "献祭复活模式：请选择一枚要献祭的己方在场士。"
+			return
+		_select_piece(own_piece)
+		return
 	if not selected_piece_id.is_empty():
 		var preview: Dictionary = _preview_for_target(cell)
 		if not preview.is_empty():
@@ -232,10 +238,20 @@ func _on_board_annotation_changed(cell: Array, marker: String) -> void:
 
 
 func _select_piece(piece: Dictionary) -> void:
+	var selecting_resurrection: bool = action_mode == "resurrect"
 	selected_piece_id = str(piece["id"])
 	selected_origin = piece["position"].duplicate()
 	pending_preview = {}
-	action_mode = "move"
+	action_mode = "resurrect" if selecting_resurrection else "move"
+	if selecting_resurrection:
+		var resurrection_preview: Dictionary = _resurrection_preview_for_piece(selected_piece_id)
+		if not resurrection_preview.is_empty():
+			_refresh_all()
+			_set_pending_preview(resurrection_preview)
+			return
+		message_value.text = _resurrection_unavailable_message()
+		_refresh_all()
+		return
 	message_value.text = "已选择 %s；绿色为已知合法，黄色为受迷雾影响。" % selected_piece_id
 	_refresh_all()
 
@@ -263,13 +279,21 @@ func _on_resurrect_pressed() -> void:
 	if not _can_submit():
 		message_value.text = "当前不能发动复活。"
 		return
-	for preview: Dictionary in action_previews:
-		if preview["piece_id"] == selected_piece_id and preview["action_type"] == "resurrect" \
-		and preview["classification"] != KNOWN_ILLEGAL:
-			action_mode = "resurrect"
-			_set_pending_preview(preview)
-			return
-	message_value.text = "请选择可发动能力的在场士；阵亡士、帅、将不进入复活随机池。"
+	var selected_preview: Dictionary = _resurrection_preview_for_piece(selected_piece_id)
+	if not selected_preview.is_empty():
+		action_mode = "resurrect"
+		_set_pending_preview(selected_preview)
+		return
+	if not _has_any_resurrection():
+		message_value.text = _resurrection_unavailable_message()
+		return
+	selected_piece_id = ""
+	selected_origin = []
+	pending_preview = {}
+	action_mode = "resurrect"
+	confirm_panel.visible = false
+	message_value.text = "献祭复活已就绪：请在棋盘上选择一枚要献祭的己方在场士。"
+	_refresh_all()
 
 
 func _set_pending_preview(preview: Dictionary) -> void:
@@ -517,7 +541,9 @@ func _refresh_status() -> void:
 	mode_status.text = "模式：%s · 左键走子 / Esc取消 · 选中时右键取消，未选中时右键标注" % mode_name
 	move_button.disabled = not _can_submit()
 	bombard_button.disabled = not _can_submit() or not _selected_has_bombardment()
-	resurrect_button.disabled = not _can_submit() or not _selected_has_resurrection()
+	resurrect_button.disabled = not _can_submit()
+	resurrect_button.tooltip_text = "点击后选择要献祭的士" if _has_any_resurrection() \
+		else _resurrection_unavailable_message()
 	pass_button.disabled = not _can_submit()
 	ai_step_button.disabled = network_mode or not match_controller.can_step_ai()
 	var casualty_counts: Dictionary = _casualty_counts_from_public_pool()
@@ -680,15 +706,44 @@ func _selected_has_bombardment() -> bool:
 	return false
 
 
-func _selected_has_resurrection() -> bool:
-	if selected_piece_id.is_empty():
-		return false
+func _has_any_resurrection() -> bool:
 	for preview: Dictionary in action_previews:
-		if str(preview["piece_id"]) == selected_piece_id \
-		and str(preview["action_type"]) == "resurrect" \
+		if str(preview["action_type"]) == "resurrect" \
 		and str(preview["classification"]) != KNOWN_ILLEGAL:
 			return true
 	return false
+
+
+func _resurrection_preview_for_piece(piece_id: String) -> Dictionary:
+	if piece_id.is_empty():
+		return {}
+	for preview: Dictionary in action_previews:
+		if str(preview["piece_id"]) == piece_id \
+		and str(preview["action_type"]) == "resurrect" \
+		and str(preview["classification"]) != KNOWN_ILLEGAL:
+			return preview.duplicate(true)
+	return {}
+
+
+func _resurrection_unavailable_message() -> String:
+	var viewer_side: String = str(player_view.get("viewer_side", ""))
+	var has_living_advisor: bool = false
+	for piece: Dictionary in player_view.get("pieces", []):
+		if str(piece.get("side", "")) == viewer_side \
+		and str(piece.get("piece_type", "")) == "advisor" \
+		and bool(piece.get("alive", false)) and not bool(piece.get("in_reserve", false)):
+			has_living_advisor = true
+			break
+	if not has_living_advisor:
+		return "当前没有可献祭的己方在场士。"
+	var candidate_count: int = 0
+	for casualty: Dictionary in player_view.get("casualties", []):
+		if str(casualty.get("side", "")) == viewer_side \
+		and str(casualty.get("piece_type", "")) not in ["advisor", "general"]:
+			candidate_count += 1
+	if candidate_count <= 0:
+		return "己方阵亡池中没有可复活棋子；阵亡士和帅/将不进入随机池。"
+	return "己方大本营没有复活空位；需要先腾出空位，或献祭一枚仍在大本营内的士。"
 
 
 func _own_piece_at(cell: Array) -> Dictionary:
