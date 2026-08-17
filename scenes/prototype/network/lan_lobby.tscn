@@ -1,0 +1,138 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/prototype/network/lan_lobby.gd" id="1_lobby"]
+[ext_resource type="PackedScene" path="res://scenes/prototype/network/lan_network_session.tscn" id="2_network"]
+[ext_resource type="Theme" path="res://resources/prototype/gate1_logic_lab_theme.tres" id="3_theme"]
+
+[node name="LanLobby" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3_theme")
+script = ExtResource("1_lobby")
+
+[node name="LanNetworkSession" parent="." instance=ExtResource("2_network")]
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.025, 0.031, 0.04, 1)
+
+[node name="CenterPanel" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(560, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -280.0
+offset_top = -180.0
+offset_right = 280.0
+offset_bottom = 180.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelMargin" type="MarginContainer" parent="CenterPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="Content" type="VBoxContainer" parent="CenterPanel/PanelMargin"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Title" type="Label" parent="CenterPanel/PanelMargin/Content"]
+layout_mode = 2
+text = "局域网真人测试"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 28
+
+[node name="ScopeNote" type="Label" parent="CenterPanel/PanelMargin/Content"]
+layout_mode = 2
+text = "可丢弃测试工具 · 房主红方 · 加入者黑方"
+horizontal_alignment = 1
+
+[node name="PortRow" type="HBoxContainer" parent="CenterPanel/PanelMargin/Content"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="PortLabel" type="Label" parent="CenterPanel/PanelMargin/Content/PortRow"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "端口"
+
+[node name="PortInput" type="SpinBox" parent="CenterPanel/PanelMargin/Content/PortRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 1024.0
+max_value = 65535.0
+value = 27771.0
+allow_greater = false
+allow_lesser = false
+
+[node name="JoinRow" type="HBoxContainer" parent="CenterPanel/PanelMargin/Content"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="AddressLabel" type="Label" parent="CenterPanel/PanelMargin/Content/JoinRow"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "房主 IP"
+
+[node name="AddressInput" type="LineEdit" parent="CenterPanel/PanelMargin/Content/JoinRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "127.0.0.1"
+placeholder_text = "例如 192.168.1.20"
+
+[node name="ActionRow" type="HBoxContainer" parent="CenterPanel/PanelMargin/Content"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 12
+
+[node name="HostButton" type="Button" parent="CenterPanel/PanelMargin/Content/ActionRow"]
+custom_minimum_size = Vector2(130, 44)
+layout_mode = 2
+text = "创建房间"
+
+[node name="JoinButton" type="Button" parent="CenterPanel/PanelMargin/Content/ActionRow"]
+custom_minimum_size = Vector2(130, 44)
+layout_mode = 2
+text = "加入房间"
+
+[node name="DisconnectButton" type="Button" parent="CenterPanel/PanelMargin/Content/ActionRow"]
+custom_minimum_size = Vector2(130, 44)
+layout_mode = 2
+disabled = true
+text = "断开"
+
+[node name="StatusGrid" type="GridContainer" parent="CenterPanel/PanelMargin/Content"]
+layout_mode = 2
+columns = 2
+
+[node name="StatusCaption" type="Label" parent="CenterPanel/PanelMargin/Content/StatusGrid"]
+layout_mode = 2
+text = "连接状态"
+
+[node name="StatusValue" type="Label" parent="CenterPanel/PanelMargin/Content/StatusGrid"]
+layout_mode = 2
+text = "disconnected"
+
+[node name="SeatCaption" type="Label" parent="CenterPanel/PanelMargin/Content/StatusGrid"]
+layout_mode = 2
+text = "当前席位"
+
+[node name="SeatValue" type="Label" parent="CenterPanel/PanelMargin/Content/StatusGrid"]
+layout_mode = 2
+text = "未分配"
