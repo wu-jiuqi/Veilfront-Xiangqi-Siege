@@ -1,12 +1,12 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene format=3 uid="uid://dgkgrr84deg40"]
 
-[ext_resource type="Script" path="res://scripts/prototype/gate1_logic_lab.gd" id="1_script"]
-[ext_resource type="Theme" path="res://resources/prototype/gate1_logic_lab_theme.tres" id="2_theme"]
+[ext_resource type="Script" uid="uid://br86f6yy2w62d" path="res://scripts/prototype/gate1_logic_lab.gd" id="1_script"]
+[ext_resource type="Theme" uid="uid://ddhngs7jkoytk" path="res://resources/prototype/gate1_logic_lab_theme.tres" id="2_theme"]
 [ext_resource type="PackedScene" path="res://scenes/prototype/board_shell.tscn" id="3_board"]
 [ext_resource type="PackedScene" path="res://scenes/prototype/status_shell.tscn" id="4_status"]
 [ext_resource type="PackedScene" path="res://scenes/prototype/match_controller.tscn" id="5_controller"]
 
-[node name="Gate1LogicLab" type="Control"]
+[node name="Gate1LogicLab" type="Control" unique_id=1893545583]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -16,13 +16,13 @@ grow_vertical = 2
 theme = ExtResource("2_theme")
 script = ExtResource("1_script")
 
-[node name="MatchController" parent="." instance=ExtResource("5_controller")]
+[node name="MatchController" parent="." unique_id=972162253 instance=ExtResource("5_controller")]
 
 [node name="AiTurnTimer" type="Timer" parent="."]
 wait_time = 0.45
 one_shot = true
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="ColorRect" parent="." unique_id=1391476200]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -32,7 +32,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.025, 0.031, 0.04, 1)
 
-[node name="SafeMargin" type="MarginContainer" parent="."]
+[node name="SafeMargin" type="MarginContainer" parent="." unique_id=1720283341]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -44,63 +44,63 @@ theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 
-[node name="Page" type="VBoxContainer" parent="SafeMargin"]
+[node name="Page" type="VBoxContainer" parent="SafeMargin" unique_id=1166109724]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="HeaderPanel" type="PanelContainer" parent="SafeMargin/Page"]
+[node name="HeaderPanel" type="PanelContainer" parent="SafeMargin/Page" unique_id=1360092780]
 layout_mode = 2
 
-[node name="HeaderMargin" type="MarginContainer" parent="SafeMargin/Page/HeaderPanel"]
+[node name="HeaderMargin" type="MarginContainer" parent="SafeMargin/Page/HeaderPanel" unique_id=1309455043]
 layout_mode = 2
 theme_override_constants/margin_left = 14
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 14
 theme_override_constants/margin_bottom = 8
 
-[node name="HeaderRow" type="HBoxContainer" parent="SafeMargin/Page/HeaderPanel/HeaderMargin"]
+[node name="HeaderRow" type="HBoxContainer" parent="SafeMargin/Page/HeaderPanel/HeaderMargin" unique_id=2102170055]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="Title" type="Label" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow"]
+[node name="Title" type="Label" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow" unique_id=100704828]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 22
 text = "《雾疆：九路烽棋》Iteration 2 灰盒"
 
-[node name="SeedGroup" type="HBoxContainer" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow"]
+[node name="SeedGroup" type="HBoxContainer" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow" unique_id=608890964]
 layout_mode = 2
 
-[node name="SeedCaption" type="Label" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/SeedGroup"]
+[node name="SeedCaption" type="Label" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/SeedGroup" unique_id=92543111]
 layout_mode = 2
 text = "种子"
 
-[node name="SeedInput" type="LineEdit" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/SeedGroup"]
+[node name="SeedInput" type="LineEdit" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/SeedGroup" unique_id=2135743766]
 custom_minimum_size = Vector2(100, 40)
 layout_mode = 2
 placeholder_text = "整数种子"
 
-[node name="SeedValue" type="Label" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/SeedGroup"]
+[node name="SeedValue" type="Label" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/SeedGroup" unique_id=710623249]
 layout_mode = 2
 text = "等待初始化"
 
-[node name="RestartButton" type="Button" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/SeedGroup"]
+[node name="RestartButton" type="Button" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/SeedGroup" unique_id=1323144274]
 custom_minimum_size = Vector2(90, 40)
 layout_mode = 2
 text = "开始/重开"
 
-[node name="DifficultyGroup" type="VBoxContainer" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow"]
+[node name="DifficultyGroup" type="VBoxContainer" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow" unique_id=529550671]
 layout_mode = 2
 
-[node name="DifficultyCaption" type="Label" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/DifficultyGroup"]
+[node name="DifficultyCaption" type="Label" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/DifficultyGroup" unique_id=1918762113]
 layout_mode = 2
 text = "AI 难度（试玩假设）"
 
-[node name="DifficultySelect" type="OptionButton" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/DifficultyGroup"]
+[node name="DifficultySelect" type="OptionButton" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/DifficultyGroup" unique_id=86304402]
 custom_minimum_size = Vector2(132, 40)
 layout_mode = 2
-item_count = 4
 selected = 1
+item_count = 4
 popup/item_0/text = "简单"
 popup/item_0/id = 0
 popup/item_1/text = "中等"
@@ -110,42 +110,42 @@ popup/item_2/id = 2
 popup/item_3/text = "专家"
 popup/item_3/id = 3
 
-[node name="MatchMeta" type="VBoxContainer" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow"]
+[node name="MatchMeta" type="VBoxContainer" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow" unique_id=2055930435]
 layout_mode = 2
 
-[node name="HumanSideValue" type="Label" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/MatchMeta"]
+[node name="HumanSideValue" type="Label" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/MatchMeta" unique_id=1716666434]
 layout_mode = 2
 text = "玩家：—"
 
-[node name="ActiveSideValue" type="Label" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/MatchMeta"]
+[node name="ActiveSideValue" type="Label" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/MatchMeta" unique_id=1365666580]
 layout_mode = 2
 text = "行动方：—"
 
-[node name="RoundValue" type="Label" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/MatchMeta"]
+[node name="RoundValue" type="Label" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/MatchMeta" unique_id=217860910]
 layout_mode = 2
 text = "完整轮：0 / 50"
 
-[node name="ConfigValue" type="Label" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/MatchMeta"]
+[node name="ConfigValue" type="Label" parent="SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/MatchMeta" unique_id=1460107179]
 layout_mode = 2
 text = "prototype · 50 · hypothesis_cli_overridable"
 
-[node name="Workspace" type="HBoxContainer" parent="SafeMargin/Page"]
+[node name="Workspace" type="HBoxContainer" parent="SafeMargin/Page" unique_id=1431251298]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 10
 
-[node name="BoardShell" parent="SafeMargin/Page/Workspace" instance=ExtResource("3_board")]
+[node name="BoardShell" parent="SafeMargin/Page/Workspace" unique_id=100180331 instance=ExtResource("3_board")]
 layout_mode = 2
 
-[node name="StatusShell" parent="SafeMargin/Page/Workspace" instance=ExtResource("4_status")]
+[node name="StatusShell" parent="SafeMargin/Page/Workspace" unique_id=1525535108 instance=ExtResource("4_status")]
 layout_mode = 2
 
-[node name="Footer" type="Label" parent="SafeMargin/Page"]
+[node name="Footer" type="Label" parent="SafeMargin/Page" unique_id=1530291510]
 layout_mode = 2
 text = "可丢弃试玩灰盒 · 左键选择 / 右键取消 · 玩家行动后 AI 自动行动"
 horizontal_alignment = 1
 
-[node name="TerminalOverlay" type="CenterContainer" parent="."]
+[node name="TerminalOverlay" type="CenterContainer" parent="." unique_id=82479925]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -155,37 +155,37 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 0
 
-[node name="TerminalPanel" type="PanelContainer" parent="TerminalOverlay"]
+[node name="TerminalPanel" type="PanelContainer" parent="TerminalOverlay" unique_id=831654289]
 custom_minimum_size = Vector2(440, 260)
 layout_mode = 2
 
-[node name="TerminalMargin" type="MarginContainer" parent="TerminalOverlay/TerminalPanel"]
+[node name="TerminalMargin" type="MarginContainer" parent="TerminalOverlay/TerminalPanel" unique_id=1053640482]
 layout_mode = 2
 theme_override_constants/margin_left = 24
 theme_override_constants/margin_top = 24
 theme_override_constants/margin_right = 24
 theme_override_constants/margin_bottom = 24
 
-[node name="TerminalColumn" type="VBoxContainer" parent="TerminalOverlay/TerminalPanel/TerminalMargin"]
+[node name="TerminalColumn" type="VBoxContainer" parent="TerminalOverlay/TerminalPanel/TerminalMargin" unique_id=1637969596]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="TerminalValue" type="Label" parent="TerminalOverlay/TerminalPanel/TerminalMargin/TerminalColumn"]
+[node name="TerminalValue" type="Label" parent="TerminalOverlay/TerminalPanel/TerminalMargin/TerminalColumn" unique_id=941590840]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "对局结束"
 horizontal_alignment = 1
 
-[node name="TerminalButtons" type="HBoxContainer" parent="TerminalOverlay/TerminalPanel/TerminalMargin/TerminalColumn"]
+[node name="TerminalButtons" type="HBoxContainer" parent="TerminalOverlay/TerminalPanel/TerminalMargin/TerminalColumn" unique_id=1954667103]
 layout_mode = 2
 alignment = 1
 
-[node name="SameSeedButton" type="Button" parent="TerminalOverlay/TerminalPanel/TerminalMargin/TerminalColumn/TerminalButtons"]
+[node name="SameSeedButton" type="Button" parent="TerminalOverlay/TerminalPanel/TerminalMargin/TerminalColumn/TerminalButtons" unique_id=381301819]
 custom_minimum_size = Vector2(150, 44)
 layout_mode = 2
 text = "同种子重开"
 
-[node name="NewSeedButton" type="Button" parent="TerminalOverlay/TerminalPanel/TerminalMargin/TerminalColumn/TerminalButtons"]
+[node name="NewSeedButton" type="Button" parent="TerminalOverlay/TerminalPanel/TerminalMargin/TerminalColumn/TerminalButtons" unique_id=1869752802]
 custom_minimum_size = Vector2(150, 44)
 layout_mode = 2
 text = "输入新种子"
