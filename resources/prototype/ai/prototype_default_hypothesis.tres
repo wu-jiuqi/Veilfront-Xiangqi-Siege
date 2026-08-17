@@ -34,6 +34,7 @@ flag_defense_priority = 650
 flag_proximity_weight = 18
 flag_vision_weight = 12
 enemy_general_attack_priority = 820
+resurrection_value_weight_percent = 85
 search_candidate_limit = 12
 opponent_response_limit = 12
 belief_sample_count = 2

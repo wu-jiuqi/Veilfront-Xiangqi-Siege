@@ -14,7 +14,8 @@ const BeliefModel = preload("res://scripts/prototype/ai/ai_belief_model.gd")
 static func run_suite() -> bool:
 	var failures: Array[String] = []
 	_test_priority_contract(failures)
-	_test_flag_scoring(failures)
+	_test_hidden_flag_progress_scoring(failures)
+	_test_advisor_resurrection_scoring(failures)
 	_test_two_ply_avoids_recapture(failures)
 	_test_belief_determinism(failures)
 	for failure: String in failures:
@@ -36,7 +37,7 @@ static func _test_priority_contract(failures: Array[String]) -> void:
 	)
 
 
-static func _test_flag_scoring(failures: Array[String]) -> void:
+static func _test_hidden_flag_progress_scoring(failures: Array[String]) -> void:
 	var config: Resource = load("res://resources/prototype/ai/prototype_default_hypothesis.tres")
 	var rules := PublicRules.new(_rules())
 	var player_data: Dictionary = _projection([], [])
@@ -46,37 +47,88 @@ static func _test_flag_scoring(failures: Array[String]) -> void:
 		_piece("black-general-1", "black", "general", [4, 23]),
 	]
 	player_data.public_flags = [{
-		"id": "flag-a", "position": [4, 10], "owner": "",
-		"capturing_side": "", "capture_progress": 0, "contested": false,
+		"id": "flag-a", "owner": "",
+		"capturing_side": "red", "capture_progress": 2, "contested": false,
 	}]
-	var flag_action: Dictionary = _action("capture-flag", "red-rook-1", [4, 8], [4, 10])
-	flag_action.occupies_flag = true
-	flag_action.flag_vicinity_reveal_count = 2
-	var result: Dictionary = VisibleStateEvaluator.evaluate(flag_action, player_data, rules, config)
-	var dimensions: Dictionary = result.breakdown.dimensions
+	var preserve_action: Dictionary = _action("preserve-capture", "red-general-1", [4, 0], [3, 0])
+	var preserve_result: Dictionary = VisibleStateEvaluator.evaluate(
+		preserve_action, player_data, rules, config
+	)
 	_expect(
-		int(dimensions.flag_control.delta) >= int(config.flag_capture_priority),
-		"踩入非己方旗格至少获得完整夺旗优先级",
+		int(preserve_result.breakdown.dimensions.flag_control.delta) == 0,
+		"公开夺旗进度在占领棋子未离开时保持评分",
+		failures
+	)
+	var alternate_action: Dictionary = _action("unknown-occupier", "red-rook-1", [4, 8], [4, 9])
+	var alternate_result: Dictionary = VisibleStateEvaluator.evaluate(alternate_action, player_data, rules, config)
+	_expect(int(alternate_result.breakdown.dimensions.flag_control.delta) == 0,
+		"只公开进度时AI不得推断哪枚棋子位于隐藏旗格", failures)
+	var valid_view := AiPlayerView.new(player_data)
+	_expect(valid_view.is_valid(), "无位置旗帜DTO通过AI白名单", failures)
+	var leaking_projection: Dictionary = player_data.duplicate(true)
+	leaking_projection.public_flags[0]["position"] = [4, 10]
+	_expect(
+		not AiPlayerView.new(leaking_projection).is_valid(),
+		"任何旗帜position字段均被AI白名单拒绝",
+		failures
+	)
+	var indirect_leak: Dictionary = player_data.duplicate(true)
+	indirect_leak.public_flags[0]["occupier_piece_id"] = "red-rook-1"
+	_expect(not AiPlayerView.new(indirect_leak).is_valid(), "occupier_piece_id间接旗位泄漏也被白名单拒绝", failures)
+
+
+static func _test_advisor_resurrection_scoring(failures: Array[String]) -> void:
+	var config := DifficultyConfig.new()
+	config.candidate_limit = 2
+	config.random_score_span = 0
+	config.material_weight = 1
+	config.mobility_weight = 0
+	config.threat_penalty_percent = 0
+	config.support_bonus_percent = 0
+	config.general_safety_penalty = 0
+	config.territory_weight = 0
+	config.enemy_general_attack_priority = 0
+	config.search_candidate_limit = 0
+	config.belief_sample_count = 0
+	config.resurrection_value_weight_percent = 100
+	var resurrect_action: Dictionary = _action(
+		"resurrect-red-advisor-1", "red-advisor-1", [3, 0], [0, 0]
+	)
+	resurrect_action.kind = "resurrect"
+	resurrect_action.path_length = 0
+	resurrect_action.resurrection_candidate_count = 2
+	resurrect_action.resurrection_average_piece_value = 50
+	var pass_action: Dictionary = _action("pass", "", [0, 0], [0, 0])
+	pass_action.kind = "pass"
+	pass_action.path_length = 0
+	var projection: Dictionary = _projection([resurrect_action, pass_action], [
+		_piece("red-general-1", "red", "general", [4, 0]),
+		_piece("red-advisor-1", "red", "advisor", [3, 0]),
+		_piece("black-general-1", "black", "general", [4, 23]),
+	])
+	var decision: Dictionary = DecisionEngine.new().decide(
+		AiPlayerView.new(projection), PublicRules.new(_rules()), Memory.new(_memory()), 40417, config
+	)
+	_expect(
+		bool(decision.get("ok", false)) \
+		and str(decision.get("action", {}).get("id", "")) == "resurrect-red-advisor-1",
+		"复活池平均棋值高于献祭士时AI可主动选择复活",
 		failures
 	)
 	_expect(
-		int(dimensions.vision.delta) == 2 * int(config.flag_vision_weight),
-		"旗帜附近新视野使用独立加权",
+		VisibleStateEvaluator.critical_reasons(
+			resurrect_action, projection, PublicRules.new(_rules()), config
+		).has("positive_expected_resurrection"),
+		"正期望复活动作受低预算关键候选保护",
 		failures
 	)
-	player_data.public_flags[0].owner = "red"
-	player_data.public_flags[0].capturing_side = "black"
-	player_data.public_flags[0].capture_progress = 1
-	var defend_action: Dictionary = _action("defend-flag", "red-rook-1", [4, 8], [4, 9])
-	var defend_result: Dictionary = VisibleStateEvaluator.evaluate(defend_action, player_data, rules, config)
+	var leaked_candidates: Dictionary = projection.duplicate(true)
+	leaked_candidates.legal_actions[0]["resurrection_candidates"] = [
+		{"piece_type": "advisor"}, {"piece_type": "general"},
+	]
 	_expect(
-		int(defend_result.breakdown.dimensions.flag_control.delta) > 0,
-		"接近被敌方占领中的己方旗帜获得回防收益",
-		failures
-	)
-	_expect(
-		VisibleStateEvaluator.critical_reasons(defend_action, player_data, rules, config).has("defend_flag_zone"),
-		"进入受威胁旗区的行动受关键候选保护",
+		not AiPlayerView.new(leaked_candidates).is_valid(),
+		"AI拒绝复活候选身份与类型列表，仅消费已排除士和帅将后的公开聚合值",
 		failures
 	)
 
@@ -191,8 +243,6 @@ static func _action(
 		"target": target,
 		"visible_captures": captures,
 		"reveal_cell_count": 0,
-		"flag_vicinity_reveal_count": 0,
-		"occupies_flag": false,
 		"attacks_wall": false,
 		"path_length": absi(int(target[0]) - int(origin[0])) + absi(int(target[1]) - int(origin[1])),
 	}
@@ -217,7 +267,7 @@ static func _rules() -> Dictionary:
 			"pawn": 10, "rook": 50, "horse": 30, "elephant": 25,
 			"advisor": 25, "cannon": 45, "general": 10000,
 		},
-		"action_kind_bias": {"move": 0, "bombard": 0, "pass": -100},
+		"action_kind_bias": {"move": 0, "bombard": 0, "resurrect": 0, "pass": -100},
 	}
 
 

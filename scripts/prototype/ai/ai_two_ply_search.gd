@@ -72,7 +72,6 @@ static func _enumerate_responses(
 	var viewer_side: String = str(player_data.get("viewer_side", ""))
 	var enemy_side: String = _opponent(viewer_side)
 	var walls: Array = player_data.get("public_walls", [])
-	var flags: Array = player_data.get("public_flags", [])
 	var occupied: Dictionary = VisibleStateEvaluator.occupied_cells(pieces)
 	for attacker: Dictionary in pieces:
 		if str(attacker.get("side", "")) != enemy_side:
@@ -86,29 +85,12 @@ static func _enumerate_responses(
 			var victim_type: String = str(victim.get("piece_type", ""))
 			var loss: int = int(config.general_safety_penalty) \
 				if victim_type == "general" else public_rules.piece_value(victim_type)
-			if _viewer_flag_at(victim_cell, flags, viewer_side):
-				loss += int(config.flag_defense_priority) / 2
 			responses.append({
 				"response_id": "%s:capture:%s" % [str(attacker.id), str(victim.id)],
 				"kind": "capture",
 				"actor_id": str(attacker.id),
 				"target_id": str(victim.id),
 				"score": loss,
-			})
-		for flag: Dictionary in flags:
-			if str(flag.get("owner", "")) == enemy_side:
-				continue
-			var flag_cell := _coordinate(flag.get("position", [0, 0]))
-			if not VisibleStateEvaluator.piece_attacks_cell_with_occupied(attacker, flag_cell, occupied, walls):
-				continue
-			var flag_loss: int = int(config.flag_defense_priority) \
-				if str(flag.get("owner", "")) == viewer_side else int(config.flag_capture_priority)
-			responses.append({
-				"response_id": "%s:flag:%s" % [str(attacker.id), str(flag.id)],
-				"kind": "flag_pressure",
-				"actor_id": str(attacker.id),
-				"target_id": str(flag.id),
-				"score": flag_loss,
 			})
 	return responses
 
@@ -117,14 +99,6 @@ static func _response_before(a: Dictionary, b: Dictionary) -> bool:
 	if int(a.score) != int(b.score):
 		return int(a.score) > int(b.score)
 	return str(a.response_id) < str(b.response_id)
-
-
-static func _viewer_flag_at(cell: Vector2i, flags: Array, viewer_side: String) -> bool:
-	for flag: Dictionary in flags:
-		if str(flag.get("owner", "")) == viewer_side \
-		and _coordinate(flag.get("position", [0, 0])) == cell:
-			return true
-	return false
 
 
 static func _coordinate(value: Variant) -> Vector2i:

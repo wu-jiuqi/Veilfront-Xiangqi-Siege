@@ -257,9 +257,10 @@ func _pre_score(
 		score += public_rules.piece_value(capture.piece_type)
 	score += mini(int(action.reveal_cell_count), int(config.vision_cell_cap)) \
 		* int(config.reveal_weight)
-	score += int(action.get("flag_vicinity_reveal_count", 0)) * int(config.flag_vision_weight)
-	if action.occupies_flag:
-		score += config.flag_capture_priority
+	if str(action.kind) == "resurrect":
+		score += int(action.get("resurrection_average_piece_value", 0)) \
+			* int(config.resurrection_value_weight_percent) / 100 \
+			- public_rules.piece_value("advisor")
 	if action.attacks_wall:
 		score += config.wall_pressure_weight
 	score -= memory.action_visit_count(action.id) * config.revisit_penalty

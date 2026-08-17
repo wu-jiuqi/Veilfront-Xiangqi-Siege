@@ -58,13 +58,6 @@ static func evaluate(
 	var center_bonus: int = (origin_center_distance - target_center_distance) * int(config.center_control_weight)
 
 	var flag_bonus: int = 0
-	for flag: Dictionary in player_data.get("public_flags", []):
-		if _coordinate(flag.get("position", [0, 0])) != target:
-			continue
-		if str(flag.get("owner", "")) != viewer_side:
-			flag_bonus += int(config.flag_weight)
-		flag_bonus += int(flag.get("capture_progress", 0)) * int(config.flag_weight) / 3
-		break
 
 	var breach_pressure_bonus: int = 0
 	if _wall_status(walls, enemy_side) != "INTACT" and _in_buffer_or_base(target, enemy_side):
@@ -202,7 +195,7 @@ static func _line_has_friendly_blocker(
 
 static func _special_eligible(side: String, origin: Vector2i, target: Vector2i, walls: Array) -> bool:
 	return _wall_status(walls, _opponent(side)) == "INTACT" \
-		and origin.y >= 5 and origin.y <= 18 and target.y >= 5 and target.y <= 18
+		and origin.y >= 3 and origin.y <= 20 and target.y >= 3 and target.y <= 20
 
 
 static func _in_buffer_or_base(cell: Vector2i, side: String) -> bool:

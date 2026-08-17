@@ -225,12 +225,12 @@ static func _expert_tactical_fixture_decision() -> Dictionary:
 				"id": "expert-greedy-capture", "kind": "move", "actor_id": "red-rook",
 				"origin": [4, 10], "target": [4, 12],
 				"visible_captures": [{"piece_id": "black-pawn", "piece_type": "pawn"}],
-				"reveal_cell_count": 0, "occupies_flag": false, "attacks_wall": false, "path_length": 2,
+				"reveal_cell_count": 0, "attacks_wall": false, "path_length": 2,
 			},
 			{
 				"id": "expert-safe", "kind": "move", "actor_id": "red-rook",
 				"origin": [4, 10], "target": [3, 10], "visible_captures": [],
-				"reveal_cell_count": 0, "occupies_flag": false, "attacks_wall": false, "path_length": 1,
+				"reveal_cell_count": 0, "attacks_wall": false, "path_length": 1,
 			},
 		],
 		"public_events": [],
@@ -257,7 +257,7 @@ static func _bombard_heavy_sampling_fixture() -> Dictionary:
 				"id": "bombard:black-cannon-%d:%03d" % [cannon_index + 1, target_index],
 				"kind": "bombard", "actor_id": "black-cannon-%d" % (cannon_index + 1),
 				"origin": [cannon_index, 23], "target": [target_index % 7 + 1, target_index % 12 + 6],
-				"visible_captures": [], "reveal_cell_count": 0, "occupies_flag": false,
+				"visible_captures": [], "reveal_cell_count": 0,
 				"attacks_wall": false, "path_length": 0,
 			})
 	for actor_index: int in 12:
@@ -265,7 +265,7 @@ static func _bombard_heavy_sampling_fixture() -> Dictionary:
 			"id": "move:black-piece-%02d" % actor_index,
 			"kind": "move", "actor_id": "black-piece-%02d" % actor_index,
 			"origin": [actor_index % 9, 22], "target": [actor_index % 9, 21],
-			"visible_captures": [], "reveal_cell_count": 0, "occupies_flag": false,
+			"visible_captures": [], "reveal_cell_count": 0,
 			"attacks_wall": false, "path_length": 1,
 		})
 	var projection: Dictionary = {
@@ -304,13 +304,13 @@ static func _strategic_top_k_fixture() -> Dictionary:
 			"kind": "move", "actor_id": "red-pawn",
 			"origin": [0, 10], "target": [index % 9, 11 + index % 4],
 			"visible_captures": [], "reveal_cell_count": 8,
-			"occupies_flag": false, "attacks_wall": false, "path_length": 1,
+			"attacks_wall": false, "path_length": 1,
 		})
 	actions.append({
 		"id": "critical-capture-general", "kind": "move", "actor_id": "red-rook",
 		"origin": [4, 10], "target": [4, 12],
 		"visible_captures": [{"piece_id": "black-general", "piece_type": "general"}],
-		"reveal_cell_count": 0, "occupies_flag": false, "attacks_wall": false, "path_length": 2,
+		"reveal_cell_count": 0, "attacks_wall": false, "path_length": 2,
 	})
 	var projection: Dictionary = {
 		"schema_version": "player-view-ai-v1", "decision_id": "fixture-strategic-top-k",
@@ -366,7 +366,6 @@ static func _public_budget_fixture(candidate_count: int) -> Dictionary:
 			"target": [0, 0],
 			"visible_captures": [],
 			"reveal_cell_count": index % 5,
-			"occupies_flag": index % 7 == 0,
 			"attacks_wall": index % 11 == 0,
 			"path_length": 0,
 		})

@@ -41,6 +41,7 @@ var strategy_mode: String = "visible-state-evaluation-v1"
 @export_range(0, 200, 1) var flag_proximity_weight: int = 18
 @export_range(0, 200, 1) var flag_vision_weight: int = 12
 @export_range(0, 5000, 10) var enemy_general_attack_priority: int = 820
+@export_range(0, 100, 1) var resurrection_value_weight_percent: int = 85
 
 @export_group("Bounded two-ply belief search hypothesis")
 @export_range(0, 256, 1) var search_candidate_limit: int = 12
@@ -82,6 +83,7 @@ func audit_snapshot() -> Dictionary:
 		"flag_proximity_weight": flag_proximity_weight,
 		"flag_vision_weight": flag_vision_weight,
 		"enemy_general_attack_priority": enemy_general_attack_priority,
+		"resurrection_value_weight_percent": resurrection_value_weight_percent,
 		"search_candidate_limit": search_candidate_limit,
 		"opponent_response_limit": opponent_response_limit,
 		"belief_sample_count": belief_sample_count,

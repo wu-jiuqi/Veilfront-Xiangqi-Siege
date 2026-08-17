@@ -28,6 +28,11 @@ static func evaluate(
 	for capture: Dictionary in action.get("visible_captures", []):
 		material_after += public_rules.piece_value(str(capture.get("piece_type", ""))) \
 			* int(config.material_weight)
+	if str(action.get("kind", "")) == "resurrect":
+		var sacrificed_value: int = public_rules.piece_value(str(original_actor.get("piece_type", "advisor")))
+		var expected_revived_value: int = int(action.get("resurrection_average_piece_value", 0)) \
+			* int(config.resurrection_value_weight_percent) / 100
+		material_after += (expected_revived_value - sacrificed_value) * int(config.material_weight)
 	var general_before: int = int(baseline.general_safety)
 	var general_attackers_after: int = int(_general_attack_context(
 		projected_pieces, viewer_side, walls
@@ -76,8 +81,7 @@ static func evaluate(
 	)
 	var vision_after: int = mini(
 		int(action.get("reveal_cell_count", 0)), int(config.vision_cell_cap)
-	) * int(config.reveal_weight) \
-		+ int(action.get("flag_vicinity_reveal_count", 0)) * int(config.flag_vision_weight)
+	) * int(config.reveal_weight)
 	var enemy_general_threat_before: int = enemy_general_attackers_before \
 		* int(config.enemy_general_attack_priority)
 	var enemy_general_threat_after: int = enemy_general_attackers_after \
@@ -128,7 +132,10 @@ static func evaluate(
 			"general_attackers_after": general_attackers_after,
 			"enemy_general_attackers_before": enemy_general_attackers_before,
 			"enemy_general_attackers_after": enemy_general_attackers_after,
-			"flag_vicinity_reveal_count": int(action.get("flag_vicinity_reveal_count", 0)),
+			"resurrection_candidate_count": int(action.get("resurrection_candidate_count", 0)),
+			"resurrection_average_piece_value": int(
+				action.get("resurrection_average_piece_value", 0)
+			),
 		},
 	}
 
@@ -167,7 +174,6 @@ static func critical_reasons(
 	var reasons: Array[String] = []
 	if str(action.get("kind", "")) == "pass":
 		return reasons
-	var flags: Array = player_data.get("public_flags", [])
 	var pieces: Array = player_data.get("visible_pieces", [])
 	for capture: Dictionary in action.get("visible_captures", []):
 		var piece_type: String = str(capture.get("piece_type", ""))
@@ -175,19 +181,14 @@ static func critical_reasons(
 			reasons.append("capture_general")
 		if public_rules.piece_value(piece_type) >= int(config.critical_capture_value):
 			reasons.append("high_value_capture")
-		var captured_piece: Dictionary = _find_piece(pieces, str(capture.get("piece_id", "")))
-		if not captured_piece.is_empty() and _cell_has_flag(_coordinate(captured_piece["position"]), flags):
-			reasons.append("defend_flag")
-	if bool(action.get("occupies_flag", false)):
-		reasons.append("capture_flag")
-	var target := _coordinate(action.get("target", [0, 0]))
 	var viewer_side: String = str(player_data.get("viewer_side", ""))
-	for flag: Dictionary in flags:
-		var threatened: bool = str(flag.get("capturing_side", "")) == _opponent(viewer_side) \
-			or bool(flag.get("contested", false))
-		if threatened and _chebyshev(target, _coordinate(flag.get("position", [0, 0]))) <= 2:
-			reasons.append("defend_flag_zone")
-			break
+	if str(action.get("kind", "")) == "resurrect":
+		var actor: Dictionary = _find_piece(pieces, str(action.get("actor_id", "")))
+		var sacrificed_value: int = public_rules.piece_value(str(actor.get("piece_type", "advisor")))
+		var expected_value: int = int(action.get("resurrection_average_piece_value", 0)) \
+			* int(config.resurrection_value_weight_percent) / 100
+		if expected_value > sacrificed_value:
+			reasons.append("positive_expected_resurrection")
 	var before_attackers: int = current_general_attackers
 	if before_attackers < 0:
 		before_attackers = general_visible_attacker_count(player_data)
@@ -221,6 +222,12 @@ static func _project_pieces(pieces: Array, action: Dictionary) -> Array:
 		var actor: Dictionary = _find_piece(projected, str(action.get("actor_id", "")))
 		if not actor.is_empty():
 			actor["position"] = action.get("target", actor.get("position", [0, 0])).duplicate()
+	elif str(action.get("kind", "")) == "resurrect":
+		var sacrificed_actor_id: String = str(action.get("actor_id", ""))
+		for index: int in range(projected.size() - 1, -1, -1):
+			if str(projected[index].get("id", "")) == sacrificed_actor_id:
+				projected.remove_at(index)
+				break
 	return projected
 
 
@@ -276,45 +283,6 @@ static func _projected_flag_score(
 ) -> int:
 	var flags: Array = player_data.get("public_flags", [])
 	var score: int = _flag_score(flags, viewer_side, config)
-	var pieces: Array = player_data.get("visible_pieces", [])
-	var original_actor: Dictionary = _find_piece(pieces, str(action.get("actor_id", "")))
-	var projected_actor: Dictionary = _find_piece(_project_pieces(pieces, action), str(action.get("actor_id", "")))
-	score += _flag_proximity_delta(original_actor, projected_actor, flags, viewer_side, config)
-	if bool(action.get("occupies_flag", false)) and str(action.get("kind", "")) != "pass":
-		var target := _coordinate(action.get("target", [0, 0]))
-		for flag: Dictionary in flags:
-			if _coordinate(flag.get("position", [0, 0])) == target:
-				var owner: String = str(flag.get("owner", ""))
-				if owner != viewer_side:
-					score += int(config.flag_capture_priority)
-				break
-	return score
-
-
-static func _flag_proximity_delta(
-	original_actor: Dictionary,
-	projected_actor: Dictionary,
-	flags: Array,
-	viewer_side: String,
-	config: Resource
-) -> int:
-	if original_actor.is_empty() or projected_actor.is_empty():
-		return 0
-	var origin := _coordinate(original_actor.get("position", [0, 0]))
-	var target := _coordinate(projected_actor.get("position", [0, 0]))
-	var score: int = 0
-	for flag: Dictionary in flags:
-		var flag_cell := _coordinate(flag.get("position", [0, 0]))
-		var progress: int = _chebyshev(origin, flag_cell) - _chebyshev(target, flag_cell)
-		if progress == 0:
-			continue
-		var owner: String = str(flag.get("owner", ""))
-		var threatened: bool = str(flag.get("capturing_side", "")) == _opponent(viewer_side) \
-			or bool(flag.get("contested", false))
-		if owner == viewer_side and threatened:
-			score += progress * int(config.flag_defense_priority) / 4
-		elif owner != viewer_side:
-			score += progress * int(config.flag_proximity_weight)
 	return score
 
 
@@ -520,7 +488,7 @@ static func _line_has_friendly_blocker(
 
 static func _special_eligible(side: String, origin: Vector2i, target: Vector2i, walls: Array) -> bool:
 	return _wall_status(walls, _opponent(side)) == "INTACT" \
-		and origin.y >= 5 and origin.y <= 18 and target.y >= 5 and target.y <= 18
+		and origin.y >= 3 and origin.y <= 20 and target.y >= 3 and target.y <= 20
 
 
 static func _wall_status(walls: Array, side: String) -> String:
@@ -549,13 +517,6 @@ static func _find_general(pieces: Array, side: String) -> Dictionary:
 		if str(piece.get("side", "")) == side and str(piece.get("piece_type", "")) == "general":
 			return piece
 	return {}
-
-
-static func _cell_has_flag(cell: Vector2i, flags: Array) -> bool:
-	for flag: Dictionary in flags:
-		if _coordinate(flag.get("position", [0, 0])) == cell:
-			return true
-	return false
 
 
 static func _sum_dimension_scores(scores: Dictionary) -> int:

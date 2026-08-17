@@ -8,12 +8,13 @@ const ROOT_KEYS: Array[String] = [
 ]
 const PIECE_KEYS: Array[String] = ["id", "side", "piece_type", "position", "status_tags"]
 const FLAG_KEYS: Array[String] = [
-	"id", "position", "owner", "capturing_side", "capture_progress", "contested",
+	"id", "owner", "capturing_side", "capture_progress", "contested",
 ]
 const WALL_KEYS: Array[String] = ["side", "status"]
 const ACTION_KEYS: Array[String] = [
 	"id", "kind", "actor_id", "origin", "target", "visible_captures",
-	"reveal_cell_count", "flag_vicinity_reveal_count", "occupies_flag", "attacks_wall", "path_length",
+	"reveal_cell_count", "attacks_wall", "path_length",
+	"resurrection_candidate_count", "resurrection_average_piece_value",
 ]
 const CAPTURE_KEYS: Array[String] = ["piece_id", "piece_type"]
 const EVENT_KEYS: Array[String] = ["id", "event_type", "actor_side", "position"]
@@ -117,7 +118,6 @@ func _validate_flag(flag: Dictionary) -> void:
 	_require_strings(flag, ["id", "owner"])
 	if flag.has("capturing_side") and not flag.capturing_side is String:
 		_validation_errors.append("public flag capturing_side must be String")
-	_require_coordinate(flag, "position")
 	if not flag.has("capture_progress") or not flag.capture_progress is int:
 		_validation_errors.append("public flag capture_progress must be int")
 	if flag.has("contested") and not flag.contested is bool:
@@ -135,12 +135,17 @@ func _validate_action(action: Dictionary) -> void:
 	for key: String in ["reveal_cell_count", "path_length"]:
 		if not action.has(key) or not action[key] is int:
 			_validation_errors.append("legal action %s must be int" % key)
-	if action.has("flag_vicinity_reveal_count") \
-	and not action.flag_vicinity_reveal_count is int:
-		_validation_errors.append("legal action flag_vicinity_reveal_count must be int")
-	for key: String in ["occupies_flag", "attacks_wall"]:
+	for key: String in ["attacks_wall"]:
 		if not action.has(key) or not action[key] is bool:
 			_validation_errors.append("legal action %s must be bool" % key)
+	for key: String in ["resurrection_candidate_count", "resurrection_average_piece_value"]:
+		if action.has(key) and (not action[key] is int or int(action[key]) < 0):
+			_validation_errors.append("legal action %s must be a non-negative int" % key)
+	if str(action.get("kind", "")) == "resurrect":
+		if int(action.get("resurrection_candidate_count", 0)) <= 0:
+			_validation_errors.append("resurrect action must have at least one public candidate")
+		if not action.has("resurrection_average_piece_value"):
+			_validation_errors.append("resurrect action must expose a public average piece value")
 	if not action.has("visible_captures") or not action.visible_captures is Array:
 		_validation_errors.append("legal action visible_captures must be Array")
 		return
