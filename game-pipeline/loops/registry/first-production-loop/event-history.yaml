@@ -3012,3 +3012,94 @@ event_history:
       digest_algorithm: sha256
       previous_event_digest: ea497e0d9a18e83c6bb1cbbc0058426ebb231e04b8e57f431e852d9269192498
       event_digest: 30193da1fca5f423d6651c7192ac883eaa8cd94b69d5647b1dd79b0b4fc04dc2
+  - schema_version: '0.1'
+    event_id: d7aa9c16-9a6c-426b-919a-bd34781b48ab
+    mutation_id: 100c375c-8f3d-47b8-9fa6-f80db10e6b23
+    loop_instance_id: 4cbb03b6-dd5a-41c5-a624-895c4b884bcb
+    sequence: 62
+    event_type: core.acceptance_recorded
+    occurred_at: '2026-08-17T23:08:18.443857+08:00'
+    recorded_at: '2026-08-17T23:08:18.443857+08:00'
+    actor:
+      actor_id: project-owner
+      role: project-owner
+      authority_id: GATE-1
+    causality:
+      correlation_id: 698fb88f-5cbd-41db-9261-cf26c11755ec
+      causation_event_id: 325c2bc0-87b2-4752-b119-a1eacacc4487
+      request_id: owner-gate-1-approval-rc3-v5
+    concurrency:
+      expected_record_revision: 61
+      resulting_record_revision: 62
+    binding_snapshot:
+      contract_digest: d88d9017bb30437ac480e0fcf4f7b262b5ae6b3427447946e50ec37a5d3b44ca
+      state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+    payload:
+      acceptance_kind: human_gate
+      record_id: ed2df7a0-5f6c-4edb-9f20-8c2ec6606ba1
+      subject_digest: 8f93c3506192b1e286bd5f1bf631054f9fb3f0dc5337f3050716a2186a383597
+      record:
+        gate_record_id: ed2df7a0-5f6c-4edb-9f20-8c2ec6606ba1
+        gate_id: GATE-1
+        decision: approved
+        decided_by: project-owner
+        decision_ref: game-pipeline/approvals/gate-1-approval-8f93c3506192.yaml@subject-digest:8f93c3506192b1e286bd5f1bf631054f9fb3f0dc5337f3050716a2186a383597
+        subject_digest: 8f93c3506192b1e286bd5f1bf631054f9fb3f0dc5337f3050716a2186a383597
+        approved_decision_package_subject_digest: 3ad999746a4942e6c9cd6986cba7a7d7e819c9f3c5ffeacaab94351d1cb589a3
+        evidence_state: accepted_with_recorded_residual_risks
+        iteration_reviewed: 2
+        full_gate1: true
+        formal_feature_development: allowed_after_new_contract_and_architecture_review
+        formal_architecture_frozen: false
+        high_cost_asset_production: forbidden_until_gate_2
+        external_release: forbidden_until_gate_4
+    evidence_refs:
+    - codex-thread://current#owner-gate1-approved-3ad999746a49
+    - game-pipeline/approvals/gate-1-approval-8f93c3506192.yaml@subject-digest:8f93c3506192b1e286bd5f1bf631054f9fb3f0dc5337f3050716a2186a383597
+    - game-pipeline/loops/evidence/GATE-1-decision-package.md@sha256:3bd27f5fa6cbf1c96b002611c5c315d6295c4a3bfab8eb0ff61ef82c159d4a0b
+    integrity:
+      canonicalization: registry-event-canonical-json-v1
+      digest_algorithm: sha256
+      previous_event_digest: 30193da1fca5f423d6651c7192ac883eaa8cd94b69d5647b1dd79b0b4fc04dc2
+      event_digest: 5493d28d1f3a8e2c0b148f07821a43fafae23bea2c8510e2b03fd2eac25a00f4
+  - schema_version: '0.1'
+    event_id: bf9835eb-9126-431a-9655-597cbd54d900
+    mutation_id: fceeb67f-8a32-45c7-9539-cc95b1ffd87a
+    loop_instance_id: 4cbb03b6-dd5a-41c5-a624-895c4b884bcb
+    sequence: 63
+    event_type: core.loop_completed
+    occurred_at: '2026-08-17T23:08:18.443857+08:00'
+    recorded_at: '2026-08-17T23:08:18.443857+08:00'
+    actor:
+      actor_id: inst:01M02M6X3Q8YWJXHY52K3V5AR2
+      role: pos:veilfront-xiangqi-siege:root:project-manager
+      authority_id: AUTH-VEILFRONT-PROJECT-MANAGER
+    causality:
+      correlation_id: 698fb88f-5cbd-41db-9261-cf26c11755ec
+      causation_event_id: d7aa9c16-9a6c-426b-919a-bd34781b48ab
+      request_id: complete-loop-after-owner-gate-1-approval
+    concurrency:
+      expected_record_revision: 62
+      resulting_record_revision: 63
+    binding_snapshot:
+      contract_digest: d88d9017bb30437ac480e0fcf4f7b262b5ae6b3427447946e50ec37a5d3b44ca
+      state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+    payload:
+      transition_id: TR-REVIEW-COMPLETED
+      from_state: review
+      to_state: completed
+      iteration:
+        before: 2
+        after: 2
+      acceptance_subject_digest: 7505ca1a4995e8214d8cd9cb64c9ecb62081110ed36371ddec263b1e01e4f99f
+      final_handoff_ref: game-pipeline/loops/evidence/GATE-1-final-handoff.md@sha256:3b186b38ea18728174100b5fc60c9785c344c2bfb22dfa0a303a944398db1753
+    evidence_refs:
+    - game-pipeline/approvals/gate-1-approval-8f93c3506192.yaml@subject-digest:8f93c3506192b1e286bd5f1bf631054f9fb3f0dc5337f3050716a2186a383597
+    - game-pipeline/loops/evidence/GATE-1-final-handoff.md@sha256:3b186b38ea18728174100b5fc60c9785c344c2bfb22dfa0a303a944398db1753
+    - game-pipeline/loops/evidence/GATE-1-decision-package.md@sha256:3bd27f5fa6cbf1c96b002611c5c315d6295c4a3bfab8eb0ff61ef82c159d4a0b
+    - git:veilfront-xiangqi-siege:7e20acbf61a42e9dcedb88dcf68b8bc8b68d9c9f#evidence/prototype/qa/gate1-rc3-independent-review.md
+    integrity:
+      canonicalization: registry-event-canonical-json-v1
+      digest_algorithm: sha256
+      previous_event_digest: 5493d28d1f3a8e2c0b148f07821a43fafae23bea2c8510e2b03fd2eac25a00f4
+      event_digest: 36db1fa246c7b0381739e49e049f2c31860d0cbdf05e22029e796a9f7411be85

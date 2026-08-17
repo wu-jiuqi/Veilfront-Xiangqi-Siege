@@ -1,0 +1,64 @@
+approval:
+  schema_version: game-production-approval/v1
+  approval_id: approval:veilfront-xiangqi-siege:gate-1:8f93c3506192
+  subject_kind: human-gate-decision
+  subject_id: GATE-1@iteration-2-review
+  subject_digest: 8f93c3506192b1e286bd5f1bf631054f9fb3f0dc5337f3050716a2186a383597
+  decision: approved
+  decided_by: project-owner
+  decided_at: '2026-08-17T23:08:18.443857+08:00'
+  evidence:
+    source_refs:
+    - codex-thread://current#owner-gate1-approved-3ad999746a49
+    - game-pipeline/loops/evidence/GATE-1-decision-package.md@sha256:3bd27f5fa6cbf1c96b002611c5c315d6295c4a3bfab8eb0ff61ef82c159d4a0b
+    - git:veilfront-xiangqi-siege:7e20acbf61a42e9dcedb88dcf68b8bc8b68d9c9f#evidence/prototype/qa/gate1-rc3-independent-review.md
+    immutable_subject:
+      subject: GATE-1-approval-rc3-v5
+      gate_id: GATE-1
+      loop_instance_id: 4cbb03b6-dd5a-41c5-a624-895c4b884bcb
+      decision: approved
+      approved_decision_package_subject_digest: 3ad999746a4942e6c9cd6986cba7a7d7e819c9f3c5ffeacaab94351d1cb589a3
+      baseline:
+        record_revision: 61
+        last_event_sequence: 61
+        last_event_digest: 30193da1fca5f423d6651c7192ac883eaa8cd94b69d5647b1dd79b0b4fc04dc2
+        contract_digest: d88d9017bb30437ac480e0fcf4f7b262b5ae6b3427447946e50ec37a5d3b44ca
+        project_brief_digest: df8deb810d8c06c8c2f5763031fde2c39f14aa81226e23ffb25636ee3f1eca0b
+        gate_1_package_digest: 3bd27f5fa6cbf1c96b002611c5c315d6295c4a3bfab8eb0ff61ef82c159d4a0b
+        qa_acceptance_subject_digest: 5be2f49678c91f3738a8be23aa4f114bb4d314a0a7b491494efdcc89738ac337
+        candidate_commit: 6253678157157091584b253470e709bad17c534f
+        qa_evidence_commit: 7e20acbf61a42e9dcedb88dcf68b8bc8b68d9c9f
+        rc3:
+          path: builds/windows/Veilfront_Xiangqi_Siege_GATE1_RC3.exe
+          size_bytes: 109740336
+          sha256: 480273ddeae985c0c4aa03be449e5999fba57ca7b296b591ac7ed36b5bc8a229
+      accepted_residual_risks:
+        round_limit_draws: 590/1000 at the 50-round experimental cap
+        round_limit_status: hypothesis_cli_overridable
+        qa_p1_003: owner-approved tooling exception; official CLI remains failed with exactly six errors
+        prototype_status: disposable vertical slice; not a formal architecture or release candidate
+        warnings: two UID text fallback warnings and forced-editor-exit scan warning remain nonblocking
+      scope:
+        formal_feature_planning: allowed through a new approved production contract
+        formal_architecture_frozen: false
+        high_cost_asset_production: forbidden until GATE-2
+        external_release: forbidden until GATE-4
+  authorized_action:
+    summary: 批准当前 RC3 的 GATE-1 核心体验假设，并完成首个生产循环。
+    allowed:
+    - 追加 GATE-1 approved 人工验收记录。
+    - 执行 TR-REVIEW-COMPLETED 并固化最终交接。
+    - 在新的获批 Contract 下开展正式功能规划与架构审查。
+    forbidden:
+    - 把 RC3 或 prototype 目录直接认定为正式架构。
+    - 把 50 回合上限、AI 预算或难度参数冻结为正式平衡值。
+    - 在 GATE-2 前启动高成本最终资产批量生产。
+    - 在 GATE-4 前把 RC3 作为对外发布版本。
+    - 把官方 Loop CLI 表述为通过。
+  application:
+    from_state: review
+    to_state: completed
+    iteration: 2
+    gate_event_sequence: 62
+    completion_event_sequence: 63
+    applied_at: '2026-08-17T23:08:18.443857+08:00'
