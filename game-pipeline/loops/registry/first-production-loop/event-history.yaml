@@ -2269,3 +2269,47 @@ event_history:
       digest_algorithm: sha256
       previous_event_digest: b3f92a4ee26c5800cd951f4912a29a9ffd18924e30fdf2fede7cfcc6a7229ebe
       event_digest: cc95e540af4e5e51c152baa51343522a5bb751e538b111226d037caf5aa990aa
+
+  - schema_version: '0.1'
+    event_id: cdbd7d08-a290-427d-8d76-86a7c23ec429
+    mutation_id: a8028d3d-1abd-498b-a157-89b27dd1da56
+    loop_instance_id: 4cbb03b6-dd5a-41c5-a624-895c4b884bcb
+    sequence: 50
+    event_type: core.contract_migrated
+    occurred_at: '2026-08-17T17:28:12.128607+08:00'
+    recorded_at: '2026-08-17T17:28:12.128607+08:00'
+    actor:
+      actor_id: inst:01M02M6X3Q8YWJXHY52K3V5AR2
+      role: pos:veilfront-xiangqi-siege:root:project-manager
+      authority_id: AUTH-VEILFRONT-PROJECT-MANAGER
+    causality:
+      correlation_id: 0c71d259-cf25-442b-b429-360ff8923fd1
+      causation_event_id: 95663858-bcf3-4723-8a2f-62b14fd15d3f
+      request_id: approval:veilfront-xiangqi-siege:loop-contract:a0da0eec9d6d
+    concurrency:
+      expected_record_revision: 49
+      resulting_record_revision: 50
+    binding_snapshot:
+      contract_digest: ce51fe2b91220a618cc81d22e7685f9bb06caa2fc15fa36b2cca83d51a235410
+      state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+    payload:
+      contract_before:
+        contract_id: LOOP-CTR-GATE1-VERTICAL-SLICE-001
+        contract_version: 3
+        contract_digest: ce51fe2b91220a618cc81d22e7685f9bb06caa2fc15fa36b2cca83d51a235410
+      contract_after:
+        contract_id: LOOP-CTR-GATE1-VERTICAL-SLICE-001
+        contract_version: 4
+        contract_digest: a0da0eec9d6d9513dd111d406c1165bc64d3b84ce1aa1ac430a2c95c10179e6a
+      migration_check_ref: game-pipeline/loops/evidence/OWNER-RULE-REVISION-contract-v4-migration-check.md@sha256:a13d649d842a9a06c1c7598fb570e5c9afa98c4cd46a53629e37f517a966f192
+      approval_id: approval:veilfront-xiangqi-siege:loop-contract:a0da0eec9d6d
+    evidence_refs:
+    - game-pipeline/approvals/loop-contract-v4-a0da0eec9d6d.yaml
+    - game-pipeline/loops/contracts/loop-contract-gate1-vertical-slice-v4.yaml@sha256:0ba98eac698ef594e1516d64d0c9b085ae411280909d962fff83bc5b60cb7fc9
+    - game-pipeline/loops/evidence/OWNER-RULE-REVISION-contract-v4-migration-check.md@sha256:a13d649d842a9a06c1c7598fb570e5c9afa98c4cd46a53629e37f517a966f192
+    - codex-thread://current#owner-rule-revision-2026-08-17
+    integrity:
+      canonicalization: registry-event-canonical-json-v1
+      digest_algorithm: sha256
+      previous_event_digest: cc95e540af4e5e51c152baa51343522a5bb751e538b111226d037caf5aa990aa
+      event_digest: 0a5ed88c5fc0699fdec4d54a531b19b29f00bf5a6ec282b49e4e54225e994f2f

@@ -1,0 +1,36 @@
+approval:
+  schema_version: game-production-approval/v1
+  approval_id: approval:veilfront-xiangqi-siege:loop-contract:a0da0eec9d6d
+  subject_kind: loop-contract
+  subject_id: LOOP-CTR-GATE1-VERTICAL-SLICE-001@v4
+  subject_digest: a0da0eec9d6d9513dd111d406c1165bc64d3b84ce1aa1ac430a2c95c10179e6a
+  decision: approved
+  decided_by: project-owner
+  decided_at: '2026-08-17T17:28:12.061633+08:00'
+  evidence:
+    source_refs:
+    - codex-thread://current#owner-rule-revision-2026-08-17
+    immutable_baseline:
+      contract_v3_subject_digest: ce51fe2b91220a618cc81d22e7685f9bb06caa2fc15fa36b2cca83d51a235410
+      contract_v3_file_digest: 2a0dd3487aa46504244dc420d495ae0ae7b30da180034f3242a3b5f793b16706
+      snapshot_rev49_file_digest: 994e0c1615256912b1c8aac9a471a95bcdb9383f6a6118a9261a61304b99cc20
+      event_history_rev49_file_digest: 61ce177c7e95f2eebc19d356ae798a92174ec10c92f08622d98122725c0e3828
+      record_revision: 49
+      last_event_sequence: 49
+  authorized_action:
+    summary: 修改墙线、相田字阻挡与视野、隐藏旗帜及士主动献祭复活，并在新规则下继续 AI、LAN UI 和 Windows 测试构建。
+    allowed:
+    - 创建 Contract v4 并追加 core.contract_migrated 事件。
+    - 更新规则规格、信息边界、Godot 原型、AI、LAN 适配器、测试与导出预置。
+    - 客户端仅接收自身 PlayerView 和不含旗位的公开夺旗反馈。
+    - 生成供项目所有者真实双机测试的 Windows 可分发构建。
+    forbidden:
+    - 公开隐藏旗位或向 AI/LAN 客户端泄露相应 FullState 字段。
+    - 把阵亡将帅或阵亡士纳入士献祭复活随机池。
+    - 让相田字区域阻挡己方车。
+    - 把测试 EXE 解释为正式发布联网架构或 GATE-1 自动通过。
+  application:
+    materialized_path: game-pipeline/loops/contracts/loop-contract-gate1-vertical-slice-v4.yaml
+    materialized_status: approved
+    materialized_digest: 0ba98eac698ef594e1516d64d0c9b085ae411280909d962fff83bc5b60cb7fc9
+    applied_at: '2026-08-17T17:28:12.061633+08:00'

@@ -12,8 +12,8 @@ registry_snapshot:
       authority_id: AUTH-VEILFRONT-PROJECT-MANAGER
   contract_binding:
     contract_id: LOOP-CTR-GATE1-VERTICAL-SLICE-001
-    contract_version: 3
-    contract_digest: ce51fe2b91220a618cc81d22e7685f9bb06caa2fc15fa36b2cca83d51a235410
+    contract_version: 4
+    contract_digest: a0da0eec9d6d9513dd111d406c1165bc64d3b84ce1aa1ac430a2c95c10179e6a
   state_machine_binding:
     state_machine_id: LOOP-SM-DEFAULT
     state_machine_version: "0.2"
@@ -72,10 +72,10 @@ registry_snapshot:
     state_entered_at: '2026-08-16T13:37:41.394234+08:00'
     current_iteration: 2
     last_transition_id: TR-REVIEW-ACTIVE
-    last_event_id: 95663858-bcf3-4723-8a2f-62b14fd15d3f
-    last_event_digest: cc95e540af4e5e51c152baa51343522a5bb751e538b111226d037caf5aa990aa
-    last_event_sequence: 49
-    record_revision: 49
+    last_event_id: cdbd7d08-a290-427d-8d76-86a7c23ec429
+    last_event_digest: 0a5ed88c5fc0699fdec4d54a531b19b29f00bf5a6ec282b49e4e54225e994f2f
+    last_event_sequence: 50
+    record_revision: 50
   budget:
     limits:
       iteration_limit: 3
