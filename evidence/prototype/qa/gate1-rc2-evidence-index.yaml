@@ -1,0 +1,76 @@
+schema_version: gate1-qa-evidence-index-v1
+review_date: 2026-08-17
+qa_instance: inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
+candidate:
+  commit: 5a596526e4b82a6af2d9345e2f06a9fecb0028c7
+  contract_id: LOOP-CTR-GATE1-VERTICAL-SLICE-001
+  contract_version: 5
+  contract_digest: d88d9017bb30437ac480e0fcf4f7b262b5ae6b3427447946e50ec37a5d3b44ca
+  project_brief_version: 4
+  project_brief_digest: df8deb810d8c06c8c2f5763031fde2c39f14aa81226e23ffb25636ee3f1eca0b
+  registry_revision: 52
+  registry_sequence: 52
+  registry_tail_digest: 90e36ddc971a9f949911352969cdc69208e416fec018c2f54684a4078cd16875
+  executable:
+    path: builds/windows/Veilfront_Xiangqi_Siege_GATE1_RC2.exe
+    size_bytes: 109734624
+    sha256: c2acd484e99b50f53e524726c0fd944b0b46dbad57634c20ce4daf9152eb89cd
+acceptance:
+  CHECK-CONTRACT-001: pass_with_approved_cli_exception_observed
+  CHECK-GODOT-001: pass
+  CHECK-RULES-001: pass
+  CHECK-DETERMINISM-001: fail
+  CHECK-FOG-001: pass
+  CHECK-AI-001: pass
+  CHECK-SIMULATION-001: fail
+  professional_review: revise
+  gate_1: not_reached
+defect:
+  id: QA-P1-004
+  severity: blocker
+  kind: replay_divergence
+  seed: 471016
+  first_divergent_event_index: 51
+  reproduction_exit_codes: [1, 1]
+simulation_batch:
+  start_seed: 471001
+  requested: 1000
+  completed: 999
+  failures: 1
+  replay_verified: 19
+  replay_samples: 20
+  records_digest: 430d6c9acc83cdb5dea68207c7d303f547160c41d3b51c3096eab25d80080378
+ai_matrix:
+  start_seed: 471001
+  seeds_per_difficulty: 100
+  difficulties: 4
+  records: 400
+  failures: 0
+  determinism_mismatches: 0
+  hidden_equivalence_mismatches: 0
+  records_digest: 06211a09c80727b850878e675ec25e540a3bf72ec9c9c8657ca9fd03b99cd23b
+artifacts:
+  - path: evidence/prototype/qa/gate1-rc2-independent-review.md
+    size_bytes: 8003
+    sha256: b88ec329d765de13f46df04bb16e8d8f618b0e363cde7fc895923027c7fc3b33
+  - path: evidence/prototype/qa/gate1-rc2-command-summary.txt
+    size_bytes: 8150
+    sha256: 4ce3393a483885ef14042f6ac04ba59f31f3326df748cf8f15e2b9669c07780c
+  - path: evidence/prototype/qa/gate1-rc2-rules-stress-1000-seeds-round50.jsonl
+    size_bytes: 493936
+    sha256: 69aa9db63c113e6914680e517d9e516c76b95c64d6e52d79021cf94d1cf43a70
+  - path: evidence/prototype/qa/gate1-rc2-ai-difficulty-seed-matrix-100x4-summary.json
+    size_bytes: 1237
+    sha256: e684d5337c2f8682e940b5224c549713d290eeb60138107cb6b52832da83da39
+  - path: evidence/prototype/qa/gate1-rc2-ai-difficulty-seed-matrix-100x4.jsonl.zip
+    size_bytes: 1807233
+    sha256: 7849a61473c5ccd601ed52f1fb20879c8b8635ef4ea3d06839100f7fe558da00
+  - path: evidence/prototype/qa/gate1_rc2_seed_471016_diagnostic.gd
+    size_bytes: 3066
+    sha256: d64411cfd61df3466d1ecb5b0c983f4d3ed5e26efd7e10fb02a5dbbe46f69bf3
+excluded_artifacts:
+  - path: evidence/prototype/qa/gate1-rc2-ai-difficulty-seed-matrix-100x4.jsonl
+    reason: raw_62mb_manifest_replaced_by_hashed_zip_and_summary
+verdict_note: >-
+  RC2 requires revision because seed 471016 produces a repeatable replay divergence.
+  This evidence does not approve GATE-1 and does not replace project-owner review.
