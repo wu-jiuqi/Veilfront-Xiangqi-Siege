@@ -6,7 +6,7 @@ config_version=5
 [application]
 
 config/name="Veilfront: Xiangqi Siege - GATE-1 Logic Lab"
-run/main_scene="res://scenes/prototype/gate1_logic_lab.tscn"
+run/main_scene="res://scenes/prototype/network/lan_lobby.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 
 [display]

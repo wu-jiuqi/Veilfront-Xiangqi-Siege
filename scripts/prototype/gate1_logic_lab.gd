@@ -9,6 +9,8 @@ const KNOWN_ILLEGAL: String = "KNOWN_ILLEGAL"
 
 @export var initial_seed: int = 471001
 @export var full_round_limit_hypothesis: int = 50
+@export var network_mode: bool = false
+@export var network_session_path: NodePath
 
 var board_state: Array[int] = []
 var player_view: Dictionary = {}
@@ -20,6 +22,7 @@ var action_mode: String = "move"
 var cell_buttons: Dictionary = {}
 var ai_difficulty_id: String = "medium"
 var ai_turn_pending: bool = false
+var network_session: Node
 
 @onready var match_controller: Node = $MatchController
 @onready var seed_value: Label = $SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/SeedGroup/SeedValue
@@ -44,6 +47,7 @@ var ai_turn_pending: bool = false
 @onready var message_value: Label = $SafeMargin/Page/Workspace/StatusShell/StatusMargin/StatusColumn/MessageValue
 @onready var move_button: Button = $SafeMargin/Page/Workspace/StatusShell/StatusMargin/StatusColumn/ActionMode/MoveButton
 @onready var bombard_button: Button = $SafeMargin/Page/Workspace/StatusShell/StatusMargin/StatusColumn/ActionMode/BombardButton
+@onready var resurrect_button: Button = $SafeMargin/Page/Workspace/StatusShell/StatusMargin/StatusColumn/ActionMode/ResurrectButton
 @onready var pass_button: Button = $SafeMargin/Page/Workspace/StatusShell/StatusMargin/StatusColumn/ActionMode/PassButton
 @onready var ai_step_button: Button = $SafeMargin/Page/Workspace/StatusShell/StatusMargin/StatusColumn/ActionMode/AiStepButton
 @onready var red_casualties: Label = $SafeMargin/Page/Workspace/StatusShell/StatusMargin/StatusColumn/CasualtyGrid/RedCasualties
@@ -59,6 +63,18 @@ func _ready() -> void:
 	board_state.fill(0)
 	_register_cell_buttons()
 	_connect_controls()
+	if network_mode:
+		network_session = get_node_or_null(network_session_path)
+		assert(network_session != null)
+		network_session.player_view_received.connect(_on_network_player_view_received)
+		network_session.action_feedback.connect(_on_network_action_feedback)
+		network_session.connection_state_changed.connect(_on_network_connection_state_changed)
+		seed_value.text = "保密"
+		seed_input.text = ""
+		seed_input.editable = false
+		difficulty_select.disabled = true
+		message_value.text = "等待局域网会话分配席位与棋局快照。"
+		return
 	seed_input.text = str(initial_seed)
 	match_controller.initialize(initial_seed, full_round_limit_hypothesis, ai_difficulty_id)
 	print("GATE1_PLAYTEST_GRAYBOX_READY seed=%d cells=%d round_limit=%d status=hypothesis_cli_overridable" % [
@@ -108,7 +124,7 @@ func step_ai_for_test() -> Dictionary:
 
 
 func restart_match_for_test(seed_override: int = 0) -> void:
-	var seed_to_use: int = int(player_view.get("match_seed", initial_seed)) if seed_override == 0 else seed_override
+	var seed_to_use: int = initial_seed if seed_override == 0 else seed_override
 	_start_match(seed_to_use)
 
 
@@ -121,7 +137,31 @@ func set_ai_difficulty_for_test(difficulty_id: String) -> void:
 
 
 func get_ai_difficulty_snapshot() -> Dictionary:
+	if network_mode:
+		return {}
 	return match_controller.get_ai_difficulty_snapshot()
+
+
+func _on_network_player_view_received(updated_view: Dictionary) -> void:
+	var previous_view: Dictionary = player_view.duplicate(true)
+	player_view = updated_view.duplicate(true)
+	action_previews = network_session.get_action_previews()
+	_clear_selection(false)
+	_refresh_all()
+	_refresh_notifications(previous_view, player_view)
+
+
+func _on_network_action_feedback(feedback: Dictionary) -> void:
+	if bool(feedback.get("consumed", false)):
+		message_value.text = "行动已由房主裁决。"
+	else:
+		message_value.text = "行动未通过房主裁决：%s" % str(feedback.get("error", "unknown"))
+
+
+func _on_network_connection_state_changed(snapshot: Dictionary) -> void:
+	var state: String = str(snapshot.get("state", "unknown"))
+	if state in ["disconnected", "connection_failed", "server_disconnected", "protocol_error"]:
+		message_value.text = "局域网连接状态：%s；本版不支持重连，请返回大厅重开房间。" % state
 
 
 func _register_cell_buttons() -> void:
@@ -142,6 +182,7 @@ func _connect_controls() -> void:
 	cancel_button.pressed.connect(_clear_selection)
 	move_button.pressed.connect(_set_action_mode.bind("move"))
 	bombard_button.pressed.connect(_set_action_mode.bind("bombard"))
+	resurrect_button.pressed.connect(_on_resurrect_pressed)
 	pass_button.pressed.connect(_on_pass_pressed)
 	ai_step_button.pressed.connect(_on_ai_step_pressed)
 	ai_turn_timer.timeout.connect(_on_ai_turn_timer_timeout)
@@ -171,7 +212,7 @@ func _on_board_cell_gui_input(event: InputEvent, button: Button) -> void:
 
 
 func _on_board_cell_pressed(x: int, y: int) -> void:
-	if not match_controller.can_human_submit():
+	if not _can_submit():
 		message_value.text = "当前不是人类行动阶段；可查看公开信息或执行 AI 单步。"
 		return
 	var cell: Array = [x, y]
@@ -209,13 +250,26 @@ func _set_action_mode(mode: String) -> void:
 
 
 func _on_pass_pressed() -> void:
-	if not match_controller.can_human_submit():
+	if not _can_submit():
 		message_value.text = "当前不能跳过。"
 		return
 	for preview: Dictionary in action_previews:
 		if preview["action_type"] == "pass":
 			_set_pending_preview(preview)
 			return
+
+
+func _on_resurrect_pressed() -> void:
+	if not _can_submit():
+		message_value.text = "当前不能发动复活。"
+		return
+	for preview: Dictionary in action_previews:
+		if preview["piece_id"] == selected_piece_id and preview["action_type"] == "resurrect" \
+		and preview["classification"] != KNOWN_ILLEGAL:
+			action_mode = "resurrect"
+			_set_pending_preview(preview)
+			return
+	message_value.text = "请选择可发动能力的在场士；阵亡士、帅、将不进入复活随机池。"
 
 
 func _set_pending_preview(preview: Dictionary) -> void:
@@ -229,6 +283,8 @@ func _set_pending_preview(preview: Dictionary) -> void:
 	]
 	if preview["action_type"] == "pass":
 		confirm_warning.text = "跳过会消耗本次行动，并推进墙、旗与完整轮结算。"
+	elif preview["action_type"] == "resurrect":
+		confirm_warning.text = "将牺牲所选士，并从阵亡区随机复活一枚友方非士、非帅/将棋子到己方大本营。"
 	elif preview["classification"] == TENTATIVE:
 		confirm_warning.text = "该行动受迷雾信息影响，提交后可能失败并消耗本次行动。"
 	elif preview["action_type"] == "bombard":
@@ -249,7 +305,8 @@ func _submit_pending_action() -> Dictionary:
 		"skill_type": str(pending_preview["skill_type"]),
 	}
 	confirm_button.disabled = true
-	var result: Dictionary = match_controller.submit_human_intent(intent)
+	var result: Dictionary = network_session.submit_intent(intent) if network_mode \
+		else match_controller.submit_human_intent(intent)
 	confirm_button.disabled = false
 	if not bool(result.get("consumed", false)):
 		message_value.text = "行动未提交：%s" % str(result.get("error", "unknown"))
@@ -265,6 +322,8 @@ func _on_ai_turn_timer_timeout() -> void:
 
 
 func _schedule_ai_turn() -> void:
+	if network_mode:
+		return
 	if not match_controller.can_step_ai():
 		ai_turn_pending = false
 		ai_turn_timer.stop()
@@ -304,16 +363,22 @@ func _on_ai_difficulty_selected(index: int) -> void:
 
 
 func _apply_ai_difficulty(difficulty_id: String) -> void:
+	if network_mode:
+		message_value.text = "局域网真人对战不启用单机 AI。"
+		return
 	ai_difficulty_id = difficulty_id
 	message_value.text = "AI 难度已切换为%s；按当前种子重新开局。" % _difficulty_name(difficulty_id)
-	_start_match(int(player_view.get("match_seed", initial_seed)))
+	_start_match(initial_seed)
 
 
 func _restart_same_seed() -> void:
-	_start_match(int(player_view.get("match_seed", initial_seed)))
+	_start_match(initial_seed)
 
 
 func _start_match(seed_to_use: int) -> void:
+	if network_mode:
+		message_value.text = "局域网棋局由房主创建；断线后请返回大厅重开。"
+		return
 	initial_seed = seed_to_use
 	seed_input.text = str(seed_to_use)
 	ai_turn_pending = false
@@ -339,14 +404,14 @@ func _clear_selection(refresh: bool = true) -> void:
 func _refresh_all() -> void:
 	if player_view.is_empty():
 		return
-	seed_value.text = str(player_view["match_seed"])
+	seed_value.text = str(initial_seed)
 	side_value.text = "玩家：%s" % _side_name(str(player_view["viewer_side"]))
 	active_value.text = "行动方：%s" % _side_name(str(player_view["active_side"]))
 	round_value.text = "完整轮：%d / %d" % [player_view["full_round_index"], player_view["full_round_limit_hypothesis"]]
-	config_value.text = "规则 %s · %s 回合 · AI %s" % [
+	config_value.text = "规则 %s · %s 回合 · %s" % [
 		str(player_view["implementation_revision"]).trim_prefix("prototype-core-"),
 		str(player_view["full_round_limit_hypothesis"]),
-		_difficulty_name(ai_difficulty_id),
+		("LAN %s" % _side_name(str(player_view["viewer_side"]))) if network_mode else "AI %s" % _difficulty_name(ai_difficulty_id),
 	]
 	_refresh_board()
 	_refresh_status()
@@ -364,9 +429,6 @@ func _refresh_board() -> void:
 	for piece: Dictionary in player_view.get("pieces", []):
 		if piece.get("position", []).size() == 2:
 			pieces_by_cell[_cell_key(int(piece["position"][0]), int(piece["position"][1]))] = piece
-	var flags_by_cell: Dictionary = {}
-	for flag: Dictionary in player_view.get("flags", []):
-		flags_by_cell[_cell_key(int(flag["position"][0]), int(flag["position"][1]))] = flag
 	var preview_by_cell: Dictionary = {}
 	if not selected_piece_id.is_empty():
 		for preview: Dictionary in action_previews:
@@ -389,13 +451,6 @@ func _refresh_board() -> void:
 			lines = ["敌?"]
 			color = Color(1.0, 0.62, 0.28, 1.0)
 			tooltip_lines.append("未知敌情接触")
-		if flags_by_cell.has(key):
-			var flag: Dictionary = flags_by_cell[key]
-			lines = ["旗%d" % int(flag["capture_progress"])]
-			button.theme_type_variation = &"FlagCell"
-			tooltip_lines.append("旗帜：%s · 占领进度 %d/3" % [
-				_owner_mark(str(flag["owner"])), int(flag["capture_progress"]),
-			])
 		if pieces_by_cell.has(key):
 			var piece: Dictionary = pieces_by_cell[key]
 			var piece_side: String = str(piece["side"])
@@ -427,8 +482,8 @@ func _refresh_board() -> void:
 		button.text = "\n".join(lines)
 		button.tooltip_text = "\n".join(tooltip_lines)
 		button.self_modulate = color
-		button.disabled = not match_controller.can_human_submit()
-	overview_strip.text = "红方区域 1–8 · 中央战场 9–16 · 黑方区域 17–24 | 可见 %d/%d · 接触 %d · 侦测 %d" % [
+		button.disabled = not _can_submit()
+	overview_strip.text = "红营 1–3 · 红墙/缓冲 4–8 · 战区 9–16 · 黑墙/缓冲 17–21 · 黑营 22–24 | 可见 %d/%d · 接触 %d · 侦测 %d" % [
 		visible_set.size(), BOARD_CELL_COUNT, contact_set.size(), detection_set.size(),
 	]
 
@@ -443,12 +498,16 @@ func _refresh_status() -> void:
 		wall_lines.append("%s墙：%s" % [_side_name(str(wall["side"])), str(wall["status"])])
 	wall_status.text = "\n".join(wall_lines)
 	var flag_lines: Array[String] = []
+	var owned_flags: Dictionary = {"red": 0, "black": 0}
 	for flag: Dictionary in player_view.get("flags", []):
-		flag_lines.append("%s (%d,%d)：%s %d/3%s" % [
-			str(flag["id"]), int(flag["position"][0]), int(flag["position"][1]),
-			_owner_mark(str(flag["owner"])), int(flag["capture_progress"]),
-			" 争夺中" if bool(flag["contested"]) else "",
-		])
+		var owner: String = str(flag.get("owner", "neutral"))
+		if owned_flags.has(owner):
+			owned_flags[owner] = int(owned_flags[owner]) + 1
+		var capturing_side: String = str(flag.get("capturing_side", ""))
+		var progress: int = int(flag.get("capture_progress", 0))
+		if not capturing_side.is_empty() and progress > 0:
+			flag_lines.append("%s正在夺旗(%d/3)" % [_side_name(capturing_side), progress])
+	flag_lines.push_front("三旗位置隐匿 · 红方已得 %d · 黑方已得 %d" % [owned_flags["red"], owned_flags["black"]])
 	flag_status.text = "\n".join(flag_lines)
 	var selected: Dictionary = _piece_by_id(selected_piece_id)
 	if selected.is_empty():
@@ -458,11 +517,13 @@ func _refresh_status() -> void:
 			selected_piece_id, _piece_mark(str(selected["piece_type"]), str(selected["side"])),
 			" · 弹药 %d" % int(selected.get("bombard_ammo", 0)) if selected["piece_type"] == "cannon" else "",
 		]
-	mode_status.text = "模式：%s · 左键操作 / 右键取消" % ("区域炮击" if action_mode == "bombard" else "普通移动")
-	move_button.disabled = not match_controller.can_human_submit()
-	bombard_button.disabled = not match_controller.can_human_submit() or not _selected_has_bombardment()
-	pass_button.disabled = not match_controller.can_human_submit()
-	ai_step_button.disabled = not match_controller.can_step_ai()
+	var mode_name: String = {"bombard": "区域炮击", "resurrect": "献祭复活", "move": "普通移动"}.get(action_mode, action_mode)
+	mode_status.text = "模式：%s · 左键操作 / 右键取消" % mode_name
+	move_button.disabled = not _can_submit()
+	bombard_button.disabled = not _can_submit() or not _selected_has_bombardment()
+	resurrect_button.disabled = not _can_submit() or not _selected_has_resurrection()
+	pass_button.disabled = not _can_submit()
+	ai_step_button.disabled = network_mode or not match_controller.can_step_ai()
 	var casualty_counts: Dictionary = _casualty_counts_from_events()
 	red_casualties.text = "红方：%s" % _format_casualties("red", casualty_counts["red"])
 	black_casualties.text = "黑方：%s" % _format_casualties("black", casualty_counts["black"])
@@ -497,13 +558,20 @@ func _refresh_notifications(previous_view: Dictionary, current_view: Dictionary)
 			"INTACT": notifications.append("%s城墙恢复完成" % _side_name(wall_side))
 			"BREACHED": notifications.append("%s城墙已被攻破" % _side_name(wall_side))
 			"REPAIRING": notifications.append("%s城墙开始恢复" % _side_name(wall_side))
-	var previous_flags: Dictionary = _flag_owner_by_id(previous_view)
+	var previous_flags: Dictionary = _flag_state_by_id(previous_view)
 	for flag: Dictionary in current_view.get("flags", []):
 		var flag_id: String = str(flag.get("id", ""))
 		var new_owner: String = str(flag.get("owner", "neutral"))
-		var old_owner: String = str(previous_flags.get(flag_id, new_owner))
+		var previous_flag: Dictionary = previous_flags.get(flag_id, {})
+		var old_owner: String = str(previous_flag.get("owner", new_owner))
 		if new_owner != old_owner and new_owner != "neutral":
-			notifications.append("%s占领%s成功" % [_side_name(new_owner), flag_id])
+			notifications.append("%s成功夺得一面旗帜" % _side_name(new_owner))
+		continue
+		var new_progress: int = int(flag.get("capture_progress", 0))
+		var old_progress: int = int(previous_flag.get("capture_progress", 0))
+		var capturing_side: String = str(flag.get("capturing_side", ""))
+		if new_progress > 0 and new_progress != old_progress and not capturing_side.is_empty():
+			notifications.append("%s正在夺旗(%d/3)" % [_side_name(capturing_side), new_progress])
 	if notifications.is_empty() and str(previous_view.get("active_side", "")) == "black" \
 	and str(current_view.get("active_side", "")) == str(current_view.get("viewer_side", "")):
 		notifications.append("AI 已行动，轮到你")
@@ -517,6 +585,7 @@ func _event_summary(event: Dictionary) -> String:
 	var action_text: String = {
 		"move_resolved": "完成移动",
 		"bombardment_resolved": "完成区域炮击",
+		"advisor_resurrection_resolved": "以士献祭并完成随机复活",
 		"pass": "主动跳过",
 		"skip": "跳过行动",
 		"timeout": "行动超时",
@@ -534,14 +603,16 @@ func _event_capture_summary(event: Dictionary) -> String:
 	var actor_side: String = str(event.get("actor_side", ""))
 	var casualty_side: String = _opponent_side(actor_side)
 	var parts: Array[String] = []
+	var resurrection: Dictionary = event.get("resurrection", {})
+	if not resurrection.is_empty():
+		parts.append("%s牺牲士并复活%s" % [
+			_side_name(actor_side), _piece_mark(str(resurrection.get("revived_piece_type", "")), actor_side),
+		])
 	for capture: Dictionary in event.get("authorized_captures", []):
 		var captured_mark: String = _piece_mark(str(capture.get("piece_type", "")), casualty_side)
-		if bool(capture.get("rescued", false)):
-			parts.append("%s士替死，保住%s" % [_side_name(casualty_side), captured_mark])
-		else:
-			parts.append("%s吃掉%s%s" % [
-				_side_name(actor_side), _side_name(casualty_side), captured_mark,
-			])
+		parts.append("%s吃掉%s%s" % [
+			_side_name(actor_side), _side_name(casualty_side), captured_mark,
+		])
 	return "；".join(parts)
 
 
@@ -552,8 +623,7 @@ func _casualty_counts_from_events() -> Dictionary:
 		if not result.has(casualty_side):
 			continue
 		for capture: Dictionary in event.get("authorized_captures", []):
-			var piece_type: String = "advisor" if bool(capture.get("rescued", false)) \
-				else str(capture.get("piece_type", ""))
+			var piece_type: String = str(capture.get("piece_type", ""))
 			result[casualty_side][piece_type] = int(result[casualty_side].get(piece_type, 0)) + 1
 	return result
 
@@ -575,10 +645,13 @@ func _wall_status_by_side(view: Dictionary) -> Dictionary:
 	return result
 
 
-func _flag_owner_by_id(view: Dictionary) -> Dictionary:
+func _flag_state_by_id(view: Dictionary) -> Dictionary:
 	var result: Dictionary = {}
 	for flag: Dictionary in view.get("flags", []):
-		result[str(flag.get("id", ""))] = str(flag.get("owner", "neutral"))
+		result[str(flag.get("id", ""))] = {
+			"owner": str(flag.get("owner", "neutral")),
+			"capture_progress": int(flag.get("capture_progress", 0)),
+		}
 	return result
 
 
@@ -608,6 +681,17 @@ func _selected_has_bombardment() -> bool:
 		return false
 	for preview: Dictionary in action_previews:
 		if str(preview["piece_id"]) == selected_piece_id 		and str(preview["action_type"]) == "bombard" 		and str(preview["classification"]) != KNOWN_ILLEGAL:
+			return true
+	return false
+
+
+func _selected_has_resurrection() -> bool:
+	if selected_piece_id.is_empty():
+		return false
+	for preview: Dictionary in action_previews:
+		if str(preview["piece_id"]) == selected_piece_id \
+		and str(preview["action_type"]) == "resurrect" \
+		and str(preview["classification"]) != KNOWN_ILLEGAL:
 			return true
 	return false
 
@@ -686,12 +770,21 @@ func _region_theme(y: int) -> String:
 
 
 func _region_name(y: int) -> String:
+	if y <= 3:
+		return "红方大本营"
 	if y <= 8:
-		return "红方区域"
+		return "红方城墙与缓冲区"
 	if y <= 16:
 		return "中央战场"
-	return "黑方区域"
+	if y <= 21:
+		return "黑方城墙与缓冲区"
+	return "黑方大本营"
 
 
 func _difficulty_name(difficulty_id: String) -> String:
 	return {"easy": "简单", "medium": "中等", "hard": "困难", "expert": "专家"}.get(difficulty_id, difficulty_id)
+
+
+func _can_submit() -> bool:
+	return network_session.can_submit_intents() if network_mode and network_session != null \
+		else match_controller.can_human_submit()
