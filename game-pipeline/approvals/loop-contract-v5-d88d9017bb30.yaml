@@ -1,0 +1,26 @@
+approval:
+  schema_version: game-production-approval/v1
+  approval_id: approval:veilfront-xiangqi-siege:loop-contract:d88d9017bb30
+  subject_kind: loop-contract
+  subject_id: LOOP-CTR-GATE1-VERTICAL-SLICE-001@v5
+  subject_digest: d88d9017bb30437ac480e0fcf4f7b262b5ae6b3427447946e50ec37a5d3b44ca
+  decision: approved
+  decided_by: project-owner
+  decided_at: '2026-08-17T21:53:52.382912+08:00'
+  evidence:
+    source_refs:
+    - codex-thread://current#owner-rule-revision-5
+    immutable_baseline:
+      contract_v4_subject_digest: a0da0eec9d6d9513dd111d406c1165bc64d3b84ce1aa1ac430a2c95c10179e6a
+      contract_v4_file_digest: 0ba98eac698ef594e1516d64d0c9b085ae411280909d962fff83bc5b60cb7fc9
+      registry_revision: 50
+  authorized_action:
+    summary: 按 revision 5 重跑 GATE-1 前置、独立 QA、LAN 白名单与 1000 固定种子，并准备人工决策包。
+    forbidden:
+    - 自动批准 GATE-1
+    - 把可丢弃 LAN 工具认定为正式联网架构
+  application:
+    materialized_path: game-pipeline/loops/contracts/loop-contract-gate1-vertical-slice-v5.yaml
+    materialized_status: approved
+    materialized_digest: e947da55d88636bd09c0e72714573ca1b31e562ea89e83637d042aa284be7f5a
+    applied_at: '2026-08-17T21:53:52.382912+08:00'

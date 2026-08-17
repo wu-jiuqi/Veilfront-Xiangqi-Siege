@@ -1,5 +1,5 @@
 registry_snapshot:
-  schema_version: "0.1"
+  schema_version: '0.1'
   identity:
     loop_instance_id: 4cbb03b6-dd5a-41c5-a624-895c4b884bcb
     project_id: veilfront-xiangqi-siege
@@ -12,11 +12,11 @@ registry_snapshot:
       authority_id: AUTH-VEILFRONT-PROJECT-MANAGER
   contract_binding:
     contract_id: LOOP-CTR-GATE1-VERTICAL-SLICE-001
-    contract_version: 4
-    contract_digest: a0da0eec9d6d9513dd111d406c1165bc64d3b84ce1aa1ac430a2c95c10179e6a
+    contract_version: 5
+    contract_digest: d88d9017bb30437ac480e0fcf4f7b262b5ae6b3427447946e50ec37a5d3b44ca
   state_machine_binding:
     state_machine_id: LOOP-SM-DEFAULT
-    state_machine_version: "0.2"
+    state_machine_version: '0.2'
     state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
   topology:
     parent_loop_id: null
@@ -30,52 +30,69 @@ registry_snapshot:
       assigned_by: project-owner
       effective_from: '2026-08-15T20:01:47.1921278+08:00'
     executors:
-      - actor_id: pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
-        role: pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
-        assignment_id: af4c8c05-ee80-4a99-adab-6d09a0f00811
-        authority_id: AUTH-VEILFRONT-SYSTEMS-EXPERIENCE
-        scope: [TASK-SPEC-001]
-      - actor_id: pos:veilfront-xiangqi-siege:technology:godot-technical-lead
-        role: pos:veilfront-xiangqi-siege:technology:godot-technical-lead
-        assignment_id: c48f53c7-3a02-4f6d-a7a1-aa4d344cf120
-        authority_id: AUTH-VEILFRONT-GODOT-TECHNOLOGY
-        scope: [TASK-MAP-001, TASK-PROTOTYPE-001]
-      - actor_id: pos:veilfront-xiangqi-siege:technology:single-player-ai-engineer
-        role: pos:veilfront-xiangqi-siege:technology:single-player-ai-engineer
-        assignment_id: bd4eb5b6-d931-4bd6-8b2d-3b31520d338b
-        authority_id: AUTH-VEILFRONT-SINGLE-PLAYER-AI
-        scope: [TASK-AI-001]
-      - actor_id: pos:veilfront-xiangqi-siege:quality:qa-release-lead
-        role: pos:veilfront-xiangqi-siege:quality:qa-release-lead
-        assignment_id: 3cdb296f-8cc8-4e4c-8038-79f184c7d05a
-        authority_id: AUTH-VEILFRONT-QA-RELEASE
-        scope: [TASK-QA-001]
+    - actor_id: pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
+      role: pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
+      assignment_id: af4c8c05-ee80-4a99-adab-6d09a0f00811
+      authority_id: AUTH-VEILFRONT-SYSTEMS-EXPERIENCE
+      scope:
+      - TASK-SPEC-001
+    - actor_id: pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+      role: pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+      assignment_id: c48f53c7-3a02-4f6d-a7a1-aa4d344cf120
+      authority_id: AUTH-VEILFRONT-GODOT-TECHNOLOGY
+      scope:
+      - TASK-MAP-001
+      - TASK-PROTOTYPE-001
+    - actor_id: pos:veilfront-xiangqi-siege:technology:single-player-ai-engineer
+      role: pos:veilfront-xiangqi-siege:technology:single-player-ai-engineer
+      assignment_id: bd4eb5b6-d931-4bd6-8b2d-3b31520d338b
+      authority_id: AUTH-VEILFRONT-SINGLE-PLAYER-AI
+      scope:
+      - TASK-AI-001
+    - actor_id: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+      role: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+      assignment_id: 3cdb296f-8cc8-4e4c-8038-79f184c7d05a
+      authority_id: AUTH-VEILFRONT-QA-RELEASE
+      scope:
+      - TASK-QA-001
     reviewers:
-      - actor_id: pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
-        role: pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
-        assignment_id: f7593644-4e1c-481c-ab1c-c9587674357b
-        review_scope: [DELIVERABLE-RULES-001, DELIVERABLE-INFO-001]
-      - actor_id: pos:veilfront-xiangqi-siege:technology:godot-technical-lead
-        role: pos:veilfront-xiangqi-siege:technology:godot-technical-lead
-        assignment_id: ea8d5f37-f244-4db1-aeff-ae4f81d8484e
-        review_scope: [DELIVERABLE-GODOT-001, DELIVERABLE-AI-001]
-      - actor_id: pos:veilfront-xiangqi-siege:quality:qa-release-lead
-        role: pos:veilfront-xiangqi-siege:quality:qa-release-lead
-        assignment_id: 9589489a-be2a-436f-bde4-8488d684c0bb
-        review_scope: [CHECK-CONTRACT-001, CHECK-GODOT-001, CHECK-RULES-001, CHECK-DETERMINISM-001, CHECK-FOG-001, CHECK-AI-001, CHECK-SIMULATION-001]
-      - actor_id: project-owner
-        role: project-owner
-        assignment_id: ecc9367a-49ac-4114-b4a7-24ecb8985d16
-        review_scope: [GATE-1]
+    - actor_id: pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
+      role: pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
+      assignment_id: f7593644-4e1c-481c-ab1c-c9587674357b
+      review_scope:
+      - DELIVERABLE-RULES-001
+      - DELIVERABLE-INFO-001
+    - actor_id: pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+      role: pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+      assignment_id: ea8d5f37-f244-4db1-aeff-ae4f81d8484e
+      review_scope:
+      - DELIVERABLE-GODOT-001
+      - DELIVERABLE-AI-001
+    - actor_id: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+      role: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+      assignment_id: 9589489a-be2a-436f-bde4-8488d684c0bb
+      review_scope:
+      - CHECK-CONTRACT-001
+      - CHECK-GODOT-001
+      - CHECK-RULES-001
+      - CHECK-DETERMINISM-001
+      - CHECK-FOG-001
+      - CHECK-AI-001
+      - CHECK-SIMULATION-001
+    - actor_id: project-owner
+      role: project-owner
+      assignment_id: ecc9367a-49ac-4114-b4a7-24ecb8985d16
+      review_scope:
+      - GATE-1
   runtime:
     current_state: active
     state_entered_at: '2026-08-16T13:37:41.394234+08:00'
     current_iteration: 2
     last_transition_id: TR-REVIEW-ACTIVE
-    last_event_id: cdbd7d08-a290-427d-8d76-86a7c23ec429
-    last_event_digest: 0a5ed88c5fc0699fdec4d54a531b19b29f00bf5a6ec282b49e4e54225e994f2f
-    last_event_sequence: 50
-    record_revision: 50
+    last_event_id: dc6c4971-6eb3-4552-b90e-c9ece385b486
+    last_event_digest: 90e36ddc971a9f949911352969cdc69208e416fec018c2f54684a4078cd16875
+    last_event_sequence: 52
+    record_revision: 52
   budget:
     limits:
       iteration_limit: 3
@@ -93,142 +110,150 @@ registry_snapshot:
     last_updated_at: '2026-08-15T20:01:47.1921278+08:00'
   resources:
     inputs:
-      - input_slot_id: INPUT-BRIEF-001
-        artifact:
-          artifact_id: artifact:veilfront-xiangqi-siege:project-brief@v2
-          artifact_type: confirmed-project-brief
-          version: 2
-          uri: game-pipeline/project-definition/project-brief.yaml
-          digest: {algorithm: sha256, value: 3cb9affedc6173dbe58ad9c630e0261c99eba706815f8d8fa9870f506b2f2599}
-        source_loop_id: null
-        bound_by_event_id: b2716148-237f-4b54-b7bf-1b06e98e5c16
-        bound_at: '2026-08-15T20:01:47.1921278+08:00'
-      - input_slot_id: INPUT-ORG-001
-        artifact:
-          artifact_id: registry:veilfront-xiangqi-siege:organization@revision-2
-          artifact_type: approved-organization-snapshot
-          version: revision-2
-          uri: git:veilfront-xiangqi-siege:623a438#game-pipeline/organization/snapshot.yaml
-          digest: {algorithm: sha256, value: 9b193d9d99f7a541edc5aa5b285ee98127fb7684f4ee47e6b06c7c413a4c7fe9}
-        source_loop_id: null
-        bound_by_event_id: c155c6f1-0a94-4772-93a1-52a4dea12300
-        bound_at: '2026-08-15T20:01:47.1921278+08:00'
-      - input_slot_id: INPUT-WORK-CTR-001
-        artifact:
-          artifact_id: artifact:veilfront-xiangqi-siege:pipeline-contract@CTR-P1-001-v1
-          artifact_type: approved-pipeline-contract
-          version: 1
-          uri: game-pipeline/loops/contracts/CTR-P1-001-vertical-slice.yaml
-          digest: {algorithm: sha256, value: 189b691e6c60b0c5c7b069081ebe34e726ff038211d60a33084eee5638499014}
-        source_loop_id: null
-        bound_by_event_id: 20ad323d-9a51-4380-8cc3-ae34c659dd26
-        bound_at: '2026-08-15T20:01:47.1921278+08:00'
+    - input_slot_id: INPUT-BRIEF-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:project-brief@v4
+        artifact_type: confirmed-project-brief
+        version: 4
+        uri: game-pipeline/project-definition/project-brief.yaml
+        digest:
+          algorithm: sha256
+          value: df8deb810d8c06c8c2f5763031fde2c39f14aa81226e23ffb25636ee3f1eca0b
+      source_loop_id: null
+      bound_by_event_id: dc6c4971-6eb3-4552-b90e-c9ece385b486
+      bound_at: '2026-08-17T21:53:52.631422+08:00'
+    - input_slot_id: INPUT-ORG-001
+      artifact:
+        artifact_id: registry:veilfront-xiangqi-siege:organization@revision-2
+        artifact_type: approved-organization-snapshot
+        version: revision-2
+        uri: git:veilfront-xiangqi-siege:623a438#game-pipeline/organization/snapshot.yaml
+        digest:
+          algorithm: sha256
+          value: 9b193d9d99f7a541edc5aa5b285ee98127fb7684f4ee47e6b06c7c413a4c7fe9
+      source_loop_id: null
+      bound_by_event_id: c155c6f1-0a94-4772-93a1-52a4dea12300
+      bound_at: '2026-08-15T20:01:47.1921278+08:00'
+    - input_slot_id: INPUT-WORK-CTR-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:pipeline-contract@CTR-P1-001-v1
+        artifact_type: approved-pipeline-contract
+        version: 1
+        uri: game-pipeline/loops/contracts/CTR-P1-001-vertical-slice.yaml
+        digest:
+          algorithm: sha256
+          value: 189b691e6c60b0c5c7b069081ebe34e726ff038211d60a33084eee5638499014
+      source_loop_id: null
+      bound_by_event_id: 20ad323d-9a51-4380-8cc3-ae34c659dd26
+      bound_at: '2026-08-15T20:01:47.1921278+08:00'
     outputs:
-      - deliverable_id: DELIVERABLE-RULES-001
-        artifact:
-          artifact_id: artifact:veilfront-xiangqi-siege:rules-spec@prototype-v1
-          artifact_type: executable-rules-spec
-          version: owner-freeze-revision-3@69a2f81c3eed08c7e4d3051efd6a39b13cf105cf+coverage@413428b807602dc82008ae87cb087aca624073d9
-          uri: git-set:veilfront-xiangqi-siege:69a2f81c3eed08c7e4d3051efd6a39b13cf105cf+413428b807602dc82008ae87cb087aca624073d9#owner-freeze-rules-and-coverage
-          manifest_paths:
-            - docs/prototype/rules-spec-v1.md
-            - docs/prototype/settlement-order-v1.md
-            - docs/prototype/rules-test-coverage-matrix-v1.md
-          digest: {algorithm: sha256, value: 0c4dce1b83db4e023f366d9cd004e6f2f8989bea236fbf725dc4463c32579fed}
-        produced_in_iteration: 1
-        lifecycle_status: submitted
-        registered_by_event_id: 0e59d8e2-8f85-4f97-be38-e94a614c245b
-      - deliverable_id: DELIVERABLE-INFO-001
-        artifact:
-          artifact_id: artifact:veilfront-xiangqi-siege:iteration2-playtest-spec@v1
-          artifact_type: information-boundary-contract
-          version: iteration-2-scope-clarified@002bff459c0d13135d9be8d0a68d2f6ac2193f5a
-          uri: git:veilfront-xiangqi-siege:002bff459c0d13135d9be8d0a68d2f6ac2193f5a#docs/prototype/iteration2-playtest-graybox-spec.md
-          manifest_paths:
-          - docs/prototype/iteration2-playtest-graybox-spec.md
-          digest:
-            algorithm: sha256
-            value: c067fbc8662932a278ac142b13a9a92d22fb942cbb4a85c1a4b700da283b29bf
-        produced_in_iteration: 2
-        lifecycle_status: submitted_for_owner_playtest
-        registered_by_event_id: 4a11bdb2-ed0b-41e2-8601-757fb5efbd5f
-      - deliverable_id: DELIVERABLE-GODOT-001
-        artifact:
-          artifact_id: source:veilfront-xiangqi-siege:godot-prototype@gate1-iteration2
-          artifact_type: disposable-godot-prototype
-          version: iteration-2-three-ai-graybox@e5963e229c05557d668316531779e406cc9e801d
-          uri: git:veilfront-xiangqi-siege:e5963e229c05557d668316531779e406cc9e801d#disposable-playable-graybox
-          manifest_paths:
-          - docs/prototype/godot-artifact-map-v1.md
-          - scenes/prototype/board_shell.tscn
-          - scenes/prototype/gate1_logic_lab.tscn
-          - scenes/prototype/match_controller.tscn
-          - scenes/prototype/status_shell.tscn
-          - scripts/prototype/gate1_logic_lab.gd
-          - scripts/prototype/match_controller.gd
-          - scripts/prototype/view/player_view_projector.gd
-          - tests/prototype/run_all.gd
-          - tests/prototype/run_playtest_graybox.gd
-          digest:
-            algorithm: sha256
-            value: bac272bac3a127791e368b8bf62019b3b69a73c4f54c43463bbc7e9b05e31ffa
-        produced_in_iteration: 2
-        lifecycle_status: submitted_for_owner_playtest
-        registered_by_event_id: 418934eb-134d-4da8-a7ec-60ff6c19ed5c
-      - deliverable_id: DELIVERABLE-AI-001
-        artifact:
-          artifact_id: source:veilfront-xiangqi-siege:ai-prototype@gate1-iteration2
-          artifact_type: auditable-baseline-ai
-          version: iteration-2-easy-medium-hard@e5963e229c05557d668316531779e406cc9e801d
-          uri: git:veilfront-xiangqi-siege:e5963e229c05557d668316531779e406cc9e801d#three-difficulty-player-view-ai
-          manifest_paths:
-          - resources/prototype/ai/prototype_low_budget_hypothesis.tres
-          - resources/prototype/ai/prototype_default_hypothesis.tres
-          - resources/prototype/ai/prototype_high_budget_hypothesis.tres
-          - scripts/prototype/ai/ai_decision_engine.gd
-          - scripts/prototype/match_controller.gd
-          - tests/prototype/test_ai_difficulty_profiles.gd
-          - tests/prototype/run_ai_difficulty_seed_matrix.gd
-          digest:
-            algorithm: sha256
-            value: 27b9730a35dd4a2024f526ac41f3cd9b755cfffc18fbac6fc3e4e2e48dff0d4b
-        produced_in_iteration: 2
-        lifecycle_status: submitted_for_owner_playtest
-        registered_by_event_id: 12c4683a-2e5e-4c1e-8e1c-99ae7cd6b724
-      - deliverable_id: DELIVERABLE-QA-001
-        artifact:
-          artifact_id: artifact:veilfront-xiangqi-siege:gate1-evidence@iteration2-playtest
-          artifact_type: independent-gate-evidence
-          version: iteration-2-100-seed-scope@910a525
-          uri: git:veilfront-xiangqi-siege:910a525#iteration-2-independent-qa
-          manifest_paths:
-          - evidence/prototype/qa/iteration-2-independent-review.md
-          - evidence/prototype/qa/iteration-2-command-output.txt
-          - evidence/prototype/qa/iteration-2-ai-difficulty-seed-matrix-100x3.jsonl
-          - evidence/prototype/qa/iteration-2-ai-difficulty-seed-matrix-summary.json
-          - evidence/prototype/qa/iteration-2-rules-stress-100-seeds-round50.jsonl
-          - evidence/prototype/qa/iteration-2-rules-stress-100-seeds-round50-summary.json
-          - evidence/prototype/qa/iteration-2-spec-clarification-addendum.md
-          digest:
-            algorithm: sha256
-            value: 0b0a894ee1a6722ed0e00477317ab136f3fbb881373b0a17e1482b5b1c61fb57
-        produced_in_iteration: 2
-        lifecycle_status: submitted_for_owner_playtest
-        registered_by_event_id: 3331ea6d-93a2-4f4e-a846-8a94ac9a9532
-      - deliverable_id: DELIVERABLE-GATE1-001
-        artifact:
-          artifact_id: artifact:veilfront-xiangqi-siege:gate1-decision-package@v1
-          artifact_type: human-decision-package
-          version: awaiting-human@sha256:d24207e5e53509d09374e3870df744c21090554f77ad819f0e61a4aa6f2d54fd
-          uri: game-pipeline/loops/evidence/GATE-1-decision-package.md
-          manifest_paths:
-          - game-pipeline/loops/evidence/GATE-1-decision-package.md
-          digest:
-            algorithm: sha256
-            value: d24207e5e53509d09374e3870df744c21090554f77ad819f0e61a4aa6f2d54fd
-        produced_in_iteration: 1
-        lifecycle_status: submitted
-        registered_by_event_id: 1ce93009-3d8e-48e1-a893-557ded2deb26
+    - deliverable_id: DELIVERABLE-RULES-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:rules-spec@prototype-v1
+        artifact_type: executable-rules-spec
+        version: owner-freeze-revision-3@69a2f81c3eed08c7e4d3051efd6a39b13cf105cf+coverage@413428b807602dc82008ae87cb087aca624073d9
+        uri: git-set:veilfront-xiangqi-siege:69a2f81c3eed08c7e4d3051efd6a39b13cf105cf+413428b807602dc82008ae87cb087aca624073d9#owner-freeze-rules-and-coverage
+        manifest_paths:
+        - docs/prototype/rules-spec-v1.md
+        - docs/prototype/settlement-order-v1.md
+        - docs/prototype/rules-test-coverage-matrix-v1.md
+        digest:
+          algorithm: sha256
+          value: 0c4dce1b83db4e023f366d9cd004e6f2f8989bea236fbf725dc4463c32579fed
+      produced_in_iteration: 1
+      lifecycle_status: submitted
+      registered_by_event_id: 0e59d8e2-8f85-4f97-be38-e94a614c245b
+    - deliverable_id: DELIVERABLE-INFO-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:iteration2-playtest-spec@v1
+        artifact_type: information-boundary-contract
+        version: iteration-2-scope-clarified@002bff459c0d13135d9be8d0a68d2f6ac2193f5a
+        uri: git:veilfront-xiangqi-siege:002bff459c0d13135d9be8d0a68d2f6ac2193f5a#docs/prototype/iteration2-playtest-graybox-spec.md
+        manifest_paths:
+        - docs/prototype/iteration2-playtest-graybox-spec.md
+        digest:
+          algorithm: sha256
+          value: c067fbc8662932a278ac142b13a9a92d22fb942cbb4a85c1a4b700da283b29bf
+      produced_in_iteration: 2
+      lifecycle_status: submitted_for_owner_playtest
+      registered_by_event_id: 4a11bdb2-ed0b-41e2-8601-757fb5efbd5f
+    - deliverable_id: DELIVERABLE-GODOT-001
+      artifact:
+        artifact_id: source:veilfront-xiangqi-siege:godot-prototype@gate1-iteration2
+        artifact_type: disposable-godot-prototype
+        version: iteration-2-three-ai-graybox@e5963e229c05557d668316531779e406cc9e801d
+        uri: git:veilfront-xiangqi-siege:e5963e229c05557d668316531779e406cc9e801d#disposable-playable-graybox
+        manifest_paths:
+        - docs/prototype/godot-artifact-map-v1.md
+        - scenes/prototype/board_shell.tscn
+        - scenes/prototype/gate1_logic_lab.tscn
+        - scenes/prototype/match_controller.tscn
+        - scenes/prototype/status_shell.tscn
+        - scripts/prototype/gate1_logic_lab.gd
+        - scripts/prototype/match_controller.gd
+        - scripts/prototype/view/player_view_projector.gd
+        - tests/prototype/run_all.gd
+        - tests/prototype/run_playtest_graybox.gd
+        digest:
+          algorithm: sha256
+          value: bac272bac3a127791e368b8bf62019b3b69a73c4f54c43463bbc7e9b05e31ffa
+      produced_in_iteration: 2
+      lifecycle_status: submitted_for_owner_playtest
+      registered_by_event_id: 418934eb-134d-4da8-a7ec-60ff6c19ed5c
+    - deliverable_id: DELIVERABLE-AI-001
+      artifact:
+        artifact_id: source:veilfront-xiangqi-siege:ai-prototype@gate1-iteration2
+        artifact_type: auditable-baseline-ai
+        version: iteration-2-easy-medium-hard@e5963e229c05557d668316531779e406cc9e801d
+        uri: git:veilfront-xiangqi-siege:e5963e229c05557d668316531779e406cc9e801d#three-difficulty-player-view-ai
+        manifest_paths:
+        - resources/prototype/ai/prototype_low_budget_hypothesis.tres
+        - resources/prototype/ai/prototype_default_hypothesis.tres
+        - resources/prototype/ai/prototype_high_budget_hypothesis.tres
+        - scripts/prototype/ai/ai_decision_engine.gd
+        - scripts/prototype/match_controller.gd
+        - tests/prototype/test_ai_difficulty_profiles.gd
+        - tests/prototype/run_ai_difficulty_seed_matrix.gd
+        digest:
+          algorithm: sha256
+          value: 27b9730a35dd4a2024f526ac41f3cd9b755cfffc18fbac6fc3e4e2e48dff0d4b
+      produced_in_iteration: 2
+      lifecycle_status: submitted_for_owner_playtest
+      registered_by_event_id: 12c4683a-2e5e-4c1e-8e1c-99ae7cd6b724
+    - deliverable_id: DELIVERABLE-QA-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:gate1-evidence@iteration2-playtest
+        artifact_type: independent-gate-evidence
+        version: iteration-2-100-seed-scope@910a525
+        uri: git:veilfront-xiangqi-siege:910a525#iteration-2-independent-qa
+        manifest_paths:
+        - evidence/prototype/qa/iteration-2-independent-review.md
+        - evidence/prototype/qa/iteration-2-command-output.txt
+        - evidence/prototype/qa/iteration-2-ai-difficulty-seed-matrix-100x3.jsonl
+        - evidence/prototype/qa/iteration-2-ai-difficulty-seed-matrix-summary.json
+        - evidence/prototype/qa/iteration-2-rules-stress-100-seeds-round50.jsonl
+        - evidence/prototype/qa/iteration-2-rules-stress-100-seeds-round50-summary.json
+        - evidence/prototype/qa/iteration-2-spec-clarification-addendum.md
+        digest:
+          algorithm: sha256
+          value: 0b0a894ee1a6722ed0e00477317ab136f3fbb881373b0a17e1482b5b1c61fb57
+      produced_in_iteration: 2
+      lifecycle_status: submitted_for_owner_playtest
+      registered_by_event_id: 3331ea6d-93a2-4f4e-a846-8a94ac9a9532
+    - deliverable_id: DELIVERABLE-GATE1-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:gate1-decision-package@v1
+        artifact_type: human-decision-package
+        version: awaiting-human@sha256:d24207e5e53509d09374e3870df744c21090554f77ad819f0e61a4aa6f2d54fd
+        uri: game-pipeline/loops/evidence/GATE-1-decision-package.md
+        manifest_paths:
+        - game-pipeline/loops/evidence/GATE-1-decision-package.md
+        digest:
+          algorithm: sha256
+          value: d24207e5e53509d09374e3870df744c21090554f77ad819f0e61a4aa6f2d54fd
+      produced_in_iteration: 1
+      lifecycle_status: submitted
+      registered_by_event_id: 1ce93009-3d8e-48e1-a893-557ded2deb26
   acceptance_snapshot:
     subject_digest: 723e0eb563d682f803dbd2f8e87afbcf54d668fa2dbf7fc1d598c43c5422d938
     automated_checks:
@@ -516,7 +541,6 @@ registry_snapshot:
     final_handoff_ref: null
   interruption: null
   pending_approvals: []
-
 storage_contract:
   authoritative_history: event_history
   snapshot_role: 可由完整事件历史重建的当前物化视图
@@ -524,10 +548,11 @@ storage_contract:
   transaction_rule: 一个 mutation_id 对应恰好一个 Event；Event 追加和 Snapshot 更新必须原子完成。
   registration_baseline: Snapshot 首次持久化必须与 sequence=1 的 core.loop_registered 同时完成，record_revision=1。
   topology_rules:
-    - parent_loop_id 与 dependency.target_loop_id 不得等于当前 loop_instance_id。
-    - 父 Loop 图必须无环；不在父 Snapshot 中重复保存 child_loop_ids。
-    - 同一依赖关系不得重复；所有 blocking=true 的依赖图必须无环。
-
+  - parent_loop_id 与 dependency.target_loop_id 不得等于当前 loop_instance_id。
+  - 父 Loop 图必须无环；不在父 Snapshot 中重复保存 child_loop_ids。
+  - 同一依赖关系不得重复；所有 blocking=true 的依赖图必须无环。
 field_examples:
-  input_binding: {input_slot_id: INPUT-001}
-  output_registration: {deliverable_id: DELIVERABLE-001}
+  input_binding:
+    input_slot_id: INPUT-001
+  output_registration:
+    deliverable_id: DELIVERABLE-001

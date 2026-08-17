@@ -3,7 +3,7 @@ project_brief:
   identity:
     brief_id: brief:veilfront-xiangqi-siege:initial
     project_id: veilfront-xiangqi-siege
-    version: 3
+    version: 4
   coordination:
     project_owner: project-owner
     coordinator_role_id: AGT-DIR
@@ -40,6 +40,11 @@ project_brief:
     version_or_digest: owner-clarification:2026-08-16:pawn-2-5-and-ai-diversity
     supplied_by: project-owner
     authority: project.direction.input
+  - source_id: source:veilfront-xiangqi-siege:owner-rule-revision-5
+    uri: codex-thread://current#owner-rule-revision-5
+    version_or_digest: owner-clarification:2026-08-17:intersection-fog-casualty-advisor-ui
+    supplied_by: project-owner
+    authority: project.direction.input
   statements:
   - statement_id: stmt:veilfront-xiangqi-siege:project-goal
     domain: project-goal
@@ -50,7 +55,7 @@ project_brief:
     - source:veilfront-xiangqi-siege:owner-planning-conversation
   - statement_id: stmt:veilfront-xiangqi-siege:project-name
     domain: project-goal
-    text: "正式项目名为《雾疆：九路烽棋》，英文名为 Veilfront: Xiangqi Siege，日常简称可使用‘雾疆 / Veilfront’。"
+    text: '正式项目名为《雾疆：九路烽棋》，英文名为 Veilfront: Xiangqi Siege，日常简称可使用‘雾疆 / Veilfront’。'
     status: confirmed
     decision_owner: project-owner
     source_refs:
@@ -58,12 +63,13 @@ project_brief:
     - source:veilfront-xiangqi-siege:owner-planning-conversation
   - statement_id: stmt:veilfront-xiangqi-siege:board-and-fog
     domain: gameplay
-    text: 棋盘为24×9格，红方大本营Y=1～3、缓冲区Y=4～8，中央战区Y=9～16，黑方缓冲区Y=17～21、大本营Y=22～24；两条城墙分别位于Y=3/4与Y=21/22边界，兵卒初始格就在墙外第一线。项目取消楚河汉界与河界概念，除将帅和士受九宫限制外，其他棋子可在全棋盘行动。开局除己方大本营外均受战争迷雾影响，普通棋子以当前位置为中心提供3×3动态视野，移动后旧区域重新进入迷雾。
+    text: 棋盘采用中国象棋式24×9交点坐标，棋子落在点线上而不是格子中心；红方大本营Y=1～3、缓冲区Y=4～8，中央战区Y=9～16，黑方缓冲区Y=17～21、大本营Y=22～24。红墙为Y=4点线、黑墙为Y=21点线，兵卒初始点就在各自城墙线上。项目取消楚河汉界与河界概念，除将帅和士受九宫限制外，其他棋子可在全棋盘行动。开局除己方大本营外均受战争迷雾影响，普通棋子以当前位置为中心提供3×3动态视野，移动后旧区域重新进入迷雾。
     status: confirmed
     decision_owner: project-owner
     source_refs:
     - source:veilfront-xiangqi-siege:owner-planning-conversation
     - source:veilfront-xiangqi-siege:owner-rules-revision
+    - source:veilfront-xiangqi-siege:owner-rule-revision-5
   - statement_id: stmt:veilfront-xiangqi-siege:phase-gameplay
     domain: gameplay
     text: 双方城墙状态独立结算。除炮的区域轰炸外，所有特殊规则仅在两个缓冲区与中央战区内生效，且一次特殊行动的起点、经过格和终点必须全部位于该区域；任意大本营内的棋子使用默认象棋规则。炮是唯一例外，位于己方大本营且敌方城墙完整时仍可对缓冲区和战区实施3×3范围随机三格轰炸。
@@ -74,13 +80,14 @@ project_brief:
     - source:veilfront-xiangqi-siege:owner-rules-revision
   - statement_id: stmt:veilfront-xiangqi-siege:horse-elephant-rules
     domain: gameplay
-    text: 马与相象可在全棋盘行动，但无视蹩马腿、无视堵象眼、隐身和相视野只在敌方城墙完整且行动完全发生于Y=4～21时生效；在任意大本营内，马受到蹩马腿限制，相象受到堵象眼限制。相象合资格移动后的视野为起点中心3×3、起终点组成的田字格九点与终点中心3×3的并集；田字格九点仅阻挡敌方车从格外进入或穿过，使其停在路径首个交点，己方车不受影响，已在格内的敌车下一次可正常离开。敌方城墙倒塌后，两者恢复默认限制并移除特殊能力。
+    text: 马与相象可在全棋盘行动，但无视蹩马腿、无视堵象眼、隐身和相视野只在敌方城墙完整且行动完全发生于Y=4～21时生效；在任意大本营内，马受到蹩马腿限制，相象受到堵象眼限制。相象合资格移动后的视野为起点中心3×3、起终点组成的田字格九点与终点中心3×3的并集；田字格九点仅阻挡敌方车与敌方兵卒从格外进入或穿过，使其停在路径首个交点，己方车与兵卒不受影响，已在格内的受阻棋子下一次可正常离开。敌方城墙倒塌后，两者恢复默认限制并移除特殊能力。
     status: confirmed
     decision_owner: project-owner
     source_refs:
     - source:veilfront-xiangqi-siege:owner-planning-conversation
     - source:veilfront-xiangqi-siege:owner-rules-revision
     - source:veilfront-xiangqi-siege:owner-rules-finalization
+    - source:veilfront-xiangqi-siege:owner-rule-revision-5
   - statement_id: stmt:veilfront-xiangqi-siege:cannon-rules
     domain: gameplay
     text: 炮的区域轰炸属于不需要炮架、不会移动炮的特殊行动；每门炮初始拥有两发区域轰炸弹药，没有冷却，允许友军伤害，弹药消耗后不恢复。轰炸中心的完整3×3九格范围必须全部位于两个缓冲区和战区（Y=4～21），再从九格内随机抽取三个不同伤害格。炮的常规移动与精确吃子继续遵守传统象棋规则，精确吃子必须隔一枚炮架并移动至目标格。区域轰炸与常规行动互斥。
@@ -92,44 +99,56 @@ project_brief:
     - source:veilfront-xiangqi-siege:owner-rules-finalization
   - statement_id: stmt:veilfront-xiangqi-siege:rook-rules
     domain: gameplay
-    text: 当敌方城墙完整且整段行动位于两个缓冲区或战区时，车可以穿过并按从起点到终点的路径顺序依次消灭全部敌方棋子，但不能穿过己方棋子；不再触发任何被动士替死，若将帅实际死亡则立即以最高优先级结束游戏，不再处理路径上的后续目标。本次移动路径形成特殊视野，持续到该车下一次移动开始。车从有效敌方相田字格外进入或穿过时停在首个交点；己方相不阻挡己方车，从田字格内离开不再次触发。
+    text: 当敌方城墙完整且整段行动位于两个缓冲区或战区时，车可以穿过并按从起点到终点的路径顺序依次消灭全部敌方棋子，但不能穿过己方棋子；不再触发任何被动士替死，若将帅实际死亡则立即以最高优先级结束游戏，不再处理路径上的后续目标。本次移动路径形成特殊视野，持续到该车下一次移动开始。车从有效敌方相田字格外进入或穿过时停在首个交点；己方相不阻挡己方车，从田字格内离开不再次触发。普通车的路径首次接触未显形敌马时，在接触点吃掉该马并停止，不能让隐身马造成无反馈的阻挡或行动失败。
     status: confirmed
     decision_owner: project-owner
     source_refs:
     - source:veilfront-xiangqi-siege:owner-rules-revision
     - source:veilfront-xiangqi-siege:owner-rules-finalization
+    - source:veilfront-xiangqi-siege:owner-rule-revision-5
   - statement_id: stmt:veilfront-xiangqi-siege:pawn-rules
     domain: gameplay
-    text: 项目取消兵卒的过河判定，兵卒默认始终按已过河状态，可向前、左或右移动一格并吃掉终点敌棋。在敌方城墙完整且整段行动位于两个缓冲区或战区时，兵卒可改为横竖行军2至5格并穿过一枚或多枚敌方棋子，但不能穿过己方棋子、不能停在被占用格，穿越不会造成伤害或吃子；该长距离行动不打开路径视野，只按移动前起点与抵达后终点的普通动态视野投影。
+    text: 项目取消兵卒的过河判定，兵卒默认始终按已过河状态，可向前、左或右移动一格并吃掉终点敌棋。在敌方城墙完整且整段行动位于两个缓冲区或战区时，兵卒可改为横竖行军2至5格并穿过一枚或多枚敌方棋子，但不能穿过己方棋子、不能停在被占用格，穿越不会造成伤害或吃子；该长距离行动不打开路径视野，只按移动前起点与抵达后终点的普通动态视野投影。敌兵卒从有效相田字格外进入或穿过时与敌车相同，只移动到路径首个交点；己方相不阻挡己方兵卒。
     status: confirmed
     decision_owner: project-owner
     source_refs:
     - source:veilfront-xiangqi-siege:owner-rules-revision
     - source:veilfront-xiangqi-siege:owner-pawn-ai-clarification
+    - source:veilfront-xiangqi-siege:owner-rule-revision-5
   - statement_id: stmt:veilfront-xiangqi-siege:wall-cycle
     domain: gameplay
-    text: 完整城墙阻挡敌方棋子从缓冲区进入大本营；至少3枚敌方棋子同时进入缓冲区时城墙倒塌。缓冲区与大本营内敌军少于3枚并持续一个完整回合后城墙恢复；恢复时只将大本营内入侵棋子随机撤回各自大本营空格，清除位置关联临时状态但不恢复已消耗的永久资源，也不附加行动惩罚。
+    text: 完整城墙阻挡敌方棋子踏入或跨越守方城墙点线；红方敌棋最多到Y=5、黑方敌棋最多到Y=20，墙倒塌或修复中才可进入红Y=4或黑Y=21及其后的守方区域。至少3枚敌方棋子同时进入缓冲区时城墙倒塌。缓冲区与大本营内敌军少于3枚并持续一个完整回合后城墙恢复；恢复时只将大本营内入侵棋子随机撤回各自大本营空点，清除位置关联临时状态但不恢复已消耗的永久资源，也不附加行动惩罚。
     status: confirmed
     decision_owner: project-owner
     source_refs:
     - source:veilfront-xiangqi-siege:owner-planning-conversation
+    - source:veilfront-xiangqi-siege:owner-rule-revision-5
   - statement_id: stmt:veilfront-xiangqi-siege:victory-and-flags
     domain: gameplay
-    text: 三个单格旗帜在完整战区X=1～9、Y=9～16内随机生成三个不同格，旗帜位置永不进入PlayerView、AI输入或LAN下行，规则种子也不得下发到可反推旗位的客户端。棋子踏入隐藏旗后立即公开“红方/黑方正在夺旗(1/3)”，之后按对方行动机会推进，完成时只公开“红方/黑方成功夺得一面旗帜”，始终不公开具体位置；同时占领三旗立即获胜。
+    text: 三面单点旗帜在完整战区X=1～9、Y=9～16内随机生成于三个不同点，并受正常迷雾视野影响。旗帜首次进入某方视野时向该方显示并写入永久发现记忆，此后即使重新入雾也在该方地图保留旗帜图标；未发现方的PlayerView、AI输入和LAN下行不含坐标，规则种子也不得下发到可反推未发现旗位的客户端。棋子踏入可占旗点后公开“红方/黑方正在夺旗(n/3)”，完成时公开“红方/黑方成功夺得一面旗帜”；这些进度消息本身不向尚未发现该旗的一方公开位置。同时占领三旗立即获胜。
     status: confirmed
     decision_owner: project-owner
     source_refs:
     - source:veilfront-xiangqi-siege:owner-planning-conversation
     - source:veilfront-xiangqi-siege:owner-rules-revision
     - source:veilfront-xiangqi-siege:owner-rules-finalization
+    - source:veilfront-xiangqi-siege:owner-rule-revision-5
   - statement_id: stmt:veilfront-xiangqi-siege:piece-rescue
     domain: gameplay
-    text: 取消最先两次阵亡强制士替死。活着且在场的士可以主动消耗一次行动，以自己阵亡为代价，从己方阵亡区随机选择一枚非士、非帅/将棋子，随机复活到己方大本营空格；阵亡士与帅/将明确不进入随机池，无合资格目标或牺牲后仍无空格时动作非法。复活不会恢复已经消耗的弹药、技能次数或永久资源。
+    text: 取消最先两次阵亡强制士替死。活着且在场的士可以主动选择并确认献祭复活，也可在提交前取消；提交后消耗一次行动并以自己阵亡为代价，从己方公开阵亡记录中随机选择一枚非士、非帅/将棋子，随机复活到己方大本营空点。所有阵亡士和帅/将都会进入公开阵亡记录，但明确不属于复活随机候选池；无合资格目标或牺牲后仍无空点时动作非法。复活不会恢复已经消耗的弹药、技能次数或永久资源。
     status: confirmed
     decision_owner: project-owner
     source_refs:
     - source:veilfront-xiangqi-siege:owner-planning-conversation
     - source:veilfront-xiangqi-siege:owner-rules-finalization
+    - source:veilfront-xiangqi-siege:owner-rule-revision-5
+  - statement_id: stmt:veilfront-xiangqi-siege:casualty-and-memory
+    domain: gameplay
+    text: 任何原因造成的阵亡，包括吃子、车路径接触、炮击、主动献祭和将帅实际死亡，都先登记到所属方阵亡记录；双方PlayerView同步公开双方完整阵亡记录，复活棋子立即移出。只有被吃的棋子会在原交点为阵亡方留下不影响规则和高亮的半透明虚影，持续到对方下一次行动完成后消失；炮击与主动献祭不生成虚影。公开阵亡记录不等于士复活随机池，阵亡士与帅/将仍被排除。
+    status: confirmed
+    decision_owner: project-owner
+    source_refs:
+    - source:veilfront-xiangqi-siege:owner-rule-revision-5
   - statement_id: stmt:veilfront-xiangqi-siege:general-capture-rules
     domain: gameplay
     text: 项目完全取消将军、应将、将死、将帅照面限制与飞将规则；将帅可以进入敌方攻击范围，只有将帅被实际吃掉时才触发所属方失败，且该结果在同一结算窗口内具有最高优先级。
@@ -139,11 +158,12 @@ project_brief:
     - source:veilfront-xiangqi-siege:owner-rules-finalization
   - statement_id: stmt:veilfront-xiangqi-siege:presentation
     domain: art-direction
-    text: 24×9棋盘采用局部主战场视图与受战争迷雾约束的鸟瞰战术小地图；主视图应完整呈现九路宽度并沿24线长轴移动，普通行动与炮击最终确认均在主棋盘完成。
+    text: 24×9交点棋盘采用局部主战场视图与受战争迷雾约束的鸟瞰战术小地图；主视图完整呈现九路宽度并沿24线长轴移动，棋盘格保持正方形。红黑双方界面都令己方大本营位于底部，黑方仅做180°显示镜像，不改变权威坐标与行动语义。区域只用明亮底色色块和不越界的大字“大本营/缓冲区/战区”区分，不使用额外区域分割线；城墙点线单独加粗。迷雾用黑色半透明蒙版覆盖底色，可见内容穿透蒙版。车移动路径与相田字侦察/阻挡范围分别沿棋盘线绘制专属高亮边框。未选棋时右键可在交点放置圆、叉或方形的玩家私有标记；已选棋时首次右键只取消选择，再次右键才进入标记，标记不影响正常高亮。普通行动、炮击和士献祭最终确认均在主棋盘完成，所有待确认行动支持取消。
     status: confirmed
     decision_owner: project-owner
     source_refs:
     - source:veilfront-xiangqi-siege:owner-planning-conversation
+    - source:veilfront-xiangqi-siege:owner-rule-revision-5
   - statement_id: stmt:veilfront-xiangqi-siege:visual-direction
     domain: art-direction
     text: 世界观确认为中国古代架空背景，同时存在朝代体系与修仙体系；美术路线冻结为90° top-down 2D俯视、角色化单位、东方战争奇幻、回合制迷雾战术象棋。首个P0里程碑先完成不依赖正式美术即可完整运行的纯逻辑原型，再进入视觉制作；具体资产精度、色彩语言、角色比例、动画与音频仍由后续美术基线细化。
@@ -313,10 +333,10 @@ project_brief:
     blocker_refs: []
   review:
     status: confirmed
-    approval_id: approval:veilfront-xiangqi-siege:project-brief:b8328fd2305e
+    approval_id: approval:veilfront-xiangqi-siege:project-brief:df8deb810d8c
     confirmed_by: project-owner
-    confirmed_at: '2026-08-16T21:02:06.7133897+08:00'
+    confirmed_at: '2026-08-17T21:53:52.382912+08:00'
   integrity:
     canonicalization: project-brief-subject-canonical-json-v1
     digest_algorithm: sha256
-    subject_digest: b8328fd2305e90d26c7854b7a9335c54c9e6647ae049e462780132edce44ea28
+    subject_digest: df8deb810d8c06c8c2f5763031fde2c39f14aa81226e23ffb25636ee3f1eca0b

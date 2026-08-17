@@ -2313,3 +2313,90 @@ event_history:
       digest_algorithm: sha256
       previous_event_digest: cc95e540af4e5e51c152baa51343522a5bb751e538b111226d037caf5aa990aa
       event_digest: 0a5ed88c5fc0699fdec4d54a531b19b29f00bf5a6ec282b49e4e54225e994f2f
+
+  - schema_version: '0.1'
+    event_id: 75657a70-6b74-4804-835c-24b1afe3835f
+    mutation_id: 48209352-3c47-42d5-8182-6ad1a8e2022d
+    loop_instance_id: 4cbb03b6-dd5a-41c5-a624-895c4b884bcb
+    sequence: 51
+    event_type: core.contract_migrated
+    occurred_at: '2026-08-17T21:53:52.630890+08:00'
+    recorded_at: '2026-08-17T21:53:52.630890+08:00'
+    actor:
+      actor_id: inst:01M02M6X3Q8YWJXHY52K3V5AR2
+      role: pos:veilfront-xiangqi-siege:root:project-manager
+      authority_id: AUTH-VEILFRONT-PROJECT-MANAGER
+    causality:
+      correlation_id: f00c6270-d198-433f-912b-2949a6037bd3
+      causation_event_id: cdbd7d08-a290-427d-8d76-86a7c23ec429
+      request_id: approval:veilfront-xiangqi-siege:loop-contract:d88d9017bb30
+    concurrency:
+      expected_record_revision: 50
+      resulting_record_revision: 51
+    binding_snapshot:
+      contract_digest: a0da0eec9d6d9513dd111d406c1165bc64d3b84ce1aa1ac430a2c95c10179e6a
+      state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+    payload:
+      contract_before:
+        contract_id: LOOP-CTR-GATE1-VERTICAL-SLICE-001
+        contract_version: 4
+        contract_digest: a0da0eec9d6d9513dd111d406c1165bc64d3b84ce1aa1ac430a2c95c10179e6a
+      contract_after:
+        contract_id: LOOP-CTR-GATE1-VERTICAL-SLICE-001
+        contract_version: 5
+        contract_digest: d88d9017bb30437ac480e0fcf4f7b262b5ae6b3427447946e50ec37a5d3b44ca
+      migration_check_ref: game-pipeline/loops/evidence/OWNER-RULE-REVISION-5-contract-v5-migration-check.md@sha256:9ae69ea314aa103643393d44520cc3f16fdf4f5869bd74632e1c20d1a817f5f1
+      approval_id: approval:veilfront-xiangqi-siege:loop-contract:d88d9017bb30
+    evidence_refs:
+    - game-pipeline/approvals/loop-contract-v5-d88d9017bb30.yaml
+    - game-pipeline/loops/contracts/loop-contract-gate1-vertical-slice-v5.yaml@sha256:e947da55d88636bd09c0e72714573ca1b31e562ea89e83637d042aa284be7f5a
+    - game-pipeline/loops/evidence/OWNER-RULE-REVISION-5-contract-v5-migration-check.md@sha256:9ae69ea314aa103643393d44520cc3f16fdf4f5869bd74632e1c20d1a817f5f1
+    - codex-thread://current#owner-rule-revision-5
+    integrity:
+      canonicalization: registry-event-canonical-json-v1
+      digest_algorithm: sha256
+      previous_event_digest: 0a5ed88c5fc0699fdec4d54a531b19b29f00bf5a6ec282b49e4e54225e994f2f
+      event_digest: b81c48206905d6f40a5cd4c9aa8f0ad50d33347732431b8e0d67a0a41118d0a6
+
+  - schema_version: '0.1'
+    event_id: dc6c4971-6eb3-4552-b90e-c9ece385b486
+    mutation_id: 00409770-5919-4eec-aaf9-5a4f3881af9b
+    loop_instance_id: 4cbb03b6-dd5a-41c5-a624-895c4b884bcb
+    sequence: 52
+    event_type: core.input_bound
+    occurred_at: '2026-08-17T21:53:52.631422+08:00'
+    recorded_at: '2026-08-17T21:53:52.631422+08:00'
+    actor:
+      actor_id: inst:01M02M6X3Q8YWJXHY52K3V5AR2
+      role: pos:veilfront-xiangqi-siege:root:project-manager
+      authority_id: AUTH-VEILFRONT-PROJECT-MANAGER
+    causality:
+      correlation_id: b602d59f-b517-4de7-9dec-817458e8339a
+      causation_event_id: 75657a70-6b74-4804-835c-24b1afe3835f
+      request_id: approval:veilfront-xiangqi-siege:project-brief:df8deb810d8c
+    concurrency:
+      expected_record_revision: 51
+      resulting_record_revision: 52
+    binding_snapshot:
+      contract_digest: d88d9017bb30437ac480e0fcf4f7b262b5ae6b3427447946e50ec37a5d3b44ca
+      state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+    payload:
+      input_slot_id: INPUT-BRIEF-001
+      before:
+        artifact_id: artifact:veilfront-xiangqi-siege:project-brief@v2
+        version: 2
+        uri: game-pipeline/project-definition/project-brief.yaml
+        digest: 3cb9affedc6173dbe58ad9c630e0261c99eba706815f8d8fa9870f506b2f2599
+      after:
+        artifact_id: artifact:veilfront-xiangqi-siege:project-brief@v4
+        version: 4
+        uri: game-pipeline/project-definition/project-brief.yaml
+        digest: df8deb810d8c06c8c2f5763031fde2c39f14aa81226e23ffb25636ee3f1eca0b
+    evidence_refs:
+    - game-pipeline/approvals/project-brief-v4-df8deb810d8c.yaml
+    - codex-thread://current#owner-rule-revision-5
+    integrity:
+      canonicalization: registry-event-canonical-json-v1
+      digest_algorithm: sha256
+      previous_event_digest: b81c48206905d6f40a5cd4c9aa8f0ad50d33347732431b8e0d67a0a41118d0a6
+      event_digest: 90e36ddc971a9f949911352969cdc69208e416fec018c2f54684a4078cd16875

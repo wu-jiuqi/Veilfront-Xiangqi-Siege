@@ -1,0 +1,20 @@
+approval:
+  schema_version: game-production-approval/v1
+  approval_id: approval:veilfront-xiangqi-siege:project-brief:df8deb810d8c
+  subject_kind: project-brief
+  subject_id: brief:veilfront-xiangqi-siege:initial
+  subject_digest: df8deb810d8c06c8c2f5763031fde2c39f14aa81226e23ffb25636ee3f1eca0b
+  decision: approved
+  decided_by: project-owner
+  decided_at: '2026-08-17T21:53:52.382912+08:00'
+  evidence:
+    source_refs:
+    - codex-thread://current#owner-rule-revision-5
+  authorized_action:
+    summary: 确认 revision 5 的交点棋盘、迷雾旗帜记忆、公开阵亡记录、士献祭、相阻挡与试玩表现边界。
+    gate_1_decision: not_made
+  application:
+    materialized_path: game-pipeline/project-definition/project-brief.yaml
+    materialized_status: confirmed
+    materialized_digest: 3fa4f6accefb2bb89daa4324796e10aecad7d3a0889d256dafe7d0c1f30736ca
+    applied_at: '2026-08-17T21:53:52.382912+08:00'
