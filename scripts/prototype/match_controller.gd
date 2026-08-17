@@ -176,7 +176,13 @@ func step_ai() -> Dictionary:
 	})
 	if not bool(result.get("consumed", false)):
 		return {"ok": false, "consumed": false, "error": "ai_intent_not_consumed"}
-	_update_ai_memory(ai_player_view, selected_id, str(decision.get("action", {}).get("actor_id", "")))
+	_update_ai_memory(
+		ai_player_view,
+		selected_id,
+		str(decision.get("action", {}).get("actor_id", "")),
+		projection,
+		decision.get("action", {})
+	)
 	_prepared_token = ""
 	_prepare_active_action()
 	_publish_human_view()
@@ -268,13 +274,17 @@ func _empty_ai_memory() -> Dictionary:
 		"action_visit_counts": {},
 		"actor_visit_counts": {},
 		"last_visible_piece_turns": {},
+		"enemy_piece_observations": {},
+		"known_captured_enemy_ids": [],
 	}
 
 
 func _update_ai_memory(
 	ai_player_view: Dictionary,
 	selected_action_id: String,
-	selected_actor_id: String
+	selected_actor_id: String,
+	projection: Dictionary,
+	selected_action: Dictionary
 ) -> void:
 	_ai_memory["recent_action_ids"].append(selected_action_id)
 	if _ai_memory["recent_action_ids"].size() > 8:
@@ -289,3 +299,19 @@ func _update_ai_memory(
 	for piece: Dictionary in ai_player_view["pieces"]:
 		if piece["side"] != ai_player_view["viewer_side"]:
 			_ai_memory["last_visible_piece_turns"][str(piece["id"])] = int(ai_player_view["action_index"])
+	for piece: Dictionary in projection.get("visible_pieces", []):
+		if str(piece.get("side", "")) == str(projection.get("viewer_side", "")):
+			continue
+		_ai_memory["enemy_piece_observations"][str(piece["id"])] = {
+			"piece_type": str(piece["piece_type"]),
+			"position": piece["position"].duplicate(),
+			"turn_index": int(projection.get("turn_index", 0)),
+		}
+	for capture: Dictionary in selected_action.get("visible_captures", []):
+		var captured_id: String = str(capture.get("piece_id", ""))
+		if captured_id.is_empty():
+			continue
+		if captured_id not in _ai_memory["known_captured_enemy_ids"]:
+			_ai_memory["known_captured_enemy_ids"].append(captured_id)
+		_ai_memory["enemy_piece_observations"].erase(captured_id)
+	_ai_memory["known_captured_enemy_ids"].sort()

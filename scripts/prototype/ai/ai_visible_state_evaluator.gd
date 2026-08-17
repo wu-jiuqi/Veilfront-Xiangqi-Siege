@@ -33,6 +33,13 @@ static func evaluate(
 		projected_pieces, viewer_side, walls
 	).get("attackers", 0))
 	var general_after: int = -general_attackers_after * int(config.general_safety_penalty)
+	var enemy_side: String = _opponent(viewer_side)
+	var enemy_general_attackers_before: int = int(_general_attack_context(
+		original_pieces, enemy_side, walls
+	).get("attackers", 0))
+	var enemy_general_attackers_after: int = int(_general_attack_context(
+		projected_pieces, enemy_side, walls
+	).get("attackers", 0))
 	var flag_before: int = int(baseline.flag_control)
 	var flag_after: int = _projected_flag_score(action, player_data, viewer_side, config)
 	var wall_before: int = int(baseline.wall_state)
@@ -69,7 +76,12 @@ static func evaluate(
 	)
 	var vision_after: int = mini(
 		int(action.get("reveal_cell_count", 0)), int(config.vision_cell_cap)
-	) * int(config.reveal_weight)
+	) * int(config.reveal_weight) \
+		+ int(action.get("flag_vicinity_reveal_count", 0)) * int(config.flag_vision_weight)
+	var enemy_general_threat_before: int = enemy_general_attackers_before \
+		* int(config.enemy_general_attack_priority)
+	var enemy_general_threat_after: int = enemy_general_attackers_after \
+		* int(config.enemy_general_attack_priority)
 	var score_pairs: Dictionary = {
 		"material": [material_before, material_after],
 		"general_safety": [general_before, general_after],
@@ -78,7 +90,10 @@ static func evaluate(
 		"territory": [territory_before, territory_after],
 		"mobility": [mobility_before, mobility_after],
 		"vision": [0, vision_after],
-		"threat": [int(original_actor_context.get("score", 0)), int(projected_actor_context.get("score", 0))],
+		"threat": [
+			int(original_actor_context.get("score", 0)) + enemy_general_threat_before,
+			int(projected_actor_context.get("score", 0)) + enemy_general_threat_after,
+		],
 	}
 	var dimensions: Dictionary = {}
 	var adjustment: int = 0
@@ -111,6 +126,9 @@ static func evaluate(
 			),
 			"general_attackers_before": int(baseline.general_attackers),
 			"general_attackers_after": general_attackers_after,
+			"enemy_general_attackers_before": enemy_general_attackers_before,
+			"enemy_general_attackers_after": enemy_general_attackers_after,
+			"flag_vicinity_reveal_count": int(action.get("flag_vicinity_reveal_count", 0)),
 		},
 	}
 
@@ -162,11 +180,18 @@ static func critical_reasons(
 			reasons.append("defend_flag")
 	if bool(action.get("occupies_flag", false)):
 		reasons.append("capture_flag")
+	var target := _coordinate(action.get("target", [0, 0]))
+	var viewer_side: String = str(player_data.get("viewer_side", ""))
+	for flag: Dictionary in flags:
+		var threatened: bool = str(flag.get("capturing_side", "")) == _opponent(viewer_side) \
+			or bool(flag.get("contested", false))
+		if threatened and _chebyshev(target, _coordinate(flag.get("position", [0, 0]))) <= 2:
+			reasons.append("defend_flag_zone")
+			break
 	var before_attackers: int = current_general_attackers
 	if before_attackers < 0:
 		before_attackers = general_visible_attacker_count(player_data)
 	if before_attackers > 0:
-		var viewer_side: String = str(player_data.get("viewer_side", ""))
 		var after: Dictionary = _general_attack_context(
 			_project_pieces(pieces, action), viewer_side, player_data.get("public_walls", [])
 		)
@@ -232,6 +257,14 @@ static func _flag_score(flags: Array, viewer_side: String, config: Resource) -> 
 			score += int(config.flag_weight)
 		elif owner == _opponent(viewer_side):
 			score -= int(config.flag_weight)
+		var capturing_side: String = str(flag.get("capturing_side", ""))
+		var progress: int = maxi(0, int(flag.get("capture_progress", 0)))
+		if capturing_side == viewer_side:
+			score += progress * int(config.flag_capture_priority) / 3
+		elif capturing_side == _opponent(viewer_side):
+			score -= progress * int(config.flag_defense_priority) / 3
+		if bool(flag.get("contested", false)) and owner == viewer_side:
+			score -= int(config.flag_defense_priority) / 3
 	return score
 
 
@@ -243,16 +276,45 @@ static func _projected_flag_score(
 ) -> int:
 	var flags: Array = player_data.get("public_flags", [])
 	var score: int = _flag_score(flags, viewer_side, config)
+	var pieces: Array = player_data.get("visible_pieces", [])
+	var original_actor: Dictionary = _find_piece(pieces, str(action.get("actor_id", "")))
+	var projected_actor: Dictionary = _find_piece(_project_pieces(pieces, action), str(action.get("actor_id", "")))
+	score += _flag_proximity_delta(original_actor, projected_actor, flags, viewer_side, config)
 	if bool(action.get("occupies_flag", false)) and str(action.get("kind", "")) != "pass":
 		var target := _coordinate(action.get("target", [0, 0]))
 		for flag: Dictionary in flags:
 			if _coordinate(flag.get("position", [0, 0])) == target:
 				var owner: String = str(flag.get("owner", ""))
 				if owner != viewer_side:
-					score += int(config.flag_weight) / 3
-					if owner == _opponent(viewer_side):
-						score += int(config.flag_weight) / 6
+					score += int(config.flag_capture_priority)
 				break
+	return score
+
+
+static func _flag_proximity_delta(
+	original_actor: Dictionary,
+	projected_actor: Dictionary,
+	flags: Array,
+	viewer_side: String,
+	config: Resource
+) -> int:
+	if original_actor.is_empty() or projected_actor.is_empty():
+		return 0
+	var origin := _coordinate(original_actor.get("position", [0, 0]))
+	var target := _coordinate(projected_actor.get("position", [0, 0]))
+	var score: int = 0
+	for flag: Dictionary in flags:
+		var flag_cell := _coordinate(flag.get("position", [0, 0]))
+		var progress: int = _chebyshev(origin, flag_cell) - _chebyshev(target, flag_cell)
+		if progress == 0:
+			continue
+		var owner: String = str(flag.get("owner", ""))
+		var threatened: bool = str(flag.get("capturing_side", "")) == _opponent(viewer_side) \
+			or bool(flag.get("contested", false))
+		if owner == viewer_side and threatened:
+			score += progress * int(config.flag_defense_priority) / 4
+		elif owner != viewer_side:
+			score += progress * int(config.flag_proximity_weight)
 	return score
 
 
@@ -330,6 +392,8 @@ static func _best_actor_threat_value(
 	var best: int = 0
 	for target: Dictionary in pieces:
 		if str(target.get("side", "")) == viewer_side:
+			continue
+		if str(target.get("piece_type", "")) == "general":
 			continue
 		if _piece_attacks_cell(actor, _coordinate(target.get("position", [0, 0])), occupied, walls):
 			best = maxi(best, public_rules.piece_value(str(target.get("piece_type", ""))))
@@ -511,3 +575,28 @@ static func _cell_key(cell: Vector2i) -> String:
 
 static func _opponent(side: String) -> String:
 	return "black" if side == "red" else "red"
+
+
+static func project_pieces(pieces: Array, action: Dictionary) -> Array:
+	return _project_pieces(pieces, action)
+
+
+static func piece_attacks_cell(piece: Dictionary, target: Vector2i, pieces: Array, walls: Array) -> bool:
+	return _piece_attacks_cell(piece, target, _occupied_cells(pieces), walls)
+
+
+static func occupied_cells(pieces: Array) -> Dictionary:
+	return _occupied_cells(pieces)
+
+
+static func piece_attacks_cell_with_occupied(
+	piece: Dictionary,
+	target: Vector2i,
+	occupied: Dictionary,
+	walls: Array
+) -> bool:
+	return _piece_attacks_cell(piece, target, occupied, walls)
+
+
+static func _chebyshev(a: Vector2i, b: Vector2i) -> int:
+	return maxi(absi(a.x - b.x), absi(a.y - b.y))

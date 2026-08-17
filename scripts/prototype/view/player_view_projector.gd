@@ -176,6 +176,7 @@ static func export_ai_projection(player_view: Dictionary, intents: Array) -> Dic
 				"target": [0, 0],
 				"visible_captures": [],
 				"reveal_cell_count": 0,
+				"flag_vicinity_reveal_count": 0,
 				"occupies_flag": false,
 				"attacks_wall": false,
 				"path_length": 0,
@@ -209,6 +210,7 @@ static func export_ai_projection(player_view: Dictionary, intents: Array) -> Dic
 			"target": [target.x - 1, target.y - 1],
 			"visible_captures": visible_captures,
 			"reveal_cell_count": _newly_revealed_cell_count(player_view, target) if is_move else 0,
+			"flag_vicinity_reveal_count": _newly_revealed_flag_vicinity_count(player_view, target) if is_move else 0,
 			"occupies_flag": (_flag_at(player_view, target) != {}) if is_move else false,
 			"attacks_wall": false,
 			"path_length": absi(target.x - origin.x) + absi(target.y - origin.y) if is_move else 0,
@@ -232,8 +234,14 @@ static func export_ai_projection(player_view: Dictionary, intents: Array) -> Dic
 			"id": flag["id"],
 			"position": [position.x - 1, position.y - 1],
 			"owner": flag["owner"],
+			"capturing_side": str(flag.get("capturing_side", "")),
 			"capture_progress": flag["capture_progress"],
+			"contested": bool(flag.get("contested", false)),
 		})
+	var visible_cells: Array = []
+	for cell_value: Variant in player_view["visible_cells"]:
+		var cell := Canonical.coordinate(cell_value)
+		visible_cells.append([cell.x - 1, cell.y - 1])
 	var public_walls: Array = []
 	for wall: Dictionary in player_view["walls"]:
 		public_walls.append({"side": wall["side"], "status": wall["status"]})
@@ -242,6 +250,7 @@ static func export_ai_projection(player_view: Dictionary, intents: Array) -> Dic
 		"decision_id": "turn-%d-%s" % [player_view["action_index"], player_view["viewer_side"]],
 		"viewer_side": player_view["viewer_side"],
 		"turn_index": player_view["action_index"],
+		"visible_cells": visible_cells,
 		"visible_pieces": visible_pieces,
 		"public_flags": public_flags,
 		"public_walls": public_walls,
@@ -370,6 +379,24 @@ static func _newly_revealed_cell_count(player_view: Dictionary, target: Vector2i
 			var cell := Vector2i(x, y)
 			if MatchState.is_inside_board(cell) and not visible_set.has(Canonical.cell_key(cell)):
 				count += 1
+	return count
+
+
+static func _newly_revealed_flag_vicinity_count(player_view: Dictionary, target: Vector2i) -> int:
+	var visible_set: Dictionary = _coordinate_set(player_view["visible_cells"])
+	var flag_positions: Array[Vector2i] = []
+	for flag: Dictionary in player_view["flags"]:
+		flag_positions.append(Canonical.coordinate(flag["position"]))
+	var count: int = 0
+	for y: int in range(target.y - 1, target.y + 2):
+		for x: int in range(target.x - 1, target.x + 2):
+			var cell := Vector2i(x, y)
+			if not MatchState.is_inside_board(cell) or visible_set.has(Canonical.cell_key(cell)):
+				continue
+			for flag_position: Vector2i in flag_positions:
+				if maxi(absi(cell.x - flag_position.x), absi(cell.y - flag_position.y)) <= 2:
+					count += 1
+					break
 	return count
 
 

@@ -15,6 +15,7 @@ extends Resource
 @export_range(0, 100, 1) var wall_pressure_weight: int = 8
 @export_range(0, 100, 1) var revisit_penalty: int = 2
 @export_range(0, 100, 1) var actor_revisit_penalty: int = 2
+@export_range(0, 1000, 10) var uncommitted_actor_bonus: int = 100
 @export_range(1, 32, 1) var vision_cell_cap: int = 4
 @export_range(1, 24, 1) var territory_step_cap: int = 3
 
@@ -34,6 +35,19 @@ var strategy_mode: String = "visible-state-evaluation-v1"
 @export_range(0, 100, 1) var unsupported_advance_penalty_percent: int = 0
 @export_range(0, 10000, 1) var critical_capture_value: int = 30
 
+@export_group("Objective priority hypothesis")
+@export_range(0, 5000, 10) var flag_capture_priority: int = 820
+@export_range(0, 5000, 10) var flag_defense_priority: int = 650
+@export_range(0, 200, 1) var flag_proximity_weight: int = 18
+@export_range(0, 200, 1) var flag_vision_weight: int = 12
+@export_range(0, 5000, 10) var enemy_general_attack_priority: int = 820
+
+@export_group("Bounded two-ply belief search hypothesis")
+@export_range(0, 256, 1) var search_candidate_limit: int = 12
+@export_range(1, 128, 1) var opponent_response_limit: int = 12
+@export_range(0, 32, 1) var belief_sample_count: int = 2
+@export_range(0, 200, 1) var belief_risk_weight_percent: int = 75
+
 
 func audit_snapshot() -> Dictionary:
 	return {
@@ -47,6 +61,7 @@ func audit_snapshot() -> Dictionary:
 		"wall_pressure_weight": wall_pressure_weight,
 		"revisit_penalty": revisit_penalty,
 		"actor_revisit_penalty": actor_revisit_penalty,
+		"uncommitted_actor_bonus": uncommitted_actor_bonus,
 		"vision_cell_cap": vision_cell_cap,
 		"territory_step_cap": territory_step_cap,
 		"strategy_mode": strategy_mode,
@@ -62,4 +77,13 @@ func audit_snapshot() -> Dictionary:
 		"threat_opportunity_percent": threat_opportunity_percent,
 		"unsupported_advance_penalty_percent": unsupported_advance_penalty_percent,
 		"critical_capture_value": critical_capture_value,
+		"flag_capture_priority": flag_capture_priority,
+		"flag_defense_priority": flag_defense_priority,
+		"flag_proximity_weight": flag_proximity_weight,
+		"flag_vision_weight": flag_vision_weight,
+		"enemy_general_attack_priority": enemy_general_attack_priority,
+		"search_candidate_limit": search_candidate_limit,
+		"opponent_response_limit": opponent_response_limit,
+		"belief_sample_count": belief_sample_count,
+		"belief_risk_weight_percent": belief_risk_weight_percent,
 	}

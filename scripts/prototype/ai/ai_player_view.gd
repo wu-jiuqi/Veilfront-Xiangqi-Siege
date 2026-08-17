@@ -4,14 +4,16 @@ const Canonical = preload("res://scripts/prototype/ai/ai_canonical.gd")
 
 const ROOT_KEYS: Array[String] = [
 	"schema_version", "decision_id", "viewer_side", "turn_index",
-	"visible_pieces", "public_flags", "public_walls", "legal_actions", "public_events",
+	"visible_cells", "visible_pieces", "public_flags", "public_walls", "legal_actions", "public_events",
 ]
 const PIECE_KEYS: Array[String] = ["id", "side", "piece_type", "position", "status_tags"]
-const FLAG_KEYS: Array[String] = ["id", "position", "owner", "capture_progress"]
+const FLAG_KEYS: Array[String] = [
+	"id", "position", "owner", "capturing_side", "capture_progress", "contested",
+]
 const WALL_KEYS: Array[String] = ["side", "status"]
 const ACTION_KEYS: Array[String] = [
 	"id", "kind", "actor_id", "origin", "target", "visible_captures",
-	"reveal_cell_count", "occupies_flag", "attacks_wall", "path_length",
+	"reveal_cell_count", "flag_vicinity_reveal_count", "occupies_flag", "attacks_wall", "path_length",
 ]
 const CAPTURE_KEYS: Array[String] = ["piece_id", "piece_type"]
 const EVENT_KEYS: Array[String] = ["id", "event_type", "actor_side", "position"]
@@ -66,6 +68,8 @@ func _validate_and_copy(projection: Dictionary) -> void:
 	_validate_scalar(projection, "decision_id", TYPE_STRING)
 	_validate_scalar(projection, "viewer_side", TYPE_STRING)
 	_validate_scalar(projection, "turn_index", TYPE_INT)
+	if projection.has("visible_cells"):
+		_validate_coordinate_array(projection, "visible_cells")
 	_validate_record_array(projection, "visible_pieces", PIECE_KEYS, "id", Callable(self, "_validate_piece"))
 	_validate_record_array(projection, "public_flags", FLAG_KEYS, "id", Callable(self, "_validate_flag"))
 	_validate_record_array(projection, "public_walls", WALL_KEYS, "side", Callable(self, "_validate_wall"))
@@ -111,9 +115,13 @@ func _validate_piece(piece: Dictionary) -> void:
 
 func _validate_flag(flag: Dictionary) -> void:
 	_require_strings(flag, ["id", "owner"])
+	if flag.has("capturing_side") and not flag.capturing_side is String:
+		_validation_errors.append("public flag capturing_side must be String")
 	_require_coordinate(flag, "position")
 	if not flag.has("capture_progress") or not flag.capture_progress is int:
 		_validation_errors.append("public flag capture_progress must be int")
+	if flag.has("contested") and not flag.contested is bool:
+		_validation_errors.append("public flag contested must be bool")
 
 
 func _validate_wall(wall: Dictionary) -> void:
@@ -127,6 +135,9 @@ func _validate_action(action: Dictionary) -> void:
 	for key: String in ["reveal_cell_count", "path_length"]:
 		if not action.has(key) or not action[key] is int:
 			_validation_errors.append("legal action %s must be int" % key)
+	if action.has("flag_vicinity_reveal_count") \
+	and not action.flag_vicinity_reveal_count is int:
+		_validation_errors.append("legal action flag_vicinity_reveal_count must be int")
 	for key: String in ["occupies_flag", "attacks_wall"]:
 		if not action.has(key) or not action[key] is bool:
 			_validation_errors.append("legal action %s must be bool" % key)
@@ -168,7 +179,20 @@ func _require_string_array(record: Dictionary, key: String) -> void:
 			_validation_errors.append("public record %s must contain only String" % key)
 
 
+func _validate_coordinate_array(data: Dictionary, key: String) -> void:
+	if not data.get(key) is Array:
+		_validation_errors.append("PlayerView.%s must be Array[[int, int]]" % key)
+		return
+	for coordinate: Variant in data[key]:
+		if not Canonical.is_coordinate(coordinate):
+			_validation_errors.append("PlayerView.%s contains an invalid coordinate" % key)
+
+
 func _normalize_order() -> void:
+	if _data.has("visible_cells"):
+		_data.visible_cells.sort_custom(
+			func(a: Array, b: Array) -> bool: return a[1] < b[1] or (a[1] == b[1] and a[0] < b[0])
+		)
 	for key: String in ["visible_pieces", "public_flags", "legal_actions", "public_events"]:
 		_data[key].sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return a.id < b.id)
 	_data.public_walls.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return a.side < b.side)

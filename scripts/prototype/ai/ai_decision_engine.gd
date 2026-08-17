@@ -6,6 +6,8 @@ const PublicRules = preload("res://scripts/prototype/ai/ai_public_rules.gd")
 const Memory = preload("res://scripts/prototype/ai/ai_memory.gd")
 const DifficultyConfig = preload("res://scripts/prototype/ai/ai_difficulty_config.gd")
 const VisibleStateEvaluator = preload("res://scripts/prototype/ai/ai_visible_state_evaluator.gd")
+const TwoPlySearch = preload("res://scripts/prototype/ai/ai_two_ply_search.gd")
+const BeliefModel = preload("res://scripts/prototype/ai/ai_belief_model.gd")
 
 
 func decide(
@@ -57,20 +59,50 @@ func decide(
 	var state_baseline: Dictionary = VisibleStateEvaluator.build_baseline(
 		player_data, public_rules, config
 	)
+	var evaluated_entries: Array[Dictionary] = []
 	for action: Dictionary in selected_actions:
 		var base_score: int = _final_action_adjustment(action, public_rules, memory, config)
 		var strategic_result: Dictionary = VisibleStateEvaluator.evaluate(
 			action, player_data, public_rules, config, state_baseline
 		)
 		var strategic_adjustment: int = int(strategic_result.get("adjustment", 0))
+		evaluated_entries.append({
+			"action": action,
+			"base_score": base_score,
+			"strategic_adjustment": strategic_adjustment,
+			"strategic_result": strategic_result,
+			"one_ply_score": base_score + strategic_adjustment,
+		})
+	var search_ranked: Array = evaluated_entries.duplicate()
+	search_ranked.sort_custom(_evaluated_entry_before)
+	var search_action_ids: Dictionary = {}
+	var search_limit: int = mini(int(config.search_candidate_limit), search_ranked.size())
+	for index: int in search_limit:
+		search_action_ids[str(search_ranked[index].action.id)] = true
+	for action_id: String in selection_metadata.get("critical_reasons_by_action", {}).keys():
+		search_action_ids[action_id] = true
+	var belief_samples: Array = BeliefModel.build_samples(
+		player_data, memory, public_rules, ai_seed, int(config.belief_sample_count)
+	) if not search_action_ids.is_empty() else []
+	for entry: Dictionary in evaluated_entries:
+		var action: Dictionary = entry.action
+		var searched: bool = search_action_ids.has(str(action.id))
+		var search_result: Dictionary = TwoPlySearch.evaluate(
+			action, player_data, memory, public_rules, config, ai_seed, belief_samples
+		) if searched else {"adjustment": 0, "breakdown": {"mode": "not_searched"}}
+		var search_adjustment: int = int(search_result.get("adjustment", 0))
 		var random_adjustment: int = rng.randi_range(-config.random_score_span, config.random_score_span)
-		var final_score: int = base_score + strategic_adjustment + random_adjustment
+		var final_score: int = int(entry.one_ply_score) + search_adjustment + random_adjustment
 		candidate_audit.append({
 			"action_id": action.id,
 			"pre_score": int(selection_metadata.get("pre_scores_by_action", {}).get(str(action.id), 0)),
-			"base_score": base_score,
-			"strategic_adjustment": strategic_adjustment,
-			"strategic_breakdown": strategic_result.get("breakdown", {}).duplicate(true),
+			"base_score": int(entry.base_score),
+			"strategic_adjustment": int(entry.strategic_adjustment),
+			"strategic_breakdown": entry.strategic_result.get("breakdown", {}).duplicate(true),
+			"one_ply_score": int(entry.one_ply_score),
+			"searched": searched,
+			"search_adjustment": search_adjustment,
+			"search_breakdown": search_result.get("breakdown", {}).duplicate(true),
 			"random_adjustment": random_adjustment,
 			"final_score": final_score,
 		})
@@ -98,6 +130,10 @@ func decide(
 			"time_budget_enforcement": "not_wall_clock_in_deterministic_prototype",
 			"available_candidates": actions.size(),
 			"evaluated_candidates": selected_actions.size(),
+			"searched_candidates": search_action_ids.size(),
+			"search_candidate_limit_hypothesis": config.search_candidate_limit,
+			"opponent_response_limit_hypothesis": config.opponent_response_limit,
+			"belief_sample_count_hypothesis": config.belief_sample_count,
 			"strategy_mode_hypothesis": str(config.strategy_mode),
 		},
 		"candidate_sampling": {
@@ -204,6 +240,12 @@ func _ranked_candidate_before(a: Dictionary, b: Dictionary) -> bool:
 	return str(a.action_id) < str(b.action_id)
 
 
+func _evaluated_entry_before(a: Dictionary, b: Dictionary) -> bool:
+	if int(a.one_ply_score) != int(b.one_ply_score):
+		return int(a.one_ply_score) > int(b.one_ply_score)
+	return str(a.action.id) < str(b.action.id)
+
+
 func _pre_score(
 	action: Dictionary,
 	public_rules: PublicRules,
@@ -215,12 +257,16 @@ func _pre_score(
 		score += public_rules.piece_value(capture.piece_type)
 	score += mini(int(action.reveal_cell_count), int(config.vision_cell_cap)) \
 		* int(config.reveal_weight)
+	score += int(action.get("flag_vicinity_reveal_count", 0)) * int(config.flag_vision_weight)
 	if action.occupies_flag:
-		score += config.flag_weight
+		score += config.flag_capture_priority
 	if action.attacks_wall:
 		score += config.wall_pressure_weight
 	score -= memory.action_visit_count(action.id) * config.revisit_penalty
 	score -= memory.actor_visit_count(action.actor_id) * config.actor_revisit_penalty
+	if str(action.kind) == "move" and not str(action.actor_id).is_empty() \
+	and memory.actor_visit_count(action.actor_id) == 0:
+		score += int(config.uncommitted_actor_bonus)
 	return score
 
 
@@ -230,9 +276,13 @@ func _final_action_adjustment(
 	memory: Memory,
 	config: DifficultyConfig
 ) -> int:
-	return public_rules.action_bias(action.kind) \
+	var score: int = public_rules.action_bias(action.kind) \
 		- memory.action_visit_count(action.id) * config.revisit_penalty \
 		- memory.actor_visit_count(action.actor_id) * config.actor_revisit_penalty
+	if str(action.kind) == "move" and not str(action.actor_id).is_empty() \
+	and memory.actor_visit_count(action.actor_id) == 0:
+		score += int(config.uncommitted_actor_bonus)
+	return score
 
 
 func _no_action_result(
