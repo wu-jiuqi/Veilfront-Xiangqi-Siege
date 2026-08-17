@@ -1,0 +1,36 @@
+{
+  "schema_version": "player-view-ai-seed-matrix-summary-v1",
+  "start_seed": 471001,
+  "requested_seeds_per_difficulty": 100,
+  "difficulty_count": 4,
+  "records_count": 400,
+  "failure_count": 0,
+  "determinism_mismatch_count": 0,
+  "hidden_equivalence_mismatch_count": 0,
+  "mapping_failure_count": 0,
+  "submit_failure_count": 0,
+  "records_digest": "06211a09c80727b850878e675ec25e540a3bf72ec9c9c8657ca9fd03b99cd23b",
+  "raw_manifest_sha256": "1a1de0c58667788605fabae15db698c3ac376a33433a1749ee2f796617f30581",
+  "compressed_manifest_sha256": "7849a61473c5ccd601ed52f1fb20879c8b8635ef4ea3d06839100f7fe558da00",
+  "difficulty_records": {
+    "easy": 100,
+    "medium": 100,
+    "hard": 100,
+    "expert": 100
+  },
+  "evaluated_candidates_average": {
+    "easy": 8.0,
+    "medium": 32.0,
+    "hard": 96.0,
+    "expert": 321.0
+  },
+  "independent_recalculation": {
+    "record_count": 400,
+    "seed_min": 471001,
+    "seed_max": 471100,
+    "all_records_ok": true,
+    "recomputed_records_digest": "06211a09c80727b850878e675ec25e540a3bf72ec9c9c8657ca9fd03b99cd23b",
+    "matches_runner_summary": true
+  },
+  "scope": "独立 QA 执行的 PlayerView AI 单决策公平性与隐藏等价矩阵；不是 1000 局完整对局门槛。"
+}
