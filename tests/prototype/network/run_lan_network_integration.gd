@@ -57,11 +57,11 @@ func _run() -> void:
 	var client_view: Dictionary = client_session.get_player_view_snapshot()
 	_check(str(server_view.get("viewer_side", "")) == "red", "房主实例仅持有红方 PlayerView")
 	_check(str(client_view.get("viewer_side", "")) == "black", "客户端实例仅持有黑方 PlayerView")
-	_check(str(server_view.get("schema_version", "")) == "lan-player-view-v2", "房主 UI 收到网络专用白名单快照")
-	_check(str(client_view.get("schema_version", "")) == "lan-player-view-v2", "客户端 UI 收到网络专用白名单快照")
+	_check(str(server_view.get("schema_version", "")) == "lan-player-view-v3", "房主 UI 收到网络专用白名单快照")
+	_check(str(client_view.get("schema_version", "")) == "lan-player-view-v3", "客户端 UI 收到网络专用白名单快照")
 	_check(not server_view.has("match_seed") and not client_view.has("match_seed"), "双方 UI 快照均不含可推导隐藏随机结果的种子")
-	_check(_flags_hide_positions(server_view), "房主 UI 快照不含旗位")
-	_check(_flags_hide_positions(client_view), "客户端 UI 快照不含旗位")
+	_check(_flags_respect_discovery(server_view), "房主 UI 旗位遵守发现记忆边界")
+	_check(_flags_respect_discovery(client_view), "客户端 UI 旗位遵守发现记忆边界")
 	_check(not server_view.has("board") and not server_view.has("rng"), "房主 UI 快照不含 FullState/RNG")
 	_check(not client_view.has("board") and not client_view.has("rng"), "客户端 UI 快照不含 FullState/RNG")
 	_check(str(server_session.get_session_role()) == "host" and str(server_session.get_local_seat()) == "red", "棋盘 UI 可查询房主角色与红方席位")
@@ -103,12 +103,17 @@ func _pass_intent() -> Dictionary:
 	}
 
 
-func _flags_hide_positions(player_view: Dictionary) -> bool:
+func _flags_respect_discovery(player_view: Dictionary) -> bool:
 	for flag_value: Variant in player_view.get("flags", []):
 		if not flag_value is Dictionary:
 			return false
 		var flag: Dictionary = flag_value
-		if flag.has("position") or flag.has("flag_position") or flag.has("flag_cell"):
+		if not flag.has("discovered") or not flag.has("position"):
+			return false
+		if flag.has("flag_position") or flag.has("flag_cell"):
+			return false
+		var position: Array = flag.get("position", [])
+		if bool(flag.get("discovered", false)) != (position.size() == 2):
 			return false
 	return true
 

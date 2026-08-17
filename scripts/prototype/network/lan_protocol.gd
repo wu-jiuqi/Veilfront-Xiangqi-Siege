@@ -1,9 +1,9 @@
 extends RefCounted
 
-const PROTOCOL_VERSION: int = 2
-const ACTION_REQUEST_SCHEMA: String = "lan-action-request-v2"
-const PLAYER_DELIVERY_SCHEMA: String = "lan-player-delivery-v2"
-const NETWORK_PLAYER_VIEW_SCHEMA: String = "lan-player-view-v2"
+const PROTOCOL_VERSION: int = 3
+const ACTION_REQUEST_SCHEMA: String = "lan-action-request-v3"
+const PLAYER_DELIVERY_SCHEMA: String = "lan-player-delivery-v3"
+const NETWORK_PLAYER_VIEW_SCHEMA: String = "lan-player-view-v3"
 
 const INTENT_KEYS: Array[String] = [
 	"action_type",
@@ -29,6 +29,8 @@ const PLAYER_VIEW_KEYS: Array[String] = [
 	"active_side",
 	"board_height",
 	"board_width",
+	"capture_ghosts",
+	"casualties",
 	"contact_intel",
 	"flags",
 	"full_round_index",
@@ -43,6 +45,7 @@ const PLAYER_VIEW_KEYS: Array[String] = [
 	"terminal",
 	"viewer_side",
 	"visible_cells",
+	"vision_overlays",
 	"walls",
 	"win_reason",
 	"winner",
@@ -51,9 +54,17 @@ const PUBLIC_FLAG_KEYS: Array[String] = [
 	"capturing_side",
 	"capture_progress",
 	"contested",
+	"discovered",
 	"id",
 	"owner",
+	"position",
 ]
+const CASUALTY_KEYS: Array[String] = ["piece_id", "piece_type", "side"]
+const CAPTURE_GHOST_KEYS: Array[String] = ["piece_id", "piece_type", "position", "side"]
+const VISION_OVERLAY_KEYS: Array[String] = [
+	"elephant_block_fields", "elephant_reveal_zones", "rook_paths",
+]
+const VISION_SOURCE_KEYS: Array[String] = ["cells", "piece_id"]
 const FORBIDDEN_DELIVERY_KEYS: Array[String] = [
 	"board",
 	"event_log_digest",
@@ -214,6 +225,15 @@ static func validate_player_delivery(value: Variant) -> Dictionary:
 	var flags_validation: Dictionary = _validate_public_flags(player_view.get("flags", []))
 	if not bool(flags_validation.get("ok", false)):
 		return flags_validation
+	var casualties_validation: Dictionary = _validate_casualties(player_view.get("casualties", []))
+	if not bool(casualties_validation.get("ok", false)):
+		return casualties_validation
+	var ghosts_validation: Dictionary = _validate_capture_ghosts(player_view.get("capture_ghosts", []))
+	if not bool(ghosts_validation.get("ok", false)):
+		return ghosts_validation
+	var overlays_validation: Dictionary = _validate_vision_overlays(player_view.get("vision_overlays", {}))
+	if not bool(overlays_validation.get("ok", false)):
+		return overlays_validation
 	return {"ok": true, "delivery": delivery.duplicate(true)}
 
 
@@ -223,9 +243,7 @@ static func first_forbidden_path(value: Variant, path: String = "$") -> String:
 		for key_value: Variant in dictionary.keys():
 			var key: String = str(key_value)
 			var child_path: String = "%s.%s" % [path, key]
-			if key in FORBIDDEN_DELIVERY_KEYS \
-			or (key == "position" and ".flags[" in path) \
-			or _looks_like_hidden_flag_location_key(key):
+			if key in FORBIDDEN_DELIVERY_KEYS or _looks_like_hidden_flag_location_key(key):
 				return child_path
 			var nested_path: String = first_forbidden_path(dictionary[key_value], child_path)
 			if not nested_path.is_empty():
@@ -253,6 +271,9 @@ static func _sanitize_flags(value: Variant) -> Array:
 			"capturing_side": str(flag.get("capturing_side", "")),
 			"capture_progress": int(flag.get("capture_progress", flag.get("progress", 0))),
 			"contested": bool(flag.get("contested", false)),
+			"discovered": bool(flag.get("discovered", false)),
+			"position": flag.get("position", []).duplicate() \
+				if flag.get("position", []) is Array else [],
 		})
 	return result
 
@@ -271,9 +292,73 @@ static func _validate_public_flags(value: Variant) -> Dictionary:
 		or not flag.get("owner") is String \
 		or not flag.get("capturing_side") is String \
 		or not flag.get("capture_progress") is int \
-		or not flag.get("contested") is bool:
+		or not flag.get("contested") is bool \
+		or not flag.get("discovered") is bool \
+		or not flag.get("position") is Array:
 			return _invalid("flag_types_invalid")
+		var position: Array = flag["position"]
+		if bool(flag["discovered"]):
+			if position.size() != 2 or not position[0] is int or not position[1] is int:
+				return _invalid("discovered_flag_position_invalid")
+		elif not position.is_empty():
+			return _invalid("undiscovered_flag_position_leak")
 	return {"ok": true}
+
+
+static func _validate_casualties(value: Variant) -> Dictionary:
+	if not value is Array:
+		return _invalid("casualties_not_array")
+	for record_value: Variant in value:
+		if not record_value is Dictionary:
+			return _invalid("casualty_not_dictionary")
+		var record: Dictionary = record_value
+		if not _has_exact_keys(record, CASUALTY_KEYS):
+			return _invalid("casualty_fields_invalid")
+		if not record.get("piece_id") is String or not record.get("piece_type") is String \
+		or not record.get("side") is String:
+			return _invalid("casualty_types_invalid")
+	return {"ok": true}
+
+
+static func _validate_capture_ghosts(value: Variant) -> Dictionary:
+	if not value is Array:
+		return _invalid("capture_ghosts_not_array")
+	for record_value: Variant in value:
+		if not record_value is Dictionary:
+			return _invalid("capture_ghost_not_dictionary")
+		var record: Dictionary = record_value
+		if not _has_exact_keys(record, CAPTURE_GHOST_KEYS):
+			return _invalid("capture_ghost_fields_invalid")
+		if not record.get("piece_id") is String or not record.get("piece_type") is String \
+		or not record.get("side") is String or not _is_coordinate(record.get("position", [])):
+			return _invalid("capture_ghost_types_invalid")
+	return {"ok": true}
+
+
+static func _validate_vision_overlays(value: Variant) -> Dictionary:
+	if not value is Dictionary:
+		return _invalid("vision_overlays_not_dictionary")
+	var overlays: Dictionary = value
+	if not _has_exact_keys(overlays, VISION_OVERLAY_KEYS):
+		return _invalid("vision_overlay_fields_invalid")
+	for overlay_key: String in VISION_OVERLAY_KEYS:
+		if not overlays[overlay_key] is Array:
+			return _invalid("vision_overlay_not_array")
+		for source_value: Variant in overlays[overlay_key]:
+			if not source_value is Dictionary:
+				return _invalid("vision_source_not_dictionary")
+			var source: Dictionary = source_value
+			if not _has_exact_keys(source, VISION_SOURCE_KEYS) \
+			or not source.get("piece_id") is String or not source.get("cells") is Array:
+				return _invalid("vision_source_fields_invalid")
+			for cell_value: Variant in source["cells"]:
+				if not _is_coordinate(cell_value):
+					return _invalid("vision_source_cell_invalid")
+	return {"ok": true}
+
+
+static func _is_coordinate(value: Variant) -> bool:
+	return value is Array and value.size() == 2 and value[0] is int and value[1] is int
 
 
 static func _duplicate_variant(value: Variant) -> Variant:

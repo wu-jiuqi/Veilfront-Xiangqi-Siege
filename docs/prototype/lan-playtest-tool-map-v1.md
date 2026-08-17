@@ -1,4 +1,4 @@
-# 局域网真人测试工具 Godot 产物映射 v2
+# 局域网真人测试工具 Godot 产物映射 v3
 
 状态：`approved disposable tooling / board-integration-ready`
 Contract：`LOOP-CTR-GATE1-VERTICAL-SLICE-001@v4`
@@ -12,7 +12,7 @@ Contract：`LOOP-CTR-GATE1-VERTICAL-SLICE-001@v4`
 
 | 产物 | Godot 类型 | 路径 | 责任 |
 |---|---|---|---|
-| 协议白名单与消息校验 | `RefCounted` GDScript | `scripts/prototype/network/lan_protocol.gd` | 规范化 intent、构造网络专用 PlayerView、隐藏旗位和规则种子、检测下行受禁字段 |
+| 协议白名单与消息校验 | `RefCounted` GDScript | `scripts/prototype/network/lan_protocol.gd` | 规范化 intent、构造网络专用 PlayerView、按发现记忆过滤旗位、隐藏规则种子、检测下行受禁字段 |
 | 房主权威棋局会话 | `RefCounted` GDScript | `scripts/prototype/network/lan_host_session.gd` | 持有 FullState、席位、准备 token、去重表并调用规则核心 |
 | ENet 网络会话 | `Node` GDScript | `scripts/prototype/network/lan_network_session.gd` | 创建/加入 ENet、RPC、连接状态、按 peer 下发 PlayerView |
 | 联网会话预置节点 | PackedScene | `scenes/prototype/network/lan_network_session.tscn` | 预置端口、最大客户端数和脚本绑定 |
@@ -31,7 +31,8 @@ Contract：`LOOP-CTR-GATE1-VERTICAL-SLICE-001@v4`
 ## 信息边界
 
 - 服务器下行只允许 `schema_version`、`protocol_version`、`seat`、网络专用 `player_view` 与公开反馈。
-- 网络专用 PlayerView 使用 `lan-player-view-v2`：旗帜只包含 `owner / capturing_side / capture_progress / contested` 等公开状态，不包含位置或可间接定位的占领棋子 ID。
+- 网络专用 PlayerView 使用 `lan-player-view-v3`：旗帜包含 `discovered / position`，未发现时位置必须为空，发现后只向对应发现方同步；始终不包含可间接定位的占领棋子 ID。
+- v3 同步双方公开阵亡池、阵亡方的一回合被吃虚影，以及本方车路径/相侦察/田字阻挡高亮源；右键战术标注保持本地，不经网络发送。
 - 网络快照不下发 `match_seed`。种子会决定隐藏旗位与后续规则随机结果，不能作为客户端可见重放参数。
 - 客户端不得接收 `board`、`rng`、`prepared_action`、`events`、`vision_sources`、`state_digest`、`event_log_digest` 或完整 FullState。
 - 服务端只接受规范化的 `{piece_id, action_type, target_cell, skill_type}`，其中动作类型包含 `move / bombard / pass / resurrect`；房主额外校验席位、当前行动方、`action_index`、请求 ID 与公开候选，并独占田字阻车和士复活随机裁决。
@@ -55,5 +56,5 @@ Contract：`LOOP-CTR-GATE1-VERTICAL-SLICE-001@v4`
 1. Godot 4.7.1 可解析新增脚本并无头加载两份新增场景。
 2. 权威会话测试验证错误席位、错误回合、过期 action index、重复请求和已知非法行动均不消费行动。
 3. loopback 双 peer 建连后，红黑双方各提交一次 `pass`，双方收到的 PlayerView 推进到同一 action index。
-4. 每次下行递归检查受禁字段；双方快照不包含 FullState、RNG、`match_seed`、旗位或完整审计。
+4. 每次下行递归检查受禁字段；双方快照不包含 FullState、RNG、`match_seed`、未发现旗位或完整审计。
 5. 现有全量原型测试保持通过；当前 AI 工作树不被修改。

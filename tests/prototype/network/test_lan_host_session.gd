@@ -25,8 +25,8 @@ static func run_suite() -> bool:
 	_expect(str(red_delivery.get("player_view", {}).get("schema_version", "")) == LanProtocol.NETWORK_PLAYER_VIEW_SCHEMA, "下行使用网络专用 PlayerView 白名单", failures)
 	_expect(not red_delivery.get("player_view", {}).has("match_seed"), "红方网络快照不下发可推导隐藏随机结果的种子", failures)
 	_expect(not black_delivery.get("player_view", {}).has("match_seed"), "黑方网络快照不下发可推导隐藏随机结果的种子", failures)
-	_expect(_flags_hide_positions(red_delivery), "红方网络 DTO 的旗帜不含位置", failures)
-	_expect(_flags_hide_positions(black_delivery), "黑方网络 DTO 的旗帜不含位置", failures)
+	_expect(_flags_respect_discovery(red_delivery), "红方网络 DTO 的旗位遵守发现记忆边界", failures)
+	_expect(_flags_respect_discovery(black_delivery), "黑方网络 DTO 的旗位遵守发现记忆边界", failures)
 	_expect(LanProtocol.first_forbidden_path(red_delivery).is_empty(), "红方下行没有 FullState 受禁字段", failures)
 	_expect(LanProtocol.first_forbidden_path(black_delivery).is_empty(), "黑方下行没有 FullState 受禁字段", failures)
 	var polluted_delivery: Dictionary = black_delivery.duplicate(true)
@@ -37,22 +37,24 @@ static func run_suite() -> bool:
 		failures
 	)
 	var flag_polluted_delivery: Dictionary = black_delivery.duplicate(true)
+	flag_polluted_delivery["player_view"]["flags"][0]["discovered"] = false
 	flag_polluted_delivery["player_view"]["flags"][0]["position"] = [5, 12]
 	var polluted_flag_result: Dictionary = LanProtocol.validate_player_delivery(flag_polluted_delivery)
 	_expect(
-		str(polluted_flag_result.get("error", "")) == "forbidden_delivery_field" \
-		and ".flags[0].position" in str(polluted_flag_result.get("forbidden_path", "")),
-		"旗帜位置即使混入公开旗帜对象也会阻断下行",
+		str(polluted_flag_result.get("error", "")) == "undiscovered_flag_position_leak",
+		"未发现旗帜混入位置时会阻断下行",
 		failures
 	)
 	var source_view_with_hidden_flag: Dictionary = red_delivery["player_view"].duplicate(true)
 	source_view_with_hidden_flag["schema_version"] = "player-view-v1"
 	source_view_with_hidden_flag["match_seed"] = 999
+	source_view_with_hidden_flag["flags"][0]["discovered"] = true
 	source_view_with_hidden_flag["flags"][0]["position"] = [1, 9]
 	source_view_with_hidden_flag["flags"][0]["capture_progress"] = 2
 	var sanitized_delivery: Dictionary = LanProtocol.build_player_delivery("red", source_view_with_hidden_flag)
 	_expect(not sanitized_delivery["player_view"].has("match_seed"), "下行构造器删除源投影中的 match_seed", failures)
-	_expect(_flags_hide_positions(sanitized_delivery), "下行构造器删除源投影中的旗位", failures)
+	_expect(_flags_respect_discovery(sanitized_delivery), "下行构造器保留已发现旗位并维持迷雾边界", failures)
+	_expect(sanitized_delivery["player_view"]["flags"][0]["position"] == [1, 9], "已发现旗位可同步到发现方", failures)
 	_expect(int(sanitized_delivery["player_view"]["flags"][0]["capture_progress"]) == 2, "下行构造器保留公开夺旗进度", failures)
 
 	var resurrect_request: Dictionary = LanProtocol.build_action_request("red-resurrect", 0, {
@@ -119,11 +121,16 @@ static func _expect(condition: bool, description: String, failures: Array[String
 		failures.append(description)
 
 
-static func _flags_hide_positions(delivery: Dictionary) -> bool:
+static func _flags_respect_discovery(delivery: Dictionary) -> bool:
 	for flag_value: Variant in delivery.get("player_view", {}).get("flags", []):
 		if not flag_value is Dictionary:
 			return false
 		var flag: Dictionary = flag_value
-		if flag.has("position") or flag.has("flag_position") or flag.has("flag_cell"):
+		if not flag.has("discovered") or not flag.has("position"):
+			return false
+		if flag.has("flag_position") or flag.has("flag_cell"):
+			return false
+		var position: Array = flag.get("position", [])
+		if bool(flag.get("discovered", false)) != (position.size() == 2):
 			return false
 	return true
