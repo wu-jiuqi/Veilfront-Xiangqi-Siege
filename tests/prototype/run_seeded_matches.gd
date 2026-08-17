@@ -4,6 +4,12 @@ const Canonical = preload("res://scripts/prototype/core/canonical.gd")
 const MatchState = preload("res://scripts/prototype/core/match_state.gd")
 const MatchSimulator = preload("res://scripts/prototype/simulation/match_simulator.gd")
 
+const COMPACT_RECORD_SCHEMA_VERSION := "seeded-match-compact-record-v2"
+const BATCH_SUMMARY_SCHEMA_VERSION := "seeded-match-batch-summary-v2"
+const MANIFEST_HEADER_SCHEMA_VERSION := "seeded-match-manifest-header-v2"
+const MANIFEST_SUMMARY_SCHEMA_VERSION := "seeded-match-manifest-summary-v2"
+const EXPECTED_FLAG_REGION := {"x_min": 1, "x_max": 9, "y_min": 9, "y_max": 16}
+
 
 func _init() -> void:
 	call_deferred("_run")
@@ -38,8 +44,9 @@ func _run() -> void:
 	var replay_verified_count: int = 0
 	var determinism_checked_count: int = 0
 	var determinism_mismatches: Array = []
-	var flag_band_counts: Dictionary = {}
+	var flag_region_counts: Dictionary = {}
 	var flag_cell_counts: Dictionary = {}
+	var invalid_flag_distribution_count: int = 0
 	for offset: int in seed_count:
 		var seed_value: int = start_seed + offset
 		var result: Dictionary = MatchSimulator.run_match(seed_value, {
@@ -74,21 +81,29 @@ func _run() -> void:
 			aggregate_profile_msec[phase] = snappedf(
 				float(aggregate_profile_msec.get(phase, 0.0)) + float(result["profile_msec"][phase]), 0.001
 			)
-		var band_start: int = int(result["initial_flag_band_start"])
-		for position_value: Variant in result["initial_flag_positions"]:
+		var initial_flag_region: Dictionary = _normalized_flag_region(result.get("initial_flag_region", {}))
+		var initial_flag_positions: Array = result.get("initial_flag_positions", [])
+		var flag_distribution_failure: String = _flag_distribution_failure(
+			initial_flag_region, initial_flag_positions
+		)
+		if not flag_distribution_failure.is_empty():
+			invalid_flag_distribution_count += 1
+			failures.append({"seed": seed_value, "failures": [flag_distribution_failure]})
+		var region_key: String = Canonical.json(initial_flag_region)
+		flag_region_counts[region_key] = int(flag_region_counts.get(region_key, 0)) + 1
+		for position_value: Variant in initial_flag_positions:
 			var position := Canonical.coordinate(position_value)
 			var cell_key: String = Canonical.cell_key(position)
 			flag_cell_counts[cell_key] = int(flag_cell_counts.get(cell_key, 0)) + 1
-		flag_band_counts[str(band_start)] = int(flag_band_counts.get(str(band_start), 0)) + 1
 		compact_results.append({
-			"schema_version": "seeded-match-compact-record-v1",
+			"schema_version": COMPACT_RECORD_SCHEMA_VERSION,
 			"seed": seed_value,
 			"winner": result["winner"],
 			"reason": result["win_reason"],
 			"rounds": result["full_round_count"],
 			"flag_counts": result["flag_counts"].duplicate(true),
-			"initial_flag_positions": result["initial_flag_positions"].duplicate(true),
-			"initial_flag_band_start": band_start,
+			"initial_flag_positions": initial_flag_positions.duplicate(true),
+			"initial_flag_region": initial_flag_region.duplicate(true),
 			"state_digest": result["state_digest"],
 			"event_digest": result["event_log_digest"],
 			"determinism_match": determinism_match,
@@ -96,7 +111,7 @@ func _run() -> void:
 		})
 	lengths.sort()
 	var summary: Dictionary = {
-		"schema_version": "seeded-match-batch-summary-v1",
+		"schema_version": BATCH_SUMMARY_SCHEMA_VERSION,
 		"simulation_mode": "rules_stress_full_state_policy",
 		"requested_seeds": seed_count,
 		"completed_matches": compact_results.size(),
@@ -120,7 +135,11 @@ func _run() -> void:
 		},
 		"metrics": aggregate_metrics,
 		"initial_flag_distribution": {
-			"band_start_counts": flag_band_counts,
+			"expected_region": EXPECTED_FLAG_REGION.duplicate(true),
+			"expected_cell_count": 72,
+			"observed_cell_count": flag_cell_counts.size(),
+			"invalid_match_count": invalid_flag_distribution_count,
+			"region_counts": flag_region_counts,
 			"cell_counts": flag_cell_counts,
 		},
 		"profile_msec_total": aggregate_profile_msec,
@@ -187,6 +206,36 @@ static func _determinism_matches(first: Dictionary, second: Dictionary) -> bool:
 		and first["action_count"] == second["action_count"]
 
 
+static func _normalized_flag_region(value: Variant) -> Dictionary:
+	if not value is Dictionary:
+		return {}
+	var region: Dictionary = value
+	return {
+		"x_min": int(region.get("x_min", -1)),
+		"x_max": int(region.get("x_max", -1)),
+		"y_min": int(region.get("y_min", -1)),
+		"y_max": int(region.get("y_max", -1)),
+	}
+
+
+static func _flag_distribution_failure(region: Dictionary, positions: Array) -> String:
+	if region != EXPECTED_FLAG_REGION:
+		return "initial_flag_region_not_full_battlefield"
+	if positions.size() != 3:
+		return "initial_flag_count_not_three"
+	var occupied_cells: Dictionary = {}
+	for position_value: Variant in positions:
+		var position := Canonical.coordinate(position_value)
+		if position.x < int(region["x_min"]) or position.x > int(region["x_max"]) \
+		or position.y < int(region["y_min"]) or position.y > int(region["y_max"]):
+			return "initial_flag_position_outside_full_battlefield"
+		var cell_key: String = Canonical.cell_key(position)
+		if occupied_cells.has(cell_key):
+			return "initial_flag_positions_not_unique"
+		occupied_cells[cell_key] = true
+	return ""
+
+
 static func _write_manifest(path: String, records: Array, summary: Dictionary) -> String:
 	var normalized_path: String = path
 	if not path.is_absolute_path() and not path.begins_with("res://") \
@@ -200,14 +249,17 @@ static func _write_manifest(path: String, records: Array, summary: Dictionary) -
 	if file == null:
 		return "manifest_open_error:%d" % FileAccess.get_open_error()
 	file.store_line(Canonical.json({
-		"schema_version": "seeded-match-manifest-header-v1",
+		"schema_version": MANIFEST_HEADER_SCHEMA_VERSION,
 		"simulation_mode": "rules_stress_full_state_policy",
 		"records_count": records.size(),
+		"record_schema_version": COMPACT_RECORD_SCHEMA_VERSION,
 	}))
 	for record: Dictionary in records:
 		file.store_line(Canonical.json(record))
 	var manifest_summary: Dictionary = summary.duplicate(true)
-	manifest_summary["schema_version"] = "seeded-match-manifest-summary-v1"
+	manifest_summary["batch_summary_schema_version"] = str(summary.get("schema_version", ""))
+	manifest_summary["record_schema_version"] = COMPACT_RECORD_SCHEMA_VERSION
+	manifest_summary["schema_version"] = MANIFEST_SUMMARY_SCHEMA_VERSION
 	file.store_line(Canonical.json(manifest_summary))
 	file.close()
 	return ""

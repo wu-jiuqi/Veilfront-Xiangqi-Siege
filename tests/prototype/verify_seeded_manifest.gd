@@ -40,8 +40,7 @@ func _init() -> void:
 	if args.size() == 3 and not record_lines.is_empty():
 		record_lines[0] = "%s " % record_lines[0]
 	var records_digest: String = Canonical.digest(record_lines)
-	var ok: bool = header.get("schema_version", "") == "seeded-match-manifest-header-v1" \
-		and summary.get("schema_version", "") == "seeded-match-manifest-summary-v1" \
+	var ok: bool = _schema_is_traceable(header, records, summary) \
 		and int(header.get("records_count", -1)) == records.size() \
 		and int(summary.get("records_count", -1)) == records.size() \
 		and str(summary.get("records_digest", "")) == records_digest
@@ -52,6 +51,26 @@ func _init() -> void:
 		records.size(), records_digest,
 	])
 	quit(0)
+
+
+static func _schema_is_traceable(header: Dictionary, records: Array, summary: Dictionary) -> bool:
+	var header_schema: String = str(header.get("schema_version", ""))
+	var summary_schema: String = str(summary.get("schema_version", ""))
+	if header_schema == "seeded-match-manifest-header-v1" \
+	and summary_schema == "seeded-match-manifest-summary-v1":
+		return true
+	if header_schema != "seeded-match-manifest-header-v2" \
+	or summary_schema != "seeded-match-manifest-summary-v2":
+		return false
+	var record_schema: String = str(header.get("record_schema_version", ""))
+	if record_schema != "seeded-match-compact-record-v2" \
+	or str(summary.get("record_schema_version", "")) != record_schema \
+	or str(summary.get("batch_summary_schema_version", "")) != "seeded-match-batch-summary-v2":
+		return false
+	for record: Dictionary in records:
+		if str(record.get("schema_version", "")) != record_schema:
+			return false
+	return true
 
 
 func _fail(code: String) -> void:
