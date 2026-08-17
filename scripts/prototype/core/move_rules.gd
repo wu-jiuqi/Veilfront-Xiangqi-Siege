@@ -156,14 +156,17 @@ static func evaluate_resurrection(state: Dictionary, intent: Dictionary, actor_s
 
 static func resurrection_candidates(state: Dictionary, side: String) -> Array:
 	var candidates: Array = []
-	for piece_value: Variant in state["pieces"].values():
-		var piece: Dictionary = piece_value
+	for piece_id_value: Variant in state.get("casualty_pools", {}).get(side, []):
+		var piece_id: String = str(piece_id_value)
+		if not state["pieces"].has(piece_id):
+			continue
+		var piece: Dictionary = state["pieces"][piece_id]
 		if piece["side"] != side or piece["alive"] or piece["in_reserve"]:
 			continue
 		# Owner-confirmed exclusion: dead advisors and generals never enter the pool.
 		if piece["piece_type"] in ["advisor", "general"]:
 			continue
-		candidates.append(piece["id"])
+		candidates.append(piece_id)
 	candidates.sort()
 	return candidates
 
@@ -297,11 +300,11 @@ static func _evaluate_rook(state: Dictionary, piece: Dictionary, origin: Vector2
 
 static func _first_enemy_elephant_field_intersection(
 	state: Dictionary,
-	rook_side: String,
+	moving_side: String,
 	origin: Vector2i,
 	path: Array
 ) -> Vector2i:
-	var enemy_side: String = MatchState.opponent(rook_side)
+	var enemy_side: String = MatchState.opponent(moving_side)
 	var fields: Dictionary = state.get("vision_sources", {}).get(enemy_side, {}).get("elephant_block_fields", {})
 	var eligible_field_sets: Array = []
 	for field_value: Variant in fields.values():
@@ -358,6 +361,13 @@ static func _evaluate_pawn(state: Dictionary, piece: Dictionary, origin: Vector2
 	var path: Array = movement_path(origin, target)
 	var special: bool = path.size() >= 2 and path.size() <= 5 \
 		and _special_eligible(state, piece["side"], origin, path)
+	var intercepted_at: Vector2i = _first_enemy_elephant_field_intersection(
+		state, piece["side"], origin, path
+	)
+	var intercepted: bool = MatchState.is_inside_board(intercepted_at)
+	if intercepted:
+		path = path.slice(0, path.find(intercepted_at) + 1)
+		target = intercepted_at
 	if special:
 		for cell: Vector2i in path:
 			var occupant: Dictionary = MatchState.piece_at(state, cell)
@@ -367,12 +377,20 @@ static func _evaluate_pawn(state: Dictionary, piece: Dictionary, origin: Vector2
 				return _invalid("pawn_special_target_occupied", [cell], true)
 			if occupant["side"] == piece["side"]:
 				return _invalid("pawn_special_blocked", [cell])
-		return _valid("pawn_special", path)
+		var special_result: Dictionary = _valid("pawn_special", path)
+		special_result["resolved_target"] = [target.x, target.y]
+		special_result["elephant_field_intercepted"] = intercepted
+		return special_result
 	var delta := target - origin
 	var forward: int = 1 if piece["side"] == MatchState.RED else -1
 	if not ((delta.y == forward and delta.x == 0) or (delta.y == 0 and absi(delta.x) == 1)):
 		return _invalid("pawn_geometry")
-	return _target_capture_result(state, piece, target, "pawn_standard", [target])
+	var standard_result: Dictionary = _target_capture_result(
+		state, piece, target, "pawn_standard", [target]
+	)
+	standard_result["resolved_target"] = [target.x, target.y]
+	standard_result["elephant_field_intercepted"] = intercepted
+	return standard_result
 
 
 static func _evaluate_cannon(
@@ -451,8 +469,8 @@ static func _blocked_by_intact_wall(
 	if state["walls"][enemy_side]["status"] != "INTACT":
 		return false
 	if enemy_side == MatchState.RED:
-		return origin.y >= 4 and target.y <= 3
-	return origin.y <= 21 and target.y >= 22
+		return (origin.y >= 5 and target.y <= 4) or (origin.y == 4 and target.y <= 3)
+	return (origin.y <= 20 and target.y >= 21) or (origin.y == 21 and target.y >= 22)
 
 
 static func _can_bombard(state: Dictionary, cannon: Dictionary) -> bool:

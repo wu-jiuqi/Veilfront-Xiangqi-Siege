@@ -8,7 +8,7 @@ const ROOT_KEYS: Array[String] = [
 ]
 const PIECE_KEYS: Array[String] = ["id", "side", "piece_type", "position", "status_tags"]
 const FLAG_KEYS: Array[String] = [
-	"id", "owner", "capturing_side", "capture_progress", "contested",
+	"id", "owner", "capturing_side", "capture_progress", "contested", "discovered", "position",
 ]
 const WALL_KEYS: Array[String] = ["side", "status"]
 const ACTION_KEYS: Array[String] = [
@@ -122,6 +122,15 @@ func _validate_flag(flag: Dictionary) -> void:
 		_validation_errors.append("public flag capture_progress must be int")
 	if flag.has("contested") and not flag.contested is bool:
 		_validation_errors.append("public flag contested must be bool")
+	if not flag.get("discovered") is bool:
+		_validation_errors.append("public flag discovered must be bool")
+	if not flag.get("position") is Array:
+		_validation_errors.append("public flag position must be Array")
+	elif bool(flag.get("discovered", false)):
+		if not Canonical.is_coordinate(flag.position):
+			_validation_errors.append("discovered public flag must expose [int, int]")
+	elif not flag.position.is_empty():
+		_validation_errors.append("undiscovered public flag position must be empty")
 
 
 func _validate_wall(wall: Dictionary) -> void:

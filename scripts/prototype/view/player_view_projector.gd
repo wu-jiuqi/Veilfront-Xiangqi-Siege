@@ -87,8 +87,11 @@ static func project(full_state: Dictionary, viewer_side: String) -> Dictionary:
 		"visible_cells": visible_cells,
 		"hidden_detection_cells": hidden_detection_cells,
 		"pieces": pieces,
-		"flags": _public_flags(full_state),
+		"flags": _public_flags(full_state, viewer_side),
 		"walls": _public_walls(full_state),
+		"casualties": _public_casualties(full_state),
+		"capture_ghosts": _public_capture_ghosts(full_state, viewer_side),
+		"vision_overlays": _public_vision_overlays(full_state, viewer_side),
 		"player_events": full_state["player_events"][viewer_side].duplicate(true),
 		"contact_intel": full_state["contact_intel"][viewer_side].duplicate(true),
 	}
@@ -235,13 +238,19 @@ static func export_ai_projection(player_view: Dictionary, intents: Array) -> Dic
 		})
 	var public_flags: Array = []
 	for flag: Dictionary in player_view["flags"]:
-		public_flags.append({
+		var public_flag: Dictionary = {
 			"id": flag["id"],
 			"owner": flag["owner"],
 			"capturing_side": str(flag.get("capturing_side", "")),
 			"capture_progress": flag["capture_progress"],
 			"contested": bool(flag.get("contested", false)),
-		})
+			"discovered": bool(flag.get("discovered", false)),
+			"position": [],
+		}
+		if public_flag["discovered"] and flag.get("position", []).size() == 2:
+			var flag_position := Canonical.coordinate(flag["position"])
+			public_flag["position"] = [flag_position.x - 1, flag_position.y - 1]
+		public_flags.append(public_flag)
 	var visible_cells: Array = []
 	for cell_value: Variant in player_view["visible_cells"]:
 		var cell := Canonical.coordinate(cell_value)
@@ -586,8 +595,8 @@ static func _public_wall_blocks(
 		if wall["side"] != enemy_side or wall["status"] != "INTACT":
 			continue
 		if enemy_side == MatchState.RED:
-			return origin.y >= 4 and target.y <= 3
-		return origin.y <= 21 and target.y >= 22
+			return origin.y >= 5 and target.y <= 4
+		return origin.y <= 20 and target.y >= 21
 	return false
 
 
@@ -703,16 +712,77 @@ static func _public_walls(full_state: Dictionary) -> Array:
 	return result
 
 
-static func _public_flags(full_state: Dictionary) -> Array:
+static func _public_flags(full_state: Dictionary, viewer_side: String) -> Array:
 	var result: Array = []
+	var discoveries: Array = full_state.get("flag_discoveries", {}).get(viewer_side, [])
 	for flag: Dictionary in full_state["flags"]:
+		var discovered: bool = discoveries.has(str(flag["id"]))
 		result.append({
 			"id": str(flag["id"]),
 			"owner": str(flag["owner"]),
 			"capturing_side": str(flag["capturing_side"]),
 			"capture_progress": int(flag["capture_progress"]),
 			"contested": bool(flag["contested"]),
+			"discovered": discovered,
+			"position": flag["position"].duplicate() if discovered else [],
 		})
+	return result
+
+
+static func _public_casualties(full_state: Dictionary) -> Array:
+	var result: Array = []
+	for side: String in [MatchState.RED, MatchState.BLACK]:
+		for piece_id_value: Variant in full_state.get("casualty_pools", {}).get(side, []):
+			var piece_id: String = str(piece_id_value)
+			if not full_state["pieces"].has(piece_id):
+				continue
+			var piece: Dictionary = full_state["pieces"][piece_id]
+			result.append({
+				"piece_id": piece_id,
+				"piece_type": str(piece["piece_type"]),
+				"side": side,
+			})
+	result.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return a["piece_id"] < b["piece_id"])
+	return result
+
+
+static func _public_capture_ghosts(full_state: Dictionary, viewer_side: String) -> Array:
+	var result: Array = []
+	for ghost_value: Variant in full_state.get("capture_ghosts", {}).get(viewer_side, []):
+		var ghost: Dictionary = ghost_value
+		if int(ghost.get("expires_at_action_index", -1)) <= int(full_state["action_index"]):
+			continue
+		result.append({
+			"piece_id": str(ghost["piece_id"]),
+			"piece_type": str(ghost["piece_type"]),
+			"side": str(ghost["side"]),
+			"position": ghost["position"].duplicate(),
+		})
+	result.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return a["piece_id"] < b["piece_id"])
+	return result
+
+
+static func _public_vision_overlays(full_state: Dictionary, viewer_side: String) -> Dictionary:
+	var sources: Dictionary = full_state.get("vision_sources", {}).get(viewer_side, {})
+	return {
+		"rook_paths": _public_source_records(sources.get("rook_paths", {})),
+		"elephant_reveal_zones": _public_source_records(sources.get("elephant_reveal_zones", {})),
+		"elephant_block_fields": _public_source_records(sources.get("elephant_block_fields", {})),
+	}
+
+
+static func _public_source_records(source_map: Dictionary) -> Array:
+	var result: Array = []
+	var piece_ids: Array = source_map.keys()
+	piece_ids.sort()
+	for piece_id_value: Variant in piece_ids:
+		var cells: Array = []
+		for cell_value: Variant in source_map[piece_id_value]:
+			var cell := Canonical.coordinate(cell_value)
+			if MatchState.is_inside_board(cell):
+				cells.append([cell.x, cell.y])
+		cells.sort_custom(_coordinate_less)
+		result.append({"piece_id": str(piece_id_value), "cells": cells})
 	return result
 
 
@@ -734,11 +804,10 @@ static func _public_resurrection_summary(player_view: Dictionary) -> Dictionary:
 	var values: Dictionary = {
 		"rook": 90, "cannon": 50, "horse": 45, "elephant": 40, "pawn": 20,
 	}
-	for piece: Dictionary in player_view.get("pieces", []):
-		if piece.get("side", "") != player_view.get("viewer_side", "") \
-		or bool(piece.get("alive", false)) or bool(piece.get("in_reserve", false)):
+	for casualty: Dictionary in player_view.get("casualties", []):
+		if casualty.get("side", "") != player_view.get("viewer_side", ""):
 			continue
-		var piece_type: String = str(piece.get("piece_type", ""))
+		var piece_type: String = str(casualty.get("piece_type", ""))
 		# Dead advisors and generals are explicitly excluded from the random pool.
 		if piece_type in ["advisor", "general"]:
 			continue

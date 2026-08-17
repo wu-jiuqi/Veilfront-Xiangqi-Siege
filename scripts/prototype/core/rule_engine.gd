@@ -81,6 +81,7 @@ static func submit_action(state: Dictionary, intent: Dictionary, options: Dictio
 		_update_walls_after_action(state, actor_side)
 	if not state["terminal"]:
 		_update_flags_after_action(state, actor_side)
+	_update_flag_discoveries(state)
 	_complete_action_clock(state, actor_side)
 	_publish_player_event(state, actor_side, action_index, outcome)
 
@@ -218,8 +219,9 @@ static func resolve_bombardment_window(
 		impacted_piece_ids[piece["id"]] = true
 		_cancel_flag_capture_for_piece(state, piece["id"])
 		_clear_piece_transient_sources(state, piece["id"])
-		MatchState.remove_piece_from_board(state, piece["id"])
-		piece["alive"] = false
+		MatchState.register_casualty(
+			state, piece["id"], "bombardment", Canonical.coordinate(target["position"])
+		)
 		var casualty: Dictionary = target.duplicate(true)
 		casualty["rescued"] = false
 		casualties.append(casualty)
@@ -350,16 +352,15 @@ static func _resolve_advisor_resurrection(
 	var sacrifice_position: Array = advisor["position"].duplicate()
 	_cancel_flag_capture_for_piece(state, advisor_id)
 	_clear_piece_transient_sources(state, advisor_id)
-	MatchState.remove_piece_from_board(state, advisor_id)
-	advisor["alive"] = false
+	MatchState.register_casualty(
+		state, advisor_id, "advisor_sacrifice", Canonical.coordinate(sacrifice_position)
+	)
 	var candidates: Array = evaluation["candidate_piece_ids"]
 	var selected: Array = SeededRandom.draw_unique(
 		state["rng"], candidates, 1, "advisor_resurrection:%s" % advisor_id
 	)
 	var revived_piece_id: String = str(selected[0])
 	var revived_piece: Dictionary = state["pieces"][revived_piece_id]
-	revived_piece["alive"] = true
-	revived_piece["in_reserve"] = false
 	var base_return: Dictionary = return_pieces_to_base(
 		state, actor_side, [revived_piece_id], "advisor_resurrection_return"
 	)
@@ -446,6 +447,19 @@ static func _start_flag_capture(state: Dictionary, piece_id: String) -> void:
 		flag["capturing_side"] = piece["side"]
 		flag["capture_progress"] = 1
 		flag["contested"] = flag["owner"] != MatchState.NEUTRAL
+
+
+static func _update_flag_discoveries(state: Dictionary) -> void:
+	for side: String in [MatchState.RED, MatchState.BLACK]:
+		var discoveries: Array = state["flag_discoveries"][side]
+		for flag: Dictionary in state["flags"]:
+			var flag_id: String = str(flag["id"])
+			if discoveries.has(flag_id):
+				continue
+			var cell := Canonical.coordinate(flag["position"])
+			if PlayerViewProjector.is_cell_visible(state, side, cell):
+				discoveries.append(flag_id)
+		discoveries.sort()
 
 
 static func _cancel_flag_capture_for_piece(state: Dictionary, piece_id: String) -> void:
@@ -658,8 +672,8 @@ static func _resolve_single_casualty(
 	}
 	_cancel_flag_capture_for_piece(state, piece_id)
 	_clear_piece_transient_sources(state, piece_id)
-	MatchState.remove_piece_from_board(state, piece_id)
-	piece["alive"] = false
+	var casualty_position := Canonical.coordinate(piece["position"])
+	MatchState.register_casualty(state, piece_id, "captured", casualty_position, true)
 	if piece["piece_type"] == "general":
 		_set_terminal(state, attacker_side, "general_destroyed")
 		return record

@@ -357,6 +357,7 @@ static func _test_transient_sources_clear_on_exit(failures: Array[String]) -> vo
 		if pool_piece["side"] == MatchState.RED and pool_piece["piece_type"] not in ["advisor", "general"] \
 		and pool_piece["id"] != "red-pawn-1":
 			pool_piece["in_reserve"] = true
+	MatchState.register_casualty(resurrected, "red-pawn-1", "test_fixture", Vector2i.ZERO, false)
 	resurrected["vision_sources"][MatchState.RED]["elephant_reveal_zones"]["red-advisor-1"] = [[4, 12]]
 	RuleEngine.submit_action(resurrected, {
 		"piece_id": "red-advisor-1", "action_type": "resurrect", "target_cell": [],

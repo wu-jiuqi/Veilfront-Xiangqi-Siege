@@ -38,11 +38,13 @@ static func _test_wall_geometry_and_hidden_flags() -> void:
 	for side: String in [MatchState.RED, MatchState.BLACK]:
 		var view: Dictionary = Projector.project(state, side)
 		for public_flag: Dictionary in view["flags"]:
-			_expect(not public_flag.has("position") and not public_flag.has("occupier_piece_id"),
-					"PlayerView旗帜不得直接或间接公开位置")
+			_expect(not bool(public_flag.get("discovered", true)) and public_flag.get("position", []) == [] \
+					and not public_flag.has("occupier_piece_id"),
+					"未发现旗帜不得直接或间接公开位置")
 		var ai_view: Dictionary = Projector.export_ai_projection_from_view(view)
 		for public_flag: Dictionary in ai_view["public_flags"]:
-			_expect(not public_flag.has("position"), "AI DTO旗帜不得公开位置")
+			_expect(not bool(public_flag.get("discovered", true)) and public_flag.get("position", []) == [],
+					"AI DTO 未发现旗帜不得公开位置")
 		for action: Dictionary in ai_view["legal_actions"]:
 			_expect(not action.has("occupies_flag") and not action.has("flag_vicinity_reveal_count"),
 					"AI动作不得包含旗帜位置推断元数据")
@@ -146,9 +148,7 @@ static func _place(state: Dictionary, piece_id: String, cell: Vector2i) -> void:
 
 
 static func _kill(state: Dictionary, piece_id: String) -> void:
-	MatchState.remove_piece_from_board(state, piece_id)
-	state["pieces"][piece_id]["alive"] = false
-	state["pieces"][piece_id]["in_reserve"] = false
+	MatchState.register_casualty(state, piece_id, "test_fixture", Vector2i.ZERO, false)
 
 
 static func _flag(flag_id: String, position: Vector2i) -> Dictionary:

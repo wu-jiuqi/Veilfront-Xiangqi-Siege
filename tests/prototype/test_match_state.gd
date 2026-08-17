@@ -26,8 +26,8 @@ static func run_suite() -> bool:
 		failures
 	)
 	_expect(state["schema_version"] == "full-state-v1", "FullState schema版本", failures)
-	_expect(state["rules_revision"] == "owner-confirm-2026-08-17-gate1-rule-v4", "规则冻结水位", failures)
-	_expect(state["implementation_revision"] == "prototype-core-revision-7", "实现修订水位", failures)
+	_expect(state["rules_revision"] == "owner-confirm-2026-08-17-gate1-rule-v5", "规则冻结水位", failures)
+	_expect(state["implementation_revision"] == "prototype-core-revision-8", "实现修订水位", failures)
 	_expect(state["active_side"] == MatchState.RED, "红方必须固定先手", failures)
 	_expect(state["pieces"].size() == 32, "冻结阵型必须包含 32 枚棋", failures)
 	_expect_piece(state, "red-general-1", Vector2i(5, 1), failures)
@@ -44,6 +44,8 @@ static func run_suite() -> bool:
 		_expect(cell.y >= 9 and cell.y <= 16, "旗帜纵坐标覆盖完整战区", failures)
 		flag_keys[Canonical.cell_key(cell)] = true
 	_expect(flag_keys.size() == 3, "旗帜格必须互不重复", failures)
+	_expect(state["flag_discoveries"] == {MatchState.RED: [], MatchState.BLACK: []}, "双方旗帜发现记忆开局为空", failures)
+	_expect(state["casualty_pools"] == {MatchState.RED: [], MatchState.BLACK: []}, "双方阵亡池开局为空", failures)
 	_expect(not Canonical.json(state).to_lower().contains("cooldown"), "无冷却裁决后 FullState 不得出现冷却字段", failures)
 	_expect(not Canonical.json(MatchState.summary(state)).to_lower().contains("cooldown"), "状态摘要不得出现冷却字段", failures)
 	for failure: String in failures:

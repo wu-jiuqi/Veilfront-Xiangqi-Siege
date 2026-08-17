@@ -283,6 +283,23 @@ static func _projected_flag_score(
 ) -> int:
 	var flags: Array = player_data.get("public_flags", [])
 	var score: int = _flag_score(flags, viewer_side, config)
+	if str(action.get("kind", "")) != "move":
+		return score
+	var origin: Array = action.get("origin", [])
+	var target: Array = action.get("target", [])
+	for flag: Dictionary in flags:
+		if not bool(flag.get("discovered", false)):
+			continue
+		var position: Array = flag.get("position", [])
+		if position.size() != 2:
+			continue
+		var owner: String = str(flag.get("owner", ""))
+		if target == position and origin != position and owner != viewer_side:
+			score += int(config.flag_capture_priority)
+		if origin == position and target != position \
+		and str(flag.get("capturing_side", "")) == viewer_side:
+			score -= maxi(1, int(flag.get("capture_progress", 0))) \
+				* int(config.flag_capture_priority) / 3
 	return score
 
 

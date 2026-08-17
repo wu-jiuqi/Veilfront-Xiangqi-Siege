@@ -49,6 +49,7 @@ static func _test_hidden_flag_progress_scoring(failures: Array[String]) -> void:
 	player_data.public_flags = [{
 		"id": "flag-a", "owner": "",
 		"capturing_side": "red", "capture_progress": 2, "contested": false,
+		"discovered": false, "position": [],
 	}]
 	var preserve_action: Dictionary = _action("preserve-capture", "red-general-1", [4, 0], [3, 0])
 	var preserve_result: Dictionary = VisibleStateEvaluator.evaluate(
@@ -64,14 +65,24 @@ static func _test_hidden_flag_progress_scoring(failures: Array[String]) -> void:
 	_expect(int(alternate_result.breakdown.dimensions.flag_control.delta) == 0,
 		"只公开进度时AI不得推断哪枚棋子位于隐藏旗格", failures)
 	var valid_view := AiPlayerView.new(player_data)
-	_expect(valid_view.is_valid(), "无位置旗帜DTO通过AI白名单", failures)
+	_expect(valid_view.is_valid(), "未发现旗帜DTO通过AI白名单", failures)
 	var leaking_projection: Dictionary = player_data.duplicate(true)
 	leaking_projection.public_flags[0]["position"] = [4, 10]
 	_expect(
 		not AiPlayerView.new(leaking_projection).is_valid(),
-		"任何旗帜position字段均被AI白名单拒绝",
+		"未发现旗帜携带position时被AI白名单拒绝",
 		failures
 	)
+	var discovered_projection: Dictionary = player_data.duplicate(true)
+	discovered_projection.public_flags[0]["discovered"] = true
+	discovered_projection.public_flags[0]["position"] = [4, 10]
+	_expect(AiPlayerView.new(discovered_projection).is_valid(), "已发现旗位可供AI使用", failures)
+	var enter_flag_action: Dictionary = _action("enter-discovered-flag", "red-rook-1", [4, 8], [4, 10])
+	var enter_flag_result: Dictionary = VisibleStateEvaluator.evaluate(
+		enter_flag_action, discovered_projection, rules, config
+	)
+	_expect(int(enter_flag_result.breakdown.dimensions.flag_control.delta) > 0,
+		"AI会利用己方已经发现的旗位争夺目标", failures)
 	var indirect_leak: Dictionary = player_data.duplicate(true)
 	indirect_leak.public_flags[0]["occupier_piece_id"] = "red-rook-1"
 	_expect(not AiPlayerView.new(indirect_leak).is_valid(), "occupier_piece_id间接旗位泄漏也被白名单拒绝", failures)

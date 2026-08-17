@@ -18,8 +18,8 @@ static func create(seed_value: int, configuration: Dictionary = {}) -> Dictionar
 	assert(round_limit > 0)
 	var state: Dictionary = {
 		"schema_version": "full-state-v1",
-		"rules_revision": "owner-confirm-2026-08-17-gate1-rule-v4",
-		"implementation_revision": "prototype-core-revision-7",
+		"rules_revision": "owner-confirm-2026-08-17-gate1-rule-v5",
+		"implementation_revision": "prototype-core-revision-8",
 		"configuration": {
 			"full_round_limit_hypothesis": round_limit,
 			"round_limit_status": "hypothesis_cli_overridable",
@@ -39,6 +39,9 @@ static func create(seed_value: int, configuration: Dictionary = {}) -> Dictionar
 			BLACK: _new_wall(BLACK),
 		},
 		"flags": [],
+		"flag_discoveries": {RED: [], BLACK: []},
+		"casualty_pools": {RED: [], BLACK: []},
+		"capture_ghosts": {RED: [], BLACK: []},
 		"reserve_queues": {RED: [], BLACK: []},
 		"contact_intel": {RED: [], BLACK: []},
 		"vision_sources": {
@@ -103,7 +106,46 @@ static func relocate_piece(state: Dictionary, piece_id: String, cell: Vector2i) 
 	piece["position"] = [cell.x, cell.y]
 	piece["alive"] = true
 	piece["in_reserve"] = false
+	if state.has("casualty_pools") and state["casualty_pools"].has(piece["side"]):
+		state["casualty_pools"][piece["side"]].erase(piece_id)
 	state["board"][Canonical.cell_key(cell)] = piece_id
+
+
+static func register_casualty(
+	state: Dictionary,
+	piece_id: String,
+	reason: String,
+	position: Vector2i,
+	leave_capture_ghost: bool = false
+) -> void:
+	assert(state["pieces"].has(piece_id))
+	var piece: Dictionary = state["pieces"][piece_id]
+	var side: String = str(piece["side"])
+	remove_piece_from_board(state, piece_id)
+	piece["alive"] = false
+	piece["in_reserve"] = false
+	piece["reserve_queue_index"] = -1
+	if state.has("reserve_queues") and state["reserve_queues"].has(side):
+		state["reserve_queues"][side].erase(piece_id)
+	var pool: Array = state["casualty_pools"][side]
+	if not pool.has(piece_id):
+		pool.append(piece_id)
+		pool.sort()
+	if not leave_capture_ghost or not is_inside_board(position):
+		return
+	var ghosts: Array = state["capture_ghosts"][side]
+	for index: int in range(ghosts.size() - 1, -1, -1):
+		if str(ghosts[index].get("piece_id", "")) == piece_id:
+			ghosts.remove_at(index)
+	ghosts.append({
+		"piece_id": piece_id,
+		"piece_type": str(piece["piece_type"]),
+		"side": side,
+		"position": [position.x, position.y],
+		"reason": reason,
+		"created_at_action_index": int(state["action_index"]),
+		"expires_at_action_index": int(state["action_index"]) + 2,
+	})
 
 
 static func remove_piece_from_board(state: Dictionary, piece_id: String) -> void:
@@ -142,6 +184,9 @@ static func summary(state: Dictionary) -> Dictionary:
 		"pieces": state["pieces"],
 		"walls": state["walls"],
 		"flags": state["flags"],
+		"flag_discoveries": state["flag_discoveries"],
+		"casualty_pools": state["casualty_pools"],
+		"capture_ghosts": state["capture_ghosts"],
 		"reserve_queues": state["reserve_queues"],
 		"contact_intel": state["contact_intel"],
 		"vision_sources": state["vision_sources"],

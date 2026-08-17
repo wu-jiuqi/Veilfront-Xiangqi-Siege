@@ -11,6 +11,7 @@ const MoveRulesTests = preload("res://tests/prototype/test_move_rules.gd")
 const Revision3RulesTests = preload("res://tests/prototype/test_revision3_rules.gd")
 const ElephantRevealTests = preload("res://tests/prototype/test_elephant_reveal.gd")
 const OwnerRuleRevisionV4Tests = preload("res://tests/prototype/test_owner_rule_revision_v4.gd")
+const OwnerRuleRevisionV5Tests = preload("res://tests/prototype/test_owner_rule_revision_v5.gd")
 const SimulationTests = preload("res://tests/prototype/test_simulation.gd")
 const PreparedActionTests = preload("res://tests/prototype/test_prepared_action.gd")
 const AiFairnessTests = preload("res://tests/prototype/test_ai_fairness.gd")
@@ -69,6 +70,7 @@ func _run_phase1_checks() -> void:
 	_check(Revision3RulesTests.run_suite(), "车逐目标、隐藏马/炮架、显形策略生命周期与玩家事件过滤")
 	_check(ElephantRevealTests.run_suite(), "相象19格视野、田字阻挡源、刷新与全离场清源")
 	_check(OwnerRuleRevisionV4Tests.run_suite(), "规则v4墙线、相视野与敌车阻挡、暗旗进度、主动士复活")
+	_check(OwnerRuleRevisionV5Tests.run_suite(), "规则v5旗帜发现记忆、统一阵亡池、墙线阻挡、士复活与被吃虚影")
 	_check(SimulationTests.run_suite(), "可配置轮上限整局终止、确定性与完整对局重放")
 	_check(PreparedActionTests.run_suite(), "后备部署准备 token、当回合可选、事件记录与状态回放")
 	var ai_result: Dictionary = AiFairnessTests.run_suite()
@@ -100,7 +102,7 @@ func _check(condition: bool, description: String) -> void:
 
 func _finish() -> void:
 	if failures.is_empty():
-		print("PROTOTYPE_BASIS_CHECKS_PASSED scaffold=9 focused_suites=14 full_gate1=false")
+		print("PROTOTYPE_BASIS_CHECKS_PASSED scaffold=9 focused_suites=15 full_gate1=false")
 		quit(0)
 		return
 	print("PHASE1_SCAFFOLD_CHECKS_FAILED count=%d" % failures.size())
