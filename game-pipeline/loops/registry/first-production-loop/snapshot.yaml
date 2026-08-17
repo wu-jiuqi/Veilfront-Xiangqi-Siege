@@ -85,14 +85,14 @@ registry_snapshot:
       review_scope:
       - GATE-1
   runtime:
-    current_state: active
-    state_entered_at: '2026-08-16T13:37:41.394234+08:00'
+    current_state: review
+    state_entered_at: '2026-08-17T22:57:23.402775+08:00'
     current_iteration: 2
-    last_transition_id: TR-REVIEW-ACTIVE
-    last_event_id: dc6c4971-6eb3-4552-b90e-c9ece385b486
-    last_event_digest: 90e36ddc971a9f949911352969cdc69208e416fec018c2f54684a4078cd16875
-    last_event_sequence: 52
-    record_revision: 52
+    last_transition_id: TR-ACTIVE-REVIEW
+    last_event_id: 325c2bc0-87b2-4752-b119-a1eacacc4487
+    last_event_digest: 30193da1fca5f423d6651c7192ac883eaa8cd94b69d5647b1dd79b0b4fc04dc2
+    last_event_sequence: 61
+    record_revision: 61
   budget:
     limits:
       iteration_limit: 3
@@ -101,7 +101,7 @@ registry_snapshot:
         amount: null
         unit: null
     usage:
-      completed_iterations: 1
+      completed_iterations: 2
       active_time_seconds: 0
       cost:
         amount: 0
@@ -149,113 +149,117 @@ registry_snapshot:
     outputs:
     - deliverable_id: DELIVERABLE-RULES-001
       artifact:
-        artifact_id: artifact:veilfront-xiangqi-siege:rules-spec@prototype-v1
+        artifact_id: artifact:veilfront-xiangqi-siege:rules-spec@gate1-revision5
         artifact_type: executable-rules-spec
-        version: owner-freeze-revision-3@69a2f81c3eed08c7e4d3051efd6a39b13cf105cf+coverage@413428b807602dc82008ae87cb087aca624073d9
-        uri: git-set:veilfront-xiangqi-siege:69a2f81c3eed08c7e4d3051efd6a39b13cf105cf+413428b807602dc82008ae87cb087aca624073d9#owner-freeze-rules-and-coverage
+        version: owner-freeze-revision-5@6253678157157091584b253470e709bad17c534f
+        uri: git:veilfront-xiangqi-siege:6253678157157091584b253470e709bad17c534f#docs/prototype/rules-spec-v1.md
         manifest_paths:
         - docs/prototype/rules-spec-v1.md
         - docs/prototype/settlement-order-v1.md
         - docs/prototype/rules-test-coverage-matrix-v1.md
         digest:
           algorithm: sha256
-          value: 0c4dce1b83db4e023f366d9cd004e6f2f8989bea236fbf725dc4463c32579fed
-      produced_in_iteration: 1
+          value: 8733e29e66582b3882b4b2663cf78ce783925be89cd40fe06a0b14c7d5d033f7
+      produced_in_iteration: 2
       lifecycle_status: submitted
-      registered_by_event_id: 0e59d8e2-8f85-4f97-be38-e94a614c245b
+      registered_by_event_id: 1c281392-ed92-4065-ac17-7bdfc3974bf2
     - deliverable_id: DELIVERABLE-INFO-001
       artifact:
-        artifact_id: artifact:veilfront-xiangqi-siege:iteration2-playtest-spec@v1
+        artifact_id: artifact:veilfront-xiangqi-siege:information-boundary@gate1-revision5
         artifact_type: information-boundary-contract
-        version: iteration-2-scope-clarified@002bff459c0d13135d9be8d0a68d2f6ac2193f5a
-        uri: git:veilfront-xiangqi-siege:002bff459c0d13135d9be8d0a68d2f6ac2193f5a#docs/prototype/iteration2-playtest-graybox-spec.md
+        version: owner-freeze-revision-5@6253678157157091584b253470e709bad17c534f
+        uri: git:veilfront-xiangqi-siege:6253678157157091584b253470e709bad17c534f#docs/prototype/information-boundary-v1.md
         manifest_paths:
-        - docs/prototype/iteration2-playtest-graybox-spec.md
+        - docs/prototype/information-boundary-v1.md
+        - docs/prototype/gate1-observation-plan-v1.md
+        - docs/prototype/ai-input-contract-v1.md
         digest:
           algorithm: sha256
-          value: c067fbc8662932a278ac142b13a9a92d22fb942cbb4a85c1a4b700da283b29bf
+          value: 9162803992343e9bbdfdb45ccdfbf5e4eb1d6c09e7bf68d046d34cfe18ae170d
       produced_in_iteration: 2
-      lifecycle_status: submitted_for_owner_playtest
-      registered_by_event_id: 4a11bdb2-ed0b-41e2-8601-757fb5efbd5f
+      lifecycle_status: submitted
+      registered_by_event_id: 7e015f96-0671-4341-9af7-130ca85665b0
     - deliverable_id: DELIVERABLE-GODOT-001
       artifact:
-        artifact_id: source:veilfront-xiangqi-siege:godot-prototype@gate1-iteration2
+        artifact_id: source:veilfront-xiangqi-siege:godot-prototype@gate1-rc3
         artifact_type: disposable-godot-prototype
-        version: iteration-2-three-ai-graybox@e5963e229c05557d668316531779e406cc9e801d
-        uri: git:veilfront-xiangqi-siege:e5963e229c05557d668316531779e406cc9e801d#disposable-playable-graybox
+        version: gate1-rc3@6253678157157091584b253470e709bad17c534f
+        uri: git:veilfront-xiangqi-siege:6253678157157091584b253470e709bad17c534f#gate1-rc3-disposable-prototype
         manifest_paths:
+        - project.godot
         - docs/prototype/godot-artifact-map-v1.md
-        - scenes/prototype/board_shell.tscn
+        - docs/prototype/lan-playtest-tool-map-v1.md
         - scenes/prototype/gate1_logic_lab.tscn
-        - scenes/prototype/match_controller.tscn
-        - scenes/prototype/status_shell.tscn
-        - scripts/prototype/gate1_logic_lab.gd
-        - scripts/prototype/match_controller.gd
+        - scenes/prototype/network/lan_lobby.tscn
+        - scripts/prototype/core/rule_engine.gd
         - scripts/prototype/view/player_view_projector.gd
+        - scripts/prototype/network/lan_network_session.gd
         - tests/prototype/run_all.gd
-        - tests/prototype/run_playtest_graybox.gd
+        - tests/prototype/network/run_lan_network_integration.gd
+        - evidence/prototype/playtest/owner-lan-dual-machine-2026-08-17.md
         digest:
           algorithm: sha256
-          value: bac272bac3a127791e368b8bf62019b3b69a73c4f54c43463bbc7e9b05e31ffa
+          value: 82a6e1bfeead8cd9a4afe33fb7d5b5e85a8617047b36560d36f02c0f27883890
       produced_in_iteration: 2
-      lifecycle_status: submitted_for_owner_playtest
-      registered_by_event_id: 418934eb-134d-4da8-a7ec-60ff6c19ed5c
+      lifecycle_status: submitted
+      registered_by_event_id: 55048ed0-1473-4bbd-b606-6ab85dc69ae0
     - deliverable_id: DELIVERABLE-AI-001
       artifact:
-        artifact_id: source:veilfront-xiangqi-siege:ai-prototype@gate1-iteration2
+        artifact_id: source:veilfront-xiangqi-siege:player-view-ai@gate1-rc3
         artifact_type: auditable-baseline-ai
-        version: iteration-2-easy-medium-hard@e5963e229c05557d668316531779e406cc9e801d
-        uri: git:veilfront-xiangqi-siege:e5963e229c05557d668316531779e406cc9e801d#three-difficulty-player-view-ai
+        version: four-difficulty-player-view-ai@6253678157157091584b253470e709bad17c534f
+        uri: git:veilfront-xiangqi-siege:6253678157157091584b253470e709bad17c534f#scripts/prototype/ai
         manifest_paths:
+        - scripts/prototype/ai/ai_decision_engine.gd
+        - scripts/prototype/ai/ai_player_view.gd
+        - scripts/prototype/ai/ai_two_ply_search.gd
         - resources/prototype/ai/prototype_low_budget_hypothesis.tres
         - resources/prototype/ai/prototype_default_hypothesis.tres
         - resources/prototype/ai/prototype_high_budget_hypothesis.tres
-        - scripts/prototype/ai/ai_decision_engine.gd
-        - scripts/prototype/match_controller.gd
-        - tests/prototype/test_ai_difficulty_profiles.gd
+        - resources/prototype/ai/prototype_expert_tactical_hypothesis.tres
         - tests/prototype/run_ai_difficulty_seed_matrix.gd
         digest:
           algorithm: sha256
-          value: 27b9730a35dd4a2024f526ac41f3cd9b755cfffc18fbac6fc3e4e2e48dff0d4b
+          value: 19c51002f2dfc9a8d8f2f5081307cfd8cafedce3143eea4b120ab641b8dc5847
       produced_in_iteration: 2
-      lifecycle_status: submitted_for_owner_playtest
-      registered_by_event_id: 12c4683a-2e5e-4c1e-8e1c-99ae7cd6b724
+      lifecycle_status: submitted
+      registered_by_event_id: a56ceee3-3c97-43ec-9b0d-f2ed8635b4c8
     - deliverable_id: DELIVERABLE-QA-001
       artifact:
-        artifact_id: artifact:veilfront-xiangqi-siege:gate1-evidence@iteration2-playtest
+        artifact_id: artifact:veilfront-xiangqi-siege:gate1-evidence@rc3
         artifact_type: independent-gate-evidence
-        version: iteration-2-100-seed-scope@910a525
-        uri: git:veilfront-xiangqi-siege:910a525#iteration-2-independent-qa
+        version: gate1-rc3-pass@7e20acbf61a42e9dcedb88dcf68b8bc8b68d9c9f
+        uri: git:veilfront-xiangqi-siege:7e20acbf61a42e9dcedb88dcf68b8bc8b68d9c9f#evidence/prototype/qa/gate1-rc3-independent-review.md
         manifest_paths:
-        - evidence/prototype/qa/iteration-2-independent-review.md
-        - evidence/prototype/qa/iteration-2-command-output.txt
-        - evidence/prototype/qa/iteration-2-ai-difficulty-seed-matrix-100x3.jsonl
-        - evidence/prototype/qa/iteration-2-ai-difficulty-seed-matrix-summary.json
-        - evidence/prototype/qa/iteration-2-rules-stress-100-seeds-round50.jsonl
-        - evidence/prototype/qa/iteration-2-rules-stress-100-seeds-round50-summary.json
-        - evidence/prototype/qa/iteration-2-spec-clarification-addendum.md
+        - evidence/prototype/qa/gate1-rc3-independent-review.md
+        - evidence/prototype/qa/gate1-rc3-command-summary.txt
+        - evidence/prototype/qa/gate1-rc3-evidence-index.yaml
+        - evidence/prototype/qa/gate1-rc3-rules-stress-1000-seeds-round50.jsonl
+        - evidence/prototype/qa/gate1-rc3-rules-stress-1000-seeds-round50-summary.json
+        - evidence/prototype/qa/gate1-rc3-ai-difficulty-seed-matrix-100x4-summary.json
+        - evidence/prototype/qa/gate1-rc3-ai-difficulty-seed-matrix-100x4.jsonl.zip
         digest:
           algorithm: sha256
-          value: 0b0a894ee1a6722ed0e00477317ab136f3fbb881373b0a17e1482b5b1c61fb57
+          value: 3f822f760bf6eec592448bb692d7ce3280df3393eda17469bf6dbe7e9c0974f7
       produced_in_iteration: 2
-      lifecycle_status: submitted_for_owner_playtest
-      registered_by_event_id: 3331ea6d-93a2-4f4e-a846-8a94ac9a9532
+      lifecycle_status: submitted
+      registered_by_event_id: defa5f24-efd3-419f-9bff-accdb95ccbed
     - deliverable_id: DELIVERABLE-GATE1-001
       artifact:
-        artifact_id: artifact:veilfront-xiangqi-siege:gate1-decision-package@v1
+        artifact_id: artifact:veilfront-xiangqi-siege:gate1-decision-package@rc3-v5
         artifact_type: human-decision-package
-        version: awaiting-human@sha256:d24207e5e53509d09374e3870df744c21090554f77ad819f0e61a4aa6f2d54fd
+        version: awaiting-human@sha256:3bd27f5fa6cbf1c96b002611c5c315d6295c4a3bfab8eb0ff61ef82c159d4a0b
         uri: game-pipeline/loops/evidence/GATE-1-decision-package.md
         manifest_paths:
         - game-pipeline/loops/evidence/GATE-1-decision-package.md
         digest:
           algorithm: sha256
-          value: d24207e5e53509d09374e3870df744c21090554f77ad819f0e61a4aa6f2d54fd
-      produced_in_iteration: 1
+          value: 3bd27f5fa6cbf1c96b002611c5c315d6295c4a3bfab8eb0ff61ef82c159d4a0b
+      produced_in_iteration: 2
       lifecycle_status: submitted
-      registered_by_event_id: 1ce93009-3d8e-48e1-a893-557ded2deb26
+      registered_by_event_id: 325c2bc0-87b2-4752-b119-a1eacacc4487
   acceptance_snapshot:
-    subject_digest: 723e0eb563d682f803dbd2f8e87afbcf54d668fa2dbf7fc1d598c43c5422d938
+    subject_digest: 5be2f49678c91f3738a8be23aa4f114bb4d314a0a7b491494efdcc89738ac337
     automated_checks:
     - check_set_id: 217138ce-efa6-405f-a2fd-7ac49a1fd107
       result: pass_with_owner_approved_tooling_exception
@@ -354,6 +358,61 @@ registry_snapshot:
         result: not_satisfied
         required_fixed_seeds: 1000
         executed_fixed_seeds: 100
+      new_defects: []
+    - check_set_id: 349e7579-0831-43bb-8bc2-2e86a01a6572
+      result: pass_with_owner_approved_tooling_exception
+      evidence_ref: git:veilfront-xiangqi-siege:7e20acbf61a42e9dcedb88dcf68b8bc8b68d9c9f#evidence/prototype/qa/gate1-rc3-independent-review.md
+      subject_digest: 5be2f49678c91f3738a8be23aa4f114bb4d314a0a7b491494efdcc89738ac337
+      project_instance:
+        exit_code: 0
+        state: normal
+      pipeline_contract:
+        exit_code: 0
+        result: pass
+      organization_history:
+        exit_code: 0
+        result: pass
+      official_cli:
+        exit_code: 1
+        result: failed
+        error_count: 6
+        errors:
+        - Snapshot 模板初始状态必须等于状态机 initial_state
+        - Snapshot 模板 current_iteration 必须从 0 开始
+        - 注册后的 Snapshot 模板必须位于 sequence=1、record_revision=1
+        - draft 注册基线的 inputs 和 outputs 必须为空
+        - Snapshot input_slot_id 必须完整对应 Contract required_inputs
+        - Snapshot deliverable_id 必须完整对应 Contract required_deliverables
+      validate_history:
+        exit_code: 0
+        error_count: 0
+        result: pass_limited_scope
+      registry_consistency:
+        result: pass
+        revision: 52
+        sequence: 52
+      godot_regression:
+        result: pass
+        version: 4.7.1
+      seeded_matches:
+        completed: 1000
+        passed: 1000
+        failure_count: 0
+        determinism_checked_count: 1000
+        determinism_mismatch_count: 0
+        replay_verified: 20/20
+        records_digest: 25c40f9467a7c4d4ad45162e3aef7f5f95b1948a76757bd2808b4eb6fc906064
+      ai_matrix:
+        records: 400
+        failure_count: 0
+        determinism_mismatch_count: 0
+        hidden_equivalence_mismatch_count: 0
+        mapping_failure_count: 0
+        submit_failure_count: 0
+        records_digest: 879b1e381944c0183fb49cd7c5975b4d0303c24627e0b4ff9742b99942abcc20
+      qa_p1_004:
+        seed: 471016
+        status: closed
       new_defects: []
     professional_reviews:
     - review_id: d5390e38-3c12-4018-99ba-0a2788d69dff
@@ -526,6 +585,34 @@ registry_snapshot:
       new_defects: []
       formal_production: forbidden_until_separate_gate_1_approval
       legal_next_action: project_owner_manual_playtest_while_loop_remains_active
+    - review_id: c7073652-b9e6-4858-aff3-440df9e61f2d
+      reviewer_assignment_id: 9589489a-be2a-436f-bde4-8488d684c0bb
+      reviewer_instance_id: inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
+      verdict: pass_with_owner_approved_tooling_exception
+      technical_regression: pass
+      professional_result: pass
+      evidence_state: sufficient
+      current_submission_accepted: true
+      full_gate1: false
+      gate_decision: not_made
+      transition_to_review_allowed: true
+      evidence_ref: git:veilfront-xiangqi-siege:7e20acbf61a42e9dcedb88dcf68b8bc8b68d9c9f#evidence/prototype/qa/gate1-rc3-independent-review.md
+      subject_digest: 5be2f49678c91f3738a8be23aa4f114bb4d314a0a7b491494efdcc89738ac337
+      defect_regression:
+      - defect_id: QA-P1-001
+        status: closed
+      - defect_id: QA-P1-002
+        status: closed
+      - defect_id: QA-P1-003
+        status: controlled_temporary_exception_requalified
+        classification: owner-approved tooling exception
+        official_cli: failed
+      - defect_id: QA-P1-004
+        status: closed
+        seed: 471016
+      new_defects: []
+      formal_production: forbidden_until_separate_gate_1_approval
+      legal_next_action: transition_active_to_review_then_prepare_gate_1_decision_package
     human_gates:
     - gate_record_id: fd1cd71c-e70a-4dbd-b945-3c86c52f7a20
       gate_id: GATE-1
