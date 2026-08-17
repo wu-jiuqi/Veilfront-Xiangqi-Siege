@@ -2,6 +2,8 @@ extends RefCounted
 
 const LanProtocol = preload("res://scripts/prototype/network/lan_protocol.gd")
 const LanHostSession = preload("res://scripts/prototype/network/lan_host_session.gd")
+const MatchState = preload("res://scripts/prototype/core/match_state.gd")
+const PlayerViewProjector = preload("res://scripts/prototype/view/player_view_projector.gd")
 
 
 static func run_suite() -> bool:
@@ -66,6 +68,44 @@ static func run_suite() -> bool:
 	var resurrect_validation: Dictionary = LanProtocol.validate_action_request(resurrect_request)
 	_expect(bool(resurrect_validation.get("ok", false)), "士主动复活动作通过网络协议白名单", failures)
 	_expect(resurrect_validation.get("request", {}).get("intent", {}).get("target_cell", []) == [0, 0], "非空间复活动作规范化为固定哨兵格", failures)
+	var resurrection_session: RefCounted = LanHostSession.new()
+	resurrection_session.initialize(471002, 50)
+	MatchState.register_casualty(
+		resurrection_session._full_state,
+		"red-rook-1",
+		"lan_resurrection_fixture",
+		Vector2i(1, 1)
+	)
+	var resurrection_delivery: Dictionary = resurrection_session.player_delivery_for_peer(1)
+	var resurrection_previews: Array = PlayerViewProjector.generate_action_intents(
+		resurrection_delivery["player_view"]
+	)
+	var resurrection_preview: Dictionary = _find_preview(
+		resurrection_previews, "red-advisor-1", "resurrect"
+	)
+	_expect(not resurrection_preview.is_empty() \
+		and resurrection_preview.get("target_cell", [99]) == [],
+		"LAN 棋盘生成的士献祭预览保持无坐标目标", failures)
+	var ui_resurrection_request: Dictionary = LanProtocol.build_action_request(
+		"red-ui-resurrect",
+		0,
+		{
+			"piece_id": str(resurrection_preview.get("piece_id", "")),
+			"action_type": str(resurrection_preview.get("action_type", "")),
+			"target_cell": resurrection_preview.get("target_cell", []).duplicate(),
+			"skill_type": str(resurrection_preview.get("skill_type", "")),
+		}
+	)
+	var resolved_resurrection: Dictionary = resurrection_session.submit_request(
+		1, ui_resurrection_request
+	)
+	_expect(bool(resolved_resurrection.get("consumed", false)) \
+		and str(resolved_resurrection.get("public_code", "")) == "advisor_resurrection_resolved",
+		"UI 生成的 LAN 献祭请求由房主权威结算成功", failures)
+	var after_resurrection: Dictionary = resurrection_session.player_delivery_for_peer(1)
+	var casualty_ids: Array = _casualty_ids(after_resurrection.get("player_view", {}))
+	_expect(casualty_ids.has("red-advisor-1") and not casualty_ids.has("red-rook-1"),
+		"LAN 献祭后士进入阵亡池且被复活的车移出阵亡池", failures)
 
 	var black_early: Dictionary = session.submit_request(2, _pass_request("black-early", 0))
 	_expect(str(black_early.get("error", "")) == "not_active_side", "非行动方不能提交", failures)
@@ -134,3 +174,19 @@ static func _flags_respect_discovery(delivery: Dictionary) -> bool:
 		if bool(flag.get("discovered", false)) != (position.size() == 2):
 			return false
 	return true
+
+
+static func _find_preview(previews: Array, piece_id: String, action_type: String) -> Dictionary:
+	for preview: Dictionary in previews:
+		if str(preview.get("piece_id", "")) == piece_id \
+		and str(preview.get("action_type", "")) == action_type \
+		and str(preview.get("classification", "")) != PlayerViewProjector.KNOWN_ILLEGAL:
+			return preview
+	return {}
+
+
+static func _casualty_ids(player_view: Dictionary) -> Array:
+	var result: Array = []
+	for casualty: Dictionary in player_view.get("casualties", []):
+		result.append(str(casualty.get("piece_id", "")))
+	return result

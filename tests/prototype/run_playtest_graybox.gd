@@ -3,6 +3,7 @@ extends SceneTree
 const MAIN_SCENE := preload("res://scenes/prototype/gate1_logic_lab.tscn")
 const Canonical := preload("res://scripts/prototype/core/canonical.gd")
 const Projector := preload("res://scripts/prototype/view/player_view_projector.gd")
+const LanProtocol := preload("res://scripts/prototype/network/lan_protocol.gd")
 
 var failures: Array[String] = []
 
@@ -93,10 +94,36 @@ func _run() -> void:
 	resurrect_button.pressed.emit()
 	_check(str(scene.action_mode) == "resurrect" and str(scene.selected_piece_id).is_empty(),
 		"有复活候选时点击入口进入选择献祭士模式")
+	_check(resurrect_button.text == "取消献祭", "献祭选择期间按钮明确提供取消入口")
+	resurrect_button.pressed.emit()
+	_check(str(scene.action_mode) == "move" and resurrect_button.text == "献祭复活",
+		"再次点击献祭按钮可取消选择并恢复普通移动")
+	resurrect_button.pressed.emit()
 	scene.select_cell_for_test([4, 1])
 	_check(str(scene.selected_piece_id) == "red-advisor-1" \
 		and str(scene.pending_preview.get("action_type", "")) == "resurrect",
 		"选择在场士后直接登记献祭复活确认动作")
+	_check(scene.pending_preview.get("target_cell", [99]) == [],
+		"献祭预览保持无坐标目标，不再生成(-1,-1)")
+	var lan_resurrection_intent: Dictionary = LanProtocol.normalize_intent({
+		"piece_id": str(scene.pending_preview["piece_id"]),
+		"action_type": str(scene.pending_preview["action_type"]),
+		"target_cell": scene.pending_preview["target_cell"].duplicate(),
+		"skill_type": str(scene.pending_preview["skill_type"]),
+	})
+	_check(not lan_resurrection_intent.is_empty() \
+		and lan_resurrection_intent.get("target_cell", []) == [0, 0],
+		"UI 生成的献祭预览可直接通过 LAN 规范化并使用非空间哨兵")
+	var confirm_summary := scene.get_node(
+		"SafeMargin/Page/Workspace/BoardShell/BoardMargin/BoardColumn/ActionConfirm/ConfirmMargin/ConfirmColumn/ConfirmSummary"
+	) as Label
+	_check(not confirm_summary.text.contains("(-1,-1)"), "献祭确认区不再显示伪目标(-1,-1)")
+	var cancel_button := scene.get_node(
+		"SafeMargin/Page/Workspace/BoardShell/BoardMargin/BoardColumn/ActionConfirm/ConfirmMargin/ConfirmColumn/ConfirmButtons/CancelButton"
+	) as Button
+	cancel_button.pressed.emit()
+	_check(str(scene.action_mode) == "move" and str(scene.selected_piece_id).is_empty(),
+		"献祭二次确认可通过取消按钮退出且不提交行动")
 	scene.restart_match_for_test()
 	await process_frame
 	initial_view = scene.get_player_view_snapshot()

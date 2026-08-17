@@ -119,7 +119,7 @@ func _gui_input(event: InputEvent) -> void:
 		point_pressed.emit([cell.x, cell.y])
 		accept_event()
 	elif mouse_event.button_index == MOUSE_BUTTON_RIGHT:
-		if not _selected_piece_id.is_empty():
+		if not _selected_piece_id.is_empty() or _action_mode == "resurrect":
 			_annotation_cell = []
 			selection_cancel_requested.emit()
 			accept_event()

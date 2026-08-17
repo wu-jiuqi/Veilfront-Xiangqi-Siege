@@ -93,8 +93,10 @@ func _ready() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
+		var cancelled_resurrection: bool = action_mode == "resurrect"
 		_clear_selection()
-		message_value.text = "已取消选择。左键可重新选择己方棋子；右键用于添加棋盘标注。"
+		message_value.text = "已取消献祭复活。" if cancelled_resurrection \
+			else "已取消选择。左键可重新选择己方棋子；右键用于添加棋盘标注。"
 		get_viewport().set_input_as_handled()
 
 
@@ -226,8 +228,10 @@ func _on_board_point_pressed(cell: Array) -> void:
 
 
 func _on_board_selection_cancel_requested() -> void:
+	var cancelled_resurrection: bool = action_mode == "resurrect"
 	_clear_selection()
-	message_value.text = "已取消棋子选择；再次右键交点可添加或清除标注。"
+	message_value.text = "已取消献祭复活；再次右键交点可添加或清除标注。" \
+		if cancelled_resurrection else "已取消棋子选择；再次右键交点可添加或清除标注。"
 
 
 func _on_board_annotation_changed(cell: Array, marker: String) -> void:
@@ -260,8 +264,12 @@ func _set_action_mode(mode: String) -> void:
 	if mode == "bombard" and not _selected_has_bombardment():
 		message_value.text = "当前所选炮不满足公开炮击条件。"
 		return
+	if action_mode == "resurrect" and mode == "move":
+		_cancel_resurrection_selection("已取消献祭复活，恢复普通移动。")
+		return
 	action_mode = mode
 	pending_preview = {}
+	confirm_panel.visible = false
 	_refresh_all()
 
 
@@ -278,6 +286,9 @@ func _on_pass_pressed() -> void:
 func _on_resurrect_pressed() -> void:
 	if not _can_submit():
 		message_value.text = "当前不能发动复活。"
+		return
+	if action_mode == "resurrect":
+		_cancel_resurrection_selection("已取消献祭复活。")
 		return
 	var selected_preview: Dictionary = _resurrection_preview_for_piece(selected_piece_id)
 	if not selected_preview.is_empty():
@@ -316,7 +327,13 @@ func _set_pending_preview(preview: Dictionary) -> void:
 	else:
 		confirm_warning.text = "确认后提交本次公开行动。"
 	confirm_panel.visible = true
-	_refresh_board()
+	_refresh_all()
+
+
+func _cancel_resurrection_selection(message: String) -> void:
+	_clear_selection(false)
+	_refresh_all()
+	message_value.text = message
 
 
 func _submit_pending_action() -> Dictionary:
@@ -542,8 +559,10 @@ func _refresh_status() -> void:
 	move_button.disabled = not _can_submit()
 	bombard_button.disabled = not _can_submit() or not _selected_has_bombardment()
 	resurrect_button.disabled = not _can_submit()
-	resurrect_button.tooltip_text = "点击后选择要献祭的士" if _has_any_resurrection() \
-		else _resurrection_unavailable_message()
+	resurrect_button.text = "取消献祭" if action_mode == "resurrect" else "献祭复活"
+	resurrect_button.tooltip_text = "点击取消本次献祭选择" if action_mode == "resurrect" \
+		else ("点击后选择要献祭的士" if _has_any_resurrection() \
+		else _resurrection_unavailable_message())
 	pass_button.disabled = not _can_submit()
 	ai_step_button.disabled = network_mode or not match_controller.can_step_ai()
 	var casualty_counts: Dictionary = _casualty_counts_from_public_pool()

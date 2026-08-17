@@ -137,6 +137,8 @@ static func preview_intent(player_view: Dictionary, intent: Dictionary) -> Dicti
 	var piece_id: String = str(intent.get("piece_id", ""))
 	var action_type: String = str(intent.get("action_type", ""))
 	var target := Canonical.coordinate(intent.get("target_cell", []))
+	var public_target: Array = [] if action_type in ["pass", "skip", "timeout", "resurrect"] \
+		else [target.x, target.y]
 	var skill_type: String = str(intent.get("skill_type", ""))
 	var piece: Dictionary = _find_piece(player_view, piece_id)
 	var classification: String = KNOWN_ILLEGAL
@@ -161,7 +163,7 @@ static func preview_intent(player_view: Dictionary, intent: Dictionary) -> Dicti
 		"classification": classification,
 		"piece_id": piece_id,
 		"action_type": action_type,
-		"target_cell": [target.x, target.y],
+		"target_cell": public_target,
 		"skill_type": skill_type,
 		"error": {"code": public_code, "fields": []},
 	}
@@ -213,7 +215,8 @@ static func export_ai_projection(player_view: Dictionary, intents: Array) -> Dic
 			"kind": preview["action_type"],
 			"actor_id": preview["piece_id"],
 			"origin": [origin.x - 1, origin.y - 1],
-			"target": [target.x - 1, target.y - 1],
+			"target": [0, 0] if preview["action_type"] == "resurrect" \
+				else [target.x - 1, target.y - 1],
 			"visible_captures": visible_captures,
 			"reveal_cell_count": _newly_revealed_cell_count(player_view, target) if is_move else 0,
 			"attacks_wall": false,
