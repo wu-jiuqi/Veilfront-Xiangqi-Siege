@@ -13,6 +13,7 @@ static func run_suite() -> bool:
 	_failures.clear()
 	_test_wall_geometry_and_hidden_flags()
 	_test_elephant_vision_and_enemy_rook_interception()
+	_test_visible_elephant_interception_remains_tentative()
 	_test_flag_capture_starts_at_one()
 	_test_active_advisor_resurrection_pool()
 	for failure: String in _failures:
@@ -87,6 +88,26 @@ static func _test_elephant_vision_and_enemy_rook_interception() -> void:
 	var exit_result: Dictionary = RuleEngine.submit_action(exiting, _move("black-rook-1", Vector2i(1, 9)))
 	_expect(exit_result.get("event", {}).get("outcome", {}).get("position", []) == [1, 9],
 			"已在田字格内的敌车下一次应能正常离开")
+
+
+static func _test_visible_elephant_interception_remains_tentative() -> void:
+	var state: Dictionary = _empty_state(8407)
+	_place(state, "black-rook-1", Vector2i(1, 22))
+	_place(state, "red-elephant-1", Vector2i(1, 7))
+	state["vision_sources"][MatchState.BLACK]["rook_paths"]["black-rook-1"] = [[1, 7]]
+	state["vision_sources"][MatchState.RED]["elephant_block_fields"]["red-elephant-1"] = [
+		[1, 5], [2, 5], [3, 5], [1, 6], [2, 6], [3, 6], [1, 7], [2, 7], [3, 7],
+	]
+	state["active_side"] = MatchState.BLACK
+	var intent: Dictionary = _move("black-rook-1", Vector2i(1, 3))
+	var view: Dictionary = Projector.project(state, MatchState.BLACK)
+	_expect(Projector.preview_intent(view, intent)["classification"] == Projector.TENTATIVE,
+			"雾中敌相田字可能截停时，可见中途敌子不得把真实合法车路误判为已知非法")
+	var result: Dictionary = RuleEngine.submit_action(state, intent)
+	_expect(result.get("consumed", false) \
+			and result.get("event", {}).get("outcome", {}).get("position", []) == [1, 7] \
+			and not state["pieces"]["red-elephant-1"]["alive"],
+			"非可信回放路径应消费同一车意图并在田字首交点截停吃相")
 
 
 static func _test_flag_capture_starts_at_one() -> void:

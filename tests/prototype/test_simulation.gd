@@ -30,6 +30,13 @@ static func run_suite() -> bool:
 	_expect(repeated.get("ok", false), "相同种子重复对局合法终止", failures)
 	_expect(first.get("state_digest", "") == repeated.get("state_digest", "") \
 		and first.get("event_log_digest", "") == repeated.get("event_log_digest", ""), "同种子与策略重放摘要确定", failures)
+	var elephant_interception_replay: Dictionary = MatchSimulator.run_match(471016, {
+		"full_round_limit_hypothesis": 50,
+		"verify_replay": true,
+	})
+	_expect(elephant_interception_replay.get("ok", false) \
+		and elephant_interception_replay.get("replay_verified", false),
+		"种子471016的敌相田字截停车意图应通过非可信回放", failures)
 	var contested_limit: Dictionary = MatchState.create(502, {"full_round_limit_hypothesis": 1})
 	contested_limit["flags"][0]["owner"] = MatchState.RED
 	contested_limit["flags"][0]["contested"] = true

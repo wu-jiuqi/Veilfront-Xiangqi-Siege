@@ -415,12 +415,20 @@ static func _ai_public_events(player_view: Dictionary) -> Array:
 
 static func _preview_move(player_view: Dictionary, piece: Dictionary, target: Vector2i) -> String:
 	var origin := Canonical.coordinate(piece["position"])
-	if target == origin or _public_wall_blocks(player_view, piece["side"], origin, target):
+	if target == origin:
+		return KNOWN_ILLEGAL
+	var visible_set: Dictionary = _coordinate_set(player_view["visible_cells"])
+	if _public_wall_blocks(player_view, piece["side"], origin, target):
+		var wall_path: Array = MoveRules.movement_path(origin, target)
+		if piece["piece_type"] in ["rook", "pawn"] \
+		and _path_has_hidden_elephant_field_uncertainty(player_view, wall_path, visible_set):
+			# The public wall is intact, but an undisclosed enemy elephant field
+			# may authoritatively stop this intent before it reaches the wall.
+			return TENTATIVE
 		return KNOWN_ILLEGAL
 	var target_piece: Dictionary = _visible_piece_at(player_view, target)
 	if not target_piece.is_empty() and target_piece["side"] == piece["side"]:
 		return KNOWN_ILLEGAL
-	var visible_set: Dictionary = _coordinate_set(player_view["visible_cells"])
 	var piece_type: String = str(piece["piece_type"])
 	match piece_type:
 		"rook":
@@ -444,6 +452,19 @@ static func _preview_move(player_view: Dictionary, piece: Dictionary, target: Ve
 	return KNOWN_ILLEGAL
 
 
+static func _path_has_hidden_elephant_field_uncertainty(
+	player_view: Dictionary,
+	path: Array,
+	visible_set: Dictionary
+) -> bool:
+	for cell: Vector2i in path:
+		if cell.y < 4 or cell.y > 21:
+			continue
+		if not visible_set.has(Canonical.cell_key(cell)) or _hidden_uncertain(player_view, cell):
+			return true
+	return false
+
+
 static func _preview_rook(
 	player_view: Dictionary,
 	piece: Dictionary,
@@ -464,8 +485,14 @@ static func _preview_rook(
 			tentative = true
 		var occupant: Dictionary = _visible_piece_at(player_view, cell)
 		if not occupant.is_empty():
-			if occupant["side"] == piece["side"] or (not special and index < path.size() - 1):
+			if occupant["side"] == piece["side"]:
 				return KNOWN_ILLEGAL
+			if not special and index < path.size() - 1:
+				# An undisclosed enemy elephant field can turn an otherwise blocked
+				# route into a legal interception at or before this visible piece.
+				# Preserve the already-established fog uncertainty instead of
+				# rejecting an intent that the authoritative rules may consume.
+				return TENTATIVE if tentative else KNOWN_ILLEGAL
 		elif not special and index < path.size() - 1 \
 		and (not visible_set.has(Canonical.cell_key(cell)) or _hidden_uncertain(player_view, cell)):
 			tentative = true
