@@ -12,24 +12,30 @@ func _capture() -> void:
 		push_error("UI snapshot requires a windowed Godot session.")
 		quit(2)
 		return
-	root.size = Vector2i(1280, 720)
+	var capture_size := Vector2i(1280, 720)
+	var output_path: String = "user://gate1-ui-snapshot.png"
+	var scroll_position: String = "top"
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--output="):
+			output_path = argument.trim_prefix("--output=")
+		elif argument.begins_with("--size="):
+			var size_parts: PackedStringArray = argument.trim_prefix("--size=").to_lower().split("x")
+			if size_parts.size() == 2:
+				capture_size = Vector2i(int(size_parts[0]), int(size_parts[1]))
+		elif argument.begins_with("--scroll="):
+			scroll_position = argument.trim_prefix("--scroll=")
+	root.size = capture_size
 	var scene := MAIN_SCENE.instantiate()
 	root.add_child(scene)
 	await process_frame
 	await process_frame
 	await process_frame
-	var output_path: String = "user://gate1-ui-snapshot.png"
-	var scroll_to_bottom: bool = false
-	for argument: String in OS.get_cmdline_user_args():
-		if argument.begins_with("--output="):
-			output_path = argument.trim_prefix("--output=")
-		elif argument == "--scroll=bottom":
-			scroll_to_bottom = true
-	if scroll_to_bottom:
+	if scroll_position != "top":
 		var board_scroll := scene.get_node(
 			"SafeMargin/Page/Workspace/BoardShell/BoardMargin/BoardColumn/BoardScroll"
 		) as ScrollContainer
-		board_scroll.scroll_vertical = int(board_scroll.get_v_scroll_bar().max_value)
+		var maximum_scroll: int = int(board_scroll.get_v_scroll_bar().max_value)
+		board_scroll.scroll_vertical = maximum_scroll if scroll_position == "bottom" else maximum_scroll / 2
 		await process_frame
 	var error: Error = root.get_texture().get_image().save_png(output_path)
 	if error != OK:

@@ -2,14 +2,17 @@ extends Control
 
 signal point_pressed(cell: Array)
 signal annotation_changed(cell: Array, marker: String)
+signal selection_cancel_requested()
 
 const BOARD_WIDTH: int = 9
 const BOARD_HEIGHT: int = 24
 const RED: String = "red"
 const BLACK: String = "black"
 
-@export var point_spacing: Vector2 = Vector2(58.0, 40.0)
-@export var board_padding: Vector2 = Vector2(34.0, 28.0)
+@export_range(40.0, 80.0, 1.0) var cell_size: float = 64.0
+@export var board_padding: Vector2 = Vector2(32.0, 32.0)
+
+var point_spacing: Vector2 = Vector2(64.0, 64.0)
 
 var _player_view: Dictionary = {}
 var _action_previews: Array = []
@@ -24,13 +27,34 @@ var _annotation_cell: Array = []
 
 
 func _ready() -> void:
-	custom_minimum_size = Vector2(
-		board_padding.x * 2.0 + point_spacing.x * float(BOARD_WIDTH - 1),
-		board_padding.y * 2.0 + point_spacing.y * float(BOARD_HEIGHT - 1)
-	)
+	_apply_cell_size(cell_size)
 	annotation_menu.id_pressed.connect(_on_annotation_menu_id_pressed)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	queue_redraw()
+
+
+func set_cell_size(value: float) -> void:
+	_apply_cell_size(clampf(roundf(value), 40.0, 80.0))
+
+
+func layout_snapshot() -> Dictionary:
+	var labels: Array = []
+	for spec: Dictionary in _region_label_specs():
+		var row_count: int = int(spec["last_y"]) - int(spec["first_y"]) + 1
+		labels.append({
+			"text": str(spec["text"]),
+			"first_y": int(spec["first_y"]),
+			"last_y": int(spec["last_y"]),
+			"font_size": _region_label_font_size(row_count, str(spec["text"])),
+			"region_height": point_spacing.y * float(row_count),
+		})
+	return {
+		"cell_size": cell_size,
+		"point_spacing": [point_spacing.x, point_spacing.y],
+		"fog_style": "cell_mask",
+		"region_separator_lines": false,
+		"region_labels": labels,
+	}
 
 
 func set_board_data(
@@ -90,6 +114,11 @@ func _gui_input(event: InputEvent) -> void:
 		point_pressed.emit([cell.x, cell.y])
 		accept_event()
 	elif mouse_event.button_index == MOUSE_BUTTON_RIGHT:
+		if not _selected_piece_id.is_empty():
+			_annotation_cell = []
+			selection_cancel_requested.emit()
+			accept_event()
+			return
 		_annotation_cell = [cell.x, cell.y]
 		annotation_menu.position = Vector2i(get_viewport().get_mouse_position())
 		annotation_menu.popup()
@@ -112,10 +141,11 @@ func _on_annotation_menu_id_pressed(id: int) -> void:
 func _draw() -> void:
 	_draw_region_bands()
 	_draw_grid_lines()
-	_draw_region_dividers()
+	_draw_fog_and_contacts()
+	_draw_region_labels()
+	_draw_walls()
 	_draw_vision_overlays()
 	_draw_annotations()
-	_draw_fog_and_contacts()
 	_draw_capture_ghosts()
 	_draw_action_highlights()
 	_draw_discovered_flags()
@@ -140,30 +170,46 @@ func _draw_grid_lines() -> void:
 	var bottom: float = logical_to_local(_display_to_logical(Vector2i(0, BOARD_HEIGHT - 1))).y
 	for display_x: int in BOARD_WIDTH:
 		var x: float = board_padding.x + display_x * point_spacing.x
-		draw_line(Vector2(x, top), Vector2(x, bottom), Color(0.54, 0.57, 0.62, 0.72), 1.4, true)
+		draw_line(Vector2(x, top), Vector2(x, bottom), Color(0.075, 0.09, 0.11, 0.72), 1.6, true)
 	for display_y: int in BOARD_HEIGHT:
 		var y: float = board_padding.y + display_y * point_spacing.y
 		draw_line(
 			Vector2(board_padding.x, y),
 			Vector2(board_padding.x + point_spacing.x * float(BOARD_WIDTH - 1), y),
-			Color(0.54, 0.57, 0.62, 0.72), 1.4, true
+			Color(0.075, 0.09, 0.11, 0.72), 1.6, true
 		)
 
 
-func _draw_region_dividers() -> void:
+func _draw_walls() -> void:
 	var left: float = board_padding.x - point_spacing.x * 0.5
 	var right: float = board_padding.x + point_spacing.x * 8.5
-	for boundary: Array in [[3, 4], [8, 9], [16, 17], [21, 22]]:
-		var y: float = (
-			logical_to_local(Vector2i(1, int(boundary[0]))).y
-			+ logical_to_local(Vector2i(1, int(boundary[1]))).y
-		) * 0.5
-		draw_line(Vector2(left, y), Vector2(right, y), Color(0.78, 0.8, 0.84, 0.9), 2.4, true)
 	for wall_y: int in [4, 21]:
 		var wall_color: Color = Color(0.95, 0.34, 0.27, 0.96) if wall_y == 4 \
 			else Color(0.38, 0.68, 1.0, 0.96)
 		var y: float = logical_to_local(Vector2i(1, wall_y)).y
-		draw_line(Vector2(left, y), Vector2(right, y), wall_color, 6.0, true)
+		draw_line(Vector2(left, y), Vector2(right, y), wall_color, 7.0, true)
+
+
+func _draw_region_labels() -> void:
+	var left: float = board_padding.x - point_spacing.x * 0.5
+	var width: float = point_spacing.x * float(BOARD_WIDTH)
+	for spec: Dictionary in _region_label_specs():
+		var first_y: int = int(spec["first_y"])
+		var last_y: int = int(spec["last_y"])
+		var top_center: float = logical_to_local(Vector2i(5, first_y)).y
+		var bottom_center: float = logical_to_local(Vector2i(5, last_y)).y
+		var center_y: float = (top_center + bottom_center) * 0.5
+		var row_count: int = last_y - first_y + 1
+		var font_size: int = _region_label_font_size(row_count, str(spec["text"]))
+		draw_string(
+			ThemeDB.fallback_font,
+			Vector2(left, center_y + float(font_size) * 0.34),
+			str(spec["text"]),
+			HORIZONTAL_ALIGNMENT_CENTER,
+			width,
+			font_size,
+			Color(1.0, 1.0, 1.0, 0.16)
+		)
 
 
 func _draw_vision_overlays() -> void:
@@ -219,11 +265,13 @@ func _draw_annotations() -> void:
 
 func _draw_fog_and_contacts() -> void:
 	var visible: Dictionary = _coordinate_set(_player_view.get("visible_cells", []))
+	var half_cell: Vector2 = point_spacing * 0.5
 	for y: int in range(1, BOARD_HEIGHT + 1):
 		for x: int in range(1, BOARD_WIDTH + 1):
 			var cell := Vector2i(x, y)
 			if not visible.has(_cell_key(cell)):
-				draw_circle(logical_to_local(cell), 4.2, Color(0.02, 0.025, 0.04, 0.72))
+				var center: Vector2 = logical_to_local(cell)
+				draw_rect(Rect2(center - half_cell, point_spacing), Color(0.01, 0.014, 0.02, 0.7), true)
 	for contact: Dictionary in _player_view.get("contact_intel", []):
 		var cell_value: Array = contact.get("cell", [])
 		if cell_value.size() == 2:
@@ -298,8 +346,9 @@ func _draw_pieces() -> void:
 		var side: String = str(piece.get("side", ""))
 		var fill: Color = Color(0.62, 0.12, 0.1, 0.98) if side == RED else Color(0.11, 0.2, 0.34, 0.98)
 		var border: Color = Color(1.0, 0.55, 0.4, 1.0) if side == RED else Color(0.55, 0.78, 1.0, 1.0)
-		draw_circle(center, 15.5, fill)
-		draw_arc(center, 15.5, 0.0, TAU, 30, border, 2.3, true)
+		var radius: float = clampf(cell_size * 0.29, 13.0, 22.0)
+		draw_circle(center, radius, fill)
+		draw_arc(center, radius, 0.0, TAU, 30, border, 2.3, true)
 		_draw_piece_text(center, _piece_mark(str(piece.get("piece_type", "")), side), Color.WHITE)
 
 
@@ -348,14 +397,40 @@ func _cell_key(cell: Vector2i) -> String:
 
 func _region_color(y: int) -> Color:
 	if y <= 3:
-		return Color(0.24, 0.055, 0.055, 0.95)
+		return Color(0.72, 0.25, 0.2, 1.0)
 	if y <= 8:
-		return Color(0.17, 0.075, 0.065, 0.95)
+		return Color(0.59, 0.37, 0.22, 1.0)
 	if y <= 16:
-		return Color(0.105, 0.115, 0.135, 0.98)
+		return Color(0.45, 0.52, 0.44, 1.0)
 	if y <= 21:
-		return Color(0.055, 0.105, 0.17, 0.95)
-	return Color(0.045, 0.075, 0.19, 0.95)
+		return Color(0.25, 0.43, 0.64, 1.0)
+	return Color(0.2, 0.3, 0.72, 1.0)
+
+
+func _apply_cell_size(value: float) -> void:
+	cell_size = value
+	point_spacing = Vector2(cell_size, cell_size)
+	custom_minimum_size = Vector2(
+		board_padding.x * 2.0 + cell_size * float(BOARD_WIDTH - 1),
+		board_padding.y * 2.0 + cell_size * float(BOARD_HEIGHT - 1)
+	)
+	queue_redraw()
+
+
+func _region_label_specs() -> Array:
+	return [
+		{"text": "大本营", "first_y": 1, "last_y": 3},
+		{"text": "缓冲区", "first_y": 4, "last_y": 8},
+		{"text": "战区", "first_y": 9, "last_y": 16},
+		{"text": "缓冲区", "first_y": 17, "last_y": 21},
+		{"text": "大本营", "first_y": 22, "last_y": 24},
+	]
+
+
+func _region_label_font_size(row_count: int, text: String) -> int:
+	var height_limit: float = point_spacing.y * float(row_count) * 0.34
+	var width_limit: float = point_spacing.x * float(BOARD_WIDTH) / maxf(1.0, float(text.length()) * 0.78)
+	return int(clampf(minf(height_limit, width_limit), 28.0, 52.0))
 
 
 func _piece_mark(piece_type: String, side: String) -> String:

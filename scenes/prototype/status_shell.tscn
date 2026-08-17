@@ -1,7 +1,8 @@
 [gd_scene format=3]
 
-[node name="StatusShell" type="PanelContainer"]
-custom_minimum_size = Vector2(360, 560)
+[node name="StatusShell" type="ScrollContainer"]
+custom_minimum_size = Vector2(300, 360)
+horizontal_scroll_mode = 0
 size_flags_vertical = 3
 mouse_filter = 1
 
@@ -79,7 +80,7 @@ text = "AI 自动行动"
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.82, 0.38, 1)
-text = "提示：左键选择棋子与交点，Esc取消；右键可添加圆、叉或方形标注。"
+text = "提示：左键选择棋子；选中时右键取消，未选中时右键添加圆、叉或方形标注。"
 autowrap_mode = 2
 
 [node name="CasualtyTitle" type="Label" parent="StatusMargin/StatusColumn"]

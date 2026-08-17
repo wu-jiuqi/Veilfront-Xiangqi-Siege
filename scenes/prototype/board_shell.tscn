@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scripts/prototype/board_surface.gd" id="1_board_surface"]
 
 [node name="BoardShell" type="PanelContainer"]
-custom_minimum_size = Vector2(620, 560)
+custom_minimum_size = Vector2(460, 360)
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -25,15 +25,16 @@ horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="BoardScroll" type="ScrollContainer" parent="BoardMargin/BoardColumn"]
-custom_minimum_size = Vector2(580, 490)
+custom_minimum_size = Vector2(430, 280)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
 [node name="BoardSurface" type="Control" parent="BoardMargin/BoardColumn/BoardScroll"]
-custom_minimum_size = Vector2(532, 976)
+custom_minimum_size = Vector2(512, 1352)
 layout_mode = 2
+size_flags_horizontal = 4
 mouse_filter = 0
 focus_mode = 1
 script = ExtResource("1_board_surface")

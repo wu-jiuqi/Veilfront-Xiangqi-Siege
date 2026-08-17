@@ -21,7 +21,15 @@ func _run() -> void:
 	_check(surface != null, "BoardSurface 预置交点棋盘节点存在")
 	_check(surface != null and surface.has_method("logical_to_local") \
 		and surface.has_method("local_to_logical"), "交点棋盘统一提供逻辑坐标与本地坐标互转")
-	_check(surface != null and surface.custom_minimum_size.x <= 540.0, "九路交点棋盘宽度可完整进入 1280 视口")
+	_check(surface != null and surface.has_method("layout_snapshot"), "交点棋盘暴露可验证的响应式绘制规格")
+	if surface != null and surface.has_method("layout_snapshot"):
+		var layout: Dictionary = surface.layout_snapshot()
+		var spacing: Array = layout.get("point_spacing", [])
+		_check(spacing.size() == 2 and is_equal_approx(float(spacing[0]), float(spacing[1])),
+			"棋盘横纵交点间距相等，格子保持正方形")
+		_check(str(layout.get("fog_style", "")) == "cell_mask", "迷雾使用整格黑色蒙版而非交点黑点")
+		_check(not bool(layout.get("region_separator_lines", true)), "区域之间仅用颜色块区分")
+		_check(layout.get("region_labels", []).size() == 5, "双侧大本营、缓冲区与中央战区均有背景大字")
 	var initial_view: Dictionary = scene.get_player_view_snapshot()
 	if surface != null:
 		var red_bottom_y: float = surface.logical_to_local(Vector2i(5, 1)).y
@@ -58,9 +66,37 @@ func _run() -> void:
 		marker_event.button_index = MOUSE_BUTTON_RIGHT
 		marker_event.pressed = true
 		marker_event.position = surface.logical_to_local(Vector2i(3, 9))
+		scene.select_cell_for_test([1, 1])
+		surface._gui_input(marker_event)
+		_check(turn_selection.text.contains("选择：无") \
+			and not surface.annotation_snapshot().has("3,9"), "选中棋子时右键优先取消选择且不打开标注")
 		surface._gui_input(marker_event)
 		surface.get_node("AnnotationMenu").id_pressed.emit(1)
-		_check(surface.annotation_snapshot().get("3,9", "") == "circle", "右键菜单可在交点添加圆形本地标注")
+		_check(surface.annotation_snapshot().get("3,9", "") == "circle", "未选中棋子时右键菜单可添加圆形本地标注")
+		scene._unhandled_input(cancel_event)
+
+	var page := scene.get_node("SafeMargin/Page") as Control
+	var original_root_size: Vector2i = root.size
+	root.size = Vector2i(1024, 640)
+	await process_frame
+	await process_frame
+	var safe_margin := scene.get_node("SafeMargin") as Control
+	_check(page.size.x <= safe_margin.size.x and page.size.y <= safe_margin.size.y,
+		"1024×640窗口缩放后页面不溢出安全区域（页面 %.0f×%.0f / 安全区 %.0f×%.0f）" % [
+			page.size.x, page.size.y, safe_margin.size.x, safe_margin.size.y,
+		])
+	var compact_cell_size: float = 0.0
+	if surface != null and surface.has_method("layout_snapshot"):
+		compact_cell_size = float(surface.layout_snapshot().get("cell_size", 0.0))
+	root.size = Vector2i(1600, 900)
+	await process_frame
+	await process_frame
+	var wide_cell_size: float = compact_cell_size
+	if surface != null and surface.has_method("layout_snapshot"):
+		wide_cell_size = float(surface.layout_snapshot().get("cell_size", 0.0))
+	_check(wide_cell_size >= compact_cell_size, "宽窗口不会缩小棋盘交点尺寸")
+	root.size = original_root_size
+	await process_frame
 
 	var move_preview: Dictionary = _first_preview(scene.get_action_preview_snapshot(), "move")
 	_check(not move_preview.is_empty(), "存在可提交的人类移动候选")

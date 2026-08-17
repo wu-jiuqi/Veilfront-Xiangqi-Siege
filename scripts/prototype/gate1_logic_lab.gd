@@ -24,6 +24,10 @@ var ai_turn_pending: bool = false
 var network_session: Node
 
 @onready var match_controller: Node = $MatchController
+@onready var safe_margin: MarginContainer = $SafeMargin
+@onready var page: VBoxContainer = $SafeMargin/Page
+@onready var header_title: Label = $SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/Title
+@onready var difficulty_caption: Label = $SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/DifficultyGroup/DifficultyCaption
 @onready var seed_value: Label = $SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/SeedGroup/SeedValue
 @onready var seed_input: LineEdit = $SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/SeedGroup/SeedInput
 @onready var side_value: Label = $SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/MatchMeta/HumanSideValue
@@ -32,6 +36,8 @@ var network_session: Node
 @onready var config_value: Label = $SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/MatchMeta/ConfigValue
 @onready var difficulty_select: OptionButton = $SafeMargin/Page/HeaderPanel/HeaderMargin/HeaderRow/DifficultyGroup/DifficultySelect
 @onready var board_surface: Control = $SafeMargin/Page/Workspace/BoardShell/BoardMargin/BoardColumn/BoardScroll/BoardSurface
+@onready var board_shell: PanelContainer = $SafeMargin/Page/Workspace/BoardShell
+@onready var status_shell: ScrollContainer = $SafeMargin/Page/Workspace/StatusShell
 @onready var overview_strip: Label = $SafeMargin/Page/Workspace/BoardShell/BoardMargin/BoardColumn/OverviewStrip
 @onready var confirm_panel: PanelContainer = $SafeMargin/Page/Workspace/BoardShell/BoardMargin/BoardColumn/ActionConfirm
 @onready var confirm_summary: Label = $SafeMargin/Page/Workspace/BoardShell/BoardMargin/BoardColumn/ActionConfirm/ConfirmMargin/ConfirmColumn/ConfirmSummary
@@ -52,6 +58,7 @@ var network_session: Node
 @onready var red_casualties: Label = $SafeMargin/Page/Workspace/StatusShell/StatusMargin/StatusColumn/CasualtyGrid/RedCasualties
 @onready var black_casualties: Label = $SafeMargin/Page/Workspace/StatusShell/StatusMargin/StatusColumn/CasualtyGrid/BlackCasualties
 @onready var event_log: RichTextLabel = $SafeMargin/Page/Workspace/StatusShell/StatusMargin/StatusColumn/EventLog
+@onready var event_title: Label = $SafeMargin/Page/Workspace/StatusShell/StatusMargin/StatusColumn/EventTitle
 @onready var terminal_overlay: CenterContainer = $TerminalOverlay
 @onready var terminal_value: Label = $TerminalOverlay/TerminalPanel/TerminalMargin/TerminalColumn/TerminalValue
 @onready var ai_turn_timer: Timer = $AiTurnTimer
@@ -61,8 +68,10 @@ var network_session: Node
 func _ready() -> void:
 	board_state.resize(BOARD_CELL_COUNT)
 	board_state.fill(0)
-	footer.text = "交点棋盘 · 左键选择 / Esc取消 / 右键圆、叉、方形标注"
+	footer.text = "交点棋盘 · 左键选择 / Esc取消 · 选中时右键取消，未选中时右键标注"
 	_connect_controls()
+	get_viewport().size_changed.connect(_apply_responsive_layout)
+	call_deferred("_apply_responsive_layout")
 	if network_mode:
 		network_session = get_node_or_null(network_session_path)
 		assert(network_session != null)
@@ -165,6 +174,7 @@ func _on_network_connection_state_changed(snapshot: Dictionary) -> void:
 func _connect_controls() -> void:
 	board_surface.point_pressed.connect(_on_board_point_pressed)
 	board_surface.annotation_changed.connect(_on_board_annotation_changed)
+	board_surface.selection_cancel_requested.connect(_on_board_selection_cancel_requested)
 	confirm_button.pressed.connect(_submit_pending_action)
 	cancel_button.pressed.connect(_clear_selection)
 	move_button.pressed.connect(_set_action_mode.bind("move"))
@@ -206,6 +216,11 @@ func _on_board_point_pressed(cell: Array) -> void:
 		_select_piece(own_piece)
 	else:
 		message_value.text = "先选择一枚己方在场棋子。"
+
+
+func _on_board_selection_cancel_requested() -> void:
+	_clear_selection()
+	message_value.text = "已取消棋子选择；再次右键交点可添加或清除标注。"
 
 
 func _on_board_annotation_changed(cell: Array, marker: String) -> void:
@@ -386,6 +401,31 @@ func _clear_selection(refresh: bool = true) -> void:
 		_refresh_all()
 
 
+func _apply_responsive_layout() -> void:
+	var viewport_size: Vector2 = get_viewport().get_visible_rect().size
+	var compact_width: bool = viewport_size.x < 1180.0
+	var compact_height: bool = viewport_size.y < 700.0
+	var outer_margin: int = 8 if compact_width or compact_height else 16
+	for margin_name: String in ["margin_left", "margin_top", "margin_right", "margin_bottom"]:
+		safe_margin.add_theme_constant_override(margin_name, outer_margin)
+	page.add_theme_constant_override("separation", 6 if compact_height else 10)
+	header_title.visible = not compact_width
+	difficulty_caption.visible = not compact_height
+	config_value.visible = not compact_width and not compact_height
+	footer.visible = not compact_height
+	event_title.visible = not compact_height
+	event_log.visible = not compact_height
+	status_shell.custom_minimum_size = Vector2(300.0 if compact_width else 340.0, 300.0)
+	board_shell.custom_minimum_size = Vector2(440.0, 300.0)
+	var target_board_width: float = clampf(viewport_size.x * 0.62, 520.0, 720.0)
+	var responsive_cell_size: float = clampf(
+		(target_board_width - board_surface.board_padding.x * 2.0) / float(BOARD_WIDTH - 1),
+		40.0,
+		80.0
+	)
+	board_surface.set_cell_size(responsive_cell_size)
+
+
 func _refresh_all() -> void:
 	if player_view.is_empty():
 		return
@@ -462,7 +502,7 @@ func _refresh_status() -> void:
 			" · 弹药 %d" % int(selected.get("bombard_ammo", 0)) if selected["piece_type"] == "cannon" else "",
 		]
 	var mode_name: String = {"bombard": "区域炮击", "resurrect": "献祭复活", "move": "普通移动"}.get(action_mode, action_mode)
-	mode_status.text = "模式：%s · 左键走子 / Esc取消 / 右键标注" % mode_name
+	mode_status.text = "模式：%s · 左键走子 / Esc取消 · 选中时右键取消，未选中时右键标注" % mode_name
 	move_button.disabled = not _can_submit()
 	bombard_button.disabled = not _can_submit() or not _selected_has_bombardment()
 	resurrect_button.disabled = not _can_submit() or not _selected_has_resurrection()
@@ -479,7 +519,7 @@ func _refresh_status() -> void:
 
 func _refresh_notifications(previous_view: Dictionary, current_view: Dictionary) -> void:
 	if int(current_view.get("action_index", 0)) == 0:
-		message_value.text = "对局开始：棋子落在交点上；左键走子，Esc取消，右键添加圆/叉/方形标注。"
+		message_value.text = "对局开始：棋子落在交点上；左键走子，选中时右键取消，未选中时右键添加圆/叉/方形标注。"
 		return
 	var notifications: Array[String] = []
 	var previous_event_ids: Dictionary = {}
