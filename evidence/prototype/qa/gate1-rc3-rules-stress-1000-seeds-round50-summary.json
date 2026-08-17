@@ -1,0 +1,58 @@
+{
+  "schema_version": "seeded-match-independent-qa-summary-v1",
+  "candidate_commit": "6253678157157091584b253470e709bad17c534f",
+  "start_seed": 471001,
+  "requested_seeds": 1000,
+  "completed_matches": 1000,
+  "failure_count": 0,
+  "determinism_checked_count": 1000,
+  "determinism_mismatch_count": 0,
+  "replay_sample_count": 20,
+  "replay_verified_count": 20,
+  "records_count": 1000,
+  "records_digest": "25c40f9467a7c4d4ad45162e3aef7f5f95b1948a76757bd2808b4eb6fc906064",
+  "manifest_sha256": "a9ae2b90e6088837b4469003d3f89b5fa6a3d681c5218c1fbd0738d984116a78",
+  "round_limit": 50,
+  "round_limit_status": "hypothesis_cli_overridable",
+  "reason_counts": {
+    "round_limit_draw": 590,
+    "round_limit_flags": 408,
+    "three_flags": 2
+  },
+  "winner_counts": {
+    "red": 183,
+    "black": 227,
+    "draw": 590
+  },
+  "flag_distribution": {
+    "expected_region": {"x_min": 1, "x_max": 9, "y_min": 9, "y_max": 16},
+    "observed_cell_count": 72,
+    "invalid_match_count": 0,
+    "duplicate_flag_match_count": 0
+  },
+  "qa_p1_004_regression": {
+    "seed": 471016,
+    "minimal_reproduction_exit_code": 0,
+    "diagnostic_first_event_mismatch": -1,
+    "diagnostic_first_rejected_intent": -1,
+    "live_event_count": 100,
+    "replay_event_count": 100,
+    "state_digest_matches": true,
+    "event_digest_matches": true,
+    "status": "closed"
+  },
+  "manifest_verification": {
+    "normal_exit_code": 0,
+    "forced_tamper_exit_code": 1,
+    "forced_tamper_error": "manifest_count_or_digest_mismatch"
+  },
+  "independent_recalculation": {
+    "record_count": 1000,
+    "seed_min": 471001,
+    "seed_max": 472000,
+    "unique_seed_count": 1000,
+    "all_records_deterministic": true,
+    "recomputed_records_digest": "25c40f9467a7c4d4ad45162e3aef7f5f95b1948a76757bd2808b4eb6fc906064",
+    "matches_runner_summary": true
+  }
+}

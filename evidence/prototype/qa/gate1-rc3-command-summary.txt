@@ -1,0 +1,137 @@
+QA Instance: inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
+执行日期: 2026-08-17 (Asia/Shanghai)
+受测提交: 6253678157157091584b253470e709bad17c534f
+生产修复提交: b3bc3861b6e88e875fb991951dcdad53249bf687
+Contract: LOOP-CTR-GATE1-VERTICAL-SLICE-001 v5 / d88d9017bb30437ac480e0fcf4f7b262b5ae6b3427447946e50ec37a5d3b44ca
+Project Brief: v4 / df8deb810d8c06c8c2f5763031fde2c39f14aa81226e23ffb25636ee3f1eca0b
+Clean worktree: D:\Veilfront-Xiangqi-Siege-GATE1-QA-RC3-6253678
+
+=== Git identity and change scope ===
+COMMAND: git rev-parse HEAD
+EXIT: 0
+OUTPUT: 6253678157157091584b253470e709bad17c534f
+COMMAND: git show -s --format=%P 6253678157157091584b253470e709bad17c534f
+EXIT: 0
+OUTPUT: b3bc3861b6e88e875fb991951dcdad53249bf687
+OBSERVATION: candidate parent is the QA-P1-004 production fix; candidate adds only the preserved RC2 QA failure evidence.
+
+=== Project / Contract / Organization ===
+COMMAND: python <plugin>/scripts/validate_project_instance.py --project-root .
+EXIT: 0
+OUTPUT: state=normal; errors=[]; warnings=[]; plugin=0.4.0-alpha.2; framework=3589bce5cf4388f91a08f12acb5d90679256191d5085e65687d06a635bbdcd32
+
+COMMAND: python <plugin>/scripts/validate_pipeline_contract.py game-pipeline/loops/contracts/CTR-P1-001-vertical-slice.yaml
+EXIT: 0
+OUTPUT: OK
+
+COMMAND: python <plugin>/scripts/validate_organization_registry.py --snapshot game-pipeline/organization/snapshot.yaml --history game-pipeline/organization/event-history.yaml
+EXIT: 0
+OUTPUT: Organization Registry contract/digest/approval/history consistent
+
+COMMAND: python -B game-pipeline/loops/tools/qa_p1_003_migration.py verify-history
+EXIT: 0
+OUTPUT: validator_sha256=90804f2221af1973d099f4fc531fd39e8aaaaca7bf101922ee63c9c67f909633; history_error_count=0; errors=[]
+
+Registry read-only observation:
+state=active; iteration=2; revision=52; sequence=52; history_count=52;
+contract=v5/d88d9017bb30437ac480e0fcf4f7b262b5ae6b3427447946e50ec37a5d3b44ca;
+brief=v4/df8deb810d8c06c8c2f5763031fde2c39f14aa81226e23ffb25636ee3f1eca0b;
+tail_event=core.input_bound; tail_digest=90e36ddc971a9f949911352969cdc69208e416fec018c2f54684a4078cd16875
+
+=== Official Loop CLI ===
+COMMAND: python <plugin>/scripts/validate_loop_registry.py --snapshot .../snapshot.yaml --event <plugin>/contracts/loop-registry-event.template.yaml --contract game-pipeline/loops/contracts/loop-contract-gate1-vertical-slice-v5.yaml --state-machine <plugin>/contracts/loop-state-machine.default.yaml --history .../event-history.yaml
+EXIT: 1
+OUTPUT: exactly the six owner-approved QA-P1-003 errors, no seventh error:
+1. Snapshot 模板初始状态必须等于状态机 initial_state
+2. Snapshot 模板 current_iteration 必须从 0 开始
+3. 注册后的 Snapshot 模板必须位于 sequence=1、record_revision=1
+4. draft 注册基线的 inputs 和 outputs 必须为空
+5. Snapshot input_slot_id 必须完整对应 Contract required_inputs
+6. Snapshot deliverable_id 必须完整对应 Contract required_deliverables
+RESULT: failed; owner-approved tooling exception is requalified because every v5 all_conditions_required item passed.
+
+=== Godot / RC3 build ===
+COMMAND: D:\Godot\godot.cmd --version
+EXIT: 0
+OUTPUT: 4.7.1.stable.official.a13da4feb
+
+COMMAND: D:\Godot\godot.cmd --headless --path . --editor --quit-after 30
+EXIT: 0
+OUTPUT: first_scan_filesystem DONE; no parse/import/resource ERROR; Scan thread aborted warning on forced exit.
+
+COMMAND: D:\Godot\godot.cmd --headless --path . --quit-after 3
+EXIT: 0
+OUTPUT: main scene loaded; two invalid UID text-path fallback warnings; no load ERROR.
+
+COMMAND: D:\Godot\godot.cmd --headless --path . --script res://tests/prototype/run_all.gd
+EXIT: 0
+OUTPUT: PROTOTYPE_BASIS_CHECKS_PASSED scaffold=9 focused_suites=15 full_gate1=false
+
+COMMAND: D:\Godot\godot.cmd --headless --path . --script res://tests/prototype/run_playtest_graybox.gd
+EXIT: 0
+OUTPUT: PLAYTEST_GRAYBOX_SMOKE_PASSED cells=216 round_limit=50 traditional_pieces=true regions=3 right_click_cancel=true auto_ai=true casualties=true
+
+Focused commands all EXIT=0:
+- res://tests/prototype/run_owner_rule_revision_v4.gd -> OWNER_RULE_REVISION_V4_PASSED
+- res://tests/prototype/run_owner_rule_revision_v5.gd -> OWNER_RULE_REVISION_V5_PASSED
+- res://tests/prototype/run_move_rules.gd -> MOVE_RULES_SUITE_PASSED
+- res://tests/prototype/run_elephant_reveal.gd -> ELEPHANT_REVEAL_PASS
+- res://tests/prototype/run_ai_piece_diversity.gd -> AI_PIECE_DIVERSITY_PASSED
+- res://tests/prototype/run_ai_strategy_state_eval.gd -> AI_STRATEGY_STATE_EVAL_PASSED
+- res://tests/prototype/run_ai_two_ply_belief.gd -> AI_TWO_PLY_BELIEF_PASSED
+- res://tests/prototype/network/run_lan_host_session.gd -> LAN_HOST_SESSION_TESTS_PASSED
+- res://tests/prototype/network/run_lan_network_integration.gd -> LAN_NETWORK_INTEGRATION_PASSED
+- res://tests/prototype/network/run_lan_lobby_scene.gd -> LAN_LOBBY_SCENE_TEST_PASSED
+
+RC3 producer artifact:
+PATH: D:\Veilfront Xiangqi Siege\builds\windows\Veilfront_Xiangqi_Siege_GATE1_RC3.exe
+SIZE: 109740336 bytes
+SHA256: 480273DDEAE985C0C4AA03BE449E5999FBA57CA7B296B591AC7ED36B5BC8A229
+HEADLESS LAUNCH EXIT: 0
+
+=== QA-P1-004 regression ===
+COMMAND: D:\Godot\godot.cmd --headless --path . --script res://tests/prototype/run_seeded_matches.gd -- --seeds 1 --start-seed 471016 --round-limit 50 --replay-samples 1
+EXIT: 0
+OUTPUT: completed=1; failure=0; determinism_checked=1; mismatch=0; replay_verified=1/1; state_digest=dea568557684bed2c3a10894bfdf14bd917186662b517942cfb945ddb9221615; event_digest=1f53e1ba8a9f26522e9ca2ecfd6ce89d7732ff63f9decca84baeaede71d820a6
+
+COMMAND: D:\Godot\godot.cmd --headless --path . --script res://evidence/prototype/qa/gate1_rc2_seed_471016_diagnostic.gd
+EXIT: 0
+OUTPUT: first_event_mismatch=-1; first_rejected_intent=-1; live/replay events=100/100; state_digest_matches=true; event_digest_matches=true
+
+=== Static information-boundary audit ===
+COMMAND: Select-String UI/client scripts for MatchState|FullState|_full_state|get_full_state|test audit|initial_flag_positions|rng_state|audit_log
+EXIT: 0
+OUTPUT: UI_FORBIDDEN_MATCH_COUNT=0
+OBSERVATION: lan_protocol.gd explicitly lists 11 forbidden delivery keys; network integration black-box tests confirm side-specific PlayerView only, no FullState/RNG/seed/other-side flag memory.
+
+=== PlayerView AI matrix ===
+COMMAND: D:\Godot\godot.cmd --headless --path . --script res://tests/prototype/run_ai_difficulty_seed_matrix.gd -- --seeds 100 --start-seed 471001 --manifest-path res://evidence/prototype/qa/gate1-rc3-ai-difficulty-seed-matrix-100x4.jsonl
+EXIT: 0
+OUTPUT: records=400; failure=0; determinism_mismatch=0; hidden_equivalence_mismatch=0; mapping_failure=0; submit_failure=0; records_digest=879b1e381944c0183fb49cd7c5975b4d0303c24627e0b4ff9742b99942abcc20
+INDEPENDENT RECOMPUTE: EXIT=0; 400 records; seeds 471001..471100; four difficulties x100; digest exact match.
+RAW SHA256: 6366CBECAC5213B03BFCD1376000427E1E7B40AD7370FA3C1159FC11D1DA892C
+ZIP SHA256: EF28CE9E862689AA7AC4B5F40A485009805286E25A5E20DD78364BDE0BB04028
+
+=== Contract 1000-seed simulation ===
+COMMAND: D:\Godot\godot.cmd --headless --path . --script res://tests/prototype/run_seeded_matches.gd -- --seeds 1000 --start-seed 471001 --round-limit 50 --replay-samples 20 --manifest-path res://evidence/prototype/qa/gate1-rc3-rules-stress-1000-seeds-round50.jsonl
+EXIT: 0
+OUTPUT: requested=1000; completed=1000; failure=0; determinism_checked=1000; determinism_mismatch=0; replay_verified=20/20; records_digest=25c40f9467a7c4d4ad45162e3aef7f5f95b1948a76757bd2808b4eb6fc906064
+TERMINATIONS: round_limit_draw=590; round_limit_flags=408; three_flags=2; winners red=183, black=227, draw=590.
+INDEPENDENT RECOMPUTE: 1000 unique seeds 471001..472000; all deterministic; no invalid flag region or duplicate flags; digest exact match.
+MANIFEST SHA256: A9AE2B90E6088837B4469003D3F89B5FA6A3D681C5218C1FBD0738D984116A78
+
+COMMAND: D:\Godot\godot.cmd --headless --path . --script res://tests/prototype/verify_seeded_manifest.gd -- --path res://evidence/prototype/qa/gate1-rc3-rules-stress-1000-seeds-round50.jsonl
+EXIT: 0
+OUTPUT: SEEDED_MANIFEST_VERIFIED records=1000 digest=25c40f9467a7c4d4ad45162e3aef7f5f95b1948a76757bd2808b4eb6fc906064
+
+COMMAND: same verifier with --force-record-tamper
+EXIT: 1
+OUTPUT: SEEDED_MANIFEST_VERIFY_FAILED: manifest_count_or_digest_mismatch
+RESULT: expected tamper rejection passed.
+
+=== Final professional result ===
+AUTOMATIC CHECKS: all satisfied under Contract v5, including QA-P1-003 owner-approved tooling exception all_conditions_required.
+QA-P1-004: closed.
+PROFESSIONAL REVIEW: pass.
+LEGAL TRANSITION: active -> review allowed.
+GATE-1: not approved by QA; result awaits project-owner human judgment.
