@@ -12,6 +12,7 @@ static var _failures: Array[String] = []
 static func run_suite() -> bool:
 	_failures.clear()
 	_test_wall_line_blocks_until_breached()
+	_test_hidden_horse_contact_stops_and_resolves_rook()
 	_test_elephant_field_blocks_enemy_pawn_and_exposes_overlays()
 	_test_flag_discovery_is_private_and_persistent()
 	_test_all_deaths_use_shared_casualty_pool()
@@ -20,6 +21,24 @@ static func run_suite() -> bool:
 	for failure: String in _failures:
 		push_error("OWNER_RULE_V5_FAIL: %s" % failure)
 	return _failures.is_empty()
+
+
+static func _test_hidden_horse_contact_stops_and_resolves_rook() -> void:
+	var state: Dictionary = _empty_state(8510)
+	state["walls"][MatchState.BLACK]["status"] = "BREACHED"
+	_place(state, "red-rook-1", Vector2i(5, 10))
+	_place(state, "black-horse-1", Vector2i(5, 12))
+	state["pieces"]["black-horse-1"]["hidden"] = true
+	state["active_side"] = MatchState.RED
+	var result: Dictionary = RuleEngine.submit_action(
+		state, _move("red-rook-1", Vector2i(5, 14))
+	)
+	_expect(result.get("consumed", false), "车接触路径中的隐身马时应正常结算行动")
+	_expect(Canonical.coordinate(state["pieces"]["red-rook-1"]["position"]) == Vector2i(5, 12),
+		"普通车接触首枚隐身马后应停在接触交点")
+	_expect(not state["pieces"]["black-horse-1"]["alive"] \
+		and state["casualty_pools"][MatchState.BLACK].has("black-horse-1"),
+		"路径首枚隐身马应被车吃掉而不是成为无反馈路障")
 
 
 static func _test_wall_line_blocks_until_breached() -> void:
@@ -148,6 +167,19 @@ static func _test_advisor_sacrifice_and_revive_update_pool() -> void:
 	_mark_dead_for_setup(state, "red-advisor-2")
 	_mark_dead_for_setup(state, "red-general-1")
 	state["active_side"] = MatchState.RED
+	var view: Dictionary = Projector.project(state, MatchState.RED)
+	var public_actions: Array = Projector.generate_action_intents(view)
+	var registered_public_action: Dictionary = _find_action(
+		public_actions, "red-advisor-1", "resurrect"
+	)
+	var core_actions: Array = MoveRules.generate_legal_actions(
+		state, MatchState.RED, Projector.visibility_context(state, MatchState.RED)
+	)
+	_expect(not registered_public_action.is_empty() \
+		and registered_public_action.get("classification", "") == Projector.KNOWN_LEGAL,
+		"士的复活动作必须注册到玩家公开行动列表")
+	_expect(not _find_action(core_actions, "red-advisor-1", "resurrect").is_empty(),
+		"士的复活动作必须注册到规则核心合法行动列表")
 	var result: Dictionary = RuleEngine.submit_action(state, {
 		"piece_id": "red-advisor-1",
 		"action_type": "resurrect",
@@ -162,6 +194,14 @@ static func _test_advisor_sacrifice_and_revive_update_pool() -> void:
 	_expect(state["pieces"]["red-rook-1"]["alive"], "唯一合格候选红车应被复活")
 	_expect(not state["pieces"]["red-advisor-2"]["alive"], "阵亡士不得成为复活候选")
 	_expect(not state["pieces"]["red-general-1"]["alive"], "阵亡帅不得成为复活候选")
+
+
+static func _find_action(actions: Array, piece_id: String, action_type: String) -> Dictionary:
+	for action: Dictionary in actions:
+		if str(action.get("piece_id", "")) == piece_id \
+		and str(action.get("action_type", "")) == action_type:
+			return action
+	return {}
 
 
 static func _test_capture_ghost_lasts_one_round() -> void:

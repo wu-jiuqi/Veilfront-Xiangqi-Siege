@@ -289,6 +289,11 @@ static func _evaluate_rook(state: Dictionary, piece: Dictionary, origin: Vector2
 		if special:
 			targets.append(occupant["id"])
 		elif index < path.size() - 1:
+			if occupant["piece_type"] == "horse" and bool(occupant.get("hidden", false)):
+				target = path[index]
+				path = path.slice(0, index + 1)
+				targets.append(occupant["id"])
+				break
 			return _invalid("route_blocked", [path[index]])
 		else:
 			targets.append(occupant["id"])

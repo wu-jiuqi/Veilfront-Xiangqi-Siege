@@ -162,6 +162,7 @@ func _on_network_action_feedback(feedback: Dictionary) -> void:
 	if bool(feedback.get("consumed", false)):
 		message_value.text = "行动已由房主裁决。"
 	else:
+		confirm_button.disabled = false
 		message_value.text = "行动未通过房主裁决：%s" % str(feedback.get("error", "unknown"))
 
 
@@ -306,10 +307,19 @@ func _submit_pending_action() -> Dictionary:
 	confirm_button.disabled = true
 	var result: Dictionary = network_session.submit_intent(intent) if network_mode \
 		else match_controller.submit_human_intent(intent)
-	confirm_button.disabled = false
-	if not bool(result.get("consumed", false)):
+	if _submission_accepted(result, network_mode):
+		if network_mode:
+			message_value.text = "行动已登记，等待房主裁决……"
+		else:
+			confirm_button.disabled = false
+	else:
+		confirm_button.disabled = false
 		message_value.text = "行动未提交：%s" % str(result.get("error", "unknown"))
 	return result
+
+
+func _submission_accepted(result: Dictionary, awaiting_host: bool) -> bool:
+	return bool(result.get("ok", false)) if awaiting_host else bool(result.get("consumed", false))
 
 
 func _on_ai_step_pressed() -> void:
@@ -397,6 +407,8 @@ func _clear_selection(refresh: bool = true) -> void:
 	action_mode = "move"
 	if is_instance_valid(confirm_panel):
 		confirm_panel.visible = false
+	if is_instance_valid(confirm_button):
+		confirm_button.disabled = false
 	if refresh and not player_view.is_empty():
 		_refresh_all()
 
