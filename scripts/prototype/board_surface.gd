@@ -54,6 +54,11 @@ func layout_snapshot() -> Dictionary:
 		"fog_style": "cell_mask",
 		"region_separator_lines": false,
 		"region_labels": labels,
+		"vision_overlay_style": {
+			"rook": "blue_grid_path_line",
+			"elephant": "yellow_field_grid_outline",
+			"elephant_reveal_outline": false,
+		},
 	}
 
 
@@ -215,37 +220,59 @@ func _draw_region_labels() -> void:
 func _draw_vision_overlays() -> void:
 	var overlays: Dictionary = _player_view.get("vision_overlays", {})
 	for source: Dictionary in overlays.get("rook_paths", []):
-		_draw_point_set_outline(source.get("cells", []), Color(0.31, 0.88, 1.0, 0.9), 3.0, 0.31)
-	for source: Dictionary in overlays.get("elephant_reveal_zones", []):
-		_draw_point_set_outline(source.get("cells", []), Color(0.35, 1.0, 0.72, 0.9), 2.6, 0.36)
+		_draw_rook_grid_path(source.get("cells", []))
 	for source: Dictionary in overlays.get("elephant_block_fields", []):
-		_draw_point_set_outline(source.get("cells", []), Color(1.0, 0.72, 0.2, 0.98), 4.4, 0.3)
+		_draw_elephant_field_grid_outline(source.get("cells", []))
 
 
-func _draw_point_set_outline(cells: Array, color: Color, width: float, scale: float) -> void:
-	var cell_set: Dictionary = {}
+func _draw_rook_grid_path(cells: Array) -> void:
+	var points: Array[Vector2i] = _normalized_overlay_cells(cells)
+	if points.size() < 2:
+		return
+	points.sort_custom(func(a: Vector2i, b: Vector2i) -> bool:
+		return a.y < b.y or (a.y == b.y and a.x < b.x)
+	)
+	var from: Vector2 = logical_to_local(points.front())
+	var to: Vector2 = logical_to_local(points.back())
+	draw_line(from, to, Color(0.04, 0.32, 0.78, 0.42), 9.0, true)
+	draw_line(from, to, Color(0.28, 0.78, 1.0, 0.98), 4.5, true)
+
+
+func _draw_elephant_field_grid_outline(cells: Array) -> void:
+	var points: Array[Vector2i] = _normalized_overlay_cells(cells)
+	if points.is_empty():
+		return
+	var min_x: int = points[0].x
+	var max_x: int = points[0].x
+	var min_y: int = points[0].y
+	var max_y: int = points[0].y
+	for cell: Vector2i in points:
+		min_x = mini(min_x, cell.x)
+		max_x = maxi(max_x, cell.x)
+		min_y = mini(min_y, cell.y)
+		max_y = maxi(max_y, cell.y)
+	var top_left: Vector2 = logical_to_local(Vector2i(min_x, min_y))
+	var top_right: Vector2 = logical_to_local(Vector2i(max_x, min_y))
+	var bottom_right: Vector2 = logical_to_local(Vector2i(max_x, max_y))
+	var bottom_left: Vector2 = logical_to_local(Vector2i(min_x, max_y))
+	var outline := PackedVector2Array([top_left, top_right, bottom_right, bottom_left, top_left])
+	draw_polyline(outline, Color(0.72, 0.48, 0.02, 0.44), 9.0, true)
+	draw_polyline(outline, Color(1.0, 0.82, 0.18, 0.98), 4.5, true)
+
+
+func _normalized_overlay_cells(cells: Array) -> Array[Vector2i]:
+	var result: Array[Vector2i] = []
+	var seen: Dictionary = {}
 	for cell_value: Variant in cells:
 		if not cell_value is Array or cell_value.size() != 2:
 			continue
 		var cell := Vector2i(int(cell_value[0]), int(cell_value[1]))
-		cell_set[_cell_key(cell)] = true
-	var half := Vector2(point_spacing.x * scale, point_spacing.y * scale)
-	for key: String in cell_set.keys():
-		var parts: PackedStringArray = key.split(",")
-		var cell := Vector2i(int(parts[0]), int(parts[1]))
-		var center: Vector2 = logical_to_local(cell)
-		var neighbors: Array[Vector2i] = [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]
-		for direction: Vector2i in neighbors:
-			if cell_set.has(_cell_key(cell + direction)):
-				continue
-			if direction == Vector2i.LEFT:
-				draw_line(center + Vector2(-half.x, -half.y), center + Vector2(-half.x, half.y), color, width, true)
-			elif direction == Vector2i.RIGHT:
-				draw_line(center + Vector2(half.x, -half.y), center + Vector2(half.x, half.y), color, width, true)
-			elif direction == Vector2i.UP:
-				draw_line(center + Vector2(-half.x, -half.y), center + Vector2(half.x, -half.y), color, width, true)
-			else:
-				draw_line(center + Vector2(-half.x, half.y), center + Vector2(half.x, half.y), color, width, true)
+		var key: String = _cell_key(cell)
+		if seen.has(key):
+			continue
+		seen[key] = true
+		result.append(cell)
+	return result
 
 
 func _draw_annotations() -> void:

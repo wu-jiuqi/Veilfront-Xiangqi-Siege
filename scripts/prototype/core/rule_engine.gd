@@ -693,7 +693,8 @@ static func _apply_move_vision_effects(
 	if piece["piece_type"] == "rook":
 		state["vision_sources"][side]["rook_paths"].erase(piece_id)
 		if move_kind == "rook_special":
-			state["vision_sources"][side]["rook_paths"][piece_id] = evaluation["path"].duplicate(true)
+			state["vision_sources"][side]["rook_paths"][piece_id] = \
+				[[origin.x, origin.y]] + evaluation["path"].duplicate(true)
 	if piece["piece_type"] == "elephant":
 		state["vision_sources"][side]["elephant_reveal_zones"].erase(piece_id)
 		state["vision_sources"][side]["elephant_block_fields"].erase(piece_id)

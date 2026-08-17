@@ -30,6 +30,21 @@ func _run() -> void:
 		_check(str(layout.get("fog_style", "")) == "cell_mask", "迷雾使用整格黑色蒙版而非交点黑点")
 		_check(not bool(layout.get("region_separator_lines", true)), "区域之间仅用颜色块区分")
 		_check(layout.get("region_labels", []).size() == 5, "双侧大本营、缓冲区与中央战区均有背景大字")
+		var overlay_style: Dictionary = layout.get("vision_overlay_style", {})
+		_check(str(overlay_style.get("rook", "")) == "blue_grid_path_line",
+			"车的特殊高亮沿移动路径绘制蓝色棋盘线")
+		_check(str(overlay_style.get("elephant", "")) == "yellow_field_grid_outline" \
+			and not bool(overlay_style.get("elephant_reveal_outline", true)),
+			"相仅沿田字格边界绘制黄色棋盘线，不描绘扩展侦察并集")
+	_check(scene.has_method("_submission_accepted") \
+		and bool(scene._submission_accepted({"ok": true, "request_id": "queued"}, true)),
+		"LAN 已登记请求在等待房主裁决时不误报行动未提交")
+	var confirm_button := scene.get_node(
+		"SafeMargin/Page/Workspace/BoardShell/BoardMargin/BoardColumn/ActionConfirm/ConfirmMargin/ConfirmColumn/ConfirmButtons/ConfirmButton"
+	) as Button
+	confirm_button.disabled = true
+	scene._clear_selection(false)
+	_check(not confirm_button.disabled, "LAN 新 PlayerView 清除选择后恢复下一回合确认按钮")
 	var initial_view: Dictionary = scene.get_player_view_snapshot()
 	if surface != null:
 		var red_bottom_y: float = surface.logical_to_local(Vector2i(5, 1)).y

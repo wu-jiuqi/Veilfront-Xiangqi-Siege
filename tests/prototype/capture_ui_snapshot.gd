@@ -15,6 +15,7 @@ func _capture() -> void:
 	var capture_size := Vector2i(1280, 720)
 	var output_path: String = "user://gate1-ui-snapshot.png"
 	var scroll_position: String = "top"
+	var overlay_demo: bool = false
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--output="):
 			output_path = argument.trim_prefix("--output=")
@@ -24,12 +25,39 @@ func _capture() -> void:
 				capture_size = Vector2i(int(size_parts[0]), int(size_parts[1]))
 		elif argument.begins_with("--scroll="):
 			scroll_position = argument.trim_prefix("--scroll=")
+		elif argument == "--overlay-demo":
+			overlay_demo = true
 	root.size = capture_size
 	var scene := MAIN_SCENE.instantiate()
 	root.add_child(scene)
 	await process_frame
 	await process_frame
 	await process_frame
+	if overlay_demo:
+		var surface := scene.get_node(
+			"SafeMargin/Page/Workspace/BoardShell/BoardMargin/BoardColumn/BoardScroll/BoardSurface"
+		) as Control
+		var demo_view: Dictionary = scene.get_player_view_snapshot()
+		demo_view["vision_overlays"] = {
+			"rook_paths": [{
+				"piece_id": "red-rook-demo",
+				"cells": [[5, 9], [5, 10], [5, 11], [5, 12], [5, 13], [5, 14]],
+			}],
+			"elephant_reveal_zones": [{
+				"piece_id": "red-elephant-demo",
+				"cells": [[1, 9], [2, 9], [3, 9], [4, 9], [5, 9]],
+			}],
+			"elephant_block_fields": [{
+				"piece_id": "red-elephant-demo",
+				"cells": [
+					[2, 10], [3, 10], [4, 10],
+					[2, 11], [3, 11], [4, 11],
+					[2, 12], [3, 12], [4, 12],
+				],
+			}],
+		}
+		surface.set_board_data(demo_view, [], "", [], "move", false)
+		await process_frame
 	if scroll_position != "top":
 		var board_scroll := scene.get_node(
 			"SafeMargin/Page/Workspace/BoardShell/BoardMargin/BoardColumn/BoardScroll"
