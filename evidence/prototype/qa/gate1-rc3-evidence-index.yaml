@@ -1,0 +1,109 @@
+schema_version: gate1-qa-evidence-index-v1
+review_date: 2026-08-17
+qa_instance: inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
+candidate:
+  commit: 6253678157157091584b253470e709bad17c534f
+  production_fix_commit: b3bc3861b6e88e875fb991951dcdad53249bf687
+  contract_id: LOOP-CTR-GATE1-VERTICAL-SLICE-001
+  contract_version: 5
+  contract_digest: d88d9017bb30437ac480e0fcf4f7b262b5ae6b3427447946e50ec37a5d3b44ca
+  project_brief_version: 4
+  project_brief_digest: df8deb810d8c06c8c2f5763031fde2c39f14aa81226e23ffb25636ee3f1eca0b
+  registry_revision: 52
+  registry_sequence: 52
+  registry_tail_digest: 90e36ddc971a9f949911352969cdc69208e416fec018c2f54684a4078cd16875
+  executable:
+    path: builds/windows/Veilfront_Xiangqi_Siege_GATE1_RC3.exe
+    size_bytes: 109740336
+    sha256: 480273ddeae985c0c4aa03be449e5999fba57ca7b296b591ac7ed36b5bc8a229
+acceptance:
+  CHECK-CONTRACT-001: pass_with_owner_approved_tooling_exception
+  CHECK-GODOT-001: pass
+  CHECK-RULES-001: pass
+  CHECK-DETERMINISM-001: pass
+  CHECK-FOG-001: pass
+  CHECK-AI-001: pass
+  CHECK-SIMULATION-001: pass
+  professional_review: pass
+  legal_transition: active_to_review_allowed
+  gate_review_result: awaiting_human
+  gate_1: not_yet_decided
+qa_p1_003:
+  official_cli_exit_code: 1
+  official_cli_result: failed
+  observed_error_count: 6
+  unexpected_error_count: 0
+  validate_history_exit_code: 0
+  history_error_count: 0
+  all_conditions_required_satisfied: true
+  exception_status: owner_approved_tooling_exception_requalified
+qa_p1_004:
+  seed: 471016
+  prior_status: blocker_replay_divergence
+  minimal_regression_exit_code: 0
+  live_event_count: 100
+  replay_event_count: 100
+  first_event_mismatch: -1
+  first_rejected_intent: -1
+  state_digest_matches: true
+  event_digest_matches: true
+  full_batch_included: true
+  status: closed
+simulation_batch:
+  start_seed: 471001
+  requested: 1000
+  completed: 1000
+  failures: 0
+  determinism_checked: 1000
+  determinism_mismatches: 0
+  replay_verified: 20
+  replay_samples: 20
+  records_digest: 25c40f9467a7c4d4ad45162e3aef7f5f95b1948a76757bd2808b4eb6fc906064
+  manifest_verified: true
+  forced_tamper_rejected: true
+ai_matrix:
+  start_seed: 471001
+  seeds_per_difficulty: 100
+  difficulties: 4
+  records: 400
+  failures: 0
+  determinism_mismatches: 0
+  hidden_equivalence_mismatches: 0
+  mapping_failures: 0
+  submit_failures: 0
+  records_digest: 879b1e381944c0183fb49cd7c5975b4d0303c24627e0b4ff9742b99942abcc20
+artifacts:
+  - path: evidence/prototype/qa/gate1-rc3-independent-review.md
+    size_bytes: 6909
+    sha256: 41a1ebd7618bded26c2fa6fa8d72d6ef3ff33f6c4d51f6f3fe55b81801764b96
+  - path: evidence/prototype/qa/gate1-rc3-command-summary.txt
+    size_bytes: 8621
+    sha256: ac9fa7a9c735ec6db019840282480821c37771e9aa01b22b4110f722aa35eef3
+  - path: evidence/prototype/qa/gate1-rc3-rules-stress-1000-seeds-round50.jsonl
+    size_bytes: 494384
+    sha256: a9ae2b90e6088837b4469003d3f89b5fa6a3d681c5218c1fbd0738d984116a78
+  - path: evidence/prototype/qa/gate1-rc3-rules-stress-1000-seeds-round50-summary.json
+    size_bytes: 1833
+    sha256: f85d16db6b68d0c78138b6845ee496f2dc7ee0c33d8c6e77ad52a5bc7b7be7b5
+  - path: evidence/prototype/qa/gate1-rc3-ai-difficulty-seed-matrix-100x4-summary.json
+    size_bytes: 1303
+    sha256: 6ab5c1a2649c676e189604bd676f83a7863de9870c1ac71a5c0a1ad7917402ff
+  - path: evidence/prototype/qa/gate1-rc3-ai-difficulty-seed-matrix-100x4.jsonl.zip
+    size_bytes: 1834697
+    sha256: ef28ce9e862689aa7ac4b5f40a485009805286e25a5e20dd78364bde0bb04028
+inherited_regression_artifact:
+  path: evidence/prototype/qa/gate1_rc2_seed_471016_diagnostic.gd
+  sha256: d64411cfd61df3466d1ecb5b0c983f4d3ed5e26efd7e10fb02a5dbbe46f69bf3
+excluded_artifacts:
+  - path: evidence/prototype/qa/gate1-rc3-ai-difficulty-seed-matrix-100x4.jsonl
+    sha256: 6366cbecac5213b03bfcd1376000427e1e7b40ad7370fa3c1159fc11d1da892c
+    reason: raw_63mb_manifest_replaced_by_hashed_zip_and_summary
+human_gate:
+  gate_id: GATE-1
+  designated_decider: project-owner
+  status: awaiting_human_after_registry_review_transition
+  approval_digest: pending_project_manager_decision_package_binding
+verdict_note: >-
+  All Contract v5 automatic conditions and independent professional review passed.
+  The project manager may transition active to review and prepare the GATE-1 decision
+  package. This evidence does not itself approve GATE-1 or authorize formal production.
