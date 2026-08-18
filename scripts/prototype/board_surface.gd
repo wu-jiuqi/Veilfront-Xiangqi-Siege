@@ -11,6 +11,7 @@ const BLACK: String = "black"
 
 @export_range(40.0, 80.0, 1.0) var cell_size: float = 64.0
 @export var board_padding: Vector2 = Vector2(32.0, 32.0)
+@export_range(1, BOARD_HEIGHT, 1) var visible_board_height: int = BOARD_HEIGHT
 
 var point_spacing: Vector2 = Vector2(64.0, 64.0)
 
@@ -35,6 +36,11 @@ func _ready() -> void:
 
 func set_cell_size(value: float) -> void:
 	_apply_cell_size(clampf(roundf(value), 40.0, 80.0))
+
+
+func set_visible_board_height(value: int) -> void:
+	visible_board_height = clampi(value, 1, BOARD_HEIGHT)
+	_apply_cell_size(cell_size)
 
 
 func layout_snapshot() -> Dictionary:
@@ -99,7 +105,8 @@ func local_to_logical(local_position: Vector2) -> Vector2i:
 		roundi(relative.x / point_spacing.x),
 		roundi(relative.y / point_spacing.y)
 	)
-	if display.x < 0 or display.x >= BOARD_WIDTH or display.y < 0 or display.y >= BOARD_HEIGHT:
+	if display.x < 0 or display.x >= BOARD_WIDTH \
+	or display.y < 0 or display.y >= visible_board_height:
 		return Vector2i.ZERO
 	var center: Vector2 = board_padding + Vector2(display.x * point_spacing.x, display.y * point_spacing.y)
 	if absf(local_position.x - center.x) > point_spacing.x * 0.46 \
@@ -161,7 +168,7 @@ func _draw() -> void:
 func _draw_region_bands() -> void:
 	var left: float = board_padding.x - point_spacing.x * 0.5
 	var width: float = point_spacing.x * float(BOARD_WIDTH)
-	for logical_y: int in range(1, BOARD_HEIGHT + 1):
+	for logical_y: int in range(1, visible_board_height + 1):
 		var center_y: float = logical_to_local(Vector2i(1, logical_y)).y
 		var band := Rect2(
 			Vector2(left, center_y - point_spacing.y * 0.5),
@@ -172,11 +179,13 @@ func _draw_region_bands() -> void:
 
 func _draw_grid_lines() -> void:
 	var top: float = logical_to_local(_display_to_logical(Vector2i(0, 0))).y
-	var bottom: float = logical_to_local(_display_to_logical(Vector2i(0, BOARD_HEIGHT - 1))).y
+	var bottom: float = logical_to_local(
+		_display_to_logical(Vector2i(0, visible_board_height - 1))
+	).y
 	for display_x: int in BOARD_WIDTH:
 		var x: float = board_padding.x + display_x * point_spacing.x
 		draw_line(Vector2(x, top), Vector2(x, bottom), Color(0.075, 0.09, 0.11, 0.72), 1.6, true)
-	for display_y: int in BOARD_HEIGHT:
+	for display_y: int in visible_board_height:
 		var y: float = board_padding.y + display_y * point_spacing.y
 		draw_line(
 			Vector2(board_padding.x, y),
@@ -189,6 +198,8 @@ func _draw_walls() -> void:
 	var left: float = board_padding.x - point_spacing.x * 0.5
 	var right: float = board_padding.x + point_spacing.x * 8.5
 	for wall_y: int in [4, 21]:
+		if wall_y > visible_board_height:
+			continue
 		var wall_color: Color = Color(0.95, 0.34, 0.27, 0.96) if wall_y == 4 \
 			else Color(0.38, 0.68, 1.0, 0.96)
 		var y: float = logical_to_local(Vector2i(1, wall_y)).y
@@ -267,6 +278,8 @@ func _normalized_overlay_cells(cells: Array) -> Array[Vector2i]:
 		if not cell_value is Array or cell_value.size() != 2:
 			continue
 		var cell := Vector2i(int(cell_value[0]), int(cell_value[1]))
+		if cell.y < 1 or cell.y > visible_board_height:
+			continue
 		var key: String = _cell_key(cell)
 		if seen.has(key):
 			continue
@@ -293,7 +306,7 @@ func _draw_annotations() -> void:
 func _draw_fog_and_contacts() -> void:
 	var visible: Dictionary = _coordinate_set(_player_view.get("visible_cells", []))
 	var half_cell: Vector2 = point_spacing * 0.5
-	for y: int in range(1, BOARD_HEIGHT + 1):
+	for y: int in range(1, visible_board_height + 1):
 		for x: int in range(1, BOARD_WIDTH + 1):
 			var cell := Vector2i(x, y)
 			if not visible.has(_cell_key(cell)):
@@ -302,6 +315,8 @@ func _draw_fog_and_contacts() -> void:
 	for contact: Dictionary in _player_view.get("contact_intel", []):
 		var cell_value: Array = contact.get("cell", [])
 		if cell_value.size() == 2:
+			if int(cell_value[1]) < 1 or int(cell_value[1]) > visible_board_height:
+				continue
 			var center: Vector2 = logical_to_local(Vector2i(int(cell_value[0]), int(cell_value[1])))
 			draw_arc(center, 13.0, 0.0, TAU, 24, Color(1.0, 0.46, 0.18, 0.95), 3.0, true)
 
@@ -310,6 +325,8 @@ func _draw_capture_ghosts() -> void:
 	for ghost: Dictionary in _player_view.get("capture_ghosts", []):
 		var value: Array = ghost.get("position", [])
 		if value.size() != 2:
+			continue
+		if int(value[1]) < 1 or int(value[1]) > visible_board_height:
 			continue
 		var center: Vector2 = logical_to_local(Vector2i(int(value[0]), int(value[1])))
 		var side: String = str(ghost.get("side", ""))
@@ -328,6 +345,8 @@ func _draw_action_highlights() -> void:
 			continue
 		var value: Array = preview.get("target_cell", [])
 		if value.size() != 2:
+			continue
+		if int(value[1]) < 1 or int(value[1]) > visible_board_height:
 			continue
 		var color: Color
 		match str(preview.get("classification", "")):
@@ -349,6 +368,8 @@ func _draw_discovered_flags() -> void:
 		var value: Array = flag.get("position", [])
 		if value.size() != 2:
 			continue
+		if int(value[1]) < 1 or int(value[1]) > visible_board_height:
+			continue
 		var center: Vector2 = logical_to_local(Vector2i(int(value[0]), int(value[1]))) + Vector2(11, -16)
 		var owner: String = str(flag.get("owner", "neutral"))
 		var color: Color = Color(0.95, 0.82, 0.28, 1.0)
@@ -368,6 +389,8 @@ func _draw_pieces() -> void:
 			continue
 		var value: Array = piece.get("position", [])
 		if value.size() != 2:
+			continue
+		if int(value[1]) < 1 or int(value[1]) > visible_board_height:
 			continue
 		var center: Vector2 = logical_to_local(Vector2i(int(value[0]), int(value[1])))
 		var side: String = str(piece.get("side", ""))
@@ -393,21 +416,26 @@ func _draw_piece_text(center: Vector2, text: String, color: Color) -> void:
 
 func _draw_coordinate_labels() -> void:
 	for display_x: int in BOARD_WIDTH:
-		var logical: Vector2i = _display_to_logical(Vector2i(display_x, BOARD_HEIGHT - 1))
-		var center: Vector2 = board_padding + Vector2(display_x * point_spacing.x, (BOARD_HEIGHT - 1) * point_spacing.y)
+		var logical: Vector2i = _display_to_logical(
+			Vector2i(display_x, visible_board_height - 1)
+		)
+		var center: Vector2 = board_padding + Vector2(
+			display_x * point_spacing.x,
+			(visible_board_height - 1) * point_spacing.y
+		)
 		draw_string(ThemeDB.fallback_font, center + Vector2(-10, 24), str(logical.x), HORIZONTAL_ALIGNMENT_CENTER, 20, 12, Color(0.8, 0.82, 0.86, 0.9))
 
 
 func _logical_to_display(cell: Vector2i) -> Vector2i:
 	if str(_player_view.get("viewer_side", RED)) == BLACK:
 		return Vector2i(BOARD_WIDTH - cell.x, cell.y - 1)
-	return Vector2i(cell.x - 1, BOARD_HEIGHT - cell.y)
+	return Vector2i(cell.x - 1, visible_board_height - cell.y)
 
 
 func _display_to_logical(display: Vector2i) -> Vector2i:
 	if str(_player_view.get("viewer_side", RED)) == BLACK:
 		return Vector2i(BOARD_WIDTH - display.x, display.y + 1)
-	return Vector2i(display.x + 1, BOARD_HEIGHT - display.y)
+	return Vector2i(display.x + 1, visible_board_height - display.y)
 
 
 func _coordinate_set(cells: Array) -> Dictionary:
@@ -439,19 +467,26 @@ func _apply_cell_size(value: float) -> void:
 	point_spacing = Vector2(cell_size, cell_size)
 	custom_minimum_size = Vector2(
 		board_padding.x * 2.0 + cell_size * float(BOARD_WIDTH - 1),
-		board_padding.y * 2.0 + cell_size * float(BOARD_HEIGHT - 1)
+		board_padding.y * 2.0 + cell_size * float(visible_board_height - 1)
 	)
 	queue_redraw()
 
 
 func _region_label_specs() -> Array:
-	return [
+	var result: Array = []
+	for spec: Dictionary in [
 		{"text": "大本营", "first_y": 1, "last_y": 3},
 		{"text": "缓冲区", "first_y": 4, "last_y": 8},
 		{"text": "战区", "first_y": 9, "last_y": 16},
 		{"text": "缓冲区", "first_y": 17, "last_y": 21},
 		{"text": "大本营", "first_y": 22, "last_y": 24},
-	]
+	]:
+		if int(spec["first_y"]) > visible_board_height:
+			continue
+		var clipped: Dictionary = spec.duplicate()
+		clipped["last_y"] = mini(int(clipped["last_y"]), visible_board_height)
+		result.append(clipped)
+	return result
 
 
 func _region_label_font_size(row_count: int, text: String) -> int:

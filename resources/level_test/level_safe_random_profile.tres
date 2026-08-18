@@ -1,0 +1,16 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/prototype/ai/ai_difficulty_config.gd" id="1_config"]
+
+[resource]
+script = ExtResource("1_config")
+profile_id = "level-safe-random-ai-v1"
+conclusion_status = "owner_requested_level_test"
+candidate_limit = 512
+time_budget_ms_hint = 20
+random_score_span = 0
+strategy_mode = "visible-tactical-one-ply"
+threat_penalty_percent = 100
+support_bonus_percent = 0
+general_safety_penalty = 0
+capture_priority_multiplier = 1
