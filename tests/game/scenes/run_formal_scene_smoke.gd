@@ -208,7 +208,7 @@ func _check_match_screen(instance: Node) -> void:
 
 
 func _check_tutorial_level(instance: Node) -> void:
-	for required_path: String in ["ApplicationHost", "MatchScreen", "TutorialOverlay"]:
+	for required_path: String in ["ApplicationHost", "MatchScreen", "TutorialOverlay", "TutorialDirector"]:
 		if instance.get_node_or_null(required_path) == null:
 			_failures.append("TutorialLevel missing preset node: %s" % required_path)
 

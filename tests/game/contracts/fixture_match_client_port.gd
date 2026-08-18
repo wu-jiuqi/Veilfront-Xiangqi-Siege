@@ -5,6 +5,7 @@ const VISIBLE_ERROR_JSON: String = "{\"action_index\":0,\"consumed\":false,\"int
 const ACTION_PREVIEW_JSON: String = "{\"action_type\":\"move\",\"classification\":\"KNOWN_LEGAL\",\"confirmation_required\":true,\"message_key\":\"action.move\",\"piece_id\":\"fixture-piece\",\"preview_id\":\"fixture-preview\",\"public_cost\":{},\"schema_version\":\"veilfront-action-preview-v1\",\"skill_type\":\"\",\"target_cell\":[1,1]}"
 
 var _player_view_path: String
+var _request_log: Array[Dictionary] = []
 
 
 func _init(player_view_path: String) -> void:
@@ -32,25 +33,40 @@ func _publish_fixture_path(fixture_path: String) -> Dictionary:
 	)
 
 
-func request_action_previews(_piece_id: String, _action_type: String) -> void:
-	pass
+func request_action_previews(piece_id: String, action_type: String) -> void:
+	_request_log.append({"name": "request_action_previews", "piece_id": piece_id, "action_type": action_type})
 
 
-func prepare_action(_preview_id: String) -> void:
-	pass
+func prepare_action(preview_id: String) -> void:
+	_request_log.append({"name": "prepare_action", "preview_id": preview_id})
+	prepared_action_changed.emit(preview_id)
 
 
-func confirm_prepared_action(_preview_id: String) -> void:
-	pass
+func confirm_prepared_action(preview_id: String) -> void:
+	_request_log.append({"name": "confirm_prepared_action", "preview_id": preview_id})
+	prepared_action_changed.emit("")
 
 
 func cancel_prepared_action() -> void:
-	pass
+	_request_log.append({"name": "cancel_prepared_action"})
+	prepared_action_changed.emit("")
 
 
 func request_skip() -> void:
-	pass
+	_request_log.append({"name": "request_skip"})
 
 
 func request_restart() -> void:
-	pass
+	_request_log.append({"name": "request_restart"})
+
+
+func get_request_log() -> Array:
+	return _request_log.duplicate(true)
+
+
+func count_request(request_name: String) -> int:
+	var count: int = 0
+	for request: Dictionary in _request_log:
+		if str(request.get("name", "")) == request_name:
+			count += 1
+	return count

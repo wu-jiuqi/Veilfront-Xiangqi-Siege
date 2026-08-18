@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Theme" path="res://resources/game/ui/formal_graybox_theme.tres" id="1_theme"]
 [ext_resource type="PackedScene" path="res://scenes/game/match/match_screen.tscn" id="2_match"]
+[ext_resource type="Script" path="res://scripts/game/application/application_host.gd" id="3_host"]
 
 [node name="GameApp" type="Control"]
 layout_mode = 3
@@ -23,6 +24,7 @@ mouse_filter = 2
 color = Color(0.02, 0.025, 0.035, 1)
 
 [node name="ApplicationHost" type="Node" parent="."]
+script = ExtResource("3_host")
 
 [node name="ScreenHost" type="Control" parent="."]
 layout_mode = 1
@@ -67,3 +69,15 @@ offset_right = 1.0
 offset_bottom = 1.0
 mouse_filter = 2
 text = "状态播报"
+
+[connection signal="session_state_changed" from="ApplicationHost" to="ScreenHost/MatchScreen" method="render_session_state"]
+[connection signal="player_view_updated" from="ApplicationHost" to="ScreenHost/MatchScreen" method="render_player_view"]
+[connection signal="visible_events_received" from="ApplicationHost" to="ScreenHost/MatchScreen" method="render_visible_events"]
+[connection signal="visible_error_received" from="ApplicationHost" to="ScreenHost/MatchScreen" method="render_visible_error"]
+[connection signal="action_previews_updated" from="ApplicationHost" to="ScreenHost/MatchScreen" method="render_action_previews_from_port"]
+[connection signal="prepared_action_changed" from="ApplicationHost" to="ScreenHost/MatchScreen" method="render_prepared_action"]
+[connection signal="action_previews_requested" from="ScreenHost/MatchScreen" to="ApplicationHost" method="request_action_previews"]
+[connection signal="action_prepare_requested" from="ScreenHost/MatchScreen" to="ApplicationHost" method="prepare_action"]
+[connection signal="action_confirm_requested" from="ScreenHost/MatchScreen" to="ApplicationHost" method="confirm_prepared_action"]
+[connection signal="prepared_action_cancel_requested" from="ScreenHost/MatchScreen" to="ApplicationHost" method="cancel_prepared_action"]
+[connection signal="skip_requested" from="ScreenHost/MatchScreen" to="ApplicationHost" method="request_skip"]
