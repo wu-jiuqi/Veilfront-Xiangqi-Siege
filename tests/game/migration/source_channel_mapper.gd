@@ -100,6 +100,33 @@ static func action_preview(player_view: Dictionary, intent: Dictionary) -> Dicti
 	}
 
 
+static func action_previews(state: Dictionary, side: String) -> Array:
+	var source_view: Dictionary = ProtoProjector.project(state, side)
+	if bool(source_view.get("terminal", false)) \
+	or str(source_view.get("active_side", "")) != side:
+		return []
+	var result: Array = []
+	for source_value: Variant in ProtoProjector.generate_action_intents(source_view):
+		var source: Dictionary = source_value
+		var action_type: String = str(source.get("action_type", ""))
+		var public_code: String = str(source.get("error", {}).get("code", ""))
+		result.append({
+			"schema_version": "veilfront-action-preview-v1",
+			"preview_id": str(source.get("id", "")),
+			"piece_id": str(source.get("piece_id", "")),
+			"action_type": action_type,
+			"target_cell": source.get("target_cell", []).duplicate(),
+			"skill_type": str(source.get("skill_type", "")),
+			"classification": str(source.get("classification", "KNOWN_ILLEGAL")),
+			"confirmation_required": action_type in ["move", "bombard", "resurrect"],
+			"public_cost": {},
+			"message_key": "action.%s" % (
+				public_code if not public_code.is_empty() else action_type
+			),
+		})
+	return result
+
+
 static func visible_error(
 	domain_result: Dictionary,
 	intent_id: String,

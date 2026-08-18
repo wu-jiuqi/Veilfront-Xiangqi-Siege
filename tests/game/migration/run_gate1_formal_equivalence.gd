@@ -4,8 +4,8 @@ const Canonical = preload("res://scripts/game/domain/canonical.gd")
 const AuthoritativeReplay = preload("res://scripts/game/domain/authoritative_replay.gd")
 const ChannelCapture = preload("res://tests/game/migration/gate1_channel_capture.gd")
 
-const GOLDEN_PATH: String = "res://tests/game/migration/golden/gate1-successor-20-seeds-v2.json"
-const GOLDEN_SHA256: String = "67ed6d953a756eac88e8fa8063612409b7b7de1e009c8b80e92b0c0fccf97411"
+const GOLDEN_PATH: String = "res://tests/game/migration/golden/gate1-successor-20-seeds-v3.json"
+const GOLDEN_SHA256: String = "7c089b43667e5c0af9f4df14a2949974cb049efde34a5e9879528d99b11242ac"
 const DEFAULT_START_SEED: int = 471001
 const DEFAULT_SEED_COUNT: int = 20
 const DEFAULT_ROUND_LIMIT: int = 50
@@ -94,7 +94,7 @@ func _run() -> void:
 
 
 func _run_live_ranges(start_seed: int, seed_count: int, round_limit: int) -> Dictionary:
-	var worker_count: int = mini(4, seed_count)
+	var worker_count: int = mini(maxi(1, OS.get_processor_count() - 4), seed_count)
 	if worker_count <= 1:
 		return ChannelCapture.compare_live_range(start_seed, seed_count, round_limit)
 	var threads: Array[Thread] = []
@@ -153,7 +153,7 @@ func _load_golden_records(start_seed: int, seed_count: int, round_limit: int) ->
 		push_error("FORMAL_EQUIVALENCE_FAIL golden_parse")
 		return {}
 	var document: Dictionary = parsed
-	if str(document.get("schema_version", "")) != "veilfront-gate1-migration-golden-v2":
+	if str(document.get("schema_version", "")) != "veilfront-gate1-migration-golden-v3":
 		push_error("FORMAL_EQUIVALENCE_FAIL golden_schema")
 		return {}
 	var result: Dictionary = {}

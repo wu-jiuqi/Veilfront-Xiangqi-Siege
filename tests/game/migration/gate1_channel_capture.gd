@@ -25,6 +25,8 @@ static func capture_source(seed_value: int, round_limit: int = DEFAULT_ROUND_LIM
 	var configuration: Dictionary = {"full_round_limit_hypothesis": round_limit}
 	var state: Dictionary = ProtoRuleEngine.create_match(seed_value, configuration)
 	var policy_rng: Dictionary = ProtoSeededRandom.create_state(_policy_seed(seed_value))
+	var red_context: RefCounted = ViewerContext.create_trusted("red")
+	var black_context: RefCounted = ViewerContext.create_trusted("black")
 	var intents: Array = []
 	var steps: Array = []
 	var failure: String = ""
@@ -53,6 +55,7 @@ static func capture_source(seed_value: int, round_limit: int = DEFAULT_ROUND_LIM
 			break
 		intents.append(intent.duplicate(true))
 		var mapped_state: Dictionary = SourceMapper.full_state(state, seed_value)
+		var next_side: String = str(state.get("active_side", ""))
 		steps.append(_channel_step(
 			intents.size() - 1,
 			intent,
@@ -62,7 +65,12 @@ static func capture_source(seed_value: int, round_limit: int = DEFAULT_ROUND_LIM
 			SourceMapper.visible_events(state, "red"),
 			SourceMapper.visible_events(state, "black"),
 			preview,
-			SourceMapper.visible_error(result, "seed-%d-action-%d" % [seed_value, intents.size() - 1], int(state["action_index"]))
+			SourceMapper.visible_error(result, "seed-%d-action-%d" % [seed_value, intents.size() - 1], int(state["action_index"])),
+			red_context,
+			black_context,
+			SourceMapper.action_previews(state, "red") if next_side == "red" else [],
+			SourceMapper.action_previews(state, "black") if next_side == "black" else [],
+			true
 		))
 	var record: Dictionary = _capture_record(seed_value, state, intents, steps, failure)
 	var replay: Dictionary = ProtoReplay.capture(seed_value, intents, configuration)
@@ -127,7 +135,12 @@ static func capture_formal(
 			preview,
 			VisibleOutcomeProjector.project_visible_error(
 				result, "seed-%d-action-%d" % [seed_value, applied_intents.size() - 1], int(state["action_index"])
-			)
+			),
+			red_context,
+			black_context,
+			[],
+			[],
+			false
 		))
 	var record: Dictionary = _capture_record(seed_value, state, applied_intents, steps, failure)
 	record["visible_error_corpus"] = _formal_visible_error_corpus(seed_value)
@@ -267,21 +280,21 @@ static func compare_live(seed_value: int, round_limit: int = DEFAULT_ROUND_LIMIT
 		if source_error != formal_error:
 			return _live_failure(seed_value, action_offset, "visible_error", source_error, formal_error)
 		intents.append(intent.duplicate(true))
-		var source_red_frame: Dictionary = _observer_frame(
-			action_offset + 1, source_red, source_red_events, source_error,
-			[source_preview] if actor_side == "red" else []
+		var formal_red_frame: Dictionary = FormalMatchApplication._compose_safe_frame_from_dtos(
+			formal_red, formal_red_events, formal_error,
+			FormalMatchApplication._action_previews_for_view(formal_red), action_offset + 1
 		)
-		var formal_red_frame: Dictionary = _observer_frame(
-			action_offset + 1, formal_red, formal_red_events, formal_error,
-			[formal_preview] if actor_side == "red" else []
+		var formal_black_frame: Dictionary = FormalMatchApplication._compose_safe_frame_from_dtos(
+			formal_black, formal_black_events, formal_error,
+			FormalMatchApplication._action_previews_for_view(formal_black), action_offset + 1
 		)
-		var source_black_frame: Dictionary = _observer_frame(
-			action_offset + 1, source_black, source_black_events, source_error,
-			[source_preview] if actor_side == "black" else []
+		var source_red_frame: Dictionary = FormalMatchApplication._compose_safe_frame_from_dtos(
+			source_red, source_red_events, source_error,
+			formal_red_frame["action_previews"], action_offset + 1
 		)
-		var formal_black_frame: Dictionary = _observer_frame(
-			action_offset + 1, formal_black, formal_black_events, formal_error,
-			[formal_preview] if actor_side == "black" else []
+		var source_black_frame: Dictionary = FormalMatchApplication._compose_safe_frame_from_dtos(
+			source_black, source_black_events, source_error,
+			formal_black_frame["action_previews"], action_offset + 1
 		)
 		if source_red_frame != formal_red_frame or source_black_frame != formal_black_frame:
 			return _live_failure(
@@ -358,22 +371,34 @@ static func _channel_step(
 	red_events: Array,
 	black_events: Array,
 	preview: Dictionary,
-	visible_error: Dictionary
+	visible_error: Dictionary,
+	red_context: RefCounted,
+	black_context: RefCounted,
+	red_frame_previews: Array,
+	black_frame_previews: Array,
+	use_source_dtos: bool
 ) -> Dictionary:
 	var intents_prefix: Array = state.get("events", []).slice(0, action_offset + 1).map(
 		func(event_value: Variant) -> Variant: return (event_value as Dictionary).get("intent", {})
 	)
 	var state_digest: String = FormalCanonical.digest(state)
 	var event_digest: String = FormalCanonical.digest(state.get("events", []))
-	var actor_side: String = str(intent.get("piece_id", "")).get_slice("-", 0)
-	var red_frame: Dictionary = _observer_frame(
-		action_offset + 1, red_view, red_events, visible_error,
-		[preview] if actor_side == "red" else []
-	)
-	var black_frame: Dictionary = _observer_frame(
-		action_offset + 1, black_view, black_events, visible_error,
-		[preview] if actor_side == "black" else []
-	)
+	var red_frame: Dictionary
+	var black_frame: Dictionary
+	if use_source_dtos:
+		red_frame = FormalMatchApplication._compose_safe_frame_from_dtos(
+			red_view, red_events, visible_error, red_frame_previews, action_offset + 1
+		)
+		black_frame = FormalMatchApplication._compose_safe_frame_from_dtos(
+			black_view, black_events, visible_error, black_frame_previews, action_offset + 1
+		)
+	else:
+		red_frame = FormalMatchApplication._compose_safe_frame(
+			state, red_context, visible_error, action_offset + 1
+		)
+		black_frame = FormalMatchApplication._compose_safe_frame(
+			state, black_context, visible_error, action_offset + 1
+		)
 	return {
 		"action_offset": action_offset,
 		"intent": intent.duplicate(true),
@@ -429,23 +454,6 @@ static func _formal_visible_error_corpus(seed_value: int) -> Array:
 			_formal_hidden_contact_result(seed_value), "hidden-contact", 1
 		),
 	]
-
-
-static func _observer_frame(
-	frame_sequence: int,
-	player_view: Dictionary,
-	visible_events: Array,
-	visible_error: Dictionary,
-	action_previews: Array
-) -> Dictionary:
-	return {
-		"frame_sequence": frame_sequence,
-		"action_index": int(player_view.get("action_index", 0)),
-		"player_view_or_digest": player_view.duplicate(true),
-		"visible_events": visible_events.duplicate(true),
-		"visible_error": visible_error.duplicate(true),
-		"action_previews": action_previews.duplicate(true),
-	}
 
 
 static func _observer_replay_digest(steps: Array, side: String) -> String:
