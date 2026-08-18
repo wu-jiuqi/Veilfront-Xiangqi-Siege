@@ -48,6 +48,36 @@ formal_migration_delta:
     - visible_error
     - action_preview
     - replay
+  channel_mapping:
+    state:
+      formal_contract: full_state
+      comparison: canonical_state_after_each_consumed_action
+    event:
+      formal_contract: domain_event
+      comparison: canonical_ordered_domain_events_after_each_consumed_action
+    red_player_view:
+      formal_contract: player_view
+      observer: red
+    black_player_view:
+      formal_contract: player_view
+      observer: black
+    red_visible_event:
+      formal_contract: visible_event
+      observer: red
+    black_visible_event:
+      formal_contract: visible_event
+      observer: black
+    visible_error:
+      formal_contract: visible_error
+      comparison: code_and_public_payload
+    action_preview:
+      formal_contract: action_preview
+      comparison: canonical_order
+    replay:
+      formal_contracts:
+        - authoritative_replay
+        - observer_replay
+      comparison: authoritative_final_state_and_events_plus_live_safe_dto_frames
   required_negative_cases:
     - red_war_zone_to_black_headquarters_capture
     - red_war_zone_to_black_headquarters_empty_cell
