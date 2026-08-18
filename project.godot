@@ -6,7 +6,7 @@ config_version=5
 [application]
 
 config/name="雾疆：九路烽棋 - 三关试玩版"
-config/version="0.1.0-level-test"
+config/version="0.1.1-level-test"
 run/main_scene="res://scenes/level_test/level_test_lab.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 

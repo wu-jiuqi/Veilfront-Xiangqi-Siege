@@ -31,11 +31,11 @@ func initialize(seed_value: int, round_limit: int = -1, selector_id: String = "e
 func get_ai_difficulty_snapshot() -> Dictionary:
 	return {
 		"difficulty_id": _ai_difficulty_id,
-		"profile_id": "level-safe-random-ai-v1",
+		"profile_id": "level-threat-safe-random-ai-v2",
 		"conclusion_status": "owner_requested_level_test",
 		"candidate_limit_hypothesis": -1,
 		"random_score_span_hypothesis": -1,
-		"strategy_mode_hypothesis": "visible-safe-random",
+		"strategy_mode_hypothesis": "visible-threat-safe-capture-random",
 		"level_id": _level_id,
 		"level_title": LevelScenario.title(_level_id),
 	}

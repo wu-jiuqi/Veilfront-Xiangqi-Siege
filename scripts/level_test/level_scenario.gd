@@ -43,7 +43,7 @@ static func enemy_count(level_id: int) -> int:
 static func configure(state: Dictionary, level_id: int) -> void:
 	var spec: Dictionary = _spec(level_id)
 	state["rules_revision"] = "level-test-owner-scope-2026-08-18"
-	state["implementation_revision"] = "level-test-v2"
+	state["implementation_revision"] = "level-test-v3"
 	state["configuration"]["full_round_limit_hypothesis"] = ROUND_LIMIT
 	state["configuration"]["round_limit_status"] = "fixed_level_objective"
 	state["configuration"]["level_id"] = level_id

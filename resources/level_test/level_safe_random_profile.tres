@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1_config")
-profile_id = "level-safe-random-ai-v1"
+profile_id = "level-threat-safe-random-ai-v2"
 conclusion_status = "owner_requested_level_test"
 candidate_limit = 512
 time_budget_ms_hint = 20

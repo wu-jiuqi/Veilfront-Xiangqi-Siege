@@ -16,20 +16,129 @@ func _init() -> void:
 
 
 func _run() -> void:
-	_test_safe_random_priority()
+	_test_safety_outranks_capture()
+	_test_single_threatened_piece_priority()
+	_test_double_threatened_piece_randomization()
+	_test_safe_capture_priority()
+	_test_unsafe_fallback_when_no_safe_landing()
+	_test_threat_ai_determinism()
 	for selector_id: String in ["easy", "medium", "hard"]:
 		await _test_level(selector_id)
 	await _test_objective_outcomes()
 	await _test_main_scene()
 	if failures.is_empty():
-		print("LEVEL_TEST_CHECKS_PASSED levels=3 playable_cells=144 round_limit=50 safe_random=true red_pawns_on_wall=true")
+		print("LEVEL_TEST_CHECKS_PASSED levels=3 playable_cells=144 round_limit=50 threat_priority=true safe_capture_priority=true red_pawns_on_wall=true")
 		quit(0)
 		return
 	print("LEVEL_TEST_CHECKS_FAILED count=%d" % failures.size())
 	quit(1)
 
 
-func _test_safe_random_priority() -> void:
+func _test_safety_outranks_capture() -> void:
+	var projection: Dictionary = {
+		"viewer_side": "black",
+		"visible_pieces": [
+			{"id": "black-elephant-1", "side": "black", "piece_type": "elephant", "position": [4, 15]},
+			{"id": "red-rook-1", "side": "red", "piece_type": "rook", "position": [4, 10]},
+			{"id": "red-pawn-1", "side": "red", "piece_type": "pawn", "position": [4, 12]},
+		],
+		"public_walls": [
+			{"side": "red", "status": "INTACT"},
+			{"side": "black", "status": "BREACHED"},
+		],
+		"legal_actions": [
+			_action("unsafe-capture", [4, 15], [4, 12], "black-elephant-1", [
+				{"piece_id": "red-pawn-1", "piece_type": "pawn"},
+			]),
+			_action("safe", [4, 15], [6, 13]),
+		],
+	}
+	for seed_value: int in range(1, 21):
+		var decision: Dictionary = SafeRandomAi.choose(
+			projection,
+			SeededRandom.create_state(seed_value),
+			_public_rules(),
+			SAFETY_PROFILE
+		)
+		_check(str(decision.get("action", {}).get("id", "")) == "safe",
+			"安全优先：种子%d不选择危险吃子" % seed_value)
+		_check(str(decision.get("audit", {}).get("selected_priority_tier", "")) \
+			== "safe_non_capture", "危险吃子被安全空移压过时审计层级正确")
+
+
+func _test_single_threatened_piece_priority() -> void:
+	var projection: Dictionary = _threat_priority_projection(false)
+	for seed_value: int in range(1, 21):
+		var decision: Dictionary = SafeRandomAi.choose(
+			projection,
+			SeededRandom.create_state(seed_value),
+			_public_rules(),
+			SAFETY_PROFILE
+		)
+		_check(str(decision.get("action", {}).get("actor_id", "")) == "black-elephant-1",
+			"单枚受威胁时种子%d优先移动受威胁棋子" % seed_value)
+		var audit: Dictionary = decision.get("audit", {})
+		_check(audit.get("threatened_piece_ids", []) == ["black-elephant-1"] \
+			and str(audit.get("selected_threatened_piece_id", "")) == "black-elephant-1",
+			"单枚受威胁时审计记录威胁识别与选子结果")
+
+
+func _test_double_threatened_piece_randomization() -> void:
+	var projection: Dictionary = _threat_priority_projection(true)
+	var selected_actor_ids: Dictionary = {}
+	for seed_value: int in range(1, 65):
+		var decision: Dictionary = SafeRandomAi.choose(
+			projection,
+			SeededRandom.create_state(seed_value),
+			_public_rules(),
+			SAFETY_PROFILE
+		)
+		var actor_id: String = str(decision.get("action", {}).get("actor_id", ""))
+		selected_actor_ids[actor_id] = true
+		_check(actor_id in ["black-elephant-1", "black-elephant-2"],
+			"双枚受威胁时种子%d只会移动受威胁棋子" % seed_value)
+		var audit: Dictionary = decision.get("audit", {})
+		_check(audit.get("threatened_piece_ids", []) \
+			== ["black-elephant-1", "black-elephant-2"] \
+			and str(audit.get("selected_threatened_piece_id", "")) == actor_id,
+			"双枚受威胁时审计记录两枚威胁并绑定随机选子")
+	_check(selected_actor_ids.has("black-elephant-1") \
+		and selected_actor_ids.has("black-elephant-2"),
+		"双枚受威胁时固定种子集合会随机覆盖两枚棋子")
+
+
+func _test_safe_capture_priority() -> void:
+	var projection: Dictionary = {
+		"viewer_side": "black",
+		"visible_pieces": [
+			{"id": "black-elephant-1", "side": "black", "piece_type": "elephant", "position": [4, 15]},
+			{"id": "red-pawn-1", "side": "red", "piece_type": "pawn", "position": [2, 13]},
+		],
+		"public_walls": [
+			{"side": "red", "status": "INTACT"},
+			{"side": "black", "status": "BREACHED"},
+		],
+		"legal_actions": [
+			_action("safe-capture", [4, 15], [2, 13], "black-elephant-1", [
+				{"piece_id": "red-pawn-1", "piece_type": "pawn"},
+			]),
+			_action("safe-empty", [4, 15], [6, 13]),
+		],
+	}
+	for seed_value: int in range(1, 21):
+		var decision: Dictionary = SafeRandomAi.choose(
+			projection,
+			SeededRandom.create_state(seed_value),
+			_public_rules(),
+			SAFETY_PROFILE
+		)
+		_check(str(decision.get("action", {}).get("id", "")) == "safe-capture",
+			"安全落点中种子%d优先选择吃子" % seed_value)
+		_check(str(decision.get("audit", {}).get("selected_priority_tier", "")) \
+			== "safe_capture", "安全吃子优先时审计层级正确")
+
+
+func _test_unsafe_fallback_when_no_safe_landing() -> void:
 	var projection: Dictionary = {
 		"viewer_side": "black",
 		"visible_pieces": [
@@ -41,11 +150,75 @@ func _test_safe_random_priority() -> void:
 			{"side": "black", "status": "BREACHED"},
 		],
 		"legal_actions": [
-			_action("unsafe", [4, 15], [4, 12]),
-			_action("safe", [4, 15], [6, 13]),
+			_action("unsafe-near", [4, 15], [4, 14]),
+			_action("unsafe-far", [4, 15], [4, 13]),
+			{"id": "pass", "kind": "pass"},
 		],
 	}
-	var public_rules := AiPublicRules.new({
+	for seed_value: int in range(1, 21):
+		var decision: Dictionary = SafeRandomAi.choose(
+			projection,
+			SeededRandom.create_state(seed_value),
+			_public_rules(),
+			SAFETY_PROFILE
+		)
+		_check(str(decision.get("action", {}).get("id", "")) \
+			in ["unsafe-near", "unsafe-far"],
+			"无安全落点时种子%d仍选择合法移动而非直接停着" % seed_value)
+		_check(str(decision.get("audit", {}).get("selected_priority_tier", "")) \
+			== "unsafe_fallback", "无安全落点时审计层级标记为危险兜底")
+
+
+func _test_threat_ai_determinism() -> void:
+	var projection: Dictionary = _threat_priority_projection(true)
+	for seed_value: int in range(1, 21):
+		var first: Dictionary = SafeRandomAi.choose(
+			projection,
+			SeededRandom.create_state(seed_value),
+			_public_rules(),
+			SAFETY_PROFILE
+		)
+		var replay: Dictionary = SafeRandomAi.choose(
+			projection,
+			SeededRandom.create_state(seed_value),
+			_public_rules(),
+			SAFETY_PROFILE
+		)
+		_check(str(first.get("action", {}).get("id", "")) \
+			== str(replay.get("action", {}).get("id", "")) \
+			and first.get("audit", {}) == replay.get("audit", {}),
+			"同一PlayerView与种子%d产生相同威胁决策和审计" % seed_value)
+
+
+func _threat_priority_projection(threaten_both: bool) -> Dictionary:
+	var visible_pieces: Array = [
+		{"id": "black-elephant-1", "side": "black", "piece_type": "elephant", "position": [4, 15]},
+		{"id": "black-elephant-2", "side": "black", "piece_type": "elephant", "position": [6, 15]},
+		{"id": "red-rook-1", "side": "red", "piece_type": "rook", "position": [4, 10]},
+		{"id": "red-pawn-1", "side": "red", "piece_type": "pawn", "position": [5, 14]},
+	]
+	if threaten_both:
+		visible_pieces.append(
+			{"id": "red-rook-2", "side": "red", "piece_type": "rook", "position": [6, 10]}
+		)
+	return {
+		"viewer_side": "black",
+		"visible_pieces": visible_pieces,
+		"public_walls": [
+			{"side": "red", "status": "INTACT"},
+			{"side": "black", "status": "BREACHED"},
+		],
+		"legal_actions": [
+			_action("elephant-1-safe", [4, 15], [3, 14], "black-elephant-1"),
+			_action("elephant-2-safe-capture", [6, 15], [5, 14], "black-elephant-2", [
+				{"piece_id": "red-pawn-1", "piece_type": "pawn"},
+			]),
+		],
+	}
+
+
+func _public_rules() -> RefCounted:
+	return AiPublicRules.new({
 		"schema_version": "public-ai-rules-v1",
 		"board_width": 9,
 		"board_height": 24,
@@ -55,15 +228,6 @@ func _test_safe_random_priority() -> void:
 		},
 		"action_kind_bias": {"move": 0, "pass": 0},
 	})
-	for seed_value: int in range(1, 21):
-		var decision: Dictionary = SafeRandomAi.choose(
-			projection,
-			SeededRandom.create_state(seed_value),
-			public_rules,
-			SAFETY_PROFILE
-		)
-		_check(str(decision.get("action", {}).get("id", "")) == "safe",
-			"存在安全落点时种子%d排除明确受攻击落点" % seed_value)
 
 
 func _test_level(selector_id: String) -> void:
@@ -93,6 +257,11 @@ func _test_level(selector_id: String) -> void:
 	_check(pawn_count == 5, "第%d关五个兵全部位于城墙线" % level_id)
 	_check(snapshot.get("black_pieces", []).size() == expected_count,
 		"第%d关敌军数量正确" % level_id)
+	var difficulty: Dictionary = controller.get_ai_difficulty_snapshot()
+	_check(str(difficulty.get("profile_id", "")) == "level-threat-safe-random-ai-v2" \
+		and str(difficulty.get("strategy_mode_hypothesis", "")) \
+		== "visible-threat-safe-capture-random",
+		"第%d关使用威胁识别与安全吃子优先AI配置" % level_id)
 	for piece: Dictionary in snapshot.get("black_pieces", []):
 		_check(str(piece["piece_type"]) == expected_type,
 			"第%d关敌军类型为%s" % [level_id, expected_type])
@@ -118,6 +287,8 @@ func _test_level(selector_id: String) -> void:
 	var audit: Dictionary = controller.get_last_ai_decision_audit_for_test()
 	_check(bool(audit.get("controller_context", {}).get("uses_player_view_only", false)),
 		"第%d关敌方AI审计确认只使用PlayerView" % level_id)
+	_check(bool(audit.get("uses_visible_information_only", false)),
+		"第%d关威胁与落点判断审计确认只使用可见信息" % level_id)
 	for piece: Dictionary in controller.get_scenario_snapshot_for_test().get("black_pieces", []):
 		_check(int(piece["position"][1]) <= 16, "第%d关敌方行动不越过战区边界" % level_id)
 	controller.queue_free()
@@ -181,14 +352,20 @@ func _test_main_scene() -> void:
 	await process_frame
 
 
-func _action(action_id: String, origin: Array, target: Array) -> Dictionary:
+func _action(
+	action_id: String,
+	origin: Array,
+	target: Array,
+	actor_id: String = "black-elephant-1",
+	visible_captures: Array = []
+) -> Dictionary:
 	return {
 		"id": action_id,
 		"kind": "move",
-		"actor_id": "black-elephant-1",
+		"actor_id": actor_id,
 		"origin": origin,
 		"target": target,
-		"visible_captures": [],
+		"visible_captures": visible_captures,
 		"reveal_cell_count": 0,
 		"attacks_wall": false,
 		"path_length": 2,
