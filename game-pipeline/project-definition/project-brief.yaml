@@ -3,7 +3,7 @@ project_brief:
   identity:
     brief_id: brief:veilfront-xiangqi-siege:initial
     project_id: veilfront-xiangqi-siege
-    version: 4
+    version: 5
   coordination:
     project_owner: project-owner
     coordinator_role_id: AGT-DIR
@@ -43,6 +43,11 @@ project_brief:
   - source_id: source:veilfront-xiangqi-siege:owner-rule-revision-5
     uri: codex-thread://current#owner-rule-revision-5
     version_or_digest: owner-clarification:2026-08-17:intersection-fog-casualty-advisor-ui
+    supplied_by: project-owner
+    authority: project.direction.input
+  - source_id: source:veilfront-xiangqi-siege:owner-demo-scope-revision
+    uri: codex-thread://current#owner-demo-scope-internet-art-tutorial
+    version_or_digest: owner-decision:2026-08-18:internet-demo-no-ai-full-art-tutorial
     supplied_by: project-owner
     authority: project.direction.input
   statements:
@@ -166,66 +171,98 @@ project_brief:
     - source:veilfront-xiangqi-siege:owner-rule-revision-5
   - statement_id: stmt:veilfront-xiangqi-siege:visual-direction
     domain: art-direction
-    text: 世界观确认为中国古代架空背景，同时存在朝代体系与修仙体系；美术路线冻结为90° top-down 2D俯视、角色化单位、东方战争奇幻、回合制迷雾战术象棋。首个P0里程碑先完成不依赖正式美术即可完整运行的纯逻辑原型，再进入视觉制作；具体资产精度、色彩语言、角色比例、动画与音频仍由后续美术基线细化。
+    text: 世界观确认为中国古代架空背景，同时存在朝代体系与修仙体系；美术路线冻结为90° top-down 2D俯视、角色化单位、东方战争奇幻、回合制迷雾战术象棋。GATE-1纯逻辑原型已经通过，首版Demo交付范围改为包含完整的Demo级棋盘、棋子、界面、迷雾、旗帜、特效、动画与音频资源；具体资产精度、色彩语言、角色比例和制作清单须先通过GATE-2美术基线审查，再启动高成本批量生产。
     status: confirmed
     decision_owner: project-owner
     source_refs:
     - source:veilfront-xiangqi-siege:owner-scope-clarification
     - source:veilfront-xiangqi-siege:owner-rules-finalization
+    - source:veilfront-xiangqi-siege:owner-demo-scope-revision
+  - statement_id: stmt:veilfront-xiangqi-siege:demo-delivery-scope
+    domain: scope-constraints
+    text: 首版Demo包含完整规则的人对人联机对战、达到Demo展示标准的完整美术资源和新手教学关卡；暂不包含AI人机对战。互联网联机仍是Demo最终目标，但当前紧接GATE-1的生产循环只负责正式架构边界、教学灰盒和视觉基线，不实现互联网传输、匹配、服务器部署或Steam网络接入。
+    status: confirmed
+    decision_owner: project-owner
+    source_refs:
+    - source:veilfront-xiangqi-siege:owner-demo-scope-revision
+  - statement_id: stmt:veilfront-xiangqi-siege:tutorial
+    domain: gameplay
+    text: 首版Demo必须包含新手教学关卡；教学采用可重复、可重置的固定局面与脚本化目标，引导玩家理解交点棋盘、迷雾、城墙、兵种特殊行动、夺旗和士献祭。教学对手或局面推进器只执行教学脚本，不构成AI人机对战，也不得另建一套规则实现。
+    status: confirmed
+    decision_owner: project-owner
+    source_refs:
+    - source:veilfront-xiangqi-siege:owner-demo-scope-revision
   - statement_id: stmt:veilfront-xiangqi-siege:implementation
     domain: implementation
-    text: 建议采用与显示层解耦的确定性规则核心、可复现随机种子、按玩家视角过滤的迷雾快照与可回放行动日志；若包含在线对战，则由权威服务器持有完整棋盘状态。该实现方向属于待技术原型验证的假设，并非已冻结架构。
-    status: hypothesis
+    text: GATE-1已经验证确定性规则核心、可复现随机种子、按观察者过滤的PlayerView与可回放行动日志可行。正式架构应把规则域、对局用例、PlayerView投影、表现层、教学脚本和未来网络传输分离；任何未来互联网对战端点都只能提交规范化意图并接收自身PlayerView，权威端独占FullState与随机消费。该正式边界仍须在下一循环经技术审查和GATE-2验证，互联网传输实现不在该循环范围内。
+    status: confirmed
     decision_owner: project-owner
     source_refs:
     - source:veilfront-xiangqi-siege:owner-planning-conversation
+    - source:veilfront-xiangqi-siege:owner-demo-scope-revision
   - statement_id: stmt:veilfront-xiangqi-siege:single-player-ai
     domain: implementation
-    text: 首个版本只实现单机玩法，机器人对手采用人工设计和编写的规则型或搜索型AI，不使用机器学习，也不需要在线服务、排位或专用服务器。AI只能读取与玩家等价的可见状态，不得读取迷雾内敌棋、隐身马、隐藏炮架或其他未公开随机结果；具体搜索预算、随机性与难度档位留待原型测试。
+    text: AI人机对战明确不进入首版Demo。现有规则型/搜索型AI及其公平性测试作为研究资产和回归参考保留，但不承担Demo体验、难度或发布验收；未来若重新纳入，仍必须只读取玩家等价PlayerView并重新立项评估训练、搜索质量和内容成本。
     status: confirmed
     decision_owner: project-owner
     source_refs:
     - source:veilfront-xiangqi-siege:owner-scope-clarification
+    - source:veilfront-xiangqi-siege:owner-demo-scope-revision
   - statement_id: stmt:veilfront-xiangqi-siege:godot-authoring
     domain: implementation
-    text: Godot实现优先使用编辑器预置场景、节点和资源，只有运行时数据或生成方案明显更安全简单时才动态创建节点；当前仓库仅完成生产管线初始化，尚未创建project.godot或游戏资产。
+    text: Godot实现优先使用编辑器预置场景、节点和资源，只有棋子实例、迷雾单元、行动轨迹等运行时数量由对局数据决定，或动态方案明显更安全简单时才动态创建节点。GATE-1原型目录只作为行为与测试基线，不能未经架构审查直接升级为正式工程结构。
     status: confirmed
     decision_owner: project-owner
     source_refs:
     - source:veilfront-xiangqi-siege:project-identity
+    - source:veilfront-xiangqi-siege:owner-demo-scope-revision
   - statement_id: stmt:veilfront-xiangqi-siege:platform-engine
     domain: platform-engine
-    text: 游戏引擎确认为Godot 4.7.1，首发平台为Steam，首个版本以桌面端单机对战为范围；具体支持的操作系统与输入设备组合留待技术基线细化。
+    text: 游戏引擎确认为Godot 4.7.1，首发平台为Steam，首版Demo以桌面端互联网人对人对战为最终交付目标，并包含本地运行的新手教学关卡；具体支持的操作系统、输入设备、Steam网络能力和服务器形态留待后续联网技术基线确认。
     status: confirmed
     decision_owner: project-owner
     source_refs:
     - source:veilfront-xiangqi-siege:project-identity
     - source:veilfront-xiangqi-siege:owner-planning-conversation
     - source:veilfront-xiangqi-siege:owner-scope-clarification
+    - source:veilfront-xiangqi-siege:owner-demo-scope-revision
   - statement_id: stmt:veilfront-xiangqi-siege:scope-constraints
     domain: scope-constraints
-    text: 首个版本边界确认为单机版，不包含在线联机、排位和专用服务器；当前规划阶段不设置团队规模、预算或周期约束。该表述不代表资源无限，任何实际里程碑承诺仍需在进入生产规划时单独确认。
+    text: 首版Demo不包含AI人机对战；互联网人对人对战、完整Demo级美术和新手教学属于交付范围。排位、观战、聊天、赛季、商业化、房主迁移和是否部署专用服务器尚未纳入已确认范围。当前不设置团队规模、预算或周期约束；任何服务器采购、第三方服务、资产量和交付日期都必须另行确认。
     status: confirmed
     decision_owner: project-owner
     source_refs:
     - source:veilfront-xiangqi-siege:owner-scope-clarification
+    - source:veilfront-xiangqi-siege:owner-demo-scope-revision
   open_questions:
   - question_id: question:veilfront-xiangqi-siege:flag-and-victory
     question: 单局完整轮上限仍需通过纯逻辑原型的批量对局与人工试玩确定；达到上限后的旗帜判胜和平局规则已经冻结。
     decision_owner: project-owner
     blocks_staffing: false
   - question_id: question:veilfront-xiangqi-siege:ai-information
-    question: 机器人AI与玩家等价的信息边界已经冻结；仍需通过原型确定AI搜索预算、决策随机性、难度档位与不得作弊的验收方式。
+    question: AI人机对战已从首版Demo移除；现有AI只作为研究与回归资产保留，何时重启AI质量提升与是否需要训练由未来独立范围决定。
     decision_owner: project-owner
     blocks_staffing: false
-  open_questions_note: 非阻断玩法问题可在编制获批后由相应责任范围形成规则规格，但在进入实现前必须冻结。
+  - question_id: question:veilfront-xiangqi-siege:internet-architecture
+    question: 互联网Demo采用Steam Networking/SDR、传统权威专用服务器、玩家房主中继或混合方案尚未决定；服务器地区、并发、断线重连、匹配、账号和发布级反作弊目标也未冻结。本问题不阻断紧接GATE-1的正式架构与教学灰盒循环，但在启动互联网实现和采购前必须解决。
+    decision_owner: project-owner
+    blocks_staffing: false
+  - question_id: question:veilfront-xiangqi-siege:art-baseline
+    question: Demo要求完整美术资源，但资产清单、角色比例、目标分辨率、帧数、特效与音频数量、外包策略和验收样片尚未冻结；必须在批量资产生产前通过GATE-2视觉基线审查。
+    decision_owner: project-owner
+    blocks_staffing: false
+  - question_id: question:veilfront-xiangqi-siege:tutorial-coverage
+    question: 教学关卡必须覆盖哪些规则、拆成几个步骤、失败和跳过策略以及是否记录完成状态，需在下一循环由系统体验职责形成教学脚本并以灰盒验证。
+    decision_owner: project-owner
+    blocks_staffing: false
+  open_questions_note: 上述问题均不阻断本次正式架构审查、教学灰盒和视觉基线循环；互联网实现、批量高成本美术或未来AI立项前必须分别冻结对应问题。
   risks:
   - risk_id: risk:veilfront-xiangqi-siege:scope-uncertainty
-    description: 首版单机范围已经确定，但团队、预算与周期暂不设约束，当前不能形成有日期和资源承诺的生产预测。
+    description: 首版Demo同时要求互联网人对人对战、完整Demo级美术和新手教学，但团队、预算与周期暂不设约束，当前不能形成有日期和资源承诺的生产预测。
     evidence_refs:
     - stmt:veilfront-xiangqi-siege:platform-engine
     - stmt:veilfront-xiangqi-siege:scope-constraints
-    impact: medium
+    impact: high
     staffing_implication: 可以按能力覆盖设计职责，但不能把组织建议解读为已批准人数、成本或交付日期。
   - risk_id: risk:veilfront-xiangqi-siege:rules-complexity
     description: 迷雾、独立城墙阶段、棋子特殊能力、随机炮击、强制撤回和多重胜利条件叠加，容易出现结算顺序歧义与状态组合缺陷。
@@ -236,7 +273,7 @@ project_brief:
     impact: high
     staffing_implication: 需要独立的规则规格、确定性测试矩阵与可复现对局证据，不能只依靠手工试玩验收。
   - risk_id: risk:veilfront-xiangqi-siege:hidden-information
-    description: 合法落点提示、镜头、音效、小地图、炮架判定或网络同步都可能无意泄露迷雾内信息。
+    description: 合法落点提示、镜头、音效、小地图、炮架判定、教学脚本或未来网络同步都可能无意泄露迷雾内信息。
     evidence_refs:
     - stmt:veilfront-xiangqi-siege:board-and-fog
     - stmt:veilfront-xiangqi-siege:presentation
@@ -254,18 +291,33 @@ project_brief:
     impact: medium
     staffing_implication: 需要可观测的平衡指标、对局日志、批量模拟或结构化试玩，不应在纸面阶段宣布平衡完成。
   - risk_id: risk:veilfront-xiangqi-siege:art-unknown
-    description: 2D俯视与角色化单位路线已经确定，但资产精度、色彩语言、角色比例、动画、音频和修仙元素的具体视觉强度仍未形成美术基线。
+    description: 首版Demo已要求完整美术资源，但资产精度、色彩语言、角色比例、动画、音频、修仙元素强度和制作总量仍未形成可估算的美术基线。
     evidence_refs:
     - stmt:veilfront-xiangqi-siege:visual-direction
-    impact: medium
-    staffing_implication: 可以建立视觉方向与资产管线职责，但具体产能和外包需求要等待美术基线。
+    impact: high
+    staffing_implication: 下一循环只能建立视觉基线、资产清单和可审查样片；具体产能、外包与批量制作承诺必须等待GATE-2。
   - risk_id: risk:veilfront-xiangqi-siege:ai-fairness
-    description: 战争迷雾下的机器人AI如果直接读取完整棋盘，会破坏侦察、隐身与欺骗玩法；若只读取可见信息，又需要处理不完全信息搜索与可解释难度。
+    description: 现有AI虽然通过公平性技术验证，但对战质量不足以支持首版Demo；若未来恢复，仍需重新评估不完全信息决策、训练或搜索成本和可解释难度。
     evidence_refs:
     - stmt:veilfront-xiangqi-siege:board-and-fog
     - stmt:veilfront-xiangqi-siege:single-player-ai
+    impact: low
+    staffing_implication: 首版Demo不为AI配置交付职责；保留PlayerView公平契约与测试资产，未来重新立项时再评估人员和质量门槛。
+  - risk_id: risk:veilfront-xiangqi-siege:internet-production
+    description: 局域网真人测试只证明基础双机体验，不能证明NAT穿透、互联网延迟、断线恢复、服务可用性、运营成本和发布级安全；直接扩展原型LAN代码会积累高风险技术债。
+    evidence_refs:
+    - stmt:veilfront-xiangqi-siege:demo-delivery-scope
+    - stmt:veilfront-xiangqi-siege:implementation
+    - stmt:veilfront-xiangqi-siege:platform-engine
     impact: high
-    staffing_implication: AI实现与QA必须共享明确的信息权限契约，并以可审计对局日志证明AI未读取隐藏状态。
+    staffing_implication: 正式架构先冻结权威边界和传输端口；互联网实现必须另立获批Contract并提供服务端、网络QA和部署运维责任。
+  - risk_id: risk:veilfront-xiangqi-siege:tutorial-divergence
+    description: 若教学通过专用作弊分支、复制规则或直接操作棋盘状态推进，将与正式对战规则产生分歧并可能泄露隐藏信息。
+    evidence_refs:
+    - stmt:veilfront-xiangqi-siege:tutorial
+    - stmt:veilfront-xiangqi-siege:implementation
+    impact: medium
+    staffing_implication: 教学脚本必须通过同一规范化意图和事件接口驱动，并以可重置固定局面和自动验收证明没有第二套规则。
   staffing_input:
     responsibility_needs:
     - need_id: need:veilfront-xiangqi-siege:rules-and-balance
@@ -280,15 +332,15 @@ project_brief:
       - 平衡指标和试玩变更记录
       acceptance_owner_kind: human
     - need_id: need:veilfront-xiangqi-siege:godot-technology
-      responsibility: 负责Godot工程结构、确定性规则核心、场景与资源映射、存档回放以及批准模式所需的联网或AI能力。
+      responsibility: 负责Godot正式工程结构、确定性规则核心迁移、场景与资源映射、存档回放、教学运行时和未来互联网传输端口。
       rationale_statement_refs:
       - stmt:veilfront-xiangqi-siege:implementation
       - stmt:veilfront-xiangqi-siege:godot-authoring
       - stmt:veilfront-xiangqi-siege:platform-engine
       expected_artifacts:
       - 技术方案与Godot场景资源映射
-      - 可运行原型和构建产物
-      - 确定性、重连或回放验证证据
+      - 可运行正式灰盒和构建产物
+      - 确定性、教学重置、网络边界或回放验证证据
       acceptance_owner_kind: human
     - need_id: need:veilfront-xiangqi-siege:information-ux
       responsibility: 设计局部棋盘、小地图、迷雾、行动反馈与无信息泄露的交互体验。
@@ -301,12 +353,12 @@ project_brief:
       - 迷雾信息边界验收清单
       acceptance_owner_kind: human
     - need_id: need:veilfront-xiangqi-siege:visual-production
-      responsibility: 在项目所有者确认方向后定义视觉语言并生产棋盘、棋子、城墙、迷雾、旗帜、特效与界面资产。
+      responsibility: 定义Demo视觉语言、资产预算与制作规范，并在GATE-2批准后生产棋盘、棋子、城墙、迷雾、旗帜、特效、动画、音频与界面资产。
       rationale_statement_refs:
       - stmt:veilfront-xiangqi-siege:visual-direction
       expected_artifacts:
       - 美术方向基线
-      - 资产清单与制作规范
+      - 带数量、规格、依赖和验收标准的Demo资产清单
       - 可审查的游戏内视觉样片
       acceptance_owner_kind: human
     - need_id: need:veilfront-xiangqi-siege:quality-validation
@@ -319,24 +371,35 @@ project_brief:
       - 可复现缺陷报告
       - 里程碑验收证据包
       acceptance_owner_kind: human
-    - need_id: need:veilfront-xiangqi-siege:single-player-ai
-      responsibility: 设计与实现只使用玩家等价可见信息的人工编写机器人AI，并维护难度、搜索预算、决策随机性和反作弊验收标准。
+    - need_id: need:veilfront-xiangqi-siege:tutorial-content
+      responsibility: 设计新手教学目标、固定局面、提示节奏、失败与重置路径，并确保教学只调用正式对局意图与事件接口。
       rationale_statement_refs:
-      - stmt:veilfront-xiangqi-siege:single-player-ai
-      - stmt:veilfront-xiangqi-siege:board-and-fog
+      - stmt:veilfront-xiangqi-siege:tutorial
+      - stmt:veilfront-xiangqi-siege:demo-delivery-scope
       expected_artifacts:
-      - AI决策与信息权限规格
-      - 可配置难度的机器人对手
-      - 无隐藏信息读取的对局证据
+      - 教学关卡流程与文案脚本
+      - 可重复、可跳过或重置的教学灰盒
+      - 正式规则复用和信息边界验收证据
+      acceptance_owner_kind: human
+    - need_id: need:veilfront-xiangqi-siege:internet-multiplayer
+      responsibility: 在后续获批联网循环中设计并验证权威对局服务、会话生命周期、Steam或其他传输接入、断线恢复、部署监控和容量成本；当前循环只定义接口边界。
+      rationale_statement_refs:
+      - stmt:veilfront-xiangqi-siege:demo-delivery-scope
+      - stmt:veilfront-xiangqi-siege:implementation
+      - stmt:veilfront-xiangqi-siege:platform-engine
+      expected_artifacts:
+      - 联网架构决策与威胁模型
+      - 互联网会话、重连与部署规格
+      - 延迟、断线、信息泄露和容量成本证据
       acceptance_owner_kind: human
     readiness: ready
     blocker_refs: []
   review:
-    status: confirmed
-    approval_id: approval:veilfront-xiangqi-siege:project-brief:df8deb810d8c
-    confirmed_by: project-owner
-    confirmed_at: '2026-08-17T21:53:52.382912+08:00'
+    status: in_review
+    approval_id: null
+    confirmed_by: null
+    confirmed_at: null
   integrity:
     canonicalization: project-brief-subject-canonical-json-v1
     digest_algorithm: sha256
-    subject_digest: df8deb810d8c06c8c2f5763031fde2c39f14aa81226e23ffb25636ee3f1eca0b
+    subject_digest: 41bb82fae4f1a0294d17746f3b9caf063ee69d2bd07e0f7d15d26baad9ab89bb
