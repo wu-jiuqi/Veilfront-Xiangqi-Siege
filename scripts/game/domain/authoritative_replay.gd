@@ -5,8 +5,12 @@ const MatchState = preload("res://scripts/game/domain/match_state.gd")
 const RuleEngine = preload("res://scripts/game/domain/rule_engine.gd")
 const FullStateCodec = preload("res://scripts/game/domain/full_state_codec.gd")
 
-const SCHEMA_VERSION: String = "veilfront-authoritative-replay-v1"
+const SCHEMA_VERSION: String = "veilfront-authoritative-replay-v2"
 const SOURCE_COMMIT: String = "6253678157157091584b253470e709bad17c534f"
+const HQ_SUCCESSOR_SHA256: String = "f6b07d8cbdc7db4492c33e8b4b028aca2906cccc8baf5921273aaa012d48e19b"
+const FORMAL_RULES_BUNDLE_SHA256: String = "f3d09bca73a4e074d698fab29acceb425cc5374b080666af3fddfdb81e1a29a8"
+const IMPLEMENTATION_REVISION: String = "formal-core-revision-1"
+const CANONICAL_REVISION: String = "veilfront_canonical_json_sha256_v1"
 const CODEC_VERSIONS: Dictionary = {
 	"full_state": "veilfront-full-state-v1",
 	"domain_event": "veilfront-domain-event-v1",
@@ -44,6 +48,7 @@ static func capture(seed_value: int, intents: Array, configuration: Dictionary =
 		"schema_version": SCHEMA_VERSION,
 		"rules_revision": str(state["rules_revision"]),
 		"source_commit": SOURCE_COMMIT,
+		"rules_input_binding": _rules_input_binding(),
 		"initial_full_state_or_seed": {
 			"seed": seed_value,
 			"match_id": str(state["match_id"]),
@@ -70,6 +75,8 @@ static func verify(record: Dictionary) -> Dictionary:
 		return {"ok": false, "error_code": "unsupported_or_invalid_replay"}
 	if str(record.get("source_commit", "")) != SOURCE_COMMIT:
 		return {"ok": false, "error_code": "source_commit_mismatch"}
+	if record.get("rules_input_binding") != _rules_input_binding():
+		return {"ok": false, "error_code": "rules_input_binding_mismatch"}
 	if record.get("codec_versions") != CODEC_VERSIONS:
 		return {"ok": false, "error_code": "codec_version_mismatch"}
 	var seed_record: Variant = record.get("initial_full_state_or_seed")
@@ -111,7 +118,8 @@ static func verify(record: Dictionary) -> Dictionary:
 
 static func _has_exact_fields(record: Dictionary) -> bool:
 	var fields: Array[String] = [
-		"schema_version", "rules_revision", "source_commit", "initial_full_state_or_seed",
+		"schema_version", "rules_revision", "source_commit", "rules_input_binding",
+		"initial_full_state_or_seed",
 		"configuration", "normalized_intents", "execution_results", "domain_events",
 		"state_digests", "event_digests", "rng_checkpoints", "final_state_digest",
 		"codec_versions", "audit_digest",
@@ -122,3 +130,15 @@ static func _has_exact_fields(record: Dictionary) -> bool:
 		if not record.has(field_name):
 			return false
 	return true
+
+
+static func _rules_input_binding() -> Dictionary:
+	return {
+		"source_commit": SOURCE_COMMIT,
+		"hq_successor_sha256": HQ_SUCCESSOR_SHA256,
+		"formal_rules_bundle_sha256": FORMAL_RULES_BUNDLE_SHA256,
+		"implementation_revision": IMPLEMENTATION_REVISION,
+		"canonical_revision": CANONICAL_REVISION,
+		"full_state_codec": "veilfront-full-state-v1",
+		"domain_event_codec": "veilfront-domain-event-v1",
+	}

@@ -85,6 +85,7 @@ func submit_intent(normalized_intent: Dictionary) -> Dictionary:
 	var action_previews: Array = [] if bool(_state.get("terminal", false)) \
 		else current_action_previews()
 	var frame: Dictionary = {
+		"frame_sequence": _observer_frames.size() + 1,
 		"action_index": int(player_view["action_index"]),
 		"player_view_or_digest": player_view.duplicate(true),
 		"visible_events": visible_events.duplicate(true),
@@ -104,8 +105,8 @@ func submit_intent(normalized_intent: Dictionary) -> Dictionary:
 
 func observer_replay_record() -> Dictionary:
 	var initial_view: Dictionary = _initial_player_view.duplicate(true)
-	return {
-		"schema_version": "veilfront-observer-replay-v1",
+	var record: Dictionary = {
+		"schema_version": "veilfront-observer-replay-v2",
 		"match_id": str(initial_view["match_id"]),
 		"rules_revision": str(initial_view["rules_revision"]),
 		"viewer_side": str(initial_view["viewer_side"]),
@@ -113,12 +114,16 @@ func observer_replay_record() -> Dictionary:
 		"frames": _observer_frames.duplicate(true),
 		"final_player_view_digest": Canonical.digest(current_player_view()),
 		"codec_versions": {
+			"observer_replay": "veilfront-observer-replay-v2",
 			"player_view": "veilfront-player-view-v1",
 			"visible_event": "veilfront-visible-event-v1",
 			"visible_error": "veilfront-visible-error-v1",
 			"action_preview": "veilfront-action-preview-v1",
 		},
+		"audit_digest": "",
 	}
+	record["audit_digest"] = Canonical.digest(record)
+	return record
 
 
 func validate_observer_replay_record(record: Dictionary) -> Dictionary:
