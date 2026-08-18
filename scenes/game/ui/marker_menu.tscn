@@ -1,0 +1,22 @@
+[gd_scene format=3]
+
+[node name="MarkerMenu" type="PopupPanel"]
+size = Vector2i(248, 64)
+
+[node name="Choices" type="HBoxContainer" parent="."]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 240.0
+offset_bottom = 56.0
+
+[node name="CircleButton" type="Button" parent="Choices"]
+layout_mode = 2
+text = "○"
+
+[node name="CrossButton" type="Button" parent="Choices"]
+layout_mode = 2
+text = "×"
+
+[node name="SquareButton" type="Button" parent="Choices"]
+layout_mode = 2
+text = "□"

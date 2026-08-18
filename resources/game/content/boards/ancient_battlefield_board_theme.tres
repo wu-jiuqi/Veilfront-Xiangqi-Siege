@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="BoardTheme" load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/presentation/board/board_theme.gd" id="1_board_theme"]
+[ext_resource type="PackedScene" path="res://scenes/game/match/board/wall_view.tscn" id="2_wall"]
+[ext_resource type="PackedScene" path="res://scenes/game/match/board/piece_view.tscn" id="3_piece"]
+[ext_resource type="PackedScene" path="res://scenes/game/match/board/flag_view.tscn" id="4_flag"]
+[ext_resource type="PackedScene" path="res://scenes/game/match/board/capture_ghost_view.tscn" id="5_ghost"]
+
+[resource]
+script = ExtResource("1_board_theme")
+theme_id = &"ancient_battlefield_graybox"
+cell_size = Vector2(128, 128)
+grid_palette = {
+"base": Color(0.68, 0.48, 0.31, 1),
+"headquarters": Color(0.72, 0.58, 0.36, 1),
+"buffer": Color(0.61, 0.46, 0.32, 1),
+"warzone": Color(0.45, 0.36, 0.28, 1)
+}
+region_label_style = {
+"font_color": Color(0.94, 0.88, 0.74, 0.24),
+"font_size": 72
+}
+wall_scene_set = Array[PackedScene]([ExtResource("2_wall")])
+piece_scene_set = Array[PackedScene]([ExtResource("3_piece")])
+flag_scene = ExtResource("4_flag")
+ghost_scene = ExtResource("5_ghost")

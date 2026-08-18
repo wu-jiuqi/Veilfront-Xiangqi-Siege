@@ -1,0 +1,35 @@
+[gd_scene format=3]
+
+[node name="MatchStatusPanel" type="PanelContainer"]
+custom_minimum_size = Vector2(280, 0)
+
+[node name="Content" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Heading" type="Label" parent="Content"]
+layout_mode = 2
+text = "战局信息"
+
+[node name="WallStatus" type="Label" parent="Content"]
+layout_mode = 2
+text = "城墙：等待对局数据"
+autowrap_mode = 2
+
+[node name="FlagStatus" type="Label" parent="Content"]
+layout_mode = 2
+text = "旗帜：等待对局数据"
+autowrap_mode = 2
+
+[node name="CasualtyStatus" type="Label" parent="Content"]
+layout_mode = 2
+text = "阵亡：等待对局数据"
+autowrap_mode = 2
+
+[node name="Spacer" type="Control" parent="Content"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SkipButton" type="Button" parent="Content"]
+layout_mode = 2
+text = "主动跳过"

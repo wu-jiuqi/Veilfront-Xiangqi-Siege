@@ -1,0 +1,7 @@
+[gd_scene format=3]
+
+[node name="CaptureGhostView" type="Node2D"]
+
+[node name="GhostBody" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(-38, -38, 38, -38, 38, 38, -38, 38)
+color = Color(0.75, 0.85, 1, 0.28)

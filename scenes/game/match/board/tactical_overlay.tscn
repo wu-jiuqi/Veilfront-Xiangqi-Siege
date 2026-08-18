@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[node name="TacticalOverlay" type="Control"]
+mouse_filter = 2
+offset_right = 1152.0
+offset_bottom = 3072.0

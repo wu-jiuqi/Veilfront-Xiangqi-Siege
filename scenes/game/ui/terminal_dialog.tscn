@@ -1,0 +1,15 @@
+[gd_scene format=3]
+
+[node name="TerminalDialog" type="AcceptDialog"]
+title = "对局结束"
+initial_position = 1
+size = Vector2i(420, 220)
+dialog_text = "等待对局结果"
+ok_button_text = "返回"
+
+[node name="RestartButton" type="Button" parent="."]
+offset_left = 16.0
+offset_top = 138.0
+offset_right = 128.0
+offset_bottom = 180.0
+text = "重新开始"

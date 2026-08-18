@@ -1,0 +1,12 @@
+[gd_scene format=3]
+
+[node name="FlagView" type="Node2D"]
+
+[node name="Mast" type="Line2D" parent="."]
+points = PackedVector2Array(-24, 44, -24, -44)
+width = 6.0
+default_color = Color(0.88, 0.78, 0.55, 1)
+
+[node name="Cloth" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(-20, -42, 42, -24, -20, -4)
+color = Color(0.86, 0.54, 0.13, 1)

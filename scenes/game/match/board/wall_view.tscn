@@ -1,0 +1,7 @@
+[gd_scene format=3]
+
+[node name="WallView" type="Node2D"]
+
+[node name="WallBody" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(-64, -12, 64, -12, 64, 12, -64, 12)
+color = Color(0.38, 0.3, 0.24, 1)

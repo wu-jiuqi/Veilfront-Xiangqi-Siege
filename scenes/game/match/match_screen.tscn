@@ -1,0 +1,111 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Theme" path="res://resources/game/ui/formal_graybox_theme.tres" id="1_theme"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/match_header.tscn" id="2_header"]
+[ext_resource type="PackedScene" path="res://scenes/game/match/board/board_viewport.tscn" id="3_board"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/match_status_panel.tscn" id="4_status"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/marker_menu.tscn" id="5_marker"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/action_confirmation_panel.tscn" id="6_confirm"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/terminal_dialog.tscn" id="7_terminal"]
+
+[node name="MatchScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+
+[node name="Backdrop" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.035, 0.043, 0.058, 1)
+
+[node name="SafeMargin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Page" type="VBoxContainer" parent="SafeMargin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="MatchHeader" parent="SafeMargin/Page" instance=ExtResource("2_header")]
+layout_mode = 2
+
+[node name="Workspace" type="HSplitContainer" parent="SafeMargin/Page"]
+layout_mode = 2
+size_flags_vertical = 3
+split_offset = 900
+
+[node name="BoardFrame" type="PanelContainer" parent="SafeMargin/Page/Workspace"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BoardViewport" parent="SafeMargin/Page/Workspace/BoardFrame" instance=ExtResource("3_board")]
+layout_mode = 2
+
+[node name="WideStatusHost" type="PanelContainer" parent="SafeMargin/Page/Workspace"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+
+[node name="MatchStatusPanel" parent="SafeMargin/Page/Workspace/WideStatusHost" instance=ExtResource("4_status")]
+layout_mode = 2
+
+[node name="CompactActionBar" type="HBoxContainer" parent="SafeMargin/Page"]
+layout_mode = 2
+alignment = 2
+
+[node name="StatusButton" type="Button" parent="SafeMargin/Page/CompactActionBar"]
+layout_mode = 2
+text = "战局信息"
+
+[node name="CancelButton" type="Button" parent="SafeMargin/Page/CompactActionBar"]
+layout_mode = 2
+text = "取消选择"
+
+[node name="ConfirmButton" type="Button" parent="SafeMargin/Page/CompactActionBar"]
+layout_mode = 2
+text = "确认行动"
+
+[node name="CompactStatusDrawer" type="PopupPanel" parent="."]
+size = Vector2i(360, 560)
+
+[node name="CompactStatusHost" type="MarginContainer" parent="CompactStatusDrawer"]
+offset_left = 12.0
+offset_top = 12.0
+offset_right = 348.0
+offset_bottom = 548.0
+
+[node name="Placeholder" type="Label" parent="CompactStatusDrawer/CompactStatusHost"]
+layout_mode = 2
+text = "窄屏战局信息将在响应式切片接入"
+autowrap_mode = 2
+
+[node name="MarkerMenu" parent="." instance=ExtResource("5_marker")]
+
+[node name="ActionConfirmationPanel" parent="." instance=ExtResource("6_confirm")]
+
+[node name="TutorialOverlayHost" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TerminalDialog" parent="." instance=ExtResource("7_terminal")]

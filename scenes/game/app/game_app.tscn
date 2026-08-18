@@ -1,0 +1,69 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Theme" path="res://resources/game/ui/formal_graybox_theme.tres" id="1_theme"]
+[ext_resource type="PackedScene" path="res://scenes/game/match/match_screen.tscn" id="2_match"]
+
+[node name="GameApp" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.02, 0.025, 0.035, 1)
+
+[node name="ApplicationHost" type="Node" parent="."]
+
+[node name="ScreenHost" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MatchScreen" parent="ScreenHost" instance=ExtResource("2_match")]
+layout_mode = 1
+
+[node name="GlobalOverlayHost" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TransitionOverlay" type="ColorRect" parent="GlobalOverlayHost"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="FatalErrorDialog" type="AcceptDialog" parent="GlobalOverlayHost"]
+title = "无法继续"
+dialog_text = "正式运行时尚未绑定。"
+ok_button_text = "返回"
+
+[node name="AccessibilityAnnouncer" type="Label" parent="."]
+visible = false
+layout_mode = 0
+offset_right = 1.0
+offset_bottom = 1.0
+mouse_filter = 2
+text = "状态播报"

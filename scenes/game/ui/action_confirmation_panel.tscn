@@ -1,0 +1,29 @@
+[gd_scene format=3]
+
+[node name="ActionConfirmationPanel" type="PanelContainer"]
+visible = false
+custom_minimum_size = Vector2(360, 128)
+offset_left = 32.0
+offset_top = 520.0
+offset_right = 392.0
+offset_bottom = 648.0
+
+[node name="Content" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Prompt" type="Label" parent="Content"]
+layout_mode = 2
+text = "确认当前行动？"
+autowrap_mode = 2
+
+[node name="Buttons" type="HBoxContainer" parent="Content"]
+layout_mode = 2
+alignment = 2
+
+[node name="CancelButton" type="Button" parent="Content/Buttons"]
+layout_mode = 2
+text = "取消"
+
+[node name="ConfirmButton" type="Button" parent="Content/Buttons"]
+layout_mode = 2
+text = "确认行动"

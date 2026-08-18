@@ -18,6 +18,53 @@ window/size/window_height_override=720
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
+[input]
+
+board_select={
+"deadzone": 0.5,
+"events": [Object(InputEventMouseButton,"button_index":1), Object(InputEventKey,"physical_keycode":4194309)]
+}
+board_cancel_or_marker={
+"deadzone": 0.5,
+"events": [Object(InputEventMouseButton,"button_index":2), Object(InputEventKey,"physical_keycode":4194305)]
+}
+board_confirm={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"physical_keycode":4194309), Object(InputEventKey,"physical_keycode":32)]
+}
+board_pan_up={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"physical_keycode":87), Object(InputEventKey,"physical_keycode":4194320)]
+}
+board_pan_down={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"physical_keycode":83), Object(InputEventKey,"physical_keycode":4194322)]
+}
+board_pan_left={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"physical_keycode":65), Object(InputEventKey,"physical_keycode":4194319)]
+}
+board_pan_right={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"physical_keycode":68), Object(InputEventKey,"physical_keycode":4194321)]
+}
+board_zoom_in={
+"deadzone": 0.5,
+"events": [Object(InputEventMouseButton,"button_index":4), Object(InputEventKey,"physical_keycode":43)]
+}
+board_zoom_out={
+"deadzone": 0.5,
+"events": [Object(InputEventMouseButton,"button_index":5), Object(InputEventKey,"physical_keycode":45)]
+}
+tutorial_skip={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"physical_keycode":84)]
+}
+ui_cancel={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"physical_keycode":4194305)]
+}
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"

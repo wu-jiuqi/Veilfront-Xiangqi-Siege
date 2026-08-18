@@ -1,0 +1,51 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Resource" path="res://resources/game/content/boards/ancient_battlefield_board_theme.tres" id="1_theme"]
+[ext_resource type="PackedScene" path="res://scenes/game/match/board/fog_overlay.tscn" id="2_fog"]
+[ext_resource type="PackedScene" path="res://scenes/game/match/board/marker_overlay.tscn" id="3_marker"]
+[ext_resource type="PackedScene" path="res://scenes/game/match/board/tactical_overlay.tscn" id="4_tactical"]
+[ext_resource type="PackedScene" path="res://scenes/game/match/board/interaction_overlay.tscn" id="5_interaction"]
+
+[node name="BoardWorld" type="Node2D"]
+metadata/_board_theme = ExtResource("1_theme")
+
+[node name="TerrainLayer" type="TileMapLayer" parent="."]
+
+[node name="ZoneTintLayer" type="TileMapLayer" parent="."]
+
+[node name="DecalLayer" type="TileMapLayer" parent="."]
+
+[node name="GridRenderer" type="Node2D" parent="."]
+
+[node name="PieceLayer" type="Node2D" parent="."]
+
+[node name="FogOverlay" parent="." instance=ExtResource("2_fog")]
+
+[node name="StructureLayer" type="Node2D" parent="."]
+
+[node name="WallViews" type="Node2D" parent="StructureLayer"]
+
+[node name="IntelLayer" type="Node2D" parent="."]
+
+[node name="FlagViews" type="Node2D" parent="IntelLayer"]
+
+[node name="ContactViews" type="Node2D" parent="IntelLayer"]
+
+[node name="CaptureGhostLayer" type="Node2D" parent="."]
+
+[node name="MarkerOverlay" parent="." instance=ExtResource("3_marker")]
+
+[node name="TacticalOverlay" parent="." instance=ExtResource("4_tactical")]
+
+[node name="InteractionOverlay" parent="." instance=ExtResource("5_interaction")]
+
+[node name="EffectLayer" type="Node2D" parent="."]
+
+[node name="InputSurface" type="Control" parent="."]
+focus_mode = 2
+offset_right = 1152.0
+offset_bottom = 3072.0
+mouse_filter = 0
+
+[node name="BoardCamera2D" type="Camera2D" parent="."]
+position = Vector2(576, 1536)

@@ -1,0 +1,33 @@
+[gd_scene format=3]
+
+[node name="TutorialOverlay" type="PanelContainer"]
+custom_minimum_size = Vector2(360, 150)
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 384.0
+offset_bottom = 174.0
+mouse_filter = 1
+
+[node name="Content" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="StepLabel" type="Label" parent="Content"]
+layout_mode = 2
+text = "教学步骤"
+
+[node name="Instruction" type="Label" parent="Content"]
+layout_mode = 2
+text = "等待公开教学提示"
+autowrap_mode = 2
+
+[node name="Actions" type="HBoxContainer" parent="Content"]
+layout_mode = 2
+alignment = 2
+
+[node name="RetryButton" type="Button" parent="Content/Actions"]
+layout_mode = 2
+text = "重试"
+
+[node name="SkipButton" type="Button" parent="Content/Actions"]
+layout_mode = 2
+text = "跳过教学"

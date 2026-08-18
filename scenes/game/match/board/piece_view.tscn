@@ -1,0 +1,17 @@
+[gd_scene format=3]
+
+[node name="PieceView" type="Node2D"]
+
+[node name="Body" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(-42, -42, 42, -42, 42, 42, -42, 42)
+color = Color(0.65, 0.18, 0.13, 1)
+
+[node name="Glyph" type="Label" parent="."]
+offset_left = -16.0
+offset_top = -20.0
+offset_right = 16.0
+offset_bottom = 20.0
+mouse_filter = 2
+text = "棋"
+horizontal_alignment = 1
+vertical_alignment = 1
