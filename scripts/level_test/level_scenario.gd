@@ -4,6 +4,7 @@ const MatchState = preload("res://scripts/prototype/core/match_state.gd")
 
 const PLAYABLE_MAX_Y: int = 16
 const ROUND_LIMIT: int = 50
+const RED_WALL_Y: int = 4
 
 const LEVEL_SPECS: Dictionary = {
 	1: {
@@ -42,7 +43,7 @@ static func enemy_count(level_id: int) -> int:
 static func configure(state: Dictionary, level_id: int) -> void:
 	var spec: Dictionary = _spec(level_id)
 	state["rules_revision"] = "level-test-owner-scope-2026-08-18"
-	state["implementation_revision"] = "level-test-v1"
+	state["implementation_revision"] = "level-test-v2"
 	state["configuration"]["full_round_limit_hypothesis"] = ROUND_LIMIT
 	state["configuration"]["round_limit_status"] = "fixed_level_objective"
 	state["configuration"]["level_id"] = level_id
@@ -50,7 +51,7 @@ static func configure(state: Dictionary, level_id: int) -> void:
 	state["flags"] = []
 	state["flag_discoveries"] = {MatchState.RED: [], MatchState.BLACK: []}
 
-	_relocate_red_army_into_base(state)
+	_place_red_army(state)
 	_configure_enemy_force(state, spec)
 
 
@@ -60,11 +61,11 @@ static func is_inside_playable_area(cell: Array) -> bool:
 		and int(cell[1]) >= 1 and int(cell[1]) <= PLAYABLE_MAX_Y
 
 
-static func _relocate_red_army_into_base(state: Dictionary) -> void:
+static func _place_red_army(state: Dictionary) -> void:
 	for pawn_index: int in range(1, 6):
 		var pawn_id: String = "red-pawn-%d" % pawn_index
 		var pawn_x: int = 1 + (pawn_index - 1) * 2
-		MatchState.relocate_piece(state, pawn_id, Vector2i(pawn_x, 3))
+		MatchState.relocate_piece(state, pawn_id, Vector2i(pawn_x, RED_WALL_Y))
 
 
 static func _configure_enemy_force(state: Dictionary, spec: Dictionary) -> void:

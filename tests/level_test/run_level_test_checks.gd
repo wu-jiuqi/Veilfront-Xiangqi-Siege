@@ -22,7 +22,7 @@ func _run() -> void:
 	await _test_objective_outcomes()
 	await _test_main_scene()
 	if failures.is_empty():
-		print("LEVEL_TEST_CHECKS_PASSED levels=3 playable_cells=144 round_limit=50 safe_random=true")
+		print("LEVEL_TEST_CHECKS_PASSED levels=3 playable_cells=144 round_limit=50 safe_random=true red_pawns_on_wall=true")
 		quit(0)
 		return
 	print("LEVEL_TEST_CHECKS_FAILED count=%d" % failures.size())
@@ -79,9 +79,18 @@ func _test_level(selector_id: String) -> void:
 	_check(int(snapshot.get("round_limit", 0)) == 50, "第%d关固定50完整回合" % level_id)
 	_check(snapshot.get("flags", []).is_empty(), "第%d关不生成夺旗目标" % level_id)
 	_check(snapshot.get("red_pieces", []).size() == 16, "第%d关保留我方全部16枚棋子" % level_id)
+	var pawn_count: int = 0
 	for piece: Dictionary in snapshot.get("red_pieces", []):
-		_check(int(piece["position"][1]) >= 1 and int(piece["position"][1]) <= 3,
-			"第%d关我方%s位于大本营" % [level_id, str(piece["id"])])
+		var piece_type: String = str(piece["piece_type"])
+		var position: Array = piece["position"]
+		if piece_type == "pawn":
+			pawn_count += 1
+			_check(int(position[1]) == 4 and int(position[0]) in [1, 3, 5, 7, 9],
+				"第%d关我方%s位于红方城墙标准兵位" % [level_id, str(piece["id"])])
+		else:
+			_check(int(position[1]) >= 1 and int(position[1]) <= 3,
+				"第%d关我方%s位于大本营" % [level_id, str(piece["id"])])
+	_check(pawn_count == 5, "第%d关五个兵全部位于城墙线" % level_id)
 	_check(snapshot.get("black_pieces", []).size() == expected_count,
 		"第%d关敌军数量正确" % level_id)
 	for piece: Dictionary in snapshot.get("black_pieces", []):
