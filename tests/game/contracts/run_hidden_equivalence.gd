@@ -191,6 +191,15 @@ func _check_authoritative_replay_boundary() -> void:
 	)
 	_expect(bool(AuthoritativeReplay.verify(replay).get("ok", false)),
 		"AuthoritativeReplay custom match replay failed")
+	_expect(str(replay.get("schema_version", "")) == "veilfront-authoritative-replay-v2",
+		"AuthoritativeReplay schema was not revised for rules-input binding")
+	var binding: Dictionary = replay.get("rules_input_binding", {})
+	_expect(str(binding.get("source_commit", "")) == "6253678157157091584b253470e709bad17c534f",
+		"AuthoritativeReplay omitted RC3 source binding")
+	_expect(str(binding.get("hq_successor_sha256", "")) == "f6b07d8cbdc7db4492c33e8b4b028aca2906cccc8baf5921273aaa012d48e19b",
+		"AuthoritativeReplay omitted HQ successor binding")
+	_expect(not str(binding.get("formal_rules_bundle_sha256", "")).is_empty(),
+		"AuthoritativeReplay omitted formal rules bundle binding")
 	var codec_tamper: Dictionary = replay.duplicate(true)
 	codec_tamper["codec_versions"]["full_state"] = "unknown-state-v9"
 	_expect(not bool(AuthoritativeReplay.verify(codec_tamper).get("ok", true)),
@@ -203,6 +212,15 @@ func _check_authoritative_replay_boundary() -> void:
 	unknown_root["debug"] = true
 	_expect(not bool(AuthoritativeReplay.verify(unknown_root).get("ok", true)),
 		"AuthoritativeReplay accepted unknown root field")
+	if replay.has("rules_input_binding"):
+		for field_name: String in [
+			"source_commit", "hq_successor_sha256", "formal_rules_bundle_sha256",
+			"implementation_revision", "canonical_revision",
+		]:
+			var binding_tamper: Dictionary = replay.duplicate(true)
+			binding_tamper["rules_input_binding"][field_name] = "tampered-%s" % field_name
+			_expect(not bool(AuthoritativeReplay.verify(binding_tamper).get("ok", true)),
+				"AuthoritativeReplay accepted rules binding tamper: %s" % field_name)
 
 
 func _check_observer_replay_boundary() -> void:
@@ -210,6 +228,10 @@ func _check_observer_replay_boundary() -> void:
 		471001, "red", {"full_round_limit_hypothesis": 50}
 	)
 	var initial_record: Dictionary = application.observer_replay_record()
+	_expect(str(initial_record.get("schema_version", "")) == "veilfront-observer-replay-v2",
+		"ObserverReplay schema was not revised for frame integrity")
+	_expect(not str(initial_record.get("audit_digest", "")).is_empty(),
+		"ObserverReplay omitted audit digest")
 	_expect(bool(application.validate_observer_replay_record(initial_record).get("ok", false)),
 		"empty ObserverReplay failed validation")
 	var live_result: Dictionary = application.submit_intent(_pass_intent(0))
@@ -245,6 +267,31 @@ func _check_observer_replay_boundary() -> void:
 	forbidden_frame["frames"][0]["domain_events"] = []
 	_expect(not bool(application.validate_observer_replay_record(forbidden_frame).get("ok", true)),
 		"ObserverReplay accepted raw domain event field")
+	var legal_event_tamper: Dictionary = record.duplicate(true)
+	legal_event_tamper["frames"][0]["visible_events"] = []
+	_expect(not bool(application.validate_observer_replay_record(legal_event_tamper).get("ok", true)),
+		"ObserverReplay accepted legal-shape VisibleEvent tamper")
+	var rejection_application: RefCounted = FormalMatchApplication.create_trusted(
+		471001, "red", {"full_round_limit_hypothesis": 50}
+	)
+	var illegal_intent: Dictionary = _pass_intent(0)
+	illegal_intent["intent_id"] = "known-illegal-frame"
+	illegal_intent["piece_id"] = "missing-piece"
+	illegal_intent["action_type"] = "move"
+	illegal_intent["target_cell"] = [5, 5]
+	var rejection_result: Dictionary = rejection_application.submit_intent(illegal_intent)
+	_expect(not bool(rejection_result.get("ok", true)), "known-illegal replay fixture unexpectedly succeeded")
+	var rejection_record: Dictionary = rejection_application.observer_replay_record()
+	_expect(bool(rejection_application.validate_observer_replay_record(rejection_record).get("ok", false)),
+		"known-illegal ObserverReplay failed baseline validation")
+	var legal_error_tamper: Dictionary = rejection_record.duplicate(true)
+	legal_error_tamper["frames"][0]["visible_error"] = {}
+	_expect(not bool(rejection_application.validate_observer_replay_record(legal_error_tamper).get("ok", true)),
+		"ObserverReplay accepted legal-shape VisibleError tamper")
+	var legal_preview_tamper: Dictionary = rejection_record.duplicate(true)
+	legal_preview_tamper["frames"][0]["action_previews"] = []
+	_expect(not bool(rejection_application.validate_observer_replay_record(legal_preview_tamper).get("ok", true)),
+		"ObserverReplay accepted legal-shape ActionPreview tamper")
 	var black_application: RefCounted = FormalMatchApplication.create_trusted(
 		471001, "black", {"full_round_limit_hypothesis": 50}
 	)

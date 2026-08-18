@@ -100,6 +100,61 @@ static func action_preview(player_view: Dictionary, intent: Dictionary) -> Dicti
 	}
 
 
+static func visible_error(
+	domain_result: Dictionary,
+	intent_id: String,
+	action_index: int
+) -> Dictionary:
+	if bool(domain_result.get("ok", false)) and bool(domain_result.get("consumed", false)):
+		var event: Dictionary = domain_result.get("event", {})
+		var outcome: Dictionary = event.get("outcome", {})
+		if str(outcome.get("result_code", "")) in [
+			"route_unknown_blocked", "target_unknown_occupied", "cannon_path_invalid",
+		]:
+			return _visible_error(intent_id, action_index, true, "intent_unresolved")
+		return {}
+	var raw_error: Dictionary = domain_result.get("error", {})
+	var raw_code: String = str(raw_error.get("code", ""))
+	var public_code: String = "known_illegal"
+	if raw_code.contains("stale"):
+		public_code = "stale_intent"
+	elif str(raw_error.get("category", "")) not in ["known_illegal", "terminal"]:
+		public_code = "invalid_request"
+	return _visible_error(intent_id, action_index, false, public_code)
+
+
+static func authoritative_replay_semantics(
+	recording: Dictionary,
+	final_state: Dictionary
+) -> Dictionary:
+	var normalized_intents: Array = []
+	for intent_value: Variant in recording.get("intents", recording.get("normalized_intents", [])):
+		var intent: Dictionary = intent_value
+		normalized_intents.append({
+			"piece_id": str(intent.get("piece_id", "")),
+			"action_type": str(intent.get("action_type", "")),
+			"target_cell": intent.get("target_cell", []).duplicate(),
+			"skill_type": str(intent.get("skill_type", "")),
+		})
+	var events: Array = recording.get("action_events", recording.get("domain_events", [])).duplicate(true)
+	for event: Dictionary in events:
+		event["schema_version"] = "veilfront-domain-event-v1"
+	return {
+		"normalized_intents": normalized_intents,
+		"execution_results": recording.get("execution_results", []).duplicate(true),
+		"domain_events": events,
+		"final_state_summary": {
+			"action_index": int(final_state.get("action_index", 0)),
+			"full_round_index": int(final_state.get("full_round_index", 0)),
+			"terminal": bool(final_state.get("terminal", false)),
+			"winner": str(final_state.get("winner", "")),
+			"win_reason": str(final_state.get("win_reason", "")),
+			"state_digest": ProtoCanonical.digest(final_state),
+			"event_digest": ProtoCanonical.digest(final_state.get("events", [])),
+		},
+	}
+
+
 static func replay_checkpoint(
 	intents: Array,
 	state_digest: String,
@@ -117,3 +172,22 @@ static func _event_action_index(source: Dictionary, fallback: int) -> int:
 	if parts.size() >= 3 and parts[2].is_valid_int():
 		return int(parts[2])
 	return fallback
+
+
+static func _visible_error(
+	intent_id: String,
+	action_index: int,
+	consumed: bool,
+	public_code: String
+) -> Dictionary:
+	return {
+		"schema_version": "veilfront-visible-error-v1",
+		"intent_id": intent_id,
+		"action_index": action_index,
+		"resolution": "consumed_without_effect" if consumed else "rejected_without_consumption",
+		"public_code": public_code,
+		"message_key": "action.intent_unresolved" if public_code == "intent_unresolved" \
+			else "action.%s" % public_code,
+		"consumed": consumed,
+		"timing_bucket": "standard",
+	}
