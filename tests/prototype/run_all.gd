@@ -70,7 +70,7 @@ func _run_phase1_checks() -> void:
 	_check(Revision3RulesTests.run_suite(), "车逐目标、隐藏马/炮架、显形策略生命周期与玩家事件过滤")
 	_check(ElephantRevealTests.run_suite(), "相象19格视野、田字阻挡源、刷新与全离场清源")
 	_check(OwnerRuleRevisionV4Tests.run_suite(), "规则v4墙线、相视野与敌车阻挡、暗旗进度、主动士复活")
-	_check(OwnerRuleRevisionV5Tests.run_suite(), "规则v5旗帜发现记忆、统一阵亡池、墙线阻挡、士复活与被吃虚影")
+	_check(OwnerRuleRevisionV5Tests.run_suite(), "规则v5旗帜发现记忆、统一阵亡池、墙线与大本营缓冲前置、士复活与被吃虚影")
 	_check(SimulationTests.run_suite(), "可配置轮上限整局终止、确定性与完整对局重放")
 	_check(PreparedActionTests.run_suite(), "后备部署准备 token、当回合可选、事件记录与状态回放")
 	var ai_result: Dictionary = AiFairnessTests.run_suite()

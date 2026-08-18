@@ -12,6 +12,7 @@ static var _failures: Array[String] = []
 static func run_suite() -> bool:
 	_failures.clear()
 	_test_wall_line_blocks_until_breached()
+	_test_enemy_buffer_staging_before_headquarters_entry()
 	_test_hidden_horse_contact_stops_and_resolves_rook()
 	_test_elephant_field_blocks_enemy_pawn_and_exposes_overlays()
 	_test_flag_discovery_is_private_and_persistent()
@@ -57,6 +58,59 @@ static func _test_wall_line_blocks_until_breached() -> void:
 		state, _move("red-rook-1", Vector2i(5, 21)), MatchState.RED
 	)
 	_expect(breached_result.get("legal", false), "黑墙倒塌后红子应能踏上城墙线")
+
+
+static func _test_enemy_buffer_staging_before_headquarters_entry() -> void:
+	var red_attack: Dictionary = _empty_state(8511)
+	red_attack["walls"][MatchState.BLACK]["status"] = "BREACHED"
+	_place(red_attack, "red-rook-1", Vector2i(5, 16))
+	_place(red_attack, "black-pawn-1", Vector2i(5, 22))
+	var direct_capture: Dictionary = MoveRules.evaluate_move(
+		red_attack, _move("red-rook-1", Vector2i(5, 22)), MatchState.RED
+	)
+	_expect(not direct_capture.get("legal", false) \
+		and direct_capture.get("reason", "") == "enemy_buffer_staging_required",
+		"黑墙倒塌后红子仍不得从战区直接攻击黑方大本营")
+	red_attack["active_side"] = MatchState.RED
+	var rejected_submission: Dictionary = RuleEngine.submit_action(
+		red_attack, _move("red-rook-1", Vector2i(5, 22))
+	)
+	_expect(not rejected_submission.get("consumed", true) \
+		and Canonical.coordinate(red_attack["pieces"]["red-rook-1"]["position"]) == Vector2i(5, 16) \
+		and red_attack["pieces"]["black-pawn-1"]["alive"],
+		"战区直击敌营必须在公开预览和真实提交中都被拒绝且不消费行动")
+	var empty_entry: Dictionary = _empty_state(8513)
+	empty_entry["walls"][MatchState.BLACK]["status"] = "BREACHED"
+	_place(empty_entry, "red-rook-1", Vector2i(5, 16))
+	var direct_entry: Dictionary = MoveRules.evaluate_move(
+		empty_entry, _move("red-rook-1", Vector2i(5, 22)), MatchState.RED
+	)
+	_expect(not direct_entry.get("legal", false) \
+		and direct_entry.get("reason", "") == "enemy_buffer_staging_required",
+		"红子不得从战区直接跨入黑方大本营空点绕过缓冲区")
+	_place(red_attack, "red-rook-1", Vector2i(5, 20))
+	var staged_capture: Dictionary = MoveRules.evaluate_move(
+		red_attack, _move("red-rook-1", Vector2i(5, 22)), MatchState.RED
+	)
+	_expect(staged_capture.get("legal", false),
+		"红子先进入黑方缓冲区后应能攻击黑方大本营")
+
+	var black_attack: Dictionary = _empty_state(8512)
+	black_attack["walls"][MatchState.RED]["status"] = "BREACHED"
+	_place(black_attack, "black-rook-1", Vector2i(5, 9))
+	_place(black_attack, "red-pawn-1", Vector2i(5, 3))
+	var mirrored_direct_capture: Dictionary = MoveRules.evaluate_move(
+		black_attack, _move("black-rook-1", Vector2i(5, 3)), MatchState.BLACK
+	)
+	_expect(not mirrored_direct_capture.get("legal", false) \
+		and mirrored_direct_capture.get("reason", "") == "enemy_buffer_staging_required",
+		"红墙倒塌后黑子仍不得从战区直接攻击红方大本营")
+	_place(black_attack, "black-rook-1", Vector2i(5, 5))
+	var mirrored_staged_capture: Dictionary = MoveRules.evaluate_move(
+		black_attack, _move("black-rook-1", Vector2i(5, 3)), MatchState.BLACK
+	)
+	_expect(mirrored_staged_capture.get("legal", false),
+		"黑子先进入红方缓冲区后应能攻击红方大本营")
 
 
 static func _test_elephant_field_blocks_enemy_pawn_and_exposes_overlays() -> void:

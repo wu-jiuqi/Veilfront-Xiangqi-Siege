@@ -13,7 +13,7 @@
 | 优先级 | 阶段 | 必须行为 |
 |---:|---|---|
 | 0 | 行动开始 | 终局拒绝行动；行动方按 FIFO 自动部署能放入己方大本营的后备棋子，重新投影视野，再生成行动提示。部署不消费行动。 |
-| 1 | 预览与校验 | 只接收指定观察者 `PlayerView` 可表达的棋子 ID、行动类型、目标交点与技能类型。`KNOWN_ILLEGAL` 不可提交且不消费行动；`KNOWN_LEGAL/TENTATIVE` 可进入待确认态。士献祭仅在发动士存活且在场、己方公开阵亡记录内至少有一枚非士且非帅/将的候选棋子、并且牺牲发动士后己方大本营至少有一个真实空点时可确认。 |
+| 1 | 预览与校验 | 只接收指定观察者 `PlayerView` 可表达的棋子 ID、行动类型、目标交点与技能类型。`KNOWN_ILLEGAL` 不可提交且不消费行动；`KNOWN_LEGAL/TENTATIVE` 可进入待确认态。任何进入敌方大本营的移动/吃子，其行动起点必须已在该敌方缓冲区（含墙线）或大本营；敌墙倒塌不允许从战区一手直入敌营，空点也不能绕过。士献祭仅在发动士存活且在场、己方公开阵亡记录内至少有一枚非士且非帅/将的候选棋子、并且牺牲发动士后己方大本营至少有一个真实空点时可确认。 |
 | 2 | 确认或取消 | 待确认的普通行动、炮击和士献祭都可取消；取消只清除待确认态，不消费行动、弹药或随机数。确认后锁定规范化行动并交给 `FullState` 最终解析。炮击确认时校验敌墙 `INTACT`、炮在己方大本营、该炮有弹药且中心完整 `3x3` 位于 `Y=4..21`，随后消费该炮 1 发并抽取三个不同落点；不存在冷却。士献祭确认后消费一次行动并进入阶段 4，随机数只在已确认动作的对应随机事件中消费。 |
 | 3 | 意图解析与位移 | 某相/象的下一次移动开始时，先清除该棋旧田字视野/阻挡源。随后解析意图：隐藏阻挡通常导致棋子不动但消耗行动，并只发布统一模糊接触结果；普通车路径首次接触未显形敌方隐身马是例外，在接触交点吃掉该马并停止。成功则执行位移。特殊车按路径顺序逐目标；兵/卒特殊穿越不伤害。敌方相/象田字格仅截停从格外进入或穿过的车、兵/卒到路径首个交点，不阻挡同阵营棋子；已在格内的受阻棋子可正常离开。 |
 | 4 | 伤亡与主动复活窗口 | 任何原因造成的实际死亡——普通吃子、车路径接触、炮击、主动献祭或将帅死亡——都立即登记到所属方公开阵亡记录，双方后续 `PlayerView` 同步该记录。普通吃子或车路径吃子为阵亡方在原交点建立虚影；炮击和主动献祭不建立虚影。士献祭先登记发动士死亡，再从己方阵亡记录的非士、非帅/将候选中随机选一枚，移出阵亡记录并随机放到己方大本营空点；不恢复弹药、技能次数或永久资源。不存在任何被动士替死。炮击使用确认时快照，让三个锁定格同步受击；动画顺序不得影响逻辑。 |
@@ -24,7 +24,7 @@
 | 9 | 完整轮上限 | 仅在完整轮边界检查。达到运行配置值时按旗所有权计数，争夺旗仍归原所有者；同数平局。上限值仍为 `unknown`。 |
 | 10 | 投影与换手 | 通过观察者安全边界生成 `PlayerView`、`VisibleEvent`、`VisibleError` 与 `ActionPreview`，随后切换行动方；终局不换手。主动、超时或无合法行动被迫跳过直接进入阶段 7，并计为一次行动机会。 |
 
-追溯：`stmt:veilfront-xiangqi-siege:rook-rules`、`stmt:veilfront-xiangqi-siege:piece-rescue`、`stmt:veilfront-xiangqi-siege:casualty-and-memory`、`stmt:veilfront-xiangqi-siege:general-capture-rules`、`stmt:veilfront-xiangqi-siege:wall-cycle`、`stmt:veilfront-xiangqi-siege:victory-and-flags`、`stmt:veilfront-xiangqi-siege:cannon-rules`、`stmt:veilfront-xiangqi-siege:horse-elephant-rules`；`rules-spec-v1.md §4-§8`。
+追溯：`stmt:veilfront-xiangqi-siege:rook-rules`、`stmt:veilfront-xiangqi-siege:piece-rescue`、`stmt:veilfront-xiangqi-siege:casualty-and-memory`、`stmt:veilfront-xiangqi-siege:general-capture-rules`、`stmt:veilfront-xiangqi-siege:wall-cycle`、`stmt:veilfront-xiangqi-siege:victory-and-flags`、`stmt:veilfront-xiangqi-siege:cannon-rules`、`stmt:veilfront-xiangqi-siege:horse-elephant-rules`；`rules-spec-v1.md §4-§8`；`OWNER-CONFIRM-2026-08-18:HEADQUARTERS-BUFFER-STAGING`。
 
 ## 特殊窗口
 

@@ -99,7 +99,9 @@ static func _test_visible_elephant_interception_remains_tentative() -> void:
 		[1, 5], [2, 5], [3, 5], [1, 6], [2, 6], [3, 6], [1, 7], [2, 7], [3, 7],
 	]
 	state["active_side"] = MatchState.BLACK
-	var intent: Dictionary = _move("black-rook-1", Vector2i(1, 3))
+	# Keep this legacy hidden-field case aimed at the red buffer. Targeting the
+	# red headquarters is now publicly illegal until the rook has staged there.
+	var intent: Dictionary = _move("black-rook-1", Vector2i(1, 4))
 	var view: Dictionary = Projector.project(state, MatchState.BLACK)
 	_expect(Projector.preview_intent(view, intent)["classification"] == Projector.TENTATIVE,
 			"雾中敌相田字可能截停时，可见中途敌子不得把真实合法车路误判为已知非法")

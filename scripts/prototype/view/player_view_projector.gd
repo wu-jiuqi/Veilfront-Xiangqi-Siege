@@ -418,6 +418,8 @@ static func _preview_move(player_view: Dictionary, piece: Dictionary, target: Ve
 	if target == origin:
 		return KNOWN_ILLEGAL
 	var visible_set: Dictionary = _coordinate_set(player_view["visible_cells"])
+	if _public_enemy_headquarters_staging_required(piece["side"], origin, target):
+		return KNOWN_ILLEGAL
 	if _public_wall_blocks(player_view, piece["side"], origin, target):
 		var wall_path: Array = MoveRules.movement_path(origin, target)
 		if piece["piece_type"] in ["rook", "pawn"] \
@@ -628,6 +630,18 @@ static func _public_wall_blocks(
 			return origin.y >= 5 and target.y <= 4
 		return origin.y <= 20 and target.y >= 21
 	return false
+
+
+static func _public_enemy_headquarters_staging_required(
+	side: String,
+	origin: Vector2i,
+	target: Vector2i
+) -> bool:
+	var enemy_side: String = MatchState.opponent(side)
+	if not MatchState.is_in_base(target, enemy_side):
+		return false
+	return not MatchState.is_in_buffer(origin, enemy_side) \
+		and not MatchState.is_in_base(origin, enemy_side)
 
 
 static func _public_bombard_available(player_view: Dictionary, piece: Dictionary, target: Vector2i) -> bool:

@@ -26,6 +26,8 @@ static func evaluate_move(
 	var target := Canonical.coordinate(intent.get("target_cell", []))
 	if not MatchState.is_inside_board(target) or target == origin:
 		return _invalid("target_out_of_bounds_or_origin")
+	if _blocked_by_enemy_headquarters_staging(piece["side"], origin, target):
+		return _invalid("enemy_buffer_staging_required", [target])
 	var visible_set: Dictionary = visibility_context.get("visible_cell_set", {})
 	if visible_set.is_empty():
 		visible_set = _cell_set(visibility_context.get("visible_cells", []))
@@ -462,6 +464,18 @@ static func _inside_palace(cell: Vector2i, side: String) -> bool:
 	if cell.x < 4 or cell.x > 6:
 		return false
 	return cell.y >= 1 and cell.y <= 3 if side == MatchState.RED else cell.y >= 22 and cell.y <= 24
+
+
+static func _blocked_by_enemy_headquarters_staging(
+	side: String,
+	origin: Vector2i,
+	target: Vector2i
+) -> bool:
+	var enemy_side: String = MatchState.opponent(side)
+	if not MatchState.is_in_base(target, enemy_side):
+		return false
+	return not MatchState.is_in_buffer(origin, enemy_side) \
+		and not MatchState.is_in_base(origin, enemy_side)
 
 
 static func _blocked_by_intact_wall(

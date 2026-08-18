@@ -11,6 +11,7 @@
 - 项目所有者冻结相/象田字显形区为本次合法移动起点与终点包围的 `3x3` 九格，关闭精确格集合歧义并补齐生命周期与多源并集。
 - 项目所有者确认城墙倒塌视野：一方城墙处于 `BREACHED` 或 `REPAIRING` 时，对方获得该方缓冲区与大本营全部格子的视野；恢复 `INTACT` 后该额外视野立即移除。该规则双方对称，不额外驱散隐身马。
 - 项目所有者将棋盘表现重构为象棋交点；两条城墙线位于兵/卒初始点并禁止敌棋在完整墙状态下踏入或跨越。旗帜受迷雾影响，发现后向发现方永久保留位置图标。相视野扩为起点中心3x3、路径田字格和终点中心3x3并集，田字格阻挡敌方车与兵/卒首次进入；士改为主动献祭复活，阵亡士与帅/将不进入随机池。所有原因导致的阵亡统一进入双方公开阵亡池。
+- 项目所有者补充大本营进攻的缓冲区前置：即使守方城墙已倒塌或正在修复，进攻棋子也不得从战区或其他非守方缓冲区位置一手进入守方大本营；必须先停入守方缓冲区，下一次行动才可进入或攻击大本营。
 
 ## 1. 坐标、区域与回合术语
 
@@ -56,9 +57,10 @@
 - 车、马、相/象、士、将/帅、炮采用传统象棋移动/吃子规则，并应用本规格明确覆盖项：马与相/象可在全棋盘行动；士、将帅仍限九宫；炮精确吃子必须隔恰好一枚炮架并移动到目标格。
 - 兵/卒始终按“已过河”处理：可向前、左、右一格，不可后退。
 - 任意大本营内使用默认规则：马受蹩马腿、相/象受堵象眼；车不得穿子；炮普通移动和精确吃子不变。
+- 进入敌方大本营必须分两次行动完成：行动起点必须已位于该敌方缓冲区（含城墙线）或其大本营，才允许以普通移动/吃子进入该大本营。即使敌墙为 `BREACHED/REPAIRING`，从战区、己方区域或另一方非目标缓冲区直接进入敌营空点或攻击敌营棋子均非法；该规则双方对称，且不能用先落空点绕过。
 - 将帅可以进入攻击范围；只有实际被吃掉才失败。
 
-追溯：`stmt:veilfront-xiangqi-siege:board-and-fog`、`stmt:veilfront-xiangqi-siege:phase-gameplay`、`stmt:veilfront-xiangqi-siege:horse-elephant-rules`、`stmt:veilfront-xiangqi-siege:cannon-rules`、`stmt:veilfront-xiangqi-siege:pawn-rules`、`stmt:veilfront-xiangqi-siege:general-capture-rules`。
+追溯：`stmt:veilfront-xiangqi-siege:board-and-fog`、`stmt:veilfront-xiangqi-siege:phase-gameplay`、`stmt:veilfront-xiangqi-siege:horse-elephant-rules`、`stmt:veilfront-xiangqi-siege:cannon-rules`、`stmt:veilfront-xiangqi-siege:pawn-rules`、`stmt:veilfront-xiangqi-siege:general-capture-rules`；`OWNER-CONFIRM-2026-08-18:HEADQUARTERS-BUFFER-STAGING`。
 
 ## 4. 特殊行动资格与效果
 

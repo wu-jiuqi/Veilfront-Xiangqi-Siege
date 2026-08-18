@@ -26,6 +26,7 @@
 | GEO-GENERAL-001 | 将/帅每次仅沿四正交方向 1 格且终点在己方九宫；可进入攻击范围；无将军/应将/将死/照面/飞将限制 | `PENDING-GEO-GENERAL-001` | PENDING |
 | GEO-ADVISOR-001 | 士每次仅沿四对角方向 1 格且终点在己方九宫 | `PENDING-GEO-ADVISOR-001` | PENDING |
 | GEO-HORSE-001 | 马目标位移仅为 `(±2,±1)/(±1,±2)`；默认规则检查对应马腿；不受河界/半场限制 | `PENDING-GEO-HORSE-001` | PENDING |
+| GEO-BASE-STAGING-001 | 即使守方墙为 `BREACHED/REPAIRING`，棋子从战区或其他非守方缓冲区位置直接进入守方大本营空点或攻击营内棋子均非法；起点已在守方缓冲区（含墙线）或大本营时才允许进入，双方对称 | `test_owner_rule_revision_v5.gd::_test_enemy_buffer_staging_before_headquarters_entry`; `tests/prototype/run_owner_rule_revision_v5.gd` | PASS-R5-CLARIFICATION（生产者自检；待独立 QA） |
 | GEO-ELEPHANT-001 | 相/象目标位移仅为 `(±2,±2)`；默认规则检查中点象眼；可跨几何中线、全棋盘行动 | `PENDING-GEO-ELEPHANT-001` | PENDING |
 | GEO-ROOK-001 | 默认车仅同列/同行任意正距离；中间格必须空；空终点移动、敌终点吃子、己终点非法 | `PENDING-GEO-ROOK-001` | PENDING |
 | GEO-CANNON-001 | 炮非吃子移动同默认车且路径空；精确吃子必须同线、恰一炮架并移动到可见敌目标格 | `INFO-CANNON-001` 只覆盖投影意图；`PENDING-GEO-CANNON-MOVE-001`; `PENDING-GEO-CANNON-CAPTURE-001` | PENDING |
