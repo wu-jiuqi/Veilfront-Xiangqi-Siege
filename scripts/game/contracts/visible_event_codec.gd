@@ -34,10 +34,21 @@ static func _is_valid(value: Dictionary) -> bool:
 		and Support.is_coordinate(value.get("position_public"), true) \
 		and _is_public_piece(value.get("piece_public")) \
 		and Support.is_string(value.get("message_key"), false) \
-		and value.get("public_payload") is Dictionary \
-		and value.get("public_payload").is_empty() \
+		and _is_public_payload(str(value.get("event_type", "")), value.get("public_payload")) \
 		and value.get("timing_bucket") is String \
 		and str(value.get("timing_bucket")) in ["immediate", "standard"]
+
+
+static func _is_public_payload(event_type: String, value: Variant) -> bool:
+	if not value is Dictionary:
+		return false
+	var payload: Dictionary = value
+	if event_type != "flag.capture_progress":
+		return payload.is_empty()
+	return Support.has_exact_fields(payload, ["capturing_side", "progress"]) \
+		and Support.is_side(payload.get("capturing_side")) \
+		and Support.is_integer(payload.get("progress"), 1) \
+		and int(payload.get("progress", 0)) <= 3
 
 
 static func _is_public_piece(value: Variant) -> bool:

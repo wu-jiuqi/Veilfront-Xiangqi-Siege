@@ -21,7 +21,6 @@ var _policy := TutorialSessionPolicy.new()
 
 
 func _ready() -> void:
-	_policy.configure(presentation_track)
 	call_deferred("_emit_initial_step")
 
 
@@ -56,19 +55,26 @@ func consume_cancel_request() -> void:
 
 
 func request_retry() -> void:
-	if not _policy.can_retry():
+	if not _policy.begin_request(TutorialSessionPolicy.REQUEST_RESTART):
 		return
-	_state = FlowState.RETRYING
-	public_step_changed.emit({"step_id": "retrying", "instruction_key": "tutorial.retrying"})
 	restart_requested.emit()
 
 
 func request_skip() -> void:
-	if not _policy.can_skip():
+	if not _policy.begin_request(TutorialSessionPolicy.REQUEST_SKIP):
 		return
-	_state = FlowState.SKIPPED
-	public_step_changed.emit({"step_id": "skipped", "instruction_key": "tutorial.skipped"})
 	skip_requested.emit()
+
+
+func consume_authority_resolution(request_name: String, accepted: bool) -> void:
+	if not _policy.resolve_request(request_name) or not accepted:
+		return
+	if request_name == TutorialSessionPolicy.REQUEST_RESTART:
+		_state = FlowState.RETRYING
+		public_step_changed.emit({"step_id": "retrying", "instruction_key": "tutorial.retrying"})
+	elif request_name == TutorialSessionPolicy.REQUEST_SKIP:
+		_state = FlowState.SKIPPED
+		public_step_changed.emit({"step_id": "skipped", "instruction_key": "tutorial.skipped"})
 
 
 func request_exit() -> void:

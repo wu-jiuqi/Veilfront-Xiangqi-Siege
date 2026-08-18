@@ -9,5 +9,3 @@ initial_step_id = "welcome"
 step_ids = PackedStringArray("observe_board")
 instruction_keys = PackedStringArray("tutorial.observe_board")
 trigger_message_keys = PackedStringArray("fixture.ready")
-retry_allowed = true
-skip_allowed = true

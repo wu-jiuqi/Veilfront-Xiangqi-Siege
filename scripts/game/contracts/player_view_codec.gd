@@ -110,7 +110,7 @@ static func _is_wall(value: Dictionary) -> bool:
 	return Support.has_exact_fields(value, ["side", "status"]) \
 		and Support.is_side(value.get("side")) \
 		and value.get("status") is String \
-		and str(value.get("status")) in ["INTACT", "COLLAPSED"]
+		and str(value.get("status")) in ["INTACT", "BREACHED", "REPAIRING"]
 
 
 static func _is_casualty(value: Dictionary) -> bool:

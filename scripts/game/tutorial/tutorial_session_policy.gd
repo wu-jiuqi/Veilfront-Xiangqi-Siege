@@ -1,18 +1,25 @@
 class_name TutorialSessionPolicy
 extends RefCounted
 
-var _retry_allowed: bool = false
-var _skip_allowed: bool = false
+const REQUEST_RESTART: String = "restart"
+const REQUEST_SKIP: String = "skip"
+
+var _pending_request: String = ""
 
 
-func configure(track: TutorialPresentationTrack) -> void:
-	_retry_allowed = track != null and track.retry_allowed
-	_skip_allowed = track != null and track.skip_allowed
+func begin_request(request_name: String) -> bool:
+	if request_name not in [REQUEST_RESTART, REQUEST_SKIP] or not _pending_request.is_empty():
+		return false
+	_pending_request = request_name
+	return true
 
 
-func can_retry() -> bool:
-	return _retry_allowed
+func resolve_request(request_name: String) -> bool:
+	if request_name != _pending_request:
+		return false
+	_pending_request = ""
+	return true
 
 
-func can_skip() -> bool:
-	return _skip_allowed
+func clear() -> void:
+	_pending_request = ""

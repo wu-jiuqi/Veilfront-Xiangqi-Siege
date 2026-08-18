@@ -16,6 +16,8 @@ func _init() -> void:
 func _run() -> void:
 	await _check_parallel_session_isolation()
 	await _check_tutorial_flow()
+	await _check_tutorial_authority_rejections()
+	await _check_tutorial_seat_rejection()
 	_check_tutorial_authority_boundary()
 
 	if _failures.is_empty():
@@ -144,6 +146,104 @@ func _check_tutorial_authority_boundary() -> void:
 		ResourceLoader.exists("res://resources/game/tutorials/presentation/tutorial_smoke_track.tres"),
 		"presentation tutorial Resource is missing"
 	)
+	var presentation_source: String = FileAccess.get_file_as_string(
+		"res://scripts/game/tutorial/tutorial_presentation_track.gd"
+	)
+	_expect(
+		not presentation_source.contains("retry_allowed")
+		and not presentation_source.contains("skip_allowed"),
+		"presentation track must not own retry/skip authorization"
+	)
+	var scene_source: String = FileAccess.get_file_as_string(
+		"res://scenes/game/tutorial/tutorial_level.tscn"
+	)
+	_expect(
+		not scene_source.contains(
+			'signal="skip_requested" from="MatchScreen" to="ApplicationHost"'
+		),
+		"MatchScreen skip must not bypass the tutorial authorization path"
+	)
+
+
+func _check_tutorial_authority_rejections() -> void:
+	var tutorial_level: Control = TUTORIAL_LEVEL_SCENE.instantiate() as Control
+	root.add_child(tutorial_level)
+	await process_frame
+	var host: Node = tutorial_level.get_node("ApplicationHost")
+	var screen: Control = tutorial_level.get_node("MatchScreen") as Control
+	var director: Node = tutorial_level.get_node("TutorialDirector")
+	var overlay: Control = tutorial_level.get_node("TutorialOverlay") as Control
+	var denied_scenario: Resource = host.trusted_tutorial_scenario.duplicate(true)
+	denied_scenario.restart_allowed = false
+	denied_scenario.skip_allowed = false
+	host.trusted_tutorial_scenario = denied_scenario
+	var port: RefCounted = FixtureMatchClientPort.new(RED_VIEW_PATH)
+
+	_expect(host.bind_client_port(port), "authority rejection fixture port failed to bind")
+	_expect(bool(port.publish_fixture().get("ok", false)), "authority rejection fixture failed to publish")
+	await process_frame
+	_expect(str(director.get_public_state()) == "PROMPTING", "authority rejection baseline did not prompt")
+
+	host.prepare_action("forbidden-preview")
+	host.confirm_prepared_action("forbidden-preview")
+	_expect(port.count_request("prepare_action") == 0, "forbidden tutorial preview was prepared")
+	_expect(port.count_request("confirm_prepared_action") == 0, "forbidden tutorial preview was confirmed")
+	host.prepare_action("fixture-preview")
+	host.confirm_prepared_action("fixture-preview")
+	_expect(port.count_request("prepare_action") == 1, "authority-allowed tutorial preview was not prepared")
+	_expect(port.count_request("confirm_prepared_action") == 1, "authority-allowed tutorial preview was not confirmed")
+
+	overlay.request_retry()
+	overlay.request_skip()
+	host.request_restart()
+	host.request_skip()
+	await process_frame
+	_expect(port.count_request("request_restart") == 0, "authority denied tutorial restart was forwarded")
+	_expect(port.count_request("request_skip") == 0, "authority denied tutorial skip was forwarded")
+	_expect(str(director.get_public_state()) == "PROMPTING", "denied presentation request changed tutorial state")
+
+	var screen_skip_targets_host: bool = false
+	var screen_skip_targets_director: bool = false
+	for connection: Dictionary in screen.skip_requested.get_connections():
+		var callable: Callable = connection.get("callable", Callable())
+		screen_skip_targets_host = screen_skip_targets_host or callable.get_object() == host
+		screen_skip_targets_director = screen_skip_targets_director or callable.get_object() == director
+	_expect(not screen_skip_targets_host, "MatchScreen skip still targets ApplicationHost directly")
+	_expect(screen_skip_targets_director, "MatchScreen skip is not routed through TutorialDirector")
+
+	tutorial_level.queue_free()
+	await process_frame
+
+
+func _check_tutorial_seat_rejection() -> void:
+	var tutorial_level: Control = TUTORIAL_LEVEL_SCENE.instantiate() as Control
+	root.add_child(tutorial_level)
+	await process_frame
+	var host: Node = tutorial_level.get_node("ApplicationHost")
+	var screen: Control = tutorial_level.get_node("MatchScreen") as Control
+	var mismatched_scenario: Resource = host.trusted_tutorial_scenario.duplicate(true)
+	mismatched_scenario.bound_seat = "black"
+	host.trusted_tutorial_scenario = mismatched_scenario
+	var port: RefCounted = FixtureMatchClientPort.new(RED_VIEW_PATH)
+
+	_expect(host.bind_client_port(port), "seat rejection fixture port failed to bind")
+	_expect(bool(port.publish_fixture().get("ok", false)), "seat rejection fixture failed to publish")
+	await process_frame
+	_expect(
+		str(screen.get_presentation_snapshot().get("match_id", "")).is_empty(),
+		"mismatched tutorial seat received PlayerView"
+	)
+	host.prepare_action("fixture-preview")
+	host.confirm_prepared_action("fixture-preview")
+	host.request_restart()
+	host.request_skip()
+	_expect(port.count_request("prepare_action") == 0, "mismatched tutorial seat prepared an action")
+	_expect(port.count_request("confirm_prepared_action") == 0, "mismatched tutorial seat confirmed an action")
+	_expect(port.count_request("request_restart") == 0, "mismatched tutorial seat restarted")
+	_expect(port.count_request("request_skip") == 0, "mismatched tutorial seat skipped")
+
+	tutorial_level.queue_free()
+	await process_frame
 
 
 func _expect(condition: bool, message: String) -> void:

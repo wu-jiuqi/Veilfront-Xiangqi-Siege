@@ -10,6 +10,7 @@ const RED_FIXTURE_PATH: String = "res://tests/game/contracts/fixtures/red_player
 const BLACK_FIXTURE_PATH: String = "res://tests/game/contracts/fixtures/black_player_view_minimal_v1.json"
 
 const VISIBLE_EVENT_JSON: String = "{\"action_index\":0,\"actor_side_public\":\"red\",\"event_type\":\"fixture.ready\",\"message_key\":\"fixture.ready\",\"piece_public\":{},\"position_public\":[],\"public_payload\":{},\"schema_version\":\"veilfront-visible-event-v1\",\"timing_bucket\":\"immediate\",\"visible_sequence\":1}"
+const FLAG_CAPTURE_PROGRESS_EVENT_JSON: String = "{\"action_index\":4,\"actor_side_public\":\"red\",\"event_type\":\"flag.capture_progress\",\"message_key\":\"flag.capture_progress\",\"piece_public\":{},\"position_public\":[],\"public_payload\":{\"capturing_side\":\"red\",\"progress\":1},\"schema_version\":\"veilfront-visible-event-v1\",\"timing_bucket\":\"immediate\",\"visible_sequence\":2}"
 const VISIBLE_ERROR_JSON: String = "{\"action_index\":0,\"consumed\":false,\"intent_id\":\"fixture-intent\",\"message_key\":\"action.invalid_request\",\"public_code\":\"invalid_request\",\"resolution\":\"rejected_without_consumption\",\"schema_version\":\"veilfront-visible-error-v1\",\"timing_bucket\":\"immediate\"}"
 const ACTION_PREVIEW_JSON: String = "{\"action_type\":\"move\",\"classification\":\"KNOWN_LEGAL\",\"confirmation_required\":true,\"message_key\":\"action.move\",\"piece_id\":\"fixture-piece\",\"preview_id\":\"fixture-preview\",\"public_cost\":{},\"schema_version\":\"veilfront-action-preview-v1\",\"skill_type\":\"\",\"target_cell\":[1,1]}"
 
@@ -23,6 +24,12 @@ func run_suite() -> Dictionary:
 	checks += _expect_round_trip(PlayerViewCodec, red_json, "red PlayerView", failures)
 	checks += _expect_round_trip(PlayerViewCodec, black_json, "black PlayerView", failures)
 	checks += _expect_round_trip(VisibleEventCodec, VISIBLE_EVENT_JSON, "VisibleEvent", failures)
+	checks += _expect_round_trip(
+		VisibleEventCodec,
+		FLAG_CAPTURE_PROGRESS_EVENT_JSON,
+		"flag capture progress VisibleEvent",
+		failures
+	)
 	checks += _expect_round_trip(VisibleErrorCodec, VISIBLE_ERROR_JSON, "VisibleError", failures)
 	checks += _expect_round_trip(ActionPreviewCodec, ACTION_PREVIEW_JSON, "ActionPreview", failures)
 
@@ -51,6 +58,8 @@ func run_suite() -> Dictionary:
 		failures.append("红黑 fixture 未保持各自绑定观察者身份")
 
 	checks += _check_decode_alias_isolation(red_json, failures)
+	checks += _check_wall_status_allow_list(red_json, failures)
+	checks += _check_visible_event_payload_allow_list(failures)
 	checks += _check_two_ports_do_not_cross_views(failures)
 	checks += _check_port_rejects_viewer_rebind(failures)
 	checks += _check_port_signal_order(failures)
@@ -117,6 +126,52 @@ func _check_decode_alias_isolation(red_json: String, failures: Array[String]) ->
 	if second.get("value", {}).get("visible_cells", []).size() != 1:
 		failures.append("两次 decode 共享了可变数组别名")
 	return 1
+
+
+func _check_wall_status_allow_list(red_json: String, failures: Array[String]) -> int:
+	for status: String in ["INTACT", "BREACHED", "REPAIRING"]:
+		var encoded: String = red_json.replace(
+			'"status":"INTACT"',
+			'"status":"%s"' % status
+		)
+		var decoded: Dictionary = PlayerViewCodec.decode(encoded)
+		if not bool(decoded.get("ok", false)):
+			failures.append("合法城墙状态被拒绝: %s" % status)
+	var collapsed_json: String = red_json.replace(
+		'"status":"INTACT"',
+		'"status":"COLLAPSED"'
+	)
+	var collapsed_result: Dictionary = PlayerViewCodec.decode(collapsed_json)
+	if bool(collapsed_result.get("ok", false)):
+		failures.append("非现行城墙状态 COLLAPSED 未被拒绝")
+	return 4
+
+
+func _check_visible_event_payload_allow_list(failures: Array[String]) -> int:
+	var parsed: Variant = JSON.parse_string(FLAG_CAPTURE_PROGRESS_EVENT_JSON)
+	if not parsed is Dictionary:
+		failures.append("夺旗进度事件基线无法解析")
+		return 7
+	var baseline: Dictionary = parsed
+	var forbidden_fields: Array[String] = [
+		"position", "flag_id", "hidden_flag_position", "debug",
+	]
+	for field_name: String in forbidden_fields:
+		var candidate: Dictionary = baseline.duplicate(true)
+		candidate["public_payload"][field_name] = [4, 12]
+		var result: Dictionary = VisibleEventCodec.decode(JSON.stringify(candidate, "", true, true))
+		if bool(result.get("ok", false)):
+			failures.append("夺旗进度事件越权字段未被拒绝: %s" % field_name)
+	var wrong_event_type: Dictionary = baseline.duplicate(true)
+	wrong_event_type["event_type"] = "fixture.ready"
+	if bool(VisibleEventCodec.decode(JSON.stringify(wrong_event_type, "", true, true)).get("ok", false)):
+		failures.append("非夺旗事件接受了夺旗 payload")
+	for invalid_progress: int in [0, 4]:
+		var candidate: Dictionary = baseline.duplicate(true)
+		candidate["public_payload"]["progress"] = invalid_progress
+		if bool(VisibleEventCodec.decode(JSON.stringify(candidate, "", true, true)).get("ok", false)):
+			failures.append("夺旗进度越界未被拒绝: %d" % invalid_progress)
+	return 7
 
 
 func _check_two_ports_do_not_cross_views(failures: Array[String]) -> int:

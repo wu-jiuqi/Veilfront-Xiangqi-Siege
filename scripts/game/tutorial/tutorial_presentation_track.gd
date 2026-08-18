@@ -6,8 +6,6 @@ extends Resource
 @export var step_ids: PackedStringArray = []
 @export var instruction_keys: PackedStringArray = []
 @export var trigger_message_keys: PackedStringArray = []
-@export var retry_allowed: bool = true
-@export var skip_allowed: bool = true
 
 
 func is_valid_track() -> bool:
