@@ -1,6 +1,8 @@
 # Iteration 1 正式壳与首批迁移计划 v1
 
-状态：`producer_complete / ready_for_execution_review`
+状态：`review_approved / iteration_complete`
+
+完成绑定：功能冻结 `47dd52ded8dbe2585d9d0f4fa93c6687624745af`；证据冻结 `c9c566bbadc79869430d94e0a9b0b74ca5890d0c`；技术、系统体验与独立 QA 最终复审均为 `approved`。本状态只关闭 `TASK-ARCH-001/TASK-SHELL-001`，不表示完整教学、规则迁移或 GATE-2 已完成。
 
 ## 1. 目标
 
