@@ -1,0 +1,253 @@
+loop_contract:
+  schema_version: '0.2'
+  contract_id: LOOP-CTR-FORMAL-FOUNDATION-GATE2-001
+  loop_type: formal-architecture-tutorial-visual-baseline
+  title: 第二生产循环——正式架构、教学灰盒与视觉基线
+  version: 1
+  status: draft
+approval_binding: null
+draft_review:
+  status: awaiting_project_owner_approval
+  prepared_against:
+    project_brief_version: 5
+    project_brief_subject_digest: 41bb82fae4f1a0294d17746f3b9caf063ee69d2bd07e0f7d15d26baad9ab89bb
+    project_brief_confirmation: pending
+    gate_1_approval_subject_digest: 8f93c3506192b1e286bd5f1bf631054f9fb3f0dc5337f3050716a2186a383597
+  note: Project Brief v5 未获项目所有者确认前，本 Contract 不得批准、登记或启动。
+purpose:
+  objective: 在不实现互联网传输、不交付AI人机对战且不启动高成本批量美术的前提下，把GATE-1已验证的规则与信息边界迁移为可维护的Godot正式架构，完成使用同一Intent/Event管线的新手教学灰盒，并形成可估算的Demo视觉基线与资产清单，为GATE-2人工审查提供证据。
+  required_deliverables:
+  - deliverable_id: DELIVERABLE-ARCH-001
+    artifact_type: approved-formal-architecture-baseline
+    description: 正式目录、依赖方向、DTO、规则域、应用用例、PlayerView、回放、教学与未来传输端口的架构决定和Godot产物映射。
+  - deliverable_id: DELIVERABLE-MIGRATION-001
+    artifact_type: behavior-preserving-formal-core
+    description: 不依赖AI、LAN或表现层的正式规则核心、应用组合根、观察者投影和回放边界，并保留GATE-1行为与摘要等价。
+  - deliverable_id: DELIVERABLE-TUTORIAL-001
+    artifact_type: playable-tutorial-graybox
+    description: Resource驱动、可重置、可完成且只通过正式Intent/Event推进的新手教学灰盒。
+  - deliverable_id: DELIVERABLE-PRESENTATION-001
+    artifact_type: preset-godot-match-shell
+    description: 由预置Control场景和可复用覆盖层组成的正式棋盘、HUD、行动确认、迷雾和特殊高亮灰盒。
+  - deliverable_id: DELIVERABLE-ART-001
+    artifact_type: demo-visual-baseline-and-asset-inventory
+    description: Demo视觉基线、少量游戏内样片、完整资产清单、规格、依赖、验收标准与成本未知项。
+  - deliverable_id: DELIVERABLE-QA-002
+    artifact_type: independent-gate2-evidence
+    description: 架构依赖、规则回归、摘要等价、教学流程、信息边界、分辨率适配和场景预置原则的独立证据。
+  - deliverable_id: DELIVERABLE-GATE2-001
+    artifact_type: human-decision-package
+    description: 绑定正式灰盒、视觉样片、资产清单、构建和独立QA摘要的GATE-2人工决策包。
+  out_of_scope:
+  - Steam Networking、Steam Datagram Relay、NAT穿透、互联网Relay、专用服务器、匹配、账号、重连、房主迁移、观战、聊天和部署运维实现。
+  - AI训练、AI质量提升、AI难度调参和首版Demo的人机对战交付；现有AI仅保持冻结研究资产与必要回归兼容。
+  - GATE-2前批量制作全套棋子动画、完整音频、全量特效、最终UI皮肤或签署高成本外包承诺。
+  - 未经规则变更流程修改owner rule revision 5、信息边界、50回合实验参数或随机消费顺序。
+  - 将GATE-1 LAN工具、逻辑实验室或AI控制器直接认定为正式运行时架构。
+responsibility:
+  owner_role: pos:veilfront-xiangqi-siege:root:project-manager
+  producer_roles:
+  - pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+  - pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
+  - pos:veilfront-xiangqi-siege:design-experience:visual-production-lead
+  reviewer_roles:
+  - pos:veilfront-xiangqi-siege:quality:qa-release-lead
+  - project-owner
+  required_authority_scope:
+  - AUTH-VEILFRONT-PROJECT-MANAGER
+  - AUTH-VEILFRONT-GODOT-TECHNOLOGY
+  - AUTH-VEILFRONT-SYSTEMS-EXPERIENCE
+  - AUTH-VEILFRONT-VISUAL-PRODUCTION
+  - AUTH-VEILFRONT-QA-RELEASE
+  - GATE-2由project-owner保留
+  escalation_to: project-owner
+start:
+  triggers:
+  - trigger_id: TRIGGER-BRIEF-V5-CONFIRMED
+    description: 项目所有者确认Project Brief v5且不可变approval摘要与本Contract输入一致。
+  - trigger_id: TRIGGER-CONTRACT-APPROVED
+    description: 项目所有者另行批准本Loop Contract的最终subject digest。
+  entry_conditions:
+  - condition_id: ENTRY-INSTANCE-NORMAL
+    description: 项目实例、插件锁、Organization Registry、权限和生成Agent适配器均为normal。
+    required_evidence: validate_project_instance.py退出码0及输出。
+  - condition_id: ENTRY-BRIEF-CONFIRMED
+    description: Project Brief v5处于confirmed并具有摘要匹配的不可变approval；仅有当前in_review草案不满足本条件。
+    required_evidence: project-brief validator带approval-dir退出码0。
+  - condition_id: ENTRY-CONTRACT-APPROVED
+    description: 本Contract由项目所有者批准，approval记录与执行文件摘要一致。
+    required_evidence: game-pipeline/approvals下不可变loop-contract approval。
+  - condition_id: ENTRY-GATE1-COMPLETE
+    description: GATE-1批准、RC3独立QA和完成态Registry保持可验证且未被后续规则变更失效。
+    required_evidence: GATE-1 final handoff、approval和RC3 evidence index。
+  - condition_id: ENTRY-NO-INTERNET-IMPLEMENTATION
+    description: 本循环不采购服务器、不接入第三方联网服务、不实现互联网传输；若技术边界无法在此前提下完成，必须升级而非扩大范围。
+    required_evidence: 启动审计中的依赖和计划清单。
+  required_inputs:
+  - input_slot_id: INPUT-BRIEF-V5-001
+    artifact_type: confirmed-project-brief
+    version_requirement: version 5；subject_digest暂为41bb82fae4f1a0294d17746f3b9caf063ee69d2bd07e0f7d15d26baad9ab89bb，须在批准前绑定对应approval。
+    required: true
+  - input_slot_id: INPUT-GATE1-001
+    artifact_type: approved-gate-handoff
+    version_requirement: GATE-1 approval subject digest 8f93c3506192b1e286bd5f1bf631054f9fb3f0dc5337f3050716a2186a383597。
+    required: true
+  - input_slot_id: INPUT-ARCH-REVIEW-001
+    artifact_type: formal-architecture-review
+    version_requirement: docs/architecture/post-gate1-formal-architecture-review-v1.md经技术与QA审阅后的版本。
+    required: true
+  - input_slot_id: INPUT-RULES-001
+    artifact_type: gate1-behavior-baseline
+    version_requirement: owner rule revision 5规则、结算、信息边界、测试和固定seed证据。
+    required: true
+  - input_slot_id: INPUT-ORG-001
+    artifact_type: approved-organization-and-authority
+    version_requirement: 当前Organization Registry与Authority Delegation摘要匹配；AI职位不参与本循环交付。
+    required: true
+iterations:
+  - iteration_id: ITERATION-1-ARCHITECTURE
+    objective: 冻结正式边界、DTO和Godot产物映射，建立最小正式组合根和迁移护栏。
+    owner_role: pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+    tasks:
+    - task_id: TASK-ARCH-001
+      description: 编写并审查正式目录、依赖规则、FullState/Intent/Event/PlayerView/Replay版本契约和架构决定记录。
+      output_refs:
+      - DELIVERABLE-ARCH-001
+    - task_id: TASK-SHELL-001
+      description: 用预置场景建立不绑定AI和LAN的正式应用、棋盘、HUD与教学组合根壳。
+      output_refs:
+      - DELIVERABLE-PRESENTATION-001
+  - iteration_id: ITERATION-2-CORE-MIGRATION
+    objective: 逐模块提取正式规则域、应用用例、PlayerView和回放，同时保持GATE-1原型与测试可运行。
+    owner_role: pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+    tasks:
+    - task_id: TASK-CORE-001
+      description: 先迁移canonical、seeded random、状态codec与replay，再按受影响回归逐步迁移规则和观察者投影。
+      output_refs:
+      - DELIVERABLE-MIGRATION-001
+    - task_id: TASK-CORE-002
+      description: 建立旧原型与正式核心的固定seed状态摘要、事件摘要和PlayerView等价验证。
+      output_refs:
+      - DELIVERABLE-QA-002
+  - iteration_id: ITERATION-3-TUTORIAL-VISUAL
+    objective: 完成教学灰盒、正式表现层样片和Demo视觉资产基线。
+    owner_role: pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
+    tasks:
+    - task_id: TASK-TUTORIAL-001
+      description: 编写教学流程、固定局面Resource、允许Intent、提示、checkpoint、失败、重置和完成条件。
+      output_refs:
+      - DELIVERABLE-TUTORIAL-001
+    - task_id: TASK-TUTORIAL-002
+      description: 将教学脚本接到正式Intent/Event管线，禁止直接写FullState或复制规则。
+      output_refs:
+      - DELIVERABLE-TUTORIAL-001
+      - DELIVERABLE-QA-002
+    - task_id: TASK-ART-001
+      description: 形成视觉基线、目标分辨率样片和带数量/规格/依赖/验收标准的Demo资产清单，不启动全量生产。
+      owner_role: pos:veilfront-xiangqi-siege:design-experience:visual-production-lead
+      output_refs:
+      - DELIVERABLE-ART-001
+  - iteration_id: ITERATION-4-INDEPENDENT-REVIEW
+    objective: 独立复核正式灰盒、迁移等价、教学可用性、信息边界、视觉可读性和Contract范围。
+    owner_role: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+    tasks:
+    - task_id: TASK-QA-001
+      description: 从clean worktree执行合同检查、Godot导入/场景/回归/固定seed/教学流程和分辨率证据。
+      output_refs:
+      - DELIVERABLE-QA-002
+    - task_id: TASK-GATE2-001
+      description: 项目经理汇总绑定提交、构建、视觉样片、资产清单与独立QA的GATE-2决策包，不代替人类批准。
+      owner_role: pos:veilfront-xiangqi-siege:root:project-manager
+      output_refs:
+      - DELIVERABLE-GATE2-001
+acceptance:
+  automated_checks:
+  - check_id: CHECK-CONTRACT-002
+    description: Project Brief v5、Contract approval、Organization Registry、Authority、Git提交和证据摘要全部匹配；草案或过期approval不得启动。
+    required: true
+  - check_id: CHECK-DEPENDENCY-001
+    description: domain不依赖Node、Control、AI、LAN、教学或网络；application不依赖具体场景和传输；表现与教学不能读取或写入未授权FullState字段。
+    required: true
+  - check_id: CHECK-MIGRATION-001
+    description: 代表性规则矩阵、owner revision 5、回放和PlayerView测试通过；固定seed的新旧canonical state/event digest等价。若迁移触及规则或随机消费，必须重新执行1000-seed全量压力测试和manifest篡改拒绝。
+    required: true
+  - check_id: CHECK-INFORMATION-002
+    description: 正式PlayerView继续按观察者隔离未发现旗位、隐身马、相田来源和私有标记；教学提示不得以文案、镜头、音效或允许行动集合泄露隐藏信息。
+    required: true
+  - check_id: CHECK-TUTORIAL-001
+    description: 教学从预置场景启动，所有章节可在固定seed下完成、失败、重置、跳过或退出；脚本化棋步全部形成合法Intent和领域Event，不存在直接状态作弊或第二套规则。
+    required: true
+  - check_id: CHECK-GODOT-002
+    description: Godot 4.7.1可无错误导入；正式主壳、对局壳和教学场景可无头加载；固定UI树、覆盖层和教学展示遵守预置节点优先，动态节点均有运行时数量或生命周期理由。
+    required: true
+  - check_id: CHECK-RESPONSIVE-001
+    description: 1280×720、1920×1080和至少一种较小桌面窗口下，九路棋盘为正方形网格，主要按钮、提示、HUD、迷雾与特殊高亮不裁切且可读。
+    required: true
+  - check_id: CHECK-ART-001
+    description: Demo资产清单覆盖棋盘、棋子、城墙、迷雾、旗帜、UI、特效、动画和音频，并记录数量、规格、依赖、占位状态与验收标准；样片足以支持GATE-2判断但没有冒充全量完成。
+    required: true
+  - check_id: CHECK-SCOPE-001
+    description: 本循环未引入互联网传输SDK、服务器部署、匹配服务、AI交付或高成本批量资产；未来端口只有接口和测试替身，不连接外部服务。
+    required: true
+  professional_review:
+    required: true
+    reviewer_role: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+    criteria:
+    - 生产者不是自己交付物的唯一审查者，QA在clean worktree复现关键证据。
+    - 架构迁移没有借重构静默修改规则、信息边界或随机序列。
+    - 教学从玩家视角可理解并可恢复，不依赖开发者面板、隐藏状态或AI质量。
+    - 视觉样片和资产清单足以估算下一阶段，但未以占位资产冒充完整美术。
+    - 所有互联网、AI和批量美术越界项均被拒绝或升级。
+  human_gate:
+    required: true
+    gate_id: GATE-2
+    question: 正式架构、教学灰盒、棋盘信息表达与视觉基线是否足够稳定，值得进入互联网专项验证和Demo级批量资产生产？
+  success_conditions:
+  - 所有必要自动检查和独立专业审查通过。
+  - 正式灰盒不依赖AI与LAN原型即可从固定局面完成合法对局用例与教学流程。
+  - GATE-1行为和信息边界在正式核心迁移后保持可审计等价。
+  - 视觉样片与Demo资产清单足以让项目所有者判断质量方向、产能风险和下一轮投入。
+  - GATE-2只进入awaiting_human；任何Agent不得代替项目所有者批准。
+state_machine:
+  state_machine_id: LOOP-SM-DEFAULT
+  version: '0.2'
+  allowed_overrides: []
+failure_and_exit:
+  blocking_conditions:
+  - Project Brief v5或本Contract未批准、摘要不匹配或项目实例非normal。
+  - 正式迁移无法保持GATE-1规则、随机消费、PlayerView或回放等价。
+  - 教学必须复制规则、直接写FullState或泄露隐藏信息才能实现。
+  - 视觉基线不足以形成可估算资产清单，或需要未经批准的高成本生产。
+  - 工作要求接入互联网、购买服务器、第三方服务、AI质量提升或扩大Demo范围。
+  - 任一必要自动检查失败且本轮修订预算不足。
+  rollback:
+    return_to: 对应迭代生产任务；若改变Demo范围、规则或外部服务承诺则返回Project Brief/Contract审批。
+    preserve:
+    - GATE-1原型、固定seed、回放、manifest和独立QA证据。
+    - 失败的迁移摘要、教学步骤、场景截图和最小复现。
+    - 已审查的架构决定、视觉样片与资产清单版本。
+  cancellation_conditions:
+  - 项目所有者取消正式架构/教学循环或再次改变首版Demo范围。
+  - 证据证明在批准边界内不可行且项目所有者选择停止而非修订。
+  final_handoff:
+    receiver_role: pos:veilfront-xiangqi-siege:root:project-manager
+    required_contents:
+    - 正式目录、依赖、DTO、Intent/Event、PlayerView、Replay和Godot产物映射。
+    - 规则迁移等价、教学流程、信息边界、场景加载和分辨率证据。
+    - Demo视觉基线、样片与完整资产清单及未知成本。
+    - 原型保留/冻结/可删除清单和后续迁移风险。
+    - 互联网专项、批量美术和未来AI分别需要的新Contract与人工决定。
+coordination:
+  allowed_parent_loop_types:
+  - project-production
+  dependency_rules:
+  - Project Brief v5必须先获项目所有者确认，本Contract再以最终摘要单独获批。
+  - 技术、系统体验和视觉可以在架构决定冻结后并行，但不得同时修改同一正式组合根或规则事实源。
+  - QA保持独立，不拥有生产事实源或GATE-2批准权。
+  - 互联网实现、服务器采购和批量美术生产必须等待GATE-2结果和新的获批Contract。
+  child_loop_creation:
+    allowed: false
+    conditions: []
+    required_authority_scope: []
+  registry_binding:
+    store_runtime_relationships_in_registry: true
