@@ -1,0 +1,72 @@
+architecture_input_binding:
+  schema_version: '1.0'
+  binding_id: INPUT-ARCH-REVIEW-001-FINAL-R2
+  input_slot_id: INPUT-ARCH-REVIEW-001
+  status: satisfied
+  subject_digest: 0149aa0189238d7cfd9535887bf6118d540d57a9bd3fbcbee48c018f8051975f
+  subject:
+    project_id: veilfront-xiangqi-siege
+    loop_contract_id: LOOP-CTR-FORMAL-FOUNDATION-GATE2-001
+    loop_contract_version: 1
+    successor_chain:
+      historical_v1:
+        path: docs/architecture/post-gate1-formal-architecture-review-v1.md
+        sha256: 9e8d7c14aef5f5bb7e46d74fb9d3a1c1321e04967b70a14591801a78c30f60f1
+        status: historical_only
+      reviewed_v2:
+        path: docs/architecture/post-gate1-formal-architecture-review-v2.md
+        sha256: 58e55d7e6e2fb25c04a243017fc8e0230915a36dcc09cacaf7076b10423705f4
+        status: final_reviewed_successor
+    approved_context:
+      project_brief_v5_subject_digest: 41bb82fae4f1a0294d17746f3b9caf063ee69d2bd07e0f7d15d26baad9ab89bb
+      project_brief_approval_id: approval:veilfront-xiangqi-siege:project-brief:41bb82fae4f1
+      contract_approved_source_digest: 9beb91baa720820d0f0985019e5a77a4e0e065a8721451eedc30e0cc22bdeaef
+      contract_approval_id: approval:veilfront-xiangqi-siege:loop-contract:9beb91baa720
+      gate_1_approval_subject_digest: 8f93c3506192b1e286bd5f1bf631054f9fb3f0dc5337f3050716a2186a383597
+      gate_1_approval_id: approval:veilfront-xiangqi-siege:gate-1:8f93c3506192
+    exact_artifact_set:
+      - path: docs/architecture/post-gate1-formal-architecture-review-v2.md
+        sha256: 58e55d7e6e2fb25c04a243017fc8e0230915a36dcc09cacaf7076b10423705f4
+      - path: docs/architecture/formal-dto-and-trust-boundary-v1.md
+        sha256: 6f23274810aad5d6f2515bd78b114da16684e38f9abe04e2d59dcfa87fc174f2
+      - path: docs/architecture/gate1-to-formal-migration-manifest-v1.yaml
+        sha256: 0502e20a861a550e9845cfa1a10e4b5d94b97d1da884add2d0de70e9fa14daa4
+      - path: docs/prototype/rules-spec-v1.md
+        sha256: 34a1d398beaee6610f3d614559a5af7a14abd464e5df4d86ac26aa3824504ddd
+      - path: docs/prototype/settlement-order-v1.md
+        sha256: 7335fb20723e6a36eb961ed50739f590e9e426b927af726ca7fbbe7c6992694a
+      - path: docs/prototype/information-boundary-v1.md
+        sha256: dd76596fb4e196732ea73da9cefc33f3879b3102df345b46f55cf00fe7c17d07
+      - path: docs/prototype/rules-test-coverage-matrix-v1.md
+        sha256: 5a6c277bbcb74f038953337a7634a1c4e3c7d53bc58b76dfff50d6d2e6f7199b
+      - path: evidence/gate2/rules-baseline-revision5-remediation-r2.md
+        sha256: 3576aca373288cc841cb814fcee7335513bfd5632222b09f4cbc1993e1dd177a
+      - path: evidence/gate2/architecture-remediation-r2.md
+        sha256: 4339243220e13f2a8e67063cbeedac71b9fcb5d063519fdc58520a46b8574048
+    final_reviews:
+      - review_kind: technical
+        verdict: approved
+        path: evidence/gate2/architecture-technical-final-rereview-v3.md
+        sha256: cf88024ea0bdce31213dd267f58b1e1b9c0d54c338dcb50ab435aaa9f4177784
+        reviewer_instance_id: inst:01M02NJ3JEQXKV6PT6DPX0NKQ0
+      - review_kind: independent_qa
+        verdict: approved
+        path: evidence/gate2/architecture-independent-qa-final-rereview-v3.md
+        sha256: 779551f8237ed88f071037895ea195e5ba6f55ffef76247de5ac492b994fd1f2
+        reviewer_instance_id: inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
+    defect_closure:
+      QA-G2-ARCH-001: closed
+      QA-G2-ARCH-002: closed
+      QA-G2-ARCH-003: closed
+      QA-G2-ARCH-004: closed
+      unclassified_passive_substitution_residue_count: 0
+    scope_guards:
+      internet_or_steam_runtime_implementation: forbidden
+      server_purchase_or_external_service: forbidden
+      ai_delivery_or_training: forbidden
+      high_cost_bulk_art: forbidden_until_gate_2
+      gate_2_decision: reserved_for_project_owner
+    result:
+      input_arch_review_001: satisfied
+      loop_registration_authorized: true
+      gate_2_approved: false
