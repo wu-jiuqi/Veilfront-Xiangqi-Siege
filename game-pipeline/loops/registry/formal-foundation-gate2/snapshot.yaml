@@ -76,10 +76,10 @@ registry_snapshot:
     state_entered_at: '2026-08-18T13:00:42.841528+08:00'
     current_iteration: 1
     last_transition_id: TR-READY-ACTIVE
-    last_event_id: 4c5028ce-c0fa-43ad-bfa7-d2c8eb63503d
-    last_event_digest: b66c63dc35d9cbf0560abaf26ea909ebe53fc7564f74497c6b27ecb827277a15
-    last_event_sequence: 13
-    record_revision: 13
+    last_event_id: 5cecf174-6e40-493e-92b1-27a6faae5bc5
+    last_event_digest: 094ba146708df92454e9c73379c1824db18d3be44b70bad638cb1da304c4dbea
+    last_event_sequence: 14
+    record_revision: 14
   budget:
     limits:
       iteration_limit: 4
@@ -141,22 +141,24 @@ registry_snapshot:
       bound_at: '2026-08-18T13:00:42.841528+08:00'
     - input_slot_id: INPUT-RULES-001
       artifact:
-        artifact_id: artifact:veilfront-xiangqi-siege:gate1-behavior-baseline@revision5-r2
-        artifact_type: gate1-behavior-baseline
-        version: owner-rule-revision-5-r2
-        uri: docs/architecture/gate1-to-formal-migration-manifest-v1.yaml
+        artifact_id: artifact:veilfront-xiangqi-siege:gate1-behavior-baseline@headquarters-staging-successor-v2
+        artifact_type: gate1-behavior-baseline-successor
+        version: owner-rule-revision-5-headquarters-staging-successor-v2
+        uri: docs/architecture/gate1-to-formal-migration-successor-v2.yaml
         digest:
           algorithm: sha256
-          value: 0502e20a861a550e9845cfa1a10e4b5d94b97d1da884add2d0de70e9fa14daa4
+          value: f6b07d8cbdc7db4492c33e8b4b028aca2906cccc8baf5921273aaa012d48e19b
         manifest_paths:
         - docs/prototype/rules-spec-v1.md
         - docs/prototype/settlement-order-v1.md
         - docs/prototype/information-boundary-v1.md
         - docs/prototype/rules-test-coverage-matrix-v1.md
-        - evidence/prototype/qa/gate1-rc3-rules-stress-1000-seeds-round50.jsonl
+        - evidence/gate2/headquarters-buffer-staging-remediation-v1.md
+        - evidence/gate2/headquarters-buffer-successor-technical-approval-v3.md
+        - evidence/gate2/headquarters-buffer-successor-independent-qa-approval-v3.md
       source_loop_id: null
-      bound_by_event_id: 8b1d72d8-07ba-433b-828b-ee120c95b464
-      bound_at: '2026-08-18T13:00:42.841528+08:00'
+      bound_by_event_id: 5cecf174-6e40-493e-92b1-27a6faae5bc5
+      bound_at: '2026-08-18T18:17:06.576307+08:00'
     - input_slot_id: INPUT-ORG-001
       artifact:
         artifact_id: registry:veilfront-xiangqi-siege:organization@current

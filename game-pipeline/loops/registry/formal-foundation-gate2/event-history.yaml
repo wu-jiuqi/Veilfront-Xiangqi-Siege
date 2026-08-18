@@ -552,3 +552,76 @@ event_history:
     digest_algorithm: sha256
     previous_event_digest: b4ea64c0136046d4b775fc65a2255ba791705e7af91c2dc38c7950e13e45ac53
     event_digest: b66c63dc35d9cbf0560abaf26ea909ebe53fc7564f74497c6b27ecb827277a15
+- schema_version: '0.1'
+  event_id: 5cecf174-6e40-493e-92b1-27a6faae5bc5
+  mutation_id: dab20949-ffcb-4769-aefb-5aba9a5c1f38
+  loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+  sequence: 14
+  event_type: core.input_bound
+  occurred_at: '2026-08-18T18:17:06.576307+08:00'
+  recorded_at: '2026-08-18T18:17:06.576307+08:00'
+  actor:
+    actor_id: inst:01M02M6X3Q8YWJXHY52K3V5AR2
+    role: pos:veilfront-xiangqi-siege:root:project-manager
+    authority_id: AUTH-VEILFRONT-PROJECT-MANAGER
+  causality:
+    correlation_id: 2a1ca4df-0536-48ab-b6cd-bbcc1fab7aa0
+    causation_event_id: 4c5028ce-c0fa-43ad-bfa7-d2c8eb63503d
+    request_id: bind-reviewed-headquarters-buffer-successor-v2
+  concurrency:
+    expected_record_revision: 13
+    resulting_record_revision: 14
+  binding_snapshot:
+    contract_digest: a26a9b3fdb0d8d06e42a06833a84455d911fea8f72bcedec59d0ae5e620cc205
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    input_slot_id: INPUT-RULES-001
+    before:
+      input_slot_id: INPUT-RULES-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:gate1-behavior-baseline@revision5-r2
+        artifact_type: gate1-behavior-baseline
+        version: owner-rule-revision-5-r2
+        uri: docs/architecture/gate1-to-formal-migration-manifest-v1.yaml
+        digest:
+          algorithm: sha256
+          value: 0502e20a861a550e9845cfa1a10e4b5d94b97d1da884add2d0de70e9fa14daa4
+        manifest_paths:
+        - docs/prototype/rules-spec-v1.md
+        - docs/prototype/settlement-order-v1.md
+        - docs/prototype/information-boundary-v1.md
+        - docs/prototype/rules-test-coverage-matrix-v1.md
+        - evidence/prototype/qa/gate1-rc3-rules-stress-1000-seeds-round50.jsonl
+      source_loop_id: null
+      bound_by_event_id: 8b1d72d8-07ba-433b-828b-ee120c95b464
+      bound_at: '2026-08-18T13:00:42.841528+08:00'
+    after:
+      input_slot_id: INPUT-RULES-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:gate1-behavior-baseline@headquarters-staging-successor-v2
+        artifact_type: gate1-behavior-baseline-successor
+        version: owner-rule-revision-5-headquarters-staging-successor-v2
+        uri: docs/architecture/gate1-to-formal-migration-successor-v2.yaml
+        digest:
+          algorithm: sha256
+          value: f6b07d8cbdc7db4492c33e8b4b028aca2906cccc8baf5921273aaa012d48e19b
+        manifest_paths:
+        - docs/prototype/rules-spec-v1.md
+        - docs/prototype/settlement-order-v1.md
+        - docs/prototype/information-boundary-v1.md
+        - docs/prototype/rules-test-coverage-matrix-v1.md
+        - evidence/gate2/headquarters-buffer-staging-remediation-v1.md
+        - evidence/gate2/headquarters-buffer-successor-technical-approval-v3.md
+        - evidence/gate2/headquarters-buffer-successor-independent-qa-approval-v3.md
+      source_loop_id: null
+      bound_by_event_id: 5cecf174-6e40-493e-92b1-27a6faae5bc5
+      bound_at: '2026-08-18T18:17:06.576307+08:00'
+  evidence_refs:
+  - docs/architecture/gate1-to-formal-migration-successor-v2.yaml
+  - evidence/gate2/headquarters-buffer-successor-technical-approval-v3.md@sha256:f638a3bf230532b64b5b11a4f6bfb0353a470cbd8243759e434f0e1265350ff9
+  - evidence/gate2/headquarters-buffer-successor-independent-qa-approval-v3.md@sha256:011e8bdbb6ae81bcea453b8f3721d7589cce1d9f10ba196241438627589a374a
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: b66c63dc35d9cbf0560abaf26ea909ebe53fc7564f74497c6b27ecb827277a15
+    event_digest: 094ba146708df92454e9c73379c1824db18d3be44b70bad638cb1da304c4dbea
