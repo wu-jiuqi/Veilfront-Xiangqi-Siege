@@ -39,11 +39,7 @@ func current_visible_events() -> Array:
 
 
 func current_action_previews() -> Array:
-	var player_view: Dictionary = current_player_view()
-	if bool(player_view.get("terminal", false)) \
-	or str(player_view.get("active_side", "")) != str(player_view.get("viewer_side", "")):
-		return []
-	return PublicActionPreviewer.generate_action_intents(player_view)
+	return _action_previews_for_view(current_player_view())
 
 
 func preview_intent(intent: Dictionary) -> Dictionary:
@@ -80,26 +76,17 @@ func submit_intent(normalized_intent: Dictionary) -> Dictionary:
 	)
 	if bool(result.get("consumed", false)) and not bool(_state.get("terminal", false)):
 		_prepare_authority_turn()
-	var player_view: Dictionary = current_player_view()
-	var visible_events: Array = current_visible_events()
-	var action_previews: Array = [] if bool(_state.get("terminal", false)) \
-		else current_action_previews()
-	var frame: Dictionary = {
-		"frame_sequence": _observer_frames.size() + 1,
-		"action_index": int(player_view["action_index"]),
-		"player_view_or_digest": player_view.duplicate(true),
-		"visible_events": visible_events.duplicate(true),
-		"visible_error": visible_error.duplicate(true),
-		"action_previews": action_previews.duplicate(true),
-	}
+	var frame: Dictionary = _compose_safe_frame(
+		_state, _viewer_context, visible_error, _observer_frames.size() + 1
+	)
 	_observer_frames.append(frame)
 	return {
 		"ok": bool(result.get("ok", false)),
 		"consumed": bool(result.get("consumed", false)),
-		"player_view": player_view,
-		"visible_events": visible_events,
-		"visible_error": visible_error,
-		"action_previews": action_previews,
+		"player_view": frame["player_view_or_digest"].duplicate(true),
+		"visible_events": frame["visible_events"].duplicate(true),
+		"visible_error": frame["visible_error"].duplicate(true),
+		"action_previews": frame["action_previews"].duplicate(true),
 	}
 
 
@@ -128,6 +115,49 @@ func observer_replay_record() -> Dictionary:
 
 func validate_observer_replay_record(record: Dictionary) -> Dictionary:
 	return ObserverReplayValidator.validate(record, str(_viewer_context.call("side")))
+
+
+static func _compose_safe_frame(
+	state_snapshot: Dictionary,
+	seat_context: RefCounted,
+	public_error: Dictionary,
+	sequence: int
+) -> Dictionary:
+	assert(seat_context != null and bool(seat_context.call("is_valid")))
+	var player_view: Dictionary = ObserverProjector.project_player_view(
+		state_snapshot, seat_context
+	)
+	return _compose_safe_frame_from_dtos(
+		player_view,
+		VisibleOutcomeProjector.project_visible_events(state_snapshot, seat_context),
+		public_error,
+		_action_previews_for_view(player_view),
+		sequence
+	)
+
+
+static func _compose_safe_frame_from_dtos(
+	player_view: Dictionary,
+	public_events: Array,
+	public_error: Dictionary,
+	action_previews: Array,
+	sequence: int
+) -> Dictionary:
+	return {
+		"frame_sequence": sequence,
+		"action_index": int(player_view.get("action_index", 0)),
+		"player_view_or_digest": player_view.duplicate(true),
+		"visible_events": public_events.duplicate(true),
+		"visible_error": public_error.duplicate(true),
+		"action_previews": action_previews.duplicate(true),
+	}
+
+
+static func _action_previews_for_view(player_view: Dictionary) -> Array:
+	if bool(player_view.get("terminal", false)) \
+	or str(player_view.get("active_side", "")) != str(player_view.get("viewer_side", "")):
+		return []
+	return PublicActionPreviewer.generate_action_intents(player_view)
 
 
 func _prepare_authority_turn() -> void:
