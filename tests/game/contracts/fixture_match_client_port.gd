@@ -6,6 +6,8 @@ const ACTION_PREVIEW_JSON: String = "{\"action_type\":\"move\",\"classification\
 
 var _player_view_path: String
 var _request_log: Array[Dictionary] = []
+var _delay_prepare_responses: bool = false
+var _delayed_prepare_preview_ids: Array[String] = []
 
 
 func _init(player_view_path: String) -> void:
@@ -39,6 +41,9 @@ func request_action_previews(piece_id: String, action_type: String) -> void:
 
 func prepare_action(preview_id: String) -> void:
 	_request_log.append({"name": "prepare_action", "preview_id": preview_id})
+	if _delay_prepare_responses:
+		_delayed_prepare_preview_ids.append(preview_id)
+		return
 	prepared_action_changed.emit(preview_id)
 
 
@@ -58,6 +63,21 @@ func request_skip() -> void:
 
 func request_restart() -> void:
 	_request_log.append({"name": "request_restart"})
+
+
+func set_prepare_response_delayed(delayed: bool) -> void:
+	_delay_prepare_responses = delayed
+
+
+func flush_next_prepare_response() -> bool:
+	if _delayed_prepare_preview_ids.is_empty():
+		return false
+	prepared_action_changed.emit(_delayed_prepare_preview_ids.pop_front())
+	return true
+
+
+func get_pending_prepare_response_count() -> int:
+	return _delayed_prepare_preview_ids.size()
 
 
 func get_request_log() -> Array:

@@ -23,7 +23,8 @@ func _run() -> void:
 	for resolution: Vector2i in RESOLUTIONS:
 		var snapshot: Dictionary = await _check_resolution(resolution)
 		snapshots.append(snapshot)
-	_write_snapshots(snapshots)
+	if _capture_screenshots:
+		_write_snapshots(snapshots)
 
 	if _failures.is_empty():
 		print("BOARD_LAYOUT_CONTRACT_PASS resolutions=%d" % RESOLUTIONS.size())
@@ -89,6 +90,7 @@ func _check_resolution(resolution: Vector2i) -> Dictionary:
 	viewport.add_child(match_screen)
 	match_screen.apply_layout_for_size(Vector2(resolution))
 	match_screen.render_player_view(_build_layout_view())
+	match_screen.set_local_interaction_state("CONFIRMING", "layout-advisor", "layout-resurrect")
 	await process_frame
 	await process_frame
 
@@ -103,6 +105,11 @@ func _check_resolution(resolution: Vector2i) -> Dictionary:
 	_expect(bool(snapshot.get("main_buttons_inside", false)), "%s main action buttons are clipped" % resolution)
 	_expect(float(snapshot.get("main_button_min_height", 0.0)) >= 44.0, "%s main buttons are below 44 px" % resolution)
 	_expect(bool(snapshot.get("compact", false)) == (resolution.x < 1100), "%s responsive breakpoint mismatch" % resolution)
+	_expect(bool(snapshot.get("confirmation_panel_inside", false)), "%s confirmation panel is clipped" % resolution)
+	_expect(bool(snapshot.get("confirmation_prompt_inside", false)), "%s confirmation prompt is clipped" % resolution)
+	_expect(bool(snapshot.get("confirmation_buttons_inside", false)), "%s confirmation buttons are clipped" % resolution)
+	_expect(float(snapshot.get("confirmation_button_min_height", 0.0)) >= 44.0, "%s confirmation buttons are below 44 px" % resolution)
+	_expect(not str(snapshot.get("confirmation_prompt_text", "")).is_empty(), "%s confirmation prompt is empty" % resolution)
 
 	var image_path: String = "res://evidence/gate2/i1-s4-%dx%d.png" % [resolution.x, resolution.y]
 	if _capture_screenshots:
@@ -127,6 +134,10 @@ func _check_resolution(resolution: Vector2i) -> Dictionary:
 		"board_rect": [board_rect.position.x, board_rect.position.y, board_rect.size.x, board_rect.size.y],
 		"main_buttons_inside": snapshot.get("main_buttons_inside", false),
 		"main_button_min_height": snapshot.get("main_button_min_height", 0.0),
+		"confirmation_panel_inside": snapshot.get("confirmation_panel_inside", false),
+		"confirmation_prompt_inside": snapshot.get("confirmation_prompt_inside", false),
+		"confirmation_buttons_inside": snapshot.get("confirmation_buttons_inside", false),
+		"confirmation_button_min_height": snapshot.get("confirmation_button_min_height", 0.0),
 		"screenshot": image_path if _capture_screenshots else "pending_capture",
 	}
 
@@ -162,8 +173,18 @@ func _build_layout_view() -> Dictionary:
 		"capture_ghosts": [{"piece_id": "layout-ghost", "piece_type": "horse", "position": [3, 5], "side": "red"}],
 		"vision_overlays": {
 			"rook_paths": [{"piece_id": "layout-rook", "cells": [[1, 3], [2, 3], [3, 3], [4, 3]]}],
-			"elephant_reveal_zones": [{"piece_id": "layout-elephant", "cells": [[4, 2], [5, 2], [6, 2], [4, 3], [5, 3], [6, 3], [4, 4], [5, 4], [6, 4]]}],
-			"elephant_block_fields": [],
+			"elephant_reveal_zones": [{"piece_id": "layout-elephant", "cells": [
+				[3, 1], [4, 1], [5, 1],
+				[3, 2], [4, 2], [5, 2], [6, 2],
+				[3, 3], [4, 3], [5, 3], [6, 3], [7, 3],
+				[4, 4], [5, 4], [6, 4], [7, 4],
+				[5, 5], [6, 5], [7, 5],
+			]}],
+			"elephant_block_fields": [{"piece_id": "layout-elephant", "cells": [
+				[4, 2], [5, 2], [6, 2],
+				[4, 3], [5, 3], [6, 3],
+				[4, 4], [5, 4], [6, 4],
+			]}],
 		},
 	}
 

@@ -47,6 +47,10 @@ var _presentation_model: Dictionary = {}
 var _current_previews: Array = []
 var _last_event_model: Dictionary = {}
 var _last_error_model: Dictionary = {}
+var _prepare_generation: int = 0
+var _inflight_prepare_generation: int = 0
+var _inflight_prepare_preview_id: String = ""
+var _cancelled_prepare_tombstones: Dictionary = {}
 
 
 func _ready() -> void:
@@ -110,8 +114,18 @@ func render_action_previews_from_port(previews: Array) -> void:
 
 func render_prepared_action(preview_id: String) -> void:
 	if preview_id.is_empty():
-		_clear_local_interaction()
+		if _interaction_state in [PREVIEW_SELECTED, CONFIRMING]:
+			_clear_local_interaction()
 		return
+	if _cancelled_prepare_tombstones.has(preview_id):
+		_consume_prepare_tombstone(preview_id)
+		return
+	if _interaction_state != PREVIEW_SELECTED:
+		return
+	if preview_id != _inflight_prepare_preview_id or _inflight_prepare_generation <= 0:
+		return
+	_inflight_prepare_generation = 0
+	_inflight_prepare_preview_id = ""
 	set_local_interaction_state(CONFIRMING, _selected_piece_id, preview_id)
 	_action_prompt.text = _preview_message_key(preview_id)
 
@@ -129,6 +143,9 @@ func request_action_previews(piece_id: String, action_type: String) -> void:
 func prepare_action(preview_id: String) -> void:
 	if not _has_preview(preview_id):
 		return
+	_prepare_generation += 1
+	_inflight_prepare_generation = _prepare_generation
+	_inflight_prepare_preview_id = preview_id
 	_prepared_preview_id = preview_id
 	_interaction_state = PREVIEW_SELECTED
 	action_prepare_requested.emit(preview_id)
@@ -160,11 +177,10 @@ func get_local_interaction_state() -> String:
 
 
 func handle_cancel_or_marker(cell: Vector2i) -> String:
-	if _interaction_state == CONFIRMING:
-		_clear_local_interaction()
-		prepared_action_cancel_requested.emit()
+	if _interaction_state in [PREVIEW_SELECTED, CONFIRMING]:
+		_cancel_prepared_action_locally()
 		return "cancel_prepared_action"
-	if _interaction_state in [SELECTED, PREVIEW_SELECTED]:
+	if _interaction_state == SELECTED:
 		_clear_local_interaction()
 		return "cancel_selection"
 	if _interaction_state == MARKER_MENU:
@@ -199,6 +215,10 @@ func get_layout_snapshot() -> Dictionary:
 			and button_rect.end.x <= size.x + 0.5 \
 			and button_rect.end.y <= size.y + 0.5
 		minimum_button_height = minf(minimum_button_height, button.custom_minimum_size.y)
+	var confirmation_button_min_height: float = minf(
+		_action_cancel_button.custom_minimum_size.y,
+		_action_confirm_button.custom_minimum_size.y
+	)
 	return {
 		"compact": _compact,
 		"screen_size": size,
@@ -206,6 +226,12 @@ func get_layout_snapshot() -> Dictionary:
 		"point_spacing": _board_viewport.get_point_spacing(),
 		"main_buttons_inside": main_buttons_inside,
 		"main_button_min_height": minimum_button_height,
+		"confirmation_panel_inside": _control_inside_screen(_confirmation_panel),
+		"confirmation_prompt_inside": _control_inside_screen(_action_prompt),
+		"confirmation_buttons_inside": _control_inside_screen(_action_cancel_button) \
+			and _control_inside_screen(_action_confirm_button),
+		"confirmation_button_min_height": confirmation_button_min_height,
+		"confirmation_prompt_text": _action_prompt.text,
 	}
 
 
@@ -242,16 +268,52 @@ func _clear_local_interaction() -> void:
 	_interaction_state = IDLE
 	_selected_piece_id = ""
 	_prepared_preview_id = ""
+	_inflight_prepare_generation = 0
+	_inflight_prepare_preview_id = ""
 	_confirmation_panel.visible = false
 	_board_viewport.clear_interaction()
 
 
 func _cancel_only() -> void:
-	if _interaction_state == CONFIRMING:
-		_clear_local_interaction()
-		prepared_action_cancel_requested.emit()
+	if _interaction_state in [PREVIEW_SELECTED, CONFIRMING]:
+		_cancel_prepared_action_locally()
 	elif _interaction_state != IDLE:
 		_clear_local_interaction()
+
+
+func _cancel_prepared_action_locally() -> void:
+	var cancelled_preview_id: String = _prepared_preview_id
+	if _interaction_state == PREVIEW_SELECTED \
+		and not cancelled_preview_id.is_empty() \
+		and _inflight_prepare_generation > 0:
+		var generations: Array = _cancelled_prepare_tombstones.get(
+			cancelled_preview_id,
+			[]
+		).duplicate()
+		generations.append(_inflight_prepare_generation)
+		_cancelled_prepare_tombstones[cancelled_preview_id] = generations
+	_clear_local_interaction()
+	prepared_action_cancel_requested.emit()
+
+
+func _consume_prepare_tombstone(preview_id: String) -> void:
+	var generations: Array = _cancelled_prepare_tombstones.get(preview_id, []).duplicate()
+	if generations.is_empty():
+		_cancelled_prepare_tombstones.erase(preview_id)
+		return
+	generations.pop_front()
+	if generations.is_empty():
+		_cancelled_prepare_tombstones.erase(preview_id)
+	else:
+		_cancelled_prepare_tombstones[preview_id] = generations
+
+
+func _control_inside_screen(control: Control) -> bool:
+	var control_rect := Rect2(control.global_position - global_position, control.size)
+	return control_rect.position.x >= -0.5 \
+		and control_rect.position.y >= -0.5 \
+		and control_rect.end.x <= size.x + 0.5 \
+		and control_rect.end.y <= size.y + 0.5
 
 
 func _on_viewport_size_changed() -> void:

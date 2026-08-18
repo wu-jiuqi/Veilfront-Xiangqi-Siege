@@ -116,6 +116,17 @@ unique_name_in_owner = true
 
 [node name="ActionConfirmationPanel" parent="." instance=ExtResource("6_confirm")]
 unique_name_in_owner = true
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -180.0
+offset_top = -208.0
+offset_right = 180.0
+offset_bottom = -80.0
+grow_horizontal = 2
+grow_vertical = 0
 
 [node name="TutorialOverlayHost" type="Control" parent="."]
 layout_mode = 1
