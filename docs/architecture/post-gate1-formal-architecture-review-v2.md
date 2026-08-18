@@ -1,8 +1,8 @@
 # GATE-1 后正式架构审查 v2
 
-状态：`revised / awaiting REM-G2-003 dual re-review / second loop not started`
+状态：`R2 revised / awaiting REM-G2-R2-003 final dual re-review / second loop not started`
 
-本文是 `docs/architecture/post-gate1-formal-architecture-review-v1.md` 的修订后继。v1 及其历史技术/QA审阅保持不变，只作审计证据；Contract `INPUT-ARCH-REVIEW-001` 虽以 v1 路径描述输入，项目经理必须以本 v2 的精确 SHA-256、规则整改摘要、迁移 manifest 与新一轮双审结果重新绑定，不能沿用 v1 的审阅或摘要。
+本文是 `docs/architecture/post-gate1-formal-architecture-review-v1.md` 的修订后继。v1 及其历史技术/QA审阅保持不变，只作审计证据；首次整改与第一次复审也保留为历史链，但不能替代本轮 R2 输入。Contract `INPUT-ARCH-REVIEW-001` 虽以 v1 路径描述输入，项目经理必须以本 v2 的最终 SHA-256、R2 规则证据、迁移 manifest 与最终双审结果重新绑定，不能沿用任何旧审阅或摘要。
 
 ## 1. 当前已批准基线
 
@@ -12,19 +12,20 @@
 | Loop Contract v1 | `LOOP-CTR-FORMAL-FOUNDATION-GATE2-001@v1 / approved`；approved source digest `9beb91baa720820d0f0985019e5a77a4e0e065a8721451eedc30e0cc22bdeaef`；approval `approval:veilfront-xiangqi-siege:loop-contract:9beb91baa720`；物化 SHA-256 `a26a9b3fdb0d8d06e42a06833a84455d911fea8f72bcedec59d0ae5e620cc205` |
 | GATE-1 | `approved`；approval `approval:veilfront-xiangqi-siege:gate-1:8f93c3506192`；subject digest `8f93c3506192b1e286bd5f1bf631054f9fb3f0dc5337f3050716a2186a383597` |
 | GATE-1 RC3 | candidate commit `6253678157157091584b253470e709bad17c534f`；独立 QA evidence index `evidence/prototype/qa/gate1-rc3-evidence-index.yaml` SHA-256 `be64807394e3f05ed8e1e4366a0a3f88ad2cc78bfef932b3f1f20c411e4eb650` |
-| Revision 5 规则规格 | `docs/prototype/rules-spec-v1.md` SHA-256 `f5158daa0e0235f9cca31ee4411ab1ae647e6ff20019c3316c8f8d35d91f61ab` |
+| Revision 5 规则规格 | `docs/prototype/rules-spec-v1.md` SHA-256 `34a1d398beaee6610f3d614559a5af7a14abd464e5df4d86ac26aa3824504ddd` |
 | Revision 5 结算顺序 | `docs/prototype/settlement-order-v1.md` SHA-256 `7335fb20723e6a36eb961ed50739f590e9e426b927af726ca7fbbe7c6992694a` |
 | Revision 5 信息边界 | `docs/prototype/information-boundary-v1.md` SHA-256 `dd76596fb4e196732ea73da9cefc33f3879b3102df345b46f55cf00fe7c17d07` |
 | Revision 5 覆盖矩阵 | `docs/prototype/rules-test-coverage-matrix-v1.md` SHA-256 `5a6c277bbcb74f038953337a7634a1c4e3c7d53bc58b76dfff50d6d2e6f7199b` |
-| 规则整改证据 | `evidence/gate2/rules-baseline-revision5-remediation.md` SHA-256 `a47a80f32b269040b4c872cdf25c9223eb57f097a74ccd7fccc1e4d13fbfaadb`；关闭 `QA-G2-ARCH-001` 与 `QA-G2-ARCH-003` 的设计侧部分 |
+| 首次规则整改证据（历史链） | `evidence/gate2/rules-baseline-revision5-remediation.md` SHA-256 `a47a80f32b269040b4c872cdf25c9223eb57f097a74ccd7fccc1e4d13fbfaadb`；只证明首次整改，不作为当前规则关闭输入 |
+| 规则 R2 整改证据（当前） | `evidence/gate2/rules-baseline-revision5-remediation-r2.md` SHA-256 `3576aca373288cc841cb814fcee7335513bfd5632222b09f4cbc1993e1dd177a`；清除 `QA-G2-ARCH-001-R2` 指出的现行被动替死残留，等待最终双审关闭 |
 
-整改代码库水位：`main@0de8bb5e29a8a0731731f978dad6f568ff0bb51e`。本报告不把该水位声明为正式架构实现；它只绑定输入事实。
+R2 整改代码库水位：`main@e9c5e9812a14a733d39595215022dd83d9538eb9`。本报告不把该水位声明为正式架构实现；它只绑定 R2 规则输入事实与历史继承链。
 
 ## 2. 修订结论
 
 GATE-1 已证明 revision 5 规则核心、确定性随机、按观察者投影、回放与局域网真人验证可行；当前 `scripts/prototype/`、`scenes/prototype/` 仍只是一套不可直接晋升的验证载体。
 
-第二生产循环技术上可行，但只有 REM-G2-003 对本 v2、`formal-dto-and-trust-boundary-v1.md` 与 `gate1-to-formal-migration-manifest-v1.yaml` 的精确摘要重新双审均为 `approved` 后，项目经理才可绑定 `INPUT-ARCH-REVIEW-001` 并登记循环。当前不得实现正式架构、推进 GATE-2、接入互联网、交付 AI 或启动高成本批量美术。
+第二生产循环技术上可行，但只有 REM-G2-R2-003 对本 v2、`formal-dto-and-trust-boundary-v1.md`、`gate1-to-formal-migration-manifest-v1.yaml`、四份 revision 5 事实源与 R2 规则证据的精确摘要重新双审均为 `approved` 后，项目经理才可绑定 `INPUT-ARCH-REVIEW-001` 并登记循环。当前不得实现正式架构、推进 GATE-2、接入互联网、交付 AI 或启动高成本批量美术。
 
 ## 3. 正式架构边界
 
@@ -120,7 +121,7 @@ ITERATION-1 必须把以下逻辑动作物化到 Input Map：`board_select`、`b
 
 ## 8. 迁移顺序与行为锁
 
-1. REM-G2-003 对 v2、DTO 文档、manifest 的精确摘要完成双审；项目经理绑定 `INPUT-ARCH-REVIEW-001` 后才可启动循环。
+1. REM-G2-R2-003 对 v2、DTO 文档、manifest、四份规则事实源与 R2 规则证据的精确摘要完成最终双审；项目经理绑定 `INPUT-ARCH-REVIEW-001` 后才可启动循环。
 2. ITERATION-1 冻结 codec、依赖扫描、Input Map、场景 map 与上述 ADR，建立不依赖 AI/LAN 的预置壳。
 3. 在任何正式代码迁移前，由 RC3 `6253678...` 生成 manifest 指定的 golden snapshot pack。
 4. 迁移 canonical、seeded random、FullState codec 与权威 replay；比较 state/event digest。
@@ -163,8 +164,9 @@ ITERATION-1 必须把以下逻辑动作物化到 Input Map：`board_select`、`b
 
 | QA 缺陷 | v2 关闭产物 | 当前状态 |
 |---|---|---|
-| `QA-G2-ARCH-002` | 本报告绑定 confirmed Brief、approved Contract、GATE-1 与修订规则摘要；声明 v2 successor 与重新 binding | `ready_for_re-review` |
-| `QA-G2-ARCH-003` | `formal-dto-and-trust-boundary-v1.md` 冻结 FullState/viewer/projection/Visible DTO/replay/私有标记/测试 | `ready_for_re-review` |
-| `QA-G2-ARCH-004` | `gate1-to-formal-migration-manifest-v1.yaml` 绑定 RC3、seed/replay/codec/命令/触发与回退 | `ready_for_re-review` |
+| `QA-G2-ARCH-001-R2` | R2 规则证据绑定修订后的四事实源，并证明现行车路径和旗帜生命周期不再描述被动替死 | `remediation_completed / closure_pending_final_dual_re_review` |
+| `QA-G2-ARCH-002` | 本报告绑定 confirmed Brief、approved Contract、GATE-1 与修订规则摘要；声明 v2 successor 与重新 binding | `previous_rereview_closed / awaiting_final_exact_set_rebind` |
+| `QA-G2-ARCH-003` | `formal-dto-and-trust-boundary-v1.md` 冻结 FullState/viewer/projection/Visible DTO/replay/私有标记/测试 | `previous_rereview_closed / awaiting_final_exact_set_rebind` |
+| `QA-G2-ARCH-004` | `gate1-to-formal-migration-manifest-v1.yaml` 绑定 RC3、seed/replay/codec/命令/触发与回退 | `previous_rereview_closed / awaiting_final_exact_set_rebind` |
 
-下一合法动作只有 REM-G2-003：计算本 v2 及关联两份架构产物摘要，由 Godot 技术负责人和独立 QA 对同一组摘要重新审阅。两份复审均为 `approved` 后，项目经理以 v2 新摘要满足 `INPUT-ARCH-REVIEW-001`，再登记第二生产循环；不得沿用 v1 技术审阅的 `approved` 或 v1 QA 的 `blocked` 作为 v2 结论。
+下一合法动作只有 REM-G2-R2-003：计算本 v2、manifest、未修改 DTO、四份规则事实源、R2 规则证据与本轮架构整改证据的最终摘要，由 Godot 技术负责人和独立 QA 对同一组摘要从头复审。两份复审均为 `approved` 后，项目经理以本轮精确摘要满足 `INPUT-ARCH-REVIEW-001`，再登记第二生产循环；不得沿用任何历史技术或 QA 结论作为最终 R2 结论。

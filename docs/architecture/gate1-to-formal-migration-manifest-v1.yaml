@@ -1,7 +1,7 @@
 migration_manifest:
   schema_version: veilfront-gate1-formal-migration-manifest/v1
   manifest_id: MIG-GATE1-RC3-TO-FORMAL-001
-  status: frozen_for_rem_g2_002_awaiting_dual_re_review
+  status: frozen_for_rem_g2_r2_002_awaiting_final_dual_re_review
   purpose: >-
     冻结 GATE-1 RC3 到正式规则、application、projection 与 replay 的行为等价输入；
     不把原型目录认定为正式架构，也不声明尚未实现的比较命令已通过。
@@ -13,14 +13,14 @@ successor_binding:
     status: historical_only_do_not_bind_as_remediated_input
   revised_review:
     path: docs/architecture/post-gate1-formal-architecture-review-v2.md
-    sha256_at_manifest_creation: 6320614a35dfa03398d6aae53a8b62bbc3f42199e471f98b59590e603bfbe025
+    sha256_at_manifest_creation: 58e55d7e6e2fb25c04a243017fc8e0230915a36dcc09cacaf7076b10423705f4
   trust_boundary:
     path: docs/architecture/formal-dto-and-trust-boundary-v1.md
     sha256: 6f23274810aad5d6f2515bd78b114da16684e38f9abe04e2d59dcfa87fc174f2
   contract_input_note: >-
     LOOP-CTR-FORMAL-FOUNDATION-GATE2-001@v1 的 INPUT-ARCH-REVIEW-001 文案指向 v1；
-    项目经理必须用 v2、本文和 DTO 文档的新摘要及 REM-G2-003 双审进行 input binding，
-    不得沿用 v1 审阅。
+    项目经理必须用 R2 后的 v2、本文、DTO 文档、四份规则事实源、R2 规则证据与
+    REM-G2-R2-003 最终双审的新摘要进行 input binding，不得沿用 v1 或任何历史复审。
 
 approved_context:
   project_brief:
@@ -68,9 +68,10 @@ source_baseline:
 
 rules_and_information_baseline:
   revision: owner_rule_revision_5
+  r2_remediation_commit: e9c5e9812a14a733d39595215022dd83d9538eb9
   files:
     - path: docs/prototype/rules-spec-v1.md
-      sha256: f5158daa0e0235f9cca31ee4411ab1ae647e6ff20019c3316c8f8d35d91f61ab
+      sha256: 34a1d398beaee6610f3d614559a5af7a14abd464e5df4d86ac26aa3824504ddd
       role: gameplay_rules
     - path: docs/prototype/settlement-order-v1.md
       sha256: 7335fb20723e6a36eb961ed50739f590e9e426b927af726ca7fbbe7c6992694a
@@ -81,12 +82,16 @@ rules_and_information_baseline:
     - path: docs/prototype/rules-test-coverage-matrix-v1.md
       sha256: 5a6c277bbcb74f038953337a7634a1c4e3c7d53bc58b76dfff50d6d2e6f7199b
       role: test_coverage_and_pending_revision5_cases
+  remediation_chain:
     - path: evidence/gate2/rules-baseline-revision5-remediation.md
       sha256: a47a80f32b269040b4c872cdf25c9223eb57f097a74ccd7fccc1e4d13fbfaadb
-      role: qa_g2_arch_001_remediation_evidence
+      role: historical_first_remediation_evidence_not_current_closure_input
+    - path: evidence/gate2/rules-baseline-revision5-remediation-r2.md
+      sha256: 3576aca373288cc841cb814fcee7335513bfd5632222b09f4cbc1993e1dd177a
+      role: current_qa_g2_arch_001_r2_remediation_evidence_pending_final_dual_review
   conflict_policy: >-
-    任一摘要变化或出现被动士替死残留时停止迁移并返回系统与体验负责人；
-    不由技术实现选择规则语义。
+    四份规则与信息事实源、当前 R2 整改证据任一摘要变化，或再次出现现行被动士替死残留时，
+    停止迁移并返回系统与体验负责人；不得退回首次整改摘要，也不由技术实现选择规则语义。
 
 seed_sets:
   rc3_full_stress:
@@ -317,7 +322,7 @@ full_1000_seed_rerun_triggers:
     - change_to_full_state_domain_event_or_canonical_codec_fields_types_order_or_normalization
     - change_to_replay_capture_decode_or_execution_order
     - change_to_projection_visibility_player_view_visible_event_visible_error_or_action_preview
-    - change_to_any_rules_and_information_baseline_sha256
+    - change_to_any_rules_and_information_baseline_or_r2_remediation_sha256
     - any_mismatch_in_smoke_replay20_known_regression_or_hidden_equivalence
   required_result:
     completed: 1000
@@ -352,10 +357,10 @@ failure_return:
 
 scope_guard:
   forbidden:
-    - runtime_implementation_during_REM-G2-002
+    - runtime_implementation_during_REM-G2-R2-002
     - internet_or_steam_networking
     - external_service_or_server_purchase
     - ai_delivery_or_training
     - bulk_final_art_production
     - contract_registry_approval_or_gate_mutation
-  next_legal_action: REM-G2-003_dual_re_review_of_exact_artifact_sha256_set
+  next_legal_action: REM-G2-R2-003_final_dual_re_review_of_exact_artifact_sha256_set
