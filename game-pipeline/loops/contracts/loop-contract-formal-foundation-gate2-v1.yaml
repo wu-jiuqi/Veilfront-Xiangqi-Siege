@@ -11,9 +11,10 @@ draft_review:
   prepared_against:
     project_brief_version: 5
     project_brief_subject_digest: 41bb82fae4f1a0294d17746f3b9caf063ee69d2bd07e0f7d15d26baad9ab89bb
-    project_brief_confirmation: pending
+    project_brief_confirmation: confirmed
+    project_brief_approval_id: approval:veilfront-xiangqi-siege:project-brief:41bb82fae4f1
     gate_1_approval_subject_digest: 8f93c3506192b1e286bd5f1bf631054f9fb3f0dc5337f3050716a2186a383597
-  note: Project Brief v5 未获项目所有者确认前，本 Contract 不得批准、登记或启动。
+  note: Project Brief v5 已确认；本 Contract 仍须由项目所有者另行批准，批准前不得登记或启动。
 purpose:
   objective: 在不实现互联网传输、不交付AI人机对战且不启动高成本批量美术的前提下，把GATE-1已验证的规则与信息边界迁移为可维护的Godot正式架构，完成使用同一Intent/Event管线的新手教学灰盒，并形成可估算的Demo视觉基线与资产清单，为GATE-2人工审查提供证据。
   required_deliverables:
@@ -86,7 +87,7 @@ start:
   required_inputs:
   - input_slot_id: INPUT-BRIEF-V5-001
     artifact_type: confirmed-project-brief
-    version_requirement: version 5；subject_digest暂为41bb82fae4f1a0294d17746f3b9caf063ee69d2bd07e0f7d15d26baad9ab89bb，须在批准前绑定对应approval。
+    version_requirement: version 5；subject_digest=41bb82fae4f1a0294d17746f3b9caf063ee69d2bd07e0f7d15d26baad9ab89bb；approval=approval:veilfront-xiangqi-siege:project-brief:41bb82fae4f1。
     required: true
   - input_slot_id: INPUT-GATE1-001
     artifact_type: approved-gate-handoff
