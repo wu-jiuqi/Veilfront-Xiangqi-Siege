@@ -4,17 +4,22 @@ loop_contract:
   loop_type: formal-architecture-tutorial-visual-baseline
   title: 第二生产循环——正式架构、教学灰盒与视觉基线
   version: 1
-  status: draft
-approval_binding: null
+  status: approved
+approval_binding:
+  approval_id: approval:veilfront-xiangqi-siege:loop-contract:9beb91baa720
+  subject_digest: 9beb91baa720820d0f0985019e5a77a4e0e065a8721451eedc30e0cc22bdeaef
+  approved_by: project-owner
+  approved_at: '2026-08-18T11:52:31.3240476+08:00'
+  source_ref: codex-thread://current#formal-foundation-gate2-contract-approval
 draft_review:
-  status: awaiting_project_owner_approval
+  status: approved_by_project_owner
   prepared_against:
     project_brief_version: 5
     project_brief_subject_digest: 41bb82fae4f1a0294d17746f3b9caf063ee69d2bd07e0f7d15d26baad9ab89bb
     project_brief_confirmation: confirmed
     project_brief_approval_id: approval:veilfront-xiangqi-siege:project-brief:41bb82fae4f1
     gate_1_approval_subject_digest: 8f93c3506192b1e286bd5f1bf631054f9fb3f0dc5337f3050716a2186a383597
-  note: Project Brief v5 已确认；本 Contract 仍须由项目所有者另行批准，批准前不得登记或启动。
+  note: 项目所有者已批准提交b845a15中的精确草案摘要；审批只授权登记与执行本Contract，不替代GATE-2人工决定。
 purpose:
   objective: 在不实现互联网传输、不交付AI人机对战且不启动高成本批量美术的前提下，把GATE-1已验证的规则与信息边界迁移为可维护的Godot正式架构，完成使用同一Intent/Event管线的新手教学灰盒，并形成可估算的Demo视觉基线与资产清单，为GATE-2人工审查提供证据。
   required_deliverables:

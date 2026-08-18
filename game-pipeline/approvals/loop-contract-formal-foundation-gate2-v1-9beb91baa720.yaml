@@ -1,0 +1,38 @@
+approval:
+  schema_version: game-production-approval/v1
+  approval_id: approval:veilfront-xiangqi-siege:loop-contract:9beb91baa720
+  subject_kind: loop-contract-draft
+  subject_id: LOOP-CTR-FORMAL-FOUNDATION-GATE2-001@v1
+  subject_digest: 9beb91baa720820d0f0985019e5a77a4e0e065a8721451eedc30e0cc22bdeaef
+  decision: approved
+  decided_by: project-owner
+  decided_at: '2026-08-18T11:52:31.3240476+08:00'
+  evidence:
+    source_refs:
+    - codex-thread://current#formal-foundation-gate2-contract-approval
+    immutable_source:
+      git_commit: b845a15a4af79a08bd794ffad09a730e375803e8
+      path: game-pipeline/loops/contracts/loop-contract-formal-foundation-gate2-v1.yaml
+      canonicalization: canonical-json-sort-keys-without-approval-binding-v1
+      subject_digest: 9beb91baa720820d0f0985019e5a77a4e0e065a8721451eedc30e0cc22bdeaef
+    bound_project_brief:
+      version: 5
+      subject_digest: 41bb82fae4f1a0294d17746f3b9caf063ee69d2bd07e0f7d15d26baad9ab89bb
+      approval_id: approval:veilfront-xiangqi-siege:project-brief:41bb82fae4f1
+    gate_1_approval_subject_digest: 8f93c3506192b1e286bd5f1bf631054f9fb3f0dc5337f3050716a2186a383597
+  authorized_action:
+    summary: 登记并执行第二生产循环，依次完成正式架构、行为保持的核心迁移、教学与视觉灰盒及独立QA，形成GATE-2人工决策包。
+    allowed:
+    - 物化Contract approved状态并登记新的Loop Registry实例
+    - 在现有组织与权限范围内启动Contract列明的四轮工作
+    forbidden:
+    - 自动批准GATE-2
+    - 实现互联网传输、Steam网络、匹配、服务器部署或采购外部服务
+    - 交付AI人机对战或启动高成本批量美术
+    - 静默修改owner rule revision 5、信息边界或验收阈值
+  application:
+    materialized_path: game-pipeline/loops/contracts/loop-contract-formal-foundation-gate2-v1.yaml
+    materialized_status: approved
+    materialized_subject_digest: 0b03c74caa94a6c89a2a799f1dfb3165b7c752e7d6dae1cba5910cae31106a45
+    materialized_digest: a26a9b3fdb0d8d06e42a06833a84455d911fea8f72bcedec59d0ae5e620cc205
+    applied_at: '2026-08-18T11:52:31.3240476+08:00'
