@@ -1,0 +1,27 @@
+approval:
+  schema_version: game-production-approval/v1
+  approval_id: approval:veilfront-xiangqi-siege:project-brief:41bb82fae4f1
+  subject_kind: project-brief
+  subject_id: brief:veilfront-xiangqi-siege:initial
+  subject_digest: 41bb82fae4f1a0294d17746f3b9caf063ee69d2bd07e0f7d15d26baad9ab89bb
+  decision: approved
+  decided_by: project-owner
+  decided_at: '2026-08-18T11:48:14.9779192+08:00'
+  evidence:
+    source_refs:
+    - codex-thread://current#project-brief-v5-confirmation
+    confirmed_input: 41bb82fae4f1a0294d17746f3b9caf063ee69d2bd07e0f7d15d26baad9ab89bb
+    previous_confirmed_brief:
+      version: 4
+      subject_digest: df8deb810d8c06c8c2f5763031fde2c39f14aa81226e23ffb25636ee3f1eca0b
+  authorized_action:
+    summary: 确认首版Demo范围为互联网真人对战最终目标、完整Demo级美术与新手教学，暂不交付AI人机对战；准许据此准备正式架构、教学灰盒与视觉基线生产循环。
+    forbidden:
+    - 自动批准或启动下一生产循环
+    - 自动批准GATE-2
+    - 在后续Contract获批前实现互联网传输、采购服务器或启动高成本批量美术
+  application:
+    materialized_path: game-pipeline/project-definition/project-brief.yaml
+    materialized_status: confirmed
+    materialized_digest: 276d777409f6218c2448e4886879216e09b4e2ea9fa2118f595dc30f14c551e9
+    applied_at: '2026-08-18T11:48:14.9779192+08:00'
