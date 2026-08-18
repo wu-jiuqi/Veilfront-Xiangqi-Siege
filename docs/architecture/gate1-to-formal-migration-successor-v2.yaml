@@ -1,0 +1,62 @@
+schema_version: gate1-to-formal-migration-successor-v2
+status: producer_verified_pending_independent_review
+project_id: veilfront-xiangqi-siege
+contract:
+  id: LOOP-CTR-FORMAL-FOUNDATION-GATE2-001
+  version: 1
+supersedes_behavior_binding:
+  path: docs/architecture/gate1-to-formal-migration-manifest-v1.yaml
+  sha256: 0502e20a861a550e9845cfa1a10e4b5d94b97d1da884add2d0de70e9fa14daa4
+  scope: rules_input_hashes_only
+  note: 旧迁移清单继续作为不可变历史证据；本文件只追加项目所有者后续澄清。
+owner_clarification:
+  id: OWNER-CONFIRM-2026-08-18:HEADQUARTERS-BUFFER-STAGING
+  source_commit: 7f511f1947d9a9438f7fcef72547b6e839c3f754
+  requirement: >-
+    城墙倒塌后，战区棋子仍不得一手移动或攻击进入敌方大本营；行动起点必须已经位于敌方缓冲区
+    （含墙线）或大本营，且规则红黑对称、同时覆盖吃子与落入空点。
+current_rule_sources:
+  - path: docs/prototype/rules-spec-v1.md
+    sha256: 26fd3d25e2a97a39b3cd817fd74e16442360de41b40fc4fa9e035340ae2528a9
+  - path: docs/prototype/settlement-order-v1.md
+    sha256: 502ac07853050038a440a894f0b80d3949bd84e173c393e2cbd46a657af57507
+  - path: docs/prototype/information-boundary-v1.md
+    sha256: dd76596fb4e196732ea73da9cefc33f3879b3102df345b46f55cf00fe7c17d07
+  - path: docs/prototype/rules-test-coverage-matrix-v1.md
+    sha256: 8ce64a69a586bb4665b7e9490ce7a3aaf3369a34908d3f2c5ef53d34d66cdabe
+verification:
+  remediation_report:
+    path: evidence/gate2/headquarters-buffer-staging-remediation-v1.md
+    sha256: 0baa7fb9879749f5d88b05d24d1339a649e5e42a44bcc39027e2f0f0d5dbc90c
+  stress_manifest:
+    path: evidence/prototype/qa/gate2-headquarters-buffer-staging-1000-seeds-round50.jsonl
+    sha256: 567278537d9eb62412e0ed0b50f6ea259d0129a1f527653892f390d2ae616c08
+    seeds: 1000
+    seed_range: 471001..472000
+    completed: 1000
+    failures: 0
+    determinism_mismatches: 0
+    replay_verified: 20
+formal_migration_delta:
+  affected_channels:
+    - state
+    - event
+    - red_player_view
+    - black_player_view
+    - visible_error
+    - action_preview
+    - replay
+  required_negative_cases:
+    - red_war_zone_to_black_headquarters_capture
+    - red_war_zone_to_black_headquarters_empty_cell
+    - black_war_zone_to_red_headquarters_capture
+  required_positive_cases:
+    - red_black_buffer_to_black_headquarters
+    - black_red_buffer_to_red_headquarters
+  full_equivalence_rerun_required: true
+  golden_baseline_commit: 7f511f1947d9a9438f7fcef72547b6e839c3f754
+review_requirements:
+  technical_review: required
+  independent_qa_review: required
+  historical_architecture_reviews_reusable_for_unaffected_boundaries: true
+  gate2_approval_implied: false
