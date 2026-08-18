@@ -43,6 +43,8 @@ formal_migration_delta:
     - event
     - red_player_view
     - black_player_view
+    - red_visible_event
+    - black_visible_event
     - visible_error
     - action_preview
     - replay
@@ -50,9 +52,15 @@ formal_migration_delta:
     - red_war_zone_to_black_headquarters_capture
     - red_war_zone_to_black_headquarters_empty_cell
     - black_war_zone_to_red_headquarters_capture
+    - black_war_zone_to_red_headquarters_empty_cell
   required_positive_cases:
-    - red_black_buffer_to_black_headquarters
-    - black_red_buffer_to_red_headquarters
+    - red_black_buffer_to_black_headquarters_capture
+    - red_black_buffer_to_black_headquarters_empty_cell
+    - black_red_buffer_to_red_headquarters_capture
+    - black_red_buffer_to_red_headquarters_empty_cell
+  required_consistency_checks:
+    - action_preview_and_submit_agree_on_public_staging_qualification
+    - public_staging_precedes_hidden_elephant_interception
   full_equivalence_rerun_required: true
   golden_baseline_commit: 7f511f1947d9a9438f7fcef72547b6e839c3f754
 review_requirements:

@@ -61,56 +61,147 @@ static func _test_wall_line_blocks_until_breached() -> void:
 
 
 static func _test_enemy_buffer_staging_before_headquarters_entry() -> void:
-	var red_attack: Dictionary = _empty_state(8511)
-	red_attack["walls"][MatchState.BLACK]["status"] = "BREACHED"
-	_place(red_attack, "red-rook-1", Vector2i(5, 16))
-	_place(red_attack, "black-pawn-1", Vector2i(5, 22))
-	var direct_capture: Dictionary = MoveRules.evaluate_move(
-		red_attack, _move("red-rook-1", Vector2i(5, 22)), MatchState.RED
+	_expect_headquarters_entry_rejected(
+		_headquarters_entry_state(8511, MatchState.RED, Vector2i(5, 16), "black-pawn-1"),
+		MatchState.RED, "red-rook-1", Vector2i(5, 16), Vector2i(5, 22),
+		"black-pawn-1", "红方战区到黑方大本营吃子"
 	)
-	_expect(not direct_capture.get("legal", false) \
-		and direct_capture.get("reason", "") == "enemy_buffer_staging_required",
-		"黑墙倒塌后红子仍不得从战区直接攻击黑方大本营")
-	red_attack["active_side"] = MatchState.RED
-	var rejected_submission: Dictionary = RuleEngine.submit_action(
-		red_attack, _move("red-rook-1", Vector2i(5, 22))
+	_expect_headquarters_entry_rejected(
+		_headquarters_entry_state(8512, MatchState.RED, Vector2i(5, 16)),
+		MatchState.RED, "red-rook-1", Vector2i(5, 16), Vector2i(5, 22),
+		"", "红方战区到黑方大本营空点"
 	)
-	_expect(not rejected_submission.get("consumed", true) \
-		and Canonical.coordinate(red_attack["pieces"]["red-rook-1"]["position"]) == Vector2i(5, 16) \
-		and red_attack["pieces"]["black-pawn-1"]["alive"],
-		"战区直击敌营必须在公开预览和真实提交中都被拒绝且不消费行动")
-	var empty_entry: Dictionary = _empty_state(8513)
-	empty_entry["walls"][MatchState.BLACK]["status"] = "BREACHED"
-	_place(empty_entry, "red-rook-1", Vector2i(5, 16))
-	var direct_entry: Dictionary = MoveRules.evaluate_move(
-		empty_entry, _move("red-rook-1", Vector2i(5, 22)), MatchState.RED
+	_expect_headquarters_entry_rejected(
+		_headquarters_entry_state(8513, MatchState.BLACK, Vector2i(5, 9), "red-pawn-1"),
+		MatchState.BLACK, "black-rook-1", Vector2i(5, 9), Vector2i(5, 3),
+		"red-pawn-1", "黑方战区到红方大本营吃子"
 	)
-	_expect(not direct_entry.get("legal", false) \
-		and direct_entry.get("reason", "") == "enemy_buffer_staging_required",
-		"红子不得从战区直接跨入黑方大本营空点绕过缓冲区")
-	_place(red_attack, "red-rook-1", Vector2i(5, 20))
-	var staged_capture: Dictionary = MoveRules.evaluate_move(
-		red_attack, _move("red-rook-1", Vector2i(5, 22)), MatchState.RED
+	_expect_headquarters_entry_rejected(
+		_headquarters_entry_state(8514, MatchState.BLACK, Vector2i(5, 9)),
+		MatchState.BLACK, "black-rook-1", Vector2i(5, 9), Vector2i(5, 3),
+		"", "黑方战区到红方大本营空点"
 	)
-	_expect(staged_capture.get("legal", false),
-		"红子先进入黑方缓冲区后应能攻击黑方大本营")
 
-	var black_attack: Dictionary = _empty_state(8512)
-	black_attack["walls"][MatchState.RED]["status"] = "BREACHED"
-	_place(black_attack, "black-rook-1", Vector2i(5, 9))
-	_place(black_attack, "red-pawn-1", Vector2i(5, 3))
-	var mirrored_direct_capture: Dictionary = MoveRules.evaluate_move(
-		black_attack, _move("black-rook-1", Vector2i(5, 3)), MatchState.BLACK
+	_expect_headquarters_entry_accepted(
+		_headquarters_entry_state(8515, MatchState.RED, Vector2i(5, 20), "black-pawn-1"),
+		MatchState.RED, "red-rook-1", Vector2i(5, 22), "black-pawn-1",
+		"红方已在黑方缓冲区后进入大本营吃子"
 	)
-	_expect(not mirrored_direct_capture.get("legal", false) \
-		and mirrored_direct_capture.get("reason", "") == "enemy_buffer_staging_required",
-		"红墙倒塌后黑子仍不得从战区直接攻击红方大本营")
-	_place(black_attack, "black-rook-1", Vector2i(5, 5))
-	var mirrored_staged_capture: Dictionary = MoveRules.evaluate_move(
-		black_attack, _move("black-rook-1", Vector2i(5, 3)), MatchState.BLACK
+	_expect_headquarters_entry_accepted(
+		_headquarters_entry_state(8516, MatchState.RED, Vector2i(5, 20)),
+		MatchState.RED, "red-rook-1", Vector2i(5, 22), "",
+		"红方已在黑方缓冲区后进入大本营空点"
 	)
-	_expect(mirrored_staged_capture.get("legal", false),
-		"黑子先进入红方缓冲区后应能攻击红方大本营")
+	_expect_headquarters_entry_accepted(
+		_headquarters_entry_state(8517, MatchState.BLACK, Vector2i(5, 5), "red-pawn-1"),
+		MatchState.BLACK, "black-rook-1", Vector2i(5, 3), "red-pawn-1",
+		"黑方已在红方缓冲区后进入大本营吃子"
+	)
+	_expect_headquarters_entry_accepted(
+		_headquarters_entry_state(8518, MatchState.BLACK, Vector2i(5, 5)),
+		MatchState.BLACK, "black-rook-1", Vector2i(5, 3), "",
+		"黑方已在红方缓冲区后进入大本营空点"
+	)
+
+	var hidden_field: Dictionary = _headquarters_entry_state(
+		8519, MatchState.RED, Vector2i(5, 16)
+	)
+	hidden_field["vision_sources"][MatchState.BLACK]["elephant_block_fields"] \
+		["black-elephant-1"] = [
+			[4, 17], [5, 17], [6, 17],
+			[4, 18], [5, 18], [6, 18],
+			[4, 19], [5, 19], [6, 19],
+		]
+	var hidden_intent: Dictionary = _move("red-rook-1", Vector2i(5, 22))
+	var hidden_evaluation: Dictionary = MoveRules.evaluate_move(
+		hidden_field, hidden_intent, MatchState.RED,
+		Projector.visibility_context(hidden_field, MatchState.RED)
+	)
+	var hidden_preview: Dictionary = Projector.preview_intent(
+		Projector.project(hidden_field, MatchState.RED), hidden_intent
+	)
+	var hidden_submit: Dictionary = RuleEngine.submit_action(hidden_field, hidden_intent)
+	_expect(not hidden_evaluation.get("legal", false) \
+		and hidden_evaluation.get("reason", "") == "enemy_buffer_staging_required" \
+		and not hidden_evaluation.get("elephant_field_intercepted", false),
+		"公开缓冲区前置判定必须先于隐藏相田字格阻挡解析")
+	_expect(hidden_preview.get("classification", "") == Projector.KNOWN_ILLEGAL \
+		and not hidden_submit.get("consumed", true),
+		"隐藏相田不得把公开前置拒绝降级为TENTATIVE或消耗行动")
+
+
+static func _headquarters_entry_state(
+	seed_value: int,
+	actor_side: String,
+	origin: Vector2i,
+	target_piece_id: String = ""
+) -> Dictionary:
+	var state: Dictionary = _empty_state(seed_value)
+	var enemy_side: String = MatchState.opponent(actor_side)
+	state["walls"][enemy_side]["status"] = "BREACHED"
+	var rook_id: String = "red-rook-1" if actor_side == MatchState.RED else "black-rook-1"
+	var target: Vector2i = Vector2i(5, 22) if actor_side == MatchState.RED else Vector2i(5, 3)
+	_place(state, rook_id, origin)
+	if not target_piece_id.is_empty():
+		_place(state, target_piece_id, target)
+	state["active_side"] = actor_side
+	return state
+
+
+static func _expect_headquarters_entry_rejected(
+	state: Dictionary,
+	actor_side: String,
+	rook_id: String,
+	origin: Vector2i,
+	target: Vector2i,
+	target_piece_id: String,
+	description: String
+) -> void:
+	var intent: Dictionary = _move(rook_id, target)
+	var evaluation: Dictionary = MoveRules.evaluate_move(
+		state, intent, actor_side, Projector.visibility_context(state, actor_side)
+	)
+	var preview: Dictionary = Projector.preview_intent(Projector.project(state, actor_side), intent)
+	var submit: Dictionary = RuleEngine.submit_action(state, intent)
+	var target_unchanged: bool = MatchState.piece_at(state, target).is_empty() \
+		if target_piece_id.is_empty() else state["pieces"][target_piece_id]["alive"]
+	_expect(not evaluation.get("legal", false) \
+		and evaluation.get("reason", "") == "enemy_buffer_staging_required",
+		"%s：统一合法性入口应返回enemy_buffer_staging_required" % description)
+	_expect(preview.get("classification", "") == Projector.KNOWN_ILLEGAL \
+		and preview.get("error", {}).get("code", "") == "known_illegal",
+		"%s：PlayerView preview应公开判为KNOWN_ILLEGAL" % description)
+	_expect(not submit.get("consumed", true) \
+		and submit.get("error", {}).get("code", "") == "visible_rule_rejection" \
+		and Canonical.coordinate(state["pieces"][rook_id]["position"]) == origin \
+		and target_unchanged,
+		"%s：submit应同语义拒绝、不消费且不改变棋盘" % description)
+
+
+static func _expect_headquarters_entry_accepted(
+	state: Dictionary,
+	actor_side: String,
+	rook_id: String,
+	target: Vector2i,
+	target_piece_id: String,
+	description: String
+) -> void:
+	var intent: Dictionary = _move(rook_id, target)
+	var evaluation: Dictionary = MoveRules.evaluate_move(
+		state, intent, actor_side, Projector.visibility_context(state, actor_side)
+	)
+	var preview: Dictionary = Projector.preview_intent(Projector.project(state, actor_side), intent)
+	var submit: Dictionary = RuleEngine.submit_action(state, intent)
+	var capture_resolved: bool = true if target_piece_id.is_empty() \
+		else not state["pieces"][target_piece_id]["alive"]
+	_expect(evaluation.get("legal", false),
+		"%s：统一合法性入口应允许已完成缓冲区前置的行动" % description)
+	_expect(preview.get("classification", "") != Projector.KNOWN_ILLEGAL,
+		"%s：PlayerView preview不得以公开前置条件拒绝；迷雾不确定时可保留TENTATIVE" % description)
+	_expect(submit.get("consumed", false) \
+		and Canonical.coordinate(state["pieces"][rook_id]["position"]) == target \
+		and capture_resolved,
+		"%s：submit应同语义接受并完成结算" % description)
 
 
 static func _test_elephant_field_blocks_enemy_pawn_and_exposes_overlays() -> void:
