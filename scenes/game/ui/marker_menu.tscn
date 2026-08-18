@@ -1,6 +1,9 @@
-[gd_scene format=3]
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/presentation/marker_menu.gd" id="1_script"]
 
 [node name="MarkerMenu" type="PopupPanel"]
+script = ExtResource("1_script")
 size = Vector2i(248, 64)
 
 [node name="Choices" type="HBoxContainer" parent="."]

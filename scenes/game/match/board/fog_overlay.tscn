@@ -1,12 +1,9 @@
-[gd_scene format=3]
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/presentation/board/fog_overlay.gd" id="1_script"]
 
 [node name="FogOverlay" type="Control"]
+script = ExtResource("1_script")
 mouse_filter = 2
 offset_right = 1152.0
 offset_bottom = 3072.0
-
-[node name="FogMask" type="ColorRect" parent="."]
-mouse_filter = 2
-offset_right = 1152.0
-offset_bottom = 3072.0
-color = Color(0.015, 0.02, 0.03, 0.72)

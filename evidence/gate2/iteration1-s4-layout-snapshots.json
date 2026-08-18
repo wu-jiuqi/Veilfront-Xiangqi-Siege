@@ -1,0 +1,65 @@
+{
+	"schema_version": "veilfront-layout-snapshot-v1",
+	"snapshots": [
+		{
+			"board_rect": [
+				16.0,
+				90.0,
+				928.0,
+				380.0
+			],
+			"compact": true,
+			"main_button_min_height": 44.0,
+			"main_buttons_inside": true,
+			"point_spacing": [
+				100.222221374512,
+				100.222221374512
+			],
+			"resolution": [
+				960,
+				540
+			],
+			"screenshot": "res://evidence/gate2/i1-s4-960x540.png"
+		},
+		{
+			"board_rect": [
+				16.0,
+				90.0,
+				936.0,
+				560.0
+			],
+			"compact": false,
+			"main_button_min_height": 44.0,
+			"main_buttons_inside": true,
+			"point_spacing": [
+				101.111114501953,
+				101.111114501953
+			],
+			"resolution": [
+				1280,
+				720
+			],
+			"screenshot": "res://evidence/gate2/i1-s4-1280x720.png"
+		},
+		{
+			"board_rect": [
+				16.0,
+				90.0,
+				1576.0,
+				920.0
+			],
+			"compact": false,
+			"main_button_min_height": 44.0,
+			"main_buttons_inside": true,
+			"point_spacing": [
+				172.222229003906,
+				172.222229003906
+			],
+			"resolution": [
+				1920,
+				1080
+			],
+			"screenshot": "res://evidence/gate2/i1-s4-1920x1080.png"
+		}
+	]
+}

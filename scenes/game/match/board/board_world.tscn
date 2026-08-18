@@ -1,13 +1,25 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=17 format=3]
 
 [ext_resource type="Resource" path="res://resources/game/content/boards/ancient_battlefield_board_theme.tres" id="1_theme"]
 [ext_resource type="PackedScene" path="res://scenes/game/match/board/fog_overlay.tscn" id="2_fog"]
 [ext_resource type="PackedScene" path="res://scenes/game/match/board/marker_overlay.tscn" id="3_marker"]
 [ext_resource type="PackedScene" path="res://scenes/game/match/board/tactical_overlay.tscn" id="4_tactical"]
 [ext_resource type="PackedScene" path="res://scenes/game/match/board/interaction_overlay.tscn" id="5_interaction"]
+[ext_resource type="Script" path="res://scripts/game/presentation/board/board_world.gd" id="6_world_script"]
+[ext_resource type="Script" path="res://scripts/game/presentation/board/grid_renderer.gd" id="7_grid_script"]
+[ext_resource type="Script" path="res://scripts/game/presentation/board/piece_renderer.gd" id="8_piece_script"]
+[ext_resource type="Script" path="res://scripts/game/presentation/board/wall_renderer.gd" id="9_wall_script"]
+[ext_resource type="Script" path="res://scripts/game/presentation/board/flag_renderer.gd" id="10_flag_script"]
+[ext_resource type="Script" path="res://scripts/game/presentation/board/capture_ghost_renderer.gd" id="11_ghost_script"]
+[ext_resource type="Script" path="res://scripts/game/presentation/board/board_input_surface.gd" id="12_input_script"]
+[ext_resource type="PackedScene" path="res://scenes/game/match/board/piece_view.tscn" id="13_piece_scene"]
+[ext_resource type="PackedScene" path="res://scenes/game/match/board/wall_view.tscn" id="14_wall_scene"]
+[ext_resource type="PackedScene" path="res://scenes/game/match/board/flag_view.tscn" id="15_flag_scene"]
+[ext_resource type="PackedScene" path="res://scenes/game/match/board/capture_ghost_view.tscn" id="16_ghost_scene"]
 
 [node name="BoardWorld" type="Node2D"]
-metadata/_board_theme = ExtResource("1_theme")
+script = ExtResource("6_world_script")
+board_theme = ExtResource("1_theme")
 
 [node name="TerrainLayer" type="TileMapLayer" parent="."]
 
@@ -16,22 +28,31 @@ metadata/_board_theme = ExtResource("1_theme")
 [node name="DecalLayer" type="TileMapLayer" parent="."]
 
 [node name="GridRenderer" type="Node2D" parent="."]
+script = ExtResource("7_grid_script")
 
 [node name="PieceLayer" type="Node2D" parent="."]
+script = ExtResource("8_piece_script")
+piece_scene = ExtResource("13_piece_scene")
 
 [node name="FogOverlay" parent="." instance=ExtResource("2_fog")]
 
 [node name="StructureLayer" type="Node2D" parent="."]
 
 [node name="WallViews" type="Node2D" parent="StructureLayer"]
+script = ExtResource("9_wall_script")
+wall_scene = ExtResource("14_wall_scene")
 
 [node name="IntelLayer" type="Node2D" parent="."]
 
 [node name="FlagViews" type="Node2D" parent="IntelLayer"]
+script = ExtResource("10_flag_script")
+flag_scene = ExtResource("15_flag_scene")
 
 [node name="ContactViews" type="Node2D" parent="IntelLayer"]
 
 [node name="CaptureGhostLayer" type="Node2D" parent="."]
+script = ExtResource("11_ghost_script")
+ghost_scene = ExtResource("16_ghost_scene")
 
 [node name="MarkerOverlay" parent="." instance=ExtResource("3_marker")]
 
@@ -42,6 +63,7 @@ metadata/_board_theme = ExtResource("1_theme")
 [node name="EffectLayer" type="Node2D" parent="."]
 
 [node name="InputSurface" type="Control" parent="."]
+script = ExtResource("12_input_script")
 focus_mode = 2
 offset_right = 1152.0
 offset_bottom = 3072.0
