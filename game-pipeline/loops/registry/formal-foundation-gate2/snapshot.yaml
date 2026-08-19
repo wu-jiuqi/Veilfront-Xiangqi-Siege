@@ -73,13 +73,13 @@ registry_snapshot:
       - GATE-2
   runtime:
     current_state: active
-    state_entered_at: '2026-08-18T13:00:42.841528+08:00'
-    current_iteration: 1
-    last_transition_id: TR-READY-ACTIVE
-    last_event_id: 5cecf174-6e40-493e-92b1-27a6faae5bc5
-    last_event_digest: 094ba146708df92454e9c73379c1824db18d3be44b70bad638cb1da304c4dbea
-    last_event_sequence: 14
-    record_revision: 14
+    state_entered_at: '2026-08-19T15:14:38.816327+08:00'
+    current_iteration: 3
+    last_transition_id: TR-REVIEW-ACTIVE
+    last_event_id: 7399fd98-50ea-4626-8cca-a4203b100a44
+    last_event_digest: 4fded39d3ce6623cc3fdf39706dba0619c96dbaa50e4178f0d8fe2bf4e5ce4d3
+    last_event_sequence: 23
+    record_revision: 23
   budget:
     limits:
       iteration_limit: 4
@@ -171,12 +171,73 @@ registry_snapshot:
       source_loop_id: null
       bound_by_event_id: ac4606b6-a496-470d-8d31-bbbb6499550e
       bound_at: '2026-08-18T13:00:42.841528+08:00'
-    outputs: []
+    outputs:
+    - deliverable_id: DELIVERABLE-ARCH-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:deliverable-arch-001@iteration1
+        artifact_type: approved-formal-architecture-baseline
+        version: iteration1
+        uri: docs/godot-prompter/specs/formal-godot-scene-composition-v1.md
+        digest:
+          algorithm: sha256
+          value: 26532200c5af5bda899e5b8eb1048e89d352a5713bb2c3d1ed839d63d6c9e488
+        manifest_paths:
+        - docs/godot-prompter/specs/formal-godot-scene-composition-v1.md
+      status: accepted_for_iteration_progression
+      registered_by_event_id: d7f6f609-d143-40bb-a59e-7c929e850749
+      registered_at: '2026-08-19T15:14:38.816327+08:00'
+    - deliverable_id: DELIVERABLE-PRESENTATION-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:deliverable-presentation-001@iteration1
+        artifact_type: preset-godot-match-shell
+        version: iteration1
+        uri: scenes/game/app/game_app.tscn
+        digest:
+          algorithm: sha256
+          value: b31a3fe65e3be1bbe523f8998a5a389a465625a4a01ab5a981256e5f1f195625
+        manifest_paths:
+        - scenes/game/app/game_app.tscn
+      status: accepted_for_iteration_progression
+      registered_by_event_id: 1e983f27-d81f-466b-b3ea-bd9e5046dfd8
+      registered_at: '2026-08-19T15:14:38.816327+08:00'
+    - deliverable_id: DELIVERABLE-MIGRATION-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:deliverable-migration-001@r3-owner-exception
+        artifact_type: behavior-preserving-formal-core
+        version: r3-owner-exception
+        uri: evidence/gate2/iteration2-core-migration-remediation-r3-v1.md
+        digest:
+          algorithm: sha256
+          value: 0561db144a21a819983fba7c717c9330b0f99178aea361b59d3984b097a93ff6
+        manifest_paths:
+        - evidence/gate2/iteration2-core-migration-remediation-r3-v1.md
+      status: accepted_for_iteration_progression
+      registered_by_event_id: f78a03ae-b8ce-4908-8a9f-fdf07e403446
+      registered_at: '2026-08-19T15:14:38.816327+08:00'
+    - deliverable_id: DELIVERABLE-QA-002
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:deliverable-qa-002@r3-producer-evidence
+        artifact_type: iteration2-regression-evidence
+        version: r3-producer-evidence
+        uri: evidence/gate2/iteration2-core-migration-remediation-r3-v1.md
+        digest:
+          algorithm: sha256
+          value: 0561db144a21a819983fba7c717c9330b0f99178aea361b59d3984b097a93ff6
+        manifest_paths:
+        - evidence/gate2/iteration2-core-migration-remediation-r3-v1.md
+      status: accepted_for_iteration_progression
+      registered_by_event_id: 2a00cf71-fbf2-48b7-95d5-64b19430027b
+      registered_at: '2026-08-19T15:14:38.816327+08:00'
   acceptance_snapshot:
-    subject_digest: null
+    subject_digest: 02fe226f664f1c903ca37fcf8afe7694c4abe61519bb636d921c49c1d03f9a83
     automated_checks: []
     professional_reviews: []
-    human_gates: []
+    human_gates:
+    - gate_id: OWNER-ITERATION2-R4
+      decision: accepted_with_sampling_exception
+      evidence_ref: evidence/gate2/iteration2-owner-decision-r4.md
+      1000_seed: cancelled_not_passed
+      independent_reviews: deferred
     final_handoff_ref: null
   interruption: null
   pending_approvals: []

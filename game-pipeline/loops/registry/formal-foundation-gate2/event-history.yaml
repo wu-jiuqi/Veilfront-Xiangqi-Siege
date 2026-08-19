@@ -625,3 +625,365 @@ event_history:
     digest_algorithm: sha256
     previous_event_digest: b66c63dc35d9cbf0560abaf26ea909ebe53fc7564f74497c6b27ecb827277a15
     event_digest: 094ba146708df92454e9c73379c1824db18d3be44b70bad638cb1da304c4dbea
+- schema_version: '0.1'
+  event_id: 50388cd4-132c-488a-8ed2-4a18f533c681
+  mutation_id: 2ff2600f-ea71-4ab1-82dd-bbd9c4ecc768
+  loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+  sequence: 15
+  event_type: core.acceptance_recorded
+  occurred_at: '2026-08-19T15:14:38.816327+08:00'
+  recorded_at: '2026-08-19T15:14:38.816327+08:00'
+  actor: &id002
+    actor_id: inst:01M02M6X3Q8YWJXHY52K3V5AR2
+    role: pos:veilfront-xiangqi-siege:root:project-manager
+    authority_id: AUTH-VEILFRONT-PROJECT-MANAGER
+  causality:
+    correlation_id: 85ee14fb-9c33-45a1-b7b5-6f7cbf623862
+    causation_event_id: 5cecf174-6e40-493e-92b1-27a6faae5bc5
+    request_id: record-owner-iteration2-r4-decision
+  concurrency:
+    expected_record_revision: 14
+    resulting_record_revision: 15
+  binding_snapshot:
+    contract_digest: a26a9b3fdb0d8d06e42a06833a84455d911fea8f72bcedec59d0ae5e620cc205
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    acceptance_kind: owner_iteration_exception
+    record_id: OWNER-DECISION-ITERATION2-R4
+    subject_digest: 02fe226f664f1c903ca37fcf8afe7694c4abe61519bb636d921c49c1d03f9a83
+    record:
+      decision: accepted_with_sampling_exception
+      independent_review_status: deferred_not_approved
+      1000_seed_status: cancelled_by_project_owner_not_passed
+      scope: iteration-2-r3
+  evidence_refs:
+  - evidence/gate2/iteration2-owner-decision-r4.md
+  - evidence/gate2/iteration2-core-migration-remediation-r3-v1.md
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: 094ba146708df92454e9c73379c1824db18d3be44b70bad638cb1da304c4dbea
+    event_digest: c4c9fda8cc1c96032065b2197fb3d4b5b134cce201966f9454cc5a1d97d7251b
+- schema_version: '0.1'
+  event_id: d7f6f609-d143-40bb-a59e-7c929e850749
+  mutation_id: 37fe4249-90b2-4292-bf15-3900dca5e1a1
+  loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+  sequence: 16
+  event_type: core.output_registered
+  occurred_at: '2026-08-19T15:14:38.816327+08:00'
+  recorded_at: '2026-08-19T15:14:38.816327+08:00'
+  actor: *id002
+  causality:
+    correlation_id: 85ee14fb-9c33-45a1-b7b5-6f7cbf623862
+    causation_event_id: 50388cd4-132c-488a-8ed2-4a18f533c681
+    request_id: register-DELIVERABLE-ARCH-001-iteration1
+  concurrency:
+    expected_record_revision: 15
+    resulting_record_revision: 16
+  binding_snapshot:
+    contract_digest: a26a9b3fdb0d8d06e42a06833a84455d911fea8f72bcedec59d0ae5e620cc205
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    deliverable_id: DELIVERABLE-ARCH-001
+    before: null
+    after:
+      deliverable_id: DELIVERABLE-ARCH-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:deliverable-arch-001@iteration1
+        artifact_type: approved-formal-architecture-baseline
+        version: iteration1
+        uri: docs/godot-prompter/specs/formal-godot-scene-composition-v1.md
+        digest:
+          algorithm: sha256
+          value: 26532200c5af5bda899e5b8eb1048e89d352a5713bb2c3d1ed839d63d6c9e488
+        manifest_paths:
+        - docs/godot-prompter/specs/formal-godot-scene-composition-v1.md
+      status: accepted_for_iteration_progression
+      registered_by_event_id: d7f6f609-d143-40bb-a59e-7c929e850749
+      registered_at: '2026-08-19T15:14:38.816327+08:00'
+  evidence_refs:
+  - docs/godot-prompter/specs/formal-godot-scene-composition-v1.md
+  - evidence/gate2/iteration1-completion-handoff-v1.md
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: c4c9fda8cc1c96032065b2197fb3d4b5b134cce201966f9454cc5a1d97d7251b
+    event_digest: 681378aa3b8978b74bf2c9eac5a29eb67938471a4b8e8f755688c2217b0ac198
+- schema_version: '0.1'
+  event_id: 1e983f27-d81f-466b-b3ea-bd9e5046dfd8
+  mutation_id: 3dcfd048-9e9f-4c53-aa12-b8550b8774b7
+  loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+  sequence: 17
+  event_type: core.output_registered
+  occurred_at: '2026-08-19T15:14:38.816327+08:00'
+  recorded_at: '2026-08-19T15:14:38.816327+08:00'
+  actor: *id002
+  causality:
+    correlation_id: 85ee14fb-9c33-45a1-b7b5-6f7cbf623862
+    causation_event_id: d7f6f609-d143-40bb-a59e-7c929e850749
+    request_id: register-DELIVERABLE-PRESENTATION-001-iteration1
+  concurrency:
+    expected_record_revision: 16
+    resulting_record_revision: 17
+  binding_snapshot:
+    contract_digest: a26a9b3fdb0d8d06e42a06833a84455d911fea8f72bcedec59d0ae5e620cc205
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    deliverable_id: DELIVERABLE-PRESENTATION-001
+    before: null
+    after:
+      deliverable_id: DELIVERABLE-PRESENTATION-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:deliverable-presentation-001@iteration1
+        artifact_type: preset-godot-match-shell
+        version: iteration1
+        uri: scenes/game/app/game_app.tscn
+        digest:
+          algorithm: sha256
+          value: b31a3fe65e3be1bbe523f8998a5a389a465625a4a01ab5a981256e5f1f195625
+        manifest_paths:
+        - scenes/game/app/game_app.tscn
+      status: accepted_for_iteration_progression
+      registered_by_event_id: 1e983f27-d81f-466b-b3ea-bd9e5046dfd8
+      registered_at: '2026-08-19T15:14:38.816327+08:00'
+  evidence_refs:
+  - scenes/game/app/game_app.tscn
+  - evidence/gate2/iteration1-completion-handoff-v1.md
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: 681378aa3b8978b74bf2c9eac5a29eb67938471a4b8e8f755688c2217b0ac198
+    event_digest: 1539f2ab57d1cb4fd36692e2567dd50a7630e129df050435a6e57b2c96ace2f1
+- schema_version: '0.1'
+  event_id: a508eab4-0848-4ce1-90bf-111aa2f42f24
+  mutation_id: ed637f00-28d1-4312-8cea-11791a485081
+  loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+  sequence: 18
+  event_type: core.state_transitioned
+  occurred_at: '2026-08-19T15:14:38.816327+08:00'
+  recorded_at: '2026-08-19T15:14:38.816327+08:00'
+  actor: *id002
+  causality:
+    correlation_id: 85ee14fb-9c33-45a1-b7b5-6f7cbf623862
+    causation_event_id: 1e983f27-d81f-466b-b3ea-bd9e5046dfd8
+    request_id: complete-iteration-1-architecture
+  concurrency:
+    expected_record_revision: 17
+    resulting_record_revision: 18
+  binding_snapshot:
+    contract_digest: a26a9b3fdb0d8d06e42a06833a84455d911fea8f72bcedec59d0ae5e620cc205
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    transition_id: TR-ACTIVE-REVIEW
+    from_state: active
+    to_state: review
+    iteration:
+      before: 1
+      after: 1
+    reason: iteration_1_architecture_and_shell_owner_accepted
+    subject_digest: 4e9223f22d4dafd89d7e99cadaf46ddfe5db74f01f8646929082af8ea0701566
+  evidence_refs:
+  - evidence/gate2/iteration1-completion-handoff-v1.md
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: 1539f2ab57d1cb4fd36692e2567dd50a7630e129df050435a6e57b2c96ace2f1
+    event_digest: 08fae940e274c4c024db9783a34bc84217e3e6b3c96d09c48bba0dbeab84ffc1
+- schema_version: '0.1'
+  event_id: 20ebf28f-7e56-4ec2-9d9d-7c8289f9bc5f
+  mutation_id: eae8a9b6-65f8-40ca-819a-7d9fa5c3fcfb
+  loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+  sequence: 19
+  event_type: core.state_transitioned
+  occurred_at: '2026-08-19T15:14:38.816327+08:00'
+  recorded_at: '2026-08-19T15:14:38.816327+08:00'
+  actor: *id002
+  causality:
+    correlation_id: 85ee14fb-9c33-45a1-b7b5-6f7cbf623862
+    causation_event_id: a508eab4-0848-4ce1-90bf-111aa2f42f24
+    request_id: start-iteration-2-core-migration
+  concurrency:
+    expected_record_revision: 18
+    resulting_record_revision: 19
+  binding_snapshot:
+    contract_digest: a26a9b3fdb0d8d06e42a06833a84455d911fea8f72bcedec59d0ae5e620cc205
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    transition_id: TR-REVIEW-ACTIVE
+    from_state: review
+    to_state: active
+    iteration:
+      before: 1
+      after: 2
+    reason: start_iteration_2_core_migration_owner_authorized
+    subject_digest: 0561db144a21a819983fba7c717c9330b0f99178aea361b59d3984b097a93ff6
+  evidence_refs:
+  - evidence/gate2/iteration2-core-migration-remediation-r3-v1.md
+  - evidence/gate2/iteration2-owner-decision-r4.md
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: 08fae940e274c4c024db9783a34bc84217e3e6b3c96d09c48bba0dbeab84ffc1
+    event_digest: ba9119d69557b7bd2af451ea895f09c0f00c9ef16db0ac8e746fa3f084e7d68c
+- schema_version: '0.1'
+  event_id: f78a03ae-b8ce-4908-8a9f-fdf07e403446
+  mutation_id: b3923a3a-024e-4516-91fa-0272629593ec
+  loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+  sequence: 20
+  event_type: core.output_registered
+  occurred_at: '2026-08-19T15:14:38.816327+08:00'
+  recorded_at: '2026-08-19T15:14:38.816327+08:00'
+  actor: *id002
+  causality:
+    correlation_id: 85ee14fb-9c33-45a1-b7b5-6f7cbf623862
+    causation_event_id: 20ebf28f-7e56-4ec2-9d9d-7c8289f9bc5f
+    request_id: register-DELIVERABLE-MIGRATION-001-iteration2-r3
+  concurrency:
+    expected_record_revision: 19
+    resulting_record_revision: 20
+  binding_snapshot:
+    contract_digest: a26a9b3fdb0d8d06e42a06833a84455d911fea8f72bcedec59d0ae5e620cc205
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    deliverable_id: DELIVERABLE-MIGRATION-001
+    before: null
+    after:
+      deliverable_id: DELIVERABLE-MIGRATION-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:deliverable-migration-001@r3-owner-exception
+        artifact_type: behavior-preserving-formal-core
+        version: r3-owner-exception
+        uri: evidence/gate2/iteration2-core-migration-remediation-r3-v1.md
+        digest:
+          algorithm: sha256
+          value: 0561db144a21a819983fba7c717c9330b0f99178aea361b59d3984b097a93ff6
+        manifest_paths:
+        - evidence/gate2/iteration2-core-migration-remediation-r3-v1.md
+      status: accepted_for_iteration_progression
+      registered_by_event_id: f78a03ae-b8ce-4908-8a9f-fdf07e403446
+      registered_at: '2026-08-19T15:14:38.816327+08:00'
+  evidence_refs:
+  - evidence/gate2/iteration2-core-migration-remediation-r3-v1.md
+  - evidence/gate2/iteration2-owner-decision-r4.md
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: ba9119d69557b7bd2af451ea895f09c0f00c9ef16db0ac8e746fa3f084e7d68c
+    event_digest: e132e00a75e740586f3644f3128d44a2fa5ff70750509e35f66a622e82eceb3f
+- schema_version: '0.1'
+  event_id: 2a00cf71-fbf2-48b7-95d5-64b19430027b
+  mutation_id: 8f707d50-c8cd-45d5-9ad8-cb3ff8f01017
+  loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+  sequence: 21
+  event_type: core.output_registered
+  occurred_at: '2026-08-19T15:14:38.816327+08:00'
+  recorded_at: '2026-08-19T15:14:38.816327+08:00'
+  actor: *id002
+  causality:
+    correlation_id: 85ee14fb-9c33-45a1-b7b5-6f7cbf623862
+    causation_event_id: f78a03ae-b8ce-4908-8a9f-fdf07e403446
+    request_id: register-DELIVERABLE-QA-002-iteration2-r3
+  concurrency:
+    expected_record_revision: 20
+    resulting_record_revision: 21
+  binding_snapshot:
+    contract_digest: a26a9b3fdb0d8d06e42a06833a84455d911fea8f72bcedec59d0ae5e620cc205
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    deliverable_id: DELIVERABLE-QA-002
+    before: null
+    after:
+      deliverable_id: DELIVERABLE-QA-002
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:deliverable-qa-002@r3-producer-evidence
+        artifact_type: iteration2-regression-evidence
+        version: r3-producer-evidence
+        uri: evidence/gate2/iteration2-core-migration-remediation-r3-v1.md
+        digest:
+          algorithm: sha256
+          value: 0561db144a21a819983fba7c717c9330b0f99178aea361b59d3984b097a93ff6
+        manifest_paths:
+        - evidence/gate2/iteration2-core-migration-remediation-r3-v1.md
+      status: accepted_for_iteration_progression
+      registered_by_event_id: 2a00cf71-fbf2-48b7-95d5-64b19430027b
+      registered_at: '2026-08-19T15:14:38.816327+08:00'
+  evidence_refs:
+  - evidence/gate2/iteration2-core-migration-remediation-r3-v1.md
+  - evidence/gate2/iteration2-owner-decision-r4.md
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: e132e00a75e740586f3644f3128d44a2fa5ff70750509e35f66a622e82eceb3f
+    event_digest: a668abc2d803a9a725776bf02b2d7347eca3cd1808d3ceb12fbbdafe529cf19e
+- schema_version: '0.1'
+  event_id: 940b6adc-f8a2-4946-80ba-c261b3db5114
+  mutation_id: e055ee73-e1f4-4ecc-b4d3-59dc8890ac12
+  loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+  sequence: 22
+  event_type: core.state_transitioned
+  occurred_at: '2026-08-19T15:14:38.816327+08:00'
+  recorded_at: '2026-08-19T15:14:38.816327+08:00'
+  actor: *id002
+  causality:
+    correlation_id: 85ee14fb-9c33-45a1-b7b5-6f7cbf623862
+    causation_event_id: 2a00cf71-fbf2-48b7-95d5-64b19430027b
+    request_id: complete-iteration-2-core-migration-owner-decision
+  concurrency:
+    expected_record_revision: 21
+    resulting_record_revision: 22
+  binding_snapshot:
+    contract_digest: a26a9b3fdb0d8d06e42a06833a84455d911fea8f72bcedec59d0ae5e620cc205
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    transition_id: TR-ACTIVE-REVIEW
+    from_state: active
+    to_state: review
+    iteration:
+      before: 2
+      after: 2
+    reason: iteration_2_core_migration_owner_accepted_with_1000_seed_exception
+    subject_digest: 0561db144a21a819983fba7c717c9330b0f99178aea361b59d3984b097a93ff6
+  evidence_refs:
+  - evidence/gate2/iteration2-core-migration-remediation-r3-v1.md
+  - evidence/gate2/iteration2-owner-decision-r4.md
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: a668abc2d803a9a725776bf02b2d7347eca3cd1808d3ceb12fbbdafe529cf19e
+    event_digest: ff3c38939416635ab8bea9335d0d04df7d11cb1899d7495f8218def43578aeb7
+- schema_version: '0.1'
+  event_id: 7399fd98-50ea-4626-8cca-a4203b100a44
+  mutation_id: 20f1e68b-74bb-45f8-9559-da7b1b0dae63
+  loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+  sequence: 23
+  event_type: core.state_transitioned
+  occurred_at: '2026-08-19T15:14:38.816327+08:00'
+  recorded_at: '2026-08-19T15:14:38.816327+08:00'
+  actor: *id002
+  causality:
+    correlation_id: 85ee14fb-9c33-45a1-b7b5-6f7cbf623862
+    causation_event_id: 940b6adc-f8a2-4946-80ba-c261b3db5114
+    request_id: start-iteration-3-tutorial-visual
+  concurrency:
+    expected_record_revision: 22
+    resulting_record_revision: 23
+  binding_snapshot:
+    contract_digest: a26a9b3fdb0d8d06e42a06833a84455d911fea8f72bcedec59d0ae5e620cc205
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    transition_id: TR-REVIEW-ACTIVE
+    from_state: review
+    to_state: active
+    iteration:
+      before: 2
+      after: 3
+    reason: start_iteration_3_tutorial_visual_owner_authorized
+    subject_digest: 813ceeef12ab7c22a2f38114f1de3c1d1abcc62199d33f7ffc07defb2e5a0a55
+  evidence_refs:
+  - docs/godot-prompter/specs/2026-08-19-main-menu-and-level-mode-design.md
+  - evidence/gate2/iteration2-owner-decision-r4.md
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: ff3c38939416635ab8bea9335d0d04df7d11cb1899d7495f8218def43578aeb7
+    event_digest: 4fded39d3ce6623cc3fdf39706dba0619c96dbaa50e4178f0d8fe2bf4e5ce4d3
