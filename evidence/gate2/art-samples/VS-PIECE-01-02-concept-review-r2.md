@@ -1,6 +1,6 @@
 # VS-PIECE-01/02金属兵马俑步兵概念样片R2
 
-状态：`candidate / awaiting_project_owner_visual_review / runtime_alpha_not_started`
+状态：`partially_superseded / black_r2_current / red_r2_superseded_by_r3`
 
 生成方式：Codex内置`image_gen`，每个资产单独生成；未使用CLI/API回退。
 
@@ -21,6 +21,7 @@
   - SHA-256：`3036d39c951ef3e747c2139a1db040623db9b8bdfc26393aa97fc5487af9c4d6`
 - 两张均为`1024×1536 / Format24bppRgb`，使用浅灰概念审查背景，不是运行时透明纹理。
 - R1保留为被本次方向修订取代的历史概念，不删除、不冒充当前方案。
+- 红方土黄钨钢R2随后被银白钨钢R3取代；黑方墨绿青铜R2仍为当前候选。
 
 ## 初审
 

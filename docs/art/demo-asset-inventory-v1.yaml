@@ -108,9 +108,11 @@ asset_inventory:
       runtime_spec: Sprite3D静态样片
       dependencies: [ART-PIECE-SHADOW, ART-PIECE-BASE]
       phase: preproduction_sample
-      status: concept_r2_awaiting_owner_review
-      evidence: evidence/gate2/art-samples/VS-PIECE-01-02-concept-review-r2.md
-      known_issue: R2已按金属兵马俑、光滑面具、盾面金色小篆风格兵字和红黑新材质重做；当前仍为浅灰背景概念图，需项目所有者审美确认、真实Alpha版本和棋盘内可读性复核。
+      status: red_r3_black_r2_awaiting_owner_review
+      evidence:
+      - evidence/gate2/art-samples/VS-PIECE-01-red-silver-tungsten-review-r3.md
+      - evidence/gate2/art-samples/VS-PIECE-01-02-concept-review-r2.md
+      known_issue: 红方已由土黄钨钢R2修订为银白钨钢R3，黑方保持墨绿青铜R2；当前仍为浅灰背景概念图，需项目所有者审美确认、真实Alpha版本和棋盘内可读性复核。
       acceptance: 近中远距离可读，透明边缘无白边，前后遮挡稳定
     - id: ART-PIECE-SAMPLE-CAVALRY
       name: 红黑骑兵样片
