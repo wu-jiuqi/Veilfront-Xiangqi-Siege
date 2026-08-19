@@ -195,7 +195,11 @@ static func compare_records(expected: Dictionary, actual: Dictionary) -> Array[S
 	return failures
 
 
-static func compare_live(seed_value: int, round_limit: int = DEFAULT_ROUND_LIMIT) -> Dictionary:
+static func compare_live(
+	seed_value: int,
+	round_limit: int = DEFAULT_ROUND_LIMIT,
+	_source_preview_mutation: String = ""
+) -> Dictionary:
 	var configuration: Dictionary = {"full_round_limit_hypothesis": round_limit}
 	var source_state: Dictionary = ProtoRuleEngine.create_match(seed_value, configuration)
 	var formal_state: Dictionary = FormalRuleEngine.create_match(seed_value, configuration)
@@ -254,11 +258,18 @@ static func compare_live(seed_value: int, round_limit: int = DEFAULT_ROUND_LIMIT
 			return _live_failure(seed_value, action_offset, "state", mapped_state, formal_state)
 		if mapped_state.get("events", []) != formal_state.get("events", []):
 			return _live_failure(seed_value, action_offset, "event", mapped_state.get("events", []), formal_state.get("events", []))
-		var source_red: Dictionary = SourceMapper.player_view(source_state, "red", seed_value)
+		var next_side: String = str(source_state.get("active_side", ""))
+		var source_red_channels: Dictionary = SourceMapper.player_view_with_action_previews(
+			source_state, "red", seed_value, next_side == "red"
+		)
+		var source_red: Dictionary = source_red_channels["player_view"]
 		var formal_red: Dictionary = ObserverProjector.project_player_view(formal_state, red_context)
 		if source_red != formal_red:
 			return _live_failure(seed_value, action_offset, "red_player_view", source_red, formal_red)
-		var source_black: Dictionary = SourceMapper.player_view(source_state, "black", seed_value)
+		var source_black_channels: Dictionary = SourceMapper.player_view_with_action_previews(
+			source_state, "black", seed_value, next_side == "black"
+		)
+		var source_black: Dictionary = source_black_channels["player_view"]
 		var formal_black: Dictionary = ObserverProjector.project_player_view(formal_state, black_context)
 		if source_black != formal_black:
 			return _live_failure(seed_value, action_offset, "black_player_view", source_black, formal_black)
@@ -288,13 +299,20 @@ static func compare_live(seed_value: int, round_limit: int = DEFAULT_ROUND_LIMIT
 			formal_black, formal_black_events, formal_error,
 			FormalMatchApplication._action_previews_for_view(formal_black), action_offset + 1
 		)
+		var source_red_previews: Array = source_red_channels["action_previews"]
+		var source_black_previews: Array = source_black_channels["action_previews"]
+		if _source_preview_mutation == "drop_first" and action_offset == 0:
+			if not source_red_previews.is_empty():
+				source_red_previews.remove_at(0)
+			elif not source_black_previews.is_empty():
+				source_black_previews.remove_at(0)
 		var source_red_frame: Dictionary = FormalMatchApplication._compose_safe_frame_from_dtos(
 			source_red, source_red_events, source_error,
-			formal_red_frame["action_previews"], action_offset + 1
+			source_red_previews, action_offset + 1
 		)
 		var source_black_frame: Dictionary = FormalMatchApplication._compose_safe_frame_from_dtos(
 			source_black, source_black_events, source_error,
-			formal_black_frame["action_previews"], action_offset + 1
+			source_black_previews, action_offset + 1
 		)
 		if source_red_frame != formal_red_frame or source_black_frame != formal_black_frame:
 			return _live_failure(

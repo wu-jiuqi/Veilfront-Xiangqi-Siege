@@ -17,6 +17,26 @@ static func full_state(state: Dictionary, seed_value: int) -> Dictionary:
 
 static func player_view(state: Dictionary, side: String, seed_value: int) -> Dictionary:
 	var source: Dictionary = ProtoProjector.project(state, side)
+	return _map_player_view(source, side, seed_value)
+
+
+static func player_view_with_action_previews(
+	state: Dictionary,
+	side: String,
+	seed_value: int,
+	include_action_previews: bool
+) -> Dictionary:
+	var source: Dictionary = ProtoProjector.project(state, side)
+	var can_preview: bool = include_action_previews \
+		and not bool(source.get("terminal", false)) \
+		and str(source.get("active_side", "")) == side
+	return {
+		"player_view": _map_player_view(source, side, seed_value),
+		"action_previews": _map_action_previews(source) if can_preview else [],
+	}
+
+
+static func _map_player_view(source: Dictionary, side: String, seed_value: int) -> Dictionary:
 	var contact: Array = []
 	for intel_value: Variant in source.get("contact_intel", []):
 		var intel: Dictionary = intel_value
@@ -105,6 +125,10 @@ static func action_previews(state: Dictionary, side: String) -> Array:
 	if bool(source_view.get("terminal", false)) \
 	or str(source_view.get("active_side", "")) != side:
 		return []
+	return _map_action_previews(source_view)
+
+
+static func _map_action_previews(source_view: Dictionary) -> Array:
 	var result: Array = []
 	for source_value: Variant in ProtoProjector.generate_action_intents(source_view):
 		var source: Dictionary = source_value
