@@ -67,7 +67,7 @@ func submit_preview(preview: Dictionary) -> Dictionary:
 
 
 func should_auto_advance_opponent() -> bool:
-	return _scenario != null
+	return _scenario != null or bool(_configuration.get("scripted_opponent_pass", false))
 
 
 func advance_scripted_opponent() -> Dictionary:

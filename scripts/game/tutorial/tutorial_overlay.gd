@@ -58,6 +58,22 @@ func configure_chapter(track: TutorialPresentationTrack) -> void:
 	_tags.text = " · ".join(track.tags)
 
 
+func configure_graybox_entry(level_id: String) -> void:
+	_level_id = level_id
+	_title = "挑战灰盒入口"
+	_chapter_code.text = "%s · 测试开放" % level_id
+	_chapter_title.text = _title
+	_goal.text = "当前开放正式棋盘、棋子和基础行动链，供界面测试。"
+	_tags.text = "测试开放 · 被动对手 · 非最终挑战内容"
+	render_public_step({
+		"id": "challenge_graybox",
+		"title": "限定对手尚未迁移",
+		"prompt": "C1–C3 的孤相、双相、双马限定对手将在挑战迁移任务中接入；当前对手只会自动跳过。",
+		"step_index": 0,
+		"step_count": 1,
+	})
+
+
 func render_public_step(step: Dictionary) -> void:
 	_step_id = str(step.get("id", step.get("step_id", "")))
 	_instruction_key = str(step.get("instruction_key", ""))

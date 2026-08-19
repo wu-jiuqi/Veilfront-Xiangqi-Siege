@@ -19,7 +19,10 @@ func _ready() -> void:
 	var scenario: TutorialScenarioDefinition = TutorialChapterCatalog.authority(_level_id)
 	var presentation: TutorialPresentationTrack = TutorialChapterCatalog.presentation(_level_id)
 	if scenario == null or presentation == null:
-		push_error("TutorialLevel could not resolve chapter %s" % _level_id)
+		if _level_id in ["C1", "C2", "C3"]:
+			_bootstrap_challenge_test_entry()
+			return
+		push_error("TutorialLevel could not resolve level %s" % _level_id)
 		return
 	$ApplicationHost.trusted_tutorial_scenario = scenario
 	$TutorialDirector.configure(_level_id, presentation)
@@ -33,6 +36,28 @@ func _bootstrap_local_session(scenario: TutorialScenarioDefinition) -> void:
 		scenario,
 		{"full_round_limit_hypothesis": 50}
 	)
+	if _local_session == null:
+		push_error("TutorialLevel failed to create FormalLocalSession")
+		return
+	_bind_and_publish_local_session()
+
+
+func _bootstrap_challenge_test_entry() -> void:
+	$ApplicationHost.trusted_tutorial_scenario = null
+	$TutorialDirector.presentation_track = null
+	$TutorialOverlay.configure_graybox_entry(_level_id)
+	$MatchScreen.set_tutorial_panel_width(422.0)
+	_local_session = FormalLocalSession.create(
+		session_seed + int(_level_id.trim_prefix("C")),
+		{
+			"full_round_limit_hypothesis": 50,
+			"scripted_opponent_pass": true,
+		}
+	)
+	_bind_and_publish_local_session()
+
+
+func _bind_and_publish_local_session() -> void:
 	if _local_session == null:
 		push_error("TutorialLevel failed to create FormalLocalSession")
 		return
