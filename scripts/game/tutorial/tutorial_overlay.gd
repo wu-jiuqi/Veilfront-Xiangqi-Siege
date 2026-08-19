@@ -10,30 +10,31 @@ signal hint_requested()
 signal next_chapter_requested()
 signal stay_requested()
 
-@onready var _chapter_code: Label = $Margin/Content/ChapterCode
-@onready var _chapter_progress: ProgressBar = $Margin/Content/ChapterProgress
-@onready var _progress_text: Label = $Margin/Content/ProgressText
-@onready var _chapter_title: Label = $Margin/Content/ChapterTitle
-@onready var _goal: Label = $Margin/Content/Goal
-@onready var _tags: Label = $Margin/Content/Tags
-@onready var _step_counter: Label = $Margin/Content/StepCounter
-@onready var _step_title: Label = $Margin/Content/StepTitle
-@onready var _instruction: Label = $Margin/Content/Instruction
-@onready var _feedback: Label = $Margin/Content/Feedback
-@onready var _action_log: Label = $Margin/Content/ActionLog
+@onready var _tutorial_foldable: FoldableContainer = $TutorialFoldable
+@onready var _chapter_code: Label = $TutorialFoldable/Margin/Content/ChapterCode
+@onready var _chapter_progress: ProgressBar = $TutorialFoldable/Margin/Content/ChapterProgress
+@onready var _progress_text: Label = $TutorialFoldable/Margin/Content/ProgressText
+@onready var _chapter_title: Label = $TutorialFoldable/Margin/Content/ChapterTitle
+@onready var _goal: Label = $TutorialFoldable/Margin/Content/Goal
+@onready var _tags: Label = $TutorialFoldable/Margin/Content/Tags
+@onready var _step_counter: Label = $TutorialFoldable/Margin/Content/StepCounter
+@onready var _step_title: Label = $TutorialFoldable/Margin/Content/StepTitle
+@onready var _instruction: Label = $TutorialFoldable/Margin/Content/Instruction
+@onready var _feedback: Label = $TutorialFoldable/Margin/Content/Feedback
+@onready var _action_log: Label = $TutorialFoldable/Margin/Content/ActionLog
 @onready var _options: Array[Button] = [
-	$Margin/Content/Options/Option0,
-	$Margin/Content/Options/Option1,
-	$Margin/Content/Options/Option2,
+	$TutorialFoldable/Margin/Content/Options/Option0,
+	$TutorialFoldable/Margin/Content/Options/Option1,
+	$TutorialFoldable/Margin/Content/Options/Option2,
 ]
-@onready var _continue_button: Button = $Margin/Content/ContinueButton
-@onready var _completion_actions: HBoxContainer = $Margin/Content/CompletionActions
-@onready var _next_chapter_button: Button = $Margin/Content/CompletionActions/NextChapterButton
-@onready var _stay_button: Button = $Margin/Content/CompletionActions/StayButton
-@onready var _hint_button: Button = $Margin/Content/HintButton
-@onready var _retry_button: Button = $Margin/Content/Actions/RetryButton
-@onready var _skip_button: Button = $Margin/Content/Actions/SkipButton
-@onready var _exit_button: Button = $Margin/Content/Actions/BackToLevelsButton
+@onready var _continue_button: Button = $TutorialFoldable/Margin/Content/ContinueButton
+@onready var _completion_actions: HBoxContainer = $TutorialFoldable/Margin/Content/CompletionActions
+@onready var _next_chapter_button: Button = $TutorialFoldable/Margin/Content/CompletionActions/NextChapterButton
+@onready var _stay_button: Button = $TutorialFoldable/Margin/Content/CompletionActions/StayButton
+@onready var _hint_button: Button = $TutorialFoldable/Margin/Content/HintButton
+@onready var _retry_button: Button = $TutorialFoldable/Margin/Content/Actions/RetryButton
+@onready var _skip_button: Button = $TutorialFoldable/Margin/Content/Actions/SkipButton
+@onready var _exit_button: Button = $TutorialFoldable/Margin/Content/Actions/BackToLevelsButton
 
 var _step_id: String = ""
 var _instruction_key: String = ""
@@ -52,6 +53,8 @@ func _ready() -> void:
 	_hint_button.pressed.connect(func() -> void: hint_requested.emit())
 	_next_chapter_button.pressed.connect(func() -> void: next_chapter_requested.emit())
 	_stay_button.pressed.connect(_stay_on_completed_chapter)
+	_tutorial_foldable.folding_changed.connect(_on_tutorial_folded)
+	_apply_folded_bounds(_tutorial_foldable.folded)
 	for option_index: int in _options.size():
 		_options[option_index].pressed.connect(_emit_quiz_answer.bind(option_index))
 
@@ -153,6 +156,26 @@ func _stay_on_completed_chapter() -> void:
 	_append_log("已留在本章：最终局面保持只读，可使用重置章节重新操作。")
 
 
+func _on_tutorial_folded(folded: bool) -> void:
+	_apply_folded_bounds(folded)
+
+
+func _apply_folded_bounds(folded: bool) -> void:
+	if folded:
+		anchor_top = 1.0
+		anchor_bottom = 1.0
+		offset_top = -76.0
+		offset_bottom = -16.0
+		grow_vertical = 0
+	else:
+		anchor_top = 0.0
+		anchor_bottom = 1.0
+		offset_top = 72.0
+		offset_bottom = -72.0
+		grow_vertical = 2
+	queue_sort()
+
+
 func request_retry() -> void:
 	retry_requested.emit()
 
@@ -171,4 +194,5 @@ func get_public_snapshot() -> Dictionary:
 		"title": _title,
 		"step_id": _step_id,
 		"instruction_key": _instruction_key,
+		"prompt_expanded": not _tutorial_foldable.folded,
 	}

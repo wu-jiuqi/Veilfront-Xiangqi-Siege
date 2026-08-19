@@ -45,7 +45,17 @@ func _run() -> void:
 	)
 	_expect(red_cell_world != black_cell_world, "mirror presentation did not change display mapping")
 
-	var overlay: Control = level.get_node("TutorialOverlay") as Control
+	var overlay: TutorialOverlay = level.get_node("TutorialOverlay") as TutorialOverlay
+	var prompt_container := overlay.find_child("TutorialFoldable", true, false) as FoldableContainer
+	_expect(prompt_container != null, "tutorial prompt is missing the foldable container")
+	if prompt_container != null:
+		_expect(not prompt_container.folded, "tutorial prompt should start expanded")
+		prompt_container.folded = true
+		await process_frame
+		_expect(not bool(overlay.get_public_snapshot().get("prompt_expanded", true)), "tutorial prompt did not collapse")
+		prompt_container.folded = false
+		await process_frame
+		_expect(bool(overlay.get_public_snapshot().get("prompt_expanded", false)), "tutorial prompt did not expand")
 	var next_button: Button = overlay.find_child("NextChapterButton", true, false) as Button
 	_expect(next_button != null, "tutorial completion is missing the next chapter button")
 	var return_button: Button = screen.find_child("ReturnButton", true, false) as Button

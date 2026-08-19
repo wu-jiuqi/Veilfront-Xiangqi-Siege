@@ -132,7 +132,7 @@ func get_layout_snapshot() -> Dictionary:
 	var tutorial: Control = $TutorialOverlay
 	var tutorial_rect := Rect2(tutorial.global_position - global_position, tutorial.size)
 	var buttons_inside := true
-	for button_name: String in ["RetryButton", "SkipButton", "BackToLevelsButton", "HintButton"]:
+	for button_name: String in ["RetryButton", "SkipButton", "BackToLevelsButton", "HintButton", "TutorialFoldable"]:
 		var button: Control = tutorial.find_child(button_name, true, false) as Control
 		if button == null:
 			buttons_inside = false
@@ -147,5 +147,5 @@ func get_layout_snapshot() -> Dictionary:
 		"board_rect": screen_snapshot.get("board_rect", Rect2()),
 		"tutorial_rect": tutorial_rect,
 		"buttons_inside": buttons_inside,
-		"actions_scrollable": tutorial.get_node_or_null("Margin") is ScrollContainer,
+		"actions_scrollable": tutorial.get_node_or_null("TutorialFoldable/Margin") is ScrollContainer,
 	}
