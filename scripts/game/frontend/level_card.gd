@@ -19,13 +19,15 @@ func _ready() -> void:
 	)
 
 
-func configure(level: LevelDefinition, unlocked: bool) -> void:
+func configure(level: LevelDefinition, unlocked: bool, test_mode: bool = false) -> void:
 	_level = level
 	_code_label.text = level.level_id
 	_title_label.text = level.title
 	_summary_label.text = level.summary
 	_play_button.disabled = not unlocked or not level.available
-	if not level.available:
+	if test_mode and unlocked and level.available:
+		_status_label.text = "测试开放·灰盒入口"
+	elif not level.available:
 		_status_label.text = "灰盒入口待接入"
 	elif unlocked:
 		_status_label.text = "已开放"
@@ -36,4 +38,3 @@ func configure(level: LevelDefinition, unlocked: bool) -> void:
 
 func focus_play_button() -> void:
 	_play_button.grab_focus()
-

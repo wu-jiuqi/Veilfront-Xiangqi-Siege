@@ -26,7 +26,10 @@ func _init() -> void:
 	await process_frame
 	assert(level_root.get_node("%TutorialGrid").get_child_count() == 11)
 	assert(level_root.get_node("%ChallengeGrid").get_child_count() == 3)
+	for card: Control in level_root.get_node("%TutorialGrid").get_children():
+		assert(not card.get_node("CardMargin/CardColumn/PlayButton").disabled, "tutorial test card must be open")
+	for card: Control in level_root.get_node("%ChallengeGrid").get_children():
+		assert(not card.get_node("CardMargin/CardColumn/PlayButton").disabled, "challenge test card must be open")
 	assert(level_root.get_node("%BackButton").focus_mode != Control.FOCUS_NONE)
 	print("FRONTEND_SCENE_SMOKE_PASS catalog=14 tutorial=11 challenge=3")
 	quit()
-

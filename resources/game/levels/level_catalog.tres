@@ -24,6 +24,7 @@ objective_text = "完成兵卒训练。"
 scene_path = "res://scenes/game/tutorial/tutorial_level.tscn"
 unlock_after = "T0"
 recommended_order = 1
+available = true
 
 [sub_resource type="Resource" id="LevelT2"]
 script = ExtResource("1_definition")
@@ -35,6 +36,7 @@ objective_text = "完成马训练。"
 scene_path = "res://scenes/game/tutorial/tutorial_level.tscn"
 unlock_after = "T1"
 recommended_order = 2
+available = true
 
 [sub_resource type="Resource" id="LevelT3"]
 script = ExtResource("1_definition")
@@ -46,6 +48,7 @@ objective_text = "完成相象训练。"
 scene_path = "res://scenes/game/tutorial/tutorial_level.tscn"
 unlock_after = "T2"
 recommended_order = 3
+available = true
 
 [sub_resource type="Resource" id="LevelT4"]
 script = ExtResource("1_definition")
@@ -57,6 +60,7 @@ objective_text = "完成车训练。"
 scene_path = "res://scenes/game/tutorial/tutorial_level.tscn"
 unlock_after = "T3"
 recommended_order = 4
+available = true
 
 [sub_resource type="Resource" id="LevelT5"]
 script = ExtResource("1_definition")
@@ -68,6 +72,7 @@ objective_text = "完成炮训练。"
 scene_path = "res://scenes/game/tutorial/tutorial_level.tscn"
 unlock_after = "T4"
 recommended_order = 5
+available = true
 
 [sub_resource type="Resource" id="LevelT6"]
 script = ExtResource("1_definition")
@@ -79,6 +84,7 @@ objective_text = "完成士献祭训练。"
 scene_path = "res://scenes/game/tutorial/tutorial_level.tscn"
 unlock_after = "T5"
 recommended_order = 6
+available = true
 
 [sub_resource type="Resource" id="LevelT7"]
 script = ExtResource("1_definition")
@@ -90,6 +96,7 @@ objective_text = "完成将帅训练。"
 scene_path = "res://scenes/game/tutorial/tutorial_level.tscn"
 unlock_after = "T6"
 recommended_order = 7
+available = true
 
 [sub_resource type="Resource" id="LevelT8"]
 script = ExtResource("1_definition")
@@ -101,6 +108,7 @@ objective_text = "完成雾墙训练。"
 scene_path = "res://scenes/game/tutorial/tutorial_level.tscn"
 unlock_after = "T7"
 recommended_order = 8
+available = true
 
 [sub_resource type="Resource" id="LevelT9"]
 script = ExtResource("1_definition")
@@ -112,6 +120,7 @@ objective_text = "完成旗帜训练。"
 scene_path = "res://scenes/game/tutorial/tutorial_level.tscn"
 unlock_after = "T8"
 recommended_order = 9
+available = true
 
 [sub_resource type="Resource" id="LevelT10"]
 script = ExtResource("1_definition")
@@ -123,6 +132,7 @@ objective_text = "完成综合考核。"
 scene_path = "res://scenes/game/tutorial/tutorial_level.tscn"
 unlock_after = "T9"
 recommended_order = 10
+available = true
 
 [sub_resource type="Resource" id="LevelC1"]
 script = ExtResource("1_definition")
@@ -133,6 +143,7 @@ summary = "固定挑战：黑方仅有一相。"
 objective_text = "完成孤相挑战。"
 scene_path = "res://scenes/game/tutorial/tutorial_level.tscn"
 recommended_order = 1
+available = true
 
 [sub_resource type="Resource" id="LevelC2"]
 script = ExtResource("1_definition")
@@ -143,6 +154,7 @@ summary = "固定挑战：黑方仅有两相。"
 objective_text = "完成双相挑战。"
 scene_path = "res://scenes/game/tutorial/tutorial_level.tscn"
 recommended_order = 2
+available = true
 
 [sub_resource type="Resource" id="LevelC3"]
 script = ExtResource("1_definition")
@@ -153,8 +165,8 @@ summary = "固定挑战：黑方仅有两马。"
 objective_text = "完成双马挑战。"
 scene_path = "res://scenes/game/tutorial/tutorial_level.tscn"
 recommended_order = 3
+available = true
 
 [resource]
 script = ExtResource("2_catalog")
 levels = Array[ExtResource("1_definition")]([SubResource("LevelT0"), SubResource("LevelT1"), SubResource("LevelT2"), SubResource("LevelT3"), SubResource("LevelT4"), SubResource("LevelT5"), SubResource("LevelT6"), SubResource("LevelT7"), SubResource("LevelT8"), SubResource("LevelT9"), SubResource("LevelT10"), SubResource("LevelC1"), SubResource("LevelC2"), SubResource("LevelC3")])
-

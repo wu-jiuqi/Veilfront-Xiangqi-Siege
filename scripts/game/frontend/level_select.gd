@@ -4,6 +4,8 @@ const MAIN_MENU_SCENE := "res://scenes/game/frontend/main_menu.tscn"
 const LEVEL_CARD_SCENE := preload("res://scenes/game/frontend/level_card.tscn")
 const CATALOG := preload("res://resources/game/levels/level_catalog.tres")
 
+@export var test_all_levels_unlocked: bool = true
+
 @onready var _back_button: Button = %BackButton
 @onready var _tutorial_grid: GridContainer = %TutorialGrid
 @onready var _challenge_grid: GridContainer = %ChallengeGrid
@@ -39,11 +41,13 @@ func _build_level_grid(grid: GridContainer, levels: Array[LevelDefinition]) -> v
 	for level: LevelDefinition in levels:
 		var card: LevelCard = LEVEL_CARD_SCENE.instantiate()
 		grid.add_child(card)
-		card.configure(level, _is_unlocked(level))
+		card.configure(level, _is_unlocked(level), test_all_levels_unlocked)
 		card.play_requested.connect(_on_level_play_requested)
 
 
 func _is_unlocked(level: LevelDefinition) -> bool:
+	if test_all_levels_unlocked:
+		return true
 	return level.unlock_after.is_empty() or bool(_completed.get(level.unlock_after, false))
 
 

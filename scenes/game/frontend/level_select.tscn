@@ -12,6 +12,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_theme")
 script = ExtResource("2_script")
+test_all_levels_unlocked = true
 
 [node name="Background" type="ColorRect" parent="."]
 layout_mode = 1
@@ -100,7 +101,7 @@ layout_mode = 2
 [node name="HelpText" type="Label" parent="SafeMargin/Page/Footer"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "T0 默认开放；T1–T10 按教学顺序解锁；C1–C3 为独立挑战灰盒。"
+text = "测试模式：T0–T10 与 C1–C3 全部开放；当前入口统一进入正式棋盘灰盒。"
 autowrap_mode = 2
 
 [node name="StatusLabel" type="Label" parent="SafeMargin/Page/Footer"]
