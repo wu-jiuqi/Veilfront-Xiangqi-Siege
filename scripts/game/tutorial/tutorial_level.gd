@@ -92,6 +92,20 @@ func return_to_level_select() -> void:
 	get_tree().change_scene_to_file("res://scenes/game/frontend/level_select.tscn")
 
 
+func advance_to_next_level() -> void:
+	var current_index := TutorialChapterCatalog.TUTORIAL_IDS.find(_level_id)
+	if current_index < 0 or current_index >= TutorialChapterCatalog.TUTORIAL_IDS.size() - 1:
+		return_to_level_select()
+		return
+	var next_level_id := TutorialChapterCatalog.TUTORIAL_IDS[current_index + 1]
+	get_tree().root.set_meta("veilfront_selected_level_id", next_level_id)
+	get_tree().change_scene_to_file("res://scenes/game/tutorial/tutorial_level.tscn")
+
+
+func stay_on_completed_chapter() -> void:
+	$TutorialOverlay.find_child("CompletionActions", true, false).visible = false
+
+
 func record_level_completion(level_id: String) -> void:
 	var config := ConfigFile.new()
 	var load_error := config.load(progress_path)

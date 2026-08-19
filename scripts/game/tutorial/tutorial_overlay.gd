@@ -7,8 +7,12 @@ signal exit_requested()
 signal continue_requested()
 signal quiz_answered(option_index: int)
 signal hint_requested()
+signal next_chapter_requested()
+signal stay_requested()
 
 @onready var _chapter_code: Label = $Margin/Content/ChapterCode
+@onready var _chapter_progress: ProgressBar = $Margin/Content/ChapterProgress
+@onready var _progress_text: Label = $Margin/Content/ProgressText
 @onready var _chapter_title: Label = $Margin/Content/ChapterTitle
 @onready var _goal: Label = $Margin/Content/Goal
 @onready var _tags: Label = $Margin/Content/Tags
@@ -16,12 +20,16 @@ signal hint_requested()
 @onready var _step_title: Label = $Margin/Content/StepTitle
 @onready var _instruction: Label = $Margin/Content/Instruction
 @onready var _feedback: Label = $Margin/Content/Feedback
+@onready var _action_log: Label = $Margin/Content/ActionLog
 @onready var _options: Array[Button] = [
 	$Margin/Content/Options/Option0,
 	$Margin/Content/Options/Option1,
 	$Margin/Content/Options/Option2,
 ]
 @onready var _continue_button: Button = $Margin/Content/ContinueButton
+@onready var _completion_actions: HBoxContainer = $Margin/Content/CompletionActions
+@onready var _next_chapter_button: Button = $Margin/Content/CompletionActions/NextChapterButton
+@onready var _stay_button: Button = $Margin/Content/CompletionActions/StayButton
 @onready var _hint_button: Button = $Margin/Content/HintButton
 @onready var _retry_button: Button = $Margin/Content/Actions/RetryButton
 @onready var _skip_button: Button = $Margin/Content/Actions/SkipButton
@@ -31,6 +39,9 @@ var _step_id: String = ""
 var _instruction_key: String = ""
 var _level_id: String = ""
 var _title: String = ""
+var _log_entries: Array[String] = []
+
+const TUTORIAL_COUNT := 11
 
 
 func _ready() -> void:
@@ -39,6 +50,8 @@ func _ready() -> void:
 	_exit_button.pressed.connect(request_exit)
 	_continue_button.pressed.connect(func() -> void: continue_requested.emit())
 	_hint_button.pressed.connect(func() -> void: hint_requested.emit())
+	_next_chapter_button.pressed.connect(func() -> void: next_chapter_requested.emit())
+	_stay_button.pressed.connect(_stay_on_completed_chapter)
 	for option_index: int in _options.size():
 		_options[option_index].pressed.connect(_emit_quiz_answer.bind(option_index))
 
@@ -56,6 +69,7 @@ func configure_chapter(track: TutorialPresentationTrack) -> void:
 	_chapter_title.text = track.title
 	_goal.text = track.goal
 	_tags.text = " · ".join(track.tags)
+	_update_progress(0)
 
 
 func configure_graybox_entry(level_id: String) -> void:
@@ -65,6 +79,7 @@ func configure_graybox_entry(level_id: String) -> void:
 	_chapter_title.text = _title
 	_goal.text = "当前开放正式棋盘、棋子和基础行动链，供界面测试。"
 	_tags.text = "测试开放 · 被动对手 · 非最终挑战内容"
+	_update_progress(0)
 	render_public_step({
 		"id": "challenge_graybox",
 		"title": "限定对手尚未迁移",
@@ -81,6 +96,7 @@ func render_public_step(step: Dictionary) -> void:
 		int(step.get("step_index", 0)) + 1,
 		maxi(1, int(step.get("step_count", 1))),
 	]
+	_update_progress(int(step.get("step_index", 0)))
 	_step_title.text = str(step.get("title", _step_id))
 	_instruction.text = str(step.get("prompt", _instruction_key))
 	_feedback.text = "按照目标在棋盘上操作。"
@@ -94,6 +110,11 @@ func render_public_step(step: Dictionary) -> void:
 	var button_text := str(step.get("button", ""))
 	_continue_button.visible = not button_text.is_empty()
 	_continue_button.text = button_text if not button_text.is_empty() else "继续"
+	var is_completed := _step_id == "completed"
+	_completion_actions.visible = is_completed
+	if is_completed:
+		_next_chapter_button.text = "进入下一章" if _level_id != "T10" else "返回训练目录"
+	_append_log("步骤：" + _step_title.text)
 
 
 func render_feedback(kind: String, title: String, message: String) -> void:
@@ -102,6 +123,34 @@ func render_feedback(kind: String, title: String, message: String) -> void:
 		"font_color",
 		Color(0.42, 0.92, 0.58, 1) if kind == "success" else Color(1.0, 0.72, 0.28, 1)
 	)
+	_append_log("%s：%s" % [title, message])
+
+
+func _update_progress(step_index: int) -> void:
+	var chapter_index := maxi(0, _tutorial_chapter_index(_level_id))
+	_progress_text.text = "章节 %d / %d · 步骤 %d" % [chapter_index + 1, TUTORIAL_COUNT, step_index + 1]
+	_chapter_progress.value = (float(chapter_index) / float(TUTORIAL_COUNT)) * 100.0
+
+
+func _tutorial_chapter_index(level_id: String) -> int:
+	if level_id.begins_with("T"):
+		var numeric := level_id.trim_prefix("T").to_int()
+		return clampi(numeric, 0, TUTORIAL_COUNT - 1)
+	return 0
+
+
+func _append_log(message: String) -> void:
+	if message.is_empty():
+		return
+	_log_entries.append(message)
+	if _log_entries.size() > 3:
+		_log_entries.pop_front()
+	_action_log.text = "公开行动记录：\n" + "\n".join(_log_entries)
+
+
+func _stay_on_completed_chapter() -> void:
+	_completion_actions.visible = false
+	_append_log("已留在本章：最终局面保持只读，可使用重置章节重新操作。")
 
 
 func request_retry() -> void:
