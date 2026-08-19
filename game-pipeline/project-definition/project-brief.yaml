@@ -3,7 +3,7 @@ project_brief:
   identity:
     brief_id: brief:veilfront-xiangqi-siege:initial
     project_id: veilfront-xiangqi-siege
-    version: 5
+    version: 6
   coordination:
     project_owner: project-owner
     coordinator_role_id: AGT-DIR
@@ -48,6 +48,11 @@ project_brief:
   - source_id: source:veilfront-xiangqi-siege:owner-demo-scope-revision
     uri: codex-thread://current#owner-demo-scope-internet-art-tutorial
     version_or_digest: owner-decision:2026-08-18:internet-demo-no-ai-full-art-tutorial
+    supplied_by: project-owner
+    authority: project.direction.input
+  - source_id: source:veilfront-xiangqi-siege:owner-oblique-3d-art-direction
+    uri: codex-thread://current#owner-freeze-oblique-3d-board-art-direction
+    version_or_digest: owner-decision:2026-08-19:replace-top-down-with-oblique-3d-board
     supplied_by: project-owner
     authority: project.direction.input
   statements:
@@ -163,21 +168,23 @@ project_brief:
     - source:veilfront-xiangqi-siege:owner-rules-finalization
   - statement_id: stmt:veilfront-xiangqi-siege:presentation
     domain: art-direction
-    text: 24×9交点棋盘采用局部主战场视图与受战争迷雾约束的鸟瞰战术小地图；主视图完整呈现九路宽度并沿24线长轴移动，棋盘格保持正方形。红黑双方界面都令己方大本营位于底部，黑方仅做180°显示镜像，不改变权威坐标与行动语义。区域只用明亮底色色块和不越界的大字“大本营/缓冲区/战区”区分，不使用额外区域分割线；城墙点线单独加粗。迷雾用黑色半透明蒙版覆盖底色，可见内容穿透蒙版。车移动路径与相田字侦察/阻挡范围分别沿棋盘线绘制专属高亮边框。未选棋时右键可在交点放置圆、叉或方形的玩家私有标记；已选棋时首次右键只取消选择，再次右键才进入标记，标记不影响正常高亮。普通行动、炮击和士献祭最终确认均在主棋盘完成，所有待确认行动支持取消。
+    text: 24×9交点棋盘采用三维主战场与受战争迷雾约束的鸟瞰战术小地图；主视图使用锁定旋转的低FOV斜俯视透视摄像机、完整呈现九路宽度并沿24线长轴移动，棋盘交点在世界空间保持等距。红黑双方界面都令己方大本营位于底部，黑方只做180°表现映射和摄像机切换，不改变权威坐标与行动语义。区域只用明亮底色色块、材质差异和不越界的大字“大本营/缓冲区/战区”区分，不使用额外区域分割线；城墙点线由独立三维结构加粗表现。迷雾由单一9×24观察者安全mask覆盖地表，未授权棋子和旗位不创建表现节点。车移动路径与相田字侦察/阻挡范围分别沿棋盘线绘制专属高亮边框。未选棋时右键可在交点放置圆、叉或方形的玩家私有标记；已选棋时首次右键只取消选择，再次右键才进入标记，标记不影响正常高亮。普通行动、炮击和士献祭最终确认均在主棋盘完成，所有待确认行动支持取消。
     status: confirmed
     decision_owner: project-owner
     source_refs:
     - source:veilfront-xiangqi-siege:owner-planning-conversation
     - source:veilfront-xiangqi-siege:owner-rule-revision-5
+    - source:veilfront-xiangqi-siege:owner-oblique-3d-art-direction
   - statement_id: stmt:veilfront-xiangqi-siege:visual-direction
     domain: art-direction
-    text: 世界观确认为中国古代架空背景，同时存在朝代体系与修仙体系；美术路线冻结为90° top-down 2D俯视、角色化单位、东方战争奇幻、回合制迷雾战术象棋。GATE-1纯逻辑原型已经通过，首版Demo交付范围改为包含完整的Demo级棋盘、棋子、界面、迷雾、旗帜、特效、动画与音频资源；具体资产精度、色彩语言、角色比例和制作清单须先通过GATE-2美术基线审查，再启动高成本批量生产。
+    text: 世界观确认为中国古代架空背景，同时存在朝代体系与修仙体系；美术路线冻结为“二维Vector2i交点规则、Node3D三维战场、Sprite3D/AnimatedSprite3D二维角色、锁定旋转的斜俯视低FOV透视摄像机、东方战争奇幻、回合制迷雾战术象棋”，正式替换原先90° top-down 2D俯视方向。正式棋盘仍为24×9一基交点，主视图保证九路完整并沿长轴浏览；角色默认Fixed-Y Billboard、假阴影和深度测试，未授权隐藏事实不创建表现节点。首版Demo继续包含完整Demo级棋盘、棋子、界面、迷雾、旗帜、特效、动画与音频资源；高成本批量生产仍须先通过GATE-2美术基线审查。
     status: confirmed
     decision_owner: project-owner
     source_refs:
     - source:veilfront-xiangqi-siege:owner-scope-clarification
     - source:veilfront-xiangqi-siege:owner-rules-finalization
     - source:veilfront-xiangqi-siege:owner-demo-scope-revision
+    - source:veilfront-xiangqi-siege:owner-oblique-3d-art-direction
   - statement_id: stmt:veilfront-xiangqi-siege:demo-delivery-scope
     domain: scope-constraints
     text: 首版Demo包含完整规则的人对人联机对战、达到Demo展示标准的完整美术资源和新手教学关卡；暂不包含AI人机对战。互联网联机仍是Demo最终目标，但当前紧接GATE-1的生产循环只负责正式架构边界、教学灰盒和视觉基线，不实现互联网传输、匹配、服务器部署或Steam网络接入。
@@ -248,7 +255,7 @@ project_brief:
     decision_owner: project-owner
     blocks_staffing: false
   - question_id: question:veilfront-xiangqi-siege:art-baseline
-    question: Demo要求完整美术资源，但资产清单、角色比例、目标分辨率、帧数、特效与音频数量、外包策略和验收样片尚未冻结；必须在批量资产生产前通过GATE-2视觉基线审查。
+    question: 斜俯视三维棋盘、Sprite3D角色、镜头校准带、基础色彩语言、源图/运行时规格和完整资产清单已经形成v1基线；实际游戏内样片、最终动画帧数、音频与特效数量、外包策略、预算和生产周期仍须在批量资产生产前通过GATE-2视觉基线审查。
     decision_owner: project-owner
     blocks_staffing: false
   - question_id: question:veilfront-xiangqi-siege:tutorial-coverage
@@ -291,11 +298,11 @@ project_brief:
     impact: medium
     staffing_implication: 需要可观测的平衡指标、对局日志、批量模拟或结构化试玩，不应在纸面阶段宣布平衡完成。
   - risk_id: risk:veilfront-xiangqi-siege:art-unknown
-    description: 首版Demo已要求完整美术资源，但资产精度、色彩语言、角色比例、动画、音频、修仙元素强度和制作总量仍未形成可估算的美术基线。
+    description: 首版Demo已形成斜俯视三维棋盘v1视觉与资产清单，但尚无游戏内样片证明前后排遮挡、透明排序、迷雾叠层、Forward+性能和三目标分辨率可读性，动画、音频、外包与总成本也仍未估算。
     evidence_refs:
     - stmt:veilfront-xiangqi-siege:visual-direction
     impact: high
-    staffing_implication: 下一循环只能建立视觉基线、资产清单和可审查样片；具体产能、外包与批量制作承诺必须等待GATE-2。
+    staffing_implication: 当前只允许制作少量可审查样片并修订三维表现架构；具体产能、外包与批量制作承诺必须等待独立QA和GATE-2。
   - risk_id: risk:veilfront-xiangqi-siege:ai-fairness
     description: 现有AI虽然通过公平性技术验证，但对战质量不足以支持首版Demo；若未来恢复，仍需重新评估不完全信息决策、训练或搜索成本和可解释难度。
     evidence_refs:
@@ -395,11 +402,11 @@ project_brief:
     readiness: ready
     blocker_refs: []
   review:
-    status: confirmed
-    approval_id: approval:veilfront-xiangqi-siege:project-brief:41bb82fae4f1
-    confirmed_by: project-owner
-    confirmed_at: '2026-08-18T11:48:14.9779192+08:00'
+    status: in_review
+    approval_id: null
+    confirmed_by: null
+    confirmed_at: null
   integrity:
     canonicalization: project-brief-subject-canonical-json-v1
     digest_algorithm: sha256
-    subject_digest: 41bb82fae4f1a0294d17746f3b9caf063ee69d2bd07e0f7d15d26baad9ab89bb
+    subject_digest: 54520517ac26859c24459accb2d7672d12d0224ef69a766f883eda7b2b523289
