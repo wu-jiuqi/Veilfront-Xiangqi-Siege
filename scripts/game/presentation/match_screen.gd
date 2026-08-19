@@ -6,6 +6,7 @@ signal action_previews_requested(piece_id: String, action_type: String)
 signal action_prepare_requested(preview_id: String)
 signal action_confirm_requested(preview_id: String)
 signal skip_requested()
+signal return_requested()
 signal selection_cancelled()
 signal marker_applied(cell: Vector2i, marker_type: String)
 signal board_point_activated(cell: Vector2i)
@@ -37,6 +38,8 @@ const Presenter = preload("res://scripts/game/presentation/match_screen_presente
 @onready var _confirm_button: Button = %ConfirmButton
 @onready var _turn_label: Label = $SafeMargin/Page/MatchHeader/Content/TurnLabel
 @onready var _round_label: Label = $SafeMargin/Page/MatchHeader/Content/RoundLabel
+@onready var _return_button: Button = $SafeMargin/Page/MatchHeader/Content/ReturnButton
+@onready var _mirror_button: Button = $SafeMargin/Page/MatchHeader/Content/MirrorButton
 @onready var _wall_status: Label = $SafeMargin/Page/Workspace/WideStatusHost/MatchStatusPanel/Content/WallStatus
 @onready var _flag_status: Label = $SafeMargin/Page/Workspace/WideStatusHost/MatchStatusPanel/Content/FlagStatus
 @onready var _casualty_status: Label = $SafeMargin/Page/Workspace/WideStatusHost/MatchStatusPanel/Content/CasualtyStatus
@@ -76,6 +79,8 @@ func _ready() -> void:
 	_board_viewport.cancel_or_marker_requested.connect(_on_cancel_or_marker_requested)
 	_marker_menu.marker_selected.connect(_on_marker_selected)
 	_status_button.pressed.connect(_on_status_button_pressed)
+	_return_button.pressed.connect(func() -> void: return_requested.emit())
+	_mirror_button.pressed.connect(_toggle_mirror_view)
 	_cancel_button.pressed.connect(_cancel_only)
 	_confirm_button.pressed.connect(confirm_prepared_action)
 	_action_cancel_button.pressed.connect(_cancel_only)
@@ -85,6 +90,17 @@ func _ready() -> void:
 	_resurrect_button.pressed.connect(_set_action_mode.bind("resurrect"))
 	_pass_button.pressed.connect(_prepare_pass)
 	call_deferred("apply_layout_for_size", size)
+
+
+func _toggle_mirror_view() -> void:
+	_board_viewport.toggle_presentation_side()
+	_update_mirror_button()
+
+
+func _update_mirror_button() -> void:
+	if not is_instance_valid(_mirror_button):
+		return
+	_mirror_button.text = "切回红方视角" if _board_viewport.get_presentation_side() == "black" else "切换黑方镜像"
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -141,6 +157,7 @@ func render_player_view(view: Dictionary) -> void:
 	_flag_status.text = str(_presentation_model.get("flag_text", "旗帜：--"))
 	_casualty_status.text = str(_presentation_model.get("casualty_text", "阵亡：--"))
 	_board_viewport.render_player_view(view)
+	_update_mirror_button()
 	_update_status_controls()
 
 

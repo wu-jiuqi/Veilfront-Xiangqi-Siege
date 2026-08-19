@@ -7,6 +7,12 @@ custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 theme_override_constants/separation = 20
 
+[node name="ReturnButton" type="Button" parent="Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(112, 44)
+layout_mode = 2
+text = "退出教学"
+
 [node name="Title" type="Label" parent="Content"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -19,3 +25,9 @@ text = "行动方：--"
 [node name="RoundLabel" type="Label" parent="Content"]
 layout_mode = 2
 text = "回合：-- / 50"
+
+[node name="MirrorButton" type="Button" parent="Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(148, 44)
+layout_mode = 2
+text = "切换黑方镜像"
