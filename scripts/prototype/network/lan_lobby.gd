@@ -12,6 +12,7 @@ extends Control
 @onready var center_panel: PanelContainer = $CenterPanel
 @onready var network_board: Control = $NetworkBoard
 @onready var back_to_lobby_button: Button = $BackToLobbyButton
+@onready var return_to_main_menu_button: Button = $ReturnToMainMenuButton
 
 
 func _ready() -> void:
@@ -19,6 +20,7 @@ func _ready() -> void:
 	join_button.pressed.connect(_on_join_pressed)
 	disconnect_button.pressed.connect(_on_disconnect_pressed)
 	back_to_lobby_button.pressed.connect(_on_disconnect_pressed)
+	return_to_main_menu_button.pressed.connect(_on_return_to_main_menu_pressed)
 	network_session.connection_state_changed.connect(_on_connection_state_changed)
 	network_session.seat_assigned.connect(_on_seat_assigned)
 	network_session.player_view_received.connect(_on_player_view_received)
@@ -48,6 +50,11 @@ func _on_join_pressed() -> void:
 func _on_disconnect_pressed() -> void:
 	network_session.disconnect_from_game()
 	_show_lobby()
+
+
+func _on_return_to_main_menu_pressed() -> void:
+	network_session.disconnect_from_game()
+	get_tree().change_scene_to_file("res://scenes/game/frontend/main_menu.tscn")
 
 
 func _on_connection_state_changed(snapshot: Dictionary) -> void:

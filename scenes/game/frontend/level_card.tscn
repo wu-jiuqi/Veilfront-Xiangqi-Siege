@@ -1,0 +1,52 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/frontend/level_card.gd" id="1_script"]
+
+[node name="LevelCard" type="PanelContainer"]
+custom_minimum_size = Vector2(250, 220)
+script = ExtResource("1_script")
+
+[node name="CardMargin" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 14
+
+[node name="CardColumn" type="VBoxContainer" parent="CardMargin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CodeLabel" type="Label" parent="CardMargin/CardColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.82, 0.48, 1)
+theme_override_font_sizes/font_size = 20
+
+[node name="TitleLabel" type="Label" parent="CardMargin/CardColumn"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 28)
+layout_mode = 2
+autowrap_mode = 2
+theme_override_font_sizes/font_size = 19
+
+[node name="SummaryLabel" type="Label" parent="CardMargin/CardColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+autowrap_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.79, 0.85, 1)
+theme_override_font_sizes/font_size = 15
+
+[node name="StatusLabel" type="Label" parent="CardMargin/CardColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "灰盒入口待接入"
+theme_override_colors/font_color = Color(0.6, 0.66, 0.74, 1)
+
+[node name="PlayButton" type="Button" parent="CardMargin/CardColumn"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+text = "待解锁"
+

@@ -1,0 +1,121 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Theme" path="res://resources/game/ui/formal_graybox_theme.tres" id="1_theme"]
+[ext_resource type="Script" path="res://scripts/game/frontend/level_select.gd" id="2_script"]
+
+[node name="LevelSelect" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+script = ExtResource("2_script")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.025, 0.031, 0.04, 1)
+
+[node name="SafeMargin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 20.0
+offset_right = -24.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Page" type="VBoxContainer" parent="SafeMargin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Header" type="HBoxContainer" parent="SafeMargin/Page"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="BackButton" type="Button" parent="SafeMargin/Page/Header"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(112, 44)
+layout_mode = 2
+text = "返回首界面"
+
+[node name="Title" type="Label" parent="SafeMargin/Page/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "关卡模式"
+vertical_alignment = 1
+theme_override_colors/font_color = Color(1, 0.88, 0.61, 1)
+theme_override_font_sizes/font_size = 30
+
+[node name="ProgressLabel" type="Label" parent="SafeMargin/Page/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "教学进度 0 / 11"
+vertical_alignment = 1
+
+[node name="CategoryTabs" type="TabContainer" parent="SafeMargin/Page"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Tutorial" type="ScrollContainer" parent="SafeMargin/Page/CategoryTabs"]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="TutorialGrid" type="GridContainer" parent="SafeMargin/Page/CategoryTabs/Tutorial"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 14
+theme_override_constants/v_separation = 14
+columns = 4
+
+[node name="Challenge" type="ScrollContainer" parent="SafeMargin/Page/CategoryTabs"]
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="ChallengeGrid" type="GridContainer" parent="SafeMargin/Page/CategoryTabs/Challenge"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 14
+theme_override_constants/v_separation = 14
+columns = 4
+
+[node name="Footer" type="HBoxContainer" parent="SafeMargin/Page"]
+layout_mode = 2
+
+[node name="HelpText" type="Label" parent="SafeMargin/Page/Footer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "T0 默认开放；T1–T10 按教学顺序解锁；C1–C3 为独立挑战灰盒。"
+autowrap_mode = 2
+
+[node name="StatusLabel" type="Label" parent="SafeMargin/Page/Footer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = ""
+horizontal_alignment = 2
+
+[node name="ResetButton" type="Button" parent="SafeMargin/Page/Footer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(132, 44)
+layout_mode = 2
+text = "清空教学进度"
+
+[node name="ResetDialog" type="ConfirmationDialog" parent="."]
+unique_name_in_owner = true
+title = "清空教学进度"
+dialog_text = "只清除 T0–T10 的本地完成记录，不影响局域网设置。"
