@@ -103,6 +103,11 @@ func _update_mirror_button() -> void:
 	_mirror_button.text = "切回红方视角" if _board_viewport.get_presentation_side() == "black" else "切换黑方镜像"
 
 
+func set_tutorial_navigation_enabled(enabled: bool) -> void:
+	_return_button.visible = enabled
+	_return_button.text = "退出教学"
+
+
 func _unhandled_input(event: InputEvent) -> void:
 	if not event.is_action_pressed(&"ui_cancel"):
 		return

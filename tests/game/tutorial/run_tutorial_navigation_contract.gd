@@ -50,6 +50,7 @@ func _run() -> void:
 	_expect(next_button != null, "tutorial completion is missing the next chapter button")
 	var return_button: Button = screen.find_child("ReturnButton", true, false) as Button
 	_expect(return_button != null, "match header is missing the return button")
+	_expect(return_button != null and return_button.visible, "tutorial return button is not visible")
 	if return_button != null:
 		return_button.pressed.emit()
 		await _wait_frames(3)

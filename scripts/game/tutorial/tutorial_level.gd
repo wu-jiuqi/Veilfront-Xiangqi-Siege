@@ -28,6 +28,7 @@ func _ready() -> void:
 	$TutorialDirector.configure(_level_id, presentation)
 	$TutorialOverlay.configure_chapter(presentation)
 	$MatchScreen.set_tutorial_panel_width(422.0)
+	$MatchScreen.set_tutorial_navigation_enabled(true)
 	_bootstrap_local_session(scenario)
 
 
@@ -47,6 +48,7 @@ func _bootstrap_challenge_test_entry() -> void:
 	$TutorialDirector.presentation_track = null
 	$TutorialOverlay.configure_graybox_entry(_level_id)
 	$MatchScreen.set_tutorial_panel_width(422.0)
+	$MatchScreen.set_tutorial_navigation_enabled(true)
 	_local_session = FormalLocalSession.create(
 		session_seed + int(_level_id.trim_prefix("C")),
 		{

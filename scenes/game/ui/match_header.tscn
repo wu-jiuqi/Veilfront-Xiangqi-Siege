@@ -8,6 +8,7 @@ layout_mode = 2
 theme_override_constants/separation = 20
 
 [node name="ReturnButton" type="Button" parent="Content"]
+visible = false
 unique_name_in_owner = true
 custom_minimum_size = Vector2(112, 44)
 layout_mode = 2
