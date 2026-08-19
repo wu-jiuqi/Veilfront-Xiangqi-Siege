@@ -78,6 +78,14 @@ func set_marker(cell: Vector2i, marker_type: String) -> void:
 	_board_world.set_marker(cell, marker_type)
 
 
+func clear_marker(cell: Vector2i) -> void:
+	_board_world.clear_marker(cell)
+
+
+func has_marker(cell: Vector2i) -> bool:
+	return _board_world.has_marker(cell)
+
+
 func set_interaction(selected_cell: Vector2i, action_previews: Array) -> void:
 	_board_world.set_interaction(selected_cell, action_previews)
 

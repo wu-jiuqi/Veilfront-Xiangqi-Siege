@@ -65,6 +65,14 @@ func set_marker(cell: Vector2i, marker_type: String) -> void:
 	_marker_overlay.set_marker(cell, marker_type)
 
 
+func clear_marker(cell: Vector2i) -> void:
+	_marker_overlay.clear_marker(cell)
+
+
+func has_marker(cell: Vector2i) -> bool:
+	return _marker_overlay.has_marker(cell)
+
+
 func set_interaction(selected_cell: Vector2i, action_previews: Array) -> void:
 	_interaction_overlay.render_selection(
 		selected_cell, action_previews, _side, board_theme.cell_size

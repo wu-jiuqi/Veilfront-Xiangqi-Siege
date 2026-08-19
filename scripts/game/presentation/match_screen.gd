@@ -78,6 +78,7 @@ func _ready() -> void:
 	_board_viewport.point_activated.connect(handle_board_point)
 	_board_viewport.cancel_or_marker_requested.connect(_on_cancel_or_marker_requested)
 	_marker_menu.marker_selected.connect(_on_marker_selected)
+	_marker_menu.popup_hide.connect(_on_marker_menu_hidden)
 	_status_button.pressed.connect(_on_status_button_pressed)
 	_return_button.pressed.connect(func() -> void: return_requested.emit())
 	_mirror_button.pressed.connect(_toggle_mirror_view)
@@ -299,7 +300,10 @@ func get_local_interaction_state() -> String:
 	return _interaction_state
 
 
-func handle_cancel_or_marker(cell: Vector2i) -> String:
+func handle_cancel_or_marker(
+	cell: Vector2i,
+	point_position: Vector2 = Vector2(INF, INF)
+) -> String:
 	if _interaction_state in [PREVIEW_SELECTED, CONFIRMING]:
 		_cancel_prepared_action_locally()
 		return "cancel_prepared_action"
@@ -308,10 +312,19 @@ func handle_cancel_or_marker(cell: Vector2i) -> String:
 		selection_cancelled.emit()
 		return "cancel_selection"
 	if _interaction_state == MARKER_MENU:
+		if _marker_menu.get_cell() == cell:
+			_marker_menu.hide()
+			_interaction_state = IDLE
+			return "close_marker_menu"
 		_marker_menu.hide()
-		_interaction_state = IDLE
-		return "close_marker_menu"
-	_marker_menu.open_for_cell(cell)
+	if not is_finite(point_position.x) or not is_finite(point_position.y):
+		point_position = get_viewport().get_mouse_position()
+	_marker_menu.open_for_cell(
+		cell,
+		point_position,
+		get_viewport().get_visible_rect(),
+		_board_viewport.has_marker(cell)
+	)
 	_interaction_state = MARKER_MENU
 	marker_menu_requested.emit(cell)
 	return "open_marker_menu"
@@ -323,7 +336,12 @@ func apply_marker(cell: Vector2i, marker_type: String) -> void:
 		if cell != target or marker_type != str(_tutorial_step.get("marker", "")):
 			_reject_tutorial_input("标记位置或类型与当前目标不一致。")
 			return
-	_board_viewport.set_marker(cell, marker_type)
+	if marker_type.is_empty():
+		_board_viewport.clear_marker(cell)
+		_message_value.text = "已清除交点（%d,%d）的本地标注。" % [cell.x, cell.y]
+	else:
+		_board_viewport.set_marker(cell, marker_type)
+		_message_value.text = "已更新交点（%d,%d）的本地标注。" % [cell.x, cell.y]
 	_marker_menu.hide()
 	_interaction_state = IDLE
 	marker_applied.emit(cell, marker_type)
@@ -460,11 +478,16 @@ func _on_viewport_size_changed() -> void:
 
 
 func _on_cancel_or_marker_requested(cell: Vector2i) -> void:
-	handle_cancel_or_marker(cell)
+	handle_cancel_or_marker(cell, get_viewport().get_mouse_position())
 
 
 func _on_marker_selected(cell: Vector2i, marker_type: String) -> void:
 	apply_marker(cell, marker_type)
+
+
+func _on_marker_menu_hidden() -> void:
+	if _interaction_state == MARKER_MENU:
+		_interaction_state = IDLE
 
 
 func _on_status_button_pressed() -> void:

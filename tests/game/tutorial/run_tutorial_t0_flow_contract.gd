@@ -26,6 +26,16 @@ func _run() -> void:
 	screen.apply_marker(Vector2i(4, 5), "circle")
 	await process_frame
 	_expect(str(director.get_public_checkpoint_id()) == "t0_move", "T0 circle marker did not advance to move step")
+	screen.apply_marker(Vector2i(4, 5), "")
+	await process_frame
+	_expect(
+		int(screen.get_board_render_snapshot().get("marker_count", -1)) == 0,
+		"T0 marker clear did not remove the local marker"
+	)
+	_expect(
+		str(director.get_public_checkpoint_id()) == "t0_move",
+		"clearing a marker outside an annotate step changed tutorial progress"
+	)
 
 	screen.handle_board_point(Vector2i(5, 4))
 	await process_frame

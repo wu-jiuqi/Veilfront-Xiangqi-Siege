@@ -72,7 +72,7 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.82, 0.38, 1)
-text = "提示：鼠标滚轮或 W/S、↑/↓ 上下滚动棋盘；Ctrl+滚轮缩放。左键选择，右键取消或标注。"
+text = "提示：鼠标滚轮或 W/S、↑/↓ 上下滚动棋盘；Ctrl+滚轮缩放。左键选择，右键取消、添加或清除标注。"
 autowrap_mode = 2
 
 [node name="Spacer" type="Control" parent="Content"]

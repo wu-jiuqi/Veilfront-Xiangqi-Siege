@@ -4,22 +4,34 @@
 
 [node name="MarkerMenu" type="PopupPanel"]
 script = ExtResource("1_script")
-size = Vector2i(248, 64)
+size = Vector2i(304, 64)
 
 [node name="Choices" type="HBoxContainer" parent="."]
 offset_left = 8.0
 offset_top = 8.0
-offset_right = 240.0
+offset_right = 296.0
 offset_bottom = 56.0
 
 [node name="CircleButton" type="Button" parent="Choices"]
+custom_minimum_size = Vector2(52, 48)
 layout_mode = 2
 text = "○"
+tooltip_text = "圆形标注"
 
 [node name="CrossButton" type="Button" parent="Choices"]
+custom_minimum_size = Vector2(52, 48)
 layout_mode = 2
 text = "×"
+tooltip_text = "叉形标注"
 
 [node name="SquareButton" type="Button" parent="Choices"]
+custom_minimum_size = Vector2(52, 48)
 layout_mode = 2
 text = "□"
+tooltip_text = "方形标注"
+
+[node name="ClearButton" type="Button" parent="Choices"]
+custom_minimum_size = Vector2(92, 48)
+layout_mode = 2
+text = "清除"
+tooltip_text = "清除此交点的标注"

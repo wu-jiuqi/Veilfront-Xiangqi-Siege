@@ -49,10 +49,56 @@ func _run() -> void:
 	_expect(match_screen.get_local_interaction_state() == "IDLE", "selection cancel must return to IDLE")
 	_expect(int(match_screen.get_board_render_snapshot().get("marker_count", -1)) == 0, "selection cancel must not add marker")
 
-	var second_right_click: String = match_screen.handle_cancel_or_marker(Vector2i(3, 10))
+	var menu_anchor := Vector2(300.0, 400.0)
+	var second_right_click: String = match_screen.handle_cancel_or_marker(
+		Vector2i(3, 10),
+		menu_anchor
+	)
 	_expect(second_right_click == "open_marker_menu", "idle right click must open marker menu")
+	var marker_menu: PopupPanel = match_screen.find_child("MarkerMenu", true, false)
+	var initial_menu_snapshot: Dictionary = marker_menu.get_context_snapshot()
+	_expect(
+		initial_menu_snapshot.get("cell", Vector2i.ZERO) == Vector2i(3, 10),
+		"marker menu did not retain the right-clicked cell"
+	)
+	_expect(
+		Vector2(initial_menu_snapshot.get("position", Vector2i.ZERO)).distance_to(menu_anchor) < 340.0,
+		"marker menu did not open beside the right-clicked point"
+	)
+	_expect(
+		Vector2(initial_menu_snapshot.get("position", Vector2i.ZERO)).x > menu_anchor.x,
+		"marker menu did not prefer the right side of an unconstrained point"
+	)
+	_expect(
+		not bool(initial_menu_snapshot.get("clear_enabled", true)),
+		"clear marker started enabled on an unmarked point"
+	)
 	match_screen.apply_marker(Vector2i(3, 10), "circle")
 	_expect(int(match_screen.get_board_render_snapshot().get("marker_count", -1)) == 1, "marker was not stored locally")
+	match_screen.handle_cancel_or_marker(Vector2i(3, 10), menu_anchor)
+	_expect(
+		bool(marker_menu.get_context_snapshot().get("clear_enabled", false)),
+		"clear marker was not enabled for a marked point"
+	)
+	marker_menu.find_child("ClearButton", true, false).pressed.emit()
+	_expect(
+		int(match_screen.get_board_render_snapshot().get("marker_count", -1)) == 0,
+		"clear marker did not remove the marker from the selected point"
+	)
+	match_screen.apply_marker(Vector2i(3, 10), "circle")
+	var viewport_rect := root.get_visible_rect()
+	var right_edge_anchor := Vector2(viewport_rect.end.x - 4.0, 120.0)
+	match_screen.handle_cancel_or_marker(Vector2i(9, 10), right_edge_anchor)
+	var edge_menu_snapshot: Dictionary = marker_menu.get_context_snapshot()
+	var edge_menu_position := Vector2(edge_menu_snapshot.get("position", Vector2i.ZERO))
+	var edge_menu_size := Vector2(edge_menu_snapshot.get("size", Vector2i.ZERO))
+	_expect(edge_menu_position.x < right_edge_anchor.x, "right-edge marker menu did not flip left")
+	_expect(
+		edge_menu_position.x >= viewport_rect.position.x + 8.0 \
+		and edge_menu_position.x + edge_menu_size.x <= viewport_rect.end.x - 8.0,
+		"right-edge marker menu escaped the visible viewport"
+	)
+	marker_menu.hide()
 	match_screen.render_action_previews(Vector2i(3, 10), [{
 		"classification": "KNOWN_LEGAL",
 		"target_cell": [4, 10],

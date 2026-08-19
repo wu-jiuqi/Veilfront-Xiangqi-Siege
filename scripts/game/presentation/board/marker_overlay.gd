@@ -27,6 +27,10 @@ func clear_marker(cell: Vector2i) -> void:
 	queue_redraw()
 
 
+func has_marker(cell: Vector2i) -> bool:
+	return _markers.has(_cell_key(cell))
+
+
 func clear_all() -> void:
 	_markers.clear()
 	queue_redraw()

@@ -213,9 +213,10 @@ func consume_visible_error(_error: Dictionary) -> void:
 
 func consume_marker(cell: Vector2i, marker_type: String) -> void:
 	var step: Dictionary = _current_step()
+	if str(step.get("type", "")) != "annotate":
+		return
 	var target: Array = step.get("target", [])
-	if str(step.get("type", "")) == "annotate" \
-	and target == [cell.x, cell.y] \
+	if target == [cell.x, cell.y] \
 	and str(step.get("marker", "")) == marker_type:
 		_advance_current_step()
 	else:
