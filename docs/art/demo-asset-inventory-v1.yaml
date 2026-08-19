@@ -108,7 +108,9 @@ asset_inventory:
       runtime_spec: Sprite3D静态样片
       dependencies: [ART-PIECE-SHADOW, ART-PIECE-BASE]
       phase: preproduction_sample
-      status: planned
+      status: concept_pair_generated_runtime_alpha_blocked
+      evidence: evidence/gate2/art-samples/VS-PIECE-01-02-concept-review-r1.md
+      known_issue: 两张概念样片为1024×1536 RGB并烘入棋盘格背景，不能作为Sprite3D运行时纹理；需真实Alpha版本和棋盘内可读性复核。
       acceptance: 近中远距离可读，透明边缘无白边，前后遮挡稳定
     - id: ART-PIECE-SAMPLE-CAVALRY
       name: 红黑骑兵样片
