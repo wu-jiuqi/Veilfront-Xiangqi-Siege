@@ -9,6 +9,7 @@ extends Resource
 @export var tags: PackedStringArray = []
 @export var steps: Array[Dictionary] = []
 @export var summary: PackedStringArray = []
+@export var assessment: bool = false
 @export var initial_step_id: String = "welcome"
 @export var step_ids: PackedStringArray = []
 @export var instruction_keys: PackedStringArray = []

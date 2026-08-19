@@ -149,8 +149,17 @@ func focus_tutorial_step(step: Dictionary) -> void:
 		)
 	if BoardCoordinateMapper.is_authority_cell_valid(focus_cell):
 		_board_viewport.focus_authority_cell(focus_cell)
-	var target := BoardCoordinateMapper.coordinate_from_variant(step.get("target", []))
+	var target := BoardCoordinateMapper.coordinate_from_variant(step.get("target", [])) \
+		if bool(step.get("show_target", true)) else Vector2i.ZERO
 	_board_viewport.set_tutorial_target(target)
+
+
+func reset_tutorial_step_interaction() -> void:
+	_clear_local_interaction()
+	var expected_mode := _tutorial_expected_action_mode()
+	if not expected_mode.is_empty():
+		_action_mode = expected_mode
+	_update_status_controls()
 
 
 func render_player_view(view: Dictionary) -> void:

@@ -26,7 +26,7 @@ func _ready() -> void:
 		return
 	$ApplicationHost.trusted_tutorial_scenario = scenario
 	$TutorialDirector.configure(_level_id, presentation)
-	$TutorialOverlay.configure_chapter(presentation)
+	$TutorialOverlay.configure_chapter(presentation, _load_completed_ids())
 	$MatchScreen.set_tutorial_panel_width(422.0)
 	$MatchScreen.set_tutorial_navigation_enabled(true)
 	_bootstrap_local_session(scenario)
@@ -86,8 +86,8 @@ func apply_tutorial_step_effect(step_id: String) -> void:
 
 
 func _apply_tutorial_step_effect(step_id: String) -> void:
-	if _local_port != null and _local_port.has_method("apply_tutorial_effect"):
-		_local_port.apply_tutorial_effect(step_id)
+	if _local_port != null and _local_port.has_method("apply_tutorial_transition"):
+		_local_port.apply_tutorial_transition(step_id)
 
 
 func return_to_level_select() -> void:
@@ -102,6 +102,12 @@ func advance_to_next_level() -> void:
 	var next_level_id := TutorialChapterCatalog.TUTORIAL_IDS[current_index + 1]
 	get_tree().root.set_meta("veilfront_selected_level_id", next_level_id)
 	get_tree().change_scene_to_file("res://scenes/game/tutorial/tutorial_level.tscn")
+
+
+func handle_level_skipped(_level_id_value: String) -> void:
+	if not bootstrap_local_session:
+		return
+	call_deferred("advance_to_next_level")
 
 
 func stay_on_completed_chapter() -> void:
@@ -125,6 +131,18 @@ func record_level_completion(level_id: String) -> void:
 	var save_error := config.save(progress_path)
 	if save_error != OK:
 		push_error("TutorialLevel could not save progress file: %s" % error_string(save_error))
+
+
+func _load_completed_ids() -> Array[String]:
+	var completed_ids: Array[String] = []
+	var config := ConfigFile.new()
+	if config.load(progress_path) != OK:
+		return completed_ids
+	var saved_ids: Variant = config.get_value("progress", "completed_ids", [])
+	if saved_ids is Array:
+		for level_id: Variant in saved_ids:
+			completed_ids.append(str(level_id))
+	return completed_ids
 
 
 func get_layout_snapshot() -> Dictionary:

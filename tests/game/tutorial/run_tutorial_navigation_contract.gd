@@ -81,6 +81,13 @@ func _run() -> void:
 		root_child_name == "TutorialLevel",
 		"next chapter did not open the tutorial scene; root child=%s" % root_child_name
 	)
+	var skipped_overlay: TutorialOverlay = current_scene.get_node("TutorialOverlay")
+	skipped_overlay.request_skip()
+	await _wait_frames(5)
+	_expect(
+		str(root.get_meta("veilfront_selected_level_id", "")) == "T2",
+		"skipping T1 did not advance to T2"
+	)
 
 	if _failures.is_empty():
 		print("TUTORIAL_NAVIGATION_CONTRACT_PASS")

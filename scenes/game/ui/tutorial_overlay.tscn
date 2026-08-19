@@ -43,6 +43,12 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.72, 0.78, 0.86, 1)
 text = "章节 1 / 11"
 
+[node name="AssessmentStatus" type="Label" parent="TutorialFoldable/Margin/Content"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.72, 0.28, 1)
+text = "综合考核：行动 0 / 8"
+
 [node name="ChapterCode" type="Label" parent="TutorialFoldable/Margin/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.82, 0.38, 1)
@@ -136,14 +142,28 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "留在本章"
 
+[node name="CompletionSummary" type="Label" parent="TutorialFoldable/Margin/Content"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.9, 0.76, 1)
+text = "章节总结"
+autowrap_mode = 2
+
 [node name="Spacer" type="Control" parent="TutorialFoldable/Margin/Content"]
 layout_mode = 2
 size_flags_vertical = 3
 
 [node name="HintButton" type="Button" parent="TutorialFoldable/Margin/Content"]
+visible = false
 custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 text = "显示操作提示"
+
+[node name="ResetStepButton" type="Button" parent="TutorialFoldable/Margin/Content"]
+visible = false
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+text = "重置本步骤"
 
 [node name="Actions" type="GridContainer" parent="TutorialFoldable/Margin/Content"]
 layout_mode = 2
