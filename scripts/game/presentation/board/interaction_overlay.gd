@@ -39,6 +39,10 @@ func get_preview_count() -> int:
 	return _previews.size()
 
 
+func get_tutorial_target() -> Vector2i:
+	return _tutorial_target
+
+
 func _draw() -> void:
 	if Mapper.is_authority_cell_valid(_tutorial_target):
 		var target_center: Vector2 = Mapper.authority_to_world(_tutorial_target, _side, _cell_size)

@@ -12,6 +12,7 @@ const WHEEL_PAN_SPEED: float = 420.0
 @onready var _board_world: Node2D = $BoardSubViewport/BoardWorld
 @onready var _camera: Camera2D = $BoardSubViewport/BoardWorld/BoardCamera2D
 @onready var _scroll_bar: VScrollBar = $VerticalScrollBar
+@onready var _coordinate_label: Label = %CoordinateLabel
 
 var _fit_zoom: float = 1.0
 var _zoom_multiplier: float = 1.0
@@ -24,6 +25,8 @@ func _ready() -> void:
 	_board_world.cancel_or_marker_requested.connect(_on_cancel_or_marker_requested)
 	_board_world.zoom_requested.connect(_apply_zoom_step)
 	_board_world.pan_requested.connect(_on_pan_requested)
+	_board_world.point_hovered.connect(_on_point_hovered)
+	_board_world.point_hover_ended.connect(_on_point_hover_ended)
 	_scroll_bar.value_changed.connect(_on_scroll_bar_value_changed)
 	_sync_layout()
 
@@ -128,6 +131,7 @@ func get_render_snapshot() -> Dictionary:
 	snapshot["focused_cell_visible"] = _is_cell_visible(_focused_cell)
 	snapshot["camera_position"] = _camera.position
 	snapshot["camera_zoom"] = _camera.zoom
+	snapshot["coordinate_text"] = _coordinate_label.text
 	return snapshot
 
 
@@ -218,3 +222,11 @@ func _on_point_activated(cell: Vector2i) -> void:
 
 func _on_cancel_or_marker_requested(cell: Vector2i) -> void:
 	cancel_or_marker_requested.emit(cell)
+
+
+func _on_point_hovered(cell: Vector2i) -> void:
+	_coordinate_label.text = "坐标：（%d, %d）" % [cell.x, cell.y]
+
+
+func _on_point_hover_ended() -> void:
+	_coordinate_label.text = "坐标：—"

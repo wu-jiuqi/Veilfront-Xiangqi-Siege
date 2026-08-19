@@ -4,6 +4,8 @@ signal point_activated(cell: Vector2i)
 signal cancel_or_marker_requested(cell: Vector2i)
 signal zoom_requested(step: float)
 signal pan_requested(amount: float)
+signal point_hovered(cell: Vector2i)
+signal point_hover_ended()
 
 @export var board_theme: BoardTheme
 
@@ -29,6 +31,8 @@ func _ready() -> void:
 	_input_surface.cancel_or_marker_requested.connect(_on_cancel_or_marker_requested)
 	_input_surface.zoom_requested.connect(_on_zoom_requested)
 	_input_surface.pan_requested.connect(_on_pan_requested)
+	_input_surface.point_hovered.connect(func(cell: Vector2i) -> void: point_hovered.emit(cell))
+	_input_surface.point_hover_ended.connect(func() -> void: point_hover_ended.emit())
 	_configure_empty_board()
 
 
@@ -87,6 +91,7 @@ func get_render_snapshot() -> Dictionary:
 		"marker_count": _marker_overlay.get_marker_count(),
 		"tactical_group_count": _tactical_overlay.get_group_count(),
 		"interaction_preview_count": _interaction_overlay.get_preview_count(),
+		"tutorial_target": _interaction_overlay.get_tutorial_target(),
 		"flag_cell_fogged": _fog_overlay.is_cell_fogged(flag_cell) \
 			if flag_cell != Vector2i.ZERO else false,
 		"flag_memory_visible": _flag_renderer.get_rendered_count() > 0,
