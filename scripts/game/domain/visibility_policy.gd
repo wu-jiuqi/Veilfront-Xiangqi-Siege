@@ -43,6 +43,10 @@ static func is_cell_visible(state: Dictionary, side: String, cell: Vector2i) -> 
 
 static func visible_cell_set(state: Dictionary, side: String) -> Dictionary:
 	var result: Dictionary = {}
+	for cell_value: Variant in state.get("tutorial_visible_cells", {}).get(side, []):
+		var tutorial_cell: Vector2i = Canonical.coordinate(cell_value)
+		if MatchState.is_inside_board(tutorial_cell):
+			result[Canonical.cell_key(tutorial_cell)] = true
 	var first_y: int = 1 if side == MatchState.RED else 22
 	var last_y: int = 3 if side == MatchState.RED else 24
 	for y: int in range(first_y, last_y + 1):

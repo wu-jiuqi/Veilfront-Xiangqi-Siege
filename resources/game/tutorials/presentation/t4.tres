@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="TutorialPresentationTrack" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/tutorial/tutorial_presentation_track.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+track_id = "tutorial-t4-presentation-v1"
+level_id = "T4"
+title = "蓝线开路"
+subtitle = "车"
+goal = "体验车的顺序歼灭、路径视野和隐藏马接触停止。"
+tags = PackedStringArray("蓝色路径", "顺序歼灭", "路径视野", "隐藏接触")
+steps = Array[Dictionary]([{"id":"t4_path","type":"move","actor":"rr4a","target":[2,15],"title":"顺序处理路径目标","prompt":"选择左侧红车和（2,15）。蓝线表示本次车路径。","success":"红车按路径顺序消灭黑卒和黑炮，并保留完整路径视野。"},{"id":"t4_hidden","type":"move","actor":"rr4b","target":[6,15],"title":"接触未显形马","prompt":"右侧红车试图走到（6,15）。确认后观察实际停止点。","success":"红车在（6,12）首次接触隐身马，吃马并停点。"},{"id":"t4_ghost","type":"observe","title":"观察己方阵亡虚影","prompt":"播放黑车吃掉红兵的脚本行动，观察红方自己的阵亡点。","button":"播放黑方吃子","success":"红兵进入公开阵亡记录，红方视图留下持续一回合的虚影。"},{"id":"t4_quiz","type":"quiz","title":"规则确认","prompt":"车路径中途首次接触未显形敌马时应如何结算？","options":["行动非法","穿过敌马","吃掉敌马并停在接触点"],"correct":2,"success":"正确：接触点既是吃子点，也是本次行动停止点。"}])
+summary = PackedStringArray("蓝色只描车的本次路径", "车按经过顺序处理敌棋", "车不能穿过友军", "首次接触隐身马时吃马并停点")

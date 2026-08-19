@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="TutorialPresentationTrack" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/tutorial/tutorial_presentation_track.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+track_id = "tutorial-t1-presentation-v1"
+level_id = "T1"
+title = "穿阵不伤"
+subtitle = "兵 / 卒"
+goal = "区分兵卒普通一步移动与 2–5 点特殊穿越。"
+tags = PackedStringArray("普通一步", "特殊穿越", "穿敌不伤", "终点为空")
+steps = Array[Dictionary]([{"id":"t1_step","type":"move","actor":"rp1","target":[5,11],"title":"先走普通一步","prompt":"让红兵从（5,10）普通前进到（5,11）。","success":"普通移动只前进一个交点。"},{"id":"t1_cross","type":"move","actor":"rp1","target":[5,15],"title":"穿过两枚敌棋","prompt":"选择特殊行动的目标（5,15）。沿途黑卒与黑炮不会被吃掉。","success":"红兵穿阵抵达空点（5,15），沿途敌棋仍在，且没有形成路径视野。"},{"id":"t1_quiz","type":"quiz","title":"规则确认","prompt":"特殊兵从敌棋上穿过时，会发生什么？","options":["沿途全部吃掉","穿过但不伤害","碰到第一枚就停止"],"correct":1,"success":"正确：特殊穿越只提供机动，不造成沿途伤害。"}])
+summary = PackedStringArray("普通兵可前、左、右一步", "特殊兵可直线移动 2–5 点", "可以穿敌，不能穿友军", "终点必须为空且不产生路径视野")

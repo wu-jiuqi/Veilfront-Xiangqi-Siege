@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="TutorialPresentationTrack" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/tutorial/tutorial_presentation_track.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+track_id = "tutorial-t2-presentation-v1"
+level_id = "T2"
+title = "越腿入雾"
+subtitle = "马"
+goal = "观察大本营蹩马腿、特殊区域越腿隐身和相田显形。"
+tags = PackedStringArray("蹩马腿", "特殊越腿", "隐身", "显形")
+steps = Array[Dictionary]([{"id":"t2_reject","type":"reject","actor":"rh2a","target":[5,4],"title":"验证大本营马腿","prompt":"选择大本营内红马，尝试移动到（5,4）并确认。这个动作应被公开拒绝。","success":"行动未提交：大本营内仍遵循蹩马腿。"},{"id":"t2_hide","type":"move","actor":"rh2b","target":[5,12],"title":"特殊越腿并隐身","prompt":"选择战区红马，移动到（5,12）。敌墙完整时，特殊马可以无视马腿。","success":"红马越腿成功并进入隐身。"},{"id":"t2_observe","type":"observe","title":"观察相田显形","prompt":"继续观察黑象建立覆盖马位置的田字显形区。","button":"继续观察","success":"相田覆盖后，隐身马显形。区域视野本身不等于反隐。"},{"id":"t2_quiz","type":"quiz","title":"规则确认","prompt":"敌墙倒塌后获得敌方区域视野，是否自动看见隐身马？","options":["自动看见","不会，仍需显形原因"],"correct":1,"success":"正确：战争迷雾视野与反隐是两套条件。"}])
+summary = PackedStringArray("大本营内仍受蹩马腿", "特殊区域且敌墙完整时可无视马腿", "特殊马落点后隐身", "相田等显形原因才能公开隐身马")

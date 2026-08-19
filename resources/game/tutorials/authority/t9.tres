@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="TutorialScenarioDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/application/tutorial_scenario_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+scenario_id = "tutorial-t9-v1"
+level_id = "T9"
+fixture_key = "ftue-t9"
+bound_seat = "red"
+seed_value = 471009
+initial_pieces = Array[Dictionary]([{"id":"re9","side":"red","piece_type":"elephant","position":[3,10]},{"id":"rp9","side":"red","piece_type":"pawn","position":[6,11]},{"id":"bp9","side":"black","piece_type":"pawn","position":[8,15]}])
+initial_visible_cells = Array[Vector2i]([Vector2i(2,9),Vector2i(3,9),Vector2i(4,9),Vector2i(2,10),Vector2i(3,10),Vector2i(4,10),Vector2i(5,10),Vector2i(5,11),Vector2i(6,11),Vector2i(7,11),Vector2i(5,12),Vector2i(6,12),Vector2i(7,12)])
+initial_flags = Array[Dictionary]([{"id":"flag-a","position":[6,13],"owner":"neutral","discovered_by":[]}])
+allow_any_public_preview = true

@@ -55,6 +55,7 @@ func _on_level_play_requested(level: LevelDefinition) -> void:
 	if _transitioning or not level.available:
 		return
 	_transitioning = true
+	get_tree().root.set_meta("veilfront_selected_level_id", level.level_id)
 	var error := get_tree().change_scene_to_file(level.scene_path)
 	if error != OK:
 		_transitioning = false

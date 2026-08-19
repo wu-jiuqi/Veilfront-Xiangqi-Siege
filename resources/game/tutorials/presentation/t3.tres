@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="TutorialPresentationTrack" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/tutorial/tutorial_presentation_track.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+track_id = "tutorial-t3-presentation-v1"
+level_id = "T3"
+title = "田字封路"
+subtitle = "相 / 象"
+goal = "建立黄色田字九点，并预测敌车、敌兵的首次停止点。"
+tags = PackedStringArray("无视象眼", "十九点视野", "黄色九点", "敌车兵截停")
+steps = Array[Dictionary]([{"id":"t3_move","type":"move","actor":"re3","target":[5,12],"title":"跨过象眼","prompt":"让红相从（3,10）移动到（5,12）。黄色边框只应围住田字九点。","success":"红相在特殊区域无视象眼，三组区域共同提供视野。"},{"id":"t3_rook","type":"predict","target":[5,11],"title":"预测敌车停止点","prompt":"黑车准备从（8,11）驶向（2,11）。点击它从田字外进入时遇到的第一个交点。","success":"正确：黑车在（5,11）首次进入田字九点。"},{"id":"t3_pawn","type":"predict","target":[4,12],"title":"预测敌卒停止点","prompt":"黑卒准备从（4,15）向（4,10）特殊移动。点击它首次进入田字九点的位置。","success":"正确：黑卒在（4,12）被截停。"},{"id":"t3_friend","type":"observe","title":"友军不受阻挡","prompt":"观察红车沿 Y=10 从田字九点内正常通过。","button":"播放友军通过","success":"田字阻挡只对敌方车和兵/卒生效。"}])
+summary = PackedStringArray("特殊相可无视象眼", "视野是起点、田字与终点区域的并集", "黄色只描田字九点", "田字只截停敌车和敌兵的首次进入")

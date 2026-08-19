@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="TutorialScenarioDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/application/tutorial_scenario_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+scenario_id = "tutorial-t6-v1"
+level_id = "T6"
+fixture_key = "ftue-t6"
+bound_seat = "red"
+seed_value = 471006
+initial_pieces = Array[Dictionary]([{"id":"ra6","side":"red","piece_type":"advisor","position":[4,1]}])
+initial_visible_cells = Array[Vector2i]([Vector2i(4,1),Vector2i(5,1),Vector2i(6,1),Vector2i(4,2),Vector2i(5,2),Vector2i(6,2),Vector2i(4,3),Vector2i(5,3),Vector2i(6,3)])
+initial_casualties = Array[Dictionary]([{"id":"dead-rook-6","side":"red","piece_type":"rook"},{"id":"dead-pawn-6","side":"red","piece_type":"pawn"},{"id":"dead-advisor-6","side":"red","piece_type":"advisor"},{"id":"dead-general-6","side":"red","piece_type":"general"}])
+allow_any_public_preview = true

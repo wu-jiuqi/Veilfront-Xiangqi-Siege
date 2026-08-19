@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="TutorialPresentationTrack" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/tutorial/tutorial_presentation_track.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+track_id = "tutorial-t7-presentation-v1"
+level_id = "T7"
+title = "实际阵亡"
+subtitle = "将 / 帅"
+goal = "验证本作没有将军与飞将限制，只有实际被吃才失败。"
+tags = PackedStringArray("九宫移动", "取消将军", "取消飞将", "实际死亡结算")
+steps = Array[Dictionary]([{"id":"t7_move","type":"move","actor":"rg7","target":[5,2],"title":"进入攻击范围","prompt":"把红帅移动到（5,2）。虽然黑车控制这一横线，但不会触发“将军”失败。","success":"红帅仍然存活并可继续对局；本作没有应将检查。"},{"id":"t7_capture","type":"move","actor":"rr7","target":[5,24],"title":"实际吃掉黑将","prompt":"使用已在黑营内的红车吃掉（5,24）的黑将。","success":"黑将实际阵亡，并以最高优先级结束对局。"},{"id":"t7_quiz","type":"quiz","title":"胜负确认","prompt":"将帅进入敌方攻击范围时，何时才会失败？","options":["进入范围立刻失败","被实际吃掉时","出现照面时"],"correct":1,"success":"正确：只有实际死亡才触发所属方失败。"}])
+summary = PackedStringArray("将帅与士仍受九宫限制", "没有将军、应将、将死、照面或飞将", "将帅可以进入攻击范围", "只有实际阵亡才结束对局")

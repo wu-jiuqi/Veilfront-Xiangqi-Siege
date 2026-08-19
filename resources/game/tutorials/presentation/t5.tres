@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="TutorialPresentationTrack" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/tutorial/tutorial_presentation_track.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+track_id = "tutorial-t5-presentation-v1"
+level_id = "T5"
+title = "一架一轰"
+subtitle = "炮"
+goal = "区分隔一子精确吃子与大本营区域轰炸。"
+tags = PackedStringArray("炮架吃子", "3×3 轰炸", "每炮两发", "允许友伤")
+steps = Array[Dictionary]([{"id":"t5_capture","type":"move","actor":"rc5a","target":[2,7],"title":"隔一架精确吃子","prompt":"选择红炮和黑车所在的（2,7），确认中间恰好只有一枚炮架。","success":"红炮隔一枚炮架吃掉黑车。"},{"id":"t5_bombard","type":"bombard","actor":"rc5b","target":[5,12],"title":"选择轰炸中心","prompt":"选择仍在红方大本营的另一门炮，再选择（5,12）作为完整 3×3 的中心。","success":"固定教学种子抽取三个不同命中点；弹药由 2 降为 1。"},{"id":"t5_quiz","type":"quiz","title":"规则确认","prompt":"这门炮还有一发弹药，下一次满足资格时是否需要等待共享冷却？","options":["需要等待","不需要，本作没有共享冷却"],"correct":1,"success":"正确：资格只取决于敌墙、炮位置和该炮弹药。"}])
+summary = PackedStringArray("精确吃子必须隔恰好一枚炮架", "轰炸炮必须在己方大本营", "中心完整 3×3 必须在特殊区域", "随机三点允许友伤且没有共享冷却")

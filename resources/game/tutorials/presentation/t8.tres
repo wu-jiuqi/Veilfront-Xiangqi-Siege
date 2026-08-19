@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="TutorialPresentationTrack" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/tutorial/tutorial_presentation_track.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+track_id = "tutorial-t8-presentation-v1"
+level_id = "T8"
+title = "雾墙攻防"
+subtitle = "特色机制"
+goal = "三子破墙，并按战区→缓冲区→大本营的顺序进攻。"
+tags = PackedStringArray("三子破墙", "倒塌视野", "不自动反隐", "缓冲区前置")
+steps = Array[Dictionary]([{"id":"t8_breach","type":"move","actor":"inv8c","target":[7,18],"title":"第三枚入侵者进入缓冲区","prompt":"让红车从战区进入黑方缓冲区（7,18），使缓冲区内红子达到三枚。","success":"黑墙倒塌，黑方缓冲区和大本营区域视野向红方开放。"},{"id":"t8_reject","type":"reject","actor":"rr8","target":[2,23],"title":"验证不能直攻大本营","prompt":"黑墙已经倒塌。尝试让仍在战区的红车直接攻击黑营（2,23）。","success":"行动未提交：即使城墙倒塌，也必须先停入守方缓冲区。"},{"id":"t8_buffer","type":"move","actor":"rr8","target":[2,20],"title":"先停入缓冲区","prompt":"让红车先移动到黑方缓冲区（2,20）。","success":"红车已经完成进攻大本营的前置停留。"},{"id":"t8_base","type":"move","actor":"rr8","target":[2,23],"title":"下一次行动进入大本营","prompt":"现在从缓冲区攻击黑营内的黑炮（2,23）。","success":"进攻顺序合法：战区→缓冲区→大本营。"},{"id":"t8_quiz","type":"quiz","title":"视野确认","prompt":"城墙倒塌提供区域视野后，黑营内隐身马是否自动显形？","options":["自动显形","仍然隐藏"],"correct":1,"success":"正确：区域视野解除迷雾，但不等同于反隐。"}])
+summary = PackedStringArray("完整墙阻止敌棋踏入或跨越墙线", "缓冲区同时存在三枚入侵棋会破墙", "倒塌墙提供区域视野但不自动反隐", "进攻大本营仍需先停入守方缓冲区")

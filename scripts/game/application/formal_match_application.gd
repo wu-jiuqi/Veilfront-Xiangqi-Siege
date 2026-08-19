@@ -8,6 +8,7 @@ const ObserverProjector = preload("res://scripts/game/projection/observer_projec
 const PublicActionPreviewer = preload("res://scripts/game/projection/public_action_previewer.gd")
 const VisibleOutcomeProjector = preload("res://scripts/game/projection/visible_outcome_projector.gd")
 const ObserverReplayValidator = preload("res://scripts/game/application/observer_replay_validator.gd")
+const ScenarioBootstrap = preload("res://scripts/game/domain/scenario_bootstrap.gd")
 
 var _state: Dictionary = {}
 var _viewer_context: RefCounted
@@ -25,6 +26,24 @@ static func create_trusted(
 	var application: RefCounted = new()
 	application._state = RuleEngine.create_match(seed_value, configuration)
 	application._viewer_context = ViewerContext.create_trusted(bound_seat)
+	application._prepare_authority_turn()
+	application._initial_player_view = application.current_player_view().duplicate(true)
+	return application
+
+
+static func create_trusted_scenario(
+	scenario: TutorialScenarioDefinition,
+	configuration: Dictionary = {}
+) -> RefCounted:
+	if scenario == null or not scenario.is_valid_definition():
+		return null
+	var application: RefCounted = new()
+	var base_state: Dictionary = RuleEngine.create_match(scenario.seed_value, configuration)
+	var bootstrap_result: Dictionary = ScenarioBootstrap.create_validated(base_state, scenario)
+	if not bool(bootstrap_result.get("ok", false)):
+		return null
+	application._state = bootstrap_result.get("state", {}).duplicate(true)
+	application._viewer_context = ViewerContext.create_trusted(scenario.bound_seat)
 	application._prepare_authority_turn()
 	application._initial_player_view = application.current_player_view().duplicate(true)
 	return application
@@ -86,6 +105,52 @@ func submit_intent(normalized_intent: Dictionary) -> Dictionary:
 		"player_view": frame["player_view_or_digest"].duplicate(true),
 		"visible_events": frame["visible_events"].duplicate(true),
 		"visible_error": frame["visible_error"].duplicate(true),
+		"action_previews": frame["action_previews"].duplicate(true),
+	}
+
+
+func advance_trusted_scripted_pass() -> Dictionary:
+	if bool(_state.get("terminal", false)) \
+	or str(_state.get("active_side", "")) == str(_viewer_context.call("side")):
+		return {
+			"ok": false,
+			"consumed": false,
+			"player_view": current_player_view(),
+			"visible_events": current_visible_events(),
+			"visible_error": {},
+			"action_previews": current_action_previews(),
+		}
+	var actor_side := str(_state.get("active_side", ""))
+	var action_index := int(_state.get("action_index", 0))
+	var domain_intent := {
+		"piece_id": "",
+		"action_type": "pass",
+		"target_cell": [],
+		"skill_type": "",
+	}
+	var result: Dictionary = RuleEngine.submit_action(_state, domain_intent, {
+		"trusted_generated_action": true,
+		"include_state_summary": false,
+		"preparation_token": str(_preparation.get("token", "")),
+		"public_classification": "KNOWN_LEGAL",
+	})
+	if bool(result.get("consumed", false)) and not bool(_state.get("terminal", false)):
+		_prepare_authority_turn()
+	var frame: Dictionary = _compose_safe_frame(
+		_state,
+		_viewer_context,
+		{},
+		_observer_frames.size() + 1
+	)
+	_observer_frames.append(frame)
+	return {
+		"ok": bool(result.get("ok", false)),
+		"consumed": bool(result.get("consumed", false)),
+		"scripted_actor_side": actor_side,
+		"scripted_action_index": action_index,
+		"player_view": frame["player_view_or_digest"].duplicate(true),
+		"visible_events": frame["visible_events"].duplicate(true),
+		"visible_error": {},
 		"action_previews": frame["action_previews"].duplicate(true),
 	}
 

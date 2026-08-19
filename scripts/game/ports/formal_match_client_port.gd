@@ -1,8 +1,6 @@
 class_name FormalMatchClientPort
 extends MatchClientPort
 
-const NormalizedIntentCodec = preload("res://scripts/game/domain/normalized_intent_codec.gd")
-
 var _session: RefCounted
 var _prepared_preview_id: String = ""
 
@@ -31,19 +29,15 @@ func confirm_prepared_action(preview_id: String) -> void:
 	var preview: Dictionary = _find_preview(preview_id)
 	if preview.is_empty():
 		return
-	var view: Dictionary = _session.current_payload().get("player_view", {})
-	var intent: Dictionary = {
-		"schema_version": NormalizedIntentCodec.SCHEMA_VERSION,
-		"intent_id": "local:%d:%s" % [int(view.get("action_index", 0)), preview_id],
-		"expected_action_index": int(view.get("action_index", 0)),
-		"piece_id": str(preview.get("piece_id", "")),
-		"action_type": str(preview.get("action_type", "")),
-		"target_cell": preview.get("target_cell", []).duplicate(),
-		"skill_type": str(preview.get("skill_type", "")),
-		"confirmation_token": "",
-	}
 	_prepared_preview_id = ""
-	_publish_payload(_session.submit_intent(intent))
+	var submit_result: Dictionary = _session.submit_preview(preview)
+	_publish_payload(submit_result)
+	if bool(submit_result.get("consumed", false)) \
+	and _session.has_method("should_auto_advance_opponent") \
+	and bool(_session.should_auto_advance_opponent()):
+		var scripted_result: Dictionary = _session.advance_scripted_opponent()
+		if bool(scripted_result.get("consumed", false)):
+			_publish_payload(scripted_result)
 
 
 func cancel_prepared_action() -> void:

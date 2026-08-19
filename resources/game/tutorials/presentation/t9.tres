@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="TutorialPresentationTrack" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/tutorial/tutorial_presentation_track.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+track_id = "tutorial-t9-presentation-v1"
+level_id = "T9"
+title = "雾中旗帜"
+subtitle = "特色机制"
+goal = "发现旗帜、验证永久记忆，并维持占领到 3/3。"
+tags = PackedStringArray("旗帜隐藏", "发现记忆", "公开进度", "位置仍保密")
+steps = Array[Dictionary]([{"id":"t9_discover","type":"move","actor":"re9","target":[5,12],"title":"用相扩展视野发现旗帜","prompt":"让红相移动到（5,12）。终点中心 3×3 将覆盖旗点（6,13）。","success":"红方首次发现旗帜，旗帜 ID 写入红方永久发现记录。"},{"id":"t9_memory","type":"observe","title":"观察迷雾恢复与记忆","prompt":"让相的临时视野离开旗点；观察旗帜图标仍作为红方记忆保留。","button":"让视野离开","success":"旗点重新入雾，但红方仍显示记忆图标。"},{"id":"t9_capture","type":"move","actor":"rp9","target":[6,13],"title":"开始占领旗帜","prompt":"让红兵停在已发现旗点（6,13）。","success":"红方正在夺旗（1/3）。公开消息不向未发现方附带旗坐标。"},{"id":"t9_wait1","type":"observe","title":"等待对方一次行动","prompt":"播放一次脚本黑方合法行动。","button":"黑方行动","success":"红方正在夺旗（2/3）。"},{"id":"t9_wait2","type":"observe","title":"完成占领","prompt":"再播放一次脚本黑方合法行动。","button":"黑方行动","success":"红方成功夺得一面旗帜。"},{"id":"t9_quiz","type":"quiz","title":"信息边界确认","prompt":"未发现旗帜的一方看到“红方正在夺旗（2/3）”后，会自动获得旗坐标吗？","options":["会公开坐标","不会，只公开进度"],"correct":1,"success":"正确：占领进度公开，但旗位仍由各方发现记忆决定。"}])
+summary = PackedStringArray("三旗位于战区并受迷雾影响", "进入视野后为发现方永久保留记忆图标", "占领进度绑定具体棋子", "公开夺旗消息不会公开未发现旗位")
