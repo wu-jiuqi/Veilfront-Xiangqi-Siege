@@ -1,0 +1,338 @@
+asset_inventory:
+  schema_version: veilfront-demo-art-inventory/v1
+  project_id: veilfront-xiangqi-siege
+  baseline_ref: docs/art/veilfront-visual-baseline-v1.md
+  status: preproduction_inventory
+  production_gate: GATE-2
+  source_authority: codex-thread://current#owner-freeze-oblique-3d-board-art-direction
+  phases:
+    preproduction:
+      allowed: true
+      includes:
+      - 视觉基线
+      - 目标分辨率样片
+      - 少量游戏内集成样片
+      - 完整资产清单与成本未知项
+    batch_production:
+      allowed: false
+      requires:
+      - GATE-2项目所有者批准
+      - 新生产Contract
+      - 独立QA视觉与信息边界证据
+  categories:
+  - category_id: board
+    name: 棋盘与地表
+    items:
+    - id: ART-BOARD-BASE
+      name: 24×9战场底板
+      quantity: 1
+      source_spec: Blender或等价3D源文件，薄实体底板
+      runtime_spec: GLB或BoxMesh，约11.4×0.22×29.4世界单位
+      dependencies: [ART-MAT-GROUND]
+      phase: preproduction_sample
+      status: planned
+      acceptance: 九路完整、边缘有厚度、无规则信息、三个目标分辨率清晰
+    - id: ART-BOARD-GRID
+      name: 精确交点网格覆盖
+      quantity: 1
+      source_spec: 矢量或无损透明源图，9路24线
+      runtime_spec: 透明Texture2D，mipmap开启，不由生成式图片生成线条
+      dependencies: [ART-BOARD-BASE]
+      phase: preproduction_sample
+      status: planned
+      acceptance: 216交点与一基逻辑坐标一致，无漏线、弯线、闪烁或Z-fighting
+    - id: ART-BOARD-ZONES
+      name: 大本营/缓冲区/战区材质变体
+      quantity: 3
+      source_spec: 可平铺PBR纹理或调色遮罩
+      runtime_spec: StandardMaterial3D或ORMMaterial3D
+      dependencies: [ART-MAT-GROUND]
+      phase: post_gate2_batch
+      status: inventoried
+      acceptance: 不增加区域分割线，区域大字不越界
+    - id: ART-BOARD-DECALS
+      name: 战场痕迹与装饰贴花
+      quantity: 8
+      source_spec: 车辙、焦痕、碎石、旗印、土色变化
+      runtime_spec: Decal或材质遮罩，单项≤1024px
+      dependencies: [ART-BOARD-BASE]
+      phase: post_gate2_batch
+      status: inventoried
+      acceptance: 不遮住网格、交点和战术高亮
+  - category_id: materials
+    name: 公共材质
+    items:
+    - id: ART-MAT-GROUND
+      name: 泥土战场材质组
+      quantity: 1
+      source_spec: Albedo/Normal/ORM无缝纹理
+      runtime_spec: 最大2048px，VRAM Compressed，mipmap开启
+      dependencies: []
+      phase: preproduction_sample
+      status: planned
+      acceptance: 斜视无明显重复和闪烁，低饱和不抢交互信息
+    - id: ART-MAT-BRONZE
+      name: 旧青铜与金属材质组
+      quantity: 1
+      source_spec: Albedo/Normal/ORM
+      runtime_spec: 最大2048px，VRAM Compressed
+      dependencies: []
+      phase: post_gate2_batch
+      status: inventoried
+      acceptance: 粗糙度稳定，不依赖SSR仍可读
+    - id: ART-MAT-LACQUER
+      name: 红黑漆器材质组
+      quantity: 2
+      source_spec: 红漆与黑漆PBR材质
+      runtime_spec: 最大1024px，VRAM Compressed
+      dependencies: []
+      phase: post_gate2_batch
+      status: inventoried
+      acceptance: 红黑阵营在色觉弱化模拟下仍有明度和轮廓差异
+  - category_id: pieces
+    name: 棋子角色
+    items:
+    - id: ART-PIECE-MASTERS
+      name: 红黑七兵种静态立绘
+      quantity: 14
+      source_spec: 直立1024×1536；宽体1536×1536；透明背景；统一脚底线
+      runtime_spec: 直立最大512×768；宽体最大768×768；VRAM Compressed+mipmap
+      dependencies: [ART-PIECE-SHADOW, ART-PIECE-BASE]
+      phase: post_gate2_batch
+      status: inventoried
+      acceptance: 96～180px屏幕高度下能仅凭轮廓和主道具识别兵种
+    - id: ART-PIECE-SAMPLE-INFANTRY
+      name: 红黑步兵样片
+      quantity: 2
+      source_spec: 同正式立绘规格
+      runtime_spec: Sprite3D静态样片
+      dependencies: [ART-PIECE-SHADOW, ART-PIECE-BASE]
+      phase: preproduction_sample
+      status: planned
+      acceptance: 近中远距离可读，透明边缘无白边，前后遮挡稳定
+    - id: ART-PIECE-SAMPLE-CAVALRY
+      name: 红黑骑兵样片
+      quantity: 2
+      source_spec: 1536×1536透明源图
+      runtime_spec: 最大768×768 Sprite3D
+      dependencies: [ART-PIECE-SHADOW, ART-PIECE-BASE]
+      phase: preproduction_sample
+      status: planned
+      acceptance: 与步兵高度差明确但不连续遮住两个以上交点
+    - id: ART-PIECE-BASE
+      name: 阵营底座/识别环
+      quantity: 2
+      source_spec: 红黑阵营形状与色彩双重区分
+      runtime_spec: QuadMesh或低模圆环材质
+      dependencies: []
+      phase: preproduction_sample
+      status: planned
+      acceptance: 入雾、选中和高亮状态不混淆
+    - id: ART-PIECE-SHADOW
+      name: 通用椭圆假阴影
+      quantity: 3
+      source_spec: 小/中/大型柔边透明纹理
+      runtime_spec: 水平QuadMesh，实时阴影关闭
+      dependencies: []
+      phase: preproduction_sample
+      status: planned
+      acceptance: 无明显透明排序错误且稳定接地
+    - id: ART-PIECE-ANIMATIONS
+      name: 十四类棋子动作集
+      quantity: 14
+      source_spec: idle/move/attack/hurt/death/special，每动作4～8关键帧目标
+      runtime_spec: AnimatedSprite3D图集；实际帧数由GATE-2后预算冻结
+      dependencies: [ART-PIECE-MASTERS]
+      phase: post_gate2_batch
+      status: inventoried_unestimated
+      acceptance: 动作可跳过并由VisibleEvent驱动，不改变规则结算时序
+  - category_id: structures
+    name: 城墙与战场结构
+    items:
+    - id: ART-WALL-STATES
+      name: 红黑城墙状态组
+      quantity: 8
+      source_spec: 两阵营×完整/受损/倒塌/修复中
+      runtime_spec: GLB模块，静态碰撞按需使用-col命名
+      dependencies: [ART-MAT-BRONZE, ART-MAT-LACQUER]
+      phase: post_gate2_batch
+      status: inventoried
+      acceptance: Y=4/Y=21线状态一眼可辨且不遮住邻近棋子
+    - id: ART-WALL-SAMPLE
+      name: 单阵营城墙三状态样片
+      quantity: 3
+      source_spec: 完整/受损/倒塌模块
+      runtime_spec: GLB或预置MeshInstance3D
+      dependencies: [ART-MAT-GROUND]
+      phase: preproduction_sample
+      status: planned
+      acceptance: 与网格对齐，斜视轮廓清晰，无交点点击阻塞
+    - id: ART-ENV-PROP-KIT
+      name: 战场装饰模块组
+      quantity: 12
+      source_spec: 营寨、箭塔、残车、火盆、壕沟、沙丘等
+      runtime_spec: GLB模块，LOD开启
+      dependencies: [ART-MAT-GROUND, ART-MAT-BRONZE]
+      phase: post_gate2_batch
+      status: inventoried
+      acceptance: 只放在棋盘边界或明确装饰位，不形成规则暗示
+  - category_id: fog
+    name: 战争迷雾
+    items:
+    - id: ART-FOG-MATERIAL
+      name: 9×24迷雾mask材质
+      quantity: 1
+      source_spec: 黑蓝半透明与柔化边缘设计
+      runtime_spec: 单一SubViewport/纹理+ShaderMaterial
+      dependencies: [ART-FOG-NOISE]
+      phase: preproduction_sample
+      status: planned
+      acceptance: 只消费visible_cells，不扩大视野，不泄露隐藏节点
+    - id: ART-FOG-NOISE
+      name: 迷雾边缘噪声
+      quantity: 2
+      source_spec: 无方向性灰度平铺纹理
+      runtime_spec: 512px以内，VRAM Compressed+mipmap
+      dependencies: []
+      phase: preproduction_sample
+      status: planned
+      acceptance: 不造成格边误判或动画眩目
+  - category_id: flags
+    name: 旗帜与目标
+    items:
+    - id: ART-FLAG-SET
+      name: 旗帜状态组
+      quantity: 5
+      source_spec: 未占领/红占领/黑占领/争夺中/记忆图标
+      runtime_spec: Sprite3D或低模旗杆+Sprite3D旗面
+      dependencies: [ART-FX-FLAG]
+      phase: post_gate2_batch
+      status: inventoried
+      acceptance: 发现记忆与现场可见状态明确不同且不泄露未发现坐标
+    - id: ART-FLAG-SAMPLE
+      name: 中立旗与记忆图标样片
+      quantity: 2
+      source_spec: 正式目标色板
+      runtime_spec: Sprite3D+UI图标
+      dependencies: []
+      phase: preproduction_sample
+      status: planned
+      acceptance: 在雾上可读，不与私有标记混淆
+  - category_id: ui
+    name: 界面与图标
+    items:
+    - id: ART-UI-SHELL
+      name: 对局HUD与侧栏皮肤
+      quantity: 1
+      source_spec: 1280×720主布局，兼容960×540与1920×1080
+      runtime_spec: Godot Theme+StyleBox+九宫格纹理
+      dependencies: [ART-UI-ICONS]
+      phase: post_gate2_batch
+      status: inventoried
+      acceptance: 容器化布局，主要按钮≥44逻辑像素，无信息泄露
+    - id: ART-UI-SAMPLE
+      name: 战局侧栏局部样片
+      quantity: 1
+      source_spec: 回合、棋子信息、主要行动三块
+      runtime_spec: 现有Control场景换肤样片
+      dependencies: []
+      phase: preproduction_sample
+      status: planned
+      acceptance: 与三维棋盘色调统一且不压缩九路宽度
+    - id: ART-UI-ICONS
+      name: 兵种/状态/行动/标记图标集
+      quantity: 36
+      source_spec: SVG或1024px矢量源，单色轮廓优先
+      runtime_spec: 64～256px Texture2D，无mipmap
+      dependencies: []
+      phase: post_gate2_batch
+      status: inventoried_unestimated
+      acceptance: 24px显示时可辨，颜色不是唯一语义通道
+  - category_id: effects
+    name: 特效
+    items:
+    - id: ART-FX-CORE
+      name: 核心战术特效组
+      quantity: 10
+      source_spec: 选择、合法落点、攻击、受击、死亡、炮击、冲锋、城墙、复活、隐身显形
+      runtime_spec: Shader/Tween/GPUParticles3D组合
+      dependencies: [ART-PIECE-MASTERS]
+      phase: post_gate2_batch
+      status: inventoried_unestimated
+      acceptance: 0.8秒内传达结果，不遮挡交点，不泄露隐藏目标
+    - id: ART-FX-SAMPLE
+      name: 选择/落点/攻击样片
+      quantity: 3
+      source_spec: 正式强调色板
+      runtime_spec: MultiMeshInstance3D+粒子/Tween
+      dependencies: []
+      phase: preproduction_sample
+      status: planned
+      acceptance: 移动、攻击和危险语义无需文字即可区分
+    - id: ART-FX-FLAG
+      name: 旗帜占领反馈
+      quantity: 1
+      source_spec: 金色目标能量与阵营染色
+      runtime_spec: GPUParticles3D+UI反馈
+      dependencies: []
+      phase: post_gate2_batch
+      status: inventoried
+      acceptance: 不向未发现方公开位置
+  - category_id: audio
+    name: 音频
+    items:
+    - id: ART-AUDIO-MUSIC
+      name: 对局音乐
+      quantity: 2
+      source_spec: 对局常态与终局压力两条可循环曲目
+      runtime_spec: OGG，循环点校验
+      dependencies: []
+      phase: post_gate2_batch
+      status: inventoried_unestimated
+      acceptance: 不用隐藏信息驱动音乐层变化
+    - id: ART-AUDIO-AMBIENCE
+      name: 战场环境声
+      quantity: 3
+      source_spec: 风沙/营火/远战场
+      runtime_spec: OGG循环，分层混音
+      dependencies: []
+      phase: post_gate2_batch
+      status: inventoried_unestimated
+      acceptance: 循环无爆音，不掩盖行动反馈
+    - id: ART-AUDIO-SFX
+      name: 棋子与系统音效族
+      quantity: 18
+      source_spec: 移动、选中、攻击、受击、死亡、炮击、城墙、旗帜、UI等音效族
+      runtime_spec: 短WAV；3D定位音强制mono
+      dependencies: []
+      phase: post_gate2_batch
+      status: inventoried_unestimated
+      acceptance: 不播放观察者未授权事件的定位声音
+  - category_id: animation
+    name: 非棋子动画
+    items:
+    - id: ART-ANIM-CAMERA
+      name: 镜头交互动画
+      quantity: 3
+      source_spec: 缩放、长轴定位、双方视角切换
+      runtime_spec: Tween/AnimationPlayer
+      dependencies: []
+      phase: post_gate2_batch
+      status: inventoried
+      acceptance: 可跳过、无眩晕、切换后坐标与输入一致
+    - id: ART-ANIM-UI
+      name: UI动效组
+      quantity: 6
+      source_spec: 面板、确认、错误、回合、胜负、教学提示
+      runtime_spec: AnimationPlayer/Tween
+      dependencies: [ART-UI-SHELL]
+      phase: post_gate2_batch
+      status: inventoried_unestimated
+      acceptance: 不阻塞操作，不以动效替代文本/图标状态
+  cost_unknowns:
+  - 十四类棋子是否每类需要六套完整动作，还是部分动作复用Tween与特效
+  - 红黑阵营是否需要完全不同的角色设计与装备体系
+  - 3D结构模型由内部制作、资产商店改造还是外包
+  - 音乐、语音和战斗音效的授权与制作方式
+  - Forward+高级特性对最低桌面配置的性能成本
+  - 全套资产实际生产周期、预算、人员与外包批次
