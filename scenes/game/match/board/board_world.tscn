@@ -30,10 +30,6 @@ board_theme = ExtResource("1_theme")
 [node name="GridRenderer" type="Node2D" parent="."]
 script = ExtResource("7_grid_script")
 
-[node name="PieceLayer" type="Node2D" parent="."]
-script = ExtResource("8_piece_script")
-piece_scene = ExtResource("13_piece_scene")
-
 [node name="FogOverlay" parent="." instance=ExtResource("2_fog")]
 
 [node name="StructureLayer" type="Node2D" parent="."]
@@ -53,6 +49,10 @@ flag_scene = ExtResource("15_flag_scene")
 [node name="CaptureGhostLayer" type="Node2D" parent="."]
 script = ExtResource("11_ghost_script")
 ghost_scene = ExtResource("16_ghost_scene")
+
+[node name="PieceLayer" type="Node2D" parent="."]
+script = ExtResource("8_piece_script")
+piece_scene = ExtResource("13_piece_scene")
 
 [node name="MarkerOverlay" parent="." instance=ExtResource("3_marker")]
 

@@ -5,11 +5,15 @@ const Mapper = preload("res://scripts/game/presentation/board/board_coordinate_m
 @export var piece_scene: PackedScene
 
 var _rendered_count: int = 0
+var _rendered_glyphs: Array[String] = []
+var _rendered_cells: Array[Vector2i] = []
 
 
 func render(pieces: Array, side: String, cell_size: Vector2) -> void:
 	_clear_views()
 	_rendered_count = 0
+	_rendered_glyphs.clear()
+	_rendered_cells.clear()
 	if piece_scene == null:
 		return
 	for piece: Dictionary in pieces:
@@ -22,19 +26,35 @@ func render(pieces: Array, side: String, cell_size: Vector2) -> void:
 		view.position = Mapper.authority_to_world(cell, side, cell_size)
 		view.set_meta("piece_id", str(piece.get("id", "")))
 		view.set_meta("authority_cell", cell)
+		var piece_side := str(piece.get("side", ""))
+		var piece_glyph := _piece_glyph(str(piece.get("piece_type", "")), piece_side)
 		var glyph: Label = view.get_node_or_null("Glyph") as Label
 		if glyph != null:
-			glyph.text = _piece_glyph(str(piece.get("piece_type", "")))
+			glyph.text = piece_glyph
 		var body: Polygon2D = view.get_node_or_null("Body") as Polygon2D
 		if body != null:
-			body.color = Color(0.72, 0.18, 0.12, 1.0) if piece.get("side") == "red" \
-				else Color(0.12, 0.16, 0.22, 1.0)
+			body.color = Color(0.62, 0.12, 0.1, 0.98) if piece_side == "red" \
+				else Color(0.11, 0.2, 0.34, 0.98)
+		var border: Line2D = view.get_node_or_null("Border") as Line2D
+		if border != null:
+			border.default_color = Color(1.0, 0.55, 0.4, 1.0) if piece_side == "red" \
+				else Color(0.55, 0.78, 1.0, 1.0)
 		add_child(view)
 		_rendered_count += 1
+		_rendered_glyphs.append(piece_glyph)
+		_rendered_cells.append(cell)
 
 
 func get_rendered_count() -> int:
 	return _rendered_count
+
+
+func get_rendered_glyphs() -> Array[String]:
+	return _rendered_glyphs.duplicate()
+
+
+func get_rendered_cells() -> Array[Vector2i]:
+	return _rendered_cells.duplicate()
 
 
 func _clear_views() -> void:
@@ -43,14 +63,15 @@ func _clear_views() -> void:
 		child.queue_free()
 
 
-func _piece_glyph(piece_type: String) -> String:
-	var glyphs: Dictionary = {
-		"rook": "车",
-		"horse": "马",
-		"elephant": "相",
-		"advisor": "士",
-		"general": "将",
-		"cannon": "炮",
-		"soldier": "兵",
-	}
-	return str(glyphs.get(piece_type, "棋"))
+func _piece_glyph(piece_type: String, side: String) -> String:
+	if side == "red":
+		return {
+			"rook": "车", "horse": "马", "elephant": "相", "advisor": "仕",
+			"general": "帅", "cannon": "炮", "pawn": "兵",
+		}.get(piece_type, "?")
+	if side == "black":
+		return {
+			"rook": "车", "horse": "马", "elephant": "象", "advisor": "士",
+			"general": "将", "cannon": "炮", "pawn": "卒",
+		}.get(piece_type, "?")
+	return "?"

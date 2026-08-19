@@ -66,10 +66,16 @@ func clear_interaction() -> void:
 	_interaction_overlay.clear()
 
 
+func set_tutorial_target(cell: Vector2i) -> void:
+	_interaction_overlay.set_tutorial_target(cell)
+
+
 func get_render_snapshot() -> Dictionary:
 	var flag_cell: Vector2i = _flag_renderer.get_first_flag_cell()
 	return {
 		"piece_count": _piece_renderer.get_rendered_count(),
+		"piece_glyphs": _piece_renderer.get_rendered_glyphs(),
+		"piece_cells": _piece_renderer.get_rendered_cells(),
 		"flag_count": _flag_renderer.get_rendered_count(),
 		"ghost_count": _ghost_renderer.get_rendered_count(),
 		"wall_segment_count": _wall_renderer.get_rendered_count(),
@@ -81,6 +87,7 @@ func get_render_snapshot() -> Dictionary:
 		"flag_memory_visible": _flag_renderer.get_rendered_count() > 0,
 		"layer_order": {
 			"fog": _fog_overlay.get_index(),
+			"piece": _piece_renderer.get_index(),
 			"intel": _intel_layer.get_index(),
 			"marker": _marker_overlay.get_index(),
 			"tactical": _tactical_overlay.get_index(),
@@ -91,6 +98,14 @@ func get_render_snapshot() -> Dictionary:
 
 func get_point_spacing() -> Vector2:
 	return _grid_renderer.get_point_spacing()
+
+
+func get_viewer_side() -> String:
+	return _side
+
+
+func get_cell_size() -> Vector2:
+	return board_theme.cell_size
 
 
 func _configure_empty_board() -> void:
