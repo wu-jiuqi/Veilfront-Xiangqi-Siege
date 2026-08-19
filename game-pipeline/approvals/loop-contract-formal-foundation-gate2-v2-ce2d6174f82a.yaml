@@ -1,0 +1,43 @@
+approval:
+  schema_version: game-production-approval/v1
+  approval_id: approval:veilfront-xiangqi-siege:loop-contract:ce2d6174f82a
+  subject_kind: loop-contract-draft
+  subject_id: LOOP-CTR-FORMAL-FOUNDATION-GATE2-001@v2
+  subject_digest: ce2d6174f82af003b023f80e2ae3676510df541f4a6ac129bfcf69847361b20d
+  decision: approved
+  decided_by: project-owner
+  decided_at: '2026-08-19T20:01:59.1988259+08:00'
+  evidence:
+    source_refs:
+    - codex-thread://current#gate2-contract-v2-approval
+    immutable_source:
+      git_commit: 03de88da883730405d924bfee9a1abfb9d5b7283
+      path: game-pipeline/loops/contracts/loop-contract-formal-foundation-gate2-v2.yaml
+      canonicalization: canonical-json-sort-keys-without-approval-binding-v1
+      subject_digest: ce2d6174f82af003b023f80e2ae3676510df541f4a6ac129bfcf69847361b20d
+    bound_project_brief:
+      version: 6
+      subject_digest: 54520517ac26859c24459accb2d7672d12d0224ef69a766f883eda7b2b523289
+      approval_id: approval:veilfront-xiangqi-siege:project-brief:54520517ac26
+    previous_contract:
+      version: 1
+      approval_id: approval:veilfront-xiangqi-siege:loop-contract:9beb91baa720
+      registry_revision: 23
+  authorized_action:
+    summary: 保留第二生产循环既有规则、迁移和教学成果，将正式表现修订为24×9斜俯视三维棋盘，并制作Contract列明的最小视觉样片与独立复核证据。
+    allowed:
+    - 物化Contract v2 approved状态并迁移现有Loop Registry绑定
+    - 执行TASK-PRESENTATION-3D-001、TASK-ART-001和TASK-TUTORIAL-3D-COMPAT-001
+    - 将项目所有者提供的图片登记为非交付参考图并用于风格提炼
+    forbidden:
+    - 自动批准GATE-2
+    - 启动十四类完整棋子动画、完整音频、全量特效或最终UI皮肤的批量生产
+    - 实现互联网传输、服务器、匹配或AI交付
+    - 静默修改owner rule revision 5、PlayerView信息边界、教学语义或随机消费顺序
+    - 将参考图中的文字、标识或具体角色造型直接作为项目交付资产
+  application:
+    materialized_path: game-pipeline/loops/contracts/loop-contract-formal-foundation-gate2-v2.yaml
+    materialized_status: approved
+    materialized_subject_digest: 1cc1445297a08e641a95ba3f43bc3e3bc6417ac74bbc29d9842475a6d99e2076
+    materialized_digest: bf2d09e7117960de4b178d827dc2c123ab4b83777175e5b1b0c9cca6eabe561d
+    applied_at: '2026-08-19T20:01:59.1988259+08:00'

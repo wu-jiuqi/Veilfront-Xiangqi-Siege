@@ -1,6 +1,6 @@
 # GATE-2视觉方向Contract v2迁移计划
 
-状态：`draft / awaiting_contract_digest_approval`
+状态：`applied / registry_revision_39`
 
 Contract v2待确认主题摘要：`ce2d6174f82af003b023f80e2ae3676510df541f4a6ac129bfcf69847361b20d`
 
@@ -33,8 +33,19 @@ Project Brief v6已经以摘要`54520517ac26859c24459accb2d7672d12d0224ef69a766f
 5. 当前迭代迁移为`ITERATION-3R-OBLIQUE-3D-VISUAL`，登记三项任务责任和回退路径。
 6. 运行`validate_loop_registry.py`，通过后才允许制作样片或修改正式表现层。
 
-## 当前禁止
+## 应用结果
 
-- Contract v2摘要未获项目所有者批准前，不修改Registry。
-- 不启动游戏内样片制作，不修改正式场景，不切换项目渲染器。
+- 项目所有者于`2026-08-19T20:01:59.1988259+08:00`批准Contract v2主题摘要。
+- 不可变批准记录：`approval:veilfront-xiangqi-siege:loop-contract:ce2d6174f82a`。
+- Contract v2物化文件摘要：`bf2d09e7117960de4b178d827dc2c123ab4b83777175e5b1b0c9cca6eabe561d`。
+- Registry在保留原23条事件的基础上追加16条类型化事件，当前revision/sequence为39。
+- 当前状态保持`active / iteration 3`，Contract binding更新为version 2。
+- Brief v6、迁移前Registry、视觉基线、资产清单和v1已接受产物已绑定为v2输入。
+- 技术、系统体验、视觉与QA职责范围已更新到v2任务和检查项。
+- `validate_formal_foundation_gate2_registry.py`通过。
+
+## 仍然禁止
+
 - 不批准GATE-2，不启动批量资产生产。
+- 不接入互联网服务或AI交付，不修改规则、PlayerView、教学语义和随机消费顺序。
+- 参考图只能作为风格输入，不得将其文字、标识或具体角色造型直接作为项目交付资产。

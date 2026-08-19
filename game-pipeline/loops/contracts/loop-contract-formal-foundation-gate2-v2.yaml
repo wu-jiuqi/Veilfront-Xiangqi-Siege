@@ -4,10 +4,15 @@ loop_contract:
   loop_type: formal-architecture-tutorial-visual-baseline
   title: 第二生产循环v2——斜俯视三维表现successor与视觉样片
   version: 2
-  status: draft
-approval_binding: null
+  status: approved
+approval_binding:
+  approval_id: approval:veilfront-xiangqi-siege:loop-contract:ce2d6174f82a
+  subject_digest: ce2d6174f82af003b023f80e2ae3676510df541f4a6ac129bfcf69847361b20d
+  approved_by: project-owner
+  approved_at: '2026-08-19T20:01:59.1988259+08:00'
+  source_ref: codex-thread://current#gate2-contract-v2-approval
 draft_review:
-  status: awaiting_project_owner_approval
+  status: approved_by_project_owner
   prepared_against:
     project_brief_version: 6
     project_brief_subject_digest: 54520517ac26859c24459accb2d7672d12d0224ef69a766f883eda7b2b523289
@@ -17,7 +22,7 @@ draft_review:
     previous_contract_approval_id: approval:veilfront-xiangqi-siege:loop-contract:9beb91baa720
     current_registry_loop_id: 83c995ff-37b9-4df8-9e84-8417d6632187
     current_registry_revision: 23
-  note: 本草案只修订受新视觉方向影响的表现、样片和复核范围；批准前不得迁移Registry、修改正式场景或启动样片制作。
+  note: 项目所有者已按提交03de88d中的精确主题摘要批准；审批授权Registry迁移与Contract列明的最小样片工作，不替代GATE-2人工决定或批量美术批准。
 purpose:
   objective: 在保留GATE-2 v1已经接受的正式规则核心、PlayerView边界、回放与教学成果的前提下，以24×9一基交点、Node3D三维棋盘、Sprite3D角色和锁定低FOV斜俯视摄像机建立正式表现successor，完成少量可审查视觉样片、完整资产清单和独立QA，为GATE-2人工审查提供新证据；不启动高成本批量美术。
   preserved_deliverables:
