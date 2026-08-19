@@ -1,0 +1,188 @@
+[gd_scene load_steps=13 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/game/match/board_3d/piece_3d.tscn" id="1_piece"]
+[ext_resource type="Texture2D" path="res://assets/dev/board_grid_9x24.svg" id="2_grid"]
+
+[sub_resource type="Environment" id="Environment_test"]
+background_mode = 1
+background_color = Color(0.035, 0.045, 0.06, 1)
+ambient_light_source = 3
+ambient_light_color = Color(0.72, 0.78, 0.86, 1)
+ambient_light_energy = 0.72
+tonemap_mode = 2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_board"]
+albedo_color = Color(0.29, 0.20, 0.115, 1)
+roughness = 0.82
+
+[sub_resource type="BoxMesh" id="BoxMesh_board"]
+material = SubResource("StandardMaterial3D_board")
+size = Vector3(11.4, 0.22, 29.4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_grid"]
+transparency = 1
+shading_mode = 0
+albedo_texture = ExtResource("2_grid")
+texture_filter = 5
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_grid"]
+material = SubResource("StandardMaterial3D_grid")
+size = Vector2(9.6, 27.6)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fog"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0.015, 0.035, 0.08, 0.62)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_fog"]
+material = SubResource("StandardMaterial3D_fog")
+size = Vector2(9.6, 27.6)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wall"]
+albedo_color = Color(0.23, 0.27, 0.31, 1)
+metallic = 0.32
+roughness = 0.68
+
+[sub_resource type="BoxMesh" id="BoxMesh_wall"]
+material = SubResource("StandardMaterial3D_wall")
+size = Vector3(10.6, 0.55, 0.28)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.025, 0.035, 0.055, 0.88)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.35, 0.73, 0.7, 0.6)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+content_margin_left = 14.0
+content_margin_top = 10.0
+content_margin_right = 14.0
+content_margin_bottom = 10.0
+
+[node name="PieceArtTest3D" type="Node3D"]
+metadata/_edit_group_ = true
+metadata/purpose = "TASK-PRESENTATION-3D-001 piece art import and overlap calibration"
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_test")
+
+[node name="Lighting" type="Node3D" parent="."]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Lighting"]
+rotation_degrees = Vector3(-52, -28, 0)
+light_color = Color(0.91, 0.95, 1, 1)
+light_energy = 1.15
+shadow_enabled = true
+directional_shadow_max_distance = 40.0
+
+[node name="Board3D" type="Node3D" parent="."]
+
+[node name="BoardBase" type="MeshInstance3D" parent="Board3D"]
+position = Vector3(0, -0.11, 0)
+mesh = SubResource("BoxMesh_board")
+
+[node name="GridOverlay" type="MeshInstance3D" parent="Board3D"]
+position = Vector3(0, 0.012, 0)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_grid")
+
+[node name="FogSurface" type="MeshInstance3D" parent="Board3D"]
+visible = false
+position = Vector3(0, 0.026, 0)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_fog")
+metadata/note = "Enable only for depth/alpha checks; production fog must consume one observer-safe 9x24 mask"
+
+[node name="StructureRoot" type="Node3D" parent="Board3D"]
+
+[node name="WallY4" type="MeshInstance3D" parent="Board3D/StructureRoot"]
+position = Vector3(0, 0.275, 10.2)
+mesh = SubResource("BoxMesh_wall")
+
+[node name="WallY21" type="MeshInstance3D" parent="Board3D/StructureRoot"]
+position = Vector3(0, 0.275, -10.2)
+mesh = SubResource("BoxMesh_wall")
+
+[node name="HighlightRoot" type="MultiMeshInstance3D" parent="Board3D"]
+metadata/note = "Reserved preset root for selection and legal-cell batches"
+
+[node name="PieceRoot" type="Node3D" parent="."]
+
+[node name="NearFront" parent="PieceRoot" instance=ExtResource("1_piece")]
+position = Vector3(-2.4, 0, 4.8)
+metadata/test_band = "near_front"
+
+[node name="NearRear" parent="PieceRoot" instance=ExtResource("1_piece")]
+position = Vector3(-2.4, 0, 3.6)
+metadata/test_band = "near_rear_overlap"
+
+[node name="MiddleFront" parent="PieceRoot" instance=ExtResource("1_piece")]
+position = Vector3(0, 0, 0.6)
+metadata/test_band = "middle_front"
+
+[node name="MiddleRear" parent="PieceRoot" instance=ExtResource("1_piece")]
+position = Vector3(0, 0, -0.6)
+metadata/test_band = "middle_rear_overlap"
+
+[node name="FarFront" parent="PieceRoot" instance=ExtResource("1_piece")]
+position = Vector3(2.4, 0, -3.6)
+metadata/test_band = "far_front"
+
+[node name="FarRear" parent="PieceRoot" instance=ExtResource("1_piece")]
+position = Vector3(2.4, 0, -4.8)
+metadata/test_band = "far_rear_overlap"
+
+[node name="EffectRoot" type="Node3D" parent="."]
+metadata/note = "Reserved preset root for attack and selection feedback"
+
+[node name="CameraRig" type="Node3D" parent="."]
+
+[node name="PitchPivot" type="Node3D" parent="CameraRig"]
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig/PitchPivot"]
+position = Vector3(0, 18, 15.1)
+rotation_degrees = Vector3(-50, 0, 0)
+current = true
+fov = 30.0
+near = 0.1
+far = 120.0
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="Instructions" type="PanelContainer" parent="UI"]
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 430.0
+offset_bottom = 142.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/Instructions"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Title" type="Label" parent="UI/Instructions/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.91, 0.77, 0.42, 1)
+theme_override_font_sizes/font_size = 18
+text = "棋子美术资源测试场"
+
+[node name="Usage" type="Label" parent="UI/Instructions/VBoxContainer"]
+layout_mode = 2
+text = "在 PieceRoot 实例启用“可编辑子项”，替换 VisualPivot/Sprite3D.texture。"
+autowrap_mode = 2
+
+[node name="Spec" type="Label" parent="UI/Instructions/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.68, 0.76, 0.8, 1)
+text = "基线：Fixed-Y｜Opaque Pre-Pass｜30° FOV｜近/中/远重叠位"
+
+[editable path="PieceRoot/NearFront"]
+[editable path="PieceRoot/NearRear"]
+[editable path="PieceRoot/MiddleFront"]
+[editable path="PieceRoot/MiddleRear"]
+[editable path="PieceRoot/FarFront"]
+[editable path="PieceRoot/FarRear"]

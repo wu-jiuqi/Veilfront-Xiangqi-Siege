@@ -1,0 +1,76 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/dev/piece_placeholder_512x768.svg" id="1_placeholder"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_shadow"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0.025, 0.035, 0.05, 0.34)
+
+[sub_resource type="QuadMesh" id="QuadMesh_shadow"]
+material = SubResource("StandardMaterial3D_shadow")
+size = Vector2(1.08, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_interaction"]
+size = Vector3(1.02, 1.62, 0.22)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_selection"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0.94, 0.72, 0.24, 0.92)
+
+[sub_resource type="TorusMesh" id="TorusMesh_selection"]
+material = SubResource("StandardMaterial3D_selection")
+inner_radius = 0.43
+outer_radius = 0.53
+rings = 32
+ring_segments = 8
+
+[node name="Piece3D" type="Node3D"]
+metadata/_edit_group_ = true
+metadata/asset_slot = "Replace VisualPivot/Sprite3D.texture with an approved runtime PNG"
+
+[node name="FakeShadow" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.012, 0)
+cast_shadow = 0
+mesh = SubResource("QuadMesh_shadow")
+
+[node name="VisualPivot" type="Node3D" parent="."]
+
+[node name="Sprite3D" type="Sprite3D" parent="VisualPivot"]
+texture = ExtResource("1_placeholder")
+offset = Vector2(0, 337.92)
+pixel_size = 0.00208333
+billboard = 2
+alpha_cut = 2
+shaded = false
+double_sided = true
+no_depth_test = false
+fixed_size = false
+cast_shadow = 0
+metadata/runtime_profile = "upright_512x768_anchor_0.50_0.94"
+
+[node name="FootAnchor" type="Marker3D" parent="VisualPivot"]
+gizmo_extents = 0.2
+metadata/normalized_anchor = Vector2(0.5, 0.94)
+
+[node name="InteractionArea" type="Area3D" parent="."]
+collision_layer = 8
+collision_mask = 0
+monitoring = false
+monitorable = true
+input_ray_pickable = true
+metadata/piece_id = ""
+metadata/authority_cell = Vector2i(0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InteractionArea"]
+position = Vector3(0, 0.81, 0)
+shape = SubResource("BoxShape3D_interaction")
+
+[node name="Feedback" type="Node3D" parent="."]
+
+[node name="SelectionRing" type="MeshInstance3D" parent="Feedback"]
+visible = false
+position = Vector3(0, 0.018, 0)
+cast_shadow = 0
+mesh = SubResource("TorusMesh_selection")
