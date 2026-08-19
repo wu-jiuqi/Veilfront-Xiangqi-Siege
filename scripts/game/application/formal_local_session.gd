@@ -74,6 +74,12 @@ func advance_scripted_opponent() -> Dictionary:
 	return _application.advance_trusted_scripted_pass()
 
 
+func apply_tutorial_effect(step_id: String) -> Dictionary:
+	if _scenario == null:
+		return {"ok": false, "error_code": "not_tutorial_session"}
+	return _application.apply_trusted_tutorial_effect(step_id)
+
+
 func restart() -> Dictionary:
 	_recreate_application()
 	return current_payload()

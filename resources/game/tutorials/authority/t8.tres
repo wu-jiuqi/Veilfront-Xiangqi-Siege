@@ -13,3 +13,4 @@ initial_pieces = Array[Dictionary]([{"id":"inv8a","side":"red","piece_type":"paw
 initial_visible_cells = Array[Vector2i]([Vector2i(1,15),Vector2i(2,15),Vector2i(3,15),Vector2i(1,16),Vector2i(2,16),Vector2i(3,16),Vector2i(6,15),Vector2i(7,15),Vector2i(8,15),Vector2i(6,16),Vector2i(7,16),Vector2i(8,16),Vector2i(3,18),Vector2i(5,19)])
 black_wall_status = "INTACT"
 allow_any_public_preview = true
+step_effects = {"t8_breach":{"moves":{"inv8c":[7,18]},"black_wall_status":"BREACHED","visible_region":[17,24]},"t8_buffer":{"moves":{"rr8":[2,20]},"rook_paths":{"rr8":[[2,16],[2,17],[2,18],[2,19],[2,20]]}},"t8_base":{"remove":["bc8"],"moves":{"rr8":[2,23]},"rook_paths":{"rr8":[[2,20],[2,21],[2,22],[2,23]]}}}

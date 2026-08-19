@@ -9,6 +9,7 @@ signal skip_requested()
 signal selection_cancelled()
 signal marker_applied(cell: Vector2i, marker_type: String)
 signal board_point_activated(cell: Vector2i)
+signal tutorial_input_rejected(message: String)
 
 const COMPACT_BREAKPOINT: float = 1100.0
 const IDLE: String = "IDLE"
@@ -66,6 +67,7 @@ var _cancelled_prepare_tombstones: Dictionary = {}
 var _current_view: Dictionary = {}
 var _action_mode: String = "move"
 var _tutorial_panel_width: float = 0.0
+var _tutorial_step: Dictionary = {}
 
 
 func _ready() -> void:
@@ -112,6 +114,22 @@ func set_action_mode(mode: String) -> void:
 	if mode not in ["move", "bombard", "resurrect"]:
 		return
 	_set_action_mode(mode)
+
+
+func focus_tutorial_step(step: Dictionary) -> void:
+	_tutorial_step = step.duplicate(true)
+	var focus_cell := Vector2i.ZERO
+	var actor_id := str(step.get("actor", ""))
+	if not actor_id.is_empty():
+		focus_cell = _piece_cell_by_id(actor_id)
+	if not BoardCoordinateMapper.is_authority_cell_valid(focus_cell):
+		focus_cell = BoardCoordinateMapper.coordinate_from_variant(
+			step.get("target", step.get("point", []))
+		)
+	if BoardCoordinateMapper.is_authority_cell_valid(focus_cell):
+		_board_viewport.focus_authority_cell(focus_cell)
+	var target := BoardCoordinateMapper.coordinate_from_variant(step.get("target", []))
+	_board_viewport.set_tutorial_target(target)
 
 
 func render_player_view(view: Dictionary) -> void:
@@ -176,6 +194,10 @@ func request_action_previews(piece_id: String, action_type: String) -> void:
 
 func handle_board_point(cell: Vector2i) -> void:
 	board_point_activated.emit(cell)
+	var tutorial_type := str(_tutorial_step.get("type", ""))
+	if tutorial_type in ["observe", "quiz", "annotate"]:
+		_reject_tutorial_input("当前步骤不接受棋盘行动，请按教学面板操作。")
+		return
 	if not _can_submit_action():
 		_message_value.text = "当前不是己方行动阶段。"
 		return
@@ -184,7 +206,13 @@ func handle_board_point(cell: Vector2i) -> void:
 		if own_piece.is_empty():
 			_message_value.text = "请先选择一枚己方棋子。"
 			return
+		if not _tutorial_actor_matches(str(own_piece.get("id", ""))):
+			_reject_tutorial_input("当前目标需要使用另一枚棋子。")
+			return
 		_select_piece(own_piece)
+		return
+	if not _tutorial_target_matches(cell):
+		_reject_tutorial_input("这个交点不是当前教学目标。")
 		return
 	if _action_mode == "bombard":
 		var bombard_preview: Dictionary = _preview_for_target(cell)
@@ -192,6 +220,9 @@ func handle_board_point(cell: Vector2i) -> void:
 			prepare_action(str(bombard_preview.get("preview_id", "")))
 			return
 	if not own_piece.is_empty():
+		if not _tutorial_actor_matches(str(own_piece.get("id", ""))):
+			_reject_tutorial_input("当前目标需要使用另一枚棋子。")
+			return
 		_select_piece(own_piece)
 		return
 	var preview: Dictionary = _preview_for_target(cell)
@@ -256,6 +287,11 @@ func handle_cancel_or_marker(cell: Vector2i) -> String:
 
 
 func apply_marker(cell: Vector2i, marker_type: String) -> void:
+	if str(_tutorial_step.get("type", "")) == "annotate":
+		var target := BoardCoordinateMapper.coordinate_from_variant(_tutorial_step.get("target", []))
+		if cell != target or marker_type != str(_tutorial_step.get("marker", "")):
+			_reject_tutorial_input("标记位置或类型与当前目标不一致。")
+			return
 	_board_viewport.set_marker(cell, marker_type)
 	_marker_menu.hide()
 	_interaction_state = IDLE
@@ -439,6 +475,13 @@ func _owned_piece_at(cell: Vector2i) -> Dictionary:
 	return {}
 
 
+func _piece_cell_by_id(piece_id: String) -> Vector2i:
+	for piece_value: Variant in _current_view.get("pieces", []):
+		if piece_value is Dictionary and str(piece_value.get("id", "")) == piece_id:
+			return BoardCoordinateMapper.coordinate_from_variant(piece_value.get("position", []))
+	return Vector2i.ZERO
+
+
 func _select_piece(piece: Dictionary) -> void:
 	_selected_piece_id = str(piece.get("id", ""))
 	_interaction_state = SELECTED
@@ -464,6 +507,12 @@ func _preview_for_target(cell: Vector2i) -> Dictionary:
 
 
 func _set_action_mode(mode: String) -> void:
+	var expected_mode := _tutorial_expected_action_mode()
+	if not expected_mode.is_empty() and mode != expected_mode:
+		_reject_tutorial_input("当前步骤需要使用%s。" % {
+			"move": "普通移动", "bombard": "区域炮击", "resurrect": "献祭复活",
+		}.get(expected_mode, expected_mode))
+		return
 	_action_mode = mode
 	_clear_local_interaction()
 	_message_value.text = {
@@ -533,3 +582,32 @@ func _update_status_controls() -> void:
 	_bombard_button.disabled = disabled
 	_resurrect_button.disabled = disabled
 	_pass_button.disabled = disabled
+
+
+func _tutorial_actor_matches(piece_id: String) -> bool:
+	var expected_actor := str(_tutorial_step.get("actor", ""))
+	return expected_actor.is_empty() or expected_actor == piece_id
+
+
+func _tutorial_target_matches(cell: Vector2i) -> bool:
+	var step_type := str(_tutorial_step.get("type", ""))
+	if step_type not in ["move", "bombard", "reject"]:
+		return true
+	var expected := BoardCoordinateMapper.coordinate_from_variant(_tutorial_step.get("target", []))
+	return not BoardCoordinateMapper.is_authority_cell_valid(expected) or expected == cell
+
+
+func _tutorial_expected_action_mode() -> String:
+	match str(_tutorial_step.get("type", "")):
+		"move", "reject":
+			return "move"
+		"bombard":
+			return "bombard"
+		"sacrifice_cancel", "sacrifice_confirm":
+			return "resurrect"
+	return ""
+
+
+func _reject_tutorial_input(message: String) -> void:
+	_message_value.text = message
+	tutorial_input_rejected.emit(message)

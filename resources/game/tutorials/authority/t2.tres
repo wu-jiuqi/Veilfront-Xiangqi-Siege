@@ -12,3 +12,4 @@ seed_value = 471002
 initial_pieces = Array[Dictionary]([{"id":"rh2a","side":"red","piece_type":"horse","position":[4,2]},{"id":"block2a","side":"red","piece_type":"pawn","position":[4,3]},{"id":"rh2b","side":"red","piece_type":"horse","position":[4,10]},{"id":"block2b","side":"red","piece_type":"pawn","position":[4,11]},{"id":"be2","side":"black","piece_type":"elephant","position":[7,14]}])
 initial_visible_cells = Array[Vector2i]([Vector2i(3,1),Vector2i(4,1),Vector2i(5,1),Vector2i(3,2),Vector2i(4,2),Vector2i(5,2),Vector2i(3,3),Vector2i(4,3),Vector2i(5,3),Vector2i(3,9),Vector2i(4,9),Vector2i(5,9),Vector2i(3,10),Vector2i(4,10),Vector2i(5,10),Vector2i(4,11),Vector2i(5,11),Vector2i(5,12)])
 allow_any_public_preview = true
+step_effects = {"t2_hide":{"moves":{"rh2b":[5,12]},"hidden":{"rh2b":true}},"t2_observe":{"hidden":{"rh2b":false},"elephant_fields":{"t2-scripted-field":[[4,11],[5,11],[6,11],[4,12],[5,12],[6,12],[4,13],[5,13],[6,13]]}}}

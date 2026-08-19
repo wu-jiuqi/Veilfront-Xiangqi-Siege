@@ -13,6 +13,7 @@ extends Resource
 @export_enum("INTACT", "BREACHED", "REPAIRING") var black_wall_status: String = "INTACT"
 @export var allowed_preview_ids: PackedStringArray = []
 @export var allow_any_public_preview: bool = false
+@export var step_effects: Dictionary = {}
 @export var restart_allowed: bool = true
 @export var skip_allowed: bool = true
 
@@ -54,6 +55,11 @@ func allows_preview(preview_id: String) -> bool:
 	return is_valid_definition() \
 		and not preview_id.is_empty() \
 		and (allow_any_public_preview or allowed_preview_ids.has(preview_id))
+
+
+func effect_for_step(step_id: String) -> Dictionary:
+	var effect: Variant = step_effects.get(step_id, {})
+	return effect.duplicate(true) if effect is Dictionary else {}
 
 
 func allows_restart() -> bool:

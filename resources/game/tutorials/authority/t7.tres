@@ -12,3 +12,4 @@ seed_value = 471007
 initial_pieces = Array[Dictionary]([{"id":"rg7","side":"red","piece_type":"general","position":[5,1]},{"id":"rr7","side":"red","piece_type":"rook","position":[5,22]},{"id":"bg7","side":"black","piece_type":"general","position":[5,24]},{"id":"br7","side":"black","piece_type":"rook","position":[8,2]}])
 initial_visible_cells = Array[Vector2i]([Vector2i(4,1),Vector2i(5,1),Vector2i(6,1),Vector2i(4,2),Vector2i(5,2),Vector2i(6,2),Vector2i(7,2),Vector2i(8,2),Vector2i(4,3),Vector2i(5,3),Vector2i(6,3),Vector2i(4,21),Vector2i(5,21),Vector2i(6,21),Vector2i(4,22),Vector2i(5,22),Vector2i(6,22),Vector2i(5,23),Vector2i(5,24)])
 allow_any_public_preview = true
+step_effects = {"t7_move":{"moves":{"rg7":[5,2]}},"t7_capture":{"remove":["bg7"],"moves":{"rr7":[5,24]}}}

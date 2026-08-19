@@ -6,6 +6,7 @@ var _side: String = "red"
 var _cell_size := Vector2(128.0, 128.0)
 var _previews: Array = []
 var _selected_cell := Vector2i.ZERO
+var _tutorial_target := Vector2i.ZERO
 
 
 func render_selection(
@@ -29,11 +30,33 @@ func clear() -> void:
 	queue_redraw()
 
 
+func set_tutorial_target(cell: Vector2i) -> void:
+	_tutorial_target = cell
+	queue_redraw()
+
+
 func get_preview_count() -> int:
 	return _previews.size()
 
 
 func _draw() -> void:
+	if Mapper.is_authority_cell_valid(_tutorial_target):
+		var target_center: Vector2 = Mapper.authority_to_world(_tutorial_target, _side, _cell_size)
+		draw_circle(
+			target_center,
+			minf(_cell_size.x, _cell_size.y) * 0.12,
+			Color(1.0, 0.78, 0.18, 0.28)
+		)
+		draw_arc(
+			target_center,
+			minf(_cell_size.x, _cell_size.y) * 0.22,
+			0.0,
+			TAU,
+			32,
+			Color(1.0, 0.82, 0.28, 0.95),
+			5.0,
+			true
+		)
 	if Mapper.is_authority_cell_valid(_selected_cell):
 		var selected_center: Vector2 = Mapper.authority_to_world(_selected_cell, _side, _cell_size)
 		draw_arc(

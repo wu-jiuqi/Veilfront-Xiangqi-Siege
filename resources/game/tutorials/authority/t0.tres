@@ -12,3 +12,4 @@ seed_value = 471000
 initial_pieces = Array[Dictionary]([{"id":"rp0","side":"red","piece_type":"pawn","position":[5,4]}])
 initial_visible_cells = Array[Vector2i]([Vector2i(4,4),Vector2i(5,4),Vector2i(6,4),Vector2i(4,5),Vector2i(5,5),Vector2i(6,5)])
 allow_any_public_preview = true
+step_effects = {"t0_move":{"moves":{"rp0":[5,5]}}}

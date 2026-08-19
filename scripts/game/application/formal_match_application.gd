@@ -9,12 +9,14 @@ const PublicActionPreviewer = preload("res://scripts/game/projection/public_acti
 const VisibleOutcomeProjector = preload("res://scripts/game/projection/visible_outcome_projector.gd")
 const ObserverReplayValidator = preload("res://scripts/game/application/observer_replay_validator.gd")
 const ScenarioBootstrap = preload("res://scripts/game/domain/scenario_bootstrap.gd")
+const TutorialEffectApplier = preload("res://scripts/game/domain/tutorial_effect_applier.gd")
 
 var _state: Dictionary = {}
 var _viewer_context: RefCounted
 var _preparation: Dictionary = {}
 var _observer_frames: Array = []
 var _initial_player_view: Dictionary = {}
+var _tutorial_scenario: TutorialScenarioDefinition
 
 
 static func create_trusted(
@@ -43,6 +45,7 @@ static func create_trusted_scenario(
 	if not bool(bootstrap_result.get("ok", false)):
 		return null
 	application._state = bootstrap_result.get("state", {}).duplicate(true)
+	application._tutorial_scenario = scenario
 	application._viewer_context = ViewerContext.create_trusted(scenario.bound_seat)
 	application._prepare_authority_turn()
 	application._initial_player_view = application.current_player_view().duplicate(true)
@@ -148,6 +151,31 @@ func advance_trusted_scripted_pass() -> Dictionary:
 		"consumed": bool(result.get("consumed", false)),
 		"scripted_actor_side": actor_side,
 		"scripted_action_index": action_index,
+		"player_view": frame["player_view_or_digest"].duplicate(true),
+		"visible_events": frame["visible_events"].duplicate(true),
+		"visible_error": {},
+		"action_previews": frame["action_previews"].duplicate(true),
+	}
+
+
+func apply_trusted_tutorial_effect(step_id: String) -> Dictionary:
+	var result: Dictionary = TutorialEffectApplier.apply(_state, _tutorial_scenario, step_id)
+	if not bool(result.get("ok", false)):
+		return {
+			"ok": false,
+			"player_view": current_player_view(),
+			"visible_events": current_visible_events(),
+			"visible_error": {},
+			"action_previews": current_action_previews(),
+		}
+	_prepare_authority_turn()
+	var frame: Dictionary = _compose_safe_frame(
+		_state, _viewer_context, {}, _observer_frames.size() + 1
+	)
+	_observer_frames.append(frame)
+	return {
+		"ok": true,
+		"applied": bool(result.get("applied", false)),
 		"player_view": frame["player_view_or_digest"].duplicate(true),
 		"visible_events": frame["visible_events"].duplicate(true),
 		"visible_error": {},

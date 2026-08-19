@@ -75,6 +75,19 @@ func get_level_id() -> String:
 	return _level_id
 
 
+func focus_tutorial_step(step: Dictionary) -> void:
+	$MatchScreen.focus_tutorial_step(step)
+
+
+func apply_tutorial_step_effect(step_id: String) -> void:
+	call_deferred("_apply_tutorial_step_effect", step_id)
+
+
+func _apply_tutorial_step_effect(step_id: String) -> void:
+	if _local_port != null and _local_port.has_method("apply_tutorial_effect"):
+		_local_port.apply_tutorial_effect(step_id)
+
+
 func return_to_level_select() -> void:
 	get_tree().change_scene_to_file("res://scenes/game/frontend/level_select.tscn")
 

@@ -13,6 +13,7 @@ const PAN_SPEED: float = 720.0
 
 var _fit_zoom: float = 1.0
 var _zoom_multiplier: float = 1.0
+var _focused_cell := Vector2i.ZERO
 
 
 func _ready() -> void:
@@ -44,7 +45,10 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func render_player_view(view: Dictionary) -> void:
 	_board_world.render_player_view(view)
-	reset_camera()
+	if BoardCoordinateMapper.is_authority_cell_valid(_focused_cell):
+		focus_authority_cell(_focused_cell)
+	else:
+		reset_camera()
 
 
 func set_marker(cell: Vector2i, marker_type: String) -> void:
@@ -57,6 +61,25 @@ func set_interaction(selected_cell: Vector2i, action_previews: Array) -> void:
 
 func clear_interaction() -> void:
 	_board_world.clear_interaction()
+
+
+func focus_authority_cell(cell: Vector2i) -> void:
+	if not BoardCoordinateMapper.is_authority_cell_valid(cell):
+		return
+	_focused_cell = cell
+	_zoom_multiplier = 1.0
+	_update_camera_zoom()
+	var world_position: Vector2 = BoardCoordinateMapper.authority_to_world(
+		cell,
+		str(_board_world.get_viewer_side()),
+		_board_world.get_cell_size()
+	)
+	_camera.position = Vector2(BOARD_WORLD_SIZE.x * 0.5, world_position.y)
+	_clamp_camera()
+
+
+func set_tutorial_target(cell: Vector2i) -> void:
+	_board_world.set_tutorial_target(cell)
 
 
 func reset_camera() -> void:
@@ -80,13 +103,34 @@ func get_board_world() -> Node2D:
 
 
 func get_render_snapshot() -> Dictionary:
-	return _board_world.get_render_snapshot()
+	var snapshot: Dictionary = _board_world.get_render_snapshot()
+	snapshot["focused_cell"] = _focused_cell
+	snapshot["focused_cell_visible"] = _is_cell_visible(_focused_cell)
+	snapshot["camera_position"] = _camera.position
+	snapshot["camera_zoom"] = _camera.zoom
+	return snapshot
 
 
 func _sync_layout() -> void:
 	var viewport_size := Vector2i(maxi(1, roundi(size.x)), maxi(1, roundi(size.y)))
 	_fit_zoom = maxf((float(viewport_size.x) - SCREEN_MARGIN) / BOARD_WORLD_SIZE.x, 0.05)
-	reset_camera()
+	if BoardCoordinateMapper.is_authority_cell_valid(_focused_cell):
+		focus_authority_cell(_focused_cell)
+	else:
+		reset_camera()
+
+
+func _is_cell_visible(cell: Vector2i) -> bool:
+	if not BoardCoordinateMapper.is_authority_cell_valid(cell):
+		return false
+	var world_position: Vector2 = BoardCoordinateMapper.authority_to_world(
+		cell,
+		str(_board_world.get_viewer_side()),
+		_board_world.get_cell_size()
+	)
+	var half_height: float = size.y / maxf(_camera.zoom.y, 0.01) * 0.5
+	return world_position.y >= _camera.position.y - half_height \
+		and world_position.y <= _camera.position.y + half_height
 
 
 func _apply_zoom_step(step: float) -> void:

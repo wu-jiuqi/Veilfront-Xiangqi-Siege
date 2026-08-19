@@ -13,3 +13,4 @@ initial_pieces = Array[Dictionary]([{"id":"ra6","side":"red","piece_type":"advis
 initial_visible_cells = Array[Vector2i]([Vector2i(4,1),Vector2i(5,1),Vector2i(6,1),Vector2i(4,2),Vector2i(5,2),Vector2i(6,2),Vector2i(4,3),Vector2i(5,3),Vector2i(6,3)])
 initial_casualties = Array[Dictionary]([{"id":"dead-rook-6","side":"red","piece_type":"rook"},{"id":"dead-pawn-6","side":"red","piece_type":"pawn"},{"id":"dead-advisor-6","side":"red","piece_type":"advisor"},{"id":"dead-general-6","side":"red","piece_type":"general"}])
 allow_any_public_preview = true
+step_effects = {"t6_move":{"moves":{"ra6":[5,2]}}}

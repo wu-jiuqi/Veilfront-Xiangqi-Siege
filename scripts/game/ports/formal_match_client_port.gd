@@ -58,6 +58,12 @@ func request_restart() -> void:
 	_publish_payload(_session.restart())
 
 
+func apply_tutorial_effect(step_id: String) -> Dictionary:
+	if not _session.has_method("apply_tutorial_effect"):
+		return {"ok": false, "error_code": "tutorial_effect_unsupported"}
+	return _publish_payload(_session.apply_tutorial_effect(step_id))
+
+
 func _find_preview(preview_id: String) -> Dictionary:
 	var previews: Array = _session.current_payload().get("action_previews", [])
 	for preview_value: Variant in previews:

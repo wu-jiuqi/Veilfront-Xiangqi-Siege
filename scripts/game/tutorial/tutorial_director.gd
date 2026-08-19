@@ -7,6 +7,7 @@ signal skip_requested()
 signal level_completed(level_id: String)
 signal public_feedback_changed(kind: String, title: String, message: String)
 signal action_mode_requested(mode: String)
+signal step_effect_requested(step_id: String)
 
 enum FlowState {
 	ENTERED,
@@ -207,6 +208,10 @@ func request_hint() -> void:
 	)
 
 
+func consume_input_rejection(message: String) -> void:
+	_register_mistake(message)
+
+
 func get_public_checkpoint_id() -> String:
 	return "completed" if _completed else str(_current_step().get("id", ""))
 
@@ -231,6 +236,7 @@ func _advance_current_step() -> void:
 	if _completed:
 		return
 	var step: Dictionary = _current_step()
+	step_effect_requested.emit(str(step.get("id", "")))
 	public_feedback_changed.emit(
 		"success",
 		"目标完成",
