@@ -60,20 +60,20 @@ D:\Godot\godot.cmd --headless --path . --script res://tests/game/migration/run_g
 
 Expected: exit `0`, `completed=20`, `replay_verified=20`, `channels=9`, `visible_error_checked=2080`, `authoritative_replay_checked=20`, and `observer_replay_frames_checked=4000`.
 
-- [ ] **Step 3: Run the exact one-thousand-seed equivalence command without editing covered code**
+- [ ] **Step 3: Record the project-owner sampling exception for the one-thousand-seed command**
 
 ```powershell
 D:\Godot\godot.cmd --headless --path . --script res://tests/game/migration/run_gate1_formal_equivalence.gd -- --start-seed 471001 --seeds 1000 --round-limit 50 --replay-samples 20 --channels state,event,red_player_view,black_player_view,red_visible_event,black_visible_event,visible_error,action_preview,replay
 ```
 
-Expected: exit `0`, `completed_live=980/980`, `completed=1000`, `replay_verified=20`, `visible_error_checked=103987`, `authoritative_replay_checked=1000`, and a non-zero `observer_replay_frames_checked` equal to the emitted frame count.
+The command was started against the frozen R3 files on 2026-08-19, then explicitly cancelled by the project owner before completion. Record it as cancelled and do not count it as passing evidence. For this R3 acceptance only, the owner accepts the naturally completed source-preview mutation contract plus the exact twenty-seed golden sample and the full regression set. This exception does not rewrite historical 1000-seed evidence, does not claim `completed=1000`, and does not prevent an independent reviewer from returning `revision_required` if the approved Contract still requires the full run.
 
 - [ ] **Step 4: Run the complete formal and prototype regression set**
 
 ```powershell
 $commands = @(
   'res://tests/game/architecture/run_formal_architecture_checks.gd',
-  'res://tests/game/contracts/test_observer_codec_allow_lists.gd',
+  'res://tests/game/contracts/run_observer_contract_checks.gd',
   'res://tests/game/contracts/run_hidden_equivalence.gd',
   'res://tests/game/migration/run_observer_live_frame_contract.gd',
   'res://tests/game/migration/run_source_preview_independence_contract.gd',
@@ -120,7 +120,7 @@ git push origin main
 
 - [ ] **Step 1: Obtain an independent technical review from the approved Godot technical role**
 
-The reviewer must use a clean detached worktree, bind the Task 1 commit and evidence hashes, rerun the source-preview contract and exact twenty-seed suite, audit the one-thousand-seed producer output, and conclude either `approved` or `revision_required`.
+The reviewer must use a clean detached worktree, bind the Task 1 commit and evidence hashes, rerun the source-preview contract and exact twenty-seed suite, audit the project-owner sampling exception and cancelled one-thousand-seed run without treating it as a pass, and conclude either `approved` or `revision_required`.
 
 - [ ] **Step 2: Obtain an independent QA review from the approved QA role**
 
@@ -217,7 +217,7 @@ The test must prove a red intent cannot be submitted by the black port, a stale 
 ```powershell
 D:\Godot\godot.cmd --headless --path . --script res://tests/game/application/run_formal_local_session_contract.gd
 D:\Godot\godot.cmd --headless --path . --script res://tests/game/architecture/run_formal_architecture_checks.gd
-D:\Godot\godot.cmd --headless --path . --script res://tests/game/contracts/test_observer_codec_allow_lists.gd
+D:\Godot\godot.cmd --headless --path . --script res://tests/game/contracts/run_observer_contract_checks.gd
 ```
 
 Expected: all exit `0` and architecture scanner reports no application dependency on tutorial, challenge, LAN, AI, or prototype.
@@ -407,7 +407,7 @@ Tests must reject duplicate piece cells, out-of-board coordinates, caller-provid
 ```powershell
 D:\Godot\godot.cmd --headless --path . --script res://tests/game/tutorial/run_tutorial_authority_contract.gd
 D:\Godot\godot.cmd --headless --path . --script res://tests/game/architecture/run_formal_architecture_checks.gd
-D:\Godot\godot.cmd --headless --path . --script res://tests/game/contracts/test_observer_codec_allow_lists.gd
+D:\Godot\godot.cmd --headless --path . --script res://tests/game/contracts/run_observer_contract_checks.gd
 D:\Godot\godot.cmd --headless --path . --script res://tests/game/scenes/run_tutorial_shell_smoke.gd
 ```
 
@@ -604,7 +604,7 @@ $commands = @(
   'res://tests/game/challenge/run_challenge_opponent_fairness.gd',
   'res://tests/game/challenge/run_challenge_determinism.gd',
   'res://tests/game/architecture/run_formal_architecture_checks.gd',
-  'res://tests/game/contracts/test_observer_codec_allow_lists.gd',
+  'res://tests/game/contracts/run_observer_contract_checks.gd',
   'res://tests/game/contracts/run_hidden_equivalence.gd',
   'res://tests/game/scenes/run_formal_scene_smoke.gd',
   'res://tests/game/scenes/run_tutorial_shell_smoke.gd',
