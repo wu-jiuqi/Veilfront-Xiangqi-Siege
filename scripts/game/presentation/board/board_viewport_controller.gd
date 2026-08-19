@@ -6,10 +6,12 @@ signal cancel_or_marker_requested(cell: Vector2i)
 const BOARD_WORLD_SIZE := Vector2(1152.0, 3072.0)
 const SCREEN_MARGIN: float = 24.0
 const PAN_SPEED: float = 720.0
+const WHEEL_PAN_SPEED: float = 420.0
 
 @onready var _sub_viewport: SubViewport = $BoardSubViewport
 @onready var _board_world: Node2D = $BoardSubViewport/BoardWorld
 @onready var _camera: Camera2D = $BoardSubViewport/BoardWorld/BoardCamera2D
+@onready var _scroll_bar: VScrollBar = $VerticalScrollBar
 
 var _fit_zoom: float = 1.0
 var _zoom_multiplier: float = 1.0
@@ -21,6 +23,8 @@ func _ready() -> void:
 	_board_world.point_activated.connect(_on_point_activated)
 	_board_world.cancel_or_marker_requested.connect(_on_cancel_or_marker_requested)
 	_board_world.zoom_requested.connect(_apply_zoom_step)
+	_board_world.pan_requested.connect(_on_pan_requested)
+	_scroll_bar.value_changed.connect(_on_scroll_bar_value_changed)
 	_sync_layout()
 
 
@@ -30,8 +34,7 @@ func _process(delta: float) -> void:
 	)
 	if direction.is_zero_approx():
 		return
-	_camera.position.y += direction.y * PAN_SPEED * delta / maxf(_camera.zoom.y, 0.01)
-	_clamp_camera()
+	_pan_camera(direction.y * PAN_SPEED * delta)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -41,6 +44,23 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event.is_action_pressed(&"board_zoom_out"):
 		_apply_zoom_step(-1.0)
 		get_viewport().set_input_as_handled()
+
+
+func toggle_presentation_side() -> void:
+	var current_side: String = _board_world.get_display_side()
+	set_presentation_side("black" if current_side == "red" else "red")
+
+
+func set_presentation_side(side: String) -> void:
+	_board_world.set_presentation_side(side)
+	if BoardCoordinateMapper.is_authority_cell_valid(_focused_cell):
+		focus_authority_cell(_focused_cell)
+	else:
+		reset_camera()
+
+
+func get_presentation_side() -> String:
+	return _board_world.get_display_side()
 
 
 func render_player_view(view: Dictionary) -> void:
@@ -71,7 +91,7 @@ func focus_authority_cell(cell: Vector2i) -> void:
 	_update_camera_zoom()
 	var world_position: Vector2 = BoardCoordinateMapper.authority_to_world(
 		cell,
-		str(_board_world.get_viewer_side()),
+		str(_board_world.get_display_side()),
 		_board_world.get_cell_size()
 	)
 	_camera.position = Vector2(BOARD_WORLD_SIZE.x * 0.5, world_position.y)
@@ -125,7 +145,7 @@ func _is_cell_visible(cell: Vector2i) -> bool:
 		return false
 	var world_position: Vector2 = BoardCoordinateMapper.authority_to_world(
 		cell,
-		str(_board_world.get_viewer_side()),
+		str(_board_world.get_display_side()),
 		_board_world.get_cell_size()
 	)
 	var half_height: float = size.y / maxf(_camera.zoom.y, 0.01) * 0.5
@@ -142,6 +162,7 @@ func _apply_zoom_step(step: float) -> void:
 func _update_camera_zoom() -> void:
 	var zoom_value: float = _fit_zoom * _zoom_multiplier
 	_camera.zoom = Vector2(zoom_value, zoom_value)
+	_sync_scroll_bar()
 
 
 func _clamp_camera() -> void:
@@ -155,6 +176,40 @@ func _clamp_camera() -> void:
 		visible_world_height * 0.5,
 		BOARD_WORLD_SIZE.y - visible_world_height * 0.5
 	)
+	_sync_scroll_bar()
+
+
+func _pan_camera(amount: float) -> void:
+	if is_zero_approx(amount):
+		return
+	_camera.position.y += amount / maxf(_camera.zoom.y, 0.01)
+	_clamp_camera()
+
+
+func _on_pan_requested(amount: float) -> void:
+	_pan_camera(amount * WHEEL_PAN_SPEED)
+
+
+func _on_scroll_bar_value_changed(value: float) -> void:
+	var visible_world_height: float = size.y / maxf(_camera.zoom.y, 0.01)
+	var scrollable_height := maxf(0.0, BOARD_WORLD_SIZE.y - visible_world_height)
+	if scrollable_height <= 0.0:
+		return
+	_camera.position.y = visible_world_height * 0.5 + value * scrollable_height
+	_clamp_camera()
+
+
+func _sync_scroll_bar() -> void:
+	if not is_instance_valid(_scroll_bar):
+		return
+	var visible_world_height: float = size.y / maxf(_camera.zoom.y, 0.01)
+	var scrollable_height := maxf(0.0, BOARD_WORLD_SIZE.y - visible_world_height)
+	_scroll_bar.visible = scrollable_height > 0.0
+	if scrollable_height <= 0.0:
+		_scroll_bar.set_value_no_signal(0.0)
+		return
+	var normalized := (_camera.position.y - visible_world_height * 0.5) / scrollable_height
+	_scroll_bar.set_value_no_signal(clampf(normalized, 0.0, 1.0))
 
 
 func _on_point_activated(cell: Vector2i) -> void:

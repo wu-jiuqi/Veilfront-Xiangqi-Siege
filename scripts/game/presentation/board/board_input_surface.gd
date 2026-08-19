@@ -3,6 +3,7 @@ extends Control
 signal point_activated(cell: Vector2i)
 signal cancel_or_marker_requested(cell: Vector2i)
 signal zoom_requested(step: float)
+signal pan_requested(amount: float)
 
 const Mapper = preload("res://scripts/game/presentation/board/board_coordinate_mapper.gd")
 
@@ -22,11 +23,17 @@ func _gui_input(event: InputEvent) -> void:
 		return
 	var mouse_event := event as InputEventMouseButton
 	if mouse_event.button_index == MOUSE_BUTTON_WHEEL_UP:
-		zoom_requested.emit(1.0)
+		if mouse_event.ctrl_pressed:
+			zoom_requested.emit(1.0)
+		else:
+			pan_requested.emit(-maxf(mouse_event.factor, 1.0))
 		accept_event()
 		return
 	if mouse_event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-		zoom_requested.emit(-1.0)
+		if mouse_event.ctrl_pressed:
+			zoom_requested.emit(-1.0)
+		else:
+			pan_requested.emit(maxf(mouse_event.factor, 1.0))
 		accept_event()
 		return
 	var cell: Vector2i = Mapper.world_to_authority(mouse_event.position, _side, _cell_size)

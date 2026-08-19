@@ -3,6 +3,7 @@ extends Node2D
 signal point_activated(cell: Vector2i)
 signal cancel_or_marker_requested(cell: Vector2i)
 signal zoom_requested(step: float)
+signal pan_requested(amount: float)
 
 @export var board_theme: BoardTheme
 
@@ -19,6 +20,7 @@ signal zoom_requested(step: float)
 @onready var _input_surface: Control = $InputSurface
 
 var _side: String = "red"
+var _viewer_side: String = "red"
 var _current_view: Dictionary = {}
 
 
@@ -26,12 +28,15 @@ func _ready() -> void:
 	_input_surface.point_activated.connect(_on_point_activated)
 	_input_surface.cancel_or_marker_requested.connect(_on_cancel_or_marker_requested)
 	_input_surface.zoom_requested.connect(_on_zoom_requested)
+	_input_surface.pan_requested.connect(_on_pan_requested)
 	_configure_empty_board()
 
 
 func render_player_view(view: Dictionary) -> void:
 	_current_view = view.duplicate(true)
-	_side = str(_current_view.get("viewer_side", "red"))
+	_viewer_side = str(_current_view.get("viewer_side", "red"))
+	if _side not in ["red", "black"]:
+		_side = _viewer_side
 	var cell_size: Vector2 = board_theme.cell_size
 	_grid_renderer.configure(_current_view.get("board", {"width": 9, "height": 24}), _side, board_theme)
 	_piece_renderer.render(_current_view.get("pieces", []), _side, cell_size)
@@ -101,7 +106,21 @@ func get_point_spacing() -> Vector2:
 
 
 func get_viewer_side() -> String:
+	return _viewer_side
+
+
+func get_display_side() -> String:
 	return _side
+
+
+func set_presentation_side(side: String) -> void:
+	if side not in ["red", "black"] or side == _side:
+		return
+	_side = side
+	if _current_view.is_empty():
+		_configure_empty_board()
+		return
+	render_player_view(_current_view)
 
 
 func get_cell_size() -> Vector2:
@@ -129,3 +148,7 @@ func _on_cancel_or_marker_requested(cell: Vector2i) -> void:
 
 func _on_zoom_requested(step: float) -> void:
 	zoom_requested.emit(step)
+
+
+func _on_pan_requested(amount: float) -> void:
+	pan_requested.emit(amount)
