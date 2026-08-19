@@ -6,6 +6,9 @@ signal action_previews_requested(piece_id: String, action_type: String)
 signal action_prepare_requested(preview_id: String)
 signal action_confirm_requested(preview_id: String)
 signal skip_requested()
+signal selection_cancelled()
+signal marker_applied(cell: Vector2i, marker_type: String)
+signal board_point_activated(cell: Vector2i)
 
 const COMPACT_BREAKPOINT: float = 1100.0
 const IDLE: String = "IDLE"
@@ -15,7 +18,10 @@ const CONFIRMING: String = "CONFIRMING"
 const MARKER_MENU: String = "MARKER_MENU"
 const Presenter = preload("res://scripts/game/presentation/match_screen_presenter.gd")
 
+@export var allow_known_illegal_previews: bool = false
+
 @onready var _workspace: HSplitContainer = %Workspace
+@onready var _safe_margin: MarginContainer = $SafeMargin
 @onready var _board_frame: PanelContainer = %BoardFrame
 @onready var _board_viewport: SubViewportContainer = %BoardViewport
 @onready var _wide_status_host: PanelContainer = %WideStatusHost
@@ -33,7 +39,13 @@ const Presenter = preload("res://scripts/game/presentation/match_screen_presente
 @onready var _wall_status: Label = $SafeMargin/Page/Workspace/WideStatusHost/MatchStatusPanel/Content/WallStatus
 @onready var _flag_status: Label = $SafeMargin/Page/Workspace/WideStatusHost/MatchStatusPanel/Content/FlagStatus
 @onready var _casualty_status: Label = $SafeMargin/Page/Workspace/WideStatusHost/MatchStatusPanel/Content/CasualtyStatus
-@onready var _skip_button: Button = $SafeMargin/Page/Workspace/WideStatusHost/MatchStatusPanel/Content/SkipButton
+@onready var _selection_status: Label = $SafeMargin/Page/Workspace/WideStatusHost/MatchStatusPanel/Content/SelectionStatus
+@onready var _mode_status: Label = $SafeMargin/Page/Workspace/WideStatusHost/MatchStatusPanel/Content/ModeStatus
+@onready var _message_value: Label = $SafeMargin/Page/Workspace/WideStatusHost/MatchStatusPanel/Content/MessageValue
+@onready var _move_button: Button = $SafeMargin/Page/Workspace/WideStatusHost/MatchStatusPanel/Content/ActionMode/MoveButton
+@onready var _bombard_button: Button = $SafeMargin/Page/Workspace/WideStatusHost/MatchStatusPanel/Content/ActionMode/BombardButton
+@onready var _resurrect_button: Button = $SafeMargin/Page/Workspace/WideStatusHost/MatchStatusPanel/Content/ActionMode/ResurrectButton
+@onready var _pass_button: Button = $SafeMargin/Page/Workspace/WideStatusHost/MatchStatusPanel/Content/ActionMode/PassButton
 @onready var _action_prompt: Label = $ActionConfirmationPanel/Content/Prompt
 @onready var _action_cancel_button: Button = $ActionConfirmationPanel/Content/Buttons/CancelButton
 @onready var _action_confirm_button: Button = $ActionConfirmationPanel/Content/Buttons/ConfirmButton
@@ -51,10 +63,14 @@ var _prepare_generation: int = 0
 var _inflight_prepare_generation: int = 0
 var _inflight_prepare_preview_id: String = ""
 var _cancelled_prepare_tombstones: Dictionary = {}
+var _current_view: Dictionary = {}
+var _action_mode: String = "move"
+var _tutorial_panel_width: float = 0.0
 
 
 func _ready() -> void:
 	get_viewport().size_changed.connect(_on_viewport_size_changed)
+	_board_viewport.point_activated.connect(handle_board_point)
 	_board_viewport.cancel_or_marker_requested.connect(_on_cancel_or_marker_requested)
 	_marker_menu.marker_selected.connect(_on_marker_selected)
 	_status_button.pressed.connect(_on_status_button_pressed)
@@ -62,7 +78,10 @@ func _ready() -> void:
 	_confirm_button.pressed.connect(confirm_prepared_action)
 	_action_cancel_button.pressed.connect(_cancel_only)
 	_action_confirm_button.pressed.connect(confirm_prepared_action)
-	_skip_button.pressed.connect(func() -> void: skip_requested.emit())
+	_move_button.pressed.connect(_set_action_mode.bind("move"))
+	_bombard_button.pressed.connect(_set_action_mode.bind("bombard"))
+	_resurrect_button.pressed.connect(_set_action_mode.bind("resurrect"))
+	_pass_button.pressed.connect(_prepare_pass)
 	call_deferred("apply_layout_for_size", size)
 
 
@@ -83,7 +102,20 @@ func apply_layout_for_size(requested_size: Vector2) -> void:
 	_set_compact_layout(requested_size.x < COMPACT_BREAKPOINT)
 
 
+func set_tutorial_panel_width(panel_width: float) -> void:
+	_tutorial_panel_width = maxf(0.0, panel_width)
+	_safe_margin.offset_right = -16.0 - _tutorial_panel_width
+	call_deferred("apply_layout_for_size", size)
+
+
+func set_action_mode(mode: String) -> void:
+	if mode not in ["move", "bombard", "resurrect"]:
+		return
+	_set_action_mode(mode)
+
+
 func render_player_view(view: Dictionary) -> void:
+	_current_view = view.duplicate(true)
 	_presentation_model = _presenter.player_view_model(view)
 	_turn_label.text = str(_presentation_model.get("turn_text", "行动方：--"))
 	_round_label.text = str(_presentation_model.get("round_text", "回合：-- / 50"))
@@ -91,6 +123,7 @@ func render_player_view(view: Dictionary) -> void:
 	_flag_status.text = str(_presentation_model.get("flag_text", "旗帜：--"))
 	_casualty_status.text = str(_presentation_model.get("casualty_text", "阵亡：--"))
 	_board_viewport.render_player_view(view)
+	_update_status_controls()
 
 
 func render_session_state(_public_state: Dictionary) -> void:
@@ -110,6 +143,7 @@ func render_visible_error(error: Dictionary) -> void:
 
 func render_action_previews_from_port(previews: Array) -> void:
 	_current_previews = previews.duplicate(true)
+	_refresh_selected_previews()
 
 
 func render_prepared_action(preview_id: String) -> void:
@@ -138,6 +172,33 @@ func request_action_previews(piece_id: String, action_type: String) -> void:
 	_selected_piece_id = piece_id
 	_interaction_state = SELECTED
 	action_previews_requested.emit(piece_id, action_type)
+
+
+func handle_board_point(cell: Vector2i) -> void:
+	board_point_activated.emit(cell)
+	if not _can_submit_action():
+		_message_value.text = "当前不是己方行动阶段。"
+		return
+	var own_piece: Dictionary = _owned_piece_at(cell)
+	if _selected_piece_id.is_empty():
+		if own_piece.is_empty():
+			_message_value.text = "请先选择一枚己方棋子。"
+			return
+		_select_piece(own_piece)
+		return
+	if _action_mode == "bombard":
+		var bombard_preview: Dictionary = _preview_for_target(cell)
+		if not bombard_preview.is_empty():
+			prepare_action(str(bombard_preview.get("preview_id", "")))
+			return
+	if not own_piece.is_empty():
+		_select_piece(own_piece)
+		return
+	var preview: Dictionary = _preview_for_target(cell)
+	if preview.is_empty():
+		_message_value.text = "该交点不是当前模式下可提交的公开预览。"
+		return
+	prepare_action(str(preview.get("preview_id", "")))
 
 
 func prepare_action(preview_id: String) -> void:
@@ -182,6 +243,7 @@ func handle_cancel_or_marker(cell: Vector2i) -> String:
 		return "cancel_prepared_action"
 	if _interaction_state == SELECTED:
 		_clear_local_interaction()
+		selection_cancelled.emit()
 		return "cancel_selection"
 	if _interaction_state == MARKER_MENU:
 		_marker_menu.hide()
@@ -197,6 +259,7 @@ func apply_marker(cell: Vector2i, marker_type: String) -> void:
 	_board_viewport.set_marker(cell, marker_type)
 	_marker_menu.hide()
 	_interaction_state = IDLE
+	marker_applied.emit(cell, marker_type)
 
 
 func get_board_render_snapshot() -> Dictionary:
@@ -245,7 +308,14 @@ func get_presentation_snapshot() -> Dictionary:
 		"preview_count": _current_previews.size(),
 		"prepared_preview_id": _prepared_preview_id,
 		"interaction_state": _interaction_state,
+		"selected_piece_id": _selected_piece_id,
+		"action_mode": _action_mode,
+		"action_index": int(_current_view.get("action_index", 0)),
 	}
+
+
+func get_player_view_snapshot() -> Dictionary:
+	return _current_view.duplicate(true)
 
 
 func _set_compact_layout(compact: bool) -> void:
@@ -272,6 +342,7 @@ func _clear_local_interaction() -> void:
 	_inflight_prepare_preview_id = ""
 	_confirmation_panel.visible = false
 	_board_viewport.clear_interaction()
+	_update_status_controls()
 
 
 func _cancel_only() -> void:
@@ -279,6 +350,7 @@ func _cancel_only() -> void:
 		_cancel_prepared_action_locally()
 	elif _interaction_state != IDLE:
 		_clear_local_interaction()
+		selection_cancelled.emit()
 
 
 func _cancel_prepared_action_locally() -> void:
@@ -345,3 +417,119 @@ func _preview_message_key(preview_id: String) -> String:
 		if preview is Dictionary and str(preview.get("preview_id", "")) == preview_id:
 			return str(preview.get("message_key", "action.confirm"))
 	return "action.confirm"
+
+
+func _can_submit_action() -> bool:
+	return not _current_view.is_empty() \
+		and not bool(_current_view.get("terminal", false)) \
+		and str(_current_view.get("viewer_side", "")) == str(_current_view.get("active_side", ""))
+
+
+func _owned_piece_at(cell: Vector2i) -> Dictionary:
+	var viewer_side := str(_current_view.get("viewer_side", ""))
+	for piece_value: Variant in _current_view.get("pieces", []):
+		if not piece_value is Dictionary:
+			continue
+		var piece: Dictionary = piece_value
+		if str(piece.get("side", "")) == viewer_side \
+		and bool(piece.get("alive", false)) \
+		and not bool(piece.get("in_reserve", false)) \
+		and piece.get("position", []) == [cell.x, cell.y]:
+			return piece.duplicate(true)
+	return {}
+
+
+func _select_piece(piece: Dictionary) -> void:
+	_selected_piece_id = str(piece.get("id", ""))
+	_interaction_state = SELECTED
+	_message_value.text = "已选择 %s；请选择目标交点。" % _selected_piece_id
+	request_action_previews(_selected_piece_id, _action_mode)
+	if _action_mode == "resurrect":
+		_prepare_empty_target_preview()
+	_update_status_controls()
+
+
+func _preview_for_target(cell: Vector2i) -> Dictionary:
+	for preview_value: Variant in _current_previews:
+		if not preview_value is Dictionary:
+			continue
+		var preview: Dictionary = preview_value
+		if str(preview.get("piece_id", "")) == _selected_piece_id \
+		and str(preview.get("action_type", "")) == _action_mode \
+		and preview.get("target_cell", []) == [cell.x, cell.y] \
+		and (allow_known_illegal_previews \
+			or str(preview.get("classification", "")) != "KNOWN_ILLEGAL"):
+			return preview.duplicate(true)
+	return {}
+
+
+func _set_action_mode(mode: String) -> void:
+	_action_mode = mode
+	_clear_local_interaction()
+	_message_value.text = {
+		"move": "普通移动：选择己方棋子和目标交点。",
+		"bombard": "区域炮击：先选择大本营内仍有弹药的己方炮。",
+		"resurrect": "献祭复活：选择一枚在场己方士。",
+	}.get(mode, "请选择行动。")
+	_update_status_controls()
+
+
+func _prepare_pass() -> void:
+	if not _can_submit_action():
+		return
+	request_action_previews("", "pass")
+	for preview_value: Variant in _current_previews:
+		if preview_value is Dictionary and str(preview_value.get("action_type", "")) == "pass":
+			prepare_action(str(preview_value.get("preview_id", "")))
+			return
+	_message_value.text = "当前没有可提交的主动跳过预览。"
+
+
+func _prepare_empty_target_preview() -> void:
+	for preview_value: Variant in _current_previews:
+		if not preview_value is Dictionary:
+			continue
+		var preview: Dictionary = preview_value
+		if str(preview.get("piece_id", "")) == _selected_piece_id \
+		and str(preview.get("action_type", "")) == _action_mode \
+		and preview.get("target_cell", []).is_empty():
+			prepare_action(str(preview.get("preview_id", "")))
+			return
+
+
+func _refresh_selected_previews() -> void:
+	if _selected_piece_id.is_empty():
+		return
+	var selected_cell := Vector2i.ZERO
+	for piece_value: Variant in _current_view.get("pieces", []):
+		if piece_value is Dictionary and str(piece_value.get("id", "")) == _selected_piece_id:
+			var position: Array = piece_value.get("position", [])
+			if position.size() == 2:
+				selected_cell = Vector2i(int(position[0]), int(position[1]))
+			break
+	var filtered: Array = []
+	for preview_value: Variant in _current_previews:
+		if preview_value is Dictionary \
+		and str(preview_value.get("piece_id", "")) == _selected_piece_id \
+		and str(preview_value.get("action_type", "")) == _action_mode:
+			filtered.append(preview_value)
+	_board_viewport.set_interaction(selected_cell, filtered)
+
+
+func _update_status_controls() -> void:
+	if not is_instance_valid(_selection_status):
+		return
+	_selection_status.text = "行动方：%s · 已选：%s" % [
+		str(_current_view.get("active_side", "--")),
+		_selected_piece_id if not _selected_piece_id.is_empty() else "无",
+	]
+	_mode_status.text = "模式：%s" % {
+		"move": "普通移动",
+		"bombard": "区域炮击",
+		"resurrect": "献祭复活",
+	}.get(_action_mode, _action_mode)
+	var disabled := not _can_submit_action()
+	_move_button.disabled = disabled
+	_bombard_button.disabled = disabled
+	_resurrect_button.disabled = disabled
+	_pass_button.disabled = disabled

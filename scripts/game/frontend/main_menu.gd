@@ -1,6 +1,6 @@
 extends Control
 
-const LAN_SCENE := "res://scenes/prototype/network/lan_lobby.tscn"
+const FrontendRoutes = preload("res://scripts/integration/frontend_routes.gd")
 const LEVEL_SELECT_SCENE := "res://scenes/game/frontend/level_select.tscn"
 
 @onready var _lan_button: Button = %LanButton
@@ -13,7 +13,7 @@ var _transitioning := false
 
 
 func _ready() -> void:
-	_lan_button.pressed.connect(func() -> void: _open_scene(LAN_SCENE))
+	_lan_button.pressed.connect(func() -> void: _open_scene(FrontendRoutes.lan_lobby_scene()))
 	_level_mode_button.pressed.connect(func() -> void: _open_scene(LEVEL_SELECT_SCENE))
 	_quit_button.pressed.connect(_quit_dialog.popup_centered)
 	_quit_dialog.confirmed.connect(get_tree().quit)
@@ -36,4 +36,3 @@ func _open_scene(path: String) -> void:
 		_transitioning = false
 		$FatalErrorDialog.dialog_text = "无法打开界面：%s" % path
 		$FatalErrorDialog.popup_centered()
-

@@ -9,7 +9,14 @@ theme_override_constants/separation = 10
 
 [node name="Heading" type="Label" parent="Content"]
 layout_mode = 2
-text = "战局信息"
+text = "战局信息（仅玩家可见内容）"
+theme_override_font_sizes/font_size = 19
+
+[node name="SelectionStatus" type="Label" parent="Content"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "行动与选择：等待初始化"
+autowrap_mode = 2
 
 [node name="WallStatus" type="Label" parent="Content"]
 layout_mode = 2
@@ -26,10 +33,48 @@ layout_mode = 2
 text = "阵亡：等待对局数据"
 autowrap_mode = 2
 
+[node name="ModeStatus" type="Label" parent="Content"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "模式：普通移动"
+autowrap_mode = 2
+
+[node name="ActionMode" type="GridContainer" parent="Content"]
+layout_mode = 2
+columns = 2
+
+[node name="MoveButton" type="Button" parent="Content/ActionMode"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(98, 44)
+layout_mode = 2
+text = "普通移动"
+
+[node name="BombardButton" type="Button" parent="Content/ActionMode"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(98, 44)
+layout_mode = 2
+text = "区域炮击"
+
+[node name="ResurrectButton" type="Button" parent="Content/ActionMode"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(98, 44)
+layout_mode = 2
+text = "献祭复活"
+
+[node name="PassButton" type="Button" parent="Content/ActionMode"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(98, 44)
+layout_mode = 2
+text = "主动跳过"
+
+[node name="MessageValue" type="Label" parent="Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.82, 0.38, 1)
+text = "提示：左键选择棋子；选中时右键取消，未选中时右键标注。"
+autowrap_mode = 2
+
 [node name="Spacer" type="Control" parent="Content"]
 layout_mode = 2
 size_flags_vertical = 3
-
-[node name="SkipButton" type="Button" parent="Content"]
-layout_mode = 2
-text = "主动跳过"

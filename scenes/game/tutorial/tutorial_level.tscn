@@ -25,6 +25,7 @@ trusted_tutorial_scenario = ExtResource("6_authority")
 
 [node name="MatchScreen" parent="." instance=ExtResource("2_match")]
 layout_mode = 1
+allow_known_illegal_previews = true
 
 [node name="TutorialOverlay" parent="." instance=ExtResource("3_tutorial")]
 
@@ -37,6 +38,7 @@ presentation_track = ExtResource("7_track")
 [connection signal="visible_events_received" from="ApplicationHost" to="MatchScreen" method="render_visible_events"]
 [connection signal="visible_events_received" from="ApplicationHost" to="TutorialDirector" method="consume_visible_events"]
 [connection signal="visible_error_received" from="ApplicationHost" to="MatchScreen" method="render_visible_error"]
+[connection signal="visible_error_received" from="ApplicationHost" to="TutorialDirector" method="consume_visible_error"]
 [connection signal="action_previews_updated" from="ApplicationHost" to="MatchScreen" method="render_action_previews_from_port"]
 [connection signal="prepared_action_changed" from="ApplicationHost" to="MatchScreen" method="render_prepared_action"]
 [connection signal="prepared_action_changed" from="ApplicationHost" to="TutorialDirector" method="consume_prepared_action"]
@@ -45,11 +47,21 @@ presentation_track = ExtResource("7_track")
 [connection signal="action_confirm_requested" from="MatchScreen" to="ApplicationHost" method="confirm_prepared_action"]
 [connection signal="prepared_action_cancel_requested" from="MatchScreen" to="ApplicationHost" method="cancel_prepared_action"]
 [connection signal="prepared_action_cancel_requested" from="MatchScreen" to="TutorialDirector" method="consume_cancel_request"]
+[connection signal="selection_cancelled" from="MatchScreen" to="TutorialDirector" method="consume_cancel_request"]
+[connection signal="marker_applied" from="MatchScreen" to="TutorialDirector" method="consume_marker"]
+[connection signal="board_point_activated" from="MatchScreen" to="TutorialDirector" method="consume_board_point"]
 [connection signal="skip_requested" from="MatchScreen" to="TutorialDirector" method="request_skip"]
 [connection signal="retry_requested" from="TutorialOverlay" to="TutorialDirector" method="request_retry"]
 [connection signal="skip_requested" from="TutorialOverlay" to="TutorialDirector" method="request_skip"]
 [connection signal="exit_requested" from="TutorialOverlay" to="TutorialDirector" method="request_exit"]
+[connection signal="exit_requested" from="TutorialOverlay" to="." method="return_to_level_select"]
+[connection signal="continue_requested" from="TutorialOverlay" to="TutorialDirector" method="request_continue"]
+[connection signal="quiz_answered" from="TutorialOverlay" to="TutorialDirector" method="submit_quiz_answer"]
+[connection signal="hint_requested" from="TutorialOverlay" to="TutorialDirector" method="request_hint"]
 [connection signal="public_step_changed" from="TutorialDirector" to="TutorialOverlay" method="render_public_step"]
+[connection signal="public_feedback_changed" from="TutorialDirector" to="TutorialOverlay" method="render_feedback"]
+[connection signal="action_mode_requested" from="TutorialDirector" to="MatchScreen" method="set_action_mode"]
+[connection signal="level_completed" from="TutorialDirector" to="." method="record_level_completion"]
 [connection signal="restart_requested" from="TutorialDirector" to="ApplicationHost" method="request_restart"]
 [connection signal="skip_requested" from="TutorialDirector" to="ApplicationHost" method="request_skip"]
 [connection signal="tutorial_request_resolved" from="ApplicationHost" to="TutorialDirector" method="consume_authority_resolution"]

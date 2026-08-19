@@ -4,37 +4,122 @@
 
 [node name="TutorialOverlay" type="PanelContainer"]
 script = ExtResource("1_script")
-custom_minimum_size = Vector2(360, 150)
-offset_left = 24.0
-offset_top = 24.0
-offset_right = 384.0
-offset_bottom = 174.0
+custom_minimum_size = Vector2(390, 0)
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -406.0
+offset_top = 72.0
+offset_right = -16.0
+offset_bottom = -72.0
+grow_horizontal = 0
+grow_vertical = 2
 mouse_filter = 1
 
-[node name="Content" type="VBoxContainer" parent="."]
+[node name="Margin" type="ScrollContainer" parent="."]
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="Content" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 9
+
+[node name="ChapterCode" type="Label" parent="Margin/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.82, 0.38, 1)
+text = "T0 · 操作校准"
+
+[node name="ChapterTitle" type="Label" parent="Margin/Content"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "棋落交点"
+
+[node name="Goal" type="Label" parent="Margin/Content"]
+layout_mode = 2
+text = "章节目标"
+autowrap_mode = 2
+
+[node name="Tags" type="Label" parent="Margin/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.78, 0.86, 1)
+autowrap_mode = 2
+
+[node name="Separator" type="HSeparator" parent="Margin/Content"]
 layout_mode = 2
 
-[node name="StepLabel" type="Label" parent="Content"]
+[node name="StepCounter" type="Label" parent="Margin/Content"]
 layout_mode = 2
+text = "步骤 1 / 1"
+
+[node name="StepTitle" type="Label" parent="Margin/Content"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 19
 text = "教学步骤"
 
-[node name="Instruction" type="Label" parent="Content"]
+[node name="Instruction" type="Label" parent="Margin/Content"]
+custom_minimum_size = Vector2(0, 76)
 layout_mode = 2
 text = "等待公开教学提示"
 autowrap_mode = 2
 
-[node name="Actions" type="HBoxContainer" parent="Content"]
+[node name="Feedback" type="Label" parent="Margin/Content"]
+custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
-alignment = 2
+theme_override_colors/font_color = Color(0.42, 0.92, 0.58, 1)
+text = "按照目标在棋盘上操作。"
+autowrap_mode = 2
 
-[node name="RetryButton" type="Button" parent="Content/Actions"]
+[node name="Options" type="VBoxContainer" parent="Margin/Content"]
 layout_mode = 2
-text = "重试"
 
-[node name="SkipButton" type="Button" parent="Content/Actions"]
+[node name="Option0" type="Button" parent="Margin/Content/Options"]
+visible = false
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
-text = "跳过教学"
 
-[node name="ExitButton" type="Button" parent="Content/Actions"]
+[node name="Option1" type="Button" parent="Margin/Content/Options"]
+visible = false
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
-text = "退出"
+
+[node name="Option2" type="Button" parent="Margin/Content/Options"]
+visible = false
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+
+[node name="ContinueButton" type="Button" parent="Margin/Content"]
+visible = false
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+text = "继续"
+
+[node name="Spacer" type="Control" parent="Margin/Content"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HintButton" type="Button" parent="Margin/Content"]
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+text = "显示操作提示"
+
+[node name="Actions" type="GridContainer" parent="Margin/Content"]
+layout_mode = 2
+columns = 3
+
+[node name="RetryButton" type="Button" parent="Margin/Content/Actions"]
+custom_minimum_size = Vector2(104, 44)
+layout_mode = 2
+text = "重置章节"
+
+[node name="SkipButton" type="Button" parent="Margin/Content/Actions"]
+custom_minimum_size = Vector2(104, 44)
+layout_mode = 2
+text = "跳过章节"
+
+[node name="BackToLevelsButton" type="Button" parent="Margin/Content/Actions"]
+custom_minimum_size = Vector2(104, 44)
+layout_mode = 2
+text = "返回目录"
