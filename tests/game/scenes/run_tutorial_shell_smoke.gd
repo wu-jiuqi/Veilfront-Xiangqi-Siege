@@ -91,6 +91,7 @@ func _check_parallel_session_isolation() -> void:
 
 func _check_tutorial_flow() -> void:
 	var tutorial_level: Control = TUTORIAL_LEVEL_SCENE.instantiate() as Control
+	tutorial_level.bootstrap_local_session = false
 	root.add_child(tutorial_level)
 	await process_frame
 	var host: Node = tutorial_level.get_node("ApplicationHost")
@@ -167,6 +168,7 @@ func _check_tutorial_authority_boundary() -> void:
 
 func _check_tutorial_authority_rejections() -> void:
 	var tutorial_level: Control = TUTORIAL_LEVEL_SCENE.instantiate() as Control
+	tutorial_level.bootstrap_local_session = false
 	root.add_child(tutorial_level)
 	await process_frame
 	var host: Node = tutorial_level.get_node("ApplicationHost")
@@ -217,6 +219,7 @@ func _check_tutorial_authority_rejections() -> void:
 
 func _check_tutorial_seat_rejection() -> void:
 	var tutorial_level: Control = TUTORIAL_LEVEL_SCENE.instantiate() as Control
+	tutorial_level.bootstrap_local_session = false
 	root.add_child(tutorial_level)
 	await process_frame
 	var host: Node = tutorial_level.get_node("ApplicationHost")

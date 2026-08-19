@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Theme" path="res://resources/game/ui/formal_graybox_theme.tres" id="1_theme"]
 [ext_resource type="PackedScene" path="res://scenes/game/match/match_screen.tscn" id="2_match"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://scripts/game/tutorial/tutorial_director.gd" id="5_director"]
 [ext_resource type="Resource" path="res://resources/game/tutorials/authority/tutorial_smoke_authority.tres" id="6_authority"]
 [ext_resource type="Resource" path="res://resources/game/tutorials/presentation/tutorial_smoke_track.tres" id="7_track"]
+[ext_resource type="Script" path="res://scripts/game/tutorial/tutorial_level.gd" id="8_level"]
 
 [node name="TutorialLevel" type="Control"]
 layout_mode = 3
@@ -16,6 +17,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_theme")
+script = ExtResource("8_level")
 
 [node name="ApplicationHost" type="Node" parent="."]
 script = ExtResource("4_host")
