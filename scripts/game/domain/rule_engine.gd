@@ -5,6 +5,7 @@ const MatchState = preload("res://scripts/game/domain/match_state.gd")
 const MoveRules = preload("res://scripts/game/domain/move_rules.gd")
 const SeededRandom = preload("res://scripts/game/domain/seeded_random.gd")
 const VisibilityPolicy = preload("res://scripts/game/domain/visibility_policy.gd")
+const TutorialEffectApplier = preload("res://scripts/game/domain/tutorial_effect_applier.gd")
 
 
 static func create_match(seed_value: int, configuration: Dictionary = {}) -> Dictionary:
@@ -109,6 +110,40 @@ static func submit_action(state: Dictionary, intent: Dictionary, options: Dictio
 	if bool(options.get("include_state_summary", true)):
 		response["state_summary"] = MatchState.summary(state)
 	return response
+
+
+static func resolve_tutorial_transition(
+	state: Dictionary,
+	scenario: TutorialScenarioDefinition,
+	step_id: String
+) -> Dictionary:
+	var transition_result: Dictionary = TutorialEffectApplier.apply(state, scenario, step_id)
+	if not bool(transition_result.get("ok", false)):
+		return transition_result
+	if not bool(transition_result.get("applied", false)):
+		return {"ok": true, "applied": false, "event": {}}
+	var event: Dictionary = {
+		"schema_version": "veilfront-domain-event-v1",
+		"event_id": "tutorial-transition-%d" % state.get("events", []).size(),
+		"action_index": int(state.get("action_index", 0)),
+		"actor_side": str(scenario.bound_seat),
+		"intent": {
+			"piece_id": "",
+			"action_type": "tutorial_transition",
+			"target_cell": [],
+			"skill_type": "",
+		},
+		"tutorial_step_id": step_id,
+		"deployments_before_action": [],
+		"outcome": {
+			"ok": true,
+			"consumed": false,
+			"result_code": "tutorial_transition_resolved",
+		},
+		"random_samples": [],
+	}
+	state["events"].append(event)
+	return {"ok": true, "applied": true, "event": event.duplicate(true)}
 
 
 static func can_bombard(state: Dictionary, cannon_id: String) -> bool:
@@ -755,4 +790,3 @@ static func _cell_array_has(cells: Array, target: Vector2i) -> bool:
 		if Canonical.coordinate(cell_value) == target:
 			return true
 	return false
-

@@ -58,10 +58,14 @@ func request_restart() -> void:
 	_publish_payload(_session.restart())
 
 
+func apply_tutorial_transition(step_id: String) -> Dictionary:
+	if not _session.has_method("apply_tutorial_transition"):
+		return {"ok": false, "error_code": "tutorial_transition_unsupported"}
+	return _publish_payload(_session.apply_tutorial_transition(step_id))
+
+
 func apply_tutorial_effect(step_id: String) -> Dictionary:
-	if not _session.has_method("apply_tutorial_effect"):
-		return {"ok": false, "error_code": "tutorial_effect_unsupported"}
-	return _publish_payload(_session.apply_tutorial_effect(step_id))
+	return apply_tutorial_transition(step_id)
 
 
 func _find_preview(preview_id: String) -> Dictionary:

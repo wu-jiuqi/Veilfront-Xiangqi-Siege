@@ -9,7 +9,6 @@ const PublicActionPreviewer = preload("res://scripts/game/projection/public_acti
 const VisibleOutcomeProjector = preload("res://scripts/game/projection/visible_outcome_projector.gd")
 const ObserverReplayValidator = preload("res://scripts/game/application/observer_replay_validator.gd")
 const ScenarioBootstrap = preload("res://scripts/game/domain/scenario_bootstrap.gd")
-const TutorialEffectApplier = preload("res://scripts/game/domain/tutorial_effect_applier.gd")
 
 var _state: Dictionary = {}
 var _viewer_context: RefCounted
@@ -158,8 +157,12 @@ func advance_trusted_scripted_pass() -> Dictionary:
 	}
 
 
-func apply_trusted_tutorial_effect(step_id: String) -> Dictionary:
-	var result: Dictionary = TutorialEffectApplier.apply(_state, _tutorial_scenario, step_id)
+func submit_trusted_tutorial_transition(step_id: String) -> Dictionary:
+	var result: Dictionary = RuleEngine.resolve_tutorial_transition(
+		_state,
+		_tutorial_scenario,
+		step_id
+	)
 	if not bool(result.get("ok", false)):
 		return {
 			"ok": false,
@@ -176,11 +179,16 @@ func apply_trusted_tutorial_effect(step_id: String) -> Dictionary:
 	return {
 		"ok": true,
 		"applied": bool(result.get("applied", false)),
+		"domain_event": result.get("event", {}).duplicate(true),
 		"player_view": frame["player_view_or_digest"].duplicate(true),
 		"visible_events": frame["visible_events"].duplicate(true),
 		"visible_error": {},
 		"action_previews": frame["action_previews"].duplicate(true),
 	}
+
+
+func apply_trusted_tutorial_effect(step_id: String) -> Dictionary:
+	return submit_trusted_tutorial_transition(step_id)
 
 
 func observer_replay_record() -> Dictionary:
