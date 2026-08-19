@@ -1,0 +1,36 @@
+approval:
+  schema_version: '0.1'
+  approval_id: approval:veilfront-xiangqi-siege:static-14-piece-batch:ef91c89aed45
+  status: approved
+  approved_by: project-owner
+  approved_at: '2026-08-20T00:02:53.7709686+08:00'
+  source_ref: codex-thread://current#owner-authorized-static-14-piece-batch
+  authorization_text: 完成以后同理制作所有棋子
+  authorization_digest_sha256: ef91c89aed452d3aa61f0d99a09950b4f69134f3433b6f169cd218c260ad5e98
+  supersedes_scope_restriction:
+    contract_ref: game-pipeline/loops/contracts/loop-contract-formal-foundation-gate2-v2.yaml
+    restriction: TASK-ART-001只允许红黑步兵/骑兵最小样片且不得启动14枚静态棋子批量生产
+  authorized_scope:
+    deliverable: 兵马俑风格14枚静态单体棋子视觉资产
+    pieces_per_faction:
+      - 兵
+      - 炮
+      - 车
+      - 马
+      - 相
+      - 士
+      - 将
+    factions:
+      red: 银白钨钢
+      black: 深墨绿青铜
+    workflow:
+      - 先生成或编辑为纯紫幕源
+      - 仅从紫幕源执行色键抠图
+      - 输出真实RGBA与统一运行时尺寸
+      - 形成逐对审查页与机械校验记录
+  still_out_of_scope:
+    - 动作序列与骨骼动画
+    - 全量VFX、音频和最终UI皮肤
+    - 未经校对的正式小篆矢量母版
+    - 外包预算承诺与GATE-2其他批准事项
+  note: 本例外只解除14枚静态单体棋子的批量限制，不代表GATE-2整体通过，也不改变规则、PlayerView、回放或教学事实边界。

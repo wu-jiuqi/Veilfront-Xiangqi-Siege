@@ -1,0 +1,358 @@
+{
+  "schema_version": "0.1",
+  "status": "passed",
+  "asset_count": 14,
+  "method": "purple-screen chroma key + premultiplied-alpha resize",
+  "assets": [
+    {
+      "file": "evidence/gate2/art-samples/runtime/vs-piece-01-red-infantry-512x768-alpha-v2.png",
+      "size": [
+        512,
+        768
+      ],
+      "mode": "RGBA",
+      "corner_alpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "partial_alpha_pixels": 11826,
+      "purple_spill_pixels": 0,
+      "alpha_bbox": [
+        73,
+        17,
+        449,
+        757
+      ],
+      "sha256": "0b4574105a34375a2d78cf3de3ce0df067cb3a8f563e9bbe16733d5247b11194"
+    },
+    {
+      "file": "evidence/gate2/art-samples/runtime/vs-piece-02-black-infantry-512x768-alpha-v2.png",
+      "size": [
+        512,
+        768
+      ],
+      "mode": "RGBA",
+      "corner_alpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "partial_alpha_pixels": 11888,
+      "purple_spill_pixels": 0,
+      "alpha_bbox": [
+        81,
+        18,
+        439,
+        755
+      ],
+      "sha256": "9f97a7b359e98bca6af9d567c83f663d7612769686106a312aabd9f413d7e749"
+    },
+    {
+      "file": "evidence/gate2/art-samples/runtime/vs-piece-03-red-cavalry-768x768-alpha-v2.png",
+      "size": [
+        768,
+        768
+      ],
+      "mode": "RGBA",
+      "corner_alpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "partial_alpha_pixels": 14401,
+      "purple_spill_pixels": 0,
+      "alpha_bbox": [
+        139,
+        13,
+        655,
+        726
+      ],
+      "sha256": "2e8d55c0a7471bd930f83620882f848f7b4ead718c76f00e0075ee093d01bd41"
+    },
+    {
+      "file": "evidence/gate2/art-samples/runtime/vs-piece-04-black-cavalry-768x768-alpha-v2.png",
+      "size": [
+        768,
+        768
+      ],
+      "mode": "RGBA",
+      "corner_alpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "partial_alpha_pixels": 15551,
+      "purple_spill_pixels": 0,
+      "alpha_bbox": [
+        103,
+        20,
+        664,
+        746
+      ],
+      "sha256": "4b825b44468cce31d922b23aeae65bd70fd1efb15c34f09011a0d526425fbfaf"
+    },
+    {
+      "file": "evidence/gate2/art-samples/runtime/vs-piece-05-red-trebuchet-768x768-alpha-v2.png",
+      "size": [
+        768,
+        768
+      ],
+      "mode": "RGBA",
+      "corner_alpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "partial_alpha_pixels": 27211,
+      "purple_spill_pixels": 0,
+      "alpha_bbox": [
+        53,
+        33,
+        717,
+        732
+      ],
+      "sha256": "396b8adbd80cb559300066d03086d374a88224011b985a123d6cfab0e0c1215c"
+    },
+    {
+      "file": "evidence/gate2/art-samples/runtime/vs-piece-06-black-trebuchet-768x768-alpha-v2.png",
+      "size": [
+        768,
+        768
+      ],
+      "mode": "RGBA",
+      "corner_alpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "partial_alpha_pixels": 32621,
+      "purple_spill_pixels": 0,
+      "alpha_bbox": [
+        44,
+        23,
+        723,
+        735
+      ],
+      "sha256": "398c48306ab49688ab2d93510a130502547bd358fd3bb1614bc798d5261b8058"
+    },
+    {
+      "file": "evidence/gate2/art-samples/runtime/vs-piece-07-red-chariot-768x768-alpha-v2.png",
+      "size": [
+        768,
+        768
+      ],
+      "mode": "RGBA",
+      "corner_alpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "partial_alpha_pixels": 25547,
+      "purple_spill_pixels": 0,
+      "alpha_bbox": [
+        56,
+        18,
+        685,
+        715
+      ],
+      "sha256": "316fbdb9a91299463f4345629dcedd9cdad650cee1772cf2648e784354bbc8d8"
+    },
+    {
+      "file": "evidence/gate2/art-samples/runtime/vs-piece-08-black-chariot-768x768-alpha-v2.png",
+      "size": [
+        768,
+        768
+      ],
+      "mode": "RGBA",
+      "corner_alpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "partial_alpha_pixels": 28629,
+      "purple_spill_pixels": 0,
+      "alpha_bbox": [
+        30,
+        5,
+        712,
+        728
+      ],
+      "sha256": "8e65be6d76370289674c9832a386618b9ed474cc552210b40f2d71ad01dfc19d"
+    },
+    {
+      "file": "evidence/gate2/art-samples/runtime/vs-piece-09-red-minister-512x768-alpha-v2.png",
+      "size": [
+        512,
+        768
+      ],
+      "mode": "RGBA",
+      "corner_alpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "partial_alpha_pixels": 6253,
+      "purple_spill_pixels": 0,
+      "alpha_bbox": [
+        124,
+        35,
+        408,
+        741
+      ],
+      "sha256": "e6eec9ce1b8faa44e8c6d1e3b175c54401ca852e94b4c8dccbe99f2397d3e7cd"
+    },
+    {
+      "file": "evidence/gate2/art-samples/runtime/vs-piece-10-black-minister-512x768-alpha-v2.png",
+      "size": [
+        512,
+        768
+      ],
+      "mode": "RGBA",
+      "corner_alpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "partial_alpha_pixels": 6101,
+      "purple_spill_pixels": 0,
+      "alpha_bbox": [
+        133,
+        30,
+        408,
+        726
+      ],
+      "sha256": "fcebdaf09d5aa9a3e59fc0db453e42f618dcb1f2e154d8a5cc22d1cf134763f0"
+    },
+    {
+      "file": "evidence/gate2/art-samples/runtime/vs-piece-11-red-guard-512x768-alpha-v2.png",
+      "size": [
+        512,
+        768
+      ],
+      "mode": "RGBA",
+      "corner_alpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "partial_alpha_pixels": 5644,
+      "purple_spill_pixels": 0,
+      "alpha_bbox": [
+        140,
+        52,
+        378,
+        717
+      ],
+      "sha256": "dae790ef83b99e600a64cc10c4d69dc61faa3446c894ab3cbecd8000668f3a6e"
+    },
+    {
+      "file": "evidence/gate2/art-samples/runtime/vs-piece-12-black-guard-512x768-alpha-v2.png",
+      "size": [
+        512,
+        768
+      ],
+      "mode": "RGBA",
+      "corner_alpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "partial_alpha_pixels": 5967,
+      "purple_spill_pixels": 0,
+      "alpha_bbox": [
+        142,
+        36,
+        399,
+        721
+      ],
+      "sha256": "5a74e4344ea96546fb08834cf43178639472395c6d098a9cdca5ec76e23b9328"
+    },
+    {
+      "file": "evidence/gate2/art-samples/runtime/vs-piece-13-red-general-512x768-alpha-v2.png",
+      "size": [
+        512,
+        768
+      ],
+      "mode": "RGBA",
+      "corner_alpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "partial_alpha_pixels": 9165,
+      "purple_spill_pixels": 0,
+      "alpha_bbox": [
+        65,
+        16,
+        490,
+        748
+      ],
+      "sha256": "72ceabeaf4a54e8f32b827e1daa64bd68ad3024ff344cd827882ffa5b7af6ae9"
+    },
+    {
+      "file": "evidence/gate2/art-samples/runtime/vs-piece-14-black-general-512x768-alpha-v2.png",
+      "size": [
+        512,
+        768
+      ],
+      "mode": "RGBA",
+      "corner_alpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "partial_alpha_pixels": 9755,
+      "purple_spill_pixels": 0,
+      "alpha_bbox": [
+        47,
+        22,
+        504,
+        745
+      ],
+      "sha256": "5a1027e7f309ef44c5f17287fc5e4946ab7f11798bdf4585498a81c7c3f50c6e"
+    }
+  ]
+}

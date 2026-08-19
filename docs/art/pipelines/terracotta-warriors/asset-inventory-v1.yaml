@@ -3,7 +3,7 @@ art_pipeline_inventory:
   project_id: veilfront-xiangqi-siege
   pipeline_id: terracotta-warriors
   display_name: 兵马俑
-  status: preproduction_ready_batch_pending_gate2
+  status: static_piece_batch_v2_completed_other_batch_pending_gate2
   global_baseline_ref: docs/art/veilfront-visual-baseline-v1.md
   pipeline_spec_ref: docs/art/pipelines/terracotta-warriors/terracotta-warriors-art-pipeline-v1.md
   source_authority: codex-thread://current#owner-name-terracotta-warriors-pipeline
@@ -22,7 +22,12 @@ art_pipeline_inventory:
     - 规格与清单
     - 轮廓审查页
     - Contract v2列明的最小视觉样片
+    - 项目所有者例外批准的14枚静态单体棋子
     batch_allowed: false
+    static_piece_batch_exception:
+      allowed: true
+      status: completed_v2
+      approval_ref: game-pipeline/approvals/approval-static-14-piece-batch-owner-exception-20260820.yaml
     batch_requires:
     - GATE-2项目所有者批准
     - 新批量生产Contract
@@ -38,7 +43,7 @@ art_pipeline_inventory:
     role_designs:
       兵: 盾矛重步兵；金字位于盾面
       炮: 中国早期牵引式抛石机；A形架、长臂柔性吊索石袋、短端多根人力牵引绳；金字位于机架铭牌；禁止刚性石勺、欧洲配重箱与火炮
-      车: 奔行双马秦战车与显著高旗；金字位于旗面
+      车: 奔行三马秦战车与显著高旗；金字位于旗面
       马: 冲锋或半扬蹄秦骑兵与甲马；金字位于马胸牌或鞍侧短旗
       相: 秦朝文官、高冠与笏板；金字位于笏板
       士: 秦朝侍女、端庄侍立；金字位于腰佩或礼牌
@@ -69,53 +74,57 @@ art_pipeline_inventory:
       role: 兵
       quantity: 1
       phase: sample
-      status: design_source_owner_approved_alpha_blocked
+      status: rgba_runtime_v2_completed
       evidence:
       - evidence/gate2/art-samples/sources/vs-piece-01-red-infantry-source-v1.png
       - evidence/gate2/art-samples/TW-PIECE-01-04-source-sample-review-v1.md
-    - {id: TW-PIECE-RED-PAO, faction: red, role: 炮, quantity: 1, phase: batch, status: silhouette_v2_owner_approved_batch_pending_gate2}
-    - {id: TW-PIECE-RED-JU, faction: red, role: 车, quantity: 1, phase: batch, status: silhouette_v2_owner_approved_batch_pending_gate2}
+      - evidence/gate2/art-samples/runtime/vs-piece-01-red-infantry-512x768-alpha-v2.png
+    - {id: TW-PIECE-RED-PAO, faction: red, role: 炮, quantity: 1, phase: owner_exception_static_batch, status: rgba_runtime_v2_completed, evidence: evidence/gate2/art-samples/runtime/vs-piece-05-red-trebuchet-768x768-alpha-v2.png}
+    - {id: TW-PIECE-RED-JU, faction: red, role: 车, quantity: 1, phase: owner_exception_static_batch, status: rgba_runtime_v2_completed, evidence: evidence/gate2/art-samples/runtime/vs-piece-07-red-chariot-768x768-alpha-v2.png}
     - id: TW-PIECE-RED-MA
       faction: red
       role: 马
       quantity: 1
       phase: sample
-      status: source_concept_v1_pending_owner_alpha_native_size
+      status: rgba_runtime_v2_completed_source_1254
       actual_source_size: 1254x1254
       target_source_size: 1536x1536
       target_runtime_size: 768x768
       evidence:
       - evidence/gate2/art-samples/sources/vs-piece-03-red-cavalry-source-v1.png
       - evidence/gate2/art-samples/TW-PIECE-01-04-source-sample-review-v1.md
-    - {id: TW-PIECE-RED-XIANG, faction: red, role: 相, quantity: 1, phase: batch, status: silhouette_v2_owner_approved_batch_pending_gate2}
-    - {id: TW-PIECE-RED-SHI, faction: red, role: 士, quantity: 1, phase: batch, status: silhouette_v2_owner_approved_batch_pending_gate2}
-    - {id: TW-PIECE-RED-JIANG, faction: red, role: 将, quantity: 1, phase: batch, status: silhouette_v2_owner_approved_batch_pending_gate2}
+      - evidence/gate2/art-samples/runtime/vs-piece-03-red-cavalry-768x768-alpha-v2.png
+    - {id: TW-PIECE-RED-XIANG, faction: red, role: 相, quantity: 1, phase: owner_exception_static_batch, status: rgba_runtime_v2_completed, evidence: evidence/gate2/art-samples/runtime/vs-piece-09-red-minister-512x768-alpha-v2.png}
+    - {id: TW-PIECE-RED-SHI, faction: red, role: 士, quantity: 1, phase: owner_exception_static_batch, status: rgba_runtime_v2_completed, evidence: evidence/gate2/art-samples/runtime/vs-piece-11-red-guard-512x768-alpha-v2.png}
+    - {id: TW-PIECE-RED-JIANG, faction: red, role: 将, quantity: 1, phase: owner_exception_static_batch, status: rgba_runtime_v2_completed, evidence: evidence/gate2/art-samples/runtime/vs-piece-13-red-general-512x768-alpha-v2.png}
     - id: TW-PIECE-BLACK-BING
       faction: black
       role: 兵
       quantity: 1
       phase: sample
-      status: design_source_owner_approved_alpha_blocked
+      status: rgba_runtime_v2_completed
       evidence:
       - evidence/gate2/art-samples/sources/vs-piece-02-black-infantry-source-v1.png
       - evidence/gate2/art-samples/TW-PIECE-01-04-source-sample-review-v1.md
-    - {id: TW-PIECE-BLACK-PAO, faction: black, role: 炮, quantity: 1, phase: batch, status: silhouette_v2_owner_approved_batch_pending_gate2}
-    - {id: TW-PIECE-BLACK-JU, faction: black, role: 车, quantity: 1, phase: batch, status: silhouette_v2_owner_approved_batch_pending_gate2}
+      - evidence/gate2/art-samples/runtime/vs-piece-02-black-infantry-512x768-alpha-v2.png
+    - {id: TW-PIECE-BLACK-PAO, faction: black, role: 炮, quantity: 1, phase: owner_exception_static_batch, status: rgba_runtime_v2_completed, evidence: evidence/gate2/art-samples/runtime/vs-piece-06-black-trebuchet-768x768-alpha-v2.png}
+    - {id: TW-PIECE-BLACK-JU, faction: black, role: 车, quantity: 1, phase: owner_exception_static_batch, status: rgba_runtime_v2_completed, evidence: evidence/gate2/art-samples/runtime/vs-piece-08-black-chariot-768x768-alpha-v2.png}
     - id: TW-PIECE-BLACK-MA
       faction: black
       role: 马
       quantity: 1
       phase: sample
-      status: source_concept_v1_pending_owner_alpha_native_size
+      status: rgba_runtime_v2_completed_source_1254
       actual_source_size: 1254x1254
       target_source_size: 1536x1536
       target_runtime_size: 768x768
       evidence:
       - evidence/gate2/art-samples/sources/vs-piece-04-black-cavalry-source-v1.png
       - evidence/gate2/art-samples/TW-PIECE-01-04-source-sample-review-v1.md
-    - {id: TW-PIECE-BLACK-XIANG, faction: black, role: 相, quantity: 1, phase: batch, status: silhouette_v2_owner_approved_batch_pending_gate2}
-    - {id: TW-PIECE-BLACK-SHI, faction: black, role: 士, quantity: 1, phase: batch, status: silhouette_v2_owner_approved_batch_pending_gate2}
-    - {id: TW-PIECE-BLACK-JIANG, faction: black, role: 将, quantity: 1, phase: batch, status: silhouette_v2_owner_approved_batch_pending_gate2}
+      - evidence/gate2/art-samples/runtime/vs-piece-04-black-cavalry-768x768-alpha-v2.png
+    - {id: TW-PIECE-BLACK-XIANG, faction: black, role: 相, quantity: 1, phase: owner_exception_static_batch, status: rgba_runtime_v2_completed, evidence: evidence/gate2/art-samples/runtime/vs-piece-10-black-minister-512x768-alpha-v2.png}
+    - {id: TW-PIECE-BLACK-SHI, faction: black, role: 士, quantity: 1, phase: owner_exception_static_batch, status: rgba_runtime_v2_completed, evidence: evidence/gate2/art-samples/runtime/vs-piece-12-black-guard-512x768-alpha-v2.png}
+    - {id: TW-PIECE-BLACK-JIANG, faction: black, role: 将, quantity: 1, phase: owner_exception_static_batch, status: rgba_runtime_v2_completed, evidence: evidence/gate2/art-samples/runtime/vs-piece-14-black-general-512x768-alpha-v2.png}
   - id: piece_support
     name: 棋子共用资源
     items:
@@ -176,8 +185,7 @@ art_pipeline_inventory:
   - docs/art/pipelines/terracotta-warriors/terracotta-warriors-art-pipeline-v1.md#11-最终验收
   unresolved:
   - 七兵种正式秦小篆职位字需逐字字源校对、同系列矢量重绘与授权记录；已核对的开源测试字体仅确认覆盖相
-  - 四个步兵/骑兵设计源均缺真实Alpha、统一脚底/马蹄锚点、运行时派生与96px棋盘内可读性
-  - 内置图像生成器连续两次返回RGB烘焙棋盘格；继续自动背景提取需项目所有者授权CLI/API回退并在本机设置OPENAI_API_KEY
-  - 骑兵实际源尺寸1254×1254低于1536×1536目标，禁止插值冒充原生细节
+  - 14枚静态资产已完成纯紫幕色键、真实Alpha与运行时派生；仍需96px棋盘内可读性、遮挡、双方视角与Godot导入复核
+  - 炮/车/马方形源实际尺寸1254×1254，低于原1536×1536目标，禁止插值冒充原生细节
   - 六类动作是否全部独立制作
   - 完整UI、结构、特效和音频的预算、工期与制作方式

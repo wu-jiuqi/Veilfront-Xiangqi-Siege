@@ -21,6 +21,10 @@ asset_inventory:
       - 完整资产清单与成本未知项
     batch_production:
       allowed: false
+      approved_exceptions:
+      - scope: 兵马俑管线14枚静态单体棋子
+        approval_ref: game-pipeline/approvals/approval-static-14-piece-batch-owner-exception-20260820.yaml
+        status: completed_v2
       requires:
       - GATE-2项目所有者批准
       - 新生产Contract
@@ -104,8 +108,13 @@ asset_inventory:
       source_spec: 每套命名美术管线独立提供；直立1024×1536；宽体1536×1536；透明背景；统一脚底线
       runtime_spec: 直立最大512×768；宽体最大768×768；VRAM Compressed+mipmap
       dependencies: [ART-PIECE-SHADOW, ART-PIECE-BASE]
-      phase: post_gate2_batch
-      status: inventoried
+      phase: owner_exception_static_batch
+      status: terracotta_warriors_14_static_v2_completed
+      evidence:
+      - evidence/gate2/art-samples/TW-PIECE-01-14-static-batch-production-brief-v2.md
+      - evidence/gate2/art-samples/TW-PIECE-01-14-runtime-review-v2.md
+      - evidence/gate2/art-samples/TW-PIECE-01-14-runtime-validation-v2.json
+      - evidence/gate2/art-samples/review/TW-PIECE-01-14-runtime-alpha-review-v2.png
       acceptance: 96～180px屏幕高度下能仅凭轮廓和主道具识别兵种
     - id: ART-PIECE-SAMPLE-INFANTRY
       name: 兵马俑管线红黑步兵样片
@@ -114,12 +123,13 @@ asset_inventory:
       runtime_spec: Sprite3D静态样片
       dependencies: [ART-PIECE-SHADOW, ART-PIECE-BASE]
       phase: preproduction_sample
-      status: red_r3_black_r2_awaiting_owner_review
+      status: rgba_runtime_v2_completed
       evidence:
       - evidence/gate2/art-samples/VS-PIECE-01-red-silver-tungsten-review-r3.md
       - evidence/gate2/art-samples/VS-PIECE-01-02-concept-review-r2.md
+      - evidence/gate2/art-samples/review/vs-piece-infantry-camp-alpha-review-v2.png
       style_pipeline_ref: docs/art/pipelines/terracotta-warriors/terracotta-warriors-art-pipeline-v1.md
-      known_issue: 仅属于“兵马俑”管线。红方已由土黄钨钢R2修订为银白钨钢R3，黑方保持墨绿青铜R2；当前仍为浅灰背景概念图，需项目所有者审美确认、真实Alpha版本和棋盘内可读性复核。
+      known_issue: 仅属于“兵马俑”管线；真实Alpha和运行时派生已完成，仍需棋盘内96px可读性与遮挡复核。
       acceptance: 近中远距离可读，透明边缘无白边，前后遮挡稳定
     - id: ART-PIECE-SAMPLE-CAVALRY
       name: 兵马俑管线红黑骑兵样片
@@ -128,7 +138,9 @@ asset_inventory:
       runtime_spec: 最大768×768 Sprite3D
       dependencies: [ART-PIECE-SHADOW, ART-PIECE-BASE]
       phase: preproduction_sample
-      status: planned
+      status: rgba_runtime_v2_completed
+      evidence:
+      - evidence/gate2/art-samples/review/vs-piece-cavalry-camp-alpha-review-v2.png
       acceptance: 与步兵高度差明确但不连续遮住两个以上交点
     - id: ART-PIECE-BASE
       name: 阵营底座/识别环
