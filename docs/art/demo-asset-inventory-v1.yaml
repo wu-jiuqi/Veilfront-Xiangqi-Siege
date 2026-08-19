@@ -2,6 +2,12 @@ asset_inventory:
   schema_version: veilfront-demo-art-inventory/v1
   project_id: veilfront-xiangqi-siege
   baseline_ref: docs/art/veilfront-visual-baseline-v1.md
+  style_policy: 可插拔命名管线；本清单只定义跨风格Demo类别，不把当前样片风格提升为全局风格
+  active_style_pipeline:
+    id: terracotta-warriors
+    name: 兵马俑
+    spec_ref: docs/art/pipelines/terracotta-warriors/terracotta-warriors-art-pipeline-v1.md
+    inventory_ref: docs/art/pipelines/terracotta-warriors/asset-inventory-v1.yaml
   status: preproduction_inventory
   production_gate: GATE-2
   source_authority: codex-thread://current#owner-freeze-oblique-3d-board-art-direction
@@ -71,19 +77,19 @@ asset_inventory:
       phase: preproduction_sample
       status: planned
       acceptance: 斜视无明显重复和闪烁，低饱和不抢交互信息
-    - id: ART-MAT-BRONZE
-      name: 旧青铜与金属材质组
+    - id: ART-MAT-STYLE-STRUCTURE
+      name: 当前美术管线结构材质组
       quantity: 1
-      source_spec: Albedo/Normal/ORM
+      source_spec: 由所选命名美术管线提供Albedo/Normal/ORM
       runtime_spec: 最大2048px，VRAM Compressed
       dependencies: []
       phase: post_gate2_batch
       status: inventoried
       acceptance: 粗糙度稳定，不依赖SSR仍可读
-    - id: ART-MAT-LACQUER
-      name: 红黑漆器材质组
+    - id: ART-MAT-STYLE-FACTION
+      name: 当前美术管线红黑阵营材质组
       quantity: 2
-      source_spec: 红漆与黑漆PBR材质
+      source_spec: 由所选命名美术管线提供两方PBR材质与轮廓规范
       runtime_spec: 最大1024px，VRAM Compressed
       dependencies: []
       phase: post_gate2_batch
@@ -93,16 +99,16 @@ asset_inventory:
     name: 棋子角色
     items:
     - id: ART-PIECE-MASTERS
-      name: 红黑七兵种静态立绘
+      name: 所选美术管线的红黑七兵种静态母版
       quantity: 14
-      source_spec: 直立1024×1536；宽体1536×1536；透明背景；统一脚底线
+      source_spec: 每套命名美术管线独立提供；直立1024×1536；宽体1536×1536；透明背景；统一脚底线
       runtime_spec: 直立最大512×768；宽体最大768×768；VRAM Compressed+mipmap
       dependencies: [ART-PIECE-SHADOW, ART-PIECE-BASE]
       phase: post_gate2_batch
       status: inventoried
       acceptance: 96～180px屏幕高度下能仅凭轮廓和主道具识别兵种
     - id: ART-PIECE-SAMPLE-INFANTRY
-      name: 红黑步兵样片
+      name: 兵马俑管线红黑步兵样片
       quantity: 2
       source_spec: 同正式立绘规格
       runtime_spec: Sprite3D静态样片
@@ -112,10 +118,11 @@ asset_inventory:
       evidence:
       - evidence/gate2/art-samples/VS-PIECE-01-red-silver-tungsten-review-r3.md
       - evidence/gate2/art-samples/VS-PIECE-01-02-concept-review-r2.md
-      known_issue: 红方已由土黄钨钢R2修订为银白钨钢R3，黑方保持墨绿青铜R2；当前仍为浅灰背景概念图，需项目所有者审美确认、真实Alpha版本和棋盘内可读性复核。
+      style_pipeline_ref: docs/art/pipelines/terracotta-warriors/terracotta-warriors-art-pipeline-v1.md
+      known_issue: 仅属于“兵马俑”管线。红方已由土黄钨钢R2修订为银白钨钢R3，黑方保持墨绿青铜R2；当前仍为浅灰背景概念图，需项目所有者审美确认、真实Alpha版本和棋盘内可读性复核。
       acceptance: 近中远距离可读，透明边缘无白边，前后遮挡稳定
     - id: ART-PIECE-SAMPLE-CAVALRY
-      name: 红黑骑兵样片
+      name: 兵马俑管线红黑骑兵样片
       quantity: 2
       source_spec: 1536×1536透明源图
       runtime_spec: 最大768×768 Sprite3D
@@ -142,7 +149,7 @@ asset_inventory:
       status: planned
       acceptance: 无明显透明排序错误且稳定接地
     - id: ART-PIECE-ANIMATIONS
-      name: 十四类棋子动作集
+      name: 14个角色母版动作集
       quantity: 14
       source_spec: idle/move/attack/hurt/death/special，每动作4～8关键帧目标
       runtime_spec: AnimatedSprite3D图集；实际帧数由GATE-2后预算冻结
@@ -158,7 +165,7 @@ asset_inventory:
       quantity: 8
       source_spec: 两阵营×完整/受损/倒塌/修复中
       runtime_spec: GLB模块，静态碰撞按需使用-col命名
-      dependencies: [ART-MAT-BRONZE, ART-MAT-LACQUER]
+      dependencies: [ART-MAT-STYLE-STRUCTURE, ART-MAT-STYLE-FACTION]
       phase: post_gate2_batch
       status: inventoried
       acceptance: Y=4/Y=21线状态一眼可辨且不遮住邻近棋子
@@ -176,7 +183,7 @@ asset_inventory:
       quantity: 12
       source_spec: 营寨、箭塔、残车、火盆、壕沟、沙丘等
       runtime_spec: GLB模块，LOD开启
-      dependencies: [ART-MAT-GROUND, ART-MAT-BRONZE]
+      dependencies: [ART-MAT-GROUND, ART-MAT-STYLE-STRUCTURE]
       phase: post_gate2_batch
       status: inventoried
       acceptance: 只放在棋盘边界或明确装饰位，不形成规则暗示
@@ -226,9 +233,9 @@ asset_inventory:
     name: 界面与图标
     items:
     - id: ART-UI-SHELL
-      name: 对局HUD与侧栏皮肤
+      name: 所选美术管线的对局HUD与侧栏皮肤
       quantity: 1
-      source_spec: 1280×720主布局，兼容960×540与1920×1080
+      source_spec: 每套命名美术管线独立提供Theme与皮肤；1280×720主布局，兼容960×540与1920×1080
       runtime_spec: Godot Theme+StyleBox+九宫格纹理
       dependencies: [ART-UI-ICONS]
       phase: post_gate2_batch
@@ -334,7 +341,7 @@ asset_inventory:
       status: inventoried_unestimated
       acceptance: 不阻塞操作，不以动效替代文本/图标状态
   cost_unknowns:
-  - 十四类棋子是否每类需要六套完整动作，还是部分动作复用Tween与特效
+  - 14个角色母版是否每个都需要六套完整动作，还是部分动作复用Tween与特效
   - 红黑阵营是否需要完全不同的角色设计与装备体系
   - 3D结构模型由内部制作、资产商店改造还是外包
   - 音乐、语音和战斗音效的授权与制作方式

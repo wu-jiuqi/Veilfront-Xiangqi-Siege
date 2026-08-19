@@ -1,6 +1,12 @@
-# 45°三维棋盘首轮视觉样片任务书 v1
+# 斜俯视三维棋盘首轮视觉样片任务书 v1
 
 状态：`ready_for_preproduction / no_batch-production`
+
+当前样片管线：`兵马俑（terracotta-warriors）`
+
+管线规范：`docs/art/pipelines/terracotta-warriors/terracotta-warriors-art-pipeline-v1.md`
+
+本任务书只验证“兵马俑”管线样片，不把该风格固定为项目全局风格。以后更换样片风格时建立新的管线任务书，不覆盖本文件的历史证据。
 
 ## 目标
 

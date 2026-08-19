@@ -1,0 +1,125 @@
+art_pipeline_inventory:
+  schema_version: veilfront-style-pipeline-inventory/v1
+  project_id: veilfront-xiangqi-siege
+  pipeline_id: terracotta-warriors
+  display_name: 兵马俑
+  status: preproduction_ready_batch_pending_gate2
+  global_baseline_ref: docs/art/veilfront-visual-baseline-v1.md
+  pipeline_spec_ref: docs/art/pipelines/terracotta-warriors/terracotta-warriors-art-pipeline-v1.md
+  source_authority: codex-thread://current#owner-name-terracotta-warriors-pipeline
+  scope:
+    is_global_style: false
+    applies_only_when_style_pipeline_selected: terracotta-warriors
+    piece_master_count: 14
+    piece_formula: 7兵种×2阵营×1造型
+    excluded_variants:
+    - 皮肤
+    - 升阶差分
+    - 受损差分
+    - 节庆变体
+  production_control:
+    current_allowed:
+    - 规格与清单
+    - 轮廓审查页
+    - Contract v2列明的最小视觉样片
+    batch_allowed: false
+    batch_requires:
+    - GATE-2项目所有者批准
+    - 新批量生产Contract
+    - 预算、工期与制作方式确认
+    - 独立QA前置条件
+  style_rules:
+    character_language: 金属兵马俑、秦俑体态、层叠札甲、全身金属化
+    face: 光滑无五官曲面面具
+    red_faction: 银白钨钢、深灰钢底、蓝灰反射、小面积暗朱系绳
+    black_faction: 墨绿青铜、近黑绿凹面、少量铜绿、青铜磨边
+    gold_usage: 目标、军令、关键纹章与步兵盾牌兵字
+    prohibited:
+    - 陶土或石像质感
+    - 塑料质感
+    - 大面积布甲
+    - 只换色不换轮廓
+    - 未校对或无授权的正式小篆字体资产
+  categories:
+  - id: board
+    name: 棋盘
+    items:
+    - {id: TW-BOARD-BASE, name: 薄实体棋盘底板, quantity: 1, phase: sample, status: planned}
+    - {id: TW-BOARD-GROUND, name: 压实黑土PBR材质组, quantity: 1, phase: sample, status: planned}
+    - {id: TW-BOARD-GRID, name: 9×24精确网格, quantity: 1, phase: sample, status: planned}
+    - {id: TW-BOARD-ZONES, name: 大本营/缓冲区/战区遮罩, quantity: 3, phase: batch, status: inventoried}
+    - {id: TW-BOARD-BORDER, name: 秦式包边纹样与角件, quantity: 1, phase: batch, status: inventoried}
+    - {id: TW-BOARD-DECALS, name: 战场贴花, quantity: 8, phase: batch, status: inventoried}
+    - {id: TW-BOARD-PROPS, name: 边界战场装饰模块, quantity: 12, phase: batch, status: inventoried}
+    - {id: TW-BOARD-LIGHTING, name: 灯光与环境预设, quantity: 1, phase: sample, status: planned}
+  - id: piece_masters
+    name: 十四个棋子角色母版
+    items:
+    - {id: TW-PIECE-RED-BING, faction: red, role: 兵, quantity: 1, phase: sample, status: concept_r3_pending_alpha_board_review}
+    - {id: TW-PIECE-RED-PAO, faction: red, role: 炮, quantity: 1, phase: batch, status: inventoried}
+    - {id: TW-PIECE-RED-JU, faction: red, role: 车, quantity: 1, phase: batch, status: inventoried}
+    - {id: TW-PIECE-RED-MA, faction: red, role: 马, quantity: 1, phase: sample, status: planned}
+    - {id: TW-PIECE-RED-XIANG, faction: red, role: 相, quantity: 1, phase: batch, status: inventoried}
+    - {id: TW-PIECE-RED-SHI, faction: red, role: 士, quantity: 1, phase: batch, status: inventoried}
+    - {id: TW-PIECE-RED-JIANG, faction: red, role: 将, quantity: 1, phase: batch, status: inventoried}
+    - {id: TW-PIECE-BLACK-BING, faction: black, role: 兵, quantity: 1, phase: sample, status: concept_r2_pending_alpha_board_review}
+    - {id: TW-PIECE-BLACK-PAO, faction: black, role: 炮, quantity: 1, phase: batch, status: inventoried}
+    - {id: TW-PIECE-BLACK-JU, faction: black, role: 车, quantity: 1, phase: batch, status: inventoried}
+    - {id: TW-PIECE-BLACK-MA, faction: black, role: 马, quantity: 1, phase: sample, status: planned}
+    - {id: TW-PIECE-BLACK-XIANG, faction: black, role: 相, quantity: 1, phase: batch, status: inventoried}
+    - {id: TW-PIECE-BLACK-SHI, faction: black, role: 士, quantity: 1, phase: batch, status: inventoried}
+    - {id: TW-PIECE-BLACK-JIANG, faction: black, role: 将, quantity: 1, phase: batch, status: inventoried}
+  - id: piece_support
+    name: 棋子共用资源
+    items:
+    - {id: TW-PIECE-MASK, name: 光滑无五官面具规范, quantity: 1, phase: sample, status: planned}
+    - {id: TW-PIECE-GLYPH-BING, name: 金色秦小篆兵矢量字形, quantity: 1, phase: sample, status: blocked_pending_text_license_review}
+    - {id: TW-PIECE-BASE, name: 阵营识别底座, quantity: 2, phase: sample, status: planned}
+    - {id: TW-PIECE-SHADOW, name: 椭圆假阴影, quantity: 3, phase: sample, status: planned}
+    - {id: TW-PIECE-SILHOUETTES, name: 14人同屏轮廓审查页, quantity: 1, phase: sample, status: planned}
+    - {id: TW-PIECE-PORTRAITS, name: UI头像裁切, quantity: 14, phase: batch, status: inventoried}
+    - {id: TW-PIECE-ANIMATIONS, name: 六类动作序列, quantity: 84, formula: 14角色×6动作, phase: batch, status: inventoried_unestimated}
+    - {id: TW-PIECE-PREFABS, name: Godot棋子预置场景, quantity: 14, phase: batch, status: inventoried}
+  - id: structures_and_fog
+    name: 城墙、结构、旗帜与迷雾
+    items:
+    - {id: TW-WALL-STATES, name: 红黑城墙状态, quantity: 8, formula: 2阵营×4状态, phase: batch, status: inventoried}
+    - {id: TW-FLAG-STATES, name: 旗帜状态, quantity: 5, phase: batch, status: inventoried}
+    - {id: TW-FOG-MATERIAL, name: 黑蓝烟尘迷雾材质, quantity: 1, phase: sample, status: planned}
+    - {id: TW-FOG-NOISE, name: 迷雾边缘噪声, quantity: 2, phase: sample, status: planned}
+    - {id: TW-STRUCTURE-KIT, name: 秦军结构模块, quantity: 10, phase: batch, status: inventoried}
+    - {id: TW-STRUCTURE-DAMAGE, name: 结构破损差分, quantity: 6, phase: batch, status: inventoried}
+  - id: ui
+    name: 兵马俑专属UI
+    items:
+    - {id: TW-UI-THEME, name: Godot Theme, quantity: 1, phase: batch, status: sample_partial_planned}
+    - {id: TW-UI-PANELS, name: 九宫格面板与弹窗框, quantity: 8, phase: batch, status: inventoried}
+    - {id: TW-UI-BUTTONS, name: 按钮状态组, quantity: 6, phase: batch, status: inventoried}
+    - {id: TW-UI-FRAMES, name: 头像/棋子/目标/信息框, quantity: 8, phase: batch, status: inventoried}
+    - {id: TW-UI-ICONS, name: 兵种/行动/状态/标记/系统图标, quantity: 36, formula: 7+8+8+6+7, phase: batch, status: inventoried_unestimated}
+    - {id: TW-UI-MINIMAP, name: 小地图底框与标记, quantity: 12, phase: batch, status: inventoried}
+    - {id: TW-UI-CURSORS, name: 鼠标与落点光标, quantity: 6, phase: batch, status: inventoried}
+    - {id: TW-UI-PATTERNS, name: 秦式几何纹与军令底纹, quantity: 4, phase: batch, status: inventoried}
+    - {id: TW-UI-SCREENS, name: 页面换肤目标, quantity: 9, phase: batch, status: inventoried}
+    - {id: TW-UI-TYPOGRAPHY, name: 字体与字形授权包, quantity: 1, phase: sample, status: blocked_pending_license_review}
+  - id: fx_animation_audio
+    name: 特效、动画与音频
+    items:
+    - {id: TW-FX-TACTICAL, name: 核心战术特效, quantity: 10, phase: batch, status: sample_3_planned}
+    - {id: TW-FX-MATERIAL, name: 金属火花与烟尘素材, quantity: 6, phase: batch, status: inventoried}
+    - {id: TW-FX-FLAG, name: 旗帜占领反馈, quantity: 1, phase: batch, status: inventoried}
+    - {id: TW-ANIM-UI, name: UI动效, quantity: 6, phase: batch, status: inventoried_unestimated}
+    - {id: TW-ANIM-CAMERA, name: 镜头交互动效, quantity: 3, phase: batch, status: inventoried}
+    - {id: TW-AUDIO-MUSIC, name: 对局音乐, quantity: 2, phase: batch, status: inventoried_unestimated}
+    - {id: TW-AUDIO-AMBIENCE, name: 环境声, quantity: 3, phase: batch, status: inventoried_unestimated}
+    - {id: TW-AUDIO-SFX, name: 棋子与系统音效族, quantity: 18, phase: batch, status: inventoried_unestimated}
+  acceptance_refs:
+  - CHECK-ART-001
+  - CHECK-VISUAL-READABILITY-001
+  - CHECK-INFORMATION-V2-001
+  - docs/art/pipelines/terracotta-warriors/terracotta-warriors-art-pipeline-v1.md#11-最终验收
+  unresolved:
+  - 正式秦小篆兵字的文字校对与可商用来源
+  - 红黑步兵真实Alpha、统一脚底线与棋盘内可读性
+  - 六类动作是否全部独立制作
+  - 完整UI、结构、特效和音频的预算、工期与制作方式
