@@ -1,0 +1,1637 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>《雾疆：九路烽棋》新手教学灰盒</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0d1117;
+      --panel: #151b23;
+      --panel-2: #1c2430;
+      --line: #405064;
+      --muted: #9eabb9;
+      --text: #eef3f8;
+      --red: #d9534f;
+      --red-soft: #713536;
+      --black: #252a31;
+      --blue: #36a9e1;
+      --yellow: #ffd166;
+      --green: #75c66d;
+      --orange: #ff9f43;
+      --danger: #ff6b6b;
+      --hq-red: #7c3f3f;
+      --buffer-red: #725136;
+      --war: #4c5947;
+      --buffer-black: #394b5c;
+      --hq-black: #28313c;
+      --focus: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--text); }
+    body {
+      font-family: "Microsoft YaHei UI", "Noto Sans SC", system-ui, sans-serif;
+      overflow-x: hidden;
+    }
+    button, select { font: inherit; }
+    button { color: inherit; }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: minmax(240px, 1fr) minmax(260px, 640px) auto;
+      gap: 18px;
+      align-items: center;
+      padding: 14px 18px;
+      border-bottom: 1px solid #2b3542;
+      background: #10151c;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+    .brand h1 { margin: 0; font-size: clamp(16px, 1.6vw, 23px); }
+    .brand p { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+    .progress-wrap { display: grid; gap: 6px; }
+    .progress-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); }
+    .progress {
+      height: 8px;
+      background: #252d38;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .progress > span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--blue), var(--yellow));
+      transition: width .25s ease;
+    }
+    .top-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+
+    .btn {
+      border: 1px solid #49586b;
+      border-radius: 7px;
+      background: #222b36;
+      padding: 8px 12px;
+      cursor: pointer;
+      transition: background .15s ease, border-color .15s ease, transform .05s ease;
+    }
+    .btn:hover { background: #2c3745; border-color: #70839b; }
+    .btn:active { transform: translateY(1px); }
+    .btn.primary { background: #245b77; border-color: var(--blue); }
+    .btn.warning { background: #684f24; border-color: var(--yellow); }
+    .btn.danger { background: #703838; border-color: var(--danger); }
+    .btn.ghost { background: transparent; }
+    .btn:disabled { opacity: .38; cursor: not-allowed; }
+
+    .workspace {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 260px minmax(360px, 1fr) 360px;
+      gap: 14px;
+      padding: 14px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid #313d4b;
+      border-radius: 10px;
+      min-width: 0;
+      box-shadow: 0 8px 28px rgba(0,0,0,.18);
+    }
+    .panel-head {
+      padding: 14px 15px 10px;
+      border-bottom: 1px solid #2a3542;
+    }
+    .panel-head h2 { margin: 0; font-size: 15px; }
+    .panel-head p { margin: 5px 0 0; font-size: 12px; color: var(--muted); }
+
+    .chapters {
+      max-height: calc(100vh - 134px);
+      overflow: auto;
+      padding: 9px;
+    }
+    .chapter {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 34px 1fr auto;
+      gap: 9px;
+      align-items: center;
+      text-align: left;
+      padding: 10px 9px;
+      margin: 0 0 6px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      background: transparent;
+      cursor: pointer;
+    }
+    .chapter:hover { background: #1d2631; }
+    .chapter.active { background: #24313f; border-color: #52667d; }
+    .chapter.done .chapter-index { background: #315d39; border-color: var(--green); }
+    .chapter-index {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      border: 1px solid #526173;
+      color: #dbe5ef;
+      font-size: 12px;
+      background: #202a35;
+    }
+    .chapter-title { display: block; font-size: 13px; font-weight: 700; }
+    .chapter-sub { display: block; margin-top: 2px; font-size: 11px; color: var(--muted); }
+    .chapter-state { font-size: 12px; color: var(--green); }
+
+    .board-panel {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      height: calc(100vh - 104px);
+      min-height: calc(100vh - 104px);
+      overflow: hidden;
+    }
+    .board-toolbar {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border-bottom: 1px solid #2a3542;
+    }
+    .board-toolbar .legend { display: flex; gap: 12px; flex-wrap: wrap; color: var(--muted); font-size: 11px; }
+    .key { display: inline-flex; align-items: center; gap: 5px; }
+    .swatch { width: 17px; height: 3px; border-radius: 3px; background: var(--line); }
+    .swatch.blue { background: var(--blue); }
+    .swatch.yellow { background: var(--yellow); }
+    .swatch.white { background: #fff; }
+
+    .board-scroll {
+      min-height: 0;
+      overflow: auto;
+      display: grid;
+      place-items: start center;
+      padding: 12px;
+      background: #0b0f14;
+    }
+    #board {
+      display: block;
+      height: clamp(720px, 72vh, 1050px);
+      width: auto;
+      max-width: 100%;
+      border: 1px solid #4a5665;
+      background: #313945;
+      user-select: none;
+      touch-action: manipulation;
+    }
+    .region-label {
+      font-weight: 900;
+      letter-spacing: .2em;
+      fill: rgba(255,255,255,.17);
+      pointer-events: none;
+    }
+    .grid-line { stroke: rgba(9,13,17,.78); stroke-width: 3; pointer-events: none; }
+    .wall-line { stroke-width: 14; stroke-linecap: round; pointer-events: none; }
+    .point-hit { fill: transparent; cursor: crosshair; }
+    .point-dot { fill: #111820; opacity: .65; pointer-events: none; }
+    .point-target { fill: rgba(255,255,255,.12); stroke: #fff; stroke-width: 7; pointer-events: none; }
+    .point-selected { fill: none; stroke: var(--blue); stroke-width: 10; pointer-events: none; }
+    .piece { cursor: pointer; }
+    .piece circle { stroke-width: 7; }
+    .piece.red circle { fill: #a53f3d; stroke: #f0b2a8; }
+    .piece.black circle { fill: #20262d; stroke: #aab5c0; }
+    .piece text { fill: #fff; font-size: 42px; font-weight: 900; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+    .piece.hidden { opacity: .2; }
+    .piece.selected circle { stroke: var(--blue); stroke-width: 12; }
+    /* Keep the casualty ghost scoped to the board; transparent buttons also use .btn.ghost. */
+    #board .ghost { opacity: .28; pointer-events: none; }
+    #board .ghost circle { fill: none; stroke: #fff; stroke-width: 7; stroke-dasharray: 15 10; }
+    #board .ghost text { fill: #fff; font-size: 35px; text-anchor: middle; dominant-baseline: central; }
+    .impact-mark { pointer-events: none; }
+    .impact-mark circle { fill: rgba(255,159,67,.2); stroke: var(--orange); stroke-width: 8; }
+    .impact-mark line { stroke: #ffd3a3; stroke-width: 11; stroke-linecap: round; }
+    .flag { pointer-events: none; }
+    .flag text { font-size: 44px; text-anchor: middle; dominant-baseline: central; }
+    .flag.memory { opacity: .65; }
+    .fog-cell { fill: rgba(0,0,0,.72); pointer-events: none; }
+    .rook-path { fill: none; stroke: var(--blue); stroke-width: 16; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }
+    .elephant-field { fill: rgba(255,209,102,.08); stroke: var(--yellow); stroke-width: 13; stroke-linejoin: round; pointer-events: none; }
+    .annotation { pointer-events: none; }
+    .annotation * { fill: none; stroke: #efefef; stroke-width: 10; }
+
+    .confirm-tray {
+      min-height: 84px;
+      border-top: 1px solid #2a3542;
+      padding: 10px 12px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      background: #121820;
+    }
+    .confirm-tray strong { display: block; font-size: 13px; margin-bottom: 4px; }
+    .confirm-tray p { margin: 0; font-size: 12px; color: var(--muted); }
+    .confirm-actions { display: flex; gap: 8px; }
+
+    .detail-panel {
+      height: calc(100vh - 104px);
+      min-height: calc(100vh - 104px);
+      display: grid;
+      grid-template-rows: auto auto auto minmax(120px, 1fr);
+      overflow: hidden;
+    }
+    .objective { padding: 14px 15px; border-bottom: 1px solid #2a3542; }
+    .eyebrow { color: var(--yellow); font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    .objective h2 { margin: 5px 0 7px; font-size: 19px; }
+    .objective p { margin: 0; line-height: 1.55; color: #d8e0e8; font-size: 13px; }
+    .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+    .tag { padding: 3px 7px; border-radius: 99px; background: #25313d; color: #c7d3de; font-size: 10px; border: 1px solid #39495b; }
+
+    .step-card { padding: 13px 15px; border-bottom: 1px solid #2a3542; background: var(--panel-2); }
+    .step-meta { display: flex; justify-content: space-between; gap: 8px; color: var(--muted); font-size: 11px; }
+    .step-card h3 { margin: 8px 0 6px; font-size: 15px; }
+    .step-card p { margin: 0; color: #d8e1ea; font-size: 13px; line-height: 1.55; }
+    .step-actions { display: flex; gap: 8px; margin-top: 11px; flex-wrap: wrap; }
+
+    .feedback {
+      padding: 12px 15px;
+      border-bottom: 1px solid #2a3542;
+      min-height: 74px;
+    }
+    .feedback.info { border-left: 4px solid var(--blue); }
+    .feedback.success { border-left: 4px solid var(--green); }
+    .feedback.warn { border-left: 4px solid var(--orange); }
+    .feedback.error { border-left: 4px solid var(--danger); }
+    .feedback strong { display: block; font-size: 12px; margin-bottom: 4px; }
+    .feedback p { margin: 0; color: #ccd6e0; font-size: 12px; line-height: 1.5; }
+
+    .log-wrap { min-height: 0; overflow: auto; padding: 12px 15px; }
+    .log-wrap h3 { margin: 0 0 8px; font-size: 13px; }
+    .log { display: grid; gap: 7px; }
+    .log-entry {
+      padding: 7px 9px;
+      border-radius: 6px;
+      background: #10161d;
+      border-left: 3px solid #3f4c5c;
+      font-size: 11px;
+      color: #b9c5d1;
+      line-height: 1.45;
+    }
+    .log-entry.success { border-left-color: var(--green); }
+    .log-entry.error { border-left-color: var(--danger); }
+
+    .context-menu {
+      position: fixed;
+      z-index: 100;
+      display: none;
+      gap: 6px;
+      padding: 7px;
+      border-radius: 8px;
+      background: #111820;
+      border: 1px solid #59697c;
+      box-shadow: 0 12px 28px rgba(0,0,0,.45);
+    }
+    .context-menu.open { display: flex; }
+    .mark-btn { width: 38px; height: 34px; padding: 0; }
+
+    .completion {
+      position: fixed;
+      inset: 0;
+      z-index: 120;
+      display: none;
+      place-items: center;
+      padding: 20px;
+      background: rgba(3,6,9,.82);
+    }
+    .completion.open { display: grid; }
+    .completion-card {
+      width: min(580px, 100%);
+      background: #17202a;
+      border: 1px solid #5f7186;
+      border-radius: 12px;
+      padding: 22px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.5);
+    }
+    .completion-card h2 { margin: 0 0 10px; }
+    .completion-card p { color: #c6d1dc; line-height: 1.6; }
+    .completion-card ul { color: #c6d1dc; line-height: 1.7; }
+
+    details.design-notes {
+      margin-top: 12px;
+      border-top: 1px solid #334151;
+      padding-top: 10px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.55;
+    }
+    details.design-notes summary { cursor: pointer; color: #d6e0ea; }
+
+    @media (max-width: 1180px) {
+      .workspace { grid-template-columns: 210px minmax(330px, 1fr) 320px; }
+      .topbar { grid-template-columns: 1fr minmax(240px, 480px); }
+      .top-actions { grid-column: 1 / -1; justify-content: flex-start; }
+      .board-panel, .detail-panel { height: calc(100vh - 150px); min-height: calc(100vh - 150px); }
+    }
+    @media (max-width: 900px) {
+      .topbar { position: static; grid-template-columns: 1fr; }
+      .workspace { grid-template-columns: 1fr; }
+      .chapters { max-height: 240px; }
+      .board-panel, .detail-panel { height: auto; min-height: auto; }
+      #board { height: min(78vh, 920px); }
+      .detail-panel { grid-template-rows: auto; }
+      .log-wrap { max-height: 260px; }
+    }
+    @media (max-width: 560px) {
+      .workspace { padding: 7px; gap: 8px; }
+      .topbar { padding: 11px; }
+      .board-toolbar { align-items: flex-start; flex-direction: column; }
+      .confirm-tray { grid-template-columns: 1fr; }
+      .confirm-actions { justify-content: stretch; }
+      .confirm-actions .btn { flex: 1; }
+      #board { width: 100%; height: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <h1>《雾疆：九路烽棋》新手教学灰盒</h1>
+        <p>v2 · 脚本化关卡设计验证 · 不代表正式规则实现或美术方向</p>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-meta"><span id="progressLabel">章节 1 / 11</span><span id="progressPercent">0%</span></div>
+        <div class="progress"><span id="progressBar"></span></div>
+      </div>
+      <div class="top-actions">
+        <button class="btn ghost" id="mirrorBtn" type="button">切换黑方镜像</button>
+        <button class="btn ghost" id="resetChapterBtn" type="button">重置本章</button>
+        <button class="btn ghost" id="resetAllBtn" type="button">清空试玩进度</button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <aside class="panel">
+        <div class="panel-head">
+          <h2>训练目录</h2>
+          <p>七类棋子、两项特色机制、综合考核</p>
+        </div>
+        <nav class="chapters" id="chapterList" aria-label="教程章节"></nav>
+      </aside>
+
+      <section class="panel board-panel">
+        <div class="board-toolbar">
+          <div class="legend">
+            <span class="key"><span class="swatch white"></span>普通目标点</span>
+            <span class="key"><span class="swatch blue"></span>车路径</span>
+            <span class="key"><span class="swatch yellow"></span>相田九点</span>
+          </div>
+          <div id="coordinateReadout" aria-live="polite">坐标：—</div>
+        </div>
+        <div class="board-scroll">
+          <svg id="board" viewBox="0 0 1000 2500" role="img" aria-label="九路二十四线交点棋盘"></svg>
+        </div>
+        <div class="confirm-tray">
+          <div>
+            <strong id="pendingTitle">尚未选择行动</strong>
+            <p id="pendingText">根据右侧目标选择棋子和交点。选中棋子时右键会先取消。</p>
+          </div>
+          <div class="confirm-actions">
+            <button class="btn ghost" id="cancelBtn" type="button" disabled>取消</button>
+            <button class="btn primary" id="confirmBtn" type="button" disabled>确认行动</button>
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel detail-panel">
+        <section class="objective">
+          <div class="eyebrow" id="chapterCode">T0 · 操作校准</div>
+          <h2 id="chapterTitle">棋落交点</h2>
+          <p id="chapterGoal"></p>
+          <div class="tags" id="chapterTags"></div>
+          <details class="design-notes">
+            <summary>查看设计边界</summary>
+            本页面只模拟教学输入、提示和公开结果。所有隐藏信息、随机性、合法性和结算在 Godot 正式版本中必须由权威规则与 PlayerView 提供。
+          </details>
+        </section>
+        <section class="step-card">
+          <div class="step-meta"><span id="stepCounter">步骤 1 / 1</span><span id="mistakeCounter">无效尝试 0</span></div>
+          <h3 id="stepTitle"></h3>
+          <p id="stepPrompt"></p>
+          <div class="step-actions" id="stepActions"></div>
+        </section>
+        <section class="feedback info" id="feedback">
+          <strong id="feedbackTitle">等待操作</strong>
+          <p id="feedbackText">按照当前步骤操作。</p>
+        </section>
+        <section class="log-wrap">
+          <h3>公开行动记录</h3>
+          <div class="log" id="actionLog"></div>
+        </section>
+      </aside>
+    </main>
+  </div>
+
+  <div class="context-menu" id="contextMenu" role="menu" aria-label="棋盘标注">
+    <button class="btn mark-btn" type="button" data-marker="circle" title="圆形">○</button>
+    <button class="btn mark-btn" type="button" data-marker="cross" title="叉形">×</button>
+    <button class="btn mark-btn" type="button" data-marker="square" title="方形">□</button>
+  </div>
+
+  <div class="completion" id="completion">
+    <div class="completion-card">
+      <h2 id="completionTitle">章节完成</h2>
+      <p id="completionText"></p>
+      <ul id="completionSummary"></ul>
+      <div class="top-actions">
+        <button class="btn primary" id="nextChapterBtn" type="button">进入下一章</button>
+        <button class="btn ghost" id="stayBtn" type="button">留在本章</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    "use strict";
+    const scenarios = [
+      {
+        code: "T0", title: "棋落交点", subtitle: "操作校准",
+        goal: "完成选择取消、右键标注和一次带确认的普通移动。",
+        tags: ["交点棋盘", "右键取消", "本地标注", "行动确认"],
+        pieces: [
+          { id: "rp0", side: "red", kind: "兵", x: 5, y: 4 }
+        ],
+        visible: [[4,4],[5,4],[6,4],[4,5],[5,5],[6,5]],
+        flags: [],
+        steps: [
+          { type: "cancel_selection", actor: "rp0", title: "先选择，再取消", prompt: "左键选择红兵，然后在棋盘上右键。选中状态的首次右键只能取消选择。", success: "已取消选择，没有打开标注菜单，也没有消耗行动。" },
+          { type: "annotate", point: [4,5], marker: "circle", title: "放置私人标记", prompt: "保持未选中状态，在（4,5）右键并选择圆形标记。", success: "圆形标记已放置。它只属于本地表现，不影响合法落点。" },
+          { type: "move", actor: "rp0", target: [5,5], title: "确认普通移动", prompt: "选择红兵，再选择（5,5），最后使用棋盘下方的“确认行动”。", success: "红兵完成普通移动；本章检查点已建立。", effect: { move: [5,5] } }
+        ],
+        summary: ["棋子落在点线交点", "选中时右键先取消", "未选中时右键才能标注", "预览必须确认后才提交"]
+      },
+      {
+        code: "T1", title: "穿阵不伤", subtitle: "兵 / 卒",
+        goal: "区分兵卒普通一步移动与 2–5 点特殊穿越。",
+        tags: ["普通一步", "特殊穿越", "穿敌不伤", "终点为空"],
+        pieces: [
+          { id: "rp1", side: "red", kind: "兵", x: 5, y: 10 },
+          { id: "bs1", side: "black", kind: "卒", x: 5, y: 12 },
+          { id: "bc1", side: "black", kind: "炮", x: 5, y: 13 },
+          { id: "rf1", side: "red", kind: "兵", x: 4, y: 13 }
+        ],
+        visible: [[4,9],[5,9],[6,9],[4,10],[5,10],[6,10],[4,11],[5,11],[6,11],[5,12],[5,13],[5,14],[5,15]],
+        flags: [],
+        steps: [
+          { type: "move", actor: "rp1", target: [5,11], title: "先走普通一步", prompt: "让红兵从（5,10）普通前进到（5,11）。", success: "普通移动只前进一个交点。", effect: { move: [5,11] } },
+          { type: "move", actor: "rp1", target: [5,15], title: "穿过两枚敌棋", prompt: "选择特殊行动的目标（5,15）。沿途黑卒与黑炮不会被吃掉。", success: "红兵穿阵抵达空点（5,15），沿途敌棋仍在，且没有形成路径视野。", effect: { move: [5,15] } },
+          { type: "quiz", title: "规则确认", prompt: "特殊兵从敌棋上穿过时，会发生什么？", options: ["沿途全部吃掉", "穿过但不伤害", "碰到第一枚就停止"], correct: 1, success: "正确：特殊穿越只提供机动，不造成沿途伤害。" }
+        ],
+        summary: ["普通兵可前、左、右一步", "特殊兵可直线移动 2–5 点", "可以穿敌，不能穿友军", "终点必须为空且不产生路径视野"]
+      },
+      {
+        code: "T2", title: "越腿入雾", subtitle: "马",
+        goal: "观察大本营蹩马腿、特殊区域越腿隐身和相田显形。",
+        tags: ["蹩马腿", "特殊越腿", "隐身", "显形"],
+        pieces: [
+          { id: "rh2a", side: "red", kind: "马", x: 4, y: 2 },
+          { id: "block2a", side: "red", kind: "兵", x: 4, y: 3 },
+          { id: "rh2b", side: "red", kind: "马", x: 4, y: 10 },
+          { id: "block2b", side: "red", kind: "兵", x: 4, y: 11 },
+          { id: "be2", side: "black", kind: "象", x: 7, y: 14 }
+        ],
+        visible: [[3,1],[4,1],[5,1],[3,2],[4,2],[5,2],[3,3],[4,3],[5,3],[3,9],[4,9],[5,9],[3,10],[4,10],[5,10],[4,11],[5,11],[5,12]],
+        flags: [],
+        steps: [
+          { type: "reject", actor: "rh2a", target: [5,4], title: "验证大本营马腿", prompt: "选择大本营内红马，尝试移动到（5,4）并确认。这个动作应被公开拒绝。", success: "行动未提交：大本营内仍遵循蹩马腿。" },
+          { type: "move", actor: "rh2b", target: [5,12], title: "特殊越腿并隐身", prompt: "选择战区红马，移动到（5,12）。敌墙完整时，特殊马可以无视马腿。", success: "红马越腿成功并进入隐身。", effect: { move: [5,12], hide: "rh2b" } },
+          { type: "observe", title: "观察相田显形", prompt: "点击“继续观察”，让脚本黑象建立覆盖马位置的田字显形区。", button: "继续观察", success: "相田覆盖后，隐身马显形。区域视野本身不等于反隐。", effect: { reveal: "rh2b", field: [[4,11],[6,11],[6,13],[4,13]] } },
+          { type: "quiz", title: "规则确认", prompt: "敌墙倒塌后获得敌方区域视野，是否自动看见隐身马？", options: ["自动看见", "不会，仍需显形原因"], correct: 1, success: "正确：战争迷雾视野与反隐是两套条件。" }
+        ],
+        summary: ["大本营内仍受蹩马腿", "特殊区域且敌墙完整时可无视马腿", "特殊马落点后隐身", "相田等显形原因才能公开隐身马"]
+      },
+      {
+        code: "T3", title: "田字封路", subtitle: "相 / 象",
+        goal: "建立黄色田字九点，并预测敌车、敌兵的首次停止点。",
+        tags: ["无视象眼", "十九点视野", "黄色九点", "敌车兵截停"],
+        pieces: [
+          { id: "re3", side: "red", kind: "相", x: 3, y: 10 },
+          { id: "eye3", side: "red", kind: "兵", x: 4, y: 11 },
+          { id: "br3", side: "black", kind: "车", x: 8, y: 11 },
+          { id: "bp3", side: "black", kind: "卒", x: 4, y: 15 },
+          { id: "rr3", side: "red", kind: "车", x: 2, y: 10 }
+        ],
+        visible: [[2,9],[3,9],[4,9],[2,10],[3,10],[4,10],[2,11],[3,11],[4,11],[5,11],[6,11],[7,11],[8,11],[3,12],[4,12],[5,12],[4,13],[4,14],[4,15]],
+        flags: [],
+        steps: [
+          { type: "move", actor: "re3", target: [5,12], title: "跨过象眼", prompt: "让红相从（3,10）移动到（5,12）。黄色边框只应围住田字九点。", success: "红相在特殊区域无视象眼，起点 3×3、田字九点、终点 3×3 共同提供视野。", effect: { move: [5,12], field: [[3,10],[5,10],[5,12],[3,12]], visibleAdd: [[4,12],[5,12],[6,12],[4,13],[5,13],[6,13]] } },
+          { type: "predict", target: [5,11], title: "预测敌车停止点", prompt: "黑车准备从（8,11）驶向（2,11）。点击它从田字外进入时遇到的第一个交点。", success: "正确：黑车在（5,11）首次进入田字九点，因此只能停在这里。", effect: { movePiece: ["br3",5,11] } },
+          { type: "predict", target: [4,12], title: "预测敌卒停止点", prompt: "黑卒准备从（4,15）向（4,10）特殊移动。点击它首次进入田字九点的位置。", success: "正确：黑卒在（4,12）被截停。", effect: { movePiece: ["bp3",4,12] } },
+          { type: "observe", title: "友军不受阻挡", prompt: "观察红车沿 Y=10 从田字九点内正常通过。", button: "播放友军通过", success: "田字阻挡只对敌方车和兵/卒生效。", effect: { movePiece: ["rr3",7,10], path: [[2,10],[7,10]], pathColor: "white" } }
+        ],
+        summary: ["特殊相可无视象眼", "视野是起点 3×3、田字九点、终点 3×3 的并集", "黄色只描田字九点", "田字只截停敌车和敌兵的首次进入"]
+      },
+      {
+        code: "T4", title: "蓝线开路", subtitle: "车",
+        goal: "体验车的顺序歼灭、路径视野和隐藏马接触停止。",
+        tags: ["蓝色路径", "顺序歼灭", "路径视野", "隐藏接触"],
+        pieces: [
+          { id: "rr4a", side: "red", kind: "车", x: 2, y: 9 },
+          { id: "bp4", side: "black", kind: "卒", x: 2, y: 11 },
+          { id: "bc4", side: "black", kind: "炮", x: 2, y: 13 },
+          { id: "rr4b", side: "red", kind: "车", x: 6, y: 9 },
+          { id: "bh4", side: "black", kind: "马", x: 6, y: 12, hidden: true },
+          { id: "br4c", side: "black", kind: "车", x: 8, y: 13 },
+          { id: "rp4c", side: "red", kind: "兵", x: 8, y: 10 }
+        ],
+        visible: [[1,8],[2,8],[3,8],[1,9],[2,9],[3,9],[2,10],[2,11],[2,12],[2,13],[2,14],[2,15],[5,8],[6,8],[7,8],[5,9],[6,9],[7,9],[6,10],[6,11],[6,13],[6,14],[6,15],[7,9],[8,9],[9,9],[7,10],[8,10],[9,10],[7,11],[8,11],[9,11],[7,12],[8,12],[9,12],[7,13],[8,13],[9,13]],
+        flags: [],
+        steps: [
+          { type: "move", actor: "rr4a", target: [2,15], title: "顺序处理路径目标", prompt: "选择左侧红车和（2,15）。蓝线表示本次车路径。", success: "红车按路径顺序消灭黑卒和黑炮，并把完整路径保留为临时视野。", effect: { move: [2,15], remove: ["bp4","bc4"], path: [[2,9],[2,15]], casualties: ["黑卒","黑炮"] } },
+          { type: "move", actor: "rr4b", target: [6,15], title: "接触未显形马", prompt: "右侧红车试图走到（6,15）。确认后观察实际停止点。", success: "红车在（6,12）首次接触隐身马，吃马并停点，没有发生无反馈失败。", effect: { move: [6,12], remove: ["bh4"], path: [[6,9],[6,12]], casualties: ["黑马"] } },
+          { type: "observe", title: "观察己方阵亡虚影", prompt: "播放黑车吃掉红兵的脚本行动，观察红方自己的阵亡点。", button: "播放黑方吃子", success: "红兵进入双方公开阵亡记录；只有红方视图在原点留下持续一回合的半透明虚影。", effect: { movePiece: ["br4c",8,10], remove: ["rp4c"], casualties: ["红兵"], ghost: [8,10,"兵"] } },
+          { type: "quiz", title: "规则确认", prompt: "车路径中途首次接触未显形敌马时应如何结算？", options: ["行动非法", "穿过敌马", "吃掉敌马并停在接触点"], correct: 2, success: "正确：接触点既是吃子点，也是本次行动停止点。" }
+        ],
+        summary: ["蓝色只描车的本次路径", "车按经过顺序处理敌棋", "车不能穿过友军", "首次接触隐身马时吃马并停点"]
+      },
+      {
+        code: "T5", title: "一架一轰", subtitle: "炮",
+        goal: "区分隔一子精确吃子与大本营区域轰炸。",
+        tags: ["炮架吃子", "3×3 轰炸", "每炮两发", "允许友伤"],
+        pieces: [
+          { id: "rc5a", side: "red", kind: "炮", x: 2, y: 3 },
+          { id: "screen5", side: "red", kind: "兵", x: 2, y: 5 },
+          { id: "br5", side: "black", kind: "车", x: 2, y: 7 },
+          { id: "rc5b", side: "red", kind: "炮", x: 8, y: 3 },
+          { id: "friend5", side: "red", kind: "兵", x: 5, y: 12 },
+          { id: "bp5", side: "black", kind: "卒", x: 4, y: 11 },
+          { id: "bh5", side: "black", kind: "马", x: 6, y: 13 }
+        ],
+        visible: [[1,2],[2,2],[3,2],[1,3],[2,3],[3,3],[2,4],[2,5],[2,6],[2,7],[7,2],[8,2],[9,2],[7,3],[8,3],[9,3],[4,11],[5,12],[6,13]],
+        flags: [],
+        steps: [
+          { type: "move", actor: "rc5a", target: [2,7], title: "隔一架精确吃子", prompt: "选择红炮和黑车所在的（2,7），确认中间恰好只有一枚炮架。", success: "红炮隔一枚炮架吃掉黑车。", effect: { move: [2,7], remove: ["br5"], casualties: ["黑车"] } },
+          { type: "bombard", actor: "rc5b", target: [5,12], title: "选择轰炸中心", prompt: "选择仍在红方大本营的另一门炮，再选择（5,12）作为完整 3×3 的中心。", success: "固定教学种子抽取三个不同命中点；弹药由 2 降为 1。", effect: { bombard: [[4,11],[5,12],[6,13]], remove: ["bp5","friend5","bh5"], casualties: ["黑卒","红兵","黑马"] } },
+          { type: "quiz", title: "规则确认", prompt: "这门炮还有一发弹药，下一次满足资格时是否需要等待共享冷却？", options: ["需要等待", "不需要，本作没有共享冷却"], correct: 1, success: "正确：资格只取决于敌墙、炮位置和该炮弹药。" }
+        ],
+        summary: ["精确吃子必须隔恰好一枚炮架", "轰炸炮必须在己方大本营", "中心完整 3×3 必须在特殊区域", "随机三点允许友伤且没有共享冷却"]
+      },
+      {
+        code: "T6", title: "以身换援", subtitle: "士",
+        goal: "先取消一次献祭，再确认献祭并观察合资格复活。",
+        tags: ["九宫斜走", "献祭确认", "可取消", "复活候选池"],
+        pieces: [
+          { id: "ra6", side: "red", kind: "士", x: 4, y: 1 }
+        ],
+        visible: [[4,1],[5,1],[6,1],[4,2],[5,2],[6,2],[4,3],[5,3],[6,3]],
+        flags: [],
+        casualties: ["红车","红兵","红士","红帅"],
+        steps: [
+          { type: "move", actor: "ra6", target: [5,2], title: "九宫内斜走", prompt: "让红士从（4,1）斜走到（5,2）。", success: "士完成九宫内普通移动。", effect: { move: [5,2] } },
+          { type: "sacrifice_cancel", actor: "ra6", title: "打开后取消献祭", prompt: "点击“献祭复活”，查看候选说明，然后使用确认栏的取消。", button: "献祭复活", success: "献祭已取消，士仍在场，行动没有消耗。" },
+          { type: "sacrifice_confirm", actor: "ra6", title: "确认献祭复活", prompt: "再次点击“献祭复活”并确认。固定种子会从红车、红兵中选择一枚。", button: "再次献祭", success: "红士进入公开阵亡记录，红车随机复活到红方大本营空点并从阵亡记录移出。", effect: { remove: ["ra6"], casualties: ["红士"], removeCasualties: ["红车"], revive: { id: "revived6", side: "red", kind: "车", x: 6, y: 2 } } },
+          { type: "quiz", title: "候选池确认", prompt: "公开阵亡记录中的红士和红帅是否属于复活随机池？", options: ["都属于", "只有红士属于", "都不属于"], correct: 2, success: "正确：它们会被公开记录，但明确排除在复活随机池外。" }
+        ],
+        summary: ["士只能在九宫内斜走", "献祭必须确认且可在提交前取消", "士先阵亡，再随机复活合资格友军", "阵亡士与将帅不进入复活随机池"]
+      },
+      {
+        code: "T7", title: "实际阵亡", subtitle: "将 / 帅",
+        goal: "验证本作没有将军与飞将限制，只有实际被吃才失败。",
+        tags: ["九宫移动", "取消将军", "取消飞将", "实际死亡结算"],
+        pieces: [
+          { id: "rg7", side: "red", kind: "帅", x: 5, y: 1 },
+          { id: "rr7", side: "red", kind: "车", x: 5, y: 22 },
+          { id: "bg7", side: "black", kind: "将", x: 5, y: 24 },
+          { id: "br7", side: "black", kind: "车", x: 8, y: 2 }
+        ],
+        visible: [[4,1],[5,1],[6,1],[4,2],[5,2],[6,2],[7,2],[8,2],[4,3],[5,3],[6,3],[4,21],[5,21],[6,21],[4,22],[5,22],[6,22],[5,23],[5,24]],
+        flags: [],
+        steps: [
+          { type: "move", actor: "rg7", target: [5,2], title: "进入攻击范围", prompt: "把红帅移动到（5,2）。虽然黑车控制这一横线，但不会触发“将军”失败。", success: "红帅仍然存活并可继续对局；本作没有应将检查。", effect: { move: [5,2] } },
+          { type: "move", actor: "rr7", target: [5,24], title: "实际吃掉黑将", prompt: "使用已在黑营内的红车吃掉（5,24）的黑将。", success: "黑将实际阵亡，先登记公开阵亡记录，再以最高优先级结束对局。", effect: { move: [5,24], remove: ["bg7"], casualties: ["黑将"] } },
+          { type: "quiz", title: "胜负确认", prompt: "将帅进入敌方攻击范围时，何时才会失败？", options: ["进入范围立刻失败", "被实际吃掉时", "出现照面时"], correct: 1, success: "正确：只有实际死亡才触发所属方失败。" }
+        ],
+        summary: ["将帅与士仍受九宫限制", "没有将军、应将、将死、照面或飞将", "将帅可以进入攻击范围", "只有实际阵亡才结束对局"]
+      },
+      {
+        code: "T8", title: "雾墙攻防", subtitle: "特色机制",
+        goal: "三子破墙，并按战区→缓冲区→大本营的顺序进攻。",
+        tags: ["三子破墙", "倒塌视野", "不自动反隐", "缓冲区前置"],
+        pieces: [
+          { id: "inv8a", side: "red", kind: "兵", x: 3, y: 18 },
+          { id: "inv8b", side: "red", kind: "马", x: 5, y: 19 },
+          { id: "inv8c", side: "red", kind: "车", x: 7, y: 16 },
+          { id: "rr8", side: "red", kind: "车", x: 2, y: 16 },
+          { id: "bh8", side: "black", kind: "马", x: 6, y: 22, hidden: true },
+          { id: "bc8", side: "black", kind: "炮", x: 2, y: 23 }
+        ],
+        visible: [[1,15],[2,15],[3,15],[1,16],[2,16],[3,16],[6,15],[7,15],[8,15],[6,16],[7,16],[8,16],[3,18],[5,19]],
+        flags: [],
+        wallStatus: "INTACT",
+        steps: [
+          { type: "move", actor: "inv8c", target: [7,18], title: "第三枚入侵者进入缓冲区", prompt: "让红车从战区进入黑方缓冲区（7,18），使缓冲区内红子达到三枚。", success: "黑墙倒塌，黑方缓冲区和大本营区域视野向红方开放。", effect: { move: [7,18], wall: "BREACHED", visibleRegion: [17,24] } },
+          { type: "reject", actor: "rr8", target: [2,23], title: "验证不能直攻大本营", prompt: "黑墙已经倒塌。尝试让仍在战区的红车直接攻击黑营（2,23）。", success: "行动未提交：即使城墙倒塌，也必须先停入守方缓冲区。" },
+          { type: "move", actor: "rr8", target: [2,20], title: "先停入缓冲区", prompt: "让红车先移动到黑方缓冲区（2,20）。", success: "红车已经完成进攻大本营的前置停留。", effect: { move: [2,20], path: [[2,16],[2,20]], pathColor: "blue" } },
+          { type: "move", actor: "rr8", target: [2,23], title: "下一次行动进入大本营", prompt: "现在从缓冲区攻击黑营内的黑炮（2,23）。", success: "进攻顺序合法：战区→缓冲区→大本营。", effect: { move: [2,23], remove: ["bc8"], casualties: ["黑炮"], path: [[2,20],[2,23]], pathColor: "blue" } },
+          { type: "quiz", title: "视野确认", prompt: "城墙倒塌提供区域视野后，黑营内隐身马是否自动显形？", options: ["自动显形", "仍然隐藏"], correct: 1, success: "正确：区域视野解除迷雾，但不等同于反隐。" }
+        ],
+        summary: ["完整墙阻止敌棋踏入或跨越墙线", "缓冲区同时存在三枚入侵棋会破墙", "倒塌墙提供区域视野但不自动反隐", "进攻大本营仍需先停入守方缓冲区"]
+      },
+      {
+        code: "T9", title: "雾中旗帜", subtitle: "特色机制",
+        goal: "发现旗帜、验证永久记忆，并维持占领到 3/3。",
+        tags: ["旗帜隐藏", "发现记忆", "公开进度", "位置仍保密"],
+        pieces: [
+          { id: "re9", side: "red", kind: "相", x: 3, y: 10 },
+          { id: "rp9", side: "red", kind: "兵", x: 6, y: 11 },
+          { id: "bp9", side: "black", kind: "卒", x: 8, y: 15 }
+        ],
+        visible: [[2,9],[3,9],[4,9],[2,10],[3,10],[4,10],[5,10],[5,11],[6,11],[7,11],[5,12],[6,12],[7,12]],
+        flags: [{ id: "flag-a", x: 6, y: 13, discovered: false, memory: false, progress: 0 }],
+        steps: [
+          { type: "move", actor: "re9", target: [5,12], title: "用相扩展视野发现旗帜", prompt: "让红相移动到（5,12）。终点中心 3×3 将覆盖旗点（6,13）。", success: "红方首次发现旗帜，旗帜 ID 写入红方永久发现记录。", effect: { move: [5,12], field: [[3,10],[5,10],[5,12],[3,12]], visibleAdd: [[5,13],[6,13]], discoverFlag: "flag-a" } },
+          { type: "observe", title: "观察迷雾恢复与记忆", prompt: "点击继续，相的临时视野离开旗点；观察旗帜图标仍作为红方记忆保留。", button: "让视野离开", success: "旗点重新入雾，但红方仍显示空心记忆图标；黑方未发现时仍不知道位置。", effect: { memoryFlag: "flag-a", visibleRemove: [[6,13]] } },
+          { type: "move", actor: "rp9", target: [6,13], title: "开始占领旗帜", prompt: "让红兵停在已发现旗点（6,13）。", success: "红方正在夺旗（1/3）。公开消息不向未发现方附带旗坐标。", effect: { move: [6,13], flagProgress: ["flag-a",1] } },
+          { type: "observe", title: "等待对方一次行动", prompt: "播放一次脚本黑方合法行动。", button: "黑方行动", success: "红方正在夺旗（2/3）。", effect: { flagProgress: ["flag-a",2], movePiece: ["bp9",8,14] } },
+          { type: "observe", title: "完成占领", prompt: "再播放一次脚本黑方合法行动。", button: "黑方行动", success: "红方成功夺得一面旗帜。", effect: { flagProgress: ["flag-a",3], movePiece: ["bp9",7,14] } },
+          { type: "quiz", title: "信息边界确认", prompt: "未发现旗帜的一方看到“红方正在夺旗（2/3）”后，会自动获得旗坐标吗？", options: ["会公开坐标", "不会，只公开进度"], correct: 1, success: "正确：占领进度公开，但旗位仍由各方发现记忆决定。" }
+        ],
+        summary: ["三旗位于战区并受迷雾影响", "进入视野后为发现方永久保留记忆图标", "占领进度绑定具体棋子", "公开夺旗消息不会公开未发现旗位"]
+      },
+      {
+        code: "T10", title: "第一面战旗", subtitle: "综合考核",
+        goal: "在八个己方行动内发现目标旗、处理路径威胁并完成占领。",
+        tags: ["无直接箭头", "组合机制", "固定脚本", "八行动限制"],
+        assessment: true,
+        pieces: [
+          { id: "re10", side: "red", kind: "相", x: 3, y: 10 },
+          { id: "rr10", side: "red", kind: "车", x: 2, y: 9 },
+          { id: "rp10", side: "red", kind: "兵", x: 6, y: 10 },
+          { id: "rc10", side: "red", kind: "炮", x: 8, y: 3 },
+          { id: "ra10", side: "red", kind: "士", x: 4, y: 1 },
+          { id: "rg10", side: "red", kind: "帅", x: 5, y: 1 },
+          { id: "bh10", side: "black", kind: "马", x: 2, y: 12, hidden: true },
+          { id: "bp10", side: "black", kind: "卒", x: 6, y: 12 },
+          { id: "bc10", side: "black", kind: "炮", x: 7, y: 14 }
+        ],
+        visible: [[2,8],[3,8],[1,9],[2,9],[3,9],[2,10],[3,10],[4,10],[5,9],[6,9],[7,9],[5,10],[6,10],[7,10],[5,11],[6,11],[7,11],[7,2],[8,2],[9,2],[7,3],[8,3],[9,3]],
+        flags: [{ id: "flag-final", x: 6, y: 13, discovered: false, memory: false, progress: 0 }],
+        steps: [
+          { type: "move", actor: "re10", target: [5,12], title: "目标：建立侦察视野", prompt: "没有箭头提示。选择能够让你发现战区目标的行动。", success: "相的扩展视野发现目标旗。", effect: { move: [5,12], field: [[3,10],[5,10],[5,12],[3,12]], visibleAdd: [[5,12],[6,12],[5,13],[6,13]], discoverFlag: "flag-final" } },
+          { type: "move", actor: "rr10", target: [2,15], title: "目标：处理未知路径接触", prompt: "为占领路线建立车路径视野。留意路径中可能存在未显形目标。", success: "车在（2,12）接触并吃掉隐身马后停点。", effect: { move: [2,12], remove: ["bh10"], path: [[2,9],[2,12]], visibleAdd: [[2,11],[2,12]], casualties: ["黑马"] } },
+          { type: "bombard", actor: "rc10", target: [6,13], title: "目标：清除旗点附近威胁", prompt: "使用大本营内的炮选择旗点附近轰炸中心。命中仍由固定种子决定。", success: "轰炸清除了黑卒，同时保留了通往旗点的路线。", effect: { bombard: [[6,12],[7,14],[5,14]], remove: ["bp10","bc10"], casualties: ["黑卒","黑炮"] } },
+          { type: "move", actor: "rp10", target: [6,13], title: "目标：开始占领", prompt: "让合适的棋子抵达已发现旗点。", success: "红方正在夺旗（1/3）。", effect: { move: [6,13], flagProgress: ["flag-final",1] } },
+          { type: "observe", title: "守住旗点", prompt: "播放敌方固定行动，确认占领者仍在旗点。", button: "敌方行动", success: "红方正在夺旗（2/3）。", effect: { flagProgress: ["flag-final",2] } },
+          { type: "observe", title: "完成综合考核", prompt: "再完成一个敌方行动窗口。", button: "敌方行动", success: "红方成功夺得目标旗；综合考核通过。", effect: { flagProgress: ["flag-final",3] } }
+        ],
+        summary: ["你独立建立了侦察视野", "你处理了隐藏路径接触", "你使用资源清除旗点威胁", "你维持占领并夺得第一面战旗"]
+      }
+    ];
+
+    const svgNS = "http://www.w3.org/2000/svg";
+    const els = {
+      board: document.getElementById("board"),
+      boardScroll: document.querySelector(".board-scroll"),
+      chapterList: document.getElementById("chapterList"),
+      chapterCode: document.getElementById("chapterCode"),
+      chapterTitle: document.getElementById("chapterTitle"),
+      chapterGoal: document.getElementById("chapterGoal"),
+      chapterTags: document.getElementById("chapterTags"),
+      stepCounter: document.getElementById("stepCounter"),
+      mistakeCounter: document.getElementById("mistakeCounter"),
+      stepTitle: document.getElementById("stepTitle"),
+      stepPrompt: document.getElementById("stepPrompt"),
+      stepActions: document.getElementById("stepActions"),
+      feedback: document.getElementById("feedback"),
+      feedbackTitle: document.getElementById("feedbackTitle"),
+      feedbackText: document.getElementById("feedbackText"),
+      actionLog: document.getElementById("actionLog"),
+      pendingTitle: document.getElementById("pendingTitle"),
+      pendingText: document.getElementById("pendingText"),
+      cancelBtn: document.getElementById("cancelBtn"),
+      confirmBtn: document.getElementById("confirmBtn"),
+      mirrorBtn: document.getElementById("mirrorBtn"),
+      resetChapterBtn: document.getElementById("resetChapterBtn"),
+      resetAllBtn: document.getElementById("resetAllBtn"),
+      coordinateReadout: document.getElementById("coordinateReadout"),
+      progressLabel: document.getElementById("progressLabel"),
+      progressPercent: document.getElementById("progressPercent"),
+      progressBar: document.getElementById("progressBar"),
+      contextMenu: document.getElementById("contextMenu"),
+      completion: document.getElementById("completion"),
+      completionTitle: document.getElementById("completionTitle"),
+      completionText: document.getElementById("completionText"),
+      completionSummary: document.getElementById("completionSummary"),
+      nextChapterBtn: document.getElementById("nextChapterBtn"),
+      stayBtn: document.getElementById("stayBtn")
+    };
+
+    const storageKey = "veilfront-ftue-graybox-v2-progress";
+    let completed = new Set();
+    try {
+      const stored = JSON.parse(localStorage.getItem(storageKey) || "[]");
+      completed = new Set(Array.isArray(stored) ? stored : []);
+    } catch (_error) {
+      completed = new Set();
+    }
+
+    let chapterIndex = 0;
+    let stepIndex = 0;
+    let mistakes = 0;
+    let selectedId = null;
+    let pending = null;
+    let mirrored = false;
+    let contextPoint = null;
+    let annotations = [];
+    let logs = [];
+    let runtime = null;
+
+    function deepCopy(value) {
+      return JSON.parse(JSON.stringify(value));
+    }
+
+    function makeSvg(name, attrs) {
+      const node = document.createElementNS(svgNS, name);
+      Object.keys(attrs || {}).forEach(function (key) {
+        node.setAttribute(key, String(attrs[key]));
+      });
+      return node;
+    }
+
+    function currentScenario() {
+      return scenarios[chapterIndex];
+    }
+
+    function currentStep() {
+      return currentScenario().steps[stepIndex];
+    }
+
+    function coordKey(x, y) {
+      return String(x) + "," + String(y);
+    }
+
+    function screenPos(x, y) {
+      const displayX = mirrored ? 10 - x : x;
+      const displayY = mirrored ? 25 - y : y;
+      return {
+        x: 100 + (displayX - 1) * 100,
+        y: 100 + (24 - displayY) * 100
+      };
+    }
+
+    function regionName(y) {
+      if (y <= 3) return "红方大本营";
+      if (y <= 8) return "红方缓冲区";
+      if (y <= 16) return "战区";
+      if (y <= 21) return "黑方缓冲区";
+      return "黑方大本营";
+    }
+
+    function regionFill(y) {
+      if (y <= 3) return "var(--hq-red)";
+      if (y <= 8) return "var(--buffer-red)";
+      if (y <= 16) return "var(--war)";
+      if (y <= 21) return "var(--buffer-black)";
+      return "var(--hq-black)";
+    }
+
+    function resetRuntime() {
+      const scenario = currentScenario();
+      runtime = {
+        pieces: deepCopy(scenario.pieces || []),
+        visible: deepCopy(scenario.visible || []),
+        flags: deepCopy(scenario.flags || []),
+        casualties: deepCopy(scenario.casualties || []),
+        wallStatus: scenario.wallStatus || "INTACT",
+        field: null,
+        path: null,
+        impacts: [],
+        ghost: null,
+        complete: false,
+        cancelDemonstrated: false
+      };
+      stepIndex = 0;
+      mistakes = 0;
+      selectedId = null;
+      pending = null;
+      contextPoint = null;
+      annotations = [];
+      logs = [];
+      closeContextMenu();
+      closeCompletion();
+      addLog("已载入 " + scenario.code + " 固定教学局面。", "info");
+      renderAll();
+      focusCurrentStep();
+    }
+
+    function saveProgress() {
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(Array.from(completed)));
+      } catch (_error) {
+        // 本地存储不可用时不阻断灰盒试玩。
+      }
+    }
+
+    function addLog(text, type) {
+      logs.unshift({ text: text, type: type || "info" });
+      logs = logs.slice(0, 16);
+    }
+
+    function setFeedback(type, title, text) {
+      els.feedback.className = "feedback " + type;
+      els.feedbackTitle.textContent = title;
+      els.feedbackText.textContent = text;
+    }
+
+    function setPending(title, text, confirmLabel) {
+      els.pendingTitle.textContent = title;
+      els.pendingText.textContent = text;
+      els.cancelBtn.disabled = false;
+      els.confirmBtn.disabled = false;
+      els.confirmBtn.textContent = confirmLabel || "确认行动";
+    }
+
+    function clearPending() {
+      pending = null;
+      if (runtime && runtime.complete) {
+        els.pendingTitle.textContent = "本章已完成";
+        els.pendingText.textContent = "当前局面已锁定为只读。可查看棋盘、切换镜像或重置本章。";
+        els.cancelBtn.disabled = true;
+        els.confirmBtn.disabled = true;
+        els.confirmBtn.textContent = "确认行动";
+        return;
+      }
+      els.pendingTitle.textContent = selectedId ? "已选择棋子" : "尚未选择行动";
+      els.pendingText.textContent = selectedId ? "请选择当前步骤要求的目标交点。" : "根据右侧目标选择棋子和交点。选中棋子时右键会先取消。";
+      els.cancelBtn.disabled = true;
+      els.confirmBtn.disabled = true;
+      els.confirmBtn.textContent = "确认行动";
+    }
+
+    function renderAll() {
+      renderChapters();
+      renderChapterDetails();
+      renderBoard();
+      renderLogs();
+      renderProgress();
+      if (!pending) clearPending();
+    }
+
+    function focusCurrentStep() {
+      window.requestAnimationFrame(function () {
+        const step = currentStep();
+        let focusNode = null;
+        if (step.actor) {
+          focusNode = els.board.querySelector('[data-piece="' + step.actor + '"]');
+        }
+        if (!focusNode) {
+          const focusPoint = step.target || step.point;
+          if (focusPoint) focusNode = els.board.querySelector('.point-hit[data-x="' + focusPoint[0] + '"][data-y="' + focusPoint[1] + '"]');
+        }
+        centerBoardOnNode(focusNode);
+      });
+    }
+
+    function focusStepTarget() {
+      window.requestAnimationFrame(function () {
+        const step = currentStep();
+        const focusPoint = step.target || step.point;
+        if (!focusPoint) return;
+        const focusNode = els.board.querySelector('.point-hit[data-x="' + focusPoint[0] + '"][data-y="' + focusPoint[1] + '"]');
+        centerBoardOnNode(focusNode);
+      });
+    }
+
+    function centerBoardOnNode(node) {
+        if (!node) return;
+        const rect = node.getBoundingClientRect();
+        const center = (rect.top + rect.bottom) / 2;
+        const viewport = els.boardScroll.getBoundingClientRect();
+        els.boardScroll.scrollTop += center - (viewport.top + viewport.height / 2);
+    }
+
+    function renderChapters() {
+      els.chapterList.replaceChildren();
+      scenarios.forEach(function (scenario, index) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "chapter" + (index === chapterIndex ? " active" : "") + (completed.has(scenario.code) ? " done" : "");
+
+        const number = document.createElement("span");
+        number.className = "chapter-index";
+        number.textContent = index + 1;
+
+        const copy = document.createElement("span");
+        const title = document.createElement("span");
+        title.className = "chapter-title";
+        title.textContent = scenario.code + " · " + scenario.title;
+        const sub = document.createElement("span");
+        sub.className = "chapter-sub";
+        sub.textContent = scenario.subtitle;
+        copy.append(title, sub);
+
+        const status = document.createElement("span");
+        status.className = "chapter-state";
+        status.textContent = completed.has(scenario.code) ? "✓" : "";
+        button.append(number, copy, status);
+        button.addEventListener("click", function () {
+          if (index === chapterIndex) return;
+          chapterIndex = index;
+          resetRuntime();
+        });
+        els.chapterList.append(button);
+      });
+    }
+
+    function renderChapterDetails() {
+      const scenario = currentScenario();
+      const step = currentStep();
+      els.chapterCode.textContent = scenario.code + " · " + scenario.subtitle;
+      els.chapterTitle.textContent = scenario.title;
+      els.chapterGoal.textContent = scenario.goal;
+      els.chapterTags.replaceChildren();
+      scenario.tags.forEach(function (tagText) {
+        const tag = document.createElement("span");
+        tag.className = "tag";
+        tag.textContent = tagText;
+        els.chapterTags.append(tag);
+      });
+      els.stepCounter.textContent = "步骤 " + (stepIndex + 1) + " / " + scenario.steps.length;
+      els.mistakeCounter.textContent = "无效尝试 " + mistakes;
+      els.stepTitle.textContent = step.title;
+      els.stepPrompt.textContent = step.prompt;
+      els.stepActions.replaceChildren();
+
+      if (runtime.complete) {
+        els.stepCounter.textContent = "章节已完成";
+        els.mistakeCounter.textContent = "检查点已记录";
+        els.stepTitle.textContent = "完成态 · 只读局面";
+        els.stepPrompt.textContent = "可以检查最终棋盘和公开记录。若要重新操作，请使用“重置本章”。";
+        const replay = document.createElement("button");
+        replay.type = "button";
+        replay.className = "btn ghost";
+        replay.textContent = "重玩本章";
+        replay.addEventListener("click", resetRuntime);
+        els.stepActions.append(replay);
+        return;
+      }
+
+      if (step.type === "sacrifice_cancel" && runtime.cancelDemonstrated) {
+        const continueButton = document.createElement("button");
+        continueButton.type = "button";
+        continueButton.className = "btn primary";
+        continueButton.textContent = "继续学习献祭";
+        continueButton.addEventListener("click", completeStep);
+        els.stepActions.append(continueButton);
+      } else if (step.type === "observe" || step.type === "sacrifice_cancel" || step.type === "sacrifice_confirm") {
+        const action = document.createElement("button");
+        action.type = "button";
+        action.className = step.type.indexOf("sacrifice") === 0 ? "btn warning" : "btn primary";
+        action.textContent = step.button || "继续";
+        action.addEventListener("click", function () {
+          if (step.type === "observe") {
+            completeStep();
+            return;
+          }
+          pending = { type: step.type, actor: step.actor };
+          selectedId = step.actor;
+          setPending("献祭复活 · 待确认", "发动者将进入公开阵亡记录；随机池排除士与将帅。", "确认献祭");
+          setFeedback("warn", "高代价行动", step.type === "sacrifice_cancel" ? "本步骤要求先取消，验证取消不会消耗行动。" : "本步骤要求确认献祭，结果由固定教学种子演示。");
+          renderBoard();
+        });
+        els.stepActions.append(action);
+      }
+
+      if (step.type === "quiz") {
+        step.options.forEach(function (optionText, index) {
+          const option = document.createElement("button");
+          option.type = "button";
+          option.className = "btn";
+          option.textContent = optionText;
+          option.addEventListener("click", function () {
+            if (index === step.correct) completeStep();
+            else registerMistake("这个答案与本章刚才展示的公开结算不一致。");
+          });
+          els.stepActions.append(option);
+        });
+      }
+
+      if (mistakes >= 3 && ["move","reject","bombard","predict"].includes(step.type)) {
+        const demo = document.createElement("button");
+        demo.type = "button";
+        demo.className = "btn ghost";
+        demo.textContent = "显示操作提示";
+        demo.addEventListener("click", function () {
+          const target = step.target ? "目标是（" + step.target[0] + "," + step.target[1] + "）。" : "";
+          setFeedback("info", "三级提示", "选择与当前目标同名的棋子，再选择目标交点并确认。" + target + " 演示不会替你提交。");
+          renderBoard();
+        });
+        els.stepActions.append(demo);
+      }
+    }
+
+    function renderProgress() {
+      const scenario = currentScenario();
+      const chapterFraction = stepIndex / scenario.steps.length;
+      const completedCount = completed.size;
+      const percent = Math.min(100, Math.round(((completedCount + (completed.has(scenario.code) ? 0 : chapterFraction)) / scenarios.length) * 100));
+      els.progressLabel.textContent = "章节 " + (chapterIndex + 1) + " / " + scenarios.length;
+      els.progressPercent.textContent = percent + "%";
+      els.progressBar.style.width = percent + "%";
+    }
+
+    function renderLogs() {
+      els.actionLog.replaceChildren();
+      if (runtime.casualties.length) {
+        const casualty = document.createElement("div");
+        casualty.className = "log-entry";
+        casualty.textContent = "双方公开阵亡记录：" + runtime.casualties.join("、");
+        els.actionLog.append(casualty);
+      }
+      logs.forEach(function (entry) {
+        const row = document.createElement("div");
+        row.className = "log-entry " + entry.type;
+        row.textContent = entry.text;
+        els.actionLog.append(row);
+      });
+    }
+
+    function drawRegionBands() {
+      for (let y = 1; y <= 24; y += 1) {
+        const pos = screenPos(1, y);
+        const rect = makeSvg("rect", {
+          x: 50,
+          y: pos.y - 50,
+          width: 900,
+          height: 100,
+          fill: regionFill(y)
+        });
+        els.board.append(rect);
+      }
+
+      [
+        { y: 2, text: "红方大本营" },
+        { y: 6, text: "红方缓冲区" },
+        { y: 12.5, text: "战区" },
+        { y: 19, text: "黑方缓冲区" },
+        { y: 23, text: "黑方大本营" }
+      ].forEach(function (label) {
+        const pos = screenPos(5, label.y);
+        const text = makeSvg("text", { x: pos.x, y: pos.y, class: "region-label", "font-size": label.text === "战区" ? 92 : 62, "text-anchor": "middle" });
+        text.textContent = label.text;
+        els.board.append(text);
+      });
+    }
+
+    function drawGrid() {
+      for (let file = 1; file <= 9; file += 1) {
+        const x = 100 + (file - 1) * 100;
+        els.board.append(makeSvg("line", { x1: x, y1: 100, x2: x, y2: 2400, class: "grid-line" }));
+      }
+      for (let rank = 1; rank <= 24; rank += 1) {
+        const y = 100 + (rank - 1) * 100;
+        els.board.append(makeSvg("line", { x1: 100, y1: y, x2: 900, y2: y, class: "grid-line" }));
+      }
+
+      const redWall = screenPos(1, 4).y;
+      const blackWall = screenPos(1, 21).y;
+      els.board.append(makeSvg("line", { x1: 100, y1: redWall, x2: 900, y2: redWall, class: "wall-line", stroke: "#d85e56" }));
+      els.board.append(makeSvg("line", {
+        x1: 100, y1: blackWall, x2: 900, y2: blackWall, class: "wall-line",
+        stroke: runtime.wallStatus === "INTACT" ? "#77899d" : "#b58a49",
+        "stroke-dasharray": runtime.wallStatus === "INTACT" ? "none" : "36 18"
+      }));
+    }
+
+    function visibleSet() {
+      const set = new Set();
+      runtime.visible.forEach(function (point) { set.add(coordKey(point[0], point[1])); });
+      for (let x = 1; x <= 9; x += 1) {
+        for (let y = 1; y <= 3; y += 1) set.add(coordKey(x, y));
+      }
+      return set;
+    }
+
+    function drawFog(visible) {
+      for (let x = 1; x <= 9; x += 1) {
+        for (let y = 1; y <= 24; y += 1) {
+          if (visible.has(coordKey(x, y))) continue;
+          const pos = screenPos(x, y);
+          els.board.append(makeSvg("rect", { x: pos.x - 49, y: pos.y - 49, width: 98, height: 98, class: "fog-cell" }));
+        }
+      }
+    }
+
+    function drawPath() {
+      if (!runtime.path || !runtime.path.points || runtime.path.points.length < 2) return;
+      const points = runtime.path.points.map(function (point) {
+        const pos = screenPos(point[0], point[1]);
+        return pos.x + "," + pos.y;
+      }).join(" ");
+      const polyline = makeSvg("polyline", {
+        points: points,
+        class: "rook-path",
+        stroke: runtime.path.color === "white" ? "#f0f2f4" : "var(--blue)"
+      });
+      els.board.append(polyline);
+    }
+
+    function drawField() {
+      if (!runtime.field || runtime.field.length < 4) return;
+      const points = runtime.field.map(function (point) {
+        const pos = screenPos(point[0], point[1]);
+        return pos.x + "," + pos.y;
+      }).join(" ");
+      els.board.append(makeSvg("polygon", { points: points, class: "elephant-field" }));
+    }
+
+    function drawFlags(visible) {
+      runtime.flags.forEach(function (flag) {
+        const isVisible = visible.has(coordKey(flag.x, flag.y));
+        if (!isVisible && !flag.discovered && !flag.memory) return;
+        const pos = screenPos(flag.x, flag.y);
+        const group = makeSvg("g", { class: "flag" + (!isVisible && flag.memory ? " memory" : "") });
+        const diamond = makeSvg("polygon", {
+          points: (pos.x) + "," + (pos.y - 42) + " " + (pos.x + 34) + "," + pos.y + " " + pos.x + "," + (pos.y + 42) + " " + (pos.x - 34) + "," + pos.y,
+          fill: isVisible ? "#f5d76e" : "none",
+          stroke: "#ffe59a",
+          "stroke-width": 8
+        });
+        const text = makeSvg("text", { x: pos.x, y: pos.y + 5, fill: isVisible ? "#2a2410" : "#ffe59a" });
+        text.textContent = flag.progress > 0 ? String(flag.progress) : "旗";
+        group.append(diamond, text);
+        els.board.append(group);
+      });
+    }
+
+    function drawPieces(visible) {
+      runtime.pieces.forEach(function (piece) {
+        const isOwn = piece.side === "red";
+        const inView = visible.has(coordKey(piece.x, piece.y));
+        if (!isOwn && !inView) return;
+        if (!isOwn && piece.hidden) return;
+        const pos = screenPos(piece.x, piece.y);
+        const group = makeSvg("g", {
+          class: "piece " + piece.side + (selectedId === piece.id ? " selected" : ""),
+          "data-piece": piece.id,
+          role: "button",
+          tabindex: "0",
+          "aria-label": (piece.side === "red" ? "红" : "黑") + piece.kind + "，坐标 " + piece.x + "," + piece.y
+        });
+        const circle = makeSvg("circle", { cx: pos.x, cy: pos.y, r: 37 });
+        const text = makeSvg("text", { x: pos.x, y: pos.y + 2 });
+        text.textContent = piece.kind;
+        group.append(circle, text);
+        group.addEventListener("click", function (event) {
+          event.stopPropagation();
+          handlePieceClick(piece.id);
+        });
+        group.addEventListener("keydown", function (event) {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            handlePieceClick(piece.id);
+          }
+        });
+        group.addEventListener("contextmenu", function (event) {
+          event.preventDefault();
+          event.stopPropagation();
+          handleRightClick(event, piece.x, piece.y);
+        });
+        els.board.append(group);
+      });
+    }
+
+    function drawGhost() {
+      if (!runtime.ghost) return;
+      const pos = screenPos(runtime.ghost.x, runtime.ghost.y);
+      const group = makeSvg("g", { class: "ghost" });
+      const circle = makeSvg("circle", { cx: pos.x, cy: pos.y, r: 34 });
+      const text = makeSvg("text", { x: pos.x, y: pos.y + 2 });
+      text.textContent = runtime.ghost.kind;
+      group.append(circle, text);
+      els.board.append(group);
+    }
+
+    function drawImpacts() {
+      runtime.impacts.forEach(function (point) {
+        const pos = screenPos(point[0], point[1]);
+        const group = makeSvg("g", { class: "impact-mark" });
+        group.append(makeSvg("circle", { cx: pos.x, cy: pos.y, r: 35 }));
+        group.append(makeSvg("line", { x1: pos.x - 20, y1: pos.y - 20, x2: pos.x + 20, y2: pos.y + 20 }));
+        group.append(makeSvg("line", { x1: pos.x + 20, y1: pos.y - 20, x2: pos.x - 20, y2: pos.y + 20 }));
+        els.board.append(group);
+      });
+    }
+
+    function drawAnnotations() {
+      annotations.forEach(function (mark) {
+        const pos = screenPos(mark.x, mark.y);
+        const group = makeSvg("g", { class: "annotation" });
+        if (mark.marker === "circle") {
+          group.append(makeSvg("circle", { cx: pos.x, cy: pos.y, r: 27 }));
+        } else if (mark.marker === "cross") {
+          group.append(makeSvg("line", { x1: pos.x - 24, y1: pos.y - 24, x2: pos.x + 24, y2: pos.y + 24 }));
+          group.append(makeSvg("line", { x1: pos.x + 24, y1: pos.y - 24, x2: pos.x - 24, y2: pos.y + 24 }));
+        } else {
+          group.append(makeSvg("rect", { x: pos.x - 25, y: pos.y - 25, width: 50, height: 50 }));
+        }
+        els.board.append(group);
+      });
+    }
+
+    function shouldShowTarget(step) {
+      return !currentScenario().assessment || mistakes >= 2;
+    }
+
+    function drawTarget(step) {
+      if (!step || !step.target || !shouldShowTarget(step)) return;
+      const pos = screenPos(step.target[0], step.target[1]);
+      els.board.append(makeSvg("circle", { cx: pos.x, cy: pos.y, r: 22, class: "point-target" }));
+    }
+
+    function drawSelected() {
+      if (!selectedId) return;
+      const piece = runtime.pieces.find(function (item) { return item.id === selectedId; });
+      if (!piece) return;
+      const pos = screenPos(piece.x, piece.y);
+      els.board.append(makeSvg("circle", { cx: pos.x, cy: pos.y, r: 49, class: "point-selected" }));
+    }
+
+    function drawPointHits() {
+      for (let x = 1; x <= 9; x += 1) {
+        for (let y = 1; y <= 24; y += 1) {
+          const pos = screenPos(x, y);
+          els.board.append(makeSvg("circle", { cx: pos.x, cy: pos.y, r: 7, class: "point-dot" }));
+          const hit = makeSvg("circle", { cx: pos.x, cy: pos.y, r: 40, class: "point-hit", "data-x": x, "data-y": y });
+          hit.addEventListener("click", function () { handlePointClick(x, y); });
+          hit.addEventListener("mouseenter", function () {
+            els.coordinateReadout.textContent = "坐标：（" + x + "," + y + "）· " + regionName(y);
+          });
+          hit.addEventListener("contextmenu", function (event) {
+            event.preventDefault();
+            handleRightClick(event, x, y);
+          });
+          els.board.append(hit);
+        }
+      }
+    }
+
+    function renderBoard() {
+      els.board.replaceChildren();
+      drawRegionBands();
+      drawGrid();
+      drawPath();
+      drawField();
+      const visible = visibleSet();
+      drawFog(visible);
+      drawPointHits();
+      drawFlags(visible);
+      drawImpacts();
+      drawGhost();
+      drawPieces(visible);
+      drawTarget(currentStep());
+      drawSelected();
+      drawAnnotations();
+      els.mirrorBtn.textContent = mirrored ? "切回红方视角" : "切换黑方镜像";
+    }
+
+    function handlePieceClick(pieceId) {
+      closeContextMenu();
+      if (runtime.complete) {
+        setFeedback("info", "本章已完成", "最终局面为只读状态；重置本章后可以重新操作。");
+        return;
+      }
+      const step = currentStep();
+      const clickedPiece = runtime.pieces.find(function (piece) { return piece.id === pieceId; });
+      const occupiedTargetTypes = ["move", "reject", "bombard"];
+      if (selectedId === step.actor && clickedPiece && step.target && occupiedTargetTypes.includes(step.type) && clickedPiece.x === step.target[0] && clickedPiece.y === step.target[1]) {
+        handlePointClick(clickedPiece.x, clickedPiece.y);
+        return;
+      }
+      if (!["cancel_selection","move","reject","bombard"].includes(step.type)) {
+        registerMistake("当前步骤不要求选择棋子。");
+        return;
+      }
+      if (pieceId !== step.actor) {
+        registerMistake("当前教学目标需要使用另一枚棋子。");
+        return;
+      }
+      selectedId = pieceId;
+      clearPending();
+      setFeedback("info", "已选择棋子", "现在请选择当前步骤要求的目标交点。");
+      renderBoard();
+      focusStepTarget();
+    }
+
+    function handlePointClick(x, y) {
+      closeContextMenu();
+      if (runtime.complete) {
+        setFeedback("info", "本章已完成", "最终局面为只读状态；重置本章后可以重新操作。");
+        return;
+      }
+      const step = currentStep();
+      if (step.type === "predict") {
+        if (x === step.target[0] && y === step.target[1]) completeStep();
+        else registerMistake("这个点不是从田字外进入时遇到的第一个交点。");
+        return;
+      }
+      if (!["move","reject","bombard"].includes(step.type)) {
+        registerMistake("当前步骤需要按右侧说明完成，不接受这个落点。");
+        return;
+      }
+      if (!selectedId) {
+        registerMistake("请先选择当前步骤要求的棋子。");
+        return;
+      }
+      if (selectedId !== step.actor || x !== step.target[0] || y !== step.target[1]) {
+        registerMistake("所选目标与当前训练目标不一致。");
+        return;
+      }
+      pending = { type: step.type, actor: selectedId, target: [x,y] };
+      const label = step.type === "bombard" ? "区域轰炸" : (step.type === "reject" ? "预期公开拒绝" : "棋子行动");
+      setPending(label + " · 待确认", "目标（" + x + "," + y + "）。只有确认后才模拟正式提交。", step.type === "bombard" ? "确认轰炸" : "确认行动");
+      setFeedback("warn", "等待确认", "你仍可取消本次预览，取消不会消耗行动。");
+      renderBoard();
+    }
+
+    function handleRightClick(event, x, y) {
+      if (runtime.complete) {
+        closeContextMenu();
+        setFeedback("info", "本章已完成", "最终局面为只读状态；标注和行动已锁定。");
+        return;
+      }
+      const step = currentStep();
+      if (selectedId) {
+        if (pending) {
+          cancelPendingAction("右键");
+          return;
+        }
+        const wasExpected = step.type === "cancel_selection" && selectedId === step.actor;
+        selectedId = null;
+        clearPending();
+        setFeedback("info", "已取消选择", "选中状态的首次右键只取消，不打开标注菜单。");
+        renderBoard();
+        if (wasExpected) completeStep();
+        return;
+      }
+      contextPoint = [x,y];
+      els.contextMenu.style.left = Math.min(event.clientX, window.innerWidth - 150) + "px";
+      els.contextMenu.style.top = Math.min(event.clientY, window.innerHeight - 60) + "px";
+      els.contextMenu.classList.add("open");
+    }
+
+    function closeContextMenu() {
+      els.contextMenu.classList.remove("open");
+    }
+
+    function registerMistake(reason) {
+      mistakes += 1;
+      const step = currentStep();
+      let supplement = "";
+      if (mistakes === 1) supplement = " 本次没有消耗行动。";
+      if (mistakes === 2 && step.target) supplement = " 目标交点现已高亮。";
+      if (mistakes >= 3) supplement = " 你可以使用右侧的三级操作提示。";
+      addLog("无效操作：" + reason, "error");
+      setFeedback("error", "行动未提交", reason + supplement);
+      renderChapterDetails();
+      renderBoard();
+      renderLogs();
+      renderProgress();
+    }
+
+    function applyEffect(step) {
+      const effect = step.effect || {};
+      if (runtime.impacts.length && !effect.bombard) runtime.impacts = [];
+      if (effect.move && step.actor) {
+        const actor = runtime.pieces.find(function (piece) { return piece.id === step.actor; });
+        if (actor) {
+          actor.x = effect.move[0];
+          actor.y = effect.move[1];
+        }
+      }
+      if (effect.movePiece) {
+        const piece = runtime.pieces.find(function (item) { return item.id === effect.movePiece[0]; });
+        if (piece) {
+          piece.x = effect.movePiece[1];
+          piece.y = effect.movePiece[2];
+        }
+      }
+      (effect.remove || []).forEach(function (pieceId) {
+        runtime.pieces = runtime.pieces.filter(function (piece) { return piece.id !== pieceId; });
+      });
+      if (effect.hide) {
+        const hiddenPiece = runtime.pieces.find(function (piece) { return piece.id === effect.hide; });
+        if (hiddenPiece) hiddenPiece.hidden = true;
+      }
+      if (effect.reveal) {
+        const revealedPiece = runtime.pieces.find(function (piece) { return piece.id === effect.reveal; });
+        if (revealedPiece) revealedPiece.hidden = false;
+      }
+      if (effect.field) runtime.field = deepCopy(effect.field);
+      if (effect.path) runtime.path = { points: deepCopy(effect.path), color: effect.pathColor || "blue" };
+      if (effect.visibleAdd) {
+        effect.visibleAdd.forEach(function (point) {
+          if (!runtime.visible.some(function (existing) { return existing[0] === point[0] && existing[1] === point[1]; })) runtime.visible.push(deepCopy(point));
+        });
+      }
+      if (effect.visibleRemove) {
+        effect.visibleRemove.forEach(function (point) {
+          runtime.visible = runtime.visible.filter(function (existing) { return existing[0] !== point[0] || existing[1] !== point[1]; });
+        });
+      }
+      if (effect.visibleRegion) {
+        for (let x = 1; x <= 9; x += 1) {
+          for (let y = effect.visibleRegion[0]; y <= effect.visibleRegion[1]; y += 1) {
+            if (!runtime.visible.some(function (point) { return point[0] === x && point[1] === y; })) runtime.visible.push([x,y]);
+          }
+        }
+      }
+      if (effect.wall) runtime.wallStatus = effect.wall;
+      if (effect.discoverFlag) {
+        const flag = runtime.flags.find(function (item) { return item.id === effect.discoverFlag; });
+        if (flag) flag.discovered = true;
+      }
+      if (effect.memoryFlag) {
+        const flag = runtime.flags.find(function (item) { return item.id === effect.memoryFlag; });
+        if (flag) {
+          flag.discovered = true;
+          flag.memory = true;
+        }
+      }
+      if (effect.flagProgress) {
+        const flag = runtime.flags.find(function (item) { return item.id === effect.flagProgress[0]; });
+        if (flag) {
+          flag.discovered = true;
+          flag.memory = true;
+          flag.progress = effect.flagProgress[1];
+        }
+      }
+      if (effect.casualties) runtime.casualties = runtime.casualties.concat(effect.casualties);
+      if (effect.removeCasualties) {
+        effect.removeCasualties.forEach(function (name) {
+          const index = runtime.casualties.indexOf(name);
+          if (index >= 0) runtime.casualties.splice(index, 1);
+        });
+      }
+      if (effect.ghost) runtime.ghost = { x: effect.ghost[0], y: effect.ghost[1], kind: effect.ghost[2] };
+      if (effect.bombard) runtime.impacts = deepCopy(effect.bombard);
+      if (effect.revive) runtime.pieces.push(deepCopy(effect.revive));
+    }
+
+    function completeStep() {
+      if (runtime.complete) return;
+      const scenario = currentScenario();
+      const step = currentStep();
+      applyEffect(step);
+      addLog(step.success, "success");
+      setFeedback("success", "步骤完成", step.success);
+      selectedId = null;
+      pending = null;
+      mistakes = 0;
+      runtime.cancelDemonstrated = false;
+
+      if (stepIndex >= scenario.steps.length - 1) {
+        runtime.complete = true;
+        completed.add(scenario.code);
+        saveProgress();
+        renderAll();
+        openCompletion();
+        return;
+      }
+      stepIndex += 1;
+      renderAll();
+      focusCurrentStep();
+    }
+
+    function openCompletion() {
+      const scenario = currentScenario();
+      els.completionTitle.textContent = scenario.code === "T10" ? "灰盒教程全部完成" : scenario.code + " · " + scenario.title + " 完成";
+      els.completionText.textContent = scenario.code === "T10" ? "你已经走完全部灰盒教学流程。请根据实际体验向开发者反馈难懂、冗长或反馈不足的步骤。" : "本章检查点已经记录。你可以进入下一章，也可以留在本章查看局面。";
+      els.completionSummary.replaceChildren();
+      scenario.summary.forEach(function (text) {
+        const li = document.createElement("li");
+        li.textContent = text;
+        els.completionSummary.append(li);
+      });
+      els.nextChapterBtn.textContent = chapterIndex === scenarios.length - 1 ? "回到第一章" : "进入下一章";
+      els.completion.classList.add("open");
+    }
+
+    function closeCompletion() {
+      els.completion.classList.remove("open");
+    }
+
+    els.confirmBtn.addEventListener("click", function () {
+      if (!pending) return;
+      const step = currentStep();
+      if (pending.type === "sacrifice_cancel") {
+        registerMistake("本步骤要求先验证取消，不应确认献祭。");
+        return;
+      }
+      if (pending.type === step.type) completeStep();
+    });
+
+    els.cancelBtn.addEventListener("click", function () {
+      cancelPendingAction("确认栏");
+    });
+
+    function cancelPendingAction(source) {
+      if (!pending) return false;
+      const pendingType = pending.type;
+      selectedId = null;
+      pending = null;
+      clearPending();
+      if (pendingType === "sacrifice_cancel") {
+        runtime.cancelDemonstrated = true;
+        addLog("献祭已取消：士仍在场，行动未消耗。", "success");
+        setFeedback("success", "献祭已取消", "士仍在场，行动没有消耗。你可以停留检查局面，或主动继续学习献祭。");
+        renderChapterDetails();
+        renderBoard();
+        renderLogs();
+        return true;
+      }
+      const message = pendingType === "sacrifice_confirm" ? "献祭已取消，士仍在场；本步骤没有推进。" : "取消没有消耗行动。请重新选择。";
+      setFeedback("info", source + "取消成功", message);
+      renderChapterDetails();
+      renderBoard();
+      return true;
+    }
+
+    els.contextMenu.querySelectorAll("[data-marker]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        if (!contextPoint) return;
+        const marker = button.getAttribute("data-marker");
+        annotations.push({ x: contextPoint[0], y: contextPoint[1], marker: marker });
+        const step = currentStep();
+        const correct = step.type === "annotate" && step.point[0] === contextPoint[0] && step.point[1] === contextPoint[1] && step.marker === marker;
+        closeContextMenu();
+        renderBoard();
+        if (correct) completeStep();
+        else if (step.type === "annotate") registerMistake("请按本步骤要求在指定交点使用圆形标记。");
+        else setFeedback("info", "标记已放置", "私人标记不会影响高亮、行动或对手视图。");
+      });
+    });
+
+    els.mirrorBtn.addEventListener("click", function () {
+      mirrored = !mirrored;
+      closeContextMenu();
+      renderBoard();
+      focusCurrentStep();
+      setFeedback("info", mirrored ? "黑方镜像预览" : "红方视角", "只旋转显示，不改变权威坐标和行动语义。");
+    });
+
+    els.resetChapterBtn.addEventListener("click", function () {
+      resetRuntime();
+      setFeedback("info", "本章已重置", "固定局面、提示次数和本章标注已恢复。");
+    });
+
+    els.resetAllBtn.addEventListener("click", function () {
+      if (!window.confirm("清空全部章节完成记录并回到第一章？")) return;
+      completed.clear();
+      saveProgress();
+      chapterIndex = 0;
+      resetRuntime();
+      setFeedback("info", "试玩进度已清空", "所有章节恢复为未完成状态。");
+    });
+
+    els.nextChapterBtn.addEventListener("click", function () {
+      closeCompletion();
+      chapterIndex = chapterIndex === scenarios.length - 1 ? 0 : chapterIndex + 1;
+      resetRuntime();
+    });
+
+    els.stayBtn.addEventListener("click", function () {
+      closeCompletion();
+    });
+
+    document.addEventListener("click", function (event) {
+      if (!els.contextMenu.contains(event.target)) closeContextMenu();
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key !== "Escape") return;
+      if (pending) {
+        event.preventDefault();
+        cancelPendingAction("Esc");
+        return;
+      }
+      if (selectedId) {
+        event.preventDefault();
+        selectedId = null;
+        clearPending();
+        setFeedback("info", "Esc 取消成功", "已取消棋子选择，没有消耗行动。");
+        renderBoard();
+      }
+    });
+
+    window.addEventListener("resize", closeContextMenu);
+
+    resetRuntime();
+  </script>
+</body>
+</html>
