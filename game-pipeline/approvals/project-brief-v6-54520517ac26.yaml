@@ -1,0 +1,28 @@
+approval:
+  schema_version: game-production-approval/v1
+  approval_id: approval:veilfront-xiangqi-siege:project-brief:54520517ac26
+  subject_kind: project-brief
+  subject_id: brief:veilfront-xiangqi-siege:initial
+  subject_digest: 54520517ac26859c24459accb2d7672d12d0224ef69a766f883eda7b2b523289
+  decision: approved
+  decided_by: project-owner
+  decided_at: '2026-08-19T19:47:28.8355954+08:00'
+  evidence:
+    source_refs:
+    - codex-thread://current#project-brief-v6-digest-confirmation
+    confirmed_input: 54520517ac26859c24459accb2d7672d12d0224ef69a766f883eda7b2b523289
+    previous_confirmed_brief:
+      version: 5
+      subject_digest: 41bb82fae4f1a0294d17746f3b9caf063ee69d2bd07e0f7d15d26baad9ab89bb
+  authorized_action:
+    summary: 确认24×9棋盘保持不变，并以二维规则、三维棋盘、Sprite3D角色和锁定低FOV斜俯视摄像机替换原90°二维俯视方向；准许据此修订GATE-2合同并制作少量可审查视觉样片。
+    forbidden:
+    - 自动批准GATE-2
+    - 自动批准尚未展示精确摘要的GATE-2合同修订
+    - GATE-2前启动高成本批量美术、完整音频、全套动画或外包承诺
+    - 以视觉变更修改owner rule revision 5或PlayerView信息边界
+  application:
+    materialized_path: game-pipeline/project-definition/project-brief.yaml
+    materialized_status: confirmed
+    materialized_digest: 850b8f29afffc74001bb202e5624c0db1be1723febeec418c6087da1ea7f734a
+    applied_at: '2026-08-19T19:47:28.8355954+08:00'

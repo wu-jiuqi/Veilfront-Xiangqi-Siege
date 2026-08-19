@@ -1,6 +1,6 @@
 # 45°三维棋盘视觉方向变更影响记录 v1
 
-状态：`direction_confirmed / loop_inputs_stale / return_to_project-brief-and-contract`
+状态：`direction_confirmed / project-brief-v6-approved / loop-contract-v1-stale`
 
 记录时间：2026-08-19（Asia/Shanghai）
 
@@ -53,7 +53,9 @@
 
 结果：`revise`
 
-Project Brief v6待确认摘要：`54520517ac26859c24459accb2d7672d12d0224ef69a766f883eda7b2b523289`
+Project Brief v6已确认摘要：`54520517ac26859c24459accb2d7672d12d0224ef69a766f883eda7b2b523289`
+
+Project Brief v6批准：`approval:veilfront-xiangqi-siege:project-brief:54520517ac26`
 
 已满足：
 
@@ -63,7 +65,6 @@ Project Brief v6待确认摘要：`54520517ac26859c24459accb2d7672d12d0224ef69a7
 
 尚未满足：
 
-- 新Project Brief摘要与不可变批准；
 - 修订后的Loop Contract批准；
 - 45°三维棋盘游戏内样片；
 - 960×540、1280×720、1920×1080证据；
@@ -72,8 +73,7 @@ Project Brief v6待确认摘要：`54520517ac26859c24459accb2d7672d12d0224ef69a7
 
 ## 6. 下一合法行动
 
-1. 形成Project Brief v6精确摘要并由项目所有者确认。
-2. 修订GATE-2 Contract，使架构successor与TASK-ART-001重新绑定。
-3. 在新Contract范围内制作 `vertical-art-slice-brief-v1.md` 所列少量样片。
-4. 由技术负责人复核三维场景映射，独立QA复现三分辨率与信息边界证据。
-5. 汇总新的GATE-2决策包；只有项目所有者批准后才能启动批量美术。
+1. 修订GATE-2 Contract，使架构successor与TASK-ART-001重新绑定，并按精确摘要获得项目所有者批准。
+2. 在新Contract范围内制作 `vertical-art-slice-brief-v1.md` 所列少量样片。
+3. 由技术负责人复核三维场景映射，独立QA复现三分辨率与信息边界证据。
+4. 汇总新的GATE-2决策包；只有项目所有者批准后才能启动批量美术。
