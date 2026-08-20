@@ -18,8 +18,22 @@ func _init() -> void:
 	var start_root := start_scene.instantiate()
 	root.add_child(start_root)
 	await process_frame
-	assert(start_root.get_node("%EnterPrompt").text == "点击任意位置进入")
+	var enter_prompt := start_root.get_node("%EnterPrompt") as Label
+	var prompt_animation := start_root.get_node("%PromptAnimation") as AnimationPlayer
+	assert(enter_prompt.text == "点击任意位置进入")
 	assert(start_root.get_node("%Background").texture.resource_path == "res://assets/art/ui/concepts/main_menu_background_v7_denoised.png")
+	assert(enter_prompt.get_theme_font(&"font").resource_path == "res://resources/game/ui/start_prompt_font.tres")
+	assert(enter_prompt.get_theme_font_size(&"font_size") == 28)
+	var prompt_color := enter_prompt.get_theme_color(&"font_color")
+	assert(prompt_color.r > prompt_color.g and prompt_color.g > prompt_color.b, "start prompt must use a pale gold color")
+	var blink_animation := prompt_animation.get_animation(&"prompt_blink")
+	assert(blink_animation.loop_mode == Animation.LOOP_LINEAR)
+	assert(is_equal_approx(blink_animation.length, 1.8))
+	prompt_animation.pause()
+	prompt_animation.seek(0.0, true)
+	var bright_alpha := enter_prompt.modulate.a
+	prompt_animation.seek(0.9, true)
+	assert(enter_prompt.modulate.a < bright_alpha, "start prompt animation must blink by reducing alpha")
 	start_root.queue_free()
 	await process_frame
 
