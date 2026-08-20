@@ -5,6 +5,7 @@ uniform float reveal : hint_range(0.0, 1.0, 0.001) = 0.0;
 uniform float opacity : hint_range(0.0, 1.0, 0.001) = 0.92;
 uniform float density_boost : hint_range(0.5, 1.5, 0.01) = 1.0;
 uniform float flow_speed : hint_range(0.0, 1.0, 0.01) = 0.08;
+uniform float drift_amplitude : hint_range(0.5, 2.0, 0.01) = 1.0;
 uniform vec4 fog_color : source_color = vec4(0.19, 0.25, 0.29, 1.0);
 
 vec2 random_gradient(vec2 point) {
@@ -41,21 +42,23 @@ float fog_noise(vec2 point) {
 void fragment() {
 	float time = TIME * flow_speed;
 	vec2 space = (UV - vec2(0.5)) * vec2(1.55, 1.0);
-	vec2 slow_flow = vec2(time * 0.36, -time * 0.17);
-	vec2 cross_flow = vec2(-time * 0.24, time * 0.31);
+	space += vec2(sin(time * 0.73), cos(time * 0.61)) * 0.16 * drift_amplitude;
+	vec2 slow_flow = vec2(time * 0.48, -time * 0.24) * drift_amplitude;
+	vec2 cross_flow = vec2(-time * 0.34, time * 0.43) * drift_amplitude;
 	vec2 warp = vec2(
 		fog_noise(space * 1.65 + slow_flow + vec2(2.1, 5.3)),
 		fog_noise(space * 1.83 + cross_flow + vec2(8.7, 1.4))
 	) - vec2(0.5);
-	float large_noise = fog_noise(space * 2.7 + warp * 1.55 + slow_flow);
-	float medium_noise = fog_noise(space * 5.1 - warp * 0.85 + cross_flow);
-	float wisp_noise = fog_noise(space * vec2(9.2, 6.4) + warp * 2.2 - slow_flow * 1.8);
+	warp *= 1.95 * drift_amplitude;
+	float large_noise = fog_noise(space * 2.7 + warp * 1.95 + slow_flow);
+	float medium_noise = fog_noise(space * 5.1 - warp * 1.15 + cross_flow);
+	float wisp_noise = fog_noise(space * vec2(9.2, 6.4) + warp * 2.8 - slow_flow * 1.8);
 	float shaped_noise = large_noise * 0.55 + medium_noise * 0.30 + wisp_noise * 0.15;
 
 	vec2 origin = vec2(0.5, 0.68);
 	vec2 delta = (UV - origin) * vec2(1.0, 0.76);
 	float distance_from_gate = length(delta);
-	float expanding_front = reveal * 0.92;
+	float expanding_front = reveal * 1.18;
 	float front_distortion = (large_noise - 0.5) * 0.24 + warp.x * 0.08;
 	float coverage = 1.0 - smoothstep(
 		expanding_front - 0.16,
@@ -63,8 +66,10 @@ void fragment() {
 		distance_from_gate + front_distortion
 	);
 	coverage *= smoothstep(0.0, 0.08, reveal);
+	float full_screen_lock = smoothstep(0.9, 1.0, reveal);
+	coverage = mix(coverage, 1.0, full_screen_lock);
 
-	float soft_density = smoothstep(0.20, 0.82, shaped_noise);
+	float soft_density = smoothstep(0.16, 0.74, shaped_noise);
 	float torn_edges = smoothstep(0.27, 0.74, medium_noise + wisp_noise * 0.18);
 	float depth = mix(0.24, 0.96, soft_density) * mix(0.62, 1.0, torn_edges);
 	float alpha = clamp(coverage * depth * density_boost * opacity, 0.0, 1.0);

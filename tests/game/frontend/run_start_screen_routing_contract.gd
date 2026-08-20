@@ -1,7 +1,7 @@
 extends SceneTree
 
 const START_SCREEN_SCENE := preload("res://scenes/game/frontend/start_screen.tscn")
-const SEQUENCE_COMPLETION_TIME := 6.5
+const SEQUENCE_COMPLETION_TIME := 5.0
 
 
 func _init() -> void:
