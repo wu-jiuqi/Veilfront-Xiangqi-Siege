@@ -22,8 +22,12 @@ func _init() -> void:
 	var prompt_animation := start_root.get_node("%PromptAnimation") as AnimationPlayer
 	assert(enter_prompt.text == "点击任意位置进入")
 	assert(start_root.get_node("%Background").texture.resource_path == "res://assets/art/ui/concepts/main_menu_background_v7_denoised.png")
-	assert(enter_prompt.get_theme_font(&"font").resource_path == "res://resources/game/ui/start_prompt_font.tres")
-	assert(enter_prompt.get_theme_font_size(&"font_size") == 28)
+	var prompt_font := enter_prompt.get_theme_font(&"font") as FontVariation
+	assert(prompt_font.resource_path == "res://resources/game/ui/start_prompt_font.tres")
+	assert(prompt_font.base_font.resource_path == "res://assets/fonts/ramega_zhang_qingping/ramega_zhang_qingping_xingshu.ttf")
+	for character: String in enter_prompt.text:
+		assert(prompt_font.has_char(character.unicode_at(0)), "start prompt font must contain character: %s" % character)
+	assert(enter_prompt.get_theme_font_size(&"font_size") == 32)
 	var prompt_color := enter_prompt.get_theme_color(&"font_color")
 	assert(prompt_color.r > prompt_color.g and prompt_color.g > prompt_color.b, "start prompt must use a pale gold color")
 	var blink_animation := prompt_animation.get_animation(&"prompt_blink")

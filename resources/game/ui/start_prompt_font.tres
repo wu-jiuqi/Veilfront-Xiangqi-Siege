@@ -1,10 +1,7 @@
 [gd_resource type="FontVariation" load_steps=2 format=3]
 
-[ext_resource type="FontFile" path="res://assets/fonts/noto_sans_sc/NotoSansSC-VariableFont_wght.ttf" id="1_font"]
+[ext_resource type="FontFile" path="res://assets/fonts/ramega_zhang_qingping/ramega_zhang_qingping_xingshu.ttf" id="1_font"]
 
 [resource]
 base_font = ExtResource("1_font")
-variation_opentype = {
-&"wght": 560.0
-}
-spacing_glyph = 4
+spacing_glyph = 2
