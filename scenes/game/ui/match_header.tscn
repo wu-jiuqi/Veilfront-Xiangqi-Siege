@@ -2,6 +2,7 @@
 
 [node name="MatchHeader" type="PanelContainer"]
 custom_minimum_size = Vector2(0, 64)
+theme_type_variation = &"TurnStatusPanel"
 
 [node name="Content" type="HBoxContainer" parent="."]
 layout_mode = 2

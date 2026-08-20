@@ -2,6 +2,11 @@ extends SceneTree
 
 const THEME_PATH := "res://resources/game/ui/themes/terracotta_ui_theme.tres"
 const VECTOR_ROOT := "res://assets/art/ui/terracotta_metal"
+const HUD_V2_ROOT := "res://assets/art/ui/terracotta_hud_v2"
+const PANEL_TEXTURE_PATH := HUD_V2_ROOT + "/hud_panel_9slice_v1.png"
+const BUTTON_TEXTURE_PATH := HUD_V2_ROOT + "/action_button_states_v1.png"
+const MINIMAP_TEXTURE_PATH := HUD_V2_ROOT + "/minimap_frame_v1.png"
+const TURN_STATUS_TEXTURE_PATH := HUD_V2_ROOT + "/turn_status_bar_v1.png"
 
 const BUTTON_VARIATIONS := [
 	&"PrimaryButton", &"SecondaryButton", &"DangerButton",
@@ -25,16 +30,42 @@ func _init() -> void:
 	_assert(theme.get_stylebox(&"hover", &"Button") is StyleBoxTexture, "悬停按钮未使用金属贴图")
 	_assert(theme.get_stylebox(&"pressed", &"Button") is StyleBoxTexture, "按下按钮未使用金属贴图")
 	_assert(theme.get_stylebox(&"disabled", &"Button") is StyleBoxTexture, "禁用按钮未使用金属贴图")
-	_assert(theme.get_stylebox(&"focus", &"Button") is StyleBoxTexture, "焦点框未使用金属贴图")
+	_assert(theme.get_stylebox(&"focus", &"Button") is StyleBoxFlat, "焦点框未使用轻量金线样式")
+	_assert(_style_texture_path(theme, &"normal", &"Button") == BUTTON_TEXTURE_PATH, "按钮仍引用旧废案图集")
+	_assert(_style_texture_path(theme, &"panel", &"Panel") == PANEL_TEXTURE_PATH, "面板仍引用旧废案贴图")
+	_assert(_style_texture_path(theme, &"panel", &"MinimapFrame") == MINIMAP_TEXTURE_PATH, "小地图框未接入 V2")
+	_assert(_style_texture_path(theme, &"panel", &"TurnStatusPanel") == TURN_STATUS_TEXTURE_PATH, "回合状态条未接入 V2")
 	for variation: StringName in BUTTON_VARIATIONS:
 		_assert(theme.get_type_variation_base(variation) == &"Button", "按钮语义变体缺失：%s" % variation)
 	for variation: StringName in PANEL_VARIATIONS:
 		_assert(theme.get_type_variation_base(variation) == &"PanelContainer", "面板语义变体缺失：%s" % variation)
 	for variation: StringName in FRAME_VARIATIONS:
 		_assert(theme.get_type_variation_base(variation) == &"Panel", "框体语义变体缺失：%s" % variation)
+	_assert(theme.get_type_variation_base(&"TurnStatusPanel") == &"PanelContainer", "回合状态条语义变体缺失")
 	_assert(_count_svg_files(VECTOR_ROOT) == 46, "矢量源文件数量必须为 46")
-	print("TERRACOTTA_UI_THEME_CONTRACT_PASS buttons=6 panels=8 frames=8 vectors=46")
+	_assert(_count_top_level_png_files(HUD_V2_ROOT) == 9, "HUD V2 生产 PNG 数量必须为 9")
+	print("TERRACOTTA_UI_THEME_CONTRACT_PASS buttons=6 panels=8 frames=8 vectors=46 hud_v2=9")
 	quit(0)
+
+
+func _style_texture_path(theme: Theme, style_name: StringName, type_name: StringName) -> String:
+	var style := theme.get_stylebox(style_name, type_name) as StyleBoxTexture
+	_assert(style != null and style.texture != null, "样式缺少贴图：%s/%s" % [type_name, style_name])
+	return style.texture.resource_path
+
+
+func _count_top_level_png_files(path: String) -> int:
+	var count := 0
+	var directory := DirAccess.open(path)
+	_assert(directory != null, "无法打开 HUD V2 美术目录")
+	directory.list_dir_begin()
+	var entry := directory.get_next()
+	while not entry.is_empty():
+		if not directory.current_is_dir() and entry.get_extension().to_lower() == "png":
+			count += 1
+		entry = directory.get_next()
+	directory.list_dir_end()
+	return count
 
 
 func _count_svg_files(path: String) -> int:
