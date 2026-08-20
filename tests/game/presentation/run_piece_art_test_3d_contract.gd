@@ -54,6 +54,17 @@ func _check_test_scene() -> void:
 		_expect(board_mesh.size.is_equal_approx(Vector3(11.4, 0.22, 29.4)), "board size must match the frozen 9x24 baseline")
 	_expect(test_scene.get_node_or_null("WorldEnvironment") is WorldEnvironment, "test scene must preset WorldEnvironment")
 	_expect(test_scene.get_node_or_null("Lighting/DirectionalLight3D") is DirectionalLight3D, "test scene must preset DirectionalLight3D")
+	var battle_stage: Node3D = test_scene.get_node_or_null("BattleStage") as Node3D
+	_expect(battle_stage != null, "test scene must instance the six-plane battlefield stage")
+	if battle_stage != null:
+		_expect(battle_stage.get_node_or_null("GroundPlane") is MeshInstance3D, "battle stage must preset GroundPlane")
+		_expect(battle_stage.get_node_or_null("LeftMountainRig/LeftMountainCard") is MeshInstance3D, "battle stage must preset the left mountain card")
+		_expect(battle_stage.get_node_or_null("RightMountainRig/RightMountainCard") is MeshInstance3D, "battle stage must preset the right mountain card")
+		_expect(battle_stage.get_node_or_null("NorthBackdrop") is MeshInstance3D, "battle stage must preset the north backdrop")
+		_expect(battle_stage.get_node_or_null("SouthBackdrop") is MeshInstance3D, "battle stage must preset the south backdrop")
+		_expect(battle_stage.get_node_or_null("AtmosphereCard") is MeshInstance3D, "battle stage must preset the atmosphere card")
+		var ground_plane := battle_stage.get_node("GroundPlane") as MeshInstance3D
+		_expect(ground_plane.position.y < board_base.position.y, "floating board must stay above the battlefield ground")
 	_expect(test_scene.get_node_or_null("Board3D/GridOverlay") is MeshInstance3D, "test scene must preset GridOverlay")
 	_expect(test_scene.get_node_or_null("Board3D/FogSurface") is MeshInstance3D, "test scene must reserve one FogSurface")
 	_expect(test_scene.get_node_or_null("Board3D/HighlightRoot") is MultiMeshInstance3D, "test scene must reserve HighlightRoot")

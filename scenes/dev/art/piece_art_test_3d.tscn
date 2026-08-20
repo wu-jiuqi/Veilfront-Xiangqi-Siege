@@ -17,18 +17,21 @@
 [ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces/black_general_piece_3d.tscn" id="16_black_general"]
 [ext_resource type="Script" path="res://scripts/dev/art/piece_art_test_camera_rig.gd" id="17_camera_rig"]
 [ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/walls/red_wall_plane_3d.tscn" id="18_red_wall"]
+[ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_battle_stage_3d.tscn" id="19_battle_stage"]
 
 [sub_resource type="Environment" id="Environment_test"]
 background_mode = 1
-background_color = Color(0.035, 0.045, 0.06, 1)
+background_color = Color(0.095, 0.09, 0.085, 1)
 ambient_light_source = 3
 ambient_light_color = Color(0.72, 0.78, 0.86, 1)
 ambient_light_energy = 0.72
 tonemap_mode = 2
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_board"]
-albedo_color = Color(0.29, 0.2, 0.115, 1)
-roughness = 0.82
+transparency = 1
+albedo_color = Color(0.16, 0.145, 0.115, 0.82)
+metallic = 0.42
+roughness = 0.74
 
 [sub_resource type="BoxMesh" id="BoxMesh_board"]
 material = SubResource("StandardMaterial3D_board")
@@ -85,6 +88,8 @@ light_color = Color(0.91, 0.95, 1, 1)
 light_energy = 1.15
 shadow_enabled = true
 directional_shadow_max_distance = 40.0
+
+[node name="BattleStage" parent="." instance=ExtResource("19_battle_stage")]
 
 [node name="Board3D" type="Node3D" parent="." unique_id=1239695871]
 
@@ -285,7 +290,7 @@ theme_override_constants/separation = 4
 layout_mode = 2
 theme_override_colors/font_color = Color(0.91, 0.77, 0.42, 1)
 theme_override_font_sizes/font_size = 18
-text = "兵马俑32枚阵型＋红墙平面样片"
+text = "兵马俑32枚阵型＋六平面战场舞台"
 
 [node name="Usage" type="Label" parent="UI/Instructions/VBoxContainer" unique_id=1312990010]
 layout_mode = 2
@@ -295,4 +300,4 @@ autowrap_mode = 2
 [node name="Spec" type="Label" parent="UI/Instructions/VBoxContainer" unique_id=1000427231]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.68, 0.76, 0.8, 1)
-text = "红银｜黑绿｜红墙INTACT平面｜Fixed-Y｜35°–80°受限俯角/30°"
+text = "红银｜黑绿｜悬浮棋盘｜六张2D战场卡片｜35°–80°受限俯角/30°"
