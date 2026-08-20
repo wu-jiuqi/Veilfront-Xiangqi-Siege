@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/game/match/board_3d/piece_3d.tscn" id="1_base"]
+[ext_resource type="Texture2D" path="res://assets/art/pieces/terracotta_warriors/red_chariot_idle.png" id="2_texture"]
+
+[node name="RedChariotPiece3D" instance=ExtResource("1_base")]
+metadata/camp = "red"
+metadata/piece_role = "车"
+
+[node name="Sprite3D" parent="VisualPivot" index="0"]
+texture = ExtResource("2_texture")
+offset = Vector2(0, 322.56)
+pixel_size = 0.00273438
+metadata/runtime_profile = "chariot_768x768_anchor_0.50_0.92_height_2.10"
+
+[editable path="VisualPivot"]

@@ -144,7 +144,16 @@ art_pipeline_inventory:
       - evidence/gate2/art-samples/TW-PIECE-SILHOUETTES-14-piece-review-v1.md
     - {id: TW-PIECE-PORTRAITS, name: UI头像裁切, quantity: 14, phase: batch, status: inventoried}
     - {id: TW-PIECE-ANIMATIONS, name: 六类动作序列, quantity: 84, formula: 14角色×6动作, phase: batch, status: inventoried_unestimated}
-    - {id: TW-PIECE-PREFABS, name: Godot棋子预置场景, quantity: 14, phase: batch, status: inventoried}
+    - id: TW-PIECE-PREFABS
+      name: Godot棋子预置场景
+      quantity: 14
+      phase: owner_exception_static_batch
+      status: godot_sample_completed
+      evidence:
+      - scenes/dev/art/terracotta_warriors/pieces/
+      - scenes/dev/art/piece_art_test_3d.tscn
+      - evidence/gate2/art-samples/TW-PIECE-01-14-godot-integration-review-v1.md
+      - evidence/gate2/art-samples/review/piece-art-test-3d-full-formation-v1.png
   - id: structures_and_fog
     name: 城墙、结构、旗帜与迷雾
     items:
@@ -185,7 +194,7 @@ art_pipeline_inventory:
   - docs/art/pipelines/terracotta-warriors/terracotta-warriors-art-pipeline-v1.md#11-最终验收
   unresolved:
   - 七兵种正式秦小篆职位字需逐字字源校对、同系列矢量重绘与授权记录；已核对的开源测试字体仅确认覆盖相
-  - 14枚静态资产已完成纯紫幕色键、真实Alpha与运行时派生；仍需96px棋盘内可读性、遮挡、双方视角与Godot导入复核
+  - 14枚静态资产已完成纯紫幕色键、真实Alpha、VRAM+mipmap导入和32实例Godot测试场接入；仍需正式96px多分辨率可读性、遮挡、双方180°视角与独立QA
   - 炮/车/马方形源实际尺寸1254×1254，低于原1536×1536目标，禁止插值冒充原生细节
   - 六类动作是否全部独立制作
   - 完整UI、结构、特效和音频的预算、工期与制作方式

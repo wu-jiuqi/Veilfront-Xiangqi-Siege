@@ -1,7 +1,21 @@
-[gd_scene load_steps=13 format=3]
+[gd_scene format=3 uid="uid://c78v4fy32wj8b"]
 
-[ext_resource type="PackedScene" path="res://scenes/game/match/board_3d/piece_3d.tscn" id="1_piece"]
-[ext_resource type="Texture2D" path="res://assets/dev/board_grid_9x24.svg" id="2_grid"]
+[ext_resource type="Texture2D" uid="uid://k2meun8vtanv" path="res://assets/dev/board_grid_9x24.svg" id="2_grid"]
+[ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces/red_infantry_piece_3d.tscn" id="3_red_infantry"]
+[ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces/black_infantry_piece_3d.tscn" id="4_black_infantry"]
+[ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces/red_trebuchet_piece_3d.tscn" id="5_red_trebuchet"]
+[ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces/black_trebuchet_piece_3d.tscn" id="6_black_trebuchet"]
+[ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces/red_chariot_piece_3d.tscn" id="7_red_chariot"]
+[ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces/black_chariot_piece_3d.tscn" id="8_black_chariot"]
+[ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces/red_cavalry_piece_3d.tscn" id="9_red_cavalry"]
+[ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces/black_cavalry_piece_3d.tscn" id="10_black_cavalry"]
+[ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces/red_minister_piece_3d.tscn" id="11_red_minister"]
+[ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces/black_minister_piece_3d.tscn" id="12_black_minister"]
+[ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces/red_guard_piece_3d.tscn" id="13_red_guard"]
+[ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces/black_guard_piece_3d.tscn" id="14_black_guard"]
+[ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces/red_general_piece_3d.tscn" id="15_red_general"]
+[ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces/black_general_piece_3d.tscn" id="16_black_general"]
+[ext_resource type="Script" path="res://scripts/dev/art/piece_art_test_camera_rig.gd" id="17_camera_rig"]
 
 [sub_resource type="Environment" id="Environment_test"]
 background_mode = 1
@@ -12,7 +26,7 @@ ambient_light_energy = 0.72
 tonemap_mode = 2
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_board"]
-albedo_color = Color(0.29, 0.20, 0.115, 1)
+albedo_color = Color(0.29, 0.2, 0.115, 1)
 roughness = 0.82
 
 [sub_resource type="BoxMesh" id="BoxMesh_board"]
@@ -48,6 +62,10 @@ material = SubResource("StandardMaterial3D_wall")
 size = Vector3(10.6, 0.55, 0.28)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+content_margin_left = 14.0
+content_margin_top = 10.0
+content_margin_right = 14.0
+content_margin_bottom = 10.0
 bg_color = Color(0.025, 0.035, 0.055, 0.88)
 border_width_left = 1
 border_width_top = 1
@@ -58,131 +76,232 @@ corner_radius_top_left = 6
 corner_radius_top_right = 6
 corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
-content_margin_left = 14.0
-content_margin_top = 10.0
-content_margin_right = 14.0
-content_margin_bottom = 10.0
 
-[node name="PieceArtTest3D" type="Node3D"]
+[node name="PieceArtTest3D" type="Node3D" unique_id=1279966316]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.23164272)
 metadata/_edit_group_ = true
 metadata/purpose = "TASK-PRESENTATION-3D-001 piece art import and overlap calibration"
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=402768588]
 environment = SubResource("Environment_test")
 
-[node name="Lighting" type="Node3D" parent="."]
+[node name="Lighting" type="Node3D" parent="." unique_id=1165562861]
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Lighting"]
-rotation_degrees = Vector3(-52, -28, 0)
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Lighting" unique_id=814256163]
+transform = Transform3D(0.88294756, 0.36994863, -0.2890356, 0, 0.6156615, 0.7880107, 0.46947157, -0.6957722, 0.5435968, 0, 0, 0)
 light_color = Color(0.91, 0.95, 1, 1)
 light_energy = 1.15
 shadow_enabled = true
 directional_shadow_max_distance = 40.0
 
-[node name="Board3D" type="Node3D" parent="."]
+[node name="Board3D" type="Node3D" parent="." unique_id=1239695871]
 
-[node name="BoardBase" type="MeshInstance3D" parent="Board3D"]
-position = Vector3(0, -0.11, 0)
+[node name="BoardBase" type="MeshInstance3D" parent="Board3D" unique_id=2023295393]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.11, 0)
 mesh = SubResource("BoxMesh_board")
 
-[node name="GridOverlay" type="MeshInstance3D" parent="Board3D"]
-position = Vector3(0, 0.012, 0)
+[node name="GridOverlay" type="MeshInstance3D" parent="Board3D" unique_id=2068327165]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.012, 0)
 cast_shadow = 0
 mesh = SubResource("PlaneMesh_grid")
 
-[node name="FogSurface" type="MeshInstance3D" parent="Board3D"]
+[node name="FogSurface" type="MeshInstance3D" parent="Board3D" unique_id=717808577]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.026, 0)
 visible = false
-position = Vector3(0, 0.026, 0)
 cast_shadow = 0
 mesh = SubResource("PlaneMesh_fog")
 metadata/note = "Enable only for depth/alpha checks; production fog must consume one observer-safe 9x24 mask"
 
-[node name="StructureRoot" type="Node3D" parent="Board3D"]
+[node name="StructureRoot" type="Node3D" parent="Board3D" unique_id=921752356]
+visible = false
 
-[node name="WallY4" type="MeshInstance3D" parent="Board3D/StructureRoot"]
-position = Vector3(0, 0.275, 10.2)
+[node name="WallY4" type="MeshInstance3D" parent="Board3D/StructureRoot" unique_id=1606718334]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.275, 10.2)
 mesh = SubResource("BoxMesh_wall")
 
-[node name="WallY21" type="MeshInstance3D" parent="Board3D/StructureRoot"]
-position = Vector3(0, 0.275, -10.2)
+[node name="WallY21" type="MeshInstance3D" parent="Board3D/StructureRoot" unique_id=1519904270]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.275, -10.2)
 mesh = SubResource("BoxMesh_wall")
 
-[node name="HighlightRoot" type="MultiMeshInstance3D" parent="Board3D"]
+[node name="HighlightRoot" type="MultiMeshInstance3D" parent="Board3D" unique_id=877768912]
 metadata/note = "Reserved preset root for selection and legal-cell batches"
 
-[node name="PieceRoot" type="Node3D" parent="."]
+[node name="PieceRoot" type="Node3D" parent="." unique_id=975962557]
 
-[node name="NearFront" parent="PieceRoot" instance=ExtResource("1_piece")]
-position = Vector3(-2.4, 0, 4.8)
-metadata/test_band = "near_front"
+[node name="RedCamp" type="Node3D" parent="PieceRoot"]
+metadata/camp = "red_silver_tungsten"
 
-[node name="NearRear" parent="PieceRoot" instance=ExtResource("1_piece")]
-position = Vector3(-2.4, 0, 3.6)
-metadata/test_band = "near_rear_overlap"
+[node name="ChariotL_X1Y1" parent="PieceRoot/RedCamp" instance=ExtResource("7_red_chariot")]
+position = Vector3(-4.8, 0, 13.8)
+metadata/authority_cell = Vector2i(1, 1)
 
-[node name="MiddleFront" parent="PieceRoot" instance=ExtResource("1_piece")]
-position = Vector3(0, 0, 0.6)
-metadata/test_band = "middle_front"
+[node name="CavalryL_X2Y1" parent="PieceRoot/RedCamp" instance=ExtResource("9_red_cavalry")]
+position = Vector3(-3.6, 0, 13.8)
+metadata/authority_cell = Vector2i(2, 1)
 
-[node name="MiddleRear" parent="PieceRoot" instance=ExtResource("1_piece")]
-position = Vector3(0, 0, -0.6)
-metadata/test_band = "middle_rear_overlap"
+[node name="MinisterL_X3Y1" parent="PieceRoot/RedCamp" instance=ExtResource("11_red_minister")]
+position = Vector3(-2.4, 0, 13.8)
+metadata/authority_cell = Vector2i(3, 1)
 
-[node name="FarFront" parent="PieceRoot" instance=ExtResource("1_piece")]
-position = Vector3(2.4, 0, -3.6)
-metadata/test_band = "far_front"
+[node name="GuardL_X4Y1" parent="PieceRoot/RedCamp" instance=ExtResource("13_red_guard")]
+position = Vector3(-1.2, 0, 13.8)
+metadata/authority_cell = Vector2i(4, 1)
 
-[node name="FarRear" parent="PieceRoot" instance=ExtResource("1_piece")]
-position = Vector3(2.4, 0, -4.8)
-metadata/test_band = "far_rear_overlap"
+[node name="General_X5Y1" parent="PieceRoot/RedCamp" instance=ExtResource("15_red_general")]
+position = Vector3(0, 0, 13.8)
+metadata/authority_cell = Vector2i(5, 1)
 
-[node name="EffectRoot" type="Node3D" parent="."]
+[node name="GuardR_X6Y1" parent="PieceRoot/RedCamp" instance=ExtResource("13_red_guard")]
+position = Vector3(1.2, 0, 13.8)
+metadata/authority_cell = Vector2i(6, 1)
+
+[node name="MinisterR_X7Y1" parent="PieceRoot/RedCamp" instance=ExtResource("11_red_minister")]
+position = Vector3(2.4, 0, 13.8)
+metadata/authority_cell = Vector2i(7, 1)
+
+[node name="CavalryR_X8Y1" parent="PieceRoot/RedCamp" instance=ExtResource("9_red_cavalry")]
+position = Vector3(3.6, 0, 13.8)
+metadata/authority_cell = Vector2i(8, 1)
+
+[node name="ChariotR_X9Y1" parent="PieceRoot/RedCamp" instance=ExtResource("7_red_chariot")]
+position = Vector3(4.8, 0, 13.8)
+metadata/authority_cell = Vector2i(9, 1)
+
+[node name="TrebuchetL_X2Y3" parent="PieceRoot/RedCamp" instance=ExtResource("5_red_trebuchet")]
+position = Vector3(-3.6, 0, 11.4)
+metadata/authority_cell = Vector2i(2, 3)
+
+[node name="TrebuchetR_X8Y3" parent="PieceRoot/RedCamp" instance=ExtResource("5_red_trebuchet")]
+position = Vector3(3.6, 0, 11.4)
+metadata/authority_cell = Vector2i(8, 3)
+
+[node name="Infantry1_X1Y4" parent="PieceRoot/RedCamp" instance=ExtResource("3_red_infantry")]
+position = Vector3(-4.8, 0, 10.2)
+metadata/authority_cell = Vector2i(1, 4)
+
+[node name="Infantry2_X3Y4" parent="PieceRoot/RedCamp" instance=ExtResource("3_red_infantry")]
+position = Vector3(-2.4, 0, 10.2)
+metadata/authority_cell = Vector2i(3, 4)
+
+[node name="Infantry3_X5Y4" parent="PieceRoot/RedCamp" instance=ExtResource("3_red_infantry")]
+position = Vector3(0, 0, 10.2)
+metadata/authority_cell = Vector2i(5, 4)
+
+[node name="Infantry4_X7Y4" parent="PieceRoot/RedCamp" instance=ExtResource("3_red_infantry")]
+position = Vector3(2.4, 0, 10.2)
+metadata/authority_cell = Vector2i(7, 4)
+
+[node name="Infantry5_X9Y4" parent="PieceRoot/RedCamp" instance=ExtResource("3_red_infantry")]
+position = Vector3(4.8, 0, 10.2)
+metadata/authority_cell = Vector2i(9, 4)
+
+[node name="BlackCamp" type="Node3D" parent="PieceRoot"]
+metadata/camp = "black_dark_green_bronze"
+
+[node name="ChariotL_X1Y24" parent="PieceRoot/BlackCamp" instance=ExtResource("8_black_chariot")]
+position = Vector3(-4.8, 0, -13.8)
+metadata/authority_cell = Vector2i(1, 24)
+
+[node name="CavalryL_X2Y24" parent="PieceRoot/BlackCamp" instance=ExtResource("10_black_cavalry")]
+position = Vector3(-3.6, 0, -13.8)
+metadata/authority_cell = Vector2i(2, 24)
+
+[node name="MinisterL_X3Y24" parent="PieceRoot/BlackCamp" instance=ExtResource("12_black_minister")]
+position = Vector3(-2.4, 0, -13.8)
+metadata/authority_cell = Vector2i(3, 24)
+
+[node name="GuardL_X4Y24" parent="PieceRoot/BlackCamp" instance=ExtResource("14_black_guard")]
+position = Vector3(-1.2, 0, -13.8)
+metadata/authority_cell = Vector2i(4, 24)
+
+[node name="General_X5Y24" parent="PieceRoot/BlackCamp" instance=ExtResource("16_black_general")]
+position = Vector3(0, 0, -13.8)
+metadata/authority_cell = Vector2i(5, 24)
+
+[node name="GuardR_X6Y24" parent="PieceRoot/BlackCamp" instance=ExtResource("14_black_guard")]
+position = Vector3(1.2, 0, -13.8)
+metadata/authority_cell = Vector2i(6, 24)
+
+[node name="MinisterR_X7Y24" parent="PieceRoot/BlackCamp" instance=ExtResource("12_black_minister")]
+position = Vector3(2.4, 0, -13.8)
+metadata/authority_cell = Vector2i(7, 24)
+
+[node name="CavalryR_X8Y24" parent="PieceRoot/BlackCamp" instance=ExtResource("10_black_cavalry")]
+position = Vector3(3.6, 0, -13.8)
+metadata/authority_cell = Vector2i(8, 24)
+
+[node name="ChariotR_X9Y24" parent="PieceRoot/BlackCamp" instance=ExtResource("8_black_chariot")]
+position = Vector3(4.8, 0, -13.8)
+metadata/authority_cell = Vector2i(9, 24)
+
+[node name="TrebuchetL_X2Y22" parent="PieceRoot/BlackCamp" instance=ExtResource("6_black_trebuchet")]
+position = Vector3(-3.6, 0, -11.4)
+metadata/authority_cell = Vector2i(2, 22)
+
+[node name="TrebuchetR_X8Y22" parent="PieceRoot/BlackCamp" instance=ExtResource("6_black_trebuchet")]
+position = Vector3(3.6, 0, -11.4)
+metadata/authority_cell = Vector2i(8, 22)
+
+[node name="Infantry1_X1Y21" parent="PieceRoot/BlackCamp" instance=ExtResource("4_black_infantry")]
+position = Vector3(-4.8, 0, -10.2)
+metadata/authority_cell = Vector2i(1, 21)
+
+[node name="Infantry2_X3Y21" parent="PieceRoot/BlackCamp" instance=ExtResource("4_black_infantry")]
+position = Vector3(-2.4, 0, -10.2)
+metadata/authority_cell = Vector2i(3, 21)
+
+[node name="Infantry3_X5Y21" parent="PieceRoot/BlackCamp" instance=ExtResource("4_black_infantry")]
+position = Vector3(0, 0, -10.2)
+metadata/authority_cell = Vector2i(5, 21)
+
+[node name="Infantry4_X7Y21" parent="PieceRoot/BlackCamp" instance=ExtResource("4_black_infantry")]
+position = Vector3(2.4, 0, -10.2)
+metadata/authority_cell = Vector2i(7, 21)
+
+[node name="Infantry5_X9Y21" parent="PieceRoot/BlackCamp" instance=ExtResource("4_black_infantry")]
+position = Vector3(4.8, 0, -10.2)
+metadata/authority_cell = Vector2i(9, 21)
+
+[node name="EffectRoot" type="Node3D" parent="." unique_id=2106333071]
 metadata/note = "Reserved preset root for attack and selection feedback"
 
-[node name="CameraRig" type="Node3D" parent="."]
+[node name="CameraRig" type="Node3D" parent="." unique_id=1563882275]
+script = ExtResource("17_camera_rig")
 
-[node name="PitchPivot" type="Node3D" parent="CameraRig"]
+[node name="PitchPivot" type="Node3D" parent="CameraRig" unique_id=1020975177]
 
-[node name="Camera3D" type="Camera3D" parent="CameraRig/PitchPivot"]
-position = Vector3(0, 18, 15.1)
-rotation_degrees = Vector3(-50, 0, 0)
+[node name="Camera3D" type="Camera3D" parent="CameraRig/PitchPivot" unique_id=705355510]
+transform = Transform3D(1, 0, 0, 0, 0.57357645, 0.81915206, 0, -0.81915206, 0.57357645, 0, 48, 33.607735)
 current = true
 fov = 30.0
 near = 0.1
 far = 120.0
 
-[node name="UI" type="CanvasLayer" parent="."]
+[node name="UI" type="CanvasLayer" parent="." unique_id=2120522276]
 
-[node name="Instructions" type="PanelContainer" parent="UI"]
+[node name="Instructions" type="PanelContainer" parent="UI" unique_id=1947760021]
 offset_left = 16.0
 offset_top = 16.0
-offset_right = 430.0
-offset_bottom = 142.0
+offset_right = 360.0
+offset_bottom = 120.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/Instructions"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/Instructions" unique_id=1606426645]
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="Title" type="Label" parent="UI/Instructions/VBoxContainer"]
+[node name="Title" type="Label" parent="UI/Instructions/VBoxContainer" unique_id=849465806]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.91, 0.77, 0.42, 1)
 theme_override_font_sizes/font_size = 18
-text = "棋子美术资源测试场"
+text = "兵马俑32枚标准阵型测试场"
 
-[node name="Usage" type="Label" parent="UI/Instructions/VBoxContainer"]
+[node name="Usage" type="Label" parent="UI/Instructions/VBoxContainer" unique_id=1312990010]
 layout_mode = 2
-text = "在 PieceRoot 实例启用“可编辑子项”，替换 VisualPivot/Sprite3D.texture。"
+text = "中键拖拽旋转｜WASD移动｜Home/1红方｜Space/2全盘｜End/3黑方"
 autowrap_mode = 2
 
-[node name="Spec" type="Label" parent="UI/Instructions/VBoxContainer"]
+[node name="Spec" type="Label" parent="UI/Instructions/VBoxContainer" unique_id=1000427231]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.68, 0.76, 0.8, 1)
-text = "基线：Fixed-Y｜Opaque Pre-Pass｜30° FOV｜近/中/远重叠位"
-
-[editable path="PieceRoot/NearFront"]
-[editable path="PieceRoot/NearRear"]
-[editable path="PieceRoot/MiddleFront"]
-[editable path="PieceRoot/MiddleRear"]
-[editable path="PieceRoot/FarFront"]
-[editable path="PieceRoot/FarRear"]
+text = "红银｜黑绿｜Fixed-Y｜35°–80°受限俯角/30°｜32枚预置实例"

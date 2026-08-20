@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/game/match/board_3d/piece_3d.tscn" id="1_base"]
+[ext_resource type="Texture2D" path="res://assets/art/pieces/terracotta_warriors/red_guard_idle.png" id="2_texture"]
+
+[node name="RedGuardPiece3D" instance=ExtResource("1_base")]
+metadata/camp = "red"
+metadata/piece_role = "士"
+
+[node name="Sprite3D" parent="VisualPivot" index="0"]
+texture = ExtResource("2_texture")
+
+[editable path="VisualPivot"]

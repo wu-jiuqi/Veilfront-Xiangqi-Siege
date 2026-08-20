@@ -109,12 +109,14 @@ asset_inventory:
       runtime_spec: 直立最大512×768；宽体最大768×768；VRAM Compressed+mipmap
       dependencies: [ART-PIECE-SHADOW, ART-PIECE-BASE]
       phase: owner_exception_static_batch
-      status: terracotta_warriors_14_static_v2_completed
+      status: terracotta_warriors_14_static_v2_godot_sample_completed
       evidence:
       - evidence/gate2/art-samples/TW-PIECE-01-14-static-batch-production-brief-v2.md
       - evidence/gate2/art-samples/TW-PIECE-01-14-runtime-review-v2.md
       - evidence/gate2/art-samples/TW-PIECE-01-14-runtime-validation-v2.json
       - evidence/gate2/art-samples/review/TW-PIECE-01-14-runtime-alpha-review-v2.png
+      - evidence/gate2/art-samples/TW-PIECE-01-14-godot-integration-review-v1.md
+      - evidence/gate2/art-samples/review/piece-art-test-3d-full-formation-v1.png
       acceptance: 96～180px屏幕高度下能仅凭轮廓和主道具识别兵种
     - id: ART-PIECE-SAMPLE-INFANTRY
       name: 兵马俑管线红黑步兵样片
@@ -158,7 +160,10 @@ asset_inventory:
       runtime_spec: 水平QuadMesh，实时阴影关闭
       dependencies: []
       phase: preproduction_sample
-      status: planned
+      status: soft_shadow_sample_completed_1_of_3
+      evidence:
+      - assets/dev/piece_soft_shadow.svg
+      - evidence/gate2/art-samples/review/piece-art-test-3d-red-camp-v1.png
       acceptance: 无明显透明排序错误且稳定接地
     - id: ART-PIECE-ANIMATIONS
       name: 14个角色母版动作集
