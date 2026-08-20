@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3]
 
-[ext_resource type="Theme" path="res://resources/game/ui/formal_graybox_theme.tres" id="1_theme"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_theme_binder.tscn" id="1_binder"]
 [ext_resource type="Script" path="res://scripts/game/frontend/level_select.gd" id="2_script"]
 
 [node name="LevelSelect" type="Control"]
@@ -10,11 +10,12 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("1_theme")
 script = ExtResource("2_script")
 test_all_levels_unlocked = true
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="UiThemeBinder" parent="." instance=ExtResource("1_binder")]
+
+[node name="Background" type="Panel" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -22,7 +23,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.025, 0.031, 0.04, 1)
+theme_type_variation = &"ScreenBackground"
 
 [node name="SafeMargin" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -55,8 +56,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "关卡模式"
 vertical_alignment = 1
-theme_override_colors/font_color = Color(1, 0.88, 0.61, 1)
-theme_override_font_sizes/font_size = 30
+theme_type_variation = &"SectionTitle"
 
 [node name="ProgressLabel" type="Label" parent="SafeMargin/Page/Header"]
 unique_name_in_owner = true

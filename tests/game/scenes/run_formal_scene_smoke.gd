@@ -164,7 +164,7 @@ func _check_game_app(instance: Node) -> void:
 		if instance.get_node_or_null(required_path) == null:
 			_failures.append("GameApp missing preset node: %s" % required_path)
 	if instance is Control and instance.theme == null:
-		_failures.append("GameApp must use the graybox Theme")
+		_failures.append("GameApp must use a registered UI Theme")
 
 
 func _check_match_screen(instance: Node) -> void:

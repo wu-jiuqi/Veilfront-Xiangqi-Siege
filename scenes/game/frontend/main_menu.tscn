@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3]
 
-[ext_resource type="Theme" path="res://resources/game/ui/formal_graybox_theme.tres" id="1_theme"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_theme_binder.tscn" id="1_binder"]
 [ext_resource type="Script" path="res://scripts/game/frontend/main_menu.gd" id="2_script"]
 
 [node name="MainMenu" type="Control"]
@@ -10,10 +10,11 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("1_theme")
 script = ExtResource("2_script")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="UiThemeBinder" parent="." instance=ExtResource("1_binder")]
+
+[node name="Background" type="Panel" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -21,7 +22,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.025, 0.031, 0.04, 1)
+theme_type_variation = &"ScreenBackground"
 
 [node name="SafeMargin" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -57,14 +58,12 @@ theme_override_constants/separation = 14
 layout_mode = 2
 text = "雾疆：九路烽棋"
 horizontal_alignment = 1
-theme_override_colors/font_color = Color(1, 0.88, 0.61, 1)
-theme_override_font_sizes/font_size = 38
+theme_type_variation = &"ScreenTitle"
 
 [node name="Subtitle" type="Label" parent="SafeMargin/Center/MenuPanel/MenuMargin/MenuColumn"]
 layout_mode = 2
-text = "回合制迷雾战术象棋 · 正式灰盒"
+text = "回合制迷雾战术象棋 · 东方战争奇幻"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 18
 
 [node name="Spacer" type="Control" parent="SafeMargin/Center/MenuPanel/MenuMargin/MenuColumn"]
 custom_minimum_size = Vector2(0, 12)
@@ -87,6 +86,7 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
 text = "退出游戏"
+theme_type_variation = &"DangerButton"
 
 [node name="VersionLabel" type="Label" parent="."]
 unique_name_in_owner = true
@@ -98,9 +98,9 @@ anchor_bottom = 1.0
 offset_top = -38.0
 grow_horizontal = 2
 grow_vertical = 0
-text = "灰盒版本"
+text = "UI 局部样片 v0.1"
 horizontal_alignment = 1
-theme_override_colors/font_color = Color(0.58, 0.63, 0.7, 1)
+theme_type_variation = &"MutedLabel"
 
 [node name="QuitDialog" type="ConfirmationDialog" parent="."]
 unique_name_in_owner = true
@@ -109,4 +109,3 @@ dialog_text = "确定要退出《雾疆：九路烽棋》吗？"
 
 [node name="FatalErrorDialog" type="AcceptDialog" parent="."]
 title = "界面加载失败"
-
