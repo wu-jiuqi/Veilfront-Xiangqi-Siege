@@ -1,0 +1,46 @@
+manifest:
+  schema_version: veilfront-ui-extraction/v1
+  id: UI-HUD-V2-EXTRACTION-001
+  status: implemented_pending_runtime_integration
+  owner: visual-production-lead
+  objective: 将已确认的兵马俑对局 HUD 概念图重制为独立、无文字、可由 Godot 预置 Control 节点组合的透明 UI 组件。
+  inputs:
+    visual_master: assets/art/ui/concepts/battle_hud_concept_v1.png
+    material_references:
+      - assets/art/pieces/terracotta_warriors/red_guard_idle.png
+      - assets/art/pieces/terracotta_warriors/black_guard_idle.png
+    owner_scope_approval: game-pipeline/approvals/production-scope-exception-full-ui-bb9bb74bf65b.yaml
+    transparency_cleanup_confirmation: codex-thread://current#owner-confirmed-local-alpha-cleanup
+  outputs:
+    directory: assets/art/ui/terracotta_hud_v2
+    production_rasters: 9
+    preserved_rgb_sources: 9
+    components:
+      - hud_panel_9slice_v1.png
+      - turn_status_bar_v1.png
+      - faction_status_plate_v1.png
+      - unit_info_card_v1.png
+      - objective_event_panel_v1.png
+      - action_bar_frame_v1.png
+      - action_button_states_v1.png
+      - minimap_frame_v1.png
+      - ui_decor_atlas_v1.png
+  budget:
+    external_spend: 0
+    new_agent_instances: 0
+    raster_source_limit: 24
+    raster_files_after_this_batch: 23
+  checks:
+    - 所有成品 PNG 必须为 32bpp RGBA。
+    - 外部角点 Alpha 必须为 0。
+    - 实体面板中心 Alpha 必须为 255。
+    - 小地图中央窗口 Alpha 必须为 0。
+    - Godot 必须生成并保存对应 .import 文件。
+    - 不得覆盖或删除旧版 terracotta_metal 资源包。
+  escalation:
+    trigger: 透明化会改变金属主体、需要新增第二套风格、超过文件上限或需要采购时暂停并请求项目所有者确认。
+  failure_policy:
+    invalid_output: 保留 source_rgb 母版，停止 Theme 接入，不提交不合格成品。
+  runtime_integration:
+    state: deferred_until_component_visual_review
+    reason: 本批只建立已确认概念图对应的独立美术组件，不在未经组件审看时替换现有 Theme。
