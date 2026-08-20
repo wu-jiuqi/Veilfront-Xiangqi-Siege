@@ -28,11 +28,15 @@ func _init() -> void:
 	assert(start_root.get_node("Stage/DoorLayer/LeftDoor").texture.resource_path == "res://assets/art/ui/start_sequence/gate_left_door_v2.png")
 	assert(start_root.get_node("Stage/DoorLayer/RightDoor").texture.resource_path == "res://assets/art/ui/start_sequence/gate_right_door_v2.png")
 	var menu_overlay := start_root.get_node("MenuOverlay")
-	var mist_character_texture := menu_overlay.get_node("UiRoot/MistCharacter").texture as Texture2D
-	var frontier_character_texture := menu_overlay.get_node("UiRoot/FrontierCharacter").texture as Texture2D
-	assert(mist_character_texture.resource_path == "res://assets/art/ui/start_sequence/veilfront_logo_mist_seal_v1.png")
-	assert(frontier_character_texture.resource_path == "res://assets/art/ui/start_sequence/veilfront_logo_frontier_seal_v1.png")
-	assert(mist_character_texture != frontier_character_texture, "title characters must use independent complete textures")
+	var mist_character_texture := menu_overlay.get_node("UiRoot/MistCharacter").texture as AtlasTexture
+	var frontier_character_texture := menu_overlay.get_node("UiRoot/FrontierCharacter").texture as AtlasTexture
+	assert(mist_character_texture != null)
+	assert(frontier_character_texture != null)
+	assert(mist_character_texture.atlas.resource_path == "res://assets/art/ui/start_sequence/veilfront_logo_gold_pair_v2.png")
+	assert(frontier_character_texture.atlas == mist_character_texture.atlas)
+	assert(mist_character_texture.region == Rect2(0.0, 0.0, 887.0, 887.0))
+	assert(frontier_character_texture.region == Rect2(887.0, 0.0, 887.0, 887.0))
+	assert(mist_character_texture != frontier_character_texture, "title characters must use independent atlas regions")
 	assert(menu_overlay.get_node("UiRoot/GameSubtitle").texture.resource_path == "res://assets/art/ui/start_sequence/veilfront_subtitle_square_seal_v2.png")
 	assert(menu_overlay.get_node("UiRoot/ImpactMist") is ColorRect, "title impacts must use a fog disturbance layer")
 	assert(menu_overlay.get_node("UiRoot/MenuPanel/LanButton").text == "联机对战")
