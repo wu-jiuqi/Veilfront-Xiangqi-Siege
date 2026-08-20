@@ -1,0 +1,46 @@
+approval:
+  schema_version: game-production-approval/v1
+  approval_id: approval:veilfront-xiangqi-siege:production-scope-exception:228910adda53
+  subject_kind: production-scope-exception
+  subject_id: EXCEPTION-LAN-TERRACOTTA-PIECE-VISUAL-INTEGRATION-001@v1
+  subject_digest: 228910adda5335c0fe9a79181eae571572eaea1786a79e2853a67ab444345463
+  decision: approved
+  decided_by: project-owner
+  decided_at: '2026-08-20T18:53:56.9328724+08:00'
+  evidence:
+    source_refs:
+    - codex-thread://current#owner-confirmed-lan-terracotta-piece-visual-integration-228910adda53
+    - game-pipeline/loops/evidence/LAN-TERRACOTTA-PIECE-VISUAL-INTEGRATION-OWNER-EXCEPTION-decision-package-v1.yaml
+    immutable_source:
+      git_commit: accafa94ebe5885a9dd0c9780ebcce1964e79ef6
+      path: game-pipeline/loops/evidence/LAN-TERRACOTTA-PIECE-VISUAL-INTEGRATION-OWNER-EXCEPTION-decision-package-v1.yaml
+      subject_path: exception_subject
+      canonicalization: canonical-json-sort-keys-ensure-ascii-false-v1
+      subject_digest: 228910adda5335c0fe9a79181eae571572eaea1786a79e2853a67ab444345463
+    confirmation:
+      method: exact-64-character-digest-reply
+      received_digest: 228910adda5335c0fe9a79181eae571572eaea1786a79e2853a67ab444345463
+      matches_subject_digest: true
+    bound_contract:
+      contract_id: LOOP-CTR-FORMAL-FOUNDATION-GATE2-001
+      version: 2
+      approval_id: approval:veilfront-xiangqi-siege:loop-contract:ce2d6174f82a
+    prerequisite_approval:
+      approval_id: approval:veilfront-xiangqi-siege:production-scope-exception:95214ab75a15
+      subject_digest: 95214ab75a156a4570e561f2780e9e9e9bb442291085cfd41cd13be793a90c5f
+  authorized_action:
+    summary: 允许把既有14张兵马俑棋子贴图仅接入当前LAN联机原型的BoardSurface表现层，保留字棋回退并完成主客双端视觉与信息安全验证。
+    scope_ref: game-pipeline/loops/evidence/LAN-TERRACOTTA-PIECE-VISUAL-INTEGRATION-OWNER-EXCEPTION-decision-package-v1.yaml#exception_subject.exact_scope
+    allowed_ref: game-pipeline/loops/evidence/LAN-TERRACOTTA-PIECE-VISUAL-INTEGRATION-OWNER-EXCEPTION-decision-package-v1.yaml#exception_subject.approval_effect.allowed
+    forbidden_ref: game-pipeline/loops/evidence/LAN-TERRACOTTA-PIECE-VISUAL-INTEGRATION-OWNER-EXCEPTION-decision-package-v1.yaml#exception_subject.approval_effect.forbidden
+    limits_ref: game-pipeline/loops/evidence/LAN-TERRACOTTA-PIECE-VISUAL-INTEGRATION-OWNER-EXCEPTION-decision-package-v1.yaml#exception_subject.resources_and_limits
+    does_not_approve:
+    - 正式比赛场、Steam或互联网联机及正式发布验收
+    - 规则、GameState、PlayerView、回放、随机、教学、RPC或协议变更
+    - 新棋子、棋盘、背景、UI、VFX、动画、音频、字体或其他美术生产
+    - GATE-2或全局美术风格变更
+  application:
+    state: approved_prospective_limited_exception
+    decision_package_state_preserved: awaiting_human
+    decision_package_state_note: 决策包保留审批前历史快照；本文件追加项目所有者决定，不重写原证据。
+    approved_at: '2026-08-20T18:53:56.9328724+08:00'
