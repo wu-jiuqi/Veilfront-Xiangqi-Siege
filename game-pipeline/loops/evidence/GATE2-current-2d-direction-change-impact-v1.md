@@ -1,6 +1,6 @@
 # GATE-2 当前二维方向变更影响记录 v1
 
-状态：`project_brief_v7_confirmed / awaiting_contract_v3_approval`
+状态：`project_brief_v7_and_contract_v3_approved / registry_v3_active`
 
 ## 决定
 

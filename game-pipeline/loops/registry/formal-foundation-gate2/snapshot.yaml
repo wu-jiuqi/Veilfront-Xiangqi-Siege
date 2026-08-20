@@ -4,7 +4,7 @@ registry_snapshot:
     loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
     project_id: veilfront-xiangqi-siege
     display_key: LOOP-GATE2-001
-    title: 第二生产循环v2——斜俯视三维表现successor与视觉样片
+    title: 第二生产循环v3——正式二维表现与视觉基线
     created_at: '2026-08-18T13:00:42.841528+08:00'
     created_by:
       actor_id: inst:01M02M6X3Q8YWJXHY52K3V5AR2
@@ -12,8 +12,8 @@ registry_snapshot:
       authority_id: AUTH-VEILFRONT-PROJECT-MANAGER
   contract_binding:
     contract_id: LOOP-CTR-FORMAL-FOUNDATION-GATE2-001
-    contract_version: 2
-    contract_digest: bf2d09e7117960de4b178d827dc2c123ab4b83777175e5b1b0c9cca6eabe561d
+    contract_version: 3
+    contract_digest: 9ea1fbab25b1a560b83896194099bd9b0131552d7321223622161615c1a2a205
   state_machine_binding:
     state_machine_id: LOOP-SM-DEFAULT
     state_machine_version: '0.2'
@@ -35,32 +35,32 @@ registry_snapshot:
       assignment_id: 3dc874ca-82fc-4450-8cb6-ac0b28cacee1
       authority_id: AUTH-VEILFRONT-GODOT-TECHNOLOGY
       scope:
-      - TASK-PRESENTATION-3D-001
+      - TASK-PRESENTATION-2D-001
     - actor_id: inst:01M02NJ3JENHD8VV7EKC9G198Q
       role: pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
       assignment_id: c6257f90-551b-4f90-a492-6b2351fc7b90
       authority_id: AUTH-VEILFRONT-SYSTEMS-EXPERIENCE
       scope:
-      - TASK-TUTORIAL-3D-COMPAT-001
+      - TASK-TUTORIAL-2D-COMPAT-001
     - actor_id: pos:veilfront-xiangqi-siege:design-experience:visual-production-lead
       role: pos:veilfront-xiangqi-siege:design-experience:visual-production-lead
       assignment_id: 7d14ee19-1e2f-4b72-9079-f500ab293131
       authority_id: AUTH-VEILFRONT-VISUAL-PRODUCTION
       scope:
-      - TASK-ART-001
+      - TASK-ART-2D-001
     reviewers:
     - actor_id: inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
       role: pos:veilfront-xiangqi-siege:quality:qa-release-lead
       assignment_id: 59ac676f-0933-44c2-8aaa-74e5c848e44e
       review_scope:
-      - CHECK-CONTRACT-V2-001
+      - CHECK-CONTRACT-V3-001
       - CHECK-DEPENDENCY-001
-      - CHECK-INFORMATION-V2-001
-      - CHECK-GODOT-3D-001
+      - CHECK-INFORMATION-2D-001
+      - CHECK-GODOT-2D-001
       - CHECK-COORDINATE-001
-      - CHECK-VISUAL-READABILITY-001
-      - CHECK-PERFORMANCE-001
-      - CHECK-ART-001
+      - CHECK-RESPONSIVE-2D-001
+      - CHECK-PERFORMANCE-2D-001
+      - CHECK-ART-2D-001
       - CHECK-REGRESSION-001
       - CHECK-SCOPE-001
     - actor_id: project-owner
@@ -69,14 +69,14 @@ registry_snapshot:
       review_scope:
       - GATE-2
   runtime:
-    current_state: waiting_approval
-    state_entered_at: '2026-08-20T20:14:24.003515+08:00'
+    current_state: active
+    state_entered_at: '2026-08-20T20:26:28.712661+08:00'
     current_iteration: 3
-    last_transition_id: TR-OPERATIONAL-INTERRUPTED
-    last_event_id: 17a2dbfb-e549-4e49-95f2-09550a56f137
-    last_event_digest: 12af2e7c430da1d012cbb0ea3788c3a42c41bc5294c22ed0e17ff1346b65ca80
-    last_event_sequence: 41
-    record_revision: 41
+    last_transition_id: TR-INTERRUPTED-RESUME
+    last_event_id: 8a041d86-f13e-4df7-a300-572106ecffa3
+    last_event_digest: 4ded887ef1f577cfa19a68f2f7b830e34a0abdf6023e1d9adeac2be79ab718ad
+    last_event_sequence: 56
+    record_revision: 56
   budget:
     limits:
       iteration_limit: 4
@@ -94,93 +94,61 @@ registry_snapshot:
     last_updated_at: '2026-08-18T13:00:42.841528+08:00'
   resources:
     inputs:
-    - input_slot_id: INPUT-BRIEF-V6-001
-      artifact:
-        artifact_id: artifact:veilfront-xiangqi-siege:project-brief@v6
-        artifact_type: confirmed-project-brief
-        version: 6@subject:54520517ac26859c24459accb2d7672d12d0224ef69a766f883eda7b2b523289
-        uri: game-pipeline/project-definition/project-brief.yaml
-        digest:
-          algorithm: sha256
-          value: 54520517ac26859c24459accb2d7672d12d0224ef69a766f883eda7b2b523289
-      source_loop_id: null
-      bound_by_event_id: 42808688-49bc-4ce9-8595-04e65714940c
-      bound_at: '2026-08-19T20:05:31.637093+08:00'
-    - input_slot_id: INPUT-REGISTRY-V1-001
-      artifact:
-        artifact_id: artifact:veilfront-xiangqi-siege:gate2-registry@revision23
-        artifact_type: active-loop-registry-snapshot
-        version: revision-23-pre-contract-v2
-        uri: game-pipeline/loops/registry/formal-foundation-gate2/snapshot.yaml
-        digest:
-          algorithm: sha256
-          value: 995b60e3872135bb9da2677470db5a74a1ea0106d8e23829665c35a3da1a9917
-        manifest_paths:
-        - game-pipeline/loops/registry/formal-foundation-gate2/snapshot.yaml
-        - game-pipeline/loops/registry/formal-foundation-gate2/event-history.yaml
-      source_loop_id: null
-      bound_by_event_id: 873b3099-40cc-4a2e-88a2-9a2d6658671e
-      bound_at: '2026-08-19T20:05:31.637093+08:00'
-    - input_slot_id: INPUT-VISUAL-BASELINE-001
-      artifact:
-        artifact_id: artifact:veilfront-xiangqi-siege:visual-baseline@v1
-        artifact_type: owner-frozen-oblique-3d-visual-baseline
-        version: v1
-        uri: docs/art/veilfront-visual-baseline-v1.md
-        digest:
-          algorithm: sha256
-          value: a7b0884baf887c6d46fa624cf3fc6677c8f9cdf8be0664ef1427013192f56e42
-      source_loop_id: null
-      bound_by_event_id: 627a6f50-ef20-4063-a91a-b32a99a8c4a2
-      bound_at: '2026-08-19T20:05:31.637093+08:00'
-    - input_slot_id: INPUT-ASSET-INVENTORY-001
-      artifact:
-        artifact_id: artifact:veilfront-xiangqi-siege:demo-art-asset-inventory@v1
-        artifact_type: demo-art-asset-inventory
-        version: v1
-        uri: docs/art/demo-asset-inventory-v1.yaml
-        digest:
-          algorithm: sha256
-          value: 9804521d43f34b7afee99afb52c2f0ce238504575d2b9bfa8e9cd7102eb2753e
-      source_loop_id: null
-      bound_by_event_id: 2bbd7be1-5afc-4dd9-b147-cd6498075ccb
-      bound_at: '2026-08-19T20:05:31.637093+08:00'
     - input_slot_id: INPUT-PREVIOUS-ACCEPTED-001
       artifact:
-        artifact_id: artifact:veilfront-xiangqi-siege:gate2-v1-accepted-deliverables@revision23
-        artifact_type: gate2-v1-accepted-deliverables
-        version: registry-revision-23
+        artifact_id: artifact:veilfront-xiangqi-siege:gate2-v2-preserved-deliverables@revision41
+        artifact_type: gate2-v2-preserved-deliverables
+        version: registry-revision-41
         uri: game-pipeline/loops/registry/formal-foundation-gate2/event-history.yaml
         digest:
           algorithm: sha256
           value: 0d386829502b3ca88cd133a4f9f9d14fba0ae0aefd4b54049cf9e24fde24edbc
         manifest_paths:
+        - game-pipeline/loops/registry/formal-foundation-gate2/snapshot.yaml
+        - game-pipeline/loops/registry/formal-foundation-gate2/event-history.yaml
         - docs/godot-prompter/specs/formal-godot-scene-composition-v1.md
         - scenes/game/app/game_app.tscn
         - evidence/gate2/iteration2-core-migration-remediation-r3-v1.md
         - evidence/gate2/iteration2-core-migration-remediation-r3-v1.md
       source_loop_id: null
-      bound_by_event_id: 70a2636a-9c09-480c-a1c9-42aa3067cbe4
-      bound_at: '2026-08-19T20:05:31.637093+08:00'
-    - input_slot_id: INPUT-WALL-PLANE-AMENDMENT-001
+      bound_by_event_id: e58264bd-000a-4e4f-9ae5-51866e38e39c
+      bound_at: '2026-08-20T20:26:28.712661+08:00'
+    - input_slot_id: INPUT-BRIEF-V7-001
       artifact:
-        artifact_id: artifact:veilfront-xiangqi-siege:wall-plane-visual-amendment@v1
-        artifact_type: owner-confirmed-wall-plane-visual-amendment
-        version: v1
-        uri: docs/art/veilfront-wall-plane-visual-amendment-v1.md
+        artifact_id: artifact:veilfront-xiangqi-siege:project-brief@v7
+        artifact_type: confirmed-project-brief
+        version: 7@subject:8e9d4285c1c7237a22f308808e944fd8571700f896b8dd8cfb118f0fe0de3d3e
+        uri: game-pipeline/project-definition/project-brief.yaml
         digest:
           algorithm: sha256
-          value: e9ff307d53acd94e6aef2441bda89411ec2f822e0e34bf6c5607475a115fe521
-        manifest_paths:
-        - docs/art/veilfront-wall-plane-visual-amendment-v1.md
-        - docs/art/demo-wall-plane-asset-inventory-v1.yaml
-        metadata:
-          inventory_digest: a523c029f918e0188a68571b8d23636b0de8b75c431c7166e88c140a828bf784
-          supersedes_scope: wall presentation clauses only
-          owner_source_ref: codex-thread://current#owner-confirm-wall-on-board-plane
+          value: 8e9d4285c1c7237a22f308808e944fd8571700f896b8dd8cfb118f0fe0de3d3e
       source_loop_id: null
-      bound_by_event_id: b941cae0-6333-48ac-bbba-2d259cfdc88e
-      bound_at: '2026-08-20T16:57:53.262316+08:00'
+      bound_by_event_id: ac8e62ff-ce86-4147-99e2-90e963fc6fbd
+      bound_at: '2026-08-20T20:26:28.712661+08:00'
+    - input_slot_id: INPUT-2D-DIRECTION-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:current-2d-direction@v1
+        artifact_type: owner-confirmed-current-2d-direction
+        version: v1
+        uri: docs/art/veilfront-2d-current-direction-v1.md
+        digest:
+          algorithm: sha256
+          value: 8c5b9b944290842c25c3769ac8580d93ac542a80dce67b8a5bfdafa9c1dec0f2
+      source_loop_id: null
+      bound_by_event_id: cc8d94ab-b258-4007-ba1b-a7b025a0d7bd
+      bound_at: '2026-08-20T20:26:28.712661+08:00'
+    - input_slot_id: INPUT-2D-ASSET-INVENTORY-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:demo-2d-art-asset-inventory@v1
+        artifact_type: demo-2d-art-asset-inventory
+        version: v1
+        uri: docs/art/demo-2d-asset-inventory-v1.yaml
+        digest:
+          algorithm: sha256
+          value: 3b04a65621cf6fc88859609ba19dd1f501d09833858a9461f9a344ba4e3fb92d
+      source_loop_id: null
+      bound_by_event_id: a2fc91c3-debb-49e5-a81a-e91f917fddbb
+      bound_at: '2026-08-20T20:26:28.712661+08:00'
     outputs:
     - deliverable_id: DELIVERABLE-ARCH-001
       artifact:
@@ -249,28 +217,5 @@ registry_snapshot:
       1000_seed: cancelled_not_passed
       independent_reviews: deferred
     final_handoff_ref: null
-  interruption:
-    interruption_id: 9f2636ca-4918-47e2-b5c8-e4e71f43a3dd
-    current_interruption_state: waiting_approval
-    resume_state: active
-    first_entered_from_state: active
-    first_entered_at: '2026-08-20T20:14:24.003515+08:00'
-    current_reason:
-      reason_code: owner_direction_change_requires_brief_and_contract_reapproval
-      description: 项目所有者将现阶段正式实现由三维三渲二改为二维；旧 Contract v2 不再适合作为当前生产目标，须先确认 Project Brief v7，再单独批准并迁移 Contract v3。
-      responsible_role: project-owner
-      evidence_refs:
-      - game-pipeline/loops/evidence/GATE2-current-2d-direction-change-impact-v1.md
-      - game-pipeline/project-definition/project-brief.yaml
-      - game-pipeline/loops/contracts/loop-contract-formal-foundation-gate2-v3.yaml
-      - codex-thread://current#owner-current-implementation-2d-late-3d-option
-    entry_snapshot:
-      contract_id: LOOP-CTR-FORMAL-FOUNDATION-GATE2-001
-      contract_version: 2
-      contract_digest: bf2d09e7117960de4b178d827dc2c123ab4b83777175e5b1b0c9cca6eabe561d
-      input_set_digest: 62e035c2f55cd2df4f4cae7b4e6b0b13f4024cdf11c273c6dbf8b9991146f2dc
-      dependency_set_digest: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-      authority_set_digest: c0c49f82a471d1d01c022114a09335f33082e7681501f64e33b7ed18af427adf
-      budget_usage_digest: 8cd26cff9518b616c7f9b84314d2adc987ca26722d7778dcd5897b1a44df6a69
-    latest_revalidation: null
+  interruption: null
   pending_approvals: []

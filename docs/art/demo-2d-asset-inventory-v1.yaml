@@ -2,7 +2,7 @@ asset_inventory:
   schema_version: veilfront-demo-2d-art-inventory/v1
   project_id: veilfront-xiangqi-siege
   direction_ref: docs/art/veilfront-2d-current-direction-v1.md
-  status: draft_pending_contract_v3_approval
+  status: approved_input_bound_to_active_gate2_v3
   production_gate: revised-GATE-2
   current_pipeline: godot-2d
   categories:

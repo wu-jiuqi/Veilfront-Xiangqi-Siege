@@ -1,6 +1,6 @@
 # 《雾疆：九路烽棋》当前二维表现方向 v1
 
-状态：`owner_confirmed / pending_contract_v3_approval`
+状态：`owner_confirmed / contract_v3_active`
 
 ## 1. 当前主线
 

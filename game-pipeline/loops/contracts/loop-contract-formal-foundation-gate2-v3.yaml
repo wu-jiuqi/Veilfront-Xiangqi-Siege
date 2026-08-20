@@ -4,15 +4,15 @@ loop_contract:
   loop_type: formal-2d-presentation-tutorial-visual-baseline
   title: 第二生产循环v3——正式二维表现与视觉基线
   version: 3
-  status: draft
+  status: approved
 approval_binding:
-  approval_id: null
-  subject_digest: null
-  approved_by: null
-  approved_at: null
-  source_ref: null
+  approval_id: approval:veilfront-xiangqi-siege:loop-contract:9d9e3cfc5e92
+  subject_digest: 9d9e3cfc5e92d41d38eea336dbcca95040bb858706ffd8130a8b33a3594e7dd9
+  approved_by: project-owner
+  approved_at: '2026-08-20T20:23:53.2716759+08:00'
+  source_ref: codex-thread://current#gate2-contract-v3-approval
 draft_review:
-  status: ready_for_project_owner_review
+  status: approved_by_project_owner
   prepared_against:
     project_brief_version: 7
     project_brief_subject_digest: 8e9d4285c1c7237a22f308808e944fd8571700f896b8dd8cfb118f0fe0de3d3e
@@ -22,7 +22,7 @@ draft_review:
     previous_contract_approval_id: approval:veilfront-xiangqi-siege:loop-contract:ce2d6174f82a
     current_registry_loop_id: 83c995ff-37b9-4df8-9e84-8417d6632187
     current_registry_revision: 41
-  note: 本草案落实项目所有者“现阶段2D、三渲二后期可选”的方向；Brief v7已按精确摘要确认，本Contract仍须由项目所有者按最终摘要单独批准后才能迁移。
+  note: 项目所有者已按精确主题摘要批准；本审批允许迁移Registry并执行Contract列明的二维最小基线工作，不替代GATE-2人工决定或二维批量美术批准。
 purpose:
   objective: 保留已接受的规则核心、PlayerView、回放、依赖护栏和教学语义，以预置Control/Node2D、Sprite2D/AnimatedSprite2D、二维观察者安全迷雾和响应式HUD建立正式二维对局壳、二维视觉基线及独立QA证据；斜俯视三渲二仅作为后期可选研究资产保留。
   preserved_deliverables:
