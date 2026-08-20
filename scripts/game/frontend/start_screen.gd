@@ -3,12 +3,15 @@ extends Control
 @export var main_menu_scene: PackedScene
 
 @onready var _error_dialog: AcceptDialog = %ErrorDialog
+@onready var _prompt_animation: AnimationPlayer = %PromptAnimation
+@onready var _sequence_player: AnimationPlayer = %SequencePlayer
 
 var _transitioning := false
 
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	_sequence_player.animation_finished.connect(_on_sequence_animation_finished)
 
 
 func _gui_input(event: InputEvent) -> void:
@@ -38,6 +41,17 @@ func request_entry() -> void:
 		return
 
 	_transitioning = true
+	_prompt_animation.stop()
+	_sequence_player.play(&"opening_sequence")
+
+
+func _on_sequence_animation_finished(animation_name: StringName) -> void:
+	if animation_name != &"opening_sequence":
+		return
+	_open_main_menu()
+
+
+func _open_main_menu() -> void:
 	var error := get_tree().change_scene_to_packed(main_menu_scene)
 	if error != OK:
 		_transitioning = false

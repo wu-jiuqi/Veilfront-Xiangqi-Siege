@@ -8,6 +8,8 @@ const LEVEL_SELECT_SCENE := "res://scenes/game/frontend/level_select.tscn"
 @onready var _quit_button: Button = %QuitButton
 @onready var _quit_dialog: ConfirmationDialog = %QuitDialog
 @onready var _version_label: Label = %VersionLabel
+@onready var _intro_animation: AnimationPlayer = %IntroAnimation
+@onready var _fade_overlay: ColorRect = %FadeOverlay
 
 var _transitioning := false
 
@@ -18,7 +20,22 @@ func _ready() -> void:
 	_quit_button.pressed.connect(_quit_dialog.popup_centered)
 	_quit_dialog.confirmed.connect(get_tree().quit)
 	_version_label.text = "灰盒版本 · Godot 4.7.1 · Iteration 3"
+	_set_menu_enabled(false)
+	_intro_animation.animation_finished.connect(_on_intro_animation_finished)
+
+
+func _on_intro_animation_finished(animation_name: StringName) -> void:
+	if animation_name != &"menu_fade_in":
+		return
+	_fade_overlay.hide()
+	_set_menu_enabled(true)
 	_lan_button.grab_focus()
+
+
+func _set_menu_enabled(enabled: bool) -> void:
+	_lan_button.disabled = not enabled
+	_level_mode_button.disabled = not enabled
+	_quit_button.disabled = not enabled
 
 
 func _unhandled_input(event: InputEvent) -> void:
