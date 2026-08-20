@@ -8,9 +8,27 @@ const BOARD_WIDTH: int = 9
 const BOARD_HEIGHT: int = 24
 const RED: String = "red"
 const BLACK: String = "black"
+const LAN_PLAYER_VIEW_SCHEMA: String = "lan-player-view-v3"
+const TERRACOTTA_PIECE_TEXTURE_PATHS: Dictionary = {
+	"red:pawn": "res://assets/art/pieces/terracotta_warriors/red_infantry_idle.png",
+	"red:cannon": "res://assets/art/pieces/terracotta_warriors/red_trebuchet_idle.png",
+	"red:rook": "res://assets/art/pieces/terracotta_warriors/red_chariot_idle.png",
+	"red:horse": "res://assets/art/pieces/terracotta_warriors/red_cavalry_idle.png",
+	"red:elephant": "res://assets/art/pieces/terracotta_warriors/red_minister_idle.png",
+	"red:advisor": "res://assets/art/pieces/terracotta_warriors/red_guard_idle.png",
+	"red:general": "res://assets/art/pieces/terracotta_warriors/red_general_idle.png",
+	"black:pawn": "res://assets/art/pieces/terracotta_warriors/black_infantry_idle.png",
+	"black:cannon": "res://assets/art/pieces/terracotta_warriors/black_trebuchet_idle.png",
+	"black:rook": "res://assets/art/pieces/terracotta_warriors/black_chariot_idle.png",
+	"black:horse": "res://assets/art/pieces/terracotta_warriors/black_cavalry_idle.png",
+	"black:elephant": "res://assets/art/pieces/terracotta_warriors/black_minister_idle.png",
+	"black:advisor": "res://assets/art/pieces/terracotta_warriors/black_guard_idle.png",
+	"black:general": "res://assets/art/pieces/terracotta_warriors/black_general_idle.png",
+}
 
 @export_range(40.0, 80.0, 1.0) var cell_size: float = 64.0
 @export var board_padding: Vector2 = Vector2(32.0, 32.0)
+@export var terracotta_piece_art_enabled: bool = true
 
 var point_spacing: Vector2 = Vector2(64.0, 64.0)
 
@@ -22,11 +40,13 @@ var _action_mode: String = "move"
 var _can_interact: bool = false
 var _annotations: Dictionary = {}
 var _annotation_cell: Array = []
+var _terracotta_piece_textures: Dictionary = {}
 
 @onready var annotation_menu: PopupMenu = $AnnotationMenu
 
 
 func _ready() -> void:
+	_load_terracotta_piece_textures()
 	_apply_cell_size(cell_size)
 	annotation_menu.id_pressed.connect(_on_annotation_menu_id_pressed)
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -59,7 +79,23 @@ func layout_snapshot() -> Dictionary:
 			"elephant": "yellow_field_grid_outline",
 			"elephant_reveal_outline": false,
 		},
+		"piece_art_mode": "lan_player_view_only_with_graybox_fallback",
 	}
+
+
+func piece_art_catalog_snapshot() -> Dictionary:
+	var result: Dictionary = {}
+	for key: String in _terracotta_piece_textures:
+		var texture: Texture2D = _terracotta_piece_textures[key] as Texture2D
+		if texture != null:
+			result[key] = texture.resource_path
+	return result
+
+
+func piece_art_render_snapshot() -> Array:
+	if not _uses_terracotta_piece_art():
+		return []
+	return _terracotta_piece_specs()
 
 
 func set_board_data(
@@ -150,11 +186,11 @@ func _draw() -> void:
 	_draw_region_labels()
 	_draw_walls()
 	_draw_vision_overlays()
+	_draw_pieces()
 	_draw_annotations()
 	_draw_capture_ghosts()
 	_draw_action_highlights()
 	_draw_discovered_flags()
-	_draw_pieces()
 	_draw_coordinate_labels()
 
 
@@ -363,20 +399,129 @@ func _draw_discovered_flags() -> void:
 
 
 func _draw_pieces() -> void:
+	if _uses_terracotta_piece_art():
+		_draw_terracotta_pieces()
+		return
 	for piece: Dictionary in _player_view.get("pieces", []):
-		if not bool(piece.get("alive", false)) or bool(piece.get("in_reserve", false)):
+		_draw_graybox_piece(piece)
+
+
+func _draw_terracotta_pieces() -> void:
+	var rendered_ids: Dictionary = {}
+	for spec: Dictionary in _terracotta_piece_specs():
+		var center: Vector2 = spec["center"]
+		var rect: Rect2 = spec["rect"]
+		var texture: Texture2D = spec["texture"] as Texture2D
+		var side: String = str(spec["side"])
+		var shadow_color: Color = Color(0.01, 0.015, 0.02, 0.38)
+		draw_set_transform(center + Vector2(0.0, cell_size * 0.04), 0.0, Vector2(1.0, 0.34))
+		draw_circle(Vector2.ZERO, maxf(rect.size.x * 0.36, cell_size * 0.2), shadow_color)
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+		draw_texture_rect(texture, rect, false)
+		var base_color: Color = Color(0.92, 0.95, 1.0, 0.76) if side == RED \
+			else Color(0.18, 0.38, 0.31, 0.82)
+		draw_line(
+			center + Vector2(-rect.size.x * 0.24, cell_size * 0.08),
+			center + Vector2(rect.size.x * 0.24, cell_size * 0.08),
+			base_color,
+			2.0,
+			true
+		)
+		rendered_ids[str(spec["piece_id"])] = true
+	for piece: Dictionary in _player_view.get("pieces", []):
+		if not rendered_ids.has(str(piece.get("id", ""))):
+			_draw_graybox_piece(piece)
+
+
+func _draw_graybox_piece(piece: Dictionary) -> void:
+	if not _piece_is_drawable(piece):
+		return
+	var value: Array = piece.get("position", [])
+	var center: Vector2 = logical_to_local(Vector2i(int(value[0]), int(value[1])))
+	var side: String = str(piece.get("side", ""))
+	var fill: Color = Color(0.62, 0.12, 0.1, 0.98) if side == RED else Color(0.11, 0.2, 0.34, 0.98)
+	var border: Color = Color(1.0, 0.55, 0.4, 1.0) if side == RED else Color(0.55, 0.78, 1.0, 1.0)
+	var radius: float = clampf(cell_size * 0.29, 13.0, 22.0)
+	draw_circle(center, radius, fill)
+	draw_arc(center, radius, 0.0, TAU, 30, border, 2.3, true)
+	_draw_piece_text(center, _piece_mark(str(piece.get("piece_type", "")), side), Color.WHITE)
+
+
+func _uses_terracotta_piece_art() -> bool:
+	return terracotta_piece_art_enabled \
+		and str(_player_view.get("schema_version", "")) == LAN_PLAYER_VIEW_SCHEMA
+
+
+func _terracotta_piece_specs() -> Array:
+	var result: Array = []
+	for piece: Dictionary in _player_view.get("pieces", []):
+		if not _piece_is_drawable(piece):
+			continue
+		var side: String = str(piece.get("side", ""))
+		var piece_type: String = str(piece.get("piece_type", ""))
+		var texture: Texture2D = _terracotta_piece_textures.get(
+			"%s:%s" % [side, piece_type]
+		) as Texture2D
+		if texture == null:
 			continue
 		var value: Array = piece.get("position", [])
-		if value.size() != 2:
-			continue
 		var center: Vector2 = logical_to_local(Vector2i(int(value[0]), int(value[1])))
-		var side: String = str(piece.get("side", ""))
-		var fill: Color = Color(0.62, 0.12, 0.1, 0.98) if side == RED else Color(0.11, 0.2, 0.34, 0.98)
-		var border: Color = Color(1.0, 0.55, 0.4, 1.0) if side == RED else Color(0.55, 0.78, 1.0, 1.0)
-		var radius: float = clampf(cell_size * 0.29, 13.0, 22.0)
-		draw_circle(center, radius, fill)
-		draw_arc(center, radius, 0.0, TAU, 30, border, 2.3, true)
-		_draw_piece_text(center, _piece_mark(str(piece.get("piece_type", "")), side), Color.WHITE)
+		var anchor_y: float = _piece_art_anchor_y(piece_type)
+		var source_size := Vector2(texture.get_size())
+		var max_size := Vector2(
+			cell_size * 0.9,
+			cell_size * (1.25 if _piece_uses_square_art(piece_type) else 1.55)
+		)
+		var scale_factor: float = minf(
+			max_size.x / source_size.x,
+			max_size.y / source_size.y
+		)
+		var draw_size: Vector2 = source_size * scale_factor
+		var rect := Rect2(
+			center - Vector2(draw_size.x * 0.5, draw_size.y * anchor_y),
+			draw_size
+		)
+		result.append({
+			"piece_id": str(piece.get("id", "")),
+			"side": side,
+			"piece_type": piece_type,
+			"texture_path": texture.resource_path,
+			"texture": texture,
+			"source_size": source_size,
+			"center": center,
+			"anchor_y": anchor_y,
+			"rect": rect,
+		})
+	return result
+
+
+func _piece_is_drawable(piece: Dictionary) -> bool:
+	if not bool(piece.get("alive", false)) or bool(piece.get("in_reserve", false)):
+		return false
+	var value: Array = piece.get("position", [])
+	return value.size() == 2
+
+
+func _piece_uses_square_art(piece_type: String) -> bool:
+	return piece_type in ["cannon", "rook", "horse"]
+
+
+func _piece_art_anchor_y(piece_type: String) -> float:
+	return 0.92 if _piece_uses_square_art(piece_type) else 0.94
+
+
+func _load_terracotta_piece_textures() -> void:
+	_terracotta_piece_textures.clear()
+	for key: String in TERRACOTTA_PIECE_TEXTURE_PATHS:
+		var path: String = str(TERRACOTTA_PIECE_TEXTURE_PATHS[key])
+		if not ResourceLoader.exists(path, "Texture2D"):
+			push_warning("兵马俑棋子贴图缺失，保留字棋回退：%s" % path)
+			continue
+		var texture: Texture2D = load(path) as Texture2D
+		if texture == null:
+			push_warning("兵马俑棋子贴图无法解析，保留字棋回退：%s" % path)
+			continue
+		_terracotta_piece_textures[key] = texture
 
 
 func _draw_piece_text(center: Vector2, text: String, color: Color) -> void:
