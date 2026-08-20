@@ -33,7 +33,7 @@ func _init() -> void:
 	assert(mist_character_texture.resource_path == "res://assets/art/ui/start_sequence/veilfront_logo_mist_seal_v1.png")
 	assert(frontier_character_texture.resource_path == "res://assets/art/ui/start_sequence/veilfront_logo_frontier_seal_v1.png")
 	assert(mist_character_texture != frontier_character_texture, "title characters must use independent complete textures")
-	assert(menu_overlay.get_node("UiRoot/GameSubtitle").texture.resource_path == "res://assets/art/ui/start_sequence/veilfront_subtitle_seal_v1.png")
+	assert(menu_overlay.get_node("UiRoot/GameSubtitle").texture.resource_path == "res://assets/art/ui/start_sequence/veilfront_subtitle_square_seal_v2.png")
 	assert(menu_overlay.get_node("UiRoot/ImpactMist") is ColorRect, "title impacts must use a fog disturbance layer")
 	assert(menu_overlay.get_node("UiRoot/MenuPanel/LanButton").text == "联机对战")
 	assert(menu_overlay.get_node("UiRoot/MenuPanel/LevelModeButton").text == "关卡模式")

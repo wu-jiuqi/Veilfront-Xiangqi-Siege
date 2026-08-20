@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scripts/game/frontend/start_menu_overlay.gd" id="1_script"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/start_sequence/veilfront_logo_mist_seal_v1.png" id="2_logo_mist"]
 [ext_resource type="FontFile" path="res://assets/fonts/noto_sans_sc/NotoSansSC-VariableFont_wght.ttf" id="3_ui_font"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/start_sequence/veilfront_subtitle_seal_v1.png" id="4_subtitle"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/start_sequence/veilfront_subtitle_square_seal_v2.png" id="4_subtitle"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/start_sequence/veilfront_logo_frontier_seal_v1.png" id="5_logo_frontier"]
 [ext_resource type="Shader" path="res://assets/shaders/ui/title_impact_mist.gdshader" id="6_impact_mist"]
 
@@ -377,17 +377,17 @@ pivot_offset = Vector2(121.6, 115.2)
 
 [node name="GameSubtitle" type="TextureRect" parent="UiRoot"]
 layout_mode = 1
-anchor_left = 0.37
-anchor_top = 0.8
-anchor_right = 0.51
-anchor_bottom = 0.89
+anchor_left = 0.39
+anchor_top = 0.78
+anchor_right = 0.48
+anchor_bottom = 0.94
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 texture = ExtResource("4_subtitle")
 expand_mode = 1
 stretch_mode = 5
-pivot_offset = Vector2(89.6, 32.4)
+pivot_offset = Vector2(57.6, 57.6)
 
 [node name="MenuPanel" type="VBoxContainer" parent="UiRoot"]
 layout_mode = 1
