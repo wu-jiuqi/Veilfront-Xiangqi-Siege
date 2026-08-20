@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>《雾疆：九路烽棋》棋盘与 HUD 布局工具</title>
+  <link rel="stylesheet" href="board_ui_layout_editor.css">
+</head>
+<body>
+  <aside class="inspector">
+    <header class="tool-head">
+      <div class="eyebrow"><span>Veilfront · Layout Tool</span><span class="version-badge">V1</span></div>
+      <h1>棋盘与 HUD 布局</h1>
+      <p class="subtitle">调整棋盘默认可视区域，也可以移动、缩放、添加或删除任意 HUD 区域。</p>
+    </header>
+
+    <div class="inspector-body">
+      <section class="section">
+        <div class="section-title">预览画布 <span>01</span></div>
+        <label class="field">
+          <span class="field-label">Resolution Profile</span>
+          <select id="profile">
+            <option value="1280x720">1280 × 720 · 16:9</option>
+            <option value="1680x720">1680 × 720 · 21:9</option>
+            <option value="1280x800">1280 × 800 · 16:10</option>
+            <option value="1280x960">1280 × 960 · 4:3</option>
+          </select>
+        </label>
+        <div class="field-grid" style="margin-top: 9px;">
+          <label class="field"><span class="field-label">Snap</span><select id="snap"><option>1</option><option>4</option><option selected>8</option><option>16</option></select></label>
+          <label class="field"><span class="field-label">View</span><select id="view-mode"><option value="full">完整预览</option><option value="wireframe">布局线框</option><option value="board-focus">棋盘专注</option></select></label>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-title">布局对象 <span id="object-count">02 · 8</span></div>
+        <div class="object-list" id="object-list" aria-label="布局对象列表"></div>
+        <div class="object-actions">
+          <button class="tool-button primary" id="add-ui" type="button">框选添加新 UI</button>
+          <button class="tool-button danger" id="delete-ui" type="button" disabled>删除选中 UI</button>
+          <button class="tool-button" id="undo-delete" type="button" disabled>撤销删除</button>
+          <button class="tool-button" id="center-object" type="button">选中对象居中</button>
+        </div>
+      </section>
+
+      <section class="section" id="properties-section">
+        <div class="section-title">选中对象 <span>03</span></div>
+        <div class="selection-summary">
+          <span class="selection-kind" id="selection-kind">BOARD</span>
+          <strong id="selection-title">棋盘默认可视区域</strong>
+        </div>
+        <label class="field">
+          <span class="field-label">UI 名称</span>
+          <input id="element-name" type="text" maxlength="40" value="棋盘默认可视区域">
+        </label>
+        <label class="field" style="margin-top: 9px;">
+          <span class="field-label">功能说明</span>
+          <textarea id="element-function" rows="3" maxlength="240">玩家进入棋局时，屏幕内默认显示的棋盘区域；不是完整棋盘世界尺寸。</textarea>
+        </label>
+        <div class="field-grid four" style="margin-top: 10px;">
+          <label class="field"><span class="field-label">X</span><input id="rect-x" type="number" step="1"></label>
+          <label class="field"><span class="field-label">Y</span><input id="rect-y" type="number" step="1"></label>
+          <label class="field"><span class="field-label">W</span><input id="rect-w" type="number" min="40" step="1"></label>
+          <label class="field"><span class="field-label">H</span><input id="rect-h" type="number" min="32" step="1"></label>
+        </div>
+        <div class="normalized" aria-label="归一化矩形">
+          <div id="norm-x">X 0.000</div><div id="norm-y">Y 0.000</div><div id="norm-w">W 0.000</div><div id="norm-h">H 0.000</div>
+        </div>
+        <div class="toggle-grid">
+          <label class="toggle-row"><span>显示对象</span><input id="element-visible" type="checkbox" checked></label>
+          <label class="toggle-row"><span>锁定宽高比</span><input id="lock-aspect" type="checkbox"></label>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-title">显示辅助 <span>04</span></div>
+        <div class="toggle-grid single">
+          <label class="toggle-row"><span>安全区</span><input id="show-safe" type="checkbox" checked></label>
+          <label class="toggle-row"><span>坐标网格</span><input id="show-grid" type="checkbox" checked></label>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-title">布局数据 <span>05</span></div>
+        <div class="button-grid">
+          <button class="tool-button primary" id="copy-json" type="button">复制 JSON</button>
+          <button class="tool-button" id="download-json" type="button">下载 JSON</button>
+          <button class="tool-button" id="import-json" type="button">导入 JSON</button>
+          <button class="tool-button" id="save-draft" type="button">保存本地草稿</button>
+          <button class="tool-button" id="load-draft" type="button">载入本地草稿</button>
+          <button class="tool-button danger" id="reset-layout" type="button">恢复默认布局</button>
+        </div>
+        <input id="file-input" type="file" accept="application/json,.json" hidden>
+      </section>
+
+      <div class="status" id="status">已选择棋盘默认可视区域。选择任意 HUD 后即可调整它的位置和大小。</div>
+    </div>
+  </aside>
+
+  <main>
+    <header class="topbar">
+      <div><strong id="top-selection">棋盘默认可视区域</strong><span class="top-separator">/</span><span id="top-profile">1280×720 · 16:9</span></div>
+      <div class="top-actions"><span id="cursor">X 0 · Y 0</span><span id="zoom">100%</span></div>
+    </header>
+
+    <div class="workspace" id="workspace">
+      <div class="stage-shell" id="stage-shell">
+        <div class="stage" id="stage">
+          <div class="grid-overlay" id="grid-overlay"></div>
+          <div class="safe-area" id="safe-area"></div>
+          <div class="elements-layer" id="elements-layer"></div>
+
+          <div class="board-region selected" id="board-region" data-id="board-visible-region">
+            <div class="board-grid"></div>
+            <div class="region-label">棋盘默认可视区域<small>不是完整棋盘世界尺寸</small></div>
+            <div class="selection-handles" aria-hidden="true">
+              <i class="resize-handle" data-handle="nw"></i><i class="resize-handle" data-handle="n"></i><i class="resize-handle" data-handle="ne"></i>
+              <i class="resize-handle" data-handle="e"></i><i class="resize-handle" data-handle="se"></i><i class="resize-handle" data-handle="s"></i>
+              <i class="resize-handle" data-handle="sw"></i><i class="resize-handle" data-handle="w"></i>
+            </div>
+          </div>
+
+          <div class="draw-layer" id="draw-layer">
+            <div class="draw-instruction">拖动框选新 UI 区域 · Esc 取消</div>
+            <div class="draw-preview" id="draw-preview"></div>
+          </div>
+          <div class="canvas-tag" id="canvas-tag">DESIGN CANVAS · 1280×720</div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footerbar">
+      <span>选择对象 · 拖动位置 · 八向缩放 · 框选添加 · 删除/撤销</span>
+      <span id="footer-meaning">输出：default_visible_board_screen_rect + ui_elements</span>
+    </footer>
+  </main>
+
+  <script src="board_ui_layout_editor.js"></script>
+</body>
+</html>
