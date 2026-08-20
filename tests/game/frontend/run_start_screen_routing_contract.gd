@@ -13,7 +13,7 @@ func _init() -> void:
 	click_event.pressed = true
 	start_screen._gui_input(click_event)
 	start_screen._gui_input(click_event)
-	await process_frame
+	(start_screen.get_node("SequencePlayer") as AnimationPlayer).advance(5.0)
 	await process_frame
 	_assert_main_menu_route("left_click")
 
@@ -24,7 +24,7 @@ func _init() -> void:
 	var touch_event := InputEventScreenTouch.new()
 	touch_event.pressed = true
 	start_screen._gui_input(touch_event)
-	await process_frame
+	(start_screen.get_node("SequencePlayer") as AnimationPlayer).advance(5.0)
 	await process_frame
 	_assert_main_menu_route("touch")
 
@@ -36,7 +36,7 @@ func _init() -> void:
 	accept_event.action = &"ui_accept"
 	accept_event.pressed = true
 	start_screen._unhandled_input(accept_event)
-	await process_frame
+	(start_screen.get_node("SequencePlayer") as AnimationPlayer).advance(5.0)
 	await process_frame
 	_assert_main_menu_route("ui_accept")
 

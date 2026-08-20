@@ -20,8 +20,11 @@ func _init() -> void:
 	await process_frame
 	var enter_prompt := start_root.get_node("%EnterPrompt") as Label
 	var prompt_animation := start_root.get_node("%PromptAnimation") as AnimationPlayer
-	assert(enter_prompt.text == "点击任意位置进入")
-	assert(start_root.get_node("%Background").texture.resource_path == "res://assets/art/ui/concepts/main_menu_background_v7_denoised.png")
+	var sequence_player := start_root.get_node("%SequencePlayer") as AnimationPlayer
+	assert(enter_prompt.text == "点击任意位置继续")
+	assert(start_root.get_node("Stage/Environment").texture.resource_path == "res://assets/art/ui/start_sequence/gate_environment_open_v1.png")
+	assert(sequence_player.has_animation(&"opening_sequence"))
+	assert(is_equal_approx(sequence_player.get_animation(&"opening_sequence").length, 4.95))
 	var prompt_font := enter_prompt.get_theme_font(&"font") as FontVariation
 	assert(prompt_font.resource_path == "res://resources/game/ui/start_prompt_font.tres")
 	assert(prompt_font.base_font.resource_path == "res://assets/fonts/ramega_zhang_qingping/ramega_zhang_qingping_xingshu.ttf")
