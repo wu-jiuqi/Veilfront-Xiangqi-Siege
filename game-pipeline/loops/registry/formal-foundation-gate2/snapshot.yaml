@@ -73,10 +73,10 @@ registry_snapshot:
     state_entered_at: '2026-08-19T15:14:38.816327+08:00'
     current_iteration: 3
     last_transition_id: TR-REVIEW-ACTIVE
-    last_event_id: 82998b59-2d94-48bb-b299-229117dafda7
-    last_event_digest: 53153ad38488dc74b76057980ed03d017b51b83561139fa0efc76423baf758f3
-    last_event_sequence: 39
-    record_revision: 39
+    last_event_id: b941cae0-6333-48ac-bbba-2d259cfdc88e
+    last_event_digest: 8920ebebb517f7a08de1121ddc578a366d5560434aeafd8fba21c58686dc447b
+    last_event_sequence: 40
+    record_revision: 40
   budget:
     limits:
       iteration_limit: 4
@@ -162,6 +162,25 @@ registry_snapshot:
       source_loop_id: null
       bound_by_event_id: 70a2636a-9c09-480c-a1c9-42aa3067cbe4
       bound_at: '2026-08-19T20:05:31.637093+08:00'
+    - input_slot_id: INPUT-WALL-PLANE-AMENDMENT-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:wall-plane-visual-amendment@v1
+        artifact_type: owner-confirmed-wall-plane-visual-amendment
+        version: v1
+        uri: docs/art/veilfront-wall-plane-visual-amendment-v1.md
+        digest:
+          algorithm: sha256
+          value: e9ff307d53acd94e6aef2441bda89411ec2f822e0e34bf6c5607475a115fe521
+        manifest_paths:
+        - docs/art/veilfront-wall-plane-visual-amendment-v1.md
+        - docs/art/demo-wall-plane-asset-inventory-v1.yaml
+        metadata:
+          inventory_digest: a523c029f918e0188a68571b8d23636b0de8b75c431c7166e88c140a828bf784
+          supersedes_scope: wall presentation clauses only
+          owner_source_ref: codex-thread://current#owner-confirm-wall-on-board-plane
+      source_loop_id: null
+      bound_by_event_id: b941cae0-6333-48ac-bbba-2d259cfdc88e
+      bound_at: '2026-08-20T16:57:53.262316+08:00'
     outputs:
     - deliverable_id: DELIVERABLE-ARCH-001
       artifact:

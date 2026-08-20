@@ -1,0 +1,42 @@
+wall_plane_asset_inventory:
+  schema_version: veilfront-wall-plane-inventory/v1
+  project_id: veilfront-xiangqi-siege
+  task_id: TASK-ART-001
+  status: owner_direction_confirmed_sample_in_progress
+  amendment_ref: docs/art/veilfront-wall-plane-visual-amendment-v1.md
+  supersedes_wall_items_only:
+  - docs/art/demo-asset-inventory-v1.yaml#ART-WALL-STATES
+  - docs/art/demo-asset-inventory-v1.yaml#ART-WALL-SAMPLE
+  state_contract:
+    persistent_states: [INTACT, BREACHED, REPAIRING]
+    transient_feedback: DAMAGED
+    forbidden_fields: [invading_piece_count, repair_progress, hidden_timer]
+  sample:
+    id: TW-WALL-PLANE-RED-SAMPLE
+    faction: red
+    quantity: 3
+    states: [INTACT, BREACHED, REPAIRING]
+    source_spec: 2048x192透明SVG，精确九路节点，独立状态源图
+    runtime_spec: VRAM Compressed+mipmap透明Texture2D，10.6x0.72 PlaneMesh，离板0.018
+    scene_ref: scenes/dev/art/terracotta_warriors/walls/red_wall_plane_3d.tscn
+    phase: preproduction_sample
+    status: static_source_and_preset_completed_pending_godot_runtime_validation
+    acceptance:
+    - 棋子与墙同线但无实体遮挡或碰撞
+    - 三状态不依赖颜色单通道且默认镜头可辨
+    - BREACHED与REPAIRING不制造单一通路或修复百分比暗示
+    - 只接受PlayerView公开wall side/status
+  full_demo:
+    id: TW-WALL-PLANE-STATES
+    quantity: 6
+    formula: 2阵营x3持久状态
+    phase: post_gate2_batch
+    status: red_sample_only
+    dependencies:
+    - 红方三状态游戏内审查
+    - 黑方阵营材质校准
+    - 三分辨率与双方视角独立QA
+  shared_resources:
+  - {id: TW-WALL-DAMAGE-FX, quantity: 1, kind: transient_fx, status: planned}
+  - {id: TW-WALL-HUD-ICONS, quantity: 3, kind: ui_icons, status: planned}
+  - {id: TW-WALL-STATE-PRESET, quantity: 2, kind: faction_packed_scenes, status: red_sample_completed}

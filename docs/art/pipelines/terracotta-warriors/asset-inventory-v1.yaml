@@ -158,7 +158,7 @@ art_pipeline_inventory:
   - id: structures_and_fog
     name: 城墙、结构、旗帜与迷雾
     items:
-    - {id: TW-WALL-STATES, name: 红黑城墙状态, quantity: 8, formula: 2阵营×4状态, phase: batch, status: inventoried}
+    - {id: TW-WALL-STATES, name: 红黑平面城防阵线状态, quantity: 6, formula: 2阵营×3持久状态, phase: batch, status: red_three_state_static_sample_completed_pending_godot}
     - {id: TW-FLAG-STATES, name: 旗帜状态, quantity: 5, phase: batch, status: inventoried}
     - {id: TW-FOG-MATERIAL, name: 黑蓝烟尘迷雾材质, quantity: 1, phase: sample, status: planned}
     - {id: TW-FOG-NOISE, name: 迷雾边缘噪声, quantity: 2, phase: sample, status: planned}
