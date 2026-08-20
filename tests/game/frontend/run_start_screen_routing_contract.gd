@@ -1,7 +1,6 @@
 extends SceneTree
 
 const START_SCREEN_SCENE := preload("res://scenes/game/frontend/start_screen.tscn")
-const MAIN_MENU_PATH := "res://scenes/game/frontend/main_menu.tscn"
 
 
 func _init() -> void:
@@ -13,9 +12,9 @@ func _init() -> void:
 	click_event.pressed = true
 	start_screen._gui_input(click_event)
 	start_screen._gui_input(click_event)
-	(start_screen.get_node("SequencePlayer") as AnimationPlayer).advance(5.0)
+	(start_screen.get_node("SequencePlayer") as AnimationPlayer).advance(5.2)
 	await process_frame
-	_assert_main_menu_route("left_click")
+	_assert_inline_menu(start_screen, "left_click")
 
 	current_scene.queue_free()
 	await process_frame
@@ -24,9 +23,9 @@ func _init() -> void:
 	var touch_event := InputEventScreenTouch.new()
 	touch_event.pressed = true
 	start_screen._gui_input(touch_event)
-	(start_screen.get_node("SequencePlayer") as AnimationPlayer).advance(5.0)
+	(start_screen.get_node("SequencePlayer") as AnimationPlayer).advance(5.2)
 	await process_frame
-	_assert_main_menu_route("touch")
+	_assert_inline_menu(start_screen, "touch")
 
 	current_scene.queue_free()
 	await process_frame
@@ -36,11 +35,11 @@ func _init() -> void:
 	accept_event.action = &"ui_accept"
 	accept_event.pressed = true
 	start_screen._unhandled_input(accept_event)
-	(start_screen.get_node("SequencePlayer") as AnimationPlayer).advance(5.0)
+	(start_screen.get_node("SequencePlayer") as AnimationPlayer).advance(5.2)
 	await process_frame
-	_assert_main_menu_route("ui_accept")
+	_assert_inline_menu(start_screen, "ui_accept")
 
-	print("START_SCREEN_ROUTING_CONTRACT_PASS inputs=left_click,touch,ui_accept duplicate_guard=ok")
+	print("START_SCREEN_ROUTING_CONTRACT_PASS inputs=left_click,touch,ui_accept inline_menu=ok duplicate_guard=ok")
 	quit()
 
 
@@ -51,6 +50,8 @@ func _add_start_screen() -> Control:
 	return start_screen
 
 
-func _assert_main_menu_route(input_name: String) -> void:
-	assert(current_scene != null, "%s must keep a valid current scene" % input_name)
-	assert(current_scene.scene_file_path == MAIN_MENU_PATH, "%s must open the main menu" % input_name)
+func _assert_inline_menu(start_screen: Control, input_name: String) -> void:
+	assert(current_scene == start_screen, "%s must keep the start scene as the menu background" % input_name)
+	var menu_overlay := start_screen.get_node("MenuOverlay")
+	assert(menu_overlay.visible, "%s must reveal the inline menu" % input_name)
+	assert(menu_overlay.call(&"is_active"), "%s must activate the inline menu" % input_name)

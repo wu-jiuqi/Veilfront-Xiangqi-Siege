@@ -3,11 +3,11 @@ extends SceneTree
 const START_SCREEN_SCENE := preload("res://scenes/game/frontend/start_screen.tscn")
 const CAPTURE_TIMES := {
 	"00_closed": 0.0,
-	"01_brace": 0.52,
-	"02_opening": 1.5,
-	"03_fog_cover": 2.7,
-	"04_title": 3.25,
-	"05_black": 4.88,
+	"01_brace": 0.58,
+	"02_opening": 2.1,
+	"03_fog_cover": 4.0,
+	"04_standing": 5.1,
+	"05_menu": 5.1,
 }
 
 
@@ -36,6 +36,7 @@ func _capture() -> void:
 	var sequence_player := start_screen.get_node("SequencePlayer") as AnimationPlayer
 	var prompt_animation := start_screen.get_node("PromptAnimation") as AnimationPlayer
 	var gate_mist := start_screen.get_node("Stage/FogLayer/GateMist") as GPUParticles2D
+	var menu_overlay := start_screen.get_node("MenuOverlay")
 	prompt_animation.stop()
 	sequence_player.play(&"opening_sequence")
 	sequence_player.pause()
@@ -44,9 +45,12 @@ func _capture() -> void:
 		var capture_time: float = CAPTURE_TIMES[capture_name]
 		sequence_player.seek(capture_time, true)
 		gate_mist.restart()
-		gate_mist.emitting = capture_time >= 0.88 and capture_time <= 3.35
+		gate_mist.emitting = capture_time >= 1.35 and capture_time <= 4.0
 		if gate_mist.emitting:
-			gate_mist.request_particles_process(maxf(capture_time - 0.88, 0.0))
+			gate_mist.request_particles_process(maxf(capture_time - 1.35, 0.0))
+		if capture_name == "05_menu":
+			menu_overlay.call(&"reveal_menu")
+			(menu_overlay.get_node("MenuIntroPlayer") as AnimationPlayer).advance(1.0)
 		await process_frame
 		RenderingServer.force_draw(false)
 		await process_frame
