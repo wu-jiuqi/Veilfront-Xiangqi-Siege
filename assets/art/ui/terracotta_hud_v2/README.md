@@ -36,4 +36,6 @@
 
 - 模式：内置图像生成工具，逐项生成，概念图作为风格参考。
 - 提示词共同约束：front-facing orthographic、thin forged dark iron、deep green oxidized bronze、restrained aged-gold accents、no text、no icons、no characters、no battlefield。
-- 透明化：内置工具连续输出了烘焙棋盘格的 RGB 文件；经项目所有者明确授权后，使用 `tools/art/remove_baked_checkerboard.py` 只清除与指定背景种子连通的浅灰棋盘格，并保留 RGB 源图。
+- 透明化：内置工具连续输出了烘焙棋盘格的 RGB 文件；原始 RGB 母版永久保存在 `source_rgb/`。
+- 紫幕重抠：运行 `python tools/art/remove_baked_checkerboard.py assets/art/ui/terracotta_hud_v2 --chroma-repair --apply`。工具先生成精确 `#FF00FF` 中间层，只保留预先登记的 UI 主体，再由紫幕键出 Alpha；该流程不会重绘或调色金属纹理。
+- 质量检查：运行同一工具并追加 `--validate`，会检查 RGBA、透明中心、四态按钮实体中心，以及所有可见像素均归属于登记的 UI 主体。需要人工复核时可加 `--preview-dir <目录>` 输出紫幕与深色背景合成图，中间图不进入 Godot 资源目录。
