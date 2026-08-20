@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="BoardMapCatalog" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/presentation/board/board_map_option.gd" id="1_option"]
+[ext_resource type="Script" path="res://scripts/game/presentation/board/board_map_catalog.gd" id="2_catalog"]
+[ext_resource type="Resource" path="res://resources/game/content/boards/terracotta_battlefield_v3_map_option.tres" id="3_battlefield"]
+[ext_resource type="Resource" path="res://resources/game/content/boards/terracotta_grassland_pond_stream_v5_map_option.tres" id="4_grassland"]
+
+[resource]
+script = ExtResource("2_catalog")
+maps = Array[ExtResource("1_option")]([ExtResource("3_battlefield"), ExtResource("4_grassland")])

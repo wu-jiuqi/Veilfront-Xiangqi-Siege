@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="BoardMapOption" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/presentation/board/board_map_option.gd" id="1_option"]
+[ext_resource type="Texture2D" path="res://assets/art/boards/terracotta_warriors/terracotta_grassland_board_bg_gridless_v5_pond_stream.png" id="2_background"]
+
+[resource]
+script = ExtResource("1_option")
+map_id = &"terracotta_grassland_pond_stream_v5"
+display_name = "草原池塘溪流"
+description = "低饱和草原、右上池塘与沿右侧蜿蜒的浅溪；没有战争残骸，中央保持连续草地。"
+background_texture = ExtResource("2_background")
+preview_texture = ExtResource("2_background")
+selectable = true
+recommended_order = 20

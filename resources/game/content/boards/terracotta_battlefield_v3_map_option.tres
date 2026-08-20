@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="BoardMapOption" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/presentation/board/board_map_option.gd" id="1_option"]
+[ext_resource type="Texture2D" path="res://assets/art/boards/terracotta_warriors/terracotta_battlefield_board_bg_gridless_v3_decorated.png" id="2_background"]
+
+[resource]
+script = ExtResource("1_option")
+map_id = &"terracotta_battlefield_v3"
+display_name = "秦朝硝烟战场"
+description = "焦土、车辙与战损器械构成的秦朝战场；装饰集中在边缘，中央保持行棋净空。"
+background_texture = ExtResource("2_background")
+preview_texture = ExtResource("2_background")
+selectable = true
+recommended_order = 10
