@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/piece_art_2d_base.tscn" id="1_base"]
+[ext_resource type="Texture2D" path="res://assets/art/pieces/terracotta_warriors/red_minister_idle.png" id="2_texture"]
+
+[node name="RedMinisterPiece2D" instance=ExtResource("1_base")]
+metadata/camp = "red"
+metadata/piece_type = "minister"
+metadata/piece_role = "相"
+
+[node name="Artwork" parent="." index="1"]
+texture = ExtResource("2_texture")
+

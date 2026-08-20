@@ -1,0 +1,18 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/dev/piece_soft_shadow.svg" id="1_shadow"]
+
+[node name="PieceArt2D" type="Node2D" groups=["piece_art_test_2d"]]
+metadata/runtime_profile = "terracotta_warriors_2d_preview_v1"
+
+[node name="Shadow" type="Sprite2D" parent="."]
+z_index = -1
+position = Vector2(0, -5)
+scale = Vector2(0.3, 0.2)
+texture = ExtResource("1_shadow")
+
+[node name="Artwork" type="Sprite2D" parent="."]
+scale = Vector2(0.17, 0.17)
+offset = Vector2(0, -337.92)
+texture_filter = 1
+

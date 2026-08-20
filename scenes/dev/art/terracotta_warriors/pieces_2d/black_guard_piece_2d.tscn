@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/piece_art_2d_base.tscn" id="1_base"]
+[ext_resource type="Texture2D" path="res://assets/art/pieces/terracotta_warriors/black_guard_idle.png" id="2_texture"]
+
+[node name="BlackGuardPiece2D" instance=ExtResource("1_base")]
+metadata/camp = "black"
+metadata/piece_type = "guard"
+metadata/piece_role = "士"
+
+[node name="Artwork" parent="." index="1"]
+texture = ExtResource("2_texture")
+
