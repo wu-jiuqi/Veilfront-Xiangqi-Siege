@@ -1,0 +1,120 @@
+[gd_scene load_steps=20 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/art/boards/terracotta_battle_stage_test/ground.png" id="1_ground"]
+[ext_resource type="Texture2D" path="res://assets/art/boards/terracotta_battle_stage_test/left_mountains.png" id="2_left"]
+[ext_resource type="Texture2D" path="res://assets/art/boards/terracotta_battle_stage_test/right_mountains.png" id="3_right"]
+[ext_resource type="Texture2D" path="res://assets/art/boards/terracotta_battle_stage_test/north_backdrop.png" id="4_north"]
+[ext_resource type="Texture2D" path="res://assets/art/boards/terracotta_battle_stage_test/south_backdrop.png" id="5_south"]
+[ext_resource type="Texture2D" path="res://assets/art/boards/terracotta_battle_stage_test/atmosphere.png" id="6_atmosphere"]
+
+[sub_resource type="Shader" id="Shader_chroma_key"]
+code = "shader_type spatial;\nrender_mode unshaded, cull_disabled, blend_mix, depth_draw_opaque;\n\nuniform sampler2D albedo_texture : source_color, filter_linear_mipmap_anisotropic;\nuniform float alpha_scale : hint_range(0.0, 1.0) = 1.0;\n\nvoid fragment() {\n\tvec4 sample_color = texture(albedo_texture, UV);\n\tfloat lightest = max(sample_color.r, max(sample_color.g, sample_color.b));\n\tfloat darkest = min(sample_color.r, min(sample_color.g, sample_color.b));\n\tfloat neutral_light = smoothstep(0.72, 0.88, lightest) * (1.0 - smoothstep(0.035, 0.12, lightest - darkest));\n\tALBEDO = sample_color.rgb;\n\tROUGHNESS = 1.0;\n\tALPHA = sample_color.a * (1.0 - neutral_light) * alpha_scale;\n}\n"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ground"]
+shading_mode = 0
+albedo_texture = ExtResource("1_ground")
+roughness = 0.96
+texture_filter = 5
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ground"]
+material = SubResource("StandardMaterial3D_ground")
+size = Vector2(28, 44)
+
+[sub_resource type="ShaderMaterial" id="StandardMaterial3D_left"]
+shader = SubResource("Shader_chroma_key")
+shader_parameter/albedo_texture = ExtResource("2_left")
+shader_parameter/alpha_scale = 1.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_left"]
+material = SubResource("StandardMaterial3D_left")
+size = Vector2(44, 8.5)
+
+[sub_resource type="ShaderMaterial" id="StandardMaterial3D_right"]
+shader = SubResource("Shader_chroma_key")
+shader_parameter/albedo_texture = ExtResource("3_right")
+shader_parameter/alpha_scale = 1.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_right"]
+material = SubResource("StandardMaterial3D_right")
+size = Vector2(44, 8.5)
+
+[sub_resource type="ShaderMaterial" id="StandardMaterial3D_north"]
+shader = SubResource("Shader_chroma_key")
+shader_parameter/albedo_texture = ExtResource("4_north")
+shader_parameter/alpha_scale = 0.88
+
+[sub_resource type="QuadMesh" id="QuadMesh_north"]
+material = SubResource("StandardMaterial3D_north")
+size = Vector2(24, 10)
+
+[sub_resource type="ShaderMaterial" id="StandardMaterial3D_south"]
+shader = SubResource("Shader_chroma_key")
+shader_parameter/albedo_texture = ExtResource("5_south")
+shader_parameter/alpha_scale = 0.92
+
+[sub_resource type="QuadMesh" id="QuadMesh_south"]
+material = SubResource("StandardMaterial3D_south")
+size = Vector2(24, 10)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_atmosphere"]
+transparency = 1
+shading_mode = 0
+cull_mode = 2
+albedo_color = Color(1, 1, 1, 0.42)
+albedo_texture = ExtResource("6_atmosphere")
+texture_filter = 5
+
+[sub_resource type="QuadMesh" id="QuadMesh_atmosphere"]
+material = SubResource("StandardMaterial3D_atmosphere")
+size = Vector2(24, 12)
+
+[node name="TerracottaBattleStage3D" type="Node3D"]
+metadata/_edit_group_ = true
+metadata/purpose = "Six-plane 2D battlefield stage sample for TASK-ART-001"
+
+[node name="GroundPlane" type="MeshInstance3D" parent="."]
+position = Vector3(0, -0.65, 0)
+mesh = SubResource("PlaneMesh_ground")
+metadata/asset_role = "continuous_ground"
+
+[node name="LeftMountainRig" type="Node3D" parent="."]
+position = Vector3(-9.8, 3.2, 0)
+rotation = Vector3(0, 0, 0.61086524)
+metadata/asset_role = "left_boundary"
+
+[node name="LeftMountainCard" type="MeshInstance3D" parent="LeftMountainRig"]
+rotation = Vector3(0, 1.5707964, 0)
+cast_shadow = 0
+mesh = SubResource("QuadMesh_left")
+metadata/asset_role = "left_boundary"
+
+[node name="RightMountainRig" type="Node3D" parent="."]
+position = Vector3(9.8, 3.2, 0)
+rotation = Vector3(0, 0, -0.61086524)
+metadata/asset_role = "right_boundary"
+
+[node name="RightMountainCard" type="MeshInstance3D" parent="RightMountainRig"]
+rotation = Vector3(0, -1.5707964, 0)
+cast_shadow = 0
+mesh = SubResource("QuadMesh_right")
+metadata/asset_role = "right_boundary"
+
+[node name="NorthBackdrop" type="MeshInstance3D" parent="."]
+position = Vector3(0, 4.1, -21.2)
+cast_shadow = 0
+mesh = SubResource("QuadMesh_north")
+metadata/asset_role = "north_horizon"
+
+[node name="SouthBackdrop" type="MeshInstance3D" parent="."]
+position = Vector3(0, 4.1, 21.2)
+rotation = Vector3(0, 3.1415927, 0)
+cast_shadow = 0
+mesh = SubResource("QuadMesh_south")
+metadata/asset_role = "south_horizon"
+
+[node name="AtmosphereCard" type="MeshInstance3D" parent="."]
+position = Vector3(0, 5, -18.8)
+cast_shadow = 0
+mesh = SubResource("QuadMesh_atmosphere")
+metadata/asset_role = "depth_atmosphere"
+metadata/note = "Decorative only; must never encode PlayerView visibility"
