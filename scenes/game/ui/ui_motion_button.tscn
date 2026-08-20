@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/presentation/ui/ui_motion_button.gd" id="1_script"]
+[ext_resource type="Resource" path="res://resources/game/ui/motion/terracotta_ui_motion_profile.tres" id="2_profile"]
+
+[node name="UiMotionButton" type="Button" groups=["ui_motion_buttons"]]
+custom_minimum_size = Vector2(220, 64)
+focus_mode = 2
+mouse_default_cursor_shape = 2
+theme_type_variation = &"PrimaryButton"
+motion_profile = ExtResource("2_profile")
+script = ExtResource("1_script")
+
+[connection signal="button_down" from="." to="." method="_on_button_down"]
+[connection signal="button_up" from="." to="." method="_on_button_up"]
+[connection signal="focus_entered" from="." to="." method="_on_focus_entered"]
+[connection signal="focus_exited" from="." to="." method="_on_focus_exited"]
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

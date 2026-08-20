@@ -1,0 +1,230 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_theme_binder.tscn" id="1_binder"]
+[ext_resource type="Script" path="res://scripts/dev/ui/ui_button_motion_lab.gd" id="2_script"]
+[ext_resource type="Resource" path="res://resources/game/ui/motion/terracotta_ui_motion_profile.tres" id="3_profile"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button.tscn" id="4_button"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_metal/icons/system/play.svg" id="5_play"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_metal/icons/actions/back.svg" id="6_back"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_metal/icons/system/settings.svg" id="7_settings"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_metal/icons/markers/warning.svg" id="8_warning"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_metal/icons/system/help.svg" id="9_help"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_metal/icons/system/reset.svg" id="10_reset"]
+
+[node name="UiButtonMotionLab" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_script")
+motion_profile = ExtResource("3_profile")
+
+[node name="UiThemeBinder" parent="." instance=ExtResource("1_binder")]
+
+[node name="Background" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_type_variation = &"ScreenBackground"
+
+[node name="SafeMargin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 32.0
+offset_top = 24.0
+offset_right = -32.0
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Page" type="VBoxContainer" parent="SafeMargin"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Title" type="Label" parent="SafeMargin/Page"]
+layout_mode = 2
+text = "兵马俑 UI · 按钮动效实验场"
+theme_type_variation = &"ScreenTitle"
+
+[node name="Subtitle" type="Label" parent="SafeMargin/Page"]
+layout_mode = 2
+text = "Tab 切换焦点，Enter / Space 按压；移动鼠标检查悬停与连续打断。"
+theme_type_variation = &"MutedLabel"
+
+[node name="Body" type="HBoxContainer" parent="SafeMargin/Page"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 18
+
+[node name="ControlPanel" type="PanelContainer" parent="SafeMargin/Page/Body"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_type_variation = &"SettingsPanel"
+
+[node name="Margin" type="MarginContainer" parent="SafeMargin/Page/Body/ControlPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 28
+theme_override_constants/margin_top = 28
+theme_override_constants/margin_right = 28
+theme_override_constants/margin_bottom = 28
+
+[node name="Controls" type="VBoxContainer" parent="SafeMargin/Page/Body/ControlPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Heading" type="Label" parent="SafeMargin/Page/Body/ControlPanel/Margin/Controls"]
+layout_mode = 2
+text = "实验控制"
+theme_type_variation = &"SectionTitle"
+
+[node name="ReducedMotionToggle" type="CheckButton" parent="SafeMargin/Page/Body/ControlPanel/Margin/Controls"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "减少动态效果"
+
+[node name="ReplayButton" type="Button" parent="SafeMargin/Page/Body/ControlPanel/Margin/Controls"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+text = "重播入场动效"
+icon = ExtResource("10_reset")
+theme_type_variation = &"SecondaryButton"
+
+[node name="FeedbackButton" type="Button" parent="SafeMargin/Page/Body/ControlPanel/Margin/Controls"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+text = "触发结果反馈"
+icon = ExtResource("8_warning")
+theme_type_variation = &"DangerButton"
+
+[node name="GroupsLabel" type="Label" parent="SafeMargin/Page/Body/ControlPanel/Margin/Controls"]
+layout_mode = 2
+text = "六组动效\n01 入场 · 02 悬停\n03 按压 · 04 焦点\n05 页签 · 06 反馈"
+theme_type_variation = &"MutedLabel"
+
+[node name="StatusLabel" type="Label" parent="SafeMargin/Page/Body/ControlPanel/Margin/Controls"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 10
+text = "等待交互"
+autowrap_mode = 2
+
+[node name="DemoPanel" type="PanelContainer" parent="SafeMargin/Page/Body"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"HUDPanel"
+
+[node name="Margin" type="MarginContainer" parent="SafeMargin/Page/Body/DemoPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 34
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 34
+theme_override_constants/margin_bottom = 30
+
+[node name="Content" type="VBoxContainer" parent="SafeMargin/Page/Body/DemoPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Heading" type="Label" parent="SafeMargin/Page/Body/DemoPanel/Margin/Content"]
+layout_mode = 2
+text = "按钮状态与语义"
+theme_type_variation = &"SectionTitle"
+
+[node name="ButtonGrid" type="GridContainer" parent="SafeMargin/Page/Body/DemoPanel/Margin/Content"]
+layout_mode = 2
+size_flags_vertical = 3
+columns = 2
+theme_override_constants/h_separation = 14
+theme_override_constants/v_separation = 12
+
+[node name="PrimaryButton" parent="SafeMargin/Page/Body/DemoPanel/Margin/Content/ButtonGrid" instance=ExtResource("4_button")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "开始对局"
+icon = ExtResource("5_play")
+theme_type_variation = &"PrimaryButton"
+
+[node name="SecondaryButton" parent="SafeMargin/Page/Body/DemoPanel/Margin/Content/ButtonGrid" instance=ExtResource("4_button")]
+layout_mode = 2
+text = "返回上级"
+icon = ExtResource("6_back")
+theme_type_variation = &"SecondaryButton"
+
+[node name="DangerButton" parent="SafeMargin/Page/Body/DemoPanel/Margin/Content/ButtonGrid" instance=ExtResource("4_button")]
+layout_mode = 2
+text = "放弃战局"
+icon = ExtResource("8_warning")
+theme_type_variation = &"DangerButton"
+
+[node name="IconButton" parent="SafeMargin/Page/Body/DemoPanel/Margin/Content/ButtonGrid" instance=ExtResource("4_button")]
+layout_mode = 2
+text = "设置"
+icon = ExtResource("7_settings")
+theme_type_variation = &"IconButton"
+
+[node name="QuietButton" parent="SafeMargin/Page/Body/DemoPanel/Margin/Content/ButtonGrid" instance=ExtResource("4_button")]
+layout_mode = 2
+text = "查看帮助"
+icon = ExtResource("9_help")
+theme_type_variation = &"QuietButton"
+
+[node name="DisabledButton" parent="SafeMargin/Page/Body/DemoPanel/Margin/Content/ButtonGrid" instance=ExtResource("4_button")]
+layout_mode = 2
+disabled = true
+text = "尚未解锁"
+theme_type_variation = &"SecondaryButton"
+
+[node name="TabRow" type="HBoxContainer" parent="SafeMargin/Page/Body/DemoPanel/Margin/Content"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="OverviewTab" parent="SafeMargin/Page/Body/DemoPanel/Margin/Content/TabRow" instance=ExtResource("4_button")]
+custom_minimum_size = Vector2(128, 54)
+layout_mode = 2
+text = "战况"
+theme_type_variation = &"TabButton"
+
+[node name="UnitsTab" parent="SafeMargin/Page/Body/DemoPanel/Margin/Content/TabRow" instance=ExtResource("4_button")]
+custom_minimum_size = Vector2(128, 54)
+layout_mode = 2
+text = "部队"
+theme_type_variation = &"TabButton"
+
+[node name="OrdersTab" parent="SafeMargin/Page/Body/DemoPanel/Margin/Content/TabRow" instance=ExtResource("4_button")]
+custom_minimum_size = Vector2(128, 54)
+layout_mode = 2
+text = "军令"
+theme_type_variation = &"TabButton"
+
+[node name="TabIndicator" type="Panel" parent="SafeMargin/Page/Body/DemoPanel/Margin/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+theme_type_variation = &"FocusFrame"
+
+[node name="FeedbackTarget" type="PanelContainer" parent="SafeMargin/Page/Body/DemoPanel/Margin/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+theme_type_variation = &"ResultPanel"
+
+[node name="Label" type="Label" parent="SafeMargin/Page/Body/DemoPanel/Margin/Content/FeedbackTarget"]
+layout_mode = 2
+text = "结果反馈目标：危险、成功或回合结算可复用同一节奏"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="toggled" from="SafeMargin/Page/Body/ControlPanel/Margin/Controls/ReducedMotionToggle" to="." method="_on_reduced_motion_toggled"]
+[connection signal="pressed" from="SafeMargin/Page/Body/ControlPanel/Margin/Controls/ReplayButton" to="." method="_on_replay_pressed"]
+[connection signal="pressed" from="SafeMargin/Page/Body/ControlPanel/Margin/Controls/FeedbackButton" to="." method="_on_feedback_pressed"]
+[connection signal="pressed" from="SafeMargin/Page/Body/DemoPanel/Margin/Content/TabRow/OverviewTab" to="." method="_on_tab_overview_pressed"]
+[connection signal="pressed" from="SafeMargin/Page/Body/DemoPanel/Margin/Content/TabRow/UnitsTab" to="." method="_on_tab_units_pressed"]
+[connection signal="pressed" from="SafeMargin/Page/Body/DemoPanel/Margin/Content/TabRow/OrdersTab" to="." method="_on_tab_orders_pressed"]

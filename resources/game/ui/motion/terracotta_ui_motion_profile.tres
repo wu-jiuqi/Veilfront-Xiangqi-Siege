@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="UiMotionProfile" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/presentation/ui/ui_motion_profile.gd" id="1_profile"]
+
+[resource]
+script = ExtResource("1_profile")
+entrance_duration = 0.28
+hover_duration = 0.14
+press_duration = 0.08
+focus_duration = 0.16
+tab_duration = 0.18
+feedback_duration = 0.22
+hover_scale = 1.035
+pressed_scale = 0.965
+focus_scale = 1.015
+reduced_motion_duration_scale = 0.45
