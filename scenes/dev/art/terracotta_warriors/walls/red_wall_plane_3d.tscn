@@ -1,0 +1,62 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://scripts/dev/art/wall_plane_sample_3d.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/art/structures/terracotta_warriors/walls/red_wall_intact.svg" id="2_intact"]
+[ext_resource type="Texture2D" path="res://assets/art/structures/terracotta_warriors/walls/red_wall_breached.svg" id="3_breached"]
+[ext_resource type="Texture2D" path="res://assets/art/structures/terracotta_warriors/walls/red_wall_repairing.svg" id="4_repairing"]
+
+[sub_resource type="StandardMaterial3D" id="Material_intact"]
+transparency = 1
+shading_mode = 0
+cull_mode = 2
+albedo_texture = ExtResource("2_intact")
+texture_filter = 5
+
+[sub_resource type="PlaneMesh" id="Plane_intact"]
+material = SubResource("Material_intact")
+size = Vector2(10.6, 0.72)
+
+[sub_resource type="StandardMaterial3D" id="Material_breached"]
+transparency = 1
+shading_mode = 0
+cull_mode = 2
+albedo_texture = ExtResource("3_breached")
+texture_filter = 5
+
+[sub_resource type="PlaneMesh" id="Plane_breached"]
+material = SubResource("Material_breached")
+size = Vector2(10.6, 0.72)
+
+[sub_resource type="StandardMaterial3D" id="Material_repairing"]
+transparency = 1
+shading_mode = 0
+cull_mode = 2
+albedo_texture = ExtResource("4_repairing")
+texture_filter = 5
+
+[sub_resource type="PlaneMesh" id="Plane_repairing"]
+material = SubResource("Material_repairing")
+size = Vector2(10.6, 0.72)
+
+[node name="RedWallPlane3D" type="Node3D"]
+script = ExtResource("1_script")
+metadata/purpose = "TASK-ART-001 red faction flat wall three-state sample"
+metadata/authority_line = "Y=4"
+metadata/information_boundary = "PlayerView.walls[].status only"
+
+[node name="Intact" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.018, 0)
+cast_shadow = 0
+mesh = SubResource("Plane_intact")
+
+[node name="Breached" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.018, 0)
+visible = false
+cast_shadow = 0
+mesh = SubResource("Plane_breached")
+
+[node name="Repairing" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.018, 0)
+visible = false
+cast_shadow = 0
+mesh = SubResource("Plane_repairing")

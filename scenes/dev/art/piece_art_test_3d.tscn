@@ -16,6 +16,7 @@
 [ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces/red_general_piece_3d.tscn" id="15_red_general"]
 [ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces/black_general_piece_3d.tscn" id="16_black_general"]
 [ext_resource type="Script" path="res://scripts/dev/art/piece_art_test_camera_rig.gd" id="17_camera_rig"]
+[ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/walls/red_wall_plane_3d.tscn" id="18_red_wall"]
 
 [sub_resource type="Environment" id="Environment_test"]
 background_mode = 1
@@ -51,15 +52,6 @@ albedo_color = Color(0.015, 0.035, 0.08, 0.62)
 [sub_resource type="PlaneMesh" id="PlaneMesh_fog"]
 material = SubResource("StandardMaterial3D_fog")
 size = Vector2(9.6, 27.6)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wall"]
-albedo_color = Color(0.23, 0.27, 0.31, 1)
-metallic = 0.32
-roughness = 0.68
-
-[sub_resource type="BoxMesh" id="BoxMesh_wall"]
-material = SubResource("StandardMaterial3D_wall")
-size = Vector3(10.6, 0.55, 0.28)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
 content_margin_left = 14.0
@@ -113,15 +105,14 @@ mesh = SubResource("PlaneMesh_fog")
 metadata/note = "Enable only for depth/alpha checks; production fog must consume one observer-safe 9x24 mask"
 
 [node name="StructureRoot" type="Node3D" parent="Board3D" unique_id=921752356]
-visible = false
 
-[node name="WallY4" type="MeshInstance3D" parent="Board3D/StructureRoot" unique_id=1606718334]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.275, 10.2)
-mesh = SubResource("BoxMesh_wall")
+[node name="RedWallY4" parent="Board3D/StructureRoot" instance=ExtResource("18_red_wall")]
+position = Vector3(0, 0, 10.2)
+metadata/authority_cell_line = 4
 
-[node name="WallY21" type="MeshInstance3D" parent="Board3D/StructureRoot" unique_id=1519904270]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.275, -10.2)
-mesh = SubResource("BoxMesh_wall")
+[node name="BlackWallY21Pending" type="Node3D" parent="Board3D/StructureRoot"]
+position = Vector3(0, 0, -10.2)
+metadata/note = "Black faction plane variant begins only after red three-state sample review"
 
 [node name="HighlightRoot" type="MultiMeshInstance3D" parent="Board3D" unique_id=877768912]
 metadata/note = "Reserved preset root for selection and legal-cell batches"
@@ -294,7 +285,7 @@ theme_override_constants/separation = 4
 layout_mode = 2
 theme_override_colors/font_color = Color(0.91, 0.77, 0.42, 1)
 theme_override_font_sizes/font_size = 18
-text = "兵马俑32枚标准阵型测试场"
+text = "兵马俑32枚阵型＋红墙平面样片"
 
 [node name="Usage" type="Label" parent="UI/Instructions/VBoxContainer" unique_id=1312990010]
 layout_mode = 2
@@ -304,4 +295,4 @@ autowrap_mode = 2
 [node name="Spec" type="Label" parent="UI/Instructions/VBoxContainer" unique_id=1000427231]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.68, 0.76, 0.8, 1)
-text = "红银｜黑绿｜Fixed-Y｜35°–80°受限俯角/30°｜32枚预置实例"
+text = "红银｜黑绿｜红墙INTACT平面｜Fixed-Y｜35°–80°受限俯角/30°"

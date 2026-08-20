@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2048" height="192" viewBox="0 0 2048 192">
+  <defs>
+    <filter id="glow" x="-20%" y="-120%" width="140%" height="340%"><feGaussianBlur stdDeviation="10"/></filter>
+  </defs>
+  <rect x="32" y="56" width="1984" height="80" rx="22" fill="#d3a454" opacity="0.12" filter="url(#glow)"/>
+  <path d="M48 100H2000" stroke="#642426" stroke-width="22" stroke-linecap="round" stroke-dasharray="116 38" opacity="0.86"/>
+  <path d="M48 96H2000" stroke="#e2b65e" stroke-width="7" stroke-linecap="round" stroke-dasharray="54 26"/>
+  <path d="M48 70H2000M48 124H2000" stroke="#c98845" stroke-width="5" stroke-linecap="round" stroke-dasharray="88 56" opacity="0.76"/>
+  <g fill="#4b1c1f" stroke="#f0c870" stroke-width="6">
+    <path d="M64 72l24 24-24 24-24-24z"/><path d="M304 72l24 24-24 24-24-24z"/>
+    <path d="M544 72l24 24-24 24-24-24z"/><path d="M784 72l24 24-24 24-24-24z"/>
+    <path d="M1024 72l24 24-24 24-24-24z"/><path d="M1264 72l24 24-24 24-24-24z"/>
+    <path d="M1504 72l24 24-24 24-24-24z"/><path d="M1744 72l24 24-24 24-24-24z"/>
+    <path d="M1984 72l24 24-24 24-24-24z"/>
+  </g>
+  <g fill="none" stroke="#fff0a8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.88">
+    <path d="M128 46l20 18-20 18M368 46l20 18-20 18M608 46l20 18-20 18M848 46l20 18-20 18"/>
+    <path d="M1088 46l20 18-20 18M1328 46l20 18-20 18M1568 46l20 18-20 18M1808 46l20 18-20 18"/>
+    <path d="M128 146l20-18-20-18M368 146l20-18-20-18M608 146l20-18-20-18M848 146l20-18-20-18"/>
+    <path d="M1088 146l20-18-20-18M1328 146l20-18-20-18M1568 146l20-18-20-18M1808 146l20-18-20-18"/>
+  </g>
+</svg>

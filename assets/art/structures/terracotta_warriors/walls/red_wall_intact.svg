@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2048" height="192" viewBox="0 0 2048 192">
+  <defs>
+    <filter id="glow" x="-20%" y="-100%" width="140%" height="300%">
+      <feGaussianBlur stdDeviation="8"/>
+    </filter>
+  </defs>
+  <rect x="32" y="52" width="1984" height="88" rx="22" fill="#8f2727" opacity="0.13" filter="url(#glow)"/>
+  <path d="M48 96H2000" stroke="#531d21" stroke-width="44" stroke-linecap="round" opacity="0.72"/>
+  <path d="M48 66H2000M48 126H2000" stroke="#d8a956" stroke-width="7" stroke-linecap="round" opacity="0.9"/>
+  <path d="M48 96H2000" stroke="#d95a50" stroke-width="15" stroke-linecap="round"/>
+  <path d="M48 83H2000M48 109H2000" stroke="#f08a6f" stroke-width="3" opacity="0.7"/>
+  <g fill="#2f1216" stroke="#e3ba6f" stroke-width="7">
+    <path d="M64 68l28 28-28 28-28-28z"/><path d="M304 68l28 28-28 28-28-28z"/>
+    <path d="M544 68l28 28-28 28-28-28z"/><path d="M784 68l28 28-28 28-28-28z"/>
+    <path d="M1024 68l28 28-28 28-28-28z"/><path d="M1264 68l28 28-28 28-28-28z"/>
+    <path d="M1504 68l28 28-28 28-28-28z"/><path d="M1744 68l28 28-28 28-28-28z"/>
+    <path d="M1984 68l28 28-28 28-28-28z"/>
+  </g>
+  <g fill="#d95950">
+    <circle cx="64" cy="96" r="9"/><circle cx="304" cy="96" r="9"/><circle cx="544" cy="96" r="9"/>
+    <circle cx="784" cy="96" r="9"/><circle cx="1024" cy="96" r="9"/><circle cx="1264" cy="96" r="9"/>
+    <circle cx="1504" cy="96" r="9"/><circle cx="1744" cy="96" r="9"/><circle cx="1984" cy="96" r="9"/>
+  </g>
+</svg>
