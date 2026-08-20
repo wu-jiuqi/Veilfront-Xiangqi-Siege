@@ -3,6 +3,19 @@ extends SceneTree
 const PROFILE_PATH := "res://resources/game/ui/motion/terracotta_ui_motion_profile.tres"
 const BUTTON_SCENE_PATH := "res://scenes/game/ui/ui_motion_button.tscn"
 const LAB_SCENE_PATH := "res://scenes/dev/ui/ui_button_motion_lab.tscn"
+const GALLERY_SCENE_PATH := "res://scenes/dev/ui/ui_hud_v2_gallery.tscn"
+
+const GALLERY_TEXTURES := {
+	"TurnStatusTexture": "res://assets/art/ui/terracotta_hud_v2/turn_status_bar_v1.png",
+	"FactionLeftTexture": "res://assets/art/ui/terracotta_hud_v2/faction_status_plate_v1.png",
+	"UnitInfoTexture": "res://assets/art/ui/terracotta_hud_v2/unit_info_card_v1.png",
+	"ObjectiveTexture": "res://assets/art/ui/terracotta_hud_v2/objective_event_panel_v1.png",
+	"ActionBarTexture": "res://assets/art/ui/terracotta_hud_v2/action_bar_frame_v1.png",
+	"ActionButtonAtlasTexture": "res://assets/art/ui/terracotta_hud_v2/action_button_states_v1.png",
+	"MinimapTexture": "res://assets/art/ui/terracotta_hud_v2/minimap_frame_v1.png",
+	"DecorAtlasTexture": "res://assets/art/ui/terracotta_hud_v2/ui_decor_atlas_v1.png",
+	"HudPanelTexture": "res://assets/art/ui/terracotta_hud_v2/hud_panel_9slice_v1.png",
+}
 
 
 func _init() -> void:
@@ -26,6 +39,20 @@ func _run() -> void:
 	_assert(button.is_reduced_motion_enabled(), "按钮未启用减少动态效果")
 	button.queue_free()
 
+	var gallery_scene := load(GALLERY_SCENE_PATH) as PackedScene
+	_assert(gallery_scene != null, "HUD V2 组件预览无法加载")
+	var gallery := gallery_scene.instantiate() as PanelContainer
+	_assert(gallery != null, "HUD V2 组件预览根节点必须是 PanelContainer")
+	root.add_child(gallery)
+	await process_frame
+	for node_name: String in GALLERY_TEXTURES:
+		var texture_rect := gallery.get_node_or_null("%%%s" % node_name) as TextureRect
+		_assert(texture_rect != null, "HUD V2 组件预览缺少节点：%s" % node_name)
+		_assert(texture_rect.texture != null, "HUD V2 组件预览缺少贴图：%s" % node_name)
+		_assert(texture_rect.texture.resource_path == GALLERY_TEXTURES[node_name], "HUD V2 组件贴图路径错误：%s" % node_name)
+	_assert((gallery.get_node("%FactionRightTexture") as TextureRect).flip_h, "右方阵营状态板必须镜像复用")
+	gallery.queue_free()
+
 	var lab_scene := load(LAB_SCENE_PATH) as PackedScene
 	_assert(lab_scene != null, "按钮动效实验场无法加载")
 	var lab := lab_scene.instantiate() as Control
@@ -35,6 +62,9 @@ func _run() -> void:
 	_assert(lab.get_node_or_null("UiThemeBinder") != null, "实验场未预置 Theme Binder")
 	_assert(lab.get_node_or_null("SafeMargin/Page/Body/DemoPanel") != null, "实验场缺少演示面板")
 	_assert(lab.get_node_or_null("SafeMargin/Page/Body/DemoPanel/Margin/Content/FeedbackTarget") != null, "实验场缺少反馈目标")
+	var hud_gallery := lab.get_node_or_null("HudV2Gallery") as PanelContainer
+	_assert(hud_gallery != null, "实验场未接入 HUD V2 组件预览")
+	_assert(hud_gallery.visible, "实验场启动时必须先展示 HUD V2 组件预览")
 	var motion_buttons := get_nodes_in_group(&"ui_motion_buttons")
 	_assert(motion_buttons.size() == 9, "实验场必须预置 9 个可交互按钮")
 	lab.call("_on_reduced_motion_toggled", true)
@@ -42,7 +72,9 @@ func _run() -> void:
 		_assert(motion_button.call("is_reduced_motion_enabled"), "减少动态效果未同步到所有按钮")
 	lab.call("play_tab_switch", "测试页签")
 	lab.call("play_feedback")
-	print("UI_MOTION_LAB_CONTRACT_PASS groups=6 buttons=%d reduced_motion=true" % motion_buttons.size())
+	lab.call("_on_gallery_close_requested")
+	_assert(not hud_gallery.visible, "HUD V2 组件预览无法关闭")
+	print("UI_MOTION_LAB_CONTRACT_PASS groups=6 buttons=%d hud_v2_textures=%d reduced_motion=true" % [motion_buttons.size(), GALLERY_TEXTURES.size()])
 	lab.queue_free()
 	quit(0)
 

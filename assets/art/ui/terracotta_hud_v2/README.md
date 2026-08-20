@@ -30,6 +30,7 @@
 - `resources/game/ui/themes/terracotta_ui_theme.tres` 已使用本目录的通用面板、四态按钮、小地图框与回合状态条。
 - `scenes/game/ui/match_header.tscn` 通过 `TurnStatusPanel` 主题变体使用 V2 回合状态条。
 - 页面全屏背景和焦点框改用轻量 `StyleBoxFlat`，不再加载旧废案背景与焦点位图。
+- `scenes/dev/ui/ui_button_motion_lab.tscn` 启动时会打开完整组件预览；关闭预览后可继续测试按钮悬停、按压、焦点、禁用、页签与结果反馈动效。
 
 ## 生成与处理
 

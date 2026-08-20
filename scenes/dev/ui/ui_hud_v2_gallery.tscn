@@ -1,0 +1,337 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://scripts/dev/ui/ui_hud_v2_gallery.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/turn_status_bar_v1.png" id="2_turn"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/faction_status_plate_v1.png" id="3_faction"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/unit_info_card_v1.png" id="4_unit"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/objective_event_panel_v1.png" id="5_objective"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/action_bar_frame_v1.png" id="6_action_bar"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/action_button_states_v1.png" id="7_button_atlas"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/minimap_frame_v1.png" id="8_minimap"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/ui_decor_atlas_v1.png" id="9_decor"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/hud_panel_9slice_v1.png" id="10_panel"]
+
+[node name="UiHudV2Gallery" type="PanelContainer"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"HUDPanel"
+script = ExtResource("1_script")
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 28
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 28
+theme_override_constants/margin_bottom = 24
+
+[node name="Page" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Header" type="HBoxContainer" parent="Margin/Page"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="TitleBlock" type="VBoxContainer" parent="Margin/Page/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="Title" type="Label" parent="Margin/Page/Header/TitleBlock"]
+layout_mode = 2
+text = "HUD V2 · 正式组件预览"
+theme_type_variation = &"ScreenTitle"
+
+[node name="Subtitle" type="Label" parent="Margin/Page/Header/TitleBlock"]
+layout_mode = 2
+text = "滚动检查材质、透明边缘与缩放；进入按钮页测试 hover / pressed / focus。"
+theme_type_variation = &"MutedLabel"
+
+[node name="CloseButton" type="Button" parent="Margin/Page/Header"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 56)
+layout_mode = 2
+focus_mode = 2
+text = "进入按钮动效测试"
+theme_type_variation = &"PrimaryButton"
+
+[node name="Scroll" type="ScrollContainer" parent="Margin/Page"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="Gallery" type="VBoxContainer" parent="Margin/Page/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 16
+
+[node name="TurnSection" type="PanelContainer" parent="Margin/Page/Scroll/Gallery"]
+layout_mode = 2
+theme_type_variation = &"CardPanel"
+
+[node name="Content" type="VBoxContainer" parent="Margin/Page/Scroll/Gallery/TurnSection"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Label" type="Label" parent="Margin/Page/Scroll/Gallery/TurnSection/Content"]
+layout_mode = 2
+text = "01 · 顶部回合状态栏"
+theme_type_variation = &"SectionTitle"
+
+[node name="TurnStatusTexture" type="TextureRect" parent="Margin/Page/Scroll/Gallery/TurnSection/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 128)
+layout_mode = 2
+texture = ExtResource("2_turn")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="FactionSection" type="PanelContainer" parent="Margin/Page/Scroll/Gallery"]
+layout_mode = 2
+theme_type_variation = &"CardPanel"
+
+[node name="Content" type="VBoxContainer" parent="Margin/Page/Scroll/Gallery/FactionSection"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Label" type="Label" parent="Margin/Page/Scroll/Gallery/FactionSection/Content"]
+layout_mode = 2
+text = "02 · 双方阵营状态板（右方镜像复用）"
+theme_type_variation = &"SectionTitle"
+
+[node name="Row" type="HBoxContainer" parent="Margin/Page/Scroll/Gallery/FactionSection/Content"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="FactionLeftTexture" type="TextureRect" parent="Margin/Page/Scroll/Gallery/FactionSection/Content/Row"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 180)
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("3_faction")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="FactionRightTexture" type="TextureRect" parent="Margin/Page/Scroll/Gallery/FactionSection/Content/Row"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 180)
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("3_faction")
+expand_mode = 1
+stretch_mode = 5
+flip_h = true
+mouse_filter = 2
+
+[node name="PanelGrid" type="GridContainer" parent="Margin/Page/Scroll/Gallery"]
+layout_mode = 2
+columns = 3
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 12
+
+[node name="UnitCard" type="PanelContainer" parent="Margin/Page/Scroll/Gallery/PanelGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"CardPanel"
+
+[node name="Content" type="VBoxContainer" parent="Margin/Page/Scroll/Gallery/PanelGrid/UnitCard"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Label" type="Label" parent="Margin/Page/Scroll/Gallery/PanelGrid/UnitCard/Content"]
+layout_mode = 2
+text = "03 · 单位信息卡"
+theme_type_variation = &"SectionTitle"
+
+[node name="UnitInfoTexture" type="TextureRect" parent="Margin/Page/Scroll/Gallery/PanelGrid/UnitCard/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(340, 430)
+layout_mode = 2
+texture = ExtResource("4_unit")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="ObjectivePanel" type="PanelContainer" parent="Margin/Page/Scroll/Gallery/PanelGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"CardPanel"
+
+[node name="Content" type="VBoxContainer" parent="Margin/Page/Scroll/Gallery/PanelGrid/ObjectivePanel"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Label" type="Label" parent="Margin/Page/Scroll/Gallery/PanelGrid/ObjectivePanel/Content"]
+layout_mode = 2
+text = "04 · 目标 / 事件面板"
+theme_type_variation = &"SectionTitle"
+
+[node name="ObjectiveTexture" type="TextureRect" parent="Margin/Page/Scroll/Gallery/PanelGrid/ObjectivePanel/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(340, 430)
+layout_mode = 2
+texture = ExtResource("5_objective")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="MinimapPanel" type="PanelContainer" parent="Margin/Page/Scroll/Gallery/PanelGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"CardPanel"
+
+[node name="Content" type="VBoxContainer" parent="Margin/Page/Scroll/Gallery/PanelGrid/MinimapPanel"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Label" type="Label" parent="Margin/Page/Scroll/Gallery/PanelGrid/MinimapPanel/Content"]
+layout_mode = 2
+text = "05 · 小地图透明框"
+theme_type_variation = &"SectionTitle"
+
+[node name="MinimapStack" type="Control" parent="Margin/Page/Scroll/Gallery/PanelGrid/MinimapPanel/Content"]
+custom_minimum_size = Vector2(340, 430)
+layout_mode = 2
+
+[node name="MapUnderlay" type="ColorRect" parent="Margin/Page/Scroll/Gallery/PanelGrid/MinimapPanel/Content/MinimapStack"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.08, 0.13, 0.105, 1)
+mouse_filter = 2
+
+[node name="MapHint" type="Label" parent="Margin/Page/Scroll/Gallery/PanelGrid/MinimapPanel/Content/MinimapStack"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -118.0
+offset_top = -15.0
+offset_right = 118.0
+offset_bottom = 15.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "透明窗口下方可放 SubViewport"
+horizontal_alignment = 1
+theme_type_variation = &"MutedLabel"
+mouse_filter = 2
+
+[node name="MinimapTexture" type="TextureRect" parent="Margin/Page/Scroll/Gallery/PanelGrid/MinimapPanel/Content/MinimapStack"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("8_minimap")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="ActionSection" type="PanelContainer" parent="Margin/Page/Scroll/Gallery"]
+layout_mode = 2
+theme_type_variation = &"CardPanel"
+
+[node name="Content" type="VBoxContainer" parent="Margin/Page/Scroll/Gallery/ActionSection"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Label" type="Label" parent="Margin/Page/Scroll/Gallery/ActionSection/Content"]
+layout_mode = 2
+text = "06 · 五槽动作栏底框"
+theme_type_variation = &"SectionTitle"
+
+[node name="ActionBarTexture" type="TextureRect" parent="Margin/Page/Scroll/Gallery/ActionSection/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 230)
+layout_mode = 2
+texture = ExtResource("6_action_bar")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="AtlasRow" type="HBoxContainer" parent="Margin/Page/Scroll/Gallery"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="ButtonAtlasPanel" type="PanelContainer" parent="Margin/Page/Scroll/Gallery/AtlasRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"CardPanel"
+
+[node name="Content" type="VBoxContainer" parent="Margin/Page/Scroll/Gallery/AtlasRow/ButtonAtlasPanel"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Label" type="Label" parent="Margin/Page/Scroll/Gallery/AtlasRow/ButtonAtlasPanel/Content"]
+layout_mode = 2
+text = "07 · 按钮四态图集"
+theme_type_variation = &"SectionTitle"
+
+[node name="ActionButtonAtlasTexture" type="TextureRect" parent="Margin/Page/Scroll/Gallery/AtlasRow/ButtonAtlasPanel/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 190)
+layout_mode = 2
+texture = ExtResource("7_button_atlas")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="DecorAtlasPanel" type="PanelContainer" parent="Margin/Page/Scroll/Gallery/AtlasRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"CardPanel"
+
+[node name="Content" type="VBoxContainer" parent="Margin/Page/Scroll/Gallery/AtlasRow/DecorAtlasPanel"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Label" type="Label" parent="Margin/Page/Scroll/Gallery/AtlasRow/DecorAtlasPanel/Content"]
+layout_mode = 2
+text = "08 · 装饰图集"
+theme_type_variation = &"SectionTitle"
+
+[node name="DecorAtlasTexture" type="TextureRect" parent="Margin/Page/Scroll/Gallery/AtlasRow/DecorAtlasPanel/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 190)
+layout_mode = 2
+texture = ExtResource("9_decor")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="NineSliceSection" type="PanelContainer" parent="Margin/Page/Scroll/Gallery"]
+layout_mode = 2
+theme_type_variation = &"CardPanel"
+
+[node name="Content" type="VBoxContainer" parent="Margin/Page/Scroll/Gallery/NineSliceSection"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Label" type="Label" parent="Margin/Page/Scroll/Gallery/NineSliceSection/Content"]
+layout_mode = 2
+text = "09 · 通用九宫格面板原图（上方卡片均已通过 Theme 使用）"
+theme_type_variation = &"SectionTitle"
+
+[node name="HudPanelTexture" type="TextureRect" parent="Margin/Page/Scroll/Gallery/NineSliceSection/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 260)
+layout_mode = 2
+texture = ExtResource("10_panel")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[connection signal="pressed" from="Margin/Page/Header/CloseButton" to="." method="_on_close_button_pressed"]

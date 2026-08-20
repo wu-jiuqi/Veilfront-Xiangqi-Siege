@@ -8,6 +8,7 @@ extends Control
 @onready var status_label: Label = %StatusLabel
 @onready var reduced_motion_toggle: CheckButton = %ReducedMotionToggle
 @onready var primary_button: Button = %PrimaryButton
+@onready var hud_v2_gallery: UiHudV2Gallery = %HudV2Gallery
 
 var _entry_tween: Tween
 var _feedback_tween: Tween
@@ -18,7 +19,10 @@ func _ready() -> void:
 	_set_reduced_motion(false)
 	demo_panel.resized.connect(_update_demo_pivot)
 	_update_demo_pivot()
-	primary_button.grab_focus.call_deferred()
+	if hud_v2_gallery.visible:
+		hud_v2_gallery.focus_close()
+	else:
+		primary_button.grab_focus.call_deferred()
 	play_entrance.call_deferred()
 
 
@@ -71,6 +75,18 @@ func _on_feedback_pressed() -> void:
 	play_feedback()
 
 
+func _on_preview_pressed() -> void:
+	hud_v2_gallery.show()
+	hud_v2_gallery.focus_close()
+	status_label.text = "已打开：HUD V2 正式组件预览"
+
+
+func _on_gallery_close_requested() -> void:
+	hud_v2_gallery.hide()
+	primary_button.grab_focus.call_deferred()
+	status_label.text = "HUD V2 预览已关闭，可以开始按钮动效测试"
+
+
 func _on_tab_overview_pressed() -> void:
 	play_tab_switch("战况")
 
@@ -81,6 +97,12 @@ func _on_tab_units_pressed() -> void:
 
 func _on_tab_orders_pressed() -> void:
 	play_tab_switch("军令")
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if hud_v2_gallery.visible and event.is_action_pressed(&"ui_cancel"):
+		_on_gallery_close_requested()
+		get_viewport().set_input_as_handled()
 
 
 func _set_reduced_motion(enabled: bool) -> void:
