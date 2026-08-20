@@ -298,7 +298,7 @@ text = "兵马俑32枚标准阵型测试场"
 
 [node name="Usage" type="Label" parent="UI/Instructions/VBoxContainer" unique_id=1312990010]
 layout_mode = 2
-text = "中键拖拽旋转｜WASD移动｜Home/1红方｜Space/2全盘｜End/3黑方"
+text = "中键拖拽旋转｜WASD移动｜滚轮缩放｜Home/1红方｜Space/2全盘｜End/3黑方"
 autowrap_mode = 2
 
 [node name="Spec" type="Label" parent="UI/Instructions/VBoxContainer" unique_id=1000427231]

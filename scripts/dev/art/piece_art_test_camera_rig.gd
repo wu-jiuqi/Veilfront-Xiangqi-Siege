@@ -17,6 +17,12 @@ const PRESET_BLACK: StringName = &"black"
 @export var pan_right_action: StringName = &"board_pan_right"
 @export var pan_forward_action: StringName = &"board_pan_up"
 @export var pan_back_action: StringName = &"board_pan_down"
+@export_category("滚轮缩放")
+@export_range(0.1, 20.0, 0.1, "or_greater") var zoom_step: float = 4.0
+@export_range(1.0, 100.0, 0.5, "or_greater") var min_zoom_distance: float = 12.0
+@export_range(1.0, 150.0, 0.5, "or_greater") var max_zoom_distance: float = 70.0
+@export var zoom_in_action: StringName = &"board_zoom_in"
+@export var zoom_out_action: StringName = &"board_zoom_out"
 @export_category("中键旋转")
 @export var orbit_sensitivity_degrees: float = 0.15
 @export_range(-89.0, -1.0, 0.5, "degrees") var min_pitch_degrees: float = -80.0
@@ -32,6 +38,7 @@ var _orbit_dragging: bool = false
 func _ready() -> void:
 	_apply_rotation_limits()
 	_clamp_to_board()
+	_clamp_zoom_distance()
 
 
 func _physics_process(delta: float) -> void:
@@ -45,6 +52,14 @@ func _physics_process(delta: float) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed(zoom_in_action):
+		apply_zoom_steps(1.0)
+		get_viewport().set_input_as_handled()
+		return
+	if event.is_action_pressed(zoom_out_action):
+		apply_zoom_steps(-1.0)
+		get_viewport().set_input_as_handled()
+		return
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_MIDDLE:
 		_orbit_dragging = event.pressed
 		get_viewport().set_input_as_handled()
@@ -72,7 +87,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 
 
 func show_preset(preset: StringName, immediate: bool = false) -> void:
-	var target: Vector3 = _position_for_preset(preset)
+	var target: Vector3 = _clamped_camera_position(_position_for_preset(preset))
 	if _transition != null and _transition.is_valid():
 		_transition.kill()
 	if immediate:
@@ -120,6 +135,24 @@ func apply_pan_input(input_direction: Vector2, delta: float) -> void:
 		_clamp_to_board()
 
 
+func apply_zoom_steps(zoom_in_steps: float) -> void:
+	if is_zero_approx(zoom_in_steps):
+		return
+	if _transition != null and _transition.is_valid():
+		_transition.kill()
+	var camera_offset: Vector3 = _camera.position
+	if camera_offset.length_squared() <= 0.000001:
+		camera_offset = overview_position
+	var minimum_distance: float = minf(min_zoom_distance, max_zoom_distance)
+	var maximum_distance: float = maxf(min_zoom_distance, max_zoom_distance)
+	var target_distance: float = clampf(
+		camera_offset.length() - zoom_in_steps * zoom_step,
+		minimum_distance,
+		maximum_distance
+	)
+	_camera.position = camera_offset.normalized() * target_distance
+
+
 func is_orbit_dragging() -> bool:
 	return _orbit_dragging
 
@@ -143,6 +176,20 @@ func _clamp_to_board() -> void:
 		global_position.y,
 		clampf(global_position.z, pan_bounds_min.y, pan_bounds_max.y)
 	)
+
+
+func _clamp_zoom_distance() -> void:
+	_camera.position = _clamped_camera_position(_camera.position)
+
+
+func _clamped_camera_position(camera_position: Vector3) -> Vector3:
+	var minimum_distance: float = minf(min_zoom_distance, max_zoom_distance)
+	var maximum_distance: float = maxf(min_zoom_distance, max_zoom_distance)
+	var direction: Vector3 = camera_position.normalized()
+	if direction.is_zero_approx():
+		direction = overview_position.normalized()
+	var distance: float = clampf(camera_position.length(), minimum_distance, maximum_distance)
+	return direction * distance
 
 
 func _position_for_preset(preset: StringName) -> Vector3:

@@ -18,6 +18,7 @@ func _run() -> void:
 	_check_middle_drag_state(rig)
 	_check_rotation_limits(rig, camera)
 	_check_pan_limits(rig, camera)
+	_check_zoom_limits(rig, camera)
 	test_scene.queue_free()
 	await process_frame
 	if _failures.is_empty():
@@ -63,6 +64,23 @@ func _check_pan_limits(rig: Node3D, camera: Camera3D) -> void:
 	_expect(rig.global_position.z >= rig.pan_bounds_min.y, "camera target must stay inside the board front edge")
 	_expect(is_equal_approx(rig.global_position.y, initial_height), "WASD movement must remain on the board plane")
 	_expect(camera.global_position.y > 0.22, "camera must remain above the board base")
+
+
+func _check_zoom_limits(rig: Node, camera: Camera3D) -> void:
+	_expect(InputMap.has_action(rig.zoom_in_action), "camera zoom-in action must exist in Input Map")
+	_expect(InputMap.has_action(rig.zoom_out_action), "camera zoom-out action must exist in Input Map")
+	var starting_distance: float = camera.position.length()
+	var zoom_in_event := InputEventAction.new()
+	zoom_in_event.action = rig.zoom_in_action
+	zoom_in_event.pressed = true
+	rig._unhandled_input(zoom_in_event)
+	_expect(camera.position.length() < starting_distance, "mouse wheel up must move the camera closer to the board")
+	var orbit_direction: Vector3 = camera.position.normalized()
+	rig.apply_zoom_steps(1000.0)
+	_expect(is_equal_approx(camera.position.length(), rig.min_zoom_distance), "zoom in must stop at the minimum distance")
+	_expect(camera.position.normalized().dot(orbit_direction) > 0.999, "zoom must preserve the current orbit direction")
+	rig.apply_zoom_steps(-2000.0)
+	_expect(is_equal_approx(camera.position.length(), rig.max_zoom_distance), "zoom out must stop at the maximum distance")
 
 
 func _expect(condition: bool, message: String) -> void:
