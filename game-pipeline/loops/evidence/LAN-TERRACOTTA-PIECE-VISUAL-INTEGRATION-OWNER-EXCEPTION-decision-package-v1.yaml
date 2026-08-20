@@ -1,0 +1,118 @@
+exception_subject:
+  schema_version: veilfront-production-scope-exception/v1
+  subject_id: EXCEPTION-LAN-TERRACOTTA-PIECE-VISUAL-INTEGRATION-001@v1
+  project_id: veilfront-xiangqi-siege
+  title: 兵马俑14棋子接入现有LAN联机原型有限例外
+  parent_contract:
+    contract_id: LOOP-CTR-FORMAL-FOUNDATION-GATE2-001
+    version: 2
+    approval_id: approval:veilfront-xiangqi-siege:loop-contract:ce2d6174f82a
+    subject_digest: ce2d6174f82af003b023f80e2ae3676510df541f4a6ac129bfcf69847361b20d
+    exceeded_boundary: 已批准的14棋子追认例外明确排除了正式对局和联机接入；本次必须单独批准一个只改现有LAN原型表现层的前瞻性例外。
+  prerequisite_approval:
+    approval_id: approval:veilfront-xiangqi-siege:production-scope-exception:95214ab75a15
+    subject_id: EXCEPTION-STATIC-14-PIECE-BATCH-001@v1
+    subject_digest: 95214ab75a156a4570e561f2780e9e9e9bb442291085cfd41cd13be793a90c5f
+    authorized_assets: 仅限该批准绑定的14张既有RGBA运行时纹理及14个既有2D棋子预置。
+  decision_requested:
+    decision_type: prospective_limited_scope_exception
+    question: 是否允许把已批准留存的兵马俑14棋子贴图仅接入现有LAN联机原型的棋盘表现层，并在不修改规则、PlayerView、网络协议和隐藏信息边界的条件下完成双端效果验证？
+    designated_decider: project-owner
+    decisions: [approved, rejected, revise]
+  exact_scope:
+    target_runtime:
+      name: 当前LAN联机原型
+      entry_scene: scenes/prototype/network/lan_lobby.tscn
+      board_flow:
+      - scenes/prototype/gate1_logic_lab.tscn
+      - scenes/prototype/board_shell.tscn
+      render_owner: scripts/prototype/board_surface.gd
+      excluded_runtime: 正式比赛场、Steam或互联网联机、正式发布构建
+    visual_mapping:
+      viewer_source: 只消费现有lan_network_session发出的观察者安全PlayerView，不读取GameState或对手隐藏数据。
+      factions:
+        red: 银白钨钢
+        black: 深墨绿青铜
+      piece_type_to_role:
+        pawn: 兵
+        cannon: 炮
+        rook: 车
+        horse: 马
+        elephant: 相
+        advisor: 士
+        general: 将
+      unique_texture_count: 14
+      source_assets: assets/art/pieces/terracotta_warriors/*_idle.png
+      source_presets: scenes/dev/art/terracotta_warriors/pieces_2d/*_piece_2d.tscn
+      placement_rules:
+      - 棋子仍以PlayerView中的position和现有logical_to_local映射定位。
+      - 红黑观察者的棋盘翻转仍由现有viewer_side逻辑决定。
+      - 立绘保持等比缩放、脚底落在交点，不因兵种原图比例不同而拉伸。
+      - 只为alive且不在reserve且实际存在于PlayerView.pieces中的棋子绘制贴图。
+      - capture_ghosts、contact_intel、迷雾、标记、行动高亮和选择框继续使用现有语义，不用完整棋子贴图补全未知信息。
+      fallback: 保留原圆形字棋作为可回滚灰盒回退；贴图缺失或无法解析时不得中断联机对局。
+    implementation_boundary:
+      allowed_files:
+      - scripts/prototype/board_surface.gd
+      - scenes/prototype/board_shell.tscn
+      - tests/prototype/network/run_lan_terracotta_piece_visual_contract.gd
+      - evidence/prototype/qa/lan-terracotta-piece-visual-integration-v1.md
+      - evidence/prototype/qa/lan-terracotta-piece-*.png
+      permitted_changes:
+      - 在BoardSurface表现层预加载并映射14张既有纹理。
+      - 为原型棋盘增加可关闭的兵马俑贴图显示开关和字棋回退。
+      - 调整贴图绘制尺寸、脚底锚点、绘制顺序与选择/行动高亮的叠层顺序。
+      - 新增只读视觉合同测试、双端截图和验证记录。
+  approval_effect:
+    allowed:
+    - 在当前LAN联机原型中显示14类既有兵马俑棋子，并由同一纹理复用棋盘上的多个同兵种实例。
+    - 运行主机红方、客户端黑方双端联机验证和无头合同测试。
+    - 对接入所需的缩放、锚点、纹理过滤、叠层和灰盒回退进行非创意技术修复。
+    forbidden:
+    - 修改规则引擎、GameState、PlayerView DTO/投影、回放、随机消费、教学语义、行动合法性或结算。
+    - 新增或修改RPC、网络消息字段、协议版本、端口流程、主机权威模型或断线重连语义。
+    - 从服务器状态、测试夹具或本地缓存读取PlayerView未提供的敌方棋子并创建贴图节点或绘制命令。
+    - 接入正式比赛场、Steam或互联网联机，或把本原型结果描述为正式联机验收。
+    - 新增或重做棋子、棋盘、背景、UI、VFX、动画、音频、字体或其他美术资产。
+    - 批准GATE-2或把兵马俑提升为全局美术风格。
+  resources_and_limits:
+    new_external_spend_limit: 0
+    new_agent_instance_limit: 0
+    new_art_asset_count_limit: 0
+    code_change_limit: 现有BoardSurface表现层和BoardShell预置；最多新增1个视觉合同测试脚本。
+    evidence_limit: 最多新增1份验证记录和4张双端/分辨率截图。
+    duration: 仅覆盖本次现有LAN原型棋子视觉接入、验证和缺陷修复；后续正式场景接入需要新Contract或新例外。
+  acceptance:
+    functional:
+    - LAN主机和客户端继续完成原有建房、加入、准备、开局、行动和PlayerView更新流程。
+    - red/black与七个piece_type严格映射到14张对应纹理，标准全显夹具中双方各16枚、合计32枚。
+    - 红方观察者和黑方观察者的棋盘方向、棋子交点和点击判定与接入前一致。
+    information_safety:
+    - 每端只为自身PlayerView.pieces中的可见实体绘制贴图；隐藏棋子不会因贴图层新增节点、占位或完整轮廓。
+    - contact_intel与capture_ghosts继续保持降级信息表达，不泄露未知兵种或当前位置之外的信息。
+    visual:
+    - 银白钨钢与深墨绿青铜在双方视角可区分，七兵种大轮廓在现有单元格尺寸下可辨。
+    - 所有贴图等比缩放并以脚底锚定交点；炮、车、马不会因方形源图被压扁，人形不会悬浮。
+    - 雾、墙、选择框、行动高亮、标记和坐标仍可读，不被棋子贴图错误遮挡。
+    verification:
+    - 现有tests/prototype/network/run_lan_network_integration.gd通过。
+    - 现有tests/prototype/run_playtest_graybox.gd通过。
+    - 新增LAN兵马俑视觉合同测试通过，并证明未知棋子零贴图绘制。
+    - 提供至少一组主机红方和客户端黑方的实机截图及验证记录。
+    - git diff证明未修改规则、PlayerView、网络会话或协议文件。
+  failure_and_rollback:
+    stop_conditions:
+    - 发现必须修改PlayerView、网络协议或规则才能显示棋子。
+    - 任一端出现隐藏信息泄露、点击坐标偏移、棋盘翻转错误或联机回归。
+    - 14张既有纹理不足以完成映射而需要新增美术生产。
+    rollback: 关闭兵马俑显示开关并恢复原圆形字棋路径；保留失败证据，不扩大范围继续修补。
+  decision_consequences:
+    approved: 创建绑定本摘要哈希的game-production-approval/v1记录后，才可按上述边界实现并验证现有LAN原型接入。
+    rejected: 不修改LAN联机原型；14棋子继续只用于已批准的开发美术测试场。
+    revise: 根据项目所有者意见修改摘要、生成新哈希并重新请求确认；旧哈希立即失效。
+review:
+  gate_result: awaiting_human
+  designated_decider: project-owner
+  canonicalization: exception_subject使用UTF-8 canonical JSON；键排序；无额外空白；ensure_ascii=false；SHA-256。
+  approval_digest: 228910adda5335c0fe9a79181eae571572eaea1786a79e2853a67ab444345463
+  confirmation_rule: 项目所有者必须回复完整64位approval_digest；缩写、意译、实现指令或仅回复“可以”均不构成批准。
