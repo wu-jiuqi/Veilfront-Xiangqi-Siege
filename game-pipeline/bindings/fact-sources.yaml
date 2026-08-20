@@ -10,4 +10,4 @@ fact_sources:
     path: game-pipeline/project-definition/project-brief.yaml
     owner: project-owner
     authority: project.definition.confirmed
-    subject_digest: 54520517ac26859c24459accb2d7672d12d0224ef69a766f883eda7b2b523289
+    subject_digest: 8e9d4285c1c7237a22f308808e944fd8571700f896b8dd8cfb118f0fe0de3d3e

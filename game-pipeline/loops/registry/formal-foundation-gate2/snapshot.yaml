@@ -69,14 +69,14 @@ registry_snapshot:
       review_scope:
       - GATE-2
   runtime:
-    current_state: active
-    state_entered_at: '2026-08-19T15:14:38.816327+08:00'
+    current_state: waiting_approval
+    state_entered_at: '2026-08-20T20:14:24.003515+08:00'
     current_iteration: 3
-    last_transition_id: TR-REVIEW-ACTIVE
-    last_event_id: b941cae0-6333-48ac-bbba-2d259cfdc88e
-    last_event_digest: 8920ebebb517f7a08de1121ddc578a366d5560434aeafd8fba21c58686dc447b
-    last_event_sequence: 40
-    record_revision: 40
+    last_transition_id: TR-OPERATIONAL-INTERRUPTED
+    last_event_id: 17a2dbfb-e549-4e49-95f2-09550a56f137
+    last_event_digest: 12af2e7c430da1d012cbb0ea3788c3a42c41bc5294c22ed0e17ff1346b65ca80
+    last_event_sequence: 41
+    record_revision: 41
   budget:
     limits:
       iteration_limit: 4
@@ -249,5 +249,28 @@ registry_snapshot:
       1000_seed: cancelled_not_passed
       independent_reviews: deferred
     final_handoff_ref: null
-  interruption: null
+  interruption:
+    interruption_id: 9f2636ca-4918-47e2-b5c8-e4e71f43a3dd
+    current_interruption_state: waiting_approval
+    resume_state: active
+    first_entered_from_state: active
+    first_entered_at: '2026-08-20T20:14:24.003515+08:00'
+    current_reason:
+      reason_code: owner_direction_change_requires_brief_and_contract_reapproval
+      description: 项目所有者将现阶段正式实现由三维三渲二改为二维；旧 Contract v2 不再适合作为当前生产目标，须先确认 Project Brief v7，再单独批准并迁移 Contract v3。
+      responsible_role: project-owner
+      evidence_refs:
+      - game-pipeline/loops/evidence/GATE2-current-2d-direction-change-impact-v1.md
+      - game-pipeline/project-definition/project-brief.yaml
+      - game-pipeline/loops/contracts/loop-contract-formal-foundation-gate2-v3.yaml
+      - codex-thread://current#owner-current-implementation-2d-late-3d-option
+    entry_snapshot:
+      contract_id: LOOP-CTR-FORMAL-FOUNDATION-GATE2-001
+      contract_version: 2
+      contract_digest: bf2d09e7117960de4b178d827dc2c123ab4b83777175e5b1b0c9cca6eabe561d
+      input_set_digest: 62e035c2f55cd2df4f4cae7b4e6b0b13f4024cdf11c273c6dbf8b9991146f2dc
+      dependency_set_digest: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+      authority_set_digest: c0c49f82a471d1d01c022114a09335f33082e7681501f64e33b7ed18af427adf
+      budget_usage_digest: 8cd26cff9518b616c7f9b84314d2adc987ca26722d7778dcd5897b1a44df6a69
+    latest_revalidation: null
   pending_approvals: []

@@ -1,0 +1,47 @@
+asset_inventory:
+  schema_version: veilfront-demo-2d-art-inventory/v1
+  project_id: veilfront-xiangqi-siege
+  direction_ref: docs/art/veilfront-2d-current-direction-v1.md
+  status: draft_pending_contract_v3_approval
+  production_gate: revised-GATE-2
+  current_pipeline: godot-2d
+  categories:
+  - category_id: board
+    items:
+    - {id: ART2D-BOARD-BASE, name: 24×9二维棋盘底图, quantity: 1, phase: baseline_sample, status: planned}
+    - {id: ART2D-BOARD-GRID, name: 精确9路24线交点网格, quantity: 1, phase: baseline_sample, status: planned}
+    - {id: ART2D-BOARD-ZONES, name: 大本营缓冲区战区二维区域层, quantity: 3, phase: baseline_sample, status: planned}
+  - category_id: pieces
+    items:
+    - {id: ART2D-PIECE-SET, name: 红黑七兵种二维棋子集, quantity: 14, phase: baseline_sample, status: planned}
+    - {id: ART2D-PIECE-STATES, name: 选中隐身阵亡与行动状态, quantity: 1, phase: baseline_sample, status: planned}
+  - category_id: structures
+    items:
+    - {id: ART2D-WALL-STATES, name: 红黑城墙二维状态, quantity: 8, phase: baseline_sample, status: planned}
+    - {id: ART2D-FLAG-STATES, name: 三旗发现占领状态, quantity: 5, phase: baseline_sample, status: planned}
+  - category_id: fog_feedback
+    items:
+    - {id: ART2D-FOG, name: 观察者安全二维迷雾, quantity: 1, phase: baseline_sample, status: planned}
+    - {id: ART2D-HIGHLIGHTS, name: 选择落点攻击路径田字范围反馈, quantity: 1, phase: baseline_sample, status: planned}
+    - {id: ART2D-MARKERS, name: 圆叉方玩家私有标记, quantity: 3, phase: baseline_sample, status: planned}
+  - category_id: ui
+    items:
+    - {id: ART2D-HUD-SAMPLE, name: 对局HUD与行动确认局部样片, quantity: 1, phase: baseline_sample, status: planned}
+    - {id: ART2D-TUTORIAL-SAMPLE, name: 教学提示与章节导航局部样片, quantity: 1, phase: baseline_sample, status: planned}
+  deferred_research_assets:
+  - id: DEFERRED-3D-TERRACOTTA
+    name: 斜俯视三渲二与14枚兵马俑静态棋子
+    status: preserved_late_optional
+    refs:
+    - assets/art/pieces/terracotta_warriors/
+    - scenes/dev/art/piece_art_test_3d.tscn
+    - evidence/gate2/art-samples/TW-PIECE-01-14-godot-integration-review-v1.md
+  acceptance:
+  - 只消费PlayerView，未授权棋子和旗位不创建节点
+  - 红黑180度映射不改变权威坐标
+  - 960×540、1280×720、1920×1080可读且不裁切
+  - 规则、回放、随机消费与教学语义保持不变
+  unresolved:
+  - 二维棋子最终视觉风格与动画规格
+  - UI、VFX和音频的完整数量、预算与工期
+  - 后期是否重新启动三渲二研究

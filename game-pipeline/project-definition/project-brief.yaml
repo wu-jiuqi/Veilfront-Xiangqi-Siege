@@ -3,7 +3,7 @@ project_brief:
   identity:
     brief_id: brief:veilfront-xiangqi-siege:initial
     project_id: veilfront-xiangqi-siege
-    version: 6
+    version: 7
   coordination:
     project_owner: project-owner
     coordinator_role_id: AGT-DIR
@@ -53,6 +53,11 @@ project_brief:
   - source_id: source:veilfront-xiangqi-siege:owner-oblique-3d-art-direction
     uri: codex-thread://current#owner-freeze-oblique-3d-board-art-direction
     version_or_digest: owner-decision:2026-08-19:replace-top-down-with-oblique-3d-board
+    supplied_by: project-owner
+    authority: project.direction.input
+  - source_id: source:veilfront-xiangqi-siege:owner-current-2d-direction
+    uri: codex-thread://current#owner-current-implementation-2d-late-3d-option
+    version_or_digest: owner-decision:2026-08-20:current-2d-defer-3d-rendered-2d
     supplied_by: project-owner
     authority: project.direction.input
   statements:
@@ -168,16 +173,17 @@ project_brief:
     - source:veilfront-xiangqi-siege:owner-rules-finalization
   - statement_id: stmt:veilfront-xiangqi-siege:presentation
     domain: art-direction
-    text: 24×9交点棋盘采用三维主战场与受战争迷雾约束的鸟瞰战术小地图；主视图使用锁定旋转的低FOV斜俯视透视摄像机、完整呈现九路宽度并沿24线长轴移动，棋盘交点在世界空间保持等距。红黑双方界面都令己方大本营位于底部，黑方只做180°表现映射和摄像机切换，不改变权威坐标与行动语义。区域只用明亮底色色块、材质差异和不越界的大字“大本营/缓冲区/战区”区分，不使用额外区域分割线；城墙点线由独立三维结构加粗表现。迷雾由单一9×24观察者安全mask覆盖地表，未授权棋子和旗位不创建表现节点。车移动路径与相田字侦察/阻挡范围分别沿棋盘线绘制专属高亮边框。未选棋时右键可在交点放置圆、叉或方形的玩家私有标记；已选棋时首次右键只取消选择，再次右键才进入标记，标记不影响正常高亮。普通行动、炮击和士献祭最终确认均在主棋盘完成，所有待确认行动支持取消。
+    text: 24×9交点棋盘现阶段以Godot二维表现作为正式实现目标，固定界面优先使用Control预置场景和容器，棋盘、棋子、城墙、旗帜、迷雾与战术高亮使用Node2D/Sprite2D或等价二维节点组合。红黑双方界面都令己方大本营位于底部，黑方只做180°表现映射，不改变权威坐标与行动语义。主棋盘保证九路完整、交点等距且支持长轴浏览；区域以二维底色、纹理和不越界的大字“大本营/缓冲区/战区”区分，城墙在对应点线上以二维状态资源表现。迷雾只消费当前观察者PlayerView，未授权棋子和旗位不创建表现节点。车移动路径与相田字范围沿棋盘线绘制专属高亮。未选棋时右键可在交点放置圆、叉或方形的玩家私有标记；已选棋时首次右键只取消选择。普通行动、炮击和士献祭最终确认均在主棋盘完成并支持取消。原斜俯视三维与Sprite3D三渲二方案保留为项目后期进阶可选项，不是现阶段实现、验收或GATE-2前置。
     status: confirmed
     decision_owner: project-owner
     source_refs:
     - source:veilfront-xiangqi-siege:owner-planning-conversation
     - source:veilfront-xiangqi-siege:owner-rule-revision-5
     - source:veilfront-xiangqi-siege:owner-oblique-3d-art-direction
+    - source:veilfront-xiangqi-siege:owner-current-2d-direction
   - statement_id: stmt:veilfront-xiangqi-siege:visual-direction
     domain: art-direction
-    text: 世界观确认为中国古代架空背景，同时存在朝代体系与修仙体系；美术路线冻结为“二维Vector2i交点规则、Node3D三维战场、Sprite3D/AnimatedSprite3D二维角色、锁定旋转的斜俯视低FOV透视摄像机、东方战争奇幻、回合制迷雾战术象棋”，正式替换原先90° top-down 2D俯视方向。正式棋盘仍为24×9一基交点，主视图保证九路完整并沿长轴浏览；角色默认Fixed-Y Billboard、假阴影和深度测试，未授权隐藏事实不创建表现节点。首版Demo继续包含完整Demo级棋盘、棋子、界面、迷雾、旗帜、特效、动画与音频资源；高成本批量生产仍须先通过GATE-2美术基线审查。
+    text: 世界观继续为中国古代架空背景，同时存在朝代体系与修仙体系；现阶段正式美术与技术实现路线改为“二维Vector2i交点规则、Control/Node2D二维战场、Sprite2D/AnimatedSprite2D棋子与结构、东方战争奇幻、回合制迷雾战术象棋”。正式棋盘为24×9一基交点，主视图保证九路完整并沿长轴浏览；红黑视角只做二维180°表现映射，未授权隐藏事实不创建表现节点。既有斜俯视Node3D、Sprite3D棋子与兵马俑三渲二试验资产保留为后期进阶可选研究资产，不进入当前主线的功能、美术、性能或验收范围。首版Demo仍需包含完整Demo级棋盘、棋子、界面、迷雾、旗帜、特效、动画与音频资源，但都以二维管线规划；高成本批量生产仍须通过修订后的GATE-2基线审查。
     status: confirmed
     decision_owner: project-owner
     source_refs:
@@ -185,6 +191,7 @@ project_brief:
     - source:veilfront-xiangqi-siege:owner-rules-finalization
     - source:veilfront-xiangqi-siege:owner-demo-scope-revision
     - source:veilfront-xiangqi-siege:owner-oblique-3d-art-direction
+    - source:veilfront-xiangqi-siege:owner-current-2d-direction
   - statement_id: stmt:veilfront-xiangqi-siege:demo-delivery-scope
     domain: scope-constraints
     text: 首版Demo包含完整规则的人对人联机对战、达到Demo展示标准的完整美术资源和新手教学关卡；暂不包含AI人机对战。互联网联机仍是Demo最终目标，但当前紧接GATE-1的生产循环只负责正式架构边界、教学灰盒和视觉基线，不实现互联网传输、匹配、服务器部署或Steam网络接入。
@@ -201,12 +208,13 @@ project_brief:
     - source:veilfront-xiangqi-siege:owner-demo-scope-revision
   - statement_id: stmt:veilfront-xiangqi-siege:implementation
     domain: implementation
-    text: GATE-1已经验证确定性规则核心、可复现随机种子、按观察者过滤的PlayerView与可回放行动日志可行。正式架构应把规则域、对局用例、PlayerView投影、表现层、教学脚本和未来网络传输分离；任何未来互联网对战端点都只能提交规范化意图并接收自身PlayerView，权威端独占FullState与随机消费。该正式边界仍须在下一循环经技术审查和GATE-2验证，互联网传输实现不在该循环范围内。
+    text: GATE-1已验证确定性规则核心、可复现随机种子、按观察者过滤的PlayerView与可回放行动日志可行。正式架构继续把规则域、对局用例、PlayerView投影、表现层、教学脚本和未来网络传输分离；现阶段的正式表现层使用Godot二维节点和资源，不得因切换二维而复制规则或绕过PlayerView。任何未来互联网对战端点都只能提交规范化意图并接收自身PlayerView，权威端独占FullState与随机消费。斜俯视三渲二作为后期可选表现层时，也必须复用同一应用与PlayerView边界；互联网传输实现仍不在当前循环范围内。
     status: confirmed
     decision_owner: project-owner
     source_refs:
     - source:veilfront-xiangqi-siege:owner-planning-conversation
     - source:veilfront-xiangqi-siege:owner-demo-scope-revision
+    - source:veilfront-xiangqi-siege:owner-current-2d-direction
   - statement_id: stmt:veilfront-xiangqi-siege:single-player-ai
     domain: implementation
     text: AI人机对战明确不进入首版Demo。现有规则型/搜索型AI及其公平性测试作为研究资产和回归参考保留，但不承担Demo体验、难度或发布验收；未来若重新纳入，仍必须只读取玩家等价PlayerView并重新立项评估训练、搜索质量和内容成本。
@@ -217,12 +225,13 @@ project_brief:
     - source:veilfront-xiangqi-siege:owner-demo-scope-revision
   - statement_id: stmt:veilfront-xiangqi-siege:godot-authoring
     domain: implementation
-    text: Godot实现优先使用编辑器预置场景、节点和资源，只有棋子实例、迷雾单元、行动轨迹等运行时数量由对局数据决定，或动态方案明显更安全简单时才动态创建节点。GATE-1原型目录只作为行为与测试基线，不能未经架构审查直接升级为正式工程结构。
+    text: Godot实现优先使用编辑器预置场景、节点和资源；现阶段固定界面与战场结构优先使用Control容器、Node2D、Sprite2D、AnimatedSprite2D和已配置的Theme/资源场景。只有棋子实例、迷雾单元、行动轨迹等运行时数量由对局数据决定，或动态方案明显更安全简单时才动态创建节点。GATE-1原型目录只作为行为与测试基线，不能未经架构审查直接升级为正式工程结构；原Node3D/Sprite3D资产只作为后期可选研究资产保留。
     status: confirmed
     decision_owner: project-owner
     source_refs:
     - source:veilfront-xiangqi-siege:project-identity
     - source:veilfront-xiangqi-siege:owner-demo-scope-revision
+    - source:veilfront-xiangqi-siege:owner-current-2d-direction
   - statement_id: stmt:veilfront-xiangqi-siege:platform-engine
     domain: platform-engine
     text: 游戏引擎确认为Godot 4.7.1，首发平台为Steam，首版Demo以桌面端互联网人对人对战为最终交付目标，并包含本地运行的新手教学关卡；具体支持的操作系统、输入设备、Steam网络能力和服务器形态留待后续联网技术基线确认。
@@ -255,7 +264,7 @@ project_brief:
     decision_owner: project-owner
     blocks_staffing: false
   - question_id: question:veilfront-xiangqi-siege:art-baseline
-    question: 斜俯视三维棋盘、Sprite3D角色、镜头校准带、基础色彩语言、源图/运行时规格和完整资产清单已经形成v1基线；实际游戏内样片、最终动画帧数、音频与特效数量、外包策略、预算和生产周期仍须在批量资产生产前通过GATE-2视觉基线审查。
+    question: 现阶段改用二维实现，需重建二维棋盘、Sprite2D棋子、迷雾、城墙、UI、源图/运行时规格和完整资产清单的GATE-2基线；既有三渲二资产只保留为后期可选研究资产。二维具体视觉风格、动画帧数、音频与特效数量、外包策略、预算和生产周期仍须在批量生产前确认。
     decision_owner: project-owner
     blocks_staffing: false
   - question_id: question:veilfront-xiangqi-siege:tutorial-coverage
@@ -298,11 +307,11 @@ project_brief:
     impact: medium
     staffing_implication: 需要可观测的平衡指标、对局日志、批量模拟或结构化试玩，不应在纸面阶段宣布平衡完成。
   - risk_id: risk:veilfront-xiangqi-siege:art-unknown
-    description: 首版Demo已形成斜俯视三维棋盘v1视觉与资产清单，但尚无游戏内样片证明前后排遮挡、透明排序、迷雾叠层、Forward+性能和三目标分辨率可读性，动画、音频、外包与总成本也仍未估算。
+    description: 首版Demo的主线已从斜俯视三渲二改为二维表现，现有三维视觉基线和14枚兵马俑资产不能直接作为当前GATE-2验收基线。二维正式风格、棋盘与棋子可读性、迷雾叠层、响应式布局、动画、音频、外包与总成本尚需重新建立证据。
     evidence_refs:
     - stmt:veilfront-xiangqi-siege:visual-direction
     impact: high
-    staffing_implication: 当前只允许制作少量可审查样片并修订三维表现架构；具体产能、外包与批量制作承诺必须等待独立QA和GATE-2。
+    staffing_implication: 当前只允许修订二维表现架构、制作少量可审查二维样片并重建资产清单；三渲二产能与任何批量制作承诺都不在当前范围。
   - risk_id: risk:veilfront-xiangqi-siege:ai-fairness
     description: 现有AI虽然通过公平性技术验证，但对战质量不足以支持首版Demo；若未来恢复，仍需重新评估不完全信息决策、训练或搜索成本和可解释难度。
     evidence_refs:
@@ -360,7 +369,7 @@ project_brief:
       - 迷雾信息边界验收清单
       acceptance_owner_kind: human
     - need_id: need:veilfront-xiangqi-siege:visual-production
-      responsibility: 定义Demo视觉语言、资产预算与制作规范，并在GATE-2批准后生产棋盘、棋子、城墙、迷雾、旗帜、特效、动画、音频与界面资产。
+      responsibility: 定义现阶段Demo的二维视觉语言、资产预算与制作规范，并在修订后GATE-2批准后生产二维棋盘、棋子、城墙、迷雾、旗帜、特效、动画、音频与界面资产；三渲二仅作为后期可选研究项。
       rationale_statement_refs:
       - stmt:veilfront-xiangqi-siege:visual-direction
       expected_artifacts:
@@ -403,10 +412,10 @@ project_brief:
     blocker_refs: []
   review:
     status: confirmed
-    approval_id: approval:veilfront-xiangqi-siege:project-brief:54520517ac26
+    approval_id: approval:veilfront-xiangqi-siege:project-brief:8e9d4285c1c7
     confirmed_by: project-owner
-    confirmed_at: '2026-08-19T19:47:28.8355954+08:00'
+    confirmed_at: '2026-08-20T20:20:05.9425390+08:00'
   integrity:
     canonicalization: project-brief-subject-canonical-json-v1
     digest_algorithm: sha256
-    subject_digest: 54520517ac26859c24459accb2d7672d12d0224ef69a766f883eda7b2b523289
+    subject_digest: 8e9d4285c1c7237a22f308808e944fd8571700f896b8dd8cfb118f0fe0de3d3e

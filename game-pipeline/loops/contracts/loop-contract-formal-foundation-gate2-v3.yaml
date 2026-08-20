@@ -1,0 +1,233 @@
+loop_contract:
+  schema_version: '0.2'
+  contract_id: LOOP-CTR-FORMAL-FOUNDATION-GATE2-001
+  loop_type: formal-2d-presentation-tutorial-visual-baseline
+  title: 第二生产循环v3——正式二维表现与视觉基线
+  version: 3
+  status: draft
+approval_binding:
+  approval_id: null
+  subject_digest: null
+  approved_by: null
+  approved_at: null
+  source_ref: null
+draft_review:
+  status: ready_for_project_owner_review
+  prepared_against:
+    project_brief_version: 7
+    project_brief_subject_digest: 8e9d4285c1c7237a22f308808e944fd8571700f896b8dd8cfb118f0fe0de3d3e
+    project_brief_confirmation: confirmed
+    project_brief_approval_id: approval:veilfront-xiangqi-siege:project-brief:8e9d4285c1c7
+    previous_contract_version: 2
+    previous_contract_approval_id: approval:veilfront-xiangqi-siege:loop-contract:ce2d6174f82a
+    current_registry_loop_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+    current_registry_revision: 41
+  note: 本草案落实项目所有者“现阶段2D、三渲二后期可选”的方向；Brief v7已按精确摘要确认，本Contract仍须由项目所有者按最终摘要单独批准后才能迁移。
+purpose:
+  objective: 保留已接受的规则核心、PlayerView、回放、依赖护栏和教学语义，以预置Control/Node2D、Sprite2D/AnimatedSprite2D、二维观察者安全迷雾和响应式HUD建立正式二维对局壳、二维视觉基线及独立QA证据；斜俯视三渲二仅作为后期可选研究资产保留。
+  preserved_deliverables:
+  - deliverable_id: DELIVERABLE-ARCH-001
+    version: iteration1
+    preserve_as: 规则、DTO、依赖与信任边界基线；表现映射修订为二维
+  - deliverable_id: DELIVERABLE-MIGRATION-001
+    version: r3-owner-exception
+    preserve_as: 正式规则核心与迁移等价证据
+  - deliverable_id: DELIVERABLE-TUTORIAL-001
+    version: current-iteration3
+    preserve_as: 教学Intent/Event与固定流程事实；适配二维正式表现容器
+  - deliverable_id: DELIVERABLE-3D-RESEARCH-001
+    version: historical-2026-08-20
+    preserve_as: 后期可选研究资产，不进入当前验收
+  required_deliverables:
+  - deliverable_id: DELIVERABLE-PRESENTATION-2D-001
+    artifact_type: preset-godot-2d-match-shell
+    description: 以预置Control/Node2D、Sprite2D/AnimatedSprite2D、二维迷雾层和响应式HUD组成的正式二维表现壳，保持一基坐标、双方底部视角与PlayerView边界。
+  - deliverable_id: DELIVERABLE-ART-2D-001
+    artifact_type: demo-2d-visual-baseline-and-asset-inventory
+    description: 二维视觉方向、三目标分辨率游戏内样片、二维Demo资产清单、规格、依赖、验收标准与成本未知项。
+  - deliverable_id: DELIVERABLE-QA-2D-001
+    artifact_type: independent-gate2-v3-evidence
+    description: 对场景预置、坐标映射、迷雾泄露、响应式布局、二维层级、性能和旧行为回归的独立证据。
+  - deliverable_id: DELIVERABLE-GATE2-2D-001
+    artifact_type: human-decision-package
+    description: 绑定Brief v7、二维正式表现、视觉样片、资产清单、构建和独立QA摘要的修订版GATE-2人工决策包。
+  out_of_scope:
+  - Node3D/Sprite3D三渲二正式接入、新三维资产、三维性能验收与三维批量生产。
+  - Steam Networking、互联网Relay、专用服务器、匹配、账号、重连、观战、聊天和部署运维实现。
+  - AI训练、AI质量提升、AI难度调参与首版Demo人机对战交付。
+  - 完整动画、完整音频、全量特效、最终UI皮肤、正式小篆矢量母版或高成本外包承诺。
+  - 修改owner rule revision 5、确定性随机消费、回放摘要、PlayerView信息边界或教学Intent/Event语义。
+responsibility:
+  owner_role: pos:veilfront-xiangqi-siege:root:project-manager
+  producer_roles:
+  - pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+  - pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
+  - pos:veilfront-xiangqi-siege:design-experience:visual-production-lead
+  reviewer_roles:
+  - pos:veilfront-xiangqi-siege:quality:qa-release-lead
+  - project-owner
+  required_authority_scope:
+  - AUTH-VEILFRONT-PROJECT-MANAGER
+  - AUTH-VEILFRONT-GODOT-TECHNOLOGY
+  - AUTH-VEILFRONT-SYSTEMS-EXPERIENCE
+  - AUTH-VEILFRONT-VISUAL-PRODUCTION
+  - AUTH-VEILFRONT-QA-RELEASE
+  - GATE-2由project-owner保留
+  escalation_to: project-owner
+start:
+  triggers:
+  - trigger_id: TRIGGER-BRIEF-V7-CONFIRMED
+    description: Project Brief v7确认且不可变批准摘要匹配。
+  - trigger_id: TRIGGER-CONTRACT-V3-APPROVED
+    description: 本Contract v3精确摘要由项目所有者另行批准。
+  - trigger_id: TRIGGER-REGISTRY-V3-MIGRATION-READY
+    description: 当前中断Registry已形成保留历史与更新二维任务绑定的迁移计划。
+  entry_conditions:
+  - condition_id: ENTRY-INSTANCE-NORMAL
+    description: 项目实例、插件锁、Organization Registry、权限和生成Agent适配器为normal。
+    required_evidence: validate_project_instance.py退出码0。
+  - condition_id: ENTRY-BRIEF-V7-CONFIRMED
+    description: Brief v7处于confirmed且approval摘要与当前内容一致。
+    required_evidence: project-brief validator带approval-dir退出码0。
+  - condition_id: ENTRY-CONTRACT-V3-APPROVED
+    description: v3不可变approval与物化文件摘要一致。
+    required_evidence: game-pipeline/approvals下v3 approval。
+  - condition_id: ENTRY-V2-EVIDENCE-PRESERVED
+    description: v2 Registry历史、保留产物、方向变更中断与历史研究资产保持可验证。
+    required_evidence: validate_loop_registry.py退出码0及迁移前后快照。
+  required_inputs:
+  - input_slot_id: INPUT-BRIEF-V7-001
+    artifact_type: confirmed-project-brief
+    version_requirement: version 7；subject_digest与项目所有者批准记录一致。
+    required: true
+  - input_slot_id: INPUT-2D-DIRECTION-001
+    artifact_type: owner-confirmed-current-2d-direction
+    version_requirement: docs/art/veilfront-2d-current-direction-v1.md与Brief v7一致。
+    required: true
+  - input_slot_id: INPUT-2D-ASSET-INVENTORY-001
+    artifact_type: demo-2d-art-asset-inventory
+    version_requirement: docs/art/demo-2d-asset-inventory-v1.yaml覆盖CHECK-ART-2D-001全部类别。
+    required: true
+  - input_slot_id: INPUT-PREVIOUS-ACCEPTED-001
+    artifact_type: gate2-v2-preserved-deliverables
+    version_requirement: Registry已登记的ARCH、MIGRATION、规则、回放与教学保留产物。
+    required: true
+iterations:
+  - iteration_id: ITERATION-3S-FORMAL-2D
+    objective: 建立正式二维表现与二维视觉样片，不改规则核心、PlayerView、回放与教学语义。
+    owner_role: pos:veilfront-xiangqi-siege:design-experience:visual-production-lead
+    tasks:
+    - task_id: TASK-PRESENTATION-2D-001
+      description: 以预置Control/Node2D、Sprite2D、二维迷雾层、响应式HUD和一基坐标mapper实现正式二维对局壳。
+      owner_role: pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+      output_refs: [DELIVERABLE-PRESENTATION-2D-001]
+    - task_id: TASK-ART-2D-001
+      description: 完成棋盘、网格、红黑棋子、城墙、旗帜、迷雾、选择/落点/攻击反馈和局部UI二维样片与资产清单，不启动全量生产。
+      owner_role: pos:veilfront-xiangqi-siege:design-experience:visual-production-lead
+      output_refs: [DELIVERABLE-ART-2D-001]
+    - task_id: TASK-TUTORIAL-2D-COMPAT-001
+      description: 证明现有教学经同一Intent/Event运行并绑定二维正式表现容器，不复制规则或读取隐藏FullState。
+      owner_role: pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
+      output_refs: [DELIVERABLE-PRESENTATION-2D-001, DELIVERABLE-QA-2D-001]
+  - iteration_id: ITERATION-4-V3-INDEPENDENT-REVIEW
+    objective: 独立复核二维表现、视觉样片、旧行为回归、信息边界和Contract范围。
+    owner_role: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+    tasks:
+    - task_id: TASK-QA-V3-001
+      description: 从clean worktree复现项目/Registry/场景/回归、三分辨率、双方视角、二维层级、迷雾泄露和性能证据。
+      output_refs: [DELIVERABLE-QA-2D-001]
+    - task_id: TASK-GATE2-V3-001
+      description: 汇总绑定提交、构建、二维样片、资产清单与独立QA的GATE-2决策包，不代替项目所有者批准。
+      owner_role: pos:veilfront-xiangqi-siege:root:project-manager
+      output_refs: [DELIVERABLE-GATE2-2D-001]
+acceptance:
+  automated_checks:
+  - check_id: CHECK-CONTRACT-V3-001
+    description: Brief v7、Contract v3 approval、Registry迁移、组织权限、Git提交和证据摘要全部匹配。
+    required: true
+  - check_id: CHECK-DEPENDENCY-001
+    description: domain/application/PlayerView信任边界不因二维表现发生反向依赖。
+    required: true
+  - check_id: CHECK-INFORMATION-2D-001
+    description: 未授权敌棋和旗位不创建节点；迷雾、音效、粒子、碰撞体和合法落点均不能泄露隐藏信息。
+    required: true
+  - check_id: CHECK-GODOT-2D-001
+    description: Godot 4.7.1无错误导入；正式主壳、二维对局壳和教学场景可无头加载；固定结构遵守预置节点优先。
+    required: true
+  - check_id: CHECK-COORDINATE-001
+    description: 红黑视角下X=1..9/Y=1..24权威坐标、交点点击和180度二维映射一致，九路完整显示。
+    required: true
+  - check_id: CHECK-RESPONSIVE-2D-001
+    description: 960×540、1280×720、1920×1080下棋盘、HUD、棋子和高亮可读且不裁切。
+    required: true
+  - check_id: CHECK-PERFORMANCE-2D-001
+    description: 目标样片记录纹理规格、显存估算与帧率，低配模式仍保持核心可读性。
+    required: true
+  - check_id: CHECK-ART-2D-001
+    description: 二维资产清单覆盖棋盘、棋子、城墙、迷雾、旗帜、UI、特效、动画和音频，并区分样片与GATE-2后批量项。
+    required: true
+  - check_id: CHECK-REGRESSION-001
+    description: 代表性规则、PlayerView、回放与教学回归通过；二维表现不改变随机消费或权威状态摘要。
+    required: true
+  - check_id: CHECK-SCOPE-001
+    description: 未引入三渲二正式化、互联网SDK、服务器、AI交付、高成本批量资产或外包承诺。
+    required: true
+  professional_review:
+    required: true
+    reviewer_role: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+    criteria:
+    - 生产者不是自己交付物的唯一审查者，QA在clean worktree复现关键证据。
+    - 二维表现没有静默修改规则、教学语义、PlayerView或随机序列。
+    - 二维样片足以判断可读性、风格和生产成本，但没有冒充完整美术。
+    - 旧三维证据保留并明确标记为后期可选研究资产。
+  human_gate:
+    required: true
+    gate_id: GATE-2
+    question: 正式二维表现、教学灰盒、信息边界与二维视觉样片是否足够稳定，值得进入Demo级二维批量资产生产？
+  success_conditions:
+  - 所有必要自动检查和独立专业审查通过。
+  - 二维表现不依赖AI、LAN原型或隐藏FullState，且不改变正式规则/PlayerView/Replay边界。
+  - 三目标分辨率、双方视角、二维层级与迷雾安全证据可复现。
+  - 二维样片与完整资产清单足以判断质量方向和产能风险。
+  - GATE-2只进入awaiting_human，任何Agent不得代替项目所有者批准。
+state_machine:
+  state_machine_id: LOOP-SM-DEFAULT
+  version: '0.2'
+  allowed_overrides: []
+failure_and_exit:
+  blocking_conditions:
+  - Brief v7或Contract v3未批准、摘要不匹配、Registry迁移未验证或项目实例非normal。
+  - 二维表现必须读取隐藏FullState、创建未授权节点或修改规则/随机/回放才能工作。
+  - 样片无法在三目标分辨率解决九路显示、交点点击、HUD裁切或信息层级。
+  - 二维视觉基线不足以形成可估算资产清单，或需要未经批准的高成本生产。
+  - 任一必要自动检查失败且修订预算不足。
+  rollback:
+    return_to: TASK-PRESENTATION-2D-001或TASK-ART-2D-001；方向性失败返回Project Brief/Contract审批。
+    preserve:
+    - v2 Registry历史、已接受架构/迁移/教学证据和方向变更记录。
+    - Brief v7、二维视觉方向、资产清单、样片源文件和三分辨率证据。
+    - 后期可选三渲二研究资产，不混入当前验收。
+  cancellation_conditions:
+  - 项目所有者取消二维当前主线或再次改变Demo范围。
+  - 证据证明当前二维边界内不可行且项目所有者选择停止而非修订。
+  final_handoff:
+    receiver_role: pos:veilfront-xiangqi-siege:root:project-manager
+    required_contents:
+    - v2保留产物、二维正式表现和迁移影响映射。
+    - 教学回归、PlayerView信息边界、场景加载、分辨率、二维层级和性能证据。
+    - 二维视觉基线、样片、完整资产清单及成本未知项。
+    - GATE-2人工决定范围与二维批量生产前置条件。
+coordination:
+  allowed_parent_loop_types: [project-production]
+  dependency_rules:
+  - Brief v7必须先获项目所有者确认，本Contract v3再以最终摘要单独获批。
+  - Contract批准后必须先迁移Registry绑定，未迁移前不得执行二维生产任务。
+  - 技术负责人拥有二维场景与渲染映射，视觉负责人拥有二维视觉基线和样片，系统体验负责人拥有教学事实。
+  - QA保持独立，不拥有生产事实源或GATE-2批准权。
+  - 三渲二正式化、互联网实现、服务器采购与批量美术必须另立获批Contract。
+  child_loop_creation:
+    allowed: false
+    conditions: []
+    required_authority_scope: []
+  registry_binding:
+    store_runtime_relationships_in_registry: true

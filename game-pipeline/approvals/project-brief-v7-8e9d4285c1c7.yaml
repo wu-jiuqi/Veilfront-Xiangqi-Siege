@@ -1,0 +1,33 @@
+approval:
+  schema_version: game-production-approval/v1
+  approval_id: approval:veilfront-xiangqi-siege:project-brief:8e9d4285c1c7
+  subject_kind: project-brief
+  subject_id: brief:veilfront-xiangqi-siege:initial
+  subject_digest: 8e9d4285c1c7237a22f308808e944fd8571700f896b8dd8cfb118f0fe0de3d3e
+  decision: approved
+  decided_by: project-owner
+  decided_at: '2026-08-20T20:20:05.9425390+08:00'
+  evidence:
+    source_refs:
+    - codex-thread://current#project-brief-v7-digest-confirmation
+    confirmed_input: 8e9d4285c1c7237a22f308808e944fd8571700f896b8dd8cfb118f0fe0de3d3e
+    previous_confirmed_brief:
+      version: 6
+      subject_digest: 54520517ac26859c24459accb2d7672d12d0224ef69a766f883eda7b2b523289
+      approval_id: approval:veilfront-xiangqi-siege:project-brief:54520517ac26
+  authorized_action:
+    summary: 确认现阶段正式实现改用Godot二维表现，斜俯视三渲二及既有三维资产降级为项目后期进阶可选研究项；准许据此形成并单独审批GATE-2 Contract v3。
+    allowed:
+    - 将Project Brief v7物化为confirmed并更新Fact Source权威状态
+    - 准备正式二维表现、二维视觉基线和独立QA的Contract v3最终审批对象
+    - 保留既有规则核心、PlayerView、回放、教学和三维历史研究资产
+    forbidden:
+    - 自动批准Contract v3或迁移当前Loop Registry
+    - 自动批准GATE-2或启动二维批量美术生产
+    - 删除既有三渲二资产或把它们继续计入当前主线验收
+    - 修改owner rule revision 5、PlayerView信息边界、回放或随机消费
+  application:
+    materialized_path: game-pipeline/project-definition/project-brief.yaml
+    materialized_status: confirmed
+    materialized_digest: 9b580e1e9424cb01931c0ed1ef9b773834a88f515ccd561ea3b4fee7458a3a28
+    applied_at: '2026-08-20T20:20:05.9425390+08:00'

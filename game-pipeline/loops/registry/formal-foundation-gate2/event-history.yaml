@@ -1765,3 +1765,62 @@ event_history:
     digest_algorithm: sha256
     previous_event_digest: 53153ad38488dc74b76057980ed03d017b51b83561139fa0efc76423baf758f3
     event_digest: 8920ebebb517f7a08de1121ddc578a366d5560434aeafd8fba21c58686dc447b
+- schema_version: '0.1'
+  event_id: 17a2dbfb-e549-4e49-95f2-09550a56f137
+  mutation_id: de6c7cd8-8eaa-49d6-b6dc-b1fa6ab1ea8e
+  loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+  sequence: 41
+  event_type: core.interruption_entered
+  occurred_at: '2026-08-20T20:14:24.003515+08:00'
+  recorded_at: '2026-08-20T20:14:24.003515+08:00'
+  actor:
+    actor_id: inst:01M02M6X3Q8YWJXHY52K3V5AR2
+    role: pos:veilfront-xiangqi-siege:root:project-manager
+    authority_id: AUTH-VEILFRONT-PROJECT-MANAGER
+  causality:
+    correlation_id: 6d4a4efe-7073-4511-9c76-5409ec281101
+    causation_event_id: b941cae0-6333-48ac-bbba-2d259cfdc88e
+    request_id: owner-current-2d-direction-change
+  concurrency:
+    expected_record_revision: 40
+    resulting_record_revision: 41
+  binding_snapshot:
+    contract_digest: bf2d09e7117960de4b178d827dc2c123ab4b83777175e5b1b0c9cca6eabe561d
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    transition_id: TR-OPERATIONAL-INTERRUPTED
+    from_state: active
+    to_state: waiting_approval
+    iteration:
+      before: 3
+      after: 3
+    interruption:
+      interruption_id: 9f2636ca-4918-47e2-b5c8-e4e71f43a3dd
+      current_interruption_state: waiting_approval
+      resume_state: active
+      first_entered_from_state: active
+      first_entered_at: '2026-08-20T20:14:24.003515+08:00'
+      current_reason:
+        reason_code: owner_direction_change_requires_brief_and_contract_reapproval
+        description: 项目所有者将现阶段正式实现由三维三渲二改为二维；旧 Contract v2 不再适合作为当前生产目标，须先确认 Project Brief v7，再单独批准并迁移 Contract v3。
+        responsible_role: project-owner
+        evidence_refs: &id004
+        - game-pipeline/loops/evidence/GATE2-current-2d-direction-change-impact-v1.md
+        - game-pipeline/project-definition/project-brief.yaml
+        - game-pipeline/loops/contracts/loop-contract-formal-foundation-gate2-v3.yaml
+        - codex-thread://current#owner-current-implementation-2d-late-3d-option
+      entry_snapshot:
+        contract_id: LOOP-CTR-FORMAL-FOUNDATION-GATE2-001
+        contract_version: 2
+        contract_digest: bf2d09e7117960de4b178d827dc2c123ab4b83777175e5b1b0c9cca6eabe561d
+        input_set_digest: 62e035c2f55cd2df4f4cae7b4e6b0b13f4024cdf11c273c6dbf8b9991146f2dc
+        dependency_set_digest: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+        authority_set_digest: c0c49f82a471d1d01c022114a09335f33082e7681501f64e33b7ed18af427adf
+        budget_usage_digest: 8cd26cff9518b616c7f9b84314d2adc987ca26722d7778dcd5897b1a44df6a69
+      latest_revalidation: null
+  evidence_refs: *id004
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: 8920ebebb517f7a08de1121ddc578a366d5560434aeafd8fba21c58686dc447b
+    event_digest: 12af2e7c430da1d012cbb0ea3788c3a42c41bc5294c22ed0e17ff1346b65ca80
