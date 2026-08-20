@@ -1,0 +1,662 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://scripts/dev/ui/board_ui_layout_calibrator.gd" id="1_calibrator"]
+[ext_resource type="Script" path="res://scripts/dev/ui/board_visible_rect_editor.gd" id="2_rect_editor"]
+[ext_resource type="Theme" path="res://resources/game/ui/themes/terracotta_ui_theme.tres" id="3_theme"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/turn_status_bar_v1.png" id="4_turn"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/faction_status_plate_v1.png" id="5_faction"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/unit_info_card_v1.png" id="6_unit"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/objective_event_panel_v1.png" id="7_objective"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/action_bar_frame_v1.png" id="8_action"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/minimap_frame_v1.png" id="9_minimap"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_preview_border"]
+bg_color = Color(0.018, 0.024, 0.026, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.56, 0.44, 0.23, 0.9)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_safe_area"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.8, 0.63, 0.29, 0.42)
+
+[node name="BoardUiLayoutCalibrator" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3_theme")
+script = ExtResource("1_calibrator")
+
+[node name="Backdrop" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_type_variation = &"ScreenBackground"
+
+[node name="MainMargin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = 12.0
+offset_right = -12.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Page" type="VBoxContainer" parent="MainMargin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Header" type="PanelContainer" parent="MainMargin/Page"]
+custom_minimum_size = Vector2(0, 62)
+layout_mode = 2
+theme_type_variation = &"HUDPanel"
+
+[node name="HeaderMargin" type="MarginContainer" parent="MainMargin/Page/Header"]
+layout_mode = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 8
+
+[node name="HeaderRow" type="HBoxContainer" parent="MainMargin/Page/Header/HeaderMargin"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="TitleBlock" type="VBoxContainer" parent="MainMargin/Page/Header/HeaderMargin/HeaderRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 1
+
+[node name="Title" type="Label" parent="MainMargin/Page/Header/HeaderMargin/HeaderRow/TitleBlock"]
+layout_mode = 2
+text = "正式 2D 棋盘 × HUD 布局校准工具"
+theme_type_variation = &"ScreenTitle"
+
+[node name="Subtitle" type="Label" parent="MainMargin/Page/Header/HeaderMargin/HeaderRow/TitleBlock"]
+layout_mode = 2
+text = "框选的是棋盘进入对局时的屏幕默认可视区域；完整棋盘世界仍保持 1152×3072 并在窗口内滚动。"
+theme_type_variation = &"MutedLabel"
+theme_override_colors/font_color = Color(0.72, 0.75, 0.7, 1)
+
+[node name="StatusLabel" type="Label" parent="MainMargin/Page/Header/HeaderMargin/HeaderRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+text = "拖动青色区域开始校准"
+horizontal_alignment = 2
+vertical_alignment = 1
+autowrap_mode = 2
+theme_override_colors/font_color = Color(0.78, 0.8, 0.75, 1)
+
+[node name="Body" type="HBoxContainer" parent="MainMargin/Page"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="InspectorPanel" type="PanelContainer" parent="MainMargin/Page/Body"]
+custom_minimum_size = Vector2(318, 0)
+layout_mode = 2
+theme_type_variation = &"SidebarPanel"
+
+[node name="InspectorMargin" type="MarginContainer" parent="MainMargin/Page/Body/InspectorPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 14
+
+[node name="InspectorScroll" type="ScrollContainer" parent="MainMargin/Page/Body/InspectorPanel/InspectorMargin"]
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="Inspector" type="VBoxContainer" parent="MainMargin/Page/Body/InspectorPanel/InspectorMargin/InspectorScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="ProfileHeading" type="Label" parent="MainMargin/Page/Body/InspectorPanel/InspectorMargin/InspectorScroll/Inspector"]
+layout_mode = 2
+text = "预览画布"
+theme_type_variation = &"SectionTitle"
+
+[node name="ResolutionOption" type="OptionButton" parent="MainMargin/Page/Body/InspectorPanel/InspectorMargin/InspectorScroll/Inspector"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+focus_mode = 2
+
+[node name="SnapRow" type="HBoxContainer" parent="MainMargin/Page/Body/InspectorPanel/InspectorMargin/InspectorScroll/Inspector"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="SnapLabel" type="Label" parent="MainMargin/Page/Body/InspectorPanel/InspectorMargin/InspectorScroll/Inspector/SnapRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "拖拽吸附"
+vertical_alignment = 1
+
+[node name="SnapOption" type="OptionButton" parent="MainMargin/Page/Body/InspectorPanel/InspectorMargin/InspectorScroll/Inspector/SnapRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(104, 44)
+layout_mode = 2
+focus_mode = 2
+
+[node name="Separator1" type="HSeparator" parent="MainMargin/Page/Body/InspectorPanel/InspectorMargin/InspectorScroll/Inspector"]
+layout_mode = 2
+
+[node name="RectHeading" type="Label" parent="MainMargin/Page/Body/InspectorPanel/InspectorMargin/InspectorScroll/Inspector"]
+layout_mode = 2
+text = "默认棋盘可视区域（屏幕坐标）"
+theme_type_variation = &"SectionTitle"
+
+[node name="RectGrid" type="GridContainer" parent="MainMargin/Page/Body/InspectorPanel/InspectorMargin/InspectorScroll/Inspector"]
+layout_mode = 2
+columns = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 6
+
+[node name="XLabel" type="Label" parent="MainMargin/Page/Body/InspectorPanel/InspectorMargin/InspectorScroll/Inspector/RectGrid"]
+layout_mode = 2
+text = "X"
+vertical_alignment = 1
+
+[node name="XSpinBox" type="SpinBox" parent="MainMargin/Page/Body/InspectorPanel/InspectorMargin/InspectorScroll/Inspector/RectGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 40)
+layout_mode = 2
+max_value = 1280.0
+step = 1.0
+
+[node name="YLabel" type="Label" parent="MainMargin/Page/Body/InspectorPanel/InspectorMargin/InspectorScroll/Inspector/RectGrid"]
+layout_mode = 2
+text = "Y"
+vertical_alignment = 1
+
+[node name="YSpinBox" type="SpinBox" parent="MainMargin/Page/Body/InspectorPanel/InspectorMargin/InspectorScroll/Inspector/RectGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 40)
+layout_mode = 2
+max_value = 720.0
+step = 1.0
+
+[node name="WidthLabel" type="Label" parent="MainMargin/Page/Body/InspectorPanel/InspectorMargin/InspectorScroll/Inspector/RectGrid"]
+layout_mode = 2
+text = "宽度"
+vertical_alignment = 1
+
+[node name="WidthSpinBox" type="SpinBox" parent="MainMargin/Page/Body/InspectorPanel/InspectorMargin/InspectorScroll/Inspector/RectGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 40)
+layout_mode = 2
+min_value = 240.0
+max_value = 1280.0
+value = 760.0
+step = 1.0
+
+[node name="HeightLabel" type="Label" parent="MainMargin/Page/Body/InspectorPanel/InspectorMargin/InspectorScroll/Inspector/RectGrid"]
+layout_mode = 2
+text = "高度"
+vertical_alignment = 1
+
+[node name="HeightSpinBox" type="SpinBox" parent="MainMargin/Page/Body/InspectorPanel/InspectorMargin/InspectorScroll/Inspector/RectGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 40)
+layout_mode = 2
+min_value = 180.0
+max_value = 720.0
+value = 450.0
+step = 1.0
+
+[node name="RectReadout" type="Label" parent="MainMargin/Page/Body/InspectorPanel/InspectorMargin/InspectorScroll/Inspector"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 132)
+layout_mode = 2
+text = "等待校准数据"
+autowrap_mode = 2
+theme_type_variation = &"MutedLabel"
+
+[node name="Separator2" type="HSeparator" parent="MainMargin/Page/Body/InspectorPanel/InspectorMargin/InspectorScroll/Inspector"]
+layout_mode = 2
+
+[node name="DisplayHeading" type="Label" parent="MainMargin/Page/Body/InspectorPanel/InspectorMargin/InspectorScroll/Inspector"]
+layout_mode = 2
+text = "辅助显示"
+theme_type_variation = &"SectionTitle"
+
+[node name="ShowHudToggle" type="CheckButton" parent="MainMargin/Page/Body/InspectorPanel/InspectorMargin/InspectorScroll/Inspector"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+focus_mode = 2
+button_pressed = true
+text = "显示正式 HUD 组件"
+
+[node name="ShowSafeAreaToggle" type="CheckButton" parent="MainMargin/Page/Body/InspectorPanel/InspectorMargin/InspectorScroll/Inspector"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+focus_mode = 2
+button_pressed = true
+text = "显示 16 px 屏幕安全区"
+
+[node name="ActionGrid" type="GridContainer" parent="MainMargin/Page/Body/InspectorPanel/InspectorMargin/InspectorScroll/Inspector"]
+layout_mode = 2
+columns = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+
+[node name="ResetButton" type="Button" parent="MainMargin/Page/Body/InspectorPanel/InspectorMargin/InspectorScroll/Inspector/ActionGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(132, 44)
+layout_mode = 2
+focus_mode = 2
+text = "推荐中区"
+
+[node name="CenterButton" type="Button" parent="MainMargin/Page/Body/InspectorPanel/InspectorMargin/InspectorScroll/Inspector/ActionGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(132, 44)
+layout_mode = 2
+focus_mode = 2
+text = "保持尺寸居中"
+
+[node name="SafeAreaButton" type="Button" parent="MainMargin/Page/Body/InspectorPanel/InspectorMargin/InspectorScroll/Inspector/ActionGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(132, 44)
+layout_mode = 2
+focus_mode = 2
+text = "占满安全区"
+
+[node name="CopyButton" type="Button" parent="MainMargin/Page/Body/InspectorPanel/InspectorMargin/InspectorScroll/Inspector/ActionGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(132, 44)
+layout_mode = 2
+focus_mode = 2
+text = "复制布局 JSON"
+theme_type_variation = &"PrimaryButton"
+
+[node name="SaveButton" type="Button" parent="MainMargin/Page/Body/InspectorPanel/InspectorMargin/InspectorScroll/Inspector/ActionGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(132, 44)
+layout_mode = 2
+focus_mode = 2
+text = "保存本机参数"
+
+[node name="LoadButton" type="Button" parent="MainMargin/Page/Body/InspectorPanel/InspectorMargin/InspectorScroll/Inspector/ActionGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(132, 44)
+layout_mode = 2
+focus_mode = 2
+text = "载入本机参数"
+
+[node name="UsageNote" type="Label" parent="MainMargin/Page/Body/InspectorPanel/InspectorMargin/InspectorScroll/Inspector"]
+layout_mode = 2
+text = "交付正式棋盘接入时优先使用 normalized 参数；px 参数用于 1280×720 设计稿对齐。"
+autowrap_mode = 2
+theme_type_variation = &"MutedLabel"
+
+[node name="PreviewColumn" type="VBoxContainer" parent="MainMargin/Page/Body"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="PreviewTopRow" type="HBoxContainer" parent="MainMargin/Page/Body/PreviewColumn"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+
+[node name="PreviewHeading" type="Label" parent="MainMargin/Page/Body/PreviewColumn/PreviewTopRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "屏幕布局预览"
+theme_type_variation = &"SectionTitle"
+
+[node name="Legend" type="Label" parent="MainMargin/Page/Body/PreviewColumn/PreviewTopRow"]
+layout_mode = 2
+text = "青色＝默认棋盘可视区域　金色＝16 px 安全区"
+theme_type_variation = &"MutedLabel"
+theme_override_colors/font_color = Color(0.66, 0.7, 0.66, 1)
+
+[node name="PreviewBorder" type="PanelContainer" parent="MainMargin/Page/Body/PreviewColumn"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBox_preview_border")
+
+[node name="PreviewAspect" type="AspectRatioContainer" parent="MainMargin/Page/Body/PreviewColumn/PreviewBorder"]
+unique_name_in_owner = true
+layout_mode = 2
+ratio = 1.77778
+stretch_mode = 2
+alignment_horizontal = 1
+alignment_vertical = 1
+
+[node name="PreviewContainer" type="SubViewportContainer" parent="MainMargin/Page/Body/PreviewColumn/PreviewBorder/PreviewAspect"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+stretch = true
+
+[node name="PreviewViewport" type="SubViewport" parent="MainMargin/Page/Body/PreviewColumn/PreviewBorder/PreviewAspect/PreviewContainer"]
+unique_name_in_owner = true
+handle_input_locally = true
+size = Vector2i(1280, 720)
+render_target_update_mode = 4
+
+[node name="PreviewCanvas" type="Control" parent="MainMargin/Page/Body/PreviewColumn/PreviewBorder/PreviewAspect/PreviewContainer/PreviewViewport"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 1280.0
+offset_bottom = 720.0
+theme = ExtResource("3_theme")
+
+[node name="CanvasBackground" type="ColorRect" parent="MainMargin/Page/Body/PreviewColumn/PreviewBorder/PreviewAspect/PreviewContainer/PreviewViewport/PreviewCanvas"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.025, 0.04, 0.035, 1)
+
+[node name="CanvasHint" type="Label" parent="MainMargin/Page/Body/PreviewColumn/PreviewBorder/PreviewAspect/PreviewContainer/PreviewViewport/PreviewCanvas"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -230.0
+offset_top = -20.0
+offset_right = 230.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+text = "正式 2D 棋盘将在青色窗口中显示并上下滚动"
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_type_variation = &"MutedLabel"
+
+[node name="SafeAreaGuide" type="Panel" parent="MainMargin/Page/Body/PreviewColumn/PreviewBorder/PreviewAspect/PreviewContainer/PreviewViewport/PreviewCanvas"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBox_safe_area")
+
+[node name="HudOverlay" type="Control" parent="MainMargin/Page/Body/PreviewColumn/PreviewBorder/PreviewAspect/PreviewContainer/PreviewViewport/PreviewCanvas"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TurnStatus" type="TextureRect" parent="MainMargin/Page/Body/PreviewColumn/PreviewBorder/PreviewAspect/PreviewContainer/PreviewViewport/PreviewCanvas/HudOverlay"]
+layout_mode = 1
+anchors_preset = 10
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -310.0
+offset_top = 4.0
+offset_right = 310.0
+offset_bottom = 82.0
+grow_horizontal = 2
+texture = ExtResource("4_turn")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="FactionLeft" type="TextureRect" parent="MainMargin/Page/Body/PreviewColumn/PreviewBorder/PreviewAspect/PreviewContainer/PreviewViewport/PreviewCanvas/HudOverlay"]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 14.0
+offset_right = 292.0
+offset_bottom = 128.0
+texture = ExtResource("5_faction")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="FactionRight" type="TextureRect" parent="MainMargin/Page/Body/PreviewColumn/PreviewBorder/PreviewAspect/PreviewContainer/PreviewViewport/PreviewCanvas/HudOverlay"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -292.0
+offset_top = 14.0
+offset_right = -10.0
+offset_bottom = 128.0
+grow_horizontal = 0
+texture = ExtResource("5_faction")
+expand_mode = 1
+stretch_mode = 5
+flip_h = true
+mouse_filter = 2
+
+[node name="UnitCard" type="TextureRect" parent="MainMargin/Page/Body/PreviewColumn/PreviewBorder/PreviewAspect/PreviewContainer/PreviewViewport/PreviewCanvas/HudOverlay"]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 146.0
+offset_right = 242.0
+offset_bottom = 516.0
+texture = ExtResource("6_unit")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="ObjectivePanel" type="TextureRect" parent="MainMargin/Page/Body/PreviewColumn/PreviewBorder/PreviewAspect/PreviewContainer/PreviewViewport/PreviewCanvas/HudOverlay"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -242.0
+offset_top = 146.0
+offset_right = -10.0
+offset_bottom = 516.0
+grow_horizontal = 0
+texture = ExtResource("7_objective")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="Minimap" type="TextureRect" parent="MainMargin/Page/Body/PreviewColumn/PreviewBorder/PreviewAspect/PreviewContainer/PreviewViewport/PreviewCanvas/HudOverlay"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -218.0
+offset_top = -218.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 0
+grow_vertical = 0
+texture = ExtResource("9_minimap")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="ActionBar" type="TextureRect" parent="MainMargin/Page/Body/PreviewColumn/PreviewBorder/PreviewAspect/PreviewContainer/PreviewViewport/PreviewCanvas/HudOverlay"]
+layout_mode = 1
+anchors_preset = 12
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -360.0
+offset_top = -154.0
+offset_right = 360.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = ExtResource("8_action")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="BoardVisibleRect" type="Control" parent="MainMargin/Page/Body/PreviewColumn/PreviewBorder/PreviewAspect/PreviewContainer/PreviewViewport/PreviewCanvas"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 260.0
+offset_top = 104.0
+offset_right = 1020.0
+offset_bottom = 554.0
+mouse_filter = 0
+script = ExtResource("2_rect_editor")
+
+[node name="MoveLabel" type="Label" parent="MainMargin/Page/Body/PreviewColumn/PreviewBorder/PreviewAspect/PreviewContainer/PreviewViewport/PreviewCanvas/BoardVisibleRect"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -210.0
+offset_top = -38.0
+offset_right = 210.0
+offset_bottom = 38.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+text = "棋盘默认可视区域\n不是棋盘完整尺寸\n拖动内部移动 · 拖动八个控制点缩放"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+theme_override_colors/font_color = Color(0.75, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0.08, 0.09, 0.95)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 18
+
+[node name="HandleTopLeft" type="ColorRect" parent="MainMargin/Page/Body/PreviewColumn/PreviewBorder/PreviewAspect/PreviewContainer/PreviewViewport/PreviewCanvas/BoardVisibleRect"]
+unique_name_in_owner = true
+layout_mode = 1
+offset_left = -7.0
+offset_top = -7.0
+offset_right = 7.0
+offset_bottom = 7.0
+color = Color(0.94, 0.75, 0.32, 1)
+
+[node name="HandleTop" type="ColorRect" parent="MainMargin/Page/Body/PreviewColumn/PreviewBorder/PreviewAspect/PreviewContainer/PreviewViewport/PreviewCanvas/BoardVisibleRect"]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -7.0
+offset_top = -7.0
+offset_right = 7.0
+offset_bottom = 7.0
+grow_horizontal = 2
+color = Color(0.94, 0.75, 0.32, 1)
+
+[node name="HandleTopRight" type="ColorRect" parent="MainMargin/Page/Body/PreviewColumn/PreviewBorder/PreviewAspect/PreviewContainer/PreviewViewport/PreviewCanvas/BoardVisibleRect"]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -7.0
+offset_top = -7.0
+offset_right = 7.0
+offset_bottom = 7.0
+grow_horizontal = 0
+color = Color(0.94, 0.75, 0.32, 1)
+
+[node name="HandleLeft" type="ColorRect" parent="MainMargin/Page/Body/PreviewColumn/PreviewBorder/PreviewAspect/PreviewContainer/PreviewViewport/PreviewCanvas/BoardVisibleRect"]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = -7.0
+offset_top = -7.0
+offset_right = 7.0
+offset_bottom = 7.0
+grow_vertical = 2
+color = Color(0.94, 0.75, 0.32, 1)
+
+[node name="HandleRight" type="ColorRect" parent="MainMargin/Page/Body/PreviewColumn/PreviewBorder/PreviewAspect/PreviewContainer/PreviewViewport/PreviewCanvas/BoardVisibleRect"]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -7.0
+offset_top = -7.0
+offset_right = 7.0
+offset_bottom = 7.0
+grow_horizontal = 0
+grow_vertical = 2
+color = Color(0.94, 0.75, 0.32, 1)
+
+[node name="HandleBottomLeft" type="ColorRect" parent="MainMargin/Page/Body/PreviewColumn/PreviewBorder/PreviewAspect/PreviewContainer/PreviewViewport/PreviewCanvas/BoardVisibleRect"]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = -7.0
+offset_top = -7.0
+offset_right = 7.0
+offset_bottom = 7.0
+grow_vertical = 0
+color = Color(0.94, 0.75, 0.32, 1)
+
+[node name="HandleBottom" type="ColorRect" parent="MainMargin/Page/Body/PreviewColumn/PreviewBorder/PreviewAspect/PreviewContainer/PreviewViewport/PreviewCanvas/BoardVisibleRect"]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -7.0
+offset_top = -7.0
+offset_right = 7.0
+offset_bottom = 7.0
+grow_horizontal = 2
+grow_vertical = 0
+color = Color(0.94, 0.75, 0.32, 1)
+
+[node name="HandleBottomRight" type="ColorRect" parent="MainMargin/Page/Body/PreviewColumn/PreviewBorder/PreviewAspect/PreviewContainer/PreviewViewport/PreviewCanvas/BoardVisibleRect"]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -7.0
+offset_top = -7.0
+offset_right = 7.0
+offset_bottom = 7.0
+grow_horizontal = 0
+grow_vertical = 0
+color = Color(0.94, 0.75, 0.32, 1)
