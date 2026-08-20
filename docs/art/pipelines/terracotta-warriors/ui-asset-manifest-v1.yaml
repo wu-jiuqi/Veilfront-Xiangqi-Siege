@@ -1,0 +1,112 @@
+terracotta_ui_asset_manifest:
+  schema_version: veilfront-ui-asset-manifest/v1
+  project_id: veilfront-xiangqi-siege
+  style_id: terracotta-warriors
+  status: completed
+  owner_approval:
+    digest: bb9bb74bf65b81f3bc4d253dcf3947e76947a7227c2fc98f3c2738a3ecfdec05
+    approval_ref: game-pipeline/approvals/production-scope-exception-full-ui-bb9bb74bf65b.yaml
+    decision_package_ref: game-pipeline/loops/evidence/UI-FULL-ASSET-OWNER-EXCEPTION-decision-package-v1.yaml
+
+  visual_language:
+    reference_assets:
+    - assets/art/pieces/terracotta_warriors/red_guard_idle.png
+    - assets/art/pieces/terracotta_warriors/black_guard_idle.png
+    material: 中立暗锻铁、深墨绿氧化青铜、银白磨边与克制旧金
+    faction_rule: 基础控件不写死阵营色；阵营与危险语义通过调色和图标双重表达
+    prohibited:
+    - 第二套 UI 风格
+    - 未经字源校对的正式秦小篆字形
+    - 仅依赖颜色表达交互状态
+
+  runtime_resources:
+    theme: resources/game/ui/themes/terracotta_ui_theme.tres
+    motion_profile: resources/game/ui/motion/terracotta_ui_motion_profile.tres
+    motion_button_preset: scenes/game/ui/ui_motion_button.tscn
+    motion_lab: scenes/dev/ui/ui_button_motion_lab.tscn
+    screen_background: assets/art/ui/terracotta_metal/metal_screen_background_v1.png
+    panel_texture: assets/art/ui/terracotta_metal/metal_panel_frame_v1.png
+    button_atlas: assets/art/ui/terracotta_metal/metal_button_states_v1.png
+    focus_texture: assets/art/ui/terracotta_metal/metal_focus_frame_v1.png
+
+  inventory:
+    theme:
+      quantity: 1
+      variants:
+        buttons: [PrimaryButton, SecondaryButton, DangerButton, IconButton, TabButton, QuietButton]
+        panels: [HUDPanel, ModalPanel, TooltipPanel, SidebarPanel, CardPanel, MinimapPanel, ResultPanel, SettingsPanel]
+        frames: [PortraitFrame, PieceFrame, ObjectiveFrame, InfoFrame, FocusFrame, SelectedFrame, WarningFrame, MinimapFrame]
+    button_states:
+      quantity: 5
+      atlas_regions:
+        normal: [0, 210, 543, 310]
+        hover: [543, 210, 543, 310]
+        pressed: [1086, 210, 543, 310]
+        disabled: [1629, 210, 543, 310]
+        focus: assets/art/ui/terracotta_metal/metal_focus_frame_v1.png
+    icons:
+      quantity: 36
+      groups:
+        roles: {quantity: 7, path: assets/art/ui/terracotta_metal/icons/roles}
+        actions: {quantity: 8, path: assets/art/ui/terracotta_metal/icons/actions}
+        status: {quantity: 8, path: assets/art/ui/terracotta_metal/icons/status}
+        markers: {quantity: 6, path: assets/art/ui/terracotta_metal/icons/markers}
+        system: {quantity: 7, path: assets/art/ui/terracotta_metal/icons/system}
+    cursors:
+      quantity: 6
+      items: [default, hover, select, attack, forbidden, pan]
+      path: assets/art/ui/terracotta_metal/cursors
+    patterns:
+      quantity: 4
+      items: [cloud_thunder, qin_border, command_seal, hammered_noise]
+      path: assets/art/ui/terracotta_metal/patterns
+    minimap_semantics:
+      quantity: 12
+      reuse_map:
+        frame: MinimapFrame
+        friendly: icons/roles/infantry.svg + friendly_tint
+        enemy: icons/roles/infantry.svg + enemy_tint
+        flag: icons/markers/flag.svg
+        wall_intact: assets/art/structures/terracotta_warriors/walls/red_wall_intact.svg
+        wall_repairing: assets/art/structures/terracotta_warriors/walls/red_wall_repairing.svg
+        wall_breached: assets/art/structures/terracotta_warriors/walls/red_wall_breached.svg
+        fog: icons/status/hidden.svg
+        selected: icons/status/selected.svg
+        objective: icons/markers/defend_point.svg
+        viewport: FocusFrame
+        ping: icons/markers/waypoint.svg
+    typography:
+      font: assets/fonts/noto_sans_sc/NotoSansSC-VariableFont_wght.ttf
+      license: assets/fonts/noto_sans_sc/OFL.txt
+      source: https://github.com/google/fonts/tree/main/ofl/notosanssc
+      sha256: A3041811A78C361B1DE50F953C805E0244951C21C5BD412F7232EF0D899AF0DA
+    motion_groups:
+      quantity: 6
+      items: [entrance, hover, press, focus, tab, feedback]
+
+  screen_coverage:
+    scene_bound:
+    - {screen: main_menu, scene: scenes/game/frontend/main_menu.tscn}
+    - {screen: level_select, scene: scenes/game/frontend/level_select.tscn}
+    - {screen: lan_lobby, scene: scenes/prototype/network/lan_lobby.tscn}
+    - {screen: game_app, scene: scenes/game/app/game_app.tscn}
+    - {screen: match, scene: scenes/game/match/match_screen.tscn}
+    - {screen: tutorial, scene: scenes/game/tutorial/tutorial_level.tscn}
+    resource_ready_without_screen_scene:
+    - {screen: pause, panel_variation: ModalPanel}
+    - {screen: settings, panel_variation: SettingsPanel}
+    - {screen: result, panel_variation: ResultPanel}
+
+  generation:
+    mode: mixed
+    generated_texture_prompt_summary: 以红黑士兵棋子的银钢、氧化青铜和旧金为材质基线，生成无文字、无符号、均匀照明的低对比锻打金属背景。
+    vector_generator: scripts/dev/ui/generate_terracotta_ui_vectors.gd
+    vector_source_count: 46
+    raster_source_count_in_pack: 5
+
+  validation:
+    - tests/game/ui/run_terracotta_ui_theme_contract.gd
+    - tests/game/ui/run_ui_motion_lab_contract.gd
+    - tests/game/ui/run_ui_style_switch_contract.gd
+    - tests/game/frontend/run_frontend_scene_smoke.gd
+    - tests/game/scenes/run_formal_scene_smoke.gd

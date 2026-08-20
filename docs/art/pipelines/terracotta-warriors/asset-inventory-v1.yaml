@@ -3,7 +3,7 @@ art_pipeline_inventory:
   project_id: veilfront-xiangqi-siege
   pipeline_id: terracotta-warriors
   display_name: 兵马俑
-  status: static_piece_batch_v2_completed_limited_exception_approved
+  status: static_piece_batch_v2_and_full_ui_completed_owner_exceptions_approved
   global_baseline_ref: docs/art/veilfront-visual-baseline-v1.md
   pipeline_spec_ref: docs/art/pipelines/terracotta-warriors/terracotta-warriors-art-pipeline-v1.md
   source_authority: codex-thread://current#owner-name-terracotta-warriors-pipeline
@@ -29,6 +29,11 @@ art_pipeline_inventory:
       status: approved_limited_retrospective_exception
       approval_ref: game-pipeline/approvals/production-scope-exception-static-14-piece-95214ab75a15.yaml
       decision_package_ref: game-pipeline/loops/evidence/STATIC-14-PIECE-OWNER-EXCEPTION-decision-package-v1.yaml
+    full_ui_production_exception:
+      allowed: true
+      status: approved_and_completed
+      approval_ref: game-pipeline/approvals/production-scope-exception-full-ui-bb9bb74bf65b.yaml
+      decision_package_ref: game-pipeline/loops/evidence/UI-FULL-ASSET-OWNER-EXCEPTION-decision-package-v1.yaml
     batch_requires:
     - GATE-2项目所有者批准
     - 新批量生产Contract
@@ -167,23 +172,23 @@ art_pipeline_inventory:
   - id: ui
     name: 兵马俑专属UI
     items:
-    - {id: TW-UI-THEME, name: Godot Theme, quantity: 1, phase: batch, status: sample_partial_planned}
-    - {id: TW-UI-PANELS, name: 九宫格面板与弹窗框, quantity: 8, phase: batch, status: inventoried}
-    - {id: TW-UI-BUTTONS, name: 按钮状态组, quantity: 6, phase: batch, status: inventoried}
-    - {id: TW-UI-FRAMES, name: 头像/棋子/目标/信息框, quantity: 8, phase: batch, status: inventoried}
-    - {id: TW-UI-ICONS, name: 兵种/行动/状态/标记/系统图标, quantity: 36, formula: 7+8+8+6+7, phase: batch, status: inventoried_unestimated}
-    - {id: TW-UI-MINIMAP, name: 小地图底框与标记, quantity: 12, phase: batch, status: inventoried}
-    - {id: TW-UI-CURSORS, name: 鼠标与落点光标, quantity: 6, phase: batch, status: inventoried}
-    - {id: TW-UI-PATTERNS, name: 秦式几何纹与军令底纹, quantity: 4, phase: batch, status: inventoried}
-    - {id: TW-UI-SCREENS, name: 页面换肤目标, quantity: 9, phase: batch, status: inventoried}
-    - {id: TW-UI-TYPOGRAPHY, name: 字体与字形授权包, quantity: 1, phase: sample, status: blocked_pending_license_review}
+    - {id: TW-UI-THEME, name: Godot Theme, quantity: 1, phase: owner_exception_full_ui, status: completed}
+    - {id: TW-UI-PANELS, name: 九宫格面板与弹窗框, quantity: 8, phase: owner_exception_full_ui, status: completed_semantic_variants}
+    - {id: TW-UI-BUTTONS, name: 按钮状态组, quantity: 6, phase: owner_exception_full_ui, status: completed_five_states_each}
+    - {id: TW-UI-FRAMES, name: 头像/棋子/目标/信息框, quantity: 8, phase: owner_exception_full_ui, status: completed_semantic_variants}
+    - {id: TW-UI-ICONS, name: 兵种/行动/状态/标记/系统图标, quantity: 36, formula: 7+8+8+6+7, phase: owner_exception_full_ui, status: completed_svg}
+    - {id: TW-UI-MINIMAP, name: 小地图底框与标记, quantity: 12, phase: owner_exception_full_ui, status: completed_by_semantic_reuse}
+    - {id: TW-UI-CURSORS, name: 鼠标与落点光标, quantity: 6, phase: owner_exception_full_ui, status: completed_svg}
+    - {id: TW-UI-PATTERNS, name: 秦式几何纹与军令底纹, quantity: 4, phase: owner_exception_full_ui, status: completed_svg}
+    - {id: TW-UI-SCREENS, name: 页面换肤目标, quantity: 9, phase: owner_exception_full_ui, status: six_scene_bound_three_theme_ready}
+    - {id: TW-UI-TYPOGRAPHY, name: 字体与字形授权包, quantity: 1, phase: owner_exception_full_ui, status: completed_noto_sans_sc_ofl}
   - id: fx_animation_audio
     name: 特效、动画与音频
     items:
     - {id: TW-FX-TACTICAL, name: 核心战术特效, quantity: 10, phase: batch, status: sample_3_planned}
     - {id: TW-FX-MATERIAL, name: 金属火花与烟尘素材, quantity: 6, phase: batch, status: inventoried}
     - {id: TW-FX-FLAG, name: 旗帜占领反馈, quantity: 1, phase: batch, status: inventoried}
-    - {id: TW-ANIM-UI, name: UI动效, quantity: 6, phase: batch, status: inventoried_unestimated}
+    - {id: TW-ANIM-UI, name: UI动效, quantity: 6, phase: owner_exception_full_ui, status: completed_tween_groups_with_reduced_motion}
     - {id: TW-ANIM-CAMERA, name: 镜头交互动效, quantity: 3, phase: batch, status: inventoried}
     - {id: TW-AUDIO-MUSIC, name: 对局音乐, quantity: 2, phase: batch, status: inventoried_unestimated}
     - {id: TW-AUDIO-AMBIENCE, name: 环境声, quantity: 3, phase: batch, status: inventoried_unestimated}
@@ -198,4 +203,4 @@ art_pipeline_inventory:
   - 14枚静态资产已完成纯紫幕色键、真实Alpha、VRAM+mipmap导入和32实例Godot测试场接入；仍需正式96px多分辨率可读性、遮挡、双方180°视角与独立QA
   - 炮/车/马方形源实际尺寸1254×1254，低于原1536×1536目标，禁止插值冒充原生细节
   - 六类动作是否全部独立制作
-  - 完整UI、结构、特效和音频的预算、工期与制作方式
+  - 结构、特效和音频的预算、工期与制作方式；完整 UI 已按项目所有者精确范围例外完成
