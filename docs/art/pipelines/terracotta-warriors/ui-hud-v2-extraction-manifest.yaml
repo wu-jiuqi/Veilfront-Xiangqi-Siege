@@ -1,7 +1,7 @@
 manifest:
   schema_version: veilfront-ui-extraction/v1
   id: UI-HUD-V2-EXTRACTION-001
-  status: implemented_pending_runtime_integration
+  status: runtime_integrated
   owner: visual-production-lead
   objective: 将已确认的兵马俑对局 HUD 概念图重制为独立、无文字、可由 Godot 预置 Control 节点组合的透明 UI 组件。
   inputs:
@@ -42,5 +42,8 @@ manifest:
   failure_policy:
     invalid_output: 保留 source_rgb 母版，停止 Theme 接入，不提交不合格成品。
   runtime_integration:
-    state: deferred_until_component_visual_review
-    reason: 本批只建立已确认概念图对应的独立美术组件，不在未经组件审看时替换现有 Theme。
+    state: integrated_after_owner_replacement_request
+    theme: resources/game/ui/themes/terracotta_ui_theme.tres
+    preset_scene: scenes/game/ui/match_header.tscn
+    retained_shared_assets: assets/art/ui/terracotta_metal/icons, cursors, patterns
+    removed_legacy_bitmaps: 5

@@ -1,6 +1,6 @@
 # 兵马俑对局 HUD V2
 
-本目录是已确认概念图 `assets/art/ui/concepts/battle_hud_concept_v1.png` 的第一批可制作组件。视觉基线为薄型锻铁、深绿氧化青铜、少量旧金线与低反射深色内衬；旧版 `terracotta_metal/` 暂时保留，不覆盖也不删除。
+本目录是已确认概念图 `assets/art/ui/concepts/battle_hud_concept_v1.png` 的正式 V2 组件包。视觉基线为薄型锻铁、深绿氧化青铜、少量旧金线与低反射深色内衬；V2 已替换 Theme 中的旧版通用位图，`terracotta_metal/` 仅保留共享 SVG、光标和纹样。
 
 ## 组件
 
@@ -24,6 +24,12 @@
 - UI 贴图使用无损导入、关闭 mipmap、启用 Fix Alpha Border。
 - 文字、数值、阵营色、头像、目标图标和动作图标都不烘焙在贴图里。
 - 既有 36 枚 SVG 功能图标继续来自 `terracotta_metal/icons/`；V2 通过主题色和按钮材质承载新视觉，不复制一套语义相同的图标。
+
+## 运行时接入
+
+- `resources/game/ui/themes/terracotta_ui_theme.tres` 已使用本目录的通用面板、四态按钮、小地图框与回合状态条。
+- `scenes/game/ui/match_header.tscn` 通过 `TurnStatusPanel` 主题变体使用 V2 回合状态条。
+- 页面全屏背景和焦点框改用轻量 `StyleBoxFlat`，不再加载旧废案背景与焦点位图。
 
 ## 生成与处理
 

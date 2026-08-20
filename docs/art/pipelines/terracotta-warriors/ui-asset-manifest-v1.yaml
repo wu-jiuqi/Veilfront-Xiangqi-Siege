@@ -2,7 +2,7 @@ terracotta_ui_asset_manifest:
   schema_version: veilfront-ui-asset-manifest/v1
   project_id: veilfront-xiangqi-siege
   style_id: terracotta-warriors
-  status: completed
+  status: completed_v2_replacement
   owner_approval:
     digest: bb9bb74bf65b81f3bc4d253dcf3947e76947a7227c2fc98f3c2738a3ecfdec05
     approval_ref: game-pipeline/approvals/production-scope-exception-full-ui-bb9bb74bf65b.yaml
@@ -24,10 +24,12 @@ terracotta_ui_asset_manifest:
     motion_profile: resources/game/ui/motion/terracotta_ui_motion_profile.tres
     motion_button_preset: scenes/game/ui/ui_motion_button.tscn
     motion_lab: scenes/dev/ui/ui_button_motion_lab.tscn
-    screen_background: assets/art/ui/terracotta_metal/metal_screen_background_v1.png
-    panel_texture: assets/art/ui/terracotta_metal/metal_panel_frame_v1.png
-    button_atlas: assets/art/ui/terracotta_metal/metal_button_states_v1.png
-    focus_texture: assets/art/ui/terracotta_metal/metal_focus_frame_v1.png
+    screen_background: resources/game/ui/themes/terracotta_ui_theme.tres#StyleBoxBackground
+    panel_texture: assets/art/ui/terracotta_hud_v2/hud_panel_9slice_v1.png
+    button_atlas: assets/art/ui/terracotta_hud_v2/action_button_states_v1.png
+    focus_style: resources/game/ui/themes/terracotta_ui_theme.tres#StyleBoxFocus
+    turn_status_texture: assets/art/ui/terracotta_hud_v2/turn_status_bar_v1.png
+    minimap_frame: assets/art/ui/terracotta_hud_v2/minimap_frame_v1.png
 
   inventory:
     theme:
@@ -39,11 +41,11 @@ terracotta_ui_asset_manifest:
     button_states:
       quantity: 5
       atlas_regions:
-        normal: [0, 210, 543, 310]
-        hover: [543, 210, 543, 310]
-        pressed: [1086, 210, 543, 310]
-        disabled: [1629, 210, 543, 310]
-        focus: assets/art/ui/terracotta_metal/metal_focus_frame_v1.png
+        normal: [0, 94, 543, 497]
+        hover: [543, 94, 543, 497]
+        pressed: [1086, 94, 543, 497]
+        disabled: [1629, 94, 543, 497]
+        focus: procedural_aged_gold_stylebox_flat
     icons:
       quantity: 36
       groups:
@@ -99,10 +101,21 @@ terracotta_ui_asset_manifest:
 
   generation:
     mode: mixed
-    generated_texture_prompt_summary: 以红黑士兵棋子的银钢、氧化青铜和旧金为材质基线，生成无文字、无符号、均匀照明的低对比锻打金属背景。
+    generated_texture_prompt_summary: 以确认的 battle_hud_concept_v1 为视觉母版，生成薄型锻铁、深绿氧化青铜、少量旧金线和低反射内衬的无文字 HUD 组件。
     vector_generator: scripts/dev/ui/generate_terracotta_ui_vectors.gd
     vector_source_count: 46
-    raster_source_count_in_pack: 5
+    production_raster_count_in_pack: 9
+    preserved_rgb_source_count: 9
+    v2_manifest: docs/art/pipelines/terracotta-warriors/ui-hud-v2-extraction-manifest.yaml
+
+  superseded_assets:
+    removed:
+    - assets/art/ui/terracotta_metal/main_menu_concept_v1.png
+    - assets/art/ui/terracotta_metal/metal_button_states_v1.png
+    - assets/art/ui/terracotta_metal/metal_focus_frame_v1.png
+    - assets/art/ui/terracotta_metal/metal_panel_frame_v1.png
+    - assets/art/ui/terracotta_metal/metal_screen_background_v1.png
+    reason: 项目所有者确认 V2 概念图后要求替换旧废案 UI；共享 SVG、光标、纹样与字体继续保留。
 
   validation:
     - tests/game/ui/run_terracotta_ui_theme_contract.gd
