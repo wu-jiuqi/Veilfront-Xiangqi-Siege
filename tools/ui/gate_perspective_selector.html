@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>门洞透视区域标注工具</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #e9e1d0;
+      --muted: #8e9aa0;
+      --panel: #10171b;
+      --panel-soft: #172126;
+      --line: #26343b;
+      --accent: #f3222d;
+      --accent-soft: rgba(243, 34, 45, 0.18);
+      --gold: #d6b56b;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+      background: #080d10;
+      color: var(--ink);
+      font-family: "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
+    }
+
+    body {
+      display: grid;
+      grid-template-columns: 310px minmax(0, 1fr);
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    aside {
+      position: relative;
+      z-index: 2;
+      height: 100vh;
+      overflow: auto;
+      padding: 26px 22px;
+      background: linear-gradient(180deg, #131c21 0%, #0c1215 100%);
+      border-right: 1px solid var(--line);
+      box-shadow: 14px 0 40px rgba(0, 0, 0, 0.28);
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-family: "STKaiti", "KaiTi", serif;
+      font-size: 25px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+    }
+
+    .intro {
+      margin: 0 0 22px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.75;
+      text-wrap: pretty;
+    }
+
+    .order {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .point-row {
+      display: grid;
+      grid-template-columns: 28px 1fr 64px 64px;
+      align-items: center;
+      gap: 7px;
+      min-height: 38px;
+      padding: 6px 8px;
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid var(--line);
+    }
+
+    .point-index {
+      display: grid;
+      place-items: center;
+      width: 22px;
+      height: 22px;
+      color: white;
+      background: var(--accent);
+      font: 700 12px/1 Consolas, monospace;
+      border-radius: 50%;
+    }
+
+    .point-name { font-size: 13px; }
+
+    .coordinate {
+      width: 100%;
+      padding: 6px;
+      color: var(--ink);
+      background: #090e11;
+      border: 1px solid #33434b;
+      border-radius: 2px;
+      font: 12px/1 Consolas, monospace;
+      text-align: right;
+    }
+
+    .coordinate:focus {
+      outline: 1px solid var(--accent);
+      border-color: var(--accent);
+    }
+
+    .label-row {
+      display: flex;
+      justify-content: flex-end;
+      gap: 48px;
+      margin: -12px 10px 16px 0;
+      color: #65747b;
+      font: 10px/1 Consolas, monospace;
+    }
+
+    .button-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+    }
+
+    button {
+      min-height: 42px;
+      padding: 9px 12px;
+      color: var(--ink);
+      background: #141e23;
+      border: 1px solid #35464e;
+      border-radius: 2px;
+      cursor: pointer;
+      font: 600 13px/1.2 "Microsoft YaHei UI", sans-serif;
+      transition: 130ms ease;
+    }
+
+    button:hover, button:focus-visible {
+      color: white;
+      background: #202d33;
+      border-color: var(--accent);
+      outline: none;
+    }
+
+    button.primary {
+      color: white;
+      background: #75151c;
+      border-color: var(--accent);
+    }
+
+    button.primary:hover { background: #971a23; }
+
+    .status {
+      min-height: 42px;
+      margin-top: 14px;
+      padding: 10px 11px;
+      color: var(--gold);
+      background: rgba(214, 181, 107, 0.05);
+      border-left: 2px solid var(--gold);
+      font-size: 12px;
+      line-height: 1.65;
+    }
+
+    .legend {
+      margin-top: 24px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.8;
+    }
+
+    .legend strong { color: var(--ink); }
+
+    main {
+      position: relative;
+      display: grid;
+      place-items: center;
+      height: 100vh;
+      min-width: 0;
+      padding: 28px;
+      overflow: auto;
+      background:
+        radial-gradient(circle at 50% 40%, rgba(74, 95, 103, 0.12), transparent 52%),
+        #070b0d;
+    }
+
+    .stage {
+      position: relative;
+      width: min(100%, calc((100vh - 56px) * 1.776833));
+      aspect-ratio: 1672 / 941;
+      background: #020405;
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.55);
+      user-select: none;
+    }
+
+    svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+      cursor: crosshair;
+    }
+
+    .region-fill {
+      fill: var(--accent-soft);
+      stroke: var(--accent);
+      stroke-width: 4;
+      vector-effect: non-scaling-stroke;
+    }
+
+    .guide {
+      stroke: rgba(214, 181, 107, 0.86);
+      stroke-width: 2;
+      stroke-dasharray: 9 7;
+      vector-effect: non-scaling-stroke;
+      pointer-events: none;
+    }
+
+    .handle {
+      fill: #0b1013;
+      stroke: var(--accent);
+      stroke-width: 5;
+      vector-effect: non-scaling-stroke;
+      cursor: grab;
+    }
+
+    .handle:hover, .handle.active { fill: var(--accent); }
+
+    .handle-label {
+      fill: white;
+      stroke: rgba(0, 0, 0, 0.85);
+      stroke-width: 5;
+      paint-order: stroke fill;
+      font: 700 24px/1 Consolas, monospace;
+      text-anchor: middle;
+      dominant-baseline: central;
+      pointer-events: none;
+    }
+
+    .canvas-caption {
+      position: absolute;
+      right: 12px;
+      bottom: 10px;
+      padding: 5px 8px;
+      color: rgba(255, 255, 255, 0.72);
+      background: rgba(0, 0, 0, 0.55);
+      font: 11px/1 Consolas, monospace;
+      pointer-events: none;
+    }
+
+    @media (max-width: 900px) {
+      body {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto minmax(0, 1fr);
+        overflow: auto;
+      }
+
+      aside { height: auto; }
+      main { height: auto; min-height: 62vh; padding: 14px; }
+      .stage { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <aside>
+    <h1>门洞透视区域</h1>
+    <p class="intro">拖动城墙背景上的四个红色控制点，使红框贴合门洞的内缘。坐标始终对应原图 1672×941 像素。</p>
+
+    <div class="order" id="coordinate-list"></div>
+    <div class="label-row"><span>X</span><span>Y</span></div>
+
+    <div class="button-grid">
+      <button id="reset-button" type="button">恢复初始值</button>
+      <button id="copy-button" class="primary" type="button">复制 JSON</button>
+      <button id="download-button" type="button">下载 JSON</button>
+      <button id="toggle-fill-button" type="button">隐藏填充</button>
+    </div>
+
+    <div class="status" id="status">请按顺序检查四角：左上、右上、右下、左下。</div>
+
+    <div class="legend">
+      <strong>标注规则</strong><br>
+      1. 控制点放在门扇应贴合的门框内角。<br>
+      2. 不要包含砖柱、门楣或地面台阶。<br>
+      3. 中间金色虚线是两扇门的接缝与开门基准。<br>
+      4. 完成后把下载的 JSON 文件发给我。
+    </div>
+  </aside>
+
+  <main>
+    <div class="stage">
+      <svg id="selector" viewBox="0 0 1672 941" role="img" aria-label="城墙门洞四点透视区域标注画布">
+        <image href="../../assets/art/ui/start_sequence/gate_environment_open_v1.png" x="0" y="0" width="1672" height="941" preserveAspectRatio="none"></image>
+        <polygon id="region" class="region-fill"></polygon>
+        <line id="center-line" class="guide"></line>
+        <g id="handles"></g>
+      </svg>
+      <div class="canvas-caption">gate_environment_open_v1.png · 1672×941</div>
+    </div>
+  </main>
+
+  <script>
+    (() => {
+      const imageWidth = 1672;
+      const imageHeight = 941;
+      const labels = ["左上", "右上", "右下", "左下"];
+      const initialPoints = [
+        { x: 505, y: 224 },
+        { x: 1167, y: 224 },
+        { x: 1188, y: 803 },
+        { x: 484, y: 803 }
+      ];
+      let points = initialPoints.map(point => ({ ...point }));
+      let activeIndex = -1;
+      let fillVisible = true;
+
+      const svg = document.getElementById("selector");
+      const region = document.getElementById("region");
+      const centerLine = document.getElementById("center-line");
+      const handlesLayer = document.getElementById("handles");
+      const coordinateList = document.getElementById("coordinate-list");
+      const status = document.getElementById("status");
+
+      const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+      const midpoint = (a, b) => ({ x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 });
+
+      function svgPointFromEvent(event) {
+        const point = svg.createSVGPoint();
+        point.x = event.clientX;
+        point.y = event.clientY;
+        return point.matrixTransform(svg.getScreenCTM().inverse());
+      }
+
+      function updatePoint(index, x, y) {
+        points[index] = {
+          x: Math.round(clamp(x, 0, imageWidth)),
+          y: Math.round(clamp(y, 0, imageHeight))
+        };
+        render();
+      }
+
+      function buildCoordinateRows() {
+        coordinateList.innerHTML = "";
+        labels.forEach((label, index) => {
+          const row = document.createElement("div");
+          row.className = "point-row";
+          row.innerHTML = `
+            <span class="point-index">${index + 1}</span>
+            <span class="point-name">${label}</span>
+            <input class="coordinate" type="number" min="0" max="${imageWidth}" data-index="${index}" data-axis="x" aria-label="${label} X 坐标">
+            <input class="coordinate" type="number" min="0" max="${imageHeight}" data-index="${index}" data-axis="y" aria-label="${label} Y 坐标">
+          `;
+          coordinateList.appendChild(row);
+        });
+
+        coordinateList.addEventListener("change", event => {
+          const input = event.target.closest("input.coordinate");
+          if (!input) return;
+          const index = Number(input.dataset.index);
+          const axis = input.dataset.axis;
+          const value = Number(input.value);
+          if (Number.isNaN(value)) return;
+          updatePoint(index, axis === "x" ? value : points[index].x, axis === "y" ? value : points[index].y);
+        });
+      }
+
+      function buildHandles() {
+        handlesLayer.innerHTML = "";
+        points.forEach((point, index) => {
+          const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
+          group.dataset.index = String(index);
+
+          const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+          circle.classList.add("handle");
+          circle.setAttribute("r", "19");
+          circle.setAttribute("cx", String(point.x));
+          circle.setAttribute("cy", String(point.y));
+
+          const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+          text.classList.add("handle-label");
+          text.setAttribute("x", String(point.x));
+          text.setAttribute("y", String(point.y + 1));
+          text.textContent = String(index + 1);
+
+          group.append(circle, text);
+          handlesLayer.appendChild(group);
+        });
+      }
+
+      function render() {
+        region.setAttribute("points", points.map(point => `${point.x},${point.y}`).join(" "));
+        const topCenter = midpoint(points[0], points[1]);
+        const bottomCenter = midpoint(points[3], points[2]);
+        centerLine.setAttribute("x1", String(topCenter.x));
+        centerLine.setAttribute("y1", String(topCenter.y));
+        centerLine.setAttribute("x2", String(bottomCenter.x));
+        centerLine.setAttribute("y2", String(bottomCenter.y));
+        buildHandles();
+
+        document.querySelectorAll("input.coordinate").forEach(input => {
+          const index = Number(input.dataset.index);
+          input.value = String(points[index][input.dataset.axis]);
+        });
+      }
+
+      function exportPayload() {
+        const topCenter = midpoint(points[0], points[1]);
+        const bottomCenter = midpoint(points[3], points[2]);
+        return {
+          schema: "veilfront.gate-perspective-region.v1",
+          background: "res://assets/art/ui/start_sequence/gate_environment_open_v1.png",
+          image_size: { width: imageWidth, height: imageHeight },
+          point_order: ["top_left", "top_right", "bottom_right", "bottom_left"],
+          points: {
+            top_left: points[0],
+            top_right: points[1],
+            bottom_right: points[2],
+            bottom_left: points[3]
+          },
+          normalized_points: points.map(point => ({
+            x: Number((point.x / imageWidth).toFixed(6)),
+            y: Number((point.y / imageHeight).toFixed(6))
+          })),
+          center_seam: {
+            top: { x: Math.round(topCenter.x), y: Math.round(topCenter.y) },
+            bottom: { x: Math.round(bottomCenter.x), y: Math.round(bottomCenter.y) }
+          }
+        };
+      }
+
+      svg.addEventListener("pointerdown", event => {
+        const group = event.target.closest("g[data-index]");
+        if (!group) return;
+        activeIndex = Number(group.dataset.index);
+        svg.setPointerCapture(event.pointerId);
+        group.querySelector(".handle").classList.add("active");
+        status.textContent = `正在调整 ${labels[activeIndex]}。松开鼠标完成。`;
+      });
+
+      svg.addEventListener("pointermove", event => {
+        if (activeIndex < 0) return;
+        const point = svgPointFromEvent(event);
+        updatePoint(activeIndex, point.x, point.y);
+      });
+
+      const releasePointer = event => {
+        if (activeIndex < 0) return;
+        const point = points[activeIndex];
+        status.textContent = `${labels[activeIndex]} 已设为 (${point.x}, ${point.y})。`;
+        activeIndex = -1;
+        if (svg.hasPointerCapture(event.pointerId)) svg.releasePointerCapture(event.pointerId);
+      };
+
+      svg.addEventListener("pointerup", releasePointer);
+      svg.addEventListener("pointercancel", releasePointer);
+
+      document.getElementById("reset-button").addEventListener("click", () => {
+        points = initialPoints.map(point => ({ ...point }));
+        render();
+        status.textContent = "已恢复初始四点，请继续拖动微调。";
+      });
+
+      document.getElementById("toggle-fill-button").addEventListener("click", event => {
+        fillVisible = !fillVisible;
+        region.style.fill = fillVisible ? "var(--accent-soft)" : "transparent";
+        event.currentTarget.textContent = fillVisible ? "隐藏填充" : "显示填充";
+      });
+
+      document.getElementById("copy-button").addEventListener("click", async () => {
+        const json = JSON.stringify(exportPayload(), null, 2);
+        try {
+          await navigator.clipboard.writeText(json);
+          status.textContent = "坐标 JSON 已复制。直接粘贴到 Codex 对话即可。";
+        } catch {
+          const textarea = document.createElement("textarea");
+          textarea.value = json;
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand("copy");
+          textarea.remove();
+          status.textContent = "坐标 JSON 已复制。直接粘贴到 Codex 对话即可。";
+        }
+      });
+
+      document.getElementById("download-button").addEventListener("click", () => {
+        const blob = new Blob([JSON.stringify(exportPayload(), null, 2)], { type: "application/json" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "gate-perspective-region.json";
+        link.click();
+        window.setTimeout(() => URL.revokeObjectURL(link.href), 0);
+        status.textContent = "已下载 gate-perspective-region.json，请把文件发给我。";
+      });
+
+      buildCoordinateRows();
+      render();
+    })();
+  </script>
+</body>
+</html>
