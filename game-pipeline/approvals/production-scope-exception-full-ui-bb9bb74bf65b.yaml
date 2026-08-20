@@ -1,0 +1,48 @@
+approval:
+  schema_version: game-production-approval/v1
+  approval_id: approval:veilfront-xiangqi-siege:production-scope-exception:bb9bb74bf65b
+  subject_kind: production-scope-exception
+  subject_id: EXCEPTION-TERRACOTTA-FULL-UI-ASSET-001@v1
+  subject_digest: bb9bb74bf65b81f3bc4d253dcf3947e76947a7227c2fc98f3c2738a3ecfdec05
+  decision: approved
+  decided_by: project-owner
+  decided_at: '2026-08-20T18:39:21.3949643+08:00'
+  evidence:
+    source_refs:
+    - codex-thread://current#owner-confirmed-production-scope-exception-bb9bb74bf65b
+    - game-pipeline/loops/evidence/UI-FULL-ASSET-OWNER-EXCEPTION-decision-package-v1.yaml
+    immutable_source:
+      git_commit: 58ebc995019ce4b29c05d9274c77d3d95dcaeb8d
+      path: game-pipeline/loops/evidence/UI-FULL-ASSET-OWNER-EXCEPTION-decision-package-v1.yaml
+      subject_path: exception_subject
+      canonicalization: canonical-json-sort-keys-ensure-ascii-false-v1
+      subject_digest: bb9bb74bf65b81f3bc4d253dcf3947e76947a7227c2fc98f3c2738a3ecfdec05
+    confirmation:
+      method: exact-64-character-digest-reply
+      received_digest: bb9bb74bf65b81f3bc4d253dcf3947e76947a7227c2fc98f3c2738a3ecfdec05
+      matches_subject_digest: true
+    bound_contract:
+      contract_id: LOOP-CTR-FORMAL-FOUNDATION-GATE2-001
+      version: 2
+      approval_id: approval:veilfront-xiangqi-siege:loop-contract:ce2d6174f82a
+  authorized_action:
+    summary: 追认既有三张兵马俑金属UI贴图，并允许在零采购、零新增Agent和严格文件数量上限内完成全量兵马俑UI资源包、Theme接入、UI动效资源与按钮动效实验场。
+    scope_ref: game-pipeline/loops/evidence/UI-FULL-ASSET-OWNER-EXCEPTION-decision-package-v1.yaml#exception_subject.exact_scope
+    execution_ref: game-pipeline/loops/evidence/UI-FULL-ASSET-OWNER-EXCEPTION-decision-package-v1.yaml#exception_subject.execution_binding
+    allowed_ref: game-pipeline/loops/evidence/UI-FULL-ASSET-OWNER-EXCEPTION-decision-package-v1.yaml#exception_subject.approval_effect.allowed
+    forbidden_ref: game-pipeline/loops/evidence/UI-FULL-ASSET-OWNER-EXCEPTION-decision-package-v1.yaml#exception_subject.approval_effect.forbidden
+    limits_ref: game-pipeline/loops/evidence/UI-FULL-ASSET-OWNER-EXCEPTION-decision-package-v1.yaml#exception_subject.resources_and_limits
+    does_not_approve:
+    - GATE-2
+    - 第二套UI风格或玩家侧换肤选择器
+    - UI音频、棋子动画、VFX或环境批量资产
+    - 规则、PlayerView、回放、随机消费、教学语义或联网协议变更
+    - 授权不明字体、图标、纹样或正式秦小篆母版
+  application:
+    state: approved_limited_prospective_exception
+    decision_package_state_preserved: approved
+    materialized_refs:
+    - game-pipeline/loops/evidence/UI-FULL-ASSET-OWNER-EXCEPTION-decision-package-v1.yaml
+    - assets/art/ui/terracotta_metal/
+    - resources/game/ui/themes/terracotta_ui_theme.tres
+    applied_at: '2026-08-20T18:39:21.3949643+08:00'
