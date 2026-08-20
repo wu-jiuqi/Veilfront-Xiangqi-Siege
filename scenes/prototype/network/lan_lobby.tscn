@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/prototype/network/lan_lobby.gd" id="1_lobby"]
 [ext_resource type="PackedScene" path="res://scenes/prototype/network/lan_network_session.tscn" id="2_network"]
-[ext_resource type="Theme" path="res://resources/prototype/gate1_logic_lab_theme.tres" id="3_theme"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_theme_binder.tscn" id="3_binder"]
 [ext_resource type="PackedScene" path="res://scenes/prototype/gate1_logic_lab.tscn" id="4_board"]
 
 [node name="LanLobby" type="Control"]
@@ -12,12 +12,13 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("3_theme")
 script = ExtResource("1_lobby")
 
 [node name="LanNetworkSession" parent="." instance=ExtResource("2_network")]
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="UiThemeBinder" parent="." instance=ExtResource("3_binder")]
+
+[node name="Background" type="Panel" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -25,7 +26,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.025, 0.031, 0.04, 1)
+theme_type_variation = &"ScreenBackground"
 
 [node name="CenterPanel" type="PanelContainer" parent="."]
 custom_minimum_size = Vector2(560, 0)
@@ -41,6 +42,7 @@ offset_right = 280.0
 offset_bottom = 180.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_type_variation = &"ModalPanel"
 
 [node name="PanelMargin" type="MarginContainer" parent="CenterPanel"]
 layout_mode = 2
@@ -57,7 +59,7 @@ theme_override_constants/separation = 14
 layout_mode = 2
 text = "局域网真人测试"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 28
+theme_type_variation = &"SectionTitle"
 
 [node name="ScopeNote" type="Label" parent="CenterPanel/PanelMargin/Content"]
 layout_mode = 2
@@ -106,17 +108,20 @@ theme_override_constants/separation = 12
 custom_minimum_size = Vector2(130, 44)
 layout_mode = 2
 text = "创建房间"
+theme_type_variation = &"PrimaryButton"
 
 [node name="JoinButton" type="Button" parent="CenterPanel/PanelMargin/Content/ActionRow"]
 custom_minimum_size = Vector2(130, 44)
 layout_mode = 2
 text = "加入房间"
+theme_type_variation = &"SecondaryButton"
 
 [node name="DisconnectButton" type="Button" parent="CenterPanel/PanelMargin/Content/ActionRow"]
 custom_minimum_size = Vector2(130, 44)
 layout_mode = 2
 disabled = true
 text = "断开"
+theme_type_variation = &"DangerButton"
 
 [node name="StatusGrid" type="GridContainer" parent="CenterPanel/PanelMargin/Content"]
 layout_mode = 2
@@ -156,6 +161,7 @@ offset_right = -14.0
 offset_bottom = 56.0
 grow_horizontal = 0
 text = "断开并返回大厅"
+theme_type_variation = &"DangerButton"
 
 [node name="ReturnToMainMenuButton" type="Button" parent="."]
 custom_minimum_size = Vector2(132, 42)
@@ -166,3 +172,4 @@ offset_top = 14.0
 offset_right = 152.0
 offset_bottom = 56.0
 text = "返回首界面"
+theme_type_variation = &"SecondaryButton"
