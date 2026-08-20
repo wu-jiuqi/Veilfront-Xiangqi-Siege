@@ -1,0 +1,170 @@
+exception_subject:
+  schema_version: veilfront-production-scope-exception/v1
+  subject_id: EXCEPTION-TERRACOTTA-FULL-UI-ASSET-001@v1
+  project_id: veilfront-xiangqi-siege
+  title: 兵马俑全量UI美术资源与按钮动效实验场范围例外
+  parent_contract:
+    contract_id: LOOP-CTR-FORMAL-FOUNDATION-GATE2-001
+    version: 2
+    approval_id: approval:veilfront-xiangqi-siege:loop-contract:ce2d6174f82a
+    subject_digest: ce2d6174f82af003b023f80e2ae3676510df541f4a6ac129bfcf69847361b20d
+    exceeded_boundary: Contract v2只允许UI局部样片，并明确禁止GATE-2前制作最终UI皮肤或批量美术。
+  governance_context:
+    owner_request: 项目所有者要求先完成所有UI需要的美术资源，再交付专门测试UI按钮动画的场景。
+    request_status: direction_confirmed_but_not_digest_bound
+    correction:
+    - 自然语言实现指令明确了目标，但未绑定本例外的精确范围、数量、限制和摘要。
+    - 已完成的三张金属UI贴图只能作为范围偏差样片保留，除非本例外获得精确摘要批准。
+    - 本例外不得被描述为GATE-2批准，也不得授权UI之外的批量美术。
+  decision_requested:
+    decision_type: retrospective_scope_exception_and_prospective_limited_ui_asset_production
+    question: 是否追认既有三张兵马俑金属UI贴图样片，并允许在GATE-2前完成本摘要列明的兵马俑UI资源包、Theme接入、UI动效资源和按钮动效实验场？
+    designated_decider: project-owner
+    decisions: [approved, rejected, revise]
+  exact_scope:
+    style_pipeline:
+      id: terracotta-warriors
+      display_name: 兵马俑
+      is_global_style: false
+      visual_language: 中立暗金属、深墨绿氧化青铜、银白钨钢磨边、旧金关键高亮、克制暗朱危险语义
+      reference_assets:
+      - assets/art/pieces/terracotta_warriors/red_guard_idle.png
+      - assets/art/pieces/terracotta_warriors/black_guard_idle.png
+    implementation_principle:
+    - 所有功能场景、布局、交互、焦点、PlayerView边界和业务脚本保持唯一；美术仅通过Theme、纹理、SVG、字体与动效资源替换。
+    - 固定结构优先使用Godot预置Control节点、Theme与资源；不得为兵马俑风格复制业务UI场景。
+    - 数量表示Theme语义变体或Atlas子资产，不要求每个子资产独占PNG；应优先复用九宫格、AtlasTexture和可着色SVG。
+    approved_asset_inventory:
+    - id: TW-UI-THEME
+      name: Godot Theme与语义变体
+      quantity: 1
+      required_variations: [ScreenBackground, ScreenTitle, SectionTitle, MutedLabel, PrimaryButton, SecondaryButton, DangerButton, IconButton, TabButton, MetalPanel, DialogPanel, CardPanel, TooltipPanel, MinimapPanel, FocusFrame]
+    - id: TW-UI-PANELS
+      name: 九宫格面板与弹窗框
+      quantity: 8
+      variants: [全屏底框, 主菜单面板, 对局HUD侧栏, 弹窗, 关卡卡片, 提示框, 抽屉, 小地图]
+    - id: TW-UI-BUTTONS
+      name: 按钮状态组
+      quantity: 6
+      variants: [主要, 次要, 危险, 图标, 标签页, 锁定或禁用]
+      states_per_variant: [normal, hover, pressed, disabled, focus]
+    - id: TW-UI-FRAMES
+      name: 信息与状态框
+      quantity: 8
+      variants: [头像, 棋子信息, 目标, 状态, 教学, 进度, 焦点, 徽章]
+    - id: TW-UI-ICONS
+      name: 单色语义图标集
+      quantity: 36
+      groups:
+        roles: [兵, 炮, 车, 马, 相, 士, 将]
+        actions: [移动, 攻击, 修墙, 标记, 确认, 取消, 跳过, 返回]
+        statuses: [已选择, 可见, 隐藏, 受损, 修复中, 已占领, 当前回合, 已锁定]
+        markers: [旗帜, 路点, 警告, 攻击点, 防守点, 疑问点]
+        system: [开始, 暂停, 设置, 帮助, 关闭, 重置, 联机]
+      source_rule: SVG或等价可缩放源；颜色不能成为唯一语义通道。
+    - id: TW-UI-MINIMAP
+      name: 小地图底框与标记
+      quantity: 12
+      variants: [底框, 友军, 敌军, 旗帜, 城墙完整, 城墙修复, 城墙破损, 迷雾, 选中, 目标, 视口, 信号点]
+    - id: TW-UI-CURSORS
+      name: 鼠标与落点光标
+      quantity: 6
+      variants: [默认, 悬停, 选择, 攻击, 禁止, 拖拽平移]
+    - id: TW-UI-PATTERNS
+      name: 秦式几何纹与军令底纹
+      quantity: 4
+      variants: [云雷纹, 秦式边纹, 军令印纹, 锤打金属噪声]
+    - id: TW-UI-SCREENS
+      name: 页面换肤覆盖目标
+      quantity: 9
+      targets: [主菜单, 关卡选择, 局域网大厅, 对局HUD, 教学覆盖层, 暂停菜单, 设置, 终局结算, 通用确认错误提示]
+    - id: TW-UI-TYPOGRAPHY
+      name: 字体与授权包
+      quantity: 1
+      rule: 只允许来源可验证的开放许可简体中文字体；字体文件与许可证必须一起入库；不制作或冒充正式秦小篆字形。
+    - id: TW-ANIM-UI
+      name: UI动效组
+      quantity: 6
+      variants: [按钮交互, 面板与抽屉, 确认与错误, 回合切换, 终局结算, 教学提示]
+      runtime_spec: Tween为主，复杂固定演出可用AnimationPlayer，金属扫光可用Shader；必须支持减少动态效果。
+    retrospective_assets:
+    - assets/art/ui/terracotta_metal/metal_panel_frame_v1.png
+    - assets/art/ui/terracotta_metal/metal_button_states_v1.png
+    - assets/art/ui/terracotta_metal/metal_focus_frame_v1.png
+    output_roots:
+      raster_and_vector: assets/art/ui/terracotta_metal/
+      theme_and_resources: resources/game/ui/
+      runtime_components: scenes/game/ui/ and scripts/game/presentation/ui/
+      development_lab: scenes/dev/ui/ui_button_motion_lab.tscn
+      tests: tests/game/ui/
+  execution_binding:
+    objective: 完成兵马俑UI资源包并交付可独立运行的按钮动效实验场，不改变功能UI结构或规则边界。
+    owners:
+      visual_assets: pos:veilfront-xiangqi-siege:design-experience:visual-production-lead
+      godot_theme_and_motion_lab: pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+      independent_review: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+    required_inputs:
+    - docs/art/pipelines/terracotta-warriors/asset-inventory-v1.yaml
+    - resources/game/ui/themes/terracotta_ui_theme.tres
+    - assets/art/ui/terracotta_metal/
+    - scenes/game/ui/ui_theme_binder.tscn
+    outputs:
+    - 完整资源清单与源文件映射
+    - 兵马俑Theme语义变体和资源切片
+    - 可独立运行的按钮动效实验场及预置动效组件
+    - Alpha、导入、场景加载、焦点、减少动态效果和三分辨率测试证据
+    acceptance_checks:
+    - 所有PNG为真实RGBA或明确不需要Alpha；禁止烘焙棋盘格和不明背景。
+    - 24px图标仍可辨，颜色不是唯一语义通道；主要按钮逻辑高度不低于44px。
+    - 960×540、1280×720、1920×1080下不裁切；键盘与手柄焦点可见。
+    - 同一属性的旧Tween在重播前终止；动效不阻塞输入、不延迟权威状态更新，并支持减少动态效果。
+    - Godot 4.7.1无错误导入，实验场和既有五个UI根场景可无头加载。
+    - 不修改规则、PlayerView、回放、随机消费、教学Intent/Event或联网协议。
+    escalation_route: 视觉方向与最终接受交由project-owner；范围、数量、预算或跨部门冲突交由项目经理；独立QA失败返回对应视觉或技术负责人。
+    failure_return_path: Alpha或视觉资产失败返回TW-UI对应资产组；Theme、场景或Tween失败返回Godot技术负责人；方向性失败返回本例外修订并生成新摘要。
+  approval_effect:
+    allowed:
+    - 追认三张既有金属UI贴图为本资源包的v1样片，并允许非破坏性修订。
+    - 在exact_scope与resources_and_limits内制作、生成、绘制、导入、切片和验证完整兵马俑UI资源包。
+    - 把合格资源接入兵马俑Theme及九个页面目标，但不得复制功能场景或改变控件行为。
+    - 创建可独立运行的按钮动效实验场、UiMotionProfile、预置动效组件和自动测试。
+    - 获取并入库最多一个开放许可中文字体包及其许可证，但不得产生采购费用。
+    - 更新资产清单、制作说明和本范围的验证证据。
+    forbidden:
+    - 批准GATE-2、把兵马俑提升为全局唯一美术风格，或删除灰盒回归Theme。
+    - 制作第二套UI风格、玩家侧换肤选择器、UI音频、棋子新造型、棋子动画、VFX或环境批量资产。
+    - 修改规则、PlayerView、回放、随机消费、教学语义、联网协议或隐藏信息边界。
+    - 使用授权不明字体、图标、纹样或第三方素材；制作或冒充正式秦小篆母版。
+    - 以自动检查代替项目所有者的最终审美接受或独立QA。
+  resources_and_limits:
+    new_external_spend_limit: 0
+    new_agent_instance_limit: 0
+    raster_source_file_limit: 24
+    vector_source_file_limit: 48
+    font_package_limit: 1
+    font_file_limit: 2
+    new_development_scene_limit: 1
+    runtime_script_and_resource_limit: 12
+    target_platform: Steam桌面版，Godot 4.7.1
+    time_limit: 仅覆盖当前UI资源包与按钮动效实验场；范围外资产必须等待GATE-2或新Contract。
+  evidence_and_review:
+    required_evidence:
+    - UI资产清单与每个库存项的路径、状态、规格和来源
+    - PNG Alpha与尺寸机械检查、SVG解析检查、Godot导入与场景加载日志
+    - 按钮普通、悬停、按下、禁用、危险和焦点状态的实验场截图或录屏
+    - 960×540、1280×720、1920×1080与减少动态效果测试
+    - 与灰盒Theme切换回归及现有UI场景回归
+    review_boundaries:
+    - 视觉负责人初审不能替代独立QA。
+    - 自动检查不能批准审美质量或GATE-2。
+    - 项目所有者保留最终风格接受与后续批量生产决策。
+  decision_consequences:
+    approved: 创建符合game-production-approval/v1且绑定本摘要哈希的批准记录；随后按exact_scope执行全量UI资源与按钮动效实验场生产。
+    rejected: 不创建批准记录；停止新增UI批量生产，既有三张贴图只保留为越界样片历史证据，按钮实验场可另行缩减为合同允许的局部技术样片。
+    revise: 按项目所有者指出的范围、数量或限制修改本摘要，生成新哈希并重新请求确认；旧哈希立即失效。
+review:
+  gate_result: awaiting_human
+  designated_decider: project-owner
+  canonicalization: exception_subject使用UTF-8 canonical JSON；键排序；无额外空白；ensure_ascii=false；SHA-256。
+  approval_digest: bb9bb74bf65b81f3bc4d253dcf3947e76947a7227c2fc98f3c2738a3ecfdec05
+  confirmation_rule: 项目所有者必须回复完整64位approval_digest；缩写、意译、实现指令或仅回复“可以”均不构成批准。
