@@ -10,4 +10,3 @@ metadata/piece_role = "相"
 
 [node name="Artwork" parent="." index="1"]
 texture = ExtResource("2_texture")
-

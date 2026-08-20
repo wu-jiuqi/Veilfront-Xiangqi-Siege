@@ -15,4 +15,3 @@ texture = ExtResource("1_shadow")
 scale = Vector2(0.17, 0.17)
 offset = Vector2(0, -337.92)
 texture_filter = 1
-

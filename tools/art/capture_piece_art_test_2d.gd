@@ -42,4 +42,3 @@ func _capture() -> void:
 		])
 	scene.queue_free()
 	quit(0)
-

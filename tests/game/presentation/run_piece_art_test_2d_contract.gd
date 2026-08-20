@@ -56,4 +56,3 @@ func _run() -> void:
 	print("PIECE_ART_TEST_2D_FAIL failures=%d" % failures.size())
 	scene.queue_free()
 	quit(1)
-

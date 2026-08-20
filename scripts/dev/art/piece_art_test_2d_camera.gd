@@ -42,4 +42,3 @@ func show_preset(preset: StringName, immediate: bool = false) -> void:
 	tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
 	tween.tween_property(_camera, "position", target_position, 0.3)
 	tween.tween_property(_camera, "zoom", target_zoom, 0.3)
-
