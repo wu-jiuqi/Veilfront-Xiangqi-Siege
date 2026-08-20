@@ -1,8 +1,6 @@
 extends Control
 
-@export var main_menu_scene: PackedScene
-
-@onready var _error_dialog: AcceptDialog = %ErrorDialog
+@onready var _menu_overlay: Control = %MenuOverlay
 @onready var _prompt_animation: AnimationPlayer = %PromptAnimation
 @onready var _sequence_player: AnimationPlayer = %SequencePlayer
 
@@ -36,9 +34,6 @@ func _unhandled_input(event: InputEvent) -> void:
 func request_entry() -> void:
 	if _transitioning:
 		return
-	if main_menu_scene == null:
-		_show_routing_error("未配置游戏菜单场景。")
-		return
 
 	_transitioning = true
 	_prompt_animation.stop()
@@ -48,16 +43,4 @@ func request_entry() -> void:
 func _on_sequence_animation_finished(animation_name: StringName) -> void:
 	if animation_name != &"opening_sequence":
 		return
-	_open_main_menu()
-
-
-func _open_main_menu() -> void:
-	var error := get_tree().change_scene_to_packed(main_menu_scene)
-	if error != OK:
-		_transitioning = false
-		_show_routing_error("无法打开游戏菜单，错误码：%d" % error)
-
-
-func _show_routing_error(message: String) -> void:
-	_error_dialog.dialog_text = message
-	_error_dialog.popup_centered()
+	_menu_overlay.call(&"reveal_menu")
