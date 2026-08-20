@@ -1,0 +1,60 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/art/ui/concepts/main_menu_background_v7_denoised.png" id="1_background"]
+[ext_resource type="Script" path="res://scripts/game/frontend/start_screen.gd" id="2_script"]
+[ext_resource type="PackedScene" path="res://scenes/game/frontend/main_menu.tscn" id="3_main_menu"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_theme_binder.tscn" id="4_theme_binder"]
+
+[node name="StartScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+script = ExtResource("2_script")
+main_menu_scene = ExtResource("3_main_menu")
+
+[node name="UiThemeBinder" parent="." instance=ExtResource("4_theme_binder")]
+
+[node name="Background" type="TextureRect" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("1_background")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="PromptArea" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -108.0
+offset_bottom = -38.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="EnterPrompt" type="Label" parent="PromptArea"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.88, 0.87, 0.81, 1)
+theme_override_colors/font_outline_color = Color(0.015, 0.02, 0.025, 0.94)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 24
+text = "点击任意位置进入"
+horizontal_alignment = 1
+
+[node name="ErrorDialog" type="AcceptDialog" parent="."]
+unique_name_in_owner = true
+title = "界面加载失败"
+dialog_text = "无法打开游戏菜单。"

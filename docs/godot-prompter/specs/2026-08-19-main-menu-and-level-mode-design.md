@@ -16,7 +16,7 @@
 
 ## 1. 目标
 
-建立 Demo 的正式启动路径：玩家启动游戏后先进入首界面，可以进入现有局域网联机大厅，或进入关卡目录。关卡目录同时承载 T0–T10 新手教学和孤相、双相、双马三个挑战关。
+建立 Demo 的正式启动路径：玩家启动游戏后先看到长城青铜城门开始界面，点击、触摸或按确认键后进入游戏菜单；游戏菜单可以进入现有局域网联机大厅，或进入关卡目录。关卡目录同时承载 T0–T10 新手教学和孤相、双相、双马三个挑战关。
 
 本次只制作灰盒 UI、场景路由、关卡数据、正式教学流程和关卡专用规则 AI，不制作或冻结最终美术。
 
@@ -74,6 +74,16 @@ MainMenu
 所有固定 UI 结构使用预置节点。运行时只动态实例化数量由关卡目录决定的关卡卡片，以及由 `PlayerView` 决定数量的棋子、旗帜、墙和虚影。
 
 ```text
+scenes/game/frontend/start_screen.tscn
+StartScreen (Control)
+├─ UiThemeBinder (Node)
+├─ Background (TextureRect)
+├─ PromptArea (CenterContainer)
+│  └─ EnterPrompt (Label)
+└─ ErrorDialog (AcceptDialog)
+```
+
+```text
 scenes/game/frontend/main_menu.tscn
 MainMenu (Control)
 ├─ Background (ColorRect)
@@ -126,8 +136,9 @@ LevelCard (PanelContainer)
 
 ## 5. 路由与返回规则
 
-`project.godot` 的 `run/main_scene` 改为 `main_menu.tscn`。
+`project.godot` 的 `run/main_scene` 改为 `start_screen.tscn`。开始界面只负责展示已确认的长城青铜城门背景与“点击任意位置进入”提示；左键点击、触摸按下或 `ui_accept` 进入 `main_menu.tscn`，连续输入由一次性跳转锁拦截。
 
+- 开始界面加载游戏菜单失败时显示本地错误弹窗并停留在当前界面。
 - “局域网联机对战”切换到现有 LAN 大厅。
 - “关卡模式”切换到 `level_select.tscn`。
 - 教学或挑战关退出时统一返回 `level_select.tscn`，并恢复之前选中的分类和滚动位置。
@@ -226,6 +237,8 @@ T0 默认开放。T1–T10 按顺序解锁，但玩家可通过“跳过本章�
 ### 首界面与路由
 
 - 主场景 headless 加载无错误。
+- 开始界面使用确认的降噪版长城青铜城门背景，并显示“点击任意位置进入”。
+- 左键、触摸和确认键均可进入游戏菜单，连续输入不会触发重复场景切换。
 - 两个模式按钮分别进入 LAN 大厅和关卡目录。
 - LAN、关卡目录、教学关、挑战关都有可工作的返回路径。
 - 不存在重复点击导致的双场景切换。
