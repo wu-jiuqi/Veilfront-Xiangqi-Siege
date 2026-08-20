@@ -1,0 +1,925 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>《雾疆：九路烽棋》首页 UI 布局工具</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --page: #070b0d;
+      --panel: #10171b;
+      --panel-2: #151f24;
+      --field: #090e11;
+      --line: #2a3940;
+      --line-strong: #465a63;
+      --ink: #e7dfcf;
+      --muted: #87959b;
+      --gold: #d0aa5c;
+      --gold-bright: #f1cf7d;
+      --red: #e42c36;
+      --red-soft: rgba(228, 44, 54, 0.15);
+      --blue: #6eb8c4;
+      --canvas-w: 1280;
+      --canvas-h: 720;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+      background: var(--page);
+      color: var(--ink);
+      font-family: "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
+    }
+
+    body {
+      display: grid;
+      grid-template-columns: 360px minmax(0, 1fr);
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    button, input, select { font: inherit; }
+
+    aside {
+      position: relative;
+      z-index: 5;
+      height: 100vh;
+      overflow: auto;
+      background: linear-gradient(180deg, #131c21 0%, #0b1114 100%);
+      border-right: 1px solid var(--line);
+      box-shadow: 14px 0 46px rgba(0, 0, 0, 0.34);
+    }
+
+    .tool-head {
+      position: sticky;
+      top: 0;
+      z-index: 4;
+      padding: 22px 22px 16px;
+      background: rgba(15, 23, 27, 0.96);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(12px);
+    }
+
+    h1 {
+      margin: 0;
+      font-family: "STKaiti", "KaiTi", serif;
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+    }
+
+    .subtitle {
+      margin: 7px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.65;
+      text-wrap: pretty;
+    }
+
+    .sidebar-body { padding: 18px 22px 28px; }
+
+    .section {
+      margin-bottom: 20px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section:last-child { border-bottom: 0; }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 0 0 10px;
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .element-list { display: grid; gap: 6px; }
+
+    .element-row {
+      display: grid;
+      grid-template-columns: 28px 1fr 34px;
+      align-items: center;
+      min-height: 38px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.018);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: 120ms ease;
+    }
+
+    .element-row:hover { color: var(--ink); border-color: var(--line); }
+    .element-row.active { color: white; background: rgba(208, 170, 92, 0.08); border-color: var(--gold); }
+
+    .element-index {
+      display: grid;
+      place-items: center;
+      height: 100%;
+      color: #081012;
+      background: var(--gold);
+      font: 700 11px/1 Consolas, monospace;
+    }
+
+    .element-name { padding-left: 10px; font-size: 13px; }
+
+    .visibility-button {
+      height: 100%;
+      color: var(--muted);
+      background: transparent;
+      border: 0;
+      cursor: pointer;
+      font: 700 12px/1 Consolas, monospace;
+    }
+
+    .visibility-button.off { color: #465158; }
+
+    .grid-2, .grid-4 { display: grid; gap: 8px; }
+    .grid-2 { grid-template-columns: 1fr 1fr; }
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+    label.field { display: grid; gap: 5px; }
+
+    .field-label {
+      color: var(--muted);
+      font: 10px/1 Consolas, monospace;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    input[type="number"], input[type="text"], select {
+      width: 100%;
+      min-width: 0;
+      height: 36px;
+      padding: 0 9px;
+      color: var(--ink);
+      background: var(--field);
+      border: 1px solid #34454d;
+      border-radius: 2px;
+      outline: none;
+      font: 12px/1 Consolas, "Microsoft YaHei UI", sans-serif;
+    }
+
+    input:focus, select:focus { border-color: var(--gold); box-shadow: 0 0 0 1px rgba(208, 170, 92, 0.22); }
+
+    .normalized-readout {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .normalized-readout div {
+      padding: 7px 5px;
+      color: var(--blue);
+      background: rgba(110, 184, 196, 0.045);
+      border: 1px solid rgba(110, 184, 196, 0.18);
+      font: 10px/1.25 Consolas, monospace;
+      text-align: center;
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 34px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .toggle-row input { accent-color: var(--gold); }
+
+    .node-path {
+      margin-top: 9px;
+      padding: 8px 9px;
+      overflow: hidden;
+      color: #718087;
+      background: #080c0f;
+      border-left: 2px solid var(--line-strong);
+      font: 10px/1.45 Consolas, monospace;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .button-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+    .tool-button {
+      min-height: 40px;
+      padding: 8px 10px;
+      color: var(--ink);
+      background: #151f24;
+      border: 1px solid #364850;
+      border-radius: 2px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 650;
+      transition: 130ms ease;
+    }
+
+    .tool-button:hover, .tool-button:focus-visible { color: white; border-color: var(--gold); outline: none; }
+    .tool-button.primary { color: #171108; background: var(--gold); border-color: var(--gold-bright); }
+    .tool-button.primary:hover { background: var(--gold-bright); }
+    .tool-button.danger:hover { border-color: var(--red); }
+
+    .status {
+      min-height: 48px;
+      padding: 10px 11px;
+      color: var(--gold-bright);
+      background: rgba(208, 170, 92, 0.055);
+      border-left: 2px solid var(--gold);
+      font-size: 11px;
+      line-height: 1.55;
+    }
+
+    main {
+      position: relative;
+      display: grid;
+      grid-template-rows: 52px minmax(0, 1fr);
+      min-width: 0;
+      height: 100vh;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 44%, rgba(66, 92, 102, 0.13), transparent 48%),
+        #070b0d;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 0 18px;
+      color: var(--muted);
+      background: #0d1417;
+      border-bottom: 1px solid var(--line);
+      font-size: 11px;
+    }
+
+    .topbar strong { color: var(--ink); font-weight: 600; }
+    .top-actions { display: flex; align-items: center; gap: 16px; }
+
+    .workspace {
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-height: 0;
+      padding: 24px;
+      overflow: auto;
+    }
+
+    .stage-shell {
+      position: relative;
+      width: min(100%, calc((100vh - 100px) * 16 / 9));
+      aspect-ratio: 16 / 9;
+      background: #020405;
+      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.58);
+    }
+
+    .stage {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      user-select: none;
+      touch-action: none;
+      background: #020405;
+    }
+
+    .stage-background, .stage-soldiers {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      pointer-events: none;
+    }
+
+    .stage-soldiers { z-index: 1; }
+
+    .fog-preview {
+      position: absolute;
+      z-index: 2;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.38;
+      background:
+        radial-gradient(ellipse at 48% 72%, rgba(175, 190, 192, 0.34), transparent 39%),
+        radial-gradient(ellipse at 82% 62%, rgba(122, 144, 150, 0.22), transparent 34%),
+        radial-gradient(ellipse at 14% 78%, rgba(125, 144, 149, 0.2), transparent 35%);
+      filter: blur(9px);
+      mix-blend-mode: screen;
+    }
+
+    .grid-overlay {
+      position: absolute;
+      z-index: 30;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0;
+      background-image:
+        linear-gradient(rgba(208, 170, 92, 0.13) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(208, 170, 92, 0.13) 1px, transparent 1px);
+      background-size: 5% 5%;
+      transition: opacity 120ms ease;
+    }
+
+    .grid-overlay.visible { opacity: 1; }
+
+    .safe-area {
+      position: absolute;
+      z-index: 29;
+      inset: 5%;
+      pointer-events: none;
+      border: 1px dashed rgba(110, 184, 196, 0.42);
+      opacity: 0;
+    }
+
+    .safe-area.visible { opacity: 1; }
+
+    .layout-element {
+      position: absolute;
+      z-index: 10;
+      cursor: move;
+      transform-origin: center;
+      container-type: size;
+    }
+
+    .layout-element.hidden-element { opacity: 0.12 !important; }
+    .layout-element.selected { z-index: 20; outline: 2px solid var(--gold-bright); outline-offset: 2px; }
+    .layout-element.selected::after {
+      content: attr(data-label);
+      position: absolute;
+      left: -2px;
+      top: -24px;
+      padding: 4px 6px;
+      color: #140f07;
+      background: var(--gold-bright);
+      font: 700 10px/1 Consolas, sans-serif;
+      white-space: nowrap;
+    }
+
+    .visual {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .visual.image { object-fit: contain; }
+    .atlas { background: url("../../assets/art/ui/start_sequence/veilfront_logo_gold_pair_v2.png") no-repeat; background-size: 200% 100%; }
+    .atlas.mist { background-position: left center; }
+    .atlas.frontier { background-position: right center; }
+
+    .sword-visual img { width: 100%; height: 100%; object-fit: fill; }
+    .sword-text {
+      position: absolute;
+      inset: 0 13.85% 0 0;
+      display: grid;
+      place-items: center;
+      color: #c2a261;
+      font-size: calc(27px * var(--stage-scale, 1));
+      text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.95), 0 1px 0 rgba(232, 198, 116, 0.15);
+      letter-spacing: 0.04em;
+    }
+
+    .settings-visual {
+      display: grid;
+      place-items: center;
+      color: #c2c2b4;
+      background: rgba(6, 15, 18, 0.72);
+      border: 1px solid rgba(126, 118, 87, 0.62);
+      border-radius: 2px;
+      font-size: calc(24px * var(--stage-scale, 1));
+    }
+
+    .version-visual {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      color: rgba(128, 135, 132, 0.85);
+      font-size: calc(16px * var(--stage-scale, 1));
+      white-space: nowrap;
+    }
+
+    .resize-handle {
+      position: absolute;
+      z-index: 3;
+      display: none;
+      width: 11px;
+      height: 11px;
+      background: #0c1113;
+      border: 2px solid var(--gold-bright);
+      border-radius: 50%;
+    }
+
+    .selected .resize-handle { display: block; }
+    .resize-handle[data-handle="nw"] { left: -7px; top: -7px; cursor: nwse-resize; }
+    .resize-handle[data-handle="ne"] { right: -7px; top: -7px; cursor: nesw-resize; }
+    .resize-handle[data-handle="sw"] { left: -7px; bottom: -7px; cursor: nesw-resize; }
+    .resize-handle[data-handle="se"] { right: -7px; bottom: -7px; cursor: nwse-resize; }
+
+    .stage-caption {
+      position: absolute;
+      right: 9px;
+      bottom: -23px;
+      color: #5e6b70;
+      font: 10px/1 Consolas, monospace;
+    }
+
+    .drop-zone {
+      position: fixed;
+      z-index: 100;
+      inset: 18px;
+      display: none;
+      place-items: center;
+      color: white;
+      background: rgba(7, 12, 14, 0.92);
+      border: 2px dashed var(--gold);
+      font-size: 20px;
+    }
+
+    .drop-zone.visible { display: grid; }
+
+    @media (max-width: 980px) {
+      body { grid-template-columns: 1fr; height: auto; overflow: auto; }
+      aside { height: auto; max-height: none; }
+      main { height: 70vh; min-height: 560px; }
+      .tool-head { position: static; }
+    }
+  </style>
+</head>
+<body>
+  <aside>
+    <div class="tool-head">
+      <h1>首页 UI 布局工具</h1>
+      <p class="subtitle">拖动元素调整位置，拖动四角调整尺寸。完成后复制或下载 JSON，再发回 Codex 写入 Godot。</p>
+    </div>
+
+    <div class="sidebar-body">
+      <section class="section">
+        <div class="section-title"><span>元素</span><span id="element-count">0</span></div>
+        <div class="element-list" id="element-list"></div>
+      </section>
+
+      <section class="section">
+        <div class="section-title"><span>位置与尺寸</span><span>PX</span></div>
+        <div class="grid-4">
+          <label class="field"><span class="field-label">X</span><input id="field-x" type="number" step="1"></label>
+          <label class="field"><span class="field-label">Y</span><input id="field-y" type="number" step="1"></label>
+          <label class="field"><span class="field-label">W</span><input id="field-w" type="number" step="1" min="12"></label>
+          <label class="field"><span class="field-label">H</span><input id="field-h" type="number" step="1" min="12"></label>
+        </div>
+        <div class="normalized-readout" id="normalized-readout"></div>
+        <label class="field" id="text-field-wrap" style="margin-top: 10px;">
+          <span class="field-label">按钮文字</span>
+          <input id="field-text" type="text">
+        </label>
+        <div class="toggle-row"><span>锁定宽高比</span><input id="lock-aspect" type="checkbox"></div>
+        <div class="toggle-row"><span>显示该元素</span><input id="visible-element" type="checkbox"></div>
+        <div class="node-path" id="node-path">未选择元素</div>
+      </section>
+
+      <section class="section">
+        <div class="section-title"><span>画布辅助</span><span>1280×720</span></div>
+        <div class="grid-2">
+          <label class="field"><span class="field-label">吸附步长</span>
+            <select id="snap-size"><option value="1">1 px</option><option value="4">4 px</option><option value="8" selected>8 px</option><option value="16">16 px</option></select>
+          </label>
+          <label class="field"><span class="field-label">预览分辨率</span>
+            <select id="preview-size"><option value="1280x720">1280×720</option><option value="1920x1080">1920×1080</option><option value="960x540">960×540</option></select>
+          </label>
+        </div>
+        <div class="toggle-row"><span>启用吸附</span><input id="snap-enabled" type="checkbox" checked></div>
+        <div class="toggle-row"><span>显示网格</span><input id="show-grid" type="checkbox"></div>
+        <div class="toggle-row"><span>显示 5% 安全区</span><input id="show-safe-area" type="checkbox"></div>
+        <div class="toggle-row"><span>显示雾气参考层</span><input id="show-fog" type="checkbox" checked></div>
+      </section>
+
+      <section class="section">
+        <div class="section-title"><span>导入与导出</span><span>JSON</span></div>
+        <div class="button-grid">
+          <button class="tool-button primary" id="copy-json" type="button">复制布局 JSON</button>
+          <button class="tool-button" id="download-json" type="button">下载 JSON</button>
+          <button class="tool-button" id="import-json" type="button">导入 JSON</button>
+          <button class="tool-button" id="copy-anchors" type="button">复制选中锚点</button>
+          <button class="tool-button" id="save-draft" type="button">保存本地草稿</button>
+          <button class="tool-button" id="load-draft" type="button">载入本地草稿</button>
+          <button class="tool-button danger" id="reset-layout" type="button">恢复游戏当前值</button>
+          <button class="tool-button" id="center-element" type="button">选中元素居中</button>
+        </div>
+        <input id="file-input" type="file" accept="application/json,.json" hidden>
+      </section>
+
+      <div class="status" id="status">已载入当前 Godot 菜单布局。先从元素列表选择要调整的项目。</div>
+    </div>
+  </aside>
+
+  <main>
+    <div class="topbar">
+      <div><strong>Start Menu Overlay</strong> · 响应式锚点编辑</div>
+      <div class="top-actions"><span id="cursor-readout">X 0 · Y 0</span><span id="zoom-readout">100%</span></div>
+    </div>
+    <div class="workspace">
+      <div class="stage-shell" id="stage-shell">
+        <div class="stage" id="stage">
+          <img class="stage-background" src="../../assets/art/ui/start_sequence/gate_environment_open_v1.png" alt="开放城门背景">
+          <img class="stage-soldiers" src="../../assets/art/ui/start_sequence/gate_soldiers_idle_v1.png" alt="站姿士兵">
+          <div class="fog-preview" id="fog-preview"></div>
+          <div id="elements-layer"></div>
+          <div class="grid-overlay" id="grid-overlay"></div>
+          <div class="safe-area" id="safe-area"></div>
+        </div>
+        <div class="stage-caption" id="stage-caption">基准画布 1280×720 · 预览 1280×720</div>
+      </div>
+    </div>
+  </main>
+
+  <div class="drop-zone" id="drop-zone">释放以导入布局 JSON</div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const BASE_WIDTH = 1280;
+      const BASE_HEIGHT = 720;
+      const STORAGE_KEY = "veilfront.start-menu-layout.v1.draft";
+      const assetRoot = "res://assets/art/ui/start_sequence/";
+
+      const initialElements = [
+        { id: "settings", label: "设置按钮", nodePath: "UiRoot/SettingsButton", kind: "settings", x: 18, y: 18, w: 108, h: 70, text: "设置", lockAspect: false, visible: true },
+        { id: "mist", label: "雾", nodePath: "UiRoot/MistCharacter", kind: "mist", x: 435.2, y: 122.4, w: 243.2, h: 230.4, lockAspect: true, visible: true },
+        { id: "frontier", label: "疆", nodePath: "UiRoot/FrontierCharacter", kind: "frontier", x: 435.2, y: 324, w: 243.2, h: 230.4, lockAspect: true, visible: true },
+        { id: "subtitle", label: "九路烽棋方章", nodePath: "UiRoot/GameSubtitle", kind: "image", src: "../../assets/art/ui/start_sequence/veilfront_subtitle_square_seal_v2.png", x: 665.6, y: 504, w: 102.4, h: 102.4, lockAspect: true, visible: true },
+        { id: "lan", label: "联机对战", nodePath: "UiRoot/MenuPanel/LanButton", kind: "sword", x: 819.2, y: 144, w: 448, h: 89.4, text: "联机对战", lockAspect: false, visible: true },
+        { id: "level", label: "关卡模式", nodePath: "UiRoot/MenuPanel/LevelModeButton", kind: "sword", x: 819.2, y: 253.4, w: 448, h: 89.4, text: "关卡模式", lockAspect: false, visible: true },
+        { id: "community", label: "社群", nodePath: "UiRoot/MenuPanel/CommunityButton", kind: "sword", x: 819.2, y: 362.8, w: 448, h: 89.4, text: "社群", lockAspect: false, visible: true },
+        { id: "quit", label: "退出游戏", nodePath: "UiRoot/MenuPanel/QuitButton", kind: "sword", x: 819.2, y: 472.2, w: 448, h: 89.4, text: "退出游戏", lockAspect: false, visible: true },
+        { id: "version", label: "版本号", nodePath: "UiRoot/VersionLabel", kind: "version", x: 994, y: 681, w: 268, h: 23, text: "Godot 4.7.1 · Iteration 3", lockAspect: false, visible: true }
+      ];
+
+      let elements = cloneElements(initialElements);
+      let selectedId = "mist";
+      let interaction = null;
+      let previewWidth = BASE_WIDTH;
+      let previewHeight = BASE_HEIGHT;
+
+      const stage = document.getElementById("stage");
+      const stageShell = document.getElementById("stage-shell");
+      const elementsLayer = document.getElementById("elements-layer");
+      const elementList = document.getElementById("element-list");
+      const status = document.getElementById("status");
+      const fields = {
+        x: document.getElementById("field-x"), y: document.getElementById("field-y"),
+        w: document.getElementById("field-w"), h: document.getElementById("field-h")
+      };
+      const textField = document.getElementById("field-text");
+      const textFieldWrap = document.getElementById("text-field-wrap");
+      const lockAspect = document.getElementById("lock-aspect");
+      const visibleElement = document.getElementById("visible-element");
+
+      function cloneElements(source) { return source.map(item => ({ ...item })); }
+      function clamp(value, min, max) { return Math.min(max, Math.max(min, value)); }
+      function round(value, digits = 1) { const scale = 10 ** digits; return Math.round(value * scale) / scale; }
+      function selectedElement() { return elements.find(item => item.id === selectedId) || elements[0]; }
+      function snap(value) {
+        if (!document.getElementById("snap-enabled").checked) return value;
+        const step = Number(document.getElementById("snap-size").value) || 1;
+        return Math.round(value / step) * step;
+      }
+
+      function visualMarkup(item) {
+        if (item.kind === "mist" || item.kind === "frontier") return `<div class="visual atlas ${item.kind}"></div>`;
+        if (item.kind === "image") return `<img class="visual image" src="${item.src}" alt="${item.label}">`;
+        if (item.kind === "sword") return `<div class="visual sword-visual"><img src="../../assets/art/ui/start_sequence/menu_bronze_sword_button_v1.png" alt=""><span class="sword-text">${escapeHtml(item.text)}</span></div>`;
+        if (item.kind === "settings") return `<div class="visual settings-visual">${escapeHtml(item.text)}</div>`;
+        return `<div class="visual version-visual">${escapeHtml(item.text)}</div>`;
+      }
+
+      function escapeHtml(value = "") {
+        return String(value).replace(/[&<>"]/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" })[char]);
+      }
+
+      function buildElements() {
+        elementsLayer.innerHTML = "";
+        elements.forEach(item => {
+          const node = document.createElement("div");
+          node.className = "layout-element";
+          node.dataset.id = item.id;
+          node.dataset.label = item.label;
+          node.innerHTML = `${visualMarkup(item)}${["nw", "ne", "sw", "se"].map(handle => `<span class="resize-handle" data-handle="${handle}"></span>`).join("")}`;
+          elementsLayer.appendChild(node);
+        });
+      }
+
+      function buildElementList() {
+        elementList.innerHTML = "";
+        elements.forEach((item, index) => {
+          const row = document.createElement("div");
+          row.className = "element-row";
+          row.dataset.id = item.id;
+          row.innerHTML = `<span class="element-index">${String(index + 1).padStart(2, "0")}</span><span class="element-name">${item.label}</span><button class="visibility-button ${item.visible ? "" : "off"}" type="button" title="显示/隐藏">${item.visible ? "ON" : "OFF"}</button>`;
+          elementList.appendChild(row);
+        });
+        document.getElementById("element-count").textContent = String(elements.length);
+      }
+
+      function render() {
+        elements.forEach(item => {
+          const node = elementsLayer.querySelector(`[data-id="${item.id}"]`);
+          if (!node) return;
+          node.style.left = `${item.x / BASE_WIDTH * 100}%`;
+          node.style.top = `${item.y / BASE_HEIGHT * 100}%`;
+          node.style.width = `${item.w / BASE_WIDTH * 100}%`;
+          node.style.height = `${item.h / BASE_HEIGHT * 100}%`;
+          node.classList.toggle("selected", item.id === selectedId);
+          node.classList.toggle("hidden-element", !item.visible);
+          if (["sword", "settings", "version"].includes(item.kind)) node.querySelector(item.kind === "sword" ? ".sword-text" : item.kind === "settings" ? ".settings-visual" : ".version-visual").textContent = item.text;
+        });
+        elementList.querySelectorAll(".element-row").forEach(row => {
+          const item = elements.find(entry => entry.id === row.dataset.id);
+          row.classList.toggle("active", row.dataset.id === selectedId);
+          const visibility = row.querySelector(".visibility-button");
+          visibility.textContent = item.visible ? "ON" : "OFF";
+          visibility.classList.toggle("off", !item.visible);
+        });
+        updateInspector();
+      }
+
+      function updateInspector() {
+        const item = selectedElement();
+        if (!item) return;
+        fields.x.value = String(round(item.x)); fields.y.value = String(round(item.y));
+        fields.w.value = String(round(item.w)); fields.h.value = String(round(item.h));
+        textField.value = item.text || "";
+        textFieldWrap.style.display = item.text === undefined ? "none" : "grid";
+        lockAspect.checked = item.lockAspect;
+        visibleElement.checked = item.visible;
+        document.getElementById("node-path").textContent = item.nodePath;
+        const values = [item.x / BASE_WIDTH, item.y / BASE_HEIGHT, item.w / BASE_WIDTH, item.h / BASE_HEIGHT];
+        document.getElementById("normalized-readout").innerHTML = values.map((value, index) => `<div>${["X", "Y", "W", "H"][index]}<br>${value.toFixed(6)}</div>`).join("");
+      }
+
+      function selectElement(id) {
+        if (!elements.some(item => item.id === id)) return;
+        selectedId = id;
+        render();
+      }
+
+      function stageDelta(event, startEvent) {
+        const rect = stage.getBoundingClientRect();
+        return { x: (event.clientX - startEvent.x) * BASE_WIDTH / rect.width, y: (event.clientY - startEvent.y) * BASE_HEIGHT / rect.height };
+      }
+
+      function beginInteraction(event, item, handle) {
+        interaction = {
+          pointerId: event.pointerId,
+          startEvent: { x: event.clientX, y: event.clientY },
+          start: { x: item.x, y: item.y, w: item.w, h: item.h },
+          handle,
+          aspect: item.w / item.h
+        };
+        stage.setPointerCapture(event.pointerId);
+      }
+
+      function moveInteraction(event) {
+        if (!interaction) return;
+        const item = selectedElement();
+        const delta = stageDelta(event, interaction.startEvent);
+        const start = interaction.start;
+
+        if (!interaction.handle) {
+          item.x = clamp(snap(start.x + delta.x), 0, BASE_WIDTH - item.w);
+          item.y = clamp(snap(start.y + delta.y), 0, BASE_HEIGHT - item.h);
+        } else {
+          let left = start.x, top = start.y, right = start.x + start.w, bottom = start.y + start.h;
+          if (interaction.handle.includes("w")) left = clamp(start.x + delta.x, 0, right - 12);
+          if (interaction.handle.includes("e")) right = clamp(start.x + start.w + delta.x, left + 12, BASE_WIDTH);
+          if (interaction.handle.includes("n")) top = clamp(start.y + delta.y, 0, bottom - 12);
+          if (interaction.handle.includes("s")) bottom = clamp(start.y + start.h + delta.y, top + 12, BASE_HEIGHT);
+
+          if (item.lockAspect) {
+            let width = right - left;
+            let height = bottom - top;
+            if (Math.abs(delta.x) >= Math.abs(delta.y)) height = width / interaction.aspect;
+            else width = height * interaction.aspect;
+            if (interaction.handle.includes("w")) left = right - width; else right = left + width;
+            if (interaction.handle.includes("n")) top = bottom - height; else bottom = top + height;
+            left = clamp(left, 0, BASE_WIDTH - 12); top = clamp(top, 0, BASE_HEIGHT - 12);
+            right = clamp(right, left + 12, BASE_WIDTH); bottom = clamp(bottom, top + 12, BASE_HEIGHT);
+          }
+
+          item.x = snap(left); item.y = snap(top); item.w = Math.max(12, snap(right - left)); item.h = Math.max(12, snap(bottom - top));
+        }
+        render();
+      }
+
+      function endInteraction(event) {
+        if (!interaction) return;
+        if (stage.hasPointerCapture(interaction.pointerId)) stage.releasePointerCapture(interaction.pointerId);
+        const item = selectedElement();
+        status.textContent = `${item.label}：X ${round(item.x)} · Y ${round(item.y)} · W ${round(item.w)} · H ${round(item.h)}`;
+        interaction = null;
+      }
+
+      function applyFieldChanges() {
+        const item = selectedElement();
+        const next = {
+          x: Number(fields.x.value), y: Number(fields.y.value),
+          w: Number(fields.w.value), h: Number(fields.h.value)
+        };
+        if (Object.values(next).some(Number.isNaN)) return;
+        item.w = clamp(next.w, 12, BASE_WIDTH);
+        item.h = clamp(next.h, 12, BASE_HEIGHT);
+        item.x = clamp(next.x, 0, BASE_WIDTH - item.w);
+        item.y = clamp(next.y, 0, BASE_HEIGHT - item.h);
+        render();
+      }
+
+      function exportPayload() {
+        const entries = {};
+        elements.forEach(item => {
+          entries[item.id] = {
+            label: item.label,
+            node_path: item.nodePath,
+            kind: item.kind,
+            visible: item.visible,
+            position_px: { x: round(item.x, 3), y: round(item.y, 3) },
+            size_px: { width: round(item.w, 3), height: round(item.h, 3) },
+            anchors: {
+              left: Number((item.x / BASE_WIDTH).toFixed(6)),
+              top: Number((item.y / BASE_HEIGHT).toFixed(6)),
+              right: Number(((item.x + item.w) / BASE_WIDTH).toFixed(6)),
+              bottom: Number(((item.y + item.h) / BASE_HEIGHT).toFixed(6))
+            },
+            lock_aspect: item.lockAspect,
+            ...(item.text === undefined ? {} : { text: item.text })
+          };
+        });
+        return {
+          schema: "veilfront.start-menu-layout.v1",
+          scene: "res://scenes/game/frontend/start_menu_overlay.tscn",
+          base_size: { width: BASE_WIDTH, height: BASE_HEIGHT },
+          preview_size: { width: previewWidth, height: previewHeight },
+          assets: {
+            background: `${assetRoot}gate_environment_open_v1.png`,
+            soldiers: `${assetRoot}gate_soldiers_idle_v1.png`,
+            title_atlas: `${assetRoot}veilfront_logo_gold_pair_v2.png`,
+            subtitle_seal: `${assetRoot}veilfront_subtitle_square_seal_v2.png`,
+            sword_button: `${assetRoot}menu_bronze_sword_button_v1.png`
+          },
+          elements: entries
+        };
+      }
+
+      function importPayload(payload) {
+        if (!payload || payload.schema !== "veilfront.start-menu-layout.v1" || !payload.elements) throw new Error("JSON schema 不匹配");
+        const finiteOr = (value, fallback) => {
+          if (value === null || value === undefined || value === "") return fallback;
+          const number = Number(value);
+          return Number.isFinite(number) ? number : fallback;
+        };
+        elements.forEach(item => {
+          const source = payload.elements[item.id];
+          if (!source) return;
+          const anchorX = finiteOr(source.anchors?.left, null);
+          const anchorY = finiteOr(source.anchors?.top, null);
+          const anchorRight = finiteOr(source.anchors?.right, null);
+          const anchorBottom = finiteOr(source.anchors?.bottom, null);
+          item.x = finiteOr(source.position_px?.x, anchorX === null ? item.x : anchorX * BASE_WIDTH);
+          item.y = finiteOr(source.position_px?.y, anchorY === null ? item.y : anchorY * BASE_HEIGHT);
+          item.w = finiteOr(source.size_px?.width, anchorX === null || anchorRight === null ? item.w : (anchorRight - anchorX) * BASE_WIDTH);
+          item.h = finiteOr(source.size_px?.height, anchorY === null || anchorBottom === null ? item.h : (anchorBottom - anchorY) * BASE_HEIGHT);
+          item.visible = source.visible !== false;
+          item.lockAspect = Boolean(source.lock_aspect);
+          if (source.text !== undefined) item.text = String(source.text);
+        });
+        render();
+      }
+
+      async function copyText(text, successMessage) {
+        try { await navigator.clipboard.writeText(text); }
+        catch {
+          const textarea = document.createElement("textarea");
+          textarea.value = text; document.body.appendChild(textarea); textarea.select(); document.execCommand("copy"); textarea.remove();
+        }
+        status.textContent = successMessage;
+      }
+
+      function downloadJson() {
+        const blob = new Blob([JSON.stringify(exportPayload(), null, 2)], { type: "application/json" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob); link.download = "start-menu-layout.json"; link.click();
+        setTimeout(() => URL.revokeObjectURL(link.href), 0);
+        status.textContent = "已下载 start-menu-layout.json。把文件发给 Codex 即可写回 Godot。";
+      }
+
+      function updatePreviewSize(value) {
+        const [width, height] = value.split("x").map(Number);
+        previewWidth = width; previewHeight = height;
+        document.getElementById("stage-caption").textContent = `基准画布 1280×720 · 预览 ${width}×${height}`;
+      }
+
+      elementsLayer.addEventListener("pointerdown", event => {
+        const node = event.target.closest(".layout-element");
+        if (!node) return;
+        event.preventDefault();
+        selectElement(node.dataset.id);
+        beginInteraction(event, selectedElement(), event.target.closest(".resize-handle")?.dataset.handle || null);
+      });
+      stage.addEventListener("pointermove", event => {
+        const rect = stage.getBoundingClientRect();
+        const x = clamp((event.clientX - rect.left) * BASE_WIDTH / rect.width, 0, BASE_WIDTH);
+        const y = clamp((event.clientY - rect.top) * BASE_HEIGHT / rect.height, 0, BASE_HEIGHT);
+        document.getElementById("cursor-readout").textContent = `X ${Math.round(x)} · Y ${Math.round(y)}`;
+        moveInteraction(event);
+      });
+      stage.addEventListener("pointerup", endInteraction);
+      stage.addEventListener("pointercancel", endInteraction);
+
+      elementList.addEventListener("click", event => {
+        const row = event.target.closest(".element-row");
+        if (!row) return;
+        selectElement(row.dataset.id);
+        if (event.target.closest(".visibility-button")) {
+          const item = selectedElement(); item.visible = !item.visible; render();
+        }
+      });
+
+      Object.values(fields).forEach(field => field.addEventListener("change", applyFieldChanges));
+      textField.addEventListener("input", () => { const item = selectedElement(); item.text = textField.value; render(); });
+      lockAspect.addEventListener("change", () => { selectedElement().lockAspect = lockAspect.checked; });
+      visibleElement.addEventListener("change", () => { selectedElement().visible = visibleElement.checked; render(); });
+
+      document.getElementById("show-grid").addEventListener("change", event => document.getElementById("grid-overlay").classList.toggle("visible", event.target.checked));
+      document.getElementById("show-safe-area").addEventListener("change", event => document.getElementById("safe-area").classList.toggle("visible", event.target.checked));
+      document.getElementById("show-fog").addEventListener("change", event => document.getElementById("fog-preview").style.display = event.target.checked ? "block" : "none");
+      document.getElementById("preview-size").addEventListener("change", event => updatePreviewSize(event.target.value));
+
+      document.getElementById("copy-json").addEventListener("click", () => copyText(JSON.stringify(exportPayload(), null, 2), "布局 JSON 已复制。直接粘贴到 Codex 对话即可。"));
+      document.getElementById("download-json").addEventListener("click", downloadJson);
+      document.getElementById("import-json").addEventListener("click", () => document.getElementById("file-input").click());
+      document.getElementById("file-input").addEventListener("change", async event => {
+        const file = event.target.files[0]; if (!file) return;
+        try { importPayload(JSON.parse(await file.text())); status.textContent = `已导入 ${file.name}。`; }
+        catch (error) { status.textContent = `导入失败：${error.message}`; }
+        event.target.value = "";
+      });
+      document.getElementById("copy-anchors").addEventListener("click", () => {
+        const item = selectedElement();
+        const left = item.x / BASE_WIDTH, top = item.y / BASE_HEIGHT, right = (item.x + item.w) / BASE_WIDTH, bottom = (item.y + item.h) / BASE_HEIGHT;
+        const snippet = `anchor_left = ${left.toFixed(6)}\nanchor_top = ${top.toFixed(6)}\nanchor_right = ${right.toFixed(6)}\nanchor_bottom = ${bottom.toFixed(6)}`;
+        copyText(snippet, `${item.label} 的 Godot 锚点已复制。`);
+      });
+      document.getElementById("save-draft").addEventListener("click", () => { localStorage.setItem(STORAGE_KEY, JSON.stringify(exportPayload())); status.textContent = "草稿已保存到当前浏览器。"; });
+      document.getElementById("load-draft").addEventListener("click", () => {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (!saved) { status.textContent = "当前浏览器还没有保存过草稿。"; return; }
+        try { importPayload(JSON.parse(saved)); status.textContent = "已载入本地草稿。"; } catch (error) { status.textContent = `草稿损坏：${error.message}`; }
+      });
+      document.getElementById("reset-layout").addEventListener("click", () => { elements = cloneElements(initialElements); buildElements(); buildElementList(); selectElement("mist"); status.textContent = "已恢复当前 Godot 菜单的初始布局。"; });
+      document.getElementById("center-element").addEventListener("click", () => { const item = selectedElement(); item.x = (BASE_WIDTH - item.w) / 2; item.y = (BASE_HEIGHT - item.h) / 2; render(); status.textContent = `${item.label} 已移动到画面正中。`; });
+
+      window.addEventListener("keydown", event => {
+        if (["INPUT", "SELECT", "TEXTAREA"].includes(document.activeElement?.tagName)) return;
+        const directions = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
+        if (!directions[event.key]) return;
+        event.preventDefault();
+        const item = selectedElement(); const amount = event.shiftKey ? 10 : 1;
+        item.x = clamp(item.x + directions[event.key][0] * amount, 0, BASE_WIDTH - item.w);
+        item.y = clamp(item.y + directions[event.key][1] * amount, 0, BASE_HEIGHT - item.h);
+        render();
+      });
+
+      const dropZone = document.getElementById("drop-zone");
+      window.addEventListener("dragover", event => { event.preventDefault(); dropZone.classList.add("visible"); });
+      window.addEventListener("dragleave", event => { if (!event.relatedTarget) dropZone.classList.remove("visible"); });
+      window.addEventListener("drop", async event => {
+        event.preventDefault(); dropZone.classList.remove("visible");
+        const file = [...event.dataTransfer.files].find(candidate => candidate.name.endsWith(".json"));
+        if (!file) return;
+        try { importPayload(JSON.parse(await file.text())); status.textContent = `已拖入 ${file.name}。`; } catch (error) { status.textContent = `导入失败：${error.message}`; }
+      });
+
+      const resizeObserver = new ResizeObserver(() => {
+        const stageScale = stage.getBoundingClientRect().width / BASE_WIDTH;
+        const zoom = stageScale * 100;
+        stage.style.setProperty("--stage-scale", String(stageScale));
+        document.getElementById("zoom-readout").textContent = `${Math.round(zoom)}%`;
+      });
+      resizeObserver.observe(stageShell);
+
+      buildElements();
+      buildElementList();
+      render();
+    })();
+  </script>
+</body>
+</html>
