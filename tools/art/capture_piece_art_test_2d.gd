@@ -2,9 +2,9 @@ extends SceneTree
 
 const TEST_SCENE := preload("res://scenes/dev/art/piece_art_test_2d.tscn")
 const OUTPUTS := {
-	&"overview": "res://evidence/gate2/art-samples/review/piece-art-test-2d-full-formation-v1.png",
-	&"red": "res://evidence/gate2/art-samples/review/piece-art-test-2d-red-camp-v1.png",
-	&"black": "res://evidence/gate2/art-samples/review/piece-art-test-2d-black-camp-v1.png",
+	&"overview": "res://evidence/gate2/art-samples/review/piece-art-test-2d-battlefield-v3-full-formation.png",
+	&"red": "res://evidence/gate2/art-samples/review/piece-art-test-2d-battlefield-v3-red-camp.png",
+	&"black": "res://evidence/gate2/art-samples/review/piece-art-test-2d-battlefield-v3-black-camp.png",
 }
 
 

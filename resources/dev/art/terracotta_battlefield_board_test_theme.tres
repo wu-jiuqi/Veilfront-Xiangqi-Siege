@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="BoardTheme" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/presentation/board/board_theme.gd" id="1_board_theme"]
+
+[resource]
+script = ExtResource("1_board_theme")
+theme_id = &"terracotta_battlefield_art_test"
+cell_size = Vector2(128, 128)
+grid_palette = {
+"base": Color(0.22, 0.18, 0.14, 0.08),
+"headquarters": Color(0.5, 0.24, 0.14, 0.16),
+"buffer": Color(0.4, 0.3, 0.2, 0.1),
+"warzone": Color(0.16, 0.14, 0.12, 0.06)
+}
+region_label_style = {
+"font_color": Color(0.94, 0.84, 0.68, 0.34),
+"font_size": 72
+}

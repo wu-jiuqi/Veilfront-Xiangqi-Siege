@@ -1,185 +1,194 @@
-[gd_scene load_steps=17 format=3]
+[gd_scene format=3]
 
-[ext_resource type="PackedScene" path="res://scenes/game/match/board/board_world.tscn" id="1_board"]
 [ext_resource type="Script" path="res://scripts/dev/art/piece_art_test_2d_camera.gd" id="2_camera"]
-[ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces_2d/red_infantry_piece_2d.tscn" id="3_red_infantry"]
-[ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces_2d/black_infantry_piece_2d.tscn" id="4_black_infantry"]
-[ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces_2d/red_trebuchet_piece_2d.tscn" id="5_red_trebuchet"]
-[ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces_2d/black_trebuchet_piece_2d.tscn" id="6_black_trebuchet"]
+[ext_resource type="PackedScene" path="res://scenes/game/match/board/board_world.tscn" id="1_board"]
 [ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces_2d/red_chariot_piece_2d.tscn" id="7_red_chariot"]
-[ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces_2d/black_chariot_piece_2d.tscn" id="8_black_chariot"]
 [ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces_2d/red_cavalry_piece_2d.tscn" id="9_red_cavalry"]
-[ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces_2d/black_cavalry_piece_2d.tscn" id="10_black_cavalry"]
 [ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces_2d/red_minister_piece_2d.tscn" id="11_red_minister"]
-[ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces_2d/black_minister_piece_2d.tscn" id="12_black_minister"]
 [ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces_2d/red_guard_piece_2d.tscn" id="13_red_guard"]
-[ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces_2d/black_guard_piece_2d.tscn" id="14_black_guard"]
 [ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces_2d/red_general_piece_2d.tscn" id="15_red_general"]
+[ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces_2d/red_trebuchet_piece_2d.tscn" id="5_red_trebuchet"]
+[ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces_2d/red_infantry_piece_2d.tscn" id="3_red_infantry"]
+[ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces_2d/black_chariot_piece_2d.tscn" id="8_black_chariot"]
+[ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces_2d/black_cavalry_piece_2d.tscn" id="10_black_cavalry"]
+[ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces_2d/black_minister_piece_2d.tscn" id="12_black_minister"]
+[ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces_2d/black_guard_piece_2d.tscn" id="14_black_guard"]
 [ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces_2d/black_general_piece_2d.tscn" id="16_black_general"]
+[ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces_2d/black_trebuchet_piece_2d.tscn" id="6_black_trebuchet"]
+[ext_resource type="PackedScene" path="res://scenes/dev/art/terracotta_warriors/pieces_2d/black_infantry_piece_2d.tscn" id="4_black_infantry"]
+[ext_resource type="Texture2D" path="res://assets/art/boards/terracotta_warriors/terracotta_battlefield_board_bg_gridless_v3_decorated.png" id="17_k7txl"]
+[ext_resource type="Resource" path="res://resources/dev/art/terracotta_battlefield_board_test_theme.tres" id="18_test_theme"]
 
-[node name="PieceArtTest2D" type="Node2D"]
+[node name="PieceArtTest2D" type="Node2D" unique_id=422622976]
 script = ExtResource("2_camera")
 metadata/purpose = "Development-only 2D plane review for the approved static terracotta-warrior textures"
 metadata/formal_match_integration = false
 
-[node name="BoardWorld" parent="." instance=ExtResource("1_board")]
+[node name="BoardWorld" parent="." unique_id=1376813635 instance=ExtResource("1_board")]
+board_theme = ExtResource("18_test_theme")
 
-[node name="PreviewPieceLayer" type="Node2D" parent="."]
+[node name="PreviewPieceLayer" type="Node2D" parent="." unique_id=97907736]
 y_sort_enabled = true
 
-[node name="red_chariot_1_x1_y1" parent="PreviewPieceLayer" instance=ExtResource("7_red_chariot")]
+[node name="red_chariot_1_x1_y1" parent="PreviewPieceLayer" unique_id=36123356 instance=ExtResource("7_red_chariot")]
 position = Vector2(64, 3008)
 metadata/authority_cell = Vector2i(1, 1)
 
-[node name="red_cavalry_2_x2_y1" parent="PreviewPieceLayer" instance=ExtResource("9_red_cavalry")]
+[node name="red_cavalry_2_x2_y1" parent="PreviewPieceLayer" unique_id=875996825 instance=ExtResource("9_red_cavalry")]
 position = Vector2(192, 3008)
 metadata/authority_cell = Vector2i(2, 1)
 
-[node name="red_minister_3_x3_y1" parent="PreviewPieceLayer" instance=ExtResource("11_red_minister")]
+[node name="red_minister_3_x3_y1" parent="PreviewPieceLayer" unique_id=1914538077 instance=ExtResource("11_red_minister")]
 position = Vector2(320, 3008)
 metadata/authority_cell = Vector2i(3, 1)
 
-[node name="red_guard_4_x4_y1" parent="PreviewPieceLayer" instance=ExtResource("13_red_guard")]
+[node name="red_guard_4_x4_y1" parent="PreviewPieceLayer" unique_id=1478545791 instance=ExtResource("13_red_guard")]
 position = Vector2(448, 3008)
 metadata/authority_cell = Vector2i(4, 1)
 
-[node name="red_general_5_x5_y1" parent="PreviewPieceLayer" instance=ExtResource("15_red_general")]
+[node name="red_general_5_x5_y1" parent="PreviewPieceLayer" unique_id=206822459 instance=ExtResource("15_red_general")]
 position = Vector2(576, 3008)
 metadata/authority_cell = Vector2i(5, 1)
 
-[node name="red_guard_6_x6_y1" parent="PreviewPieceLayer" instance=ExtResource("13_red_guard")]
+[node name="red_guard_6_x6_y1" parent="PreviewPieceLayer" unique_id=1708600307 instance=ExtResource("13_red_guard")]
 position = Vector2(704, 3008)
 metadata/authority_cell = Vector2i(6, 1)
 
-[node name="red_minister_7_x7_y1" parent="PreviewPieceLayer" instance=ExtResource("11_red_minister")]
+[node name="red_minister_7_x7_y1" parent="PreviewPieceLayer" unique_id=907010889 instance=ExtResource("11_red_minister")]
 position = Vector2(832, 3008)
 metadata/authority_cell = Vector2i(7, 1)
 
-[node name="red_cavalry_8_x8_y1" parent="PreviewPieceLayer" instance=ExtResource("9_red_cavalry")]
+[node name="red_cavalry_8_x8_y1" parent="PreviewPieceLayer" unique_id=1589699145 instance=ExtResource("9_red_cavalry")]
 position = Vector2(960, 3008)
 metadata/authority_cell = Vector2i(8, 1)
 
-[node name="red_chariot_9_x9_y1" parent="PreviewPieceLayer" instance=ExtResource("7_red_chariot")]
+[node name="red_chariot_9_x9_y1" parent="PreviewPieceLayer" unique_id=1736623048 instance=ExtResource("7_red_chariot")]
 position = Vector2(1088, 3008)
 metadata/authority_cell = Vector2i(9, 1)
 
-[node name="red_trebuchet_2_x2_y3" parent="PreviewPieceLayer" instance=ExtResource("5_red_trebuchet")]
+[node name="red_trebuchet_2_x2_y3" parent="PreviewPieceLayer" unique_id=210022234 instance=ExtResource("5_red_trebuchet")]
 position = Vector2(192, 2752)
 metadata/authority_cell = Vector2i(2, 3)
 
-[node name="red_trebuchet_8_x8_y3" parent="PreviewPieceLayer" instance=ExtResource("5_red_trebuchet")]
+[node name="red_trebuchet_8_x8_y3" parent="PreviewPieceLayer" unique_id=1890863608 instance=ExtResource("5_red_trebuchet")]
 position = Vector2(960, 2752)
 metadata/authority_cell = Vector2i(8, 3)
 
-[node name="red_infantry_1_x1_y4" parent="PreviewPieceLayer" instance=ExtResource("3_red_infantry")]
+[node name="red_infantry_1_x1_y4" parent="PreviewPieceLayer" unique_id=1771020088 instance=ExtResource("3_red_infantry")]
 position = Vector2(64, 2624)
 metadata/authority_cell = Vector2i(1, 4)
 
-[node name="red_infantry_3_x3_y4" parent="PreviewPieceLayer" instance=ExtResource("3_red_infantry")]
+[node name="red_infantry_3_x3_y4" parent="PreviewPieceLayer" unique_id=1149506908 instance=ExtResource("3_red_infantry")]
 position = Vector2(320, 2624)
 metadata/authority_cell = Vector2i(3, 4)
 
-[node name="red_infantry_5_x5_y4" parent="PreviewPieceLayer" instance=ExtResource("3_red_infantry")]
+[node name="red_infantry_5_x5_y4" parent="PreviewPieceLayer" unique_id=1999738460 instance=ExtResource("3_red_infantry")]
 position = Vector2(576, 2624)
 metadata/authority_cell = Vector2i(5, 4)
 
-[node name="red_infantry_7_x7_y4" parent="PreviewPieceLayer" instance=ExtResource("3_red_infantry")]
+[node name="red_infantry_7_x7_y4" parent="PreviewPieceLayer" unique_id=364233651 instance=ExtResource("3_red_infantry")]
 position = Vector2(832, 2624)
 metadata/authority_cell = Vector2i(7, 4)
 
-[node name="red_infantry_9_x9_y4" parent="PreviewPieceLayer" instance=ExtResource("3_red_infantry")]
+[node name="red_infantry_9_x9_y4" parent="PreviewPieceLayer" unique_id=951606030 instance=ExtResource("3_red_infantry")]
 position = Vector2(1088, 2624)
 metadata/authority_cell = Vector2i(9, 4)
 
-[node name="black_chariot_1_x1_y24" parent="PreviewPieceLayer" instance=ExtResource("8_black_chariot")]
+[node name="black_chariot_1_x1_y24" parent="PreviewPieceLayer" unique_id=1559945918 instance=ExtResource("8_black_chariot")]
 position = Vector2(64, 64)
 metadata/authority_cell = Vector2i(1, 24)
 
-[node name="black_cavalry_2_x2_y24" parent="PreviewPieceLayer" instance=ExtResource("10_black_cavalry")]
+[node name="black_cavalry_2_x2_y24" parent="PreviewPieceLayer" unique_id=180327528 instance=ExtResource("10_black_cavalry")]
 position = Vector2(192, 64)
 metadata/authority_cell = Vector2i(2, 24)
 
-[node name="black_minister_3_x3_y24" parent="PreviewPieceLayer" instance=ExtResource("12_black_minister")]
+[node name="black_minister_3_x3_y24" parent="PreviewPieceLayer" unique_id=1140895535 instance=ExtResource("12_black_minister")]
 position = Vector2(320, 64)
 metadata/authority_cell = Vector2i(3, 24)
 
-[node name="black_guard_4_x4_y24" parent="PreviewPieceLayer" instance=ExtResource("14_black_guard")]
+[node name="black_guard_4_x4_y24" parent="PreviewPieceLayer" unique_id=1544534590 instance=ExtResource("14_black_guard")]
 position = Vector2(448, 64)
 metadata/authority_cell = Vector2i(4, 24)
 
-[node name="black_general_5_x5_y24" parent="PreviewPieceLayer" instance=ExtResource("16_black_general")]
+[node name="black_general_5_x5_y24" parent="PreviewPieceLayer" unique_id=777407941 instance=ExtResource("16_black_general")]
 position = Vector2(576, 64)
 metadata/authority_cell = Vector2i(5, 24)
 
-[node name="black_guard_6_x6_y24" parent="PreviewPieceLayer" instance=ExtResource("14_black_guard")]
+[node name="black_guard_6_x6_y24" parent="PreviewPieceLayer" unique_id=1602976892 instance=ExtResource("14_black_guard")]
 position = Vector2(704, 64)
 metadata/authority_cell = Vector2i(6, 24)
 
-[node name="black_minister_7_x7_y24" parent="PreviewPieceLayer" instance=ExtResource("12_black_minister")]
+[node name="black_minister_7_x7_y24" parent="PreviewPieceLayer" unique_id=1327126061 instance=ExtResource("12_black_minister")]
 position = Vector2(832, 64)
 metadata/authority_cell = Vector2i(7, 24)
 
-[node name="black_cavalry_8_x8_y24" parent="PreviewPieceLayer" instance=ExtResource("10_black_cavalry")]
+[node name="black_cavalry_8_x8_y24" parent="PreviewPieceLayer" unique_id=247026594 instance=ExtResource("10_black_cavalry")]
 position = Vector2(960, 64)
 metadata/authority_cell = Vector2i(8, 24)
 
-[node name="black_chariot_9_x9_y24" parent="PreviewPieceLayer" instance=ExtResource("8_black_chariot")]
+[node name="black_chariot_9_x9_y24" parent="PreviewPieceLayer" unique_id=1772389847 instance=ExtResource("8_black_chariot")]
 position = Vector2(1088, 64)
 metadata/authority_cell = Vector2i(9, 24)
 
-[node name="black_trebuchet_2_x2_y22" parent="PreviewPieceLayer" instance=ExtResource("6_black_trebuchet")]
+[node name="black_trebuchet_2_x2_y22" parent="PreviewPieceLayer" unique_id=251764699 instance=ExtResource("6_black_trebuchet")]
 position = Vector2(192, 320)
 metadata/authority_cell = Vector2i(2, 22)
 
-[node name="black_trebuchet_8_x8_y22" parent="PreviewPieceLayer" instance=ExtResource("6_black_trebuchet")]
+[node name="black_trebuchet_8_x8_y22" parent="PreviewPieceLayer" unique_id=684004351 instance=ExtResource("6_black_trebuchet")]
 position = Vector2(960, 320)
 metadata/authority_cell = Vector2i(8, 22)
 
-[node name="black_infantry_1_x1_y21" parent="PreviewPieceLayer" instance=ExtResource("4_black_infantry")]
+[node name="black_infantry_1_x1_y21" parent="PreviewPieceLayer" unique_id=972291642 instance=ExtResource("4_black_infantry")]
 position = Vector2(64, 448)
 metadata/authority_cell = Vector2i(1, 21)
 
-[node name="black_infantry_3_x3_y21" parent="PreviewPieceLayer" instance=ExtResource("4_black_infantry")]
+[node name="black_infantry_3_x3_y21" parent="PreviewPieceLayer" unique_id=731794305 instance=ExtResource("4_black_infantry")]
 position = Vector2(320, 448)
 metadata/authority_cell = Vector2i(3, 21)
 
-[node name="black_infantry_5_x5_y21" parent="PreviewPieceLayer" instance=ExtResource("4_black_infantry")]
+[node name="black_infantry_5_x5_y21" parent="PreviewPieceLayer" unique_id=1633745042 instance=ExtResource("4_black_infantry")]
 position = Vector2(576, 448)
 metadata/authority_cell = Vector2i(5, 21)
 
-[node name="black_infantry_7_x7_y21" parent="PreviewPieceLayer" instance=ExtResource("4_black_infantry")]
+[node name="black_infantry_7_x7_y21" parent="PreviewPieceLayer" unique_id=1410307076 instance=ExtResource("4_black_infantry")]
 position = Vector2(832, 448)
 metadata/authority_cell = Vector2i(7, 21)
 
-[node name="black_infantry_9_x9_y21" parent="PreviewPieceLayer" instance=ExtResource("4_black_infantry")]
+[node name="black_infantry_9_x9_y21" parent="PreviewPieceLayer" unique_id=1960968819 instance=ExtResource("4_black_infantry")]
 position = Vector2(1088, 448)
 metadata/authority_cell = Vector2i(9, 21)
 
-[node name="PreviewCamera2D" type="Camera2D" parent="."]
+[node name="PreviewCamera2D" type="Camera2D" parent="." unique_id=1615635272]
 position = Vector2(576, 1536)
 zoom = Vector2(0.32, 0.32)
 
-[node name="ReviewHud" type="CanvasLayer" parent="."]
+[node name="ReviewHud" type="CanvasLayer" parent="." unique_id=1889452715]
 layer = 2
 
-[node name="Title" type="Label" parent="ReviewHud"]
+[node name="Title" type="Label" parent="ReviewHud" unique_id=1101454756]
 offset_left = 20.0
 offset_top = 18.0
 offset_right = 740.0
 offset_bottom = 52.0
+theme_override_font_sizes/font_size = 24
 theme_override_colors/font_color = Color(0.94, 0.82, 0.48, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.025, 0.03, 0.92)
 theme_override_constants/outline_size = 6
-theme_override_font_sizes/font_size = 24
-text = "兵马俑 · 14张透明棋子贴图 · 2D平面审查场"
+text = "兵马俑 · 秦朝硝烟棋盘 · 14张透明棋子 · 2D平面审查场"
 
-[node name="Hint" type="Label" parent="ReviewHud"]
+[node name="Hint" type="Label" parent="ReviewHud" unique_id=1841889305]
 offset_left = 20.0
 offset_top = 54.0
 offset_right = 720.0
 offset_bottom = 84.0
+theme_override_font_sizes/font_size = 17
 theme_override_colors/font_color = Color(0.86, 0.88, 0.9, 0.9)
 theme_override_colors/font_outline_color = Color(0.02, 0.025, 0.03, 0.92)
 theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 17
 text = "Home/1 红方近景 · Space/2 全盘 · End/3 黑方近景"
+
+[node name="BattlefieldBackground" type="Sprite2D" parent="." unique_id=256356127]
+z_index = -100
+position = Vector2(576, 1536)
+scale = Vector2(1.6016684, 1.6016684)
+texture = ExtResource("17_k7txl")

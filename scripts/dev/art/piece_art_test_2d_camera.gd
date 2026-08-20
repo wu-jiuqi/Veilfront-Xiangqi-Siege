@@ -5,9 +5,11 @@ const PRESET_OVERVIEW: StringName = &"overview"
 const PRESET_BLACK: StringName = &"black"
 
 @onready var _camera: Camera2D = $PreviewCamera2D
+@onready var _fog_overlay: Control = $BoardWorld/FogOverlay
 
 
 func _ready() -> void:
+	_fog_overlay.visible = false
 	show_preset(PRESET_OVERVIEW, true)
 
 
