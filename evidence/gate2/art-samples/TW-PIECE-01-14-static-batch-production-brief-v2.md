@@ -1,8 +1,8 @@
 # “兵马俑”14枚静态棋子生产任务书 v2
 
-状态：`completed_historical_output / retrospective_exception_awaiting_human / pending_godot_board_readability`
+状态：`completed_historical_output / approved_limited_retrospective_exception / pending_godot_board_readability`
 
-治理说明：此前记录不符合 `game-production-approval/v1`，且没有绑定项目所有者确认的精确摘要，已从有效审批目录移除。待确认决策包：`game-pipeline/loops/evidence/STATIC-14-PIECE-OWNER-EXCEPTION-decision-package-v1.yaml`。本文件记录已经发生的生产事实，不主张存在事前授权。
+治理说明：此前记录不符合 `game-production-approval/v1`，且没有绑定项目所有者确认的精确摘要，已从有效审批目录移除。项目所有者随后按摘要`95214ab75a156a4570e561f2780e9e9e9bb442291085cfd41cd13be793a90c5f`批准追认与有限继续使用例外，正式记录为`game-pipeline/approvals/production-scope-exception-static-14-piece-95214ab75a15.yaml`。本文件仍只记录已经发生的生产事实，不主张存在事前授权，也不表示GATE-2通过。
 
 ## 生产范围
 

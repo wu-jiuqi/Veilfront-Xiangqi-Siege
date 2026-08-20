@@ -1,0 +1,48 @@
+approval:
+  schema_version: game-production-approval/v1
+  approval_id: approval:veilfront-xiangqi-siege:production-scope-exception:95214ab75a15
+  subject_kind: production-scope-exception
+  subject_id: EXCEPTION-STATIC-14-PIECE-BATCH-001@v1
+  subject_digest: 95214ab75a156a4570e561f2780e9e9e9bb442291085cfd41cd13be793a90c5f
+  decision: approved
+  decided_by: project-owner
+  decided_at: '2026-08-20T16:06:55.0652000+08:00'
+  evidence:
+    source_refs:
+    - codex-thread://current#owner-confirmed-production-scope-exception-95214ab75a15
+    - game-pipeline/loops/evidence/STATIC-14-PIECE-OWNER-EXCEPTION-decision-package-v1.yaml
+    immutable_source:
+      git_commit: 7aac3172be1536f2167d2facdb5580f3ce9d306f
+      path: game-pipeline/loops/evidence/STATIC-14-PIECE-OWNER-EXCEPTION-decision-package-v1.yaml
+      subject_path: exception_subject
+      canonicalization: canonical-json-sort-keys-ensure-ascii-false-v1
+      subject_digest: 95214ab75a156a4570e561f2780e9e9e9bb442291085cfd41cd13be793a90c5f
+    confirmation:
+      method: exact-64-character-digest-reply
+      received_digest: 95214ab75a156a4570e561f2780e9e9e9bb442291085cfd41cd13be793a90c5f
+      matches_subject_digest: true
+    bound_contract:
+      contract_id: LOOP-CTR-FORMAL-FOUNDATION-GATE2-001
+      version: 2
+      approval_id: approval:veilfront-xiangqi-siege:loop-contract:ce2d6174f82a
+  authorized_action:
+    summary: 追认已经发生的兵马俑管线14枚静态棋子范围偏差，并允许摘要列明的既有纹理、预置与测试场有限留存、验证、测试接入及非创意技术修复。
+    scope_ref: game-pipeline/loops/evidence/STATIC-14-PIECE-OWNER-EXCEPTION-decision-package-v1.yaml#exception_subject.exact_scope
+    allowed_ref: game-pipeline/loops/evidence/STATIC-14-PIECE-OWNER-EXCEPTION-decision-package-v1.yaml#exception_subject.approval_effect.allowed
+    forbidden_ref: game-pipeline/loops/evidence/STATIC-14-PIECE-OWNER-EXCEPTION-decision-package-v1.yaml#exception_subject.approval_effect.forbidden
+    limits_ref: game-pipeline/loops/evidence/STATIC-14-PIECE-OWNER-EXCEPTION-decision-package-v1.yaml#exception_subject.resources_and_limits
+    does_not_approve:
+    - GATE-2
+    - 新棋子或重做造型、姿态与动作
+    - UI、VFX、音频、环境资产或外包预算
+    - 正式秦小篆矢量母版
+    - 正式对局、规则、PlayerView、回放、随机消费或教学语义变更
+  application:
+    state: approved_limited_retrospective_exception
+    decision_package_state_preserved: awaiting_human
+    decision_package_state_note: 决策包保留审批前历史快照；本文件追加项目所有者决定，不重写原证据。
+    materialized_refs:
+    - docs/art/demo-asset-inventory-v1.yaml
+    - docs/art/pipelines/terracotta-warriors/asset-inventory-v1.yaml
+    - evidence/gate2/art-samples/TW-PIECE-01-14-static-batch-production-brief-v2.md
+    applied_at: '2026-08-20T16:06:55.0652000+08:00'

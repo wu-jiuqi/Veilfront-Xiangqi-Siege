@@ -21,10 +21,11 @@ asset_inventory:
       - 完整资产清单与成本未知项
     batch_production:
       allowed: false
-      pending_exceptions:
+      approved_exceptions:
       - scope: 兵马俑管线14枚静态单体棋子
+        approval_ref: game-pipeline/approvals/production-scope-exception-static-14-piece-95214ab75a15.yaml
         decision_package_ref: game-pipeline/loops/evidence/STATIC-14-PIECE-OWNER-EXCEPTION-decision-package-v1.yaml
-        status: awaiting_owner_exact_digest_confirmation
+        status: approved_limited_retrospective_exception
       requires:
       - GATE-2项目所有者批准
       - 新生产Contract
@@ -108,8 +109,8 @@ asset_inventory:
       source_spec: 每套命名美术管线独立提供；直立1024×1536；宽体1536×1536；透明背景；统一脚底线
       runtime_spec: 直立最大512×768；宽体最大768×768；VRAM Compressed+mipmap
       dependencies: [ART-PIECE-SHADOW, ART-PIECE-BASE]
-      phase: retrospective_exception_pending
-      status: terracotta_warriors_14_static_v2_godot_sample_completed_awaiting_governance_confirmation
+      phase: owner_exception_static_batch
+      status: terracotta_warriors_14_static_v2_godot_sample_completed_limited_exception_approved
       evidence:
       - evidence/gate2/art-samples/TW-PIECE-01-14-static-batch-production-brief-v2.md
       - evidence/gate2/art-samples/TW-PIECE-01-14-runtime-review-v2.md
