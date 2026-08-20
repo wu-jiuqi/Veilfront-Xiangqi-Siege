@@ -1,0 +1,57 @@
+{
+  "schema_version": "veilfront-turn-progress-incense-layers-v1",
+  "design_slot": {
+    "width": 952,
+    "height": 72,
+    "smoke_may_overflow_above": true
+  },
+  "direction": {
+    "burns_from": "right",
+    "burns_toward": "left",
+    "body_clip_origin": "left",
+    "remaining_ratio": "1.0 - progress"
+  },
+  "layers": [
+    {
+      "id": "holder",
+      "file": "turn_progress_holder_v1.png",
+      "source_size": [1443, 1090],
+      "visible_rect": [7, 576, 1083, 100],
+      "role": "fixed_base"
+    },
+    {
+      "id": "incense_body",
+      "file": "turn_progress_incense_body_v1.png",
+      "source_size": [1448, 1086],
+      "visible_rect": [155, 518, 1138, 48],
+      "role": "right_clipped_progress_fill"
+    },
+    {
+      "id": "ember",
+      "file": "turn_progress_ember_v1.png",
+      "source_size": [1443, 1090],
+      "visible_rect": [884, 530, 49, 37],
+      "role": "follows_remaining_body_right_edge"
+    },
+    {
+      "id": "smoke_wisp",
+      "file": "turn_progress_smoke_wisp_v1.png",
+      "source_size": [1443, 1090],
+      "visible_rect": [525, 490, 868, 142],
+      "role": "connects_ember_to_runtime_turn_text"
+    },
+    {
+      "id": "approved_preview",
+      "file": "turn_progress_incense_preview_v1.png",
+      "source_size": [1443, 1090],
+      "visible_rect": [7, 406, 1423, 270],
+      "role": "visual_reference_only",
+      "baked_example_turn": 12
+    }
+  ],
+  "runtime_text": {
+    "content": "current_turn_number",
+    "must_not_use_baked_preview_digits": true,
+    "visual_treatment": "pale_warm_grey_smoke"
+  }
+}
