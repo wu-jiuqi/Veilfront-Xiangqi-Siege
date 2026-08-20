@@ -1,9 +1,11 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene load_steps=15 format=3]
 
 [ext_resource type="Script" path="res://scripts/game/frontend/start_menu_overlay.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/start_sequence/veilfront_logo_vertical_v2.png" id="2_logo"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/start_sequence/veilfront_logo_mist_seal_v1.png" id="2_logo_mist"]
 [ext_resource type="FontFile" path="res://assets/fonts/noto_sans_sc/NotoSansSC-VariableFont_wght.ttf" id="3_ui_font"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/start_sequence/veilfront_subtitle_horizontal_v1.png" id="4_subtitle"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/start_sequence/veilfront_subtitle_seal_v1.png" id="4_subtitle"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/start_sequence/veilfront_logo_frontier_seal_v1.png" id="5_logo_frontier"]
+[ext_resource type="Shader" path="res://assets/shaders/ui/title_impact_mist.gdshader" id="6_impact_mist"]
 
 [sub_resource type="StyleBoxFlat" id="StyleButtonNormal"]
 bg_color = Color(0.025, 0.045, 0.052, 0.52)
@@ -45,6 +47,12 @@ border_width_right = 1
 border_width_bottom = 1
 border_color = Color(0.3, 0.31, 0.29, 0.35)
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterialImpactMist"]
+shader = ExtResource("6_impact_mist")
+shader_parameter/impact_strength = 0.0
+shader_parameter/impact_center = Vector2(0.435, 0.35)
+shader_parameter/mist_color = Color(0.36, 0.45, 0.48, 1)
+
 [sub_resource type="Animation" id="AnimationMenuReset"]
 length = 0.0
 tracks/0/type = "value"
@@ -57,56 +65,105 @@ tracks/0/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Arr
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("UiRoot/VerticalLogo:modulate:a")
+tracks/1/path = NodePath("UiRoot/MistCharacter:modulate:a")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [0.0]}
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("UiRoot/VerticalLogo:scale")
+tracks/2/path = NodePath("UiRoot/MistCharacter:scale")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
-tracks/2/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [Vector2(2.25, 2.25)]}
+tracks/2/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [Vector2(4.2, 4.2)]}
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("UiRoot/VerticalLogo:rotation")
+tracks/3/path = NodePath("UiRoot/MistCharacter:rotation")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [-0.04]}
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("UiRoot/GameSubtitle:modulate:a")
+tracks/4/path = NodePath("UiRoot/MistCharacter:offset_top")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [0.0]}
 tracks/5/type = "value"
 tracks/5/imported = false
 tracks/5/enabled = true
-tracks/5/path = NodePath("UiRoot/GameSubtitle:scale")
+tracks/5/path = NodePath("UiRoot/MistCharacter:offset_bottom")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
-tracks/5/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [Vector2(1.28, 1.28)]}
+tracks/5/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [0.0]}
 tracks/6/type = "value"
 tracks/6/imported = false
 tracks/6/enabled = true
-tracks/6/path = NodePath("UiRoot/MenuPanel:modulate:a")
+tracks/6/path = NodePath("UiRoot/FrontierCharacter:modulate:a")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [0.0]}
 tracks/7/type = "value"
 tracks/7/imported = false
 tracks/7/enabled = true
-tracks/7/path = NodePath("UiRoot/ImpactFlash:modulate:a")
+tracks/7/path = NodePath("UiRoot/FrontierCharacter:scale")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
-tracks/7/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [0.0]}
+tracks/7/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [Vector2(4.2, 4.2)]}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("UiRoot/FrontierCharacter:rotation")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [0.04]}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("UiRoot/FrontierCharacter:offset_top")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [0.0]}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("UiRoot/FrontierCharacter:offset_bottom")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [0.0]}
+tracks/11/type = "value"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("UiRoot/GameSubtitle:modulate:a")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [0.0]}
+tracks/12/type = "value"
+tracks/12/imported = false
+tracks/12/enabled = true
+tracks/12/path = NodePath("UiRoot/GameSubtitle:scale")
+tracks/12/interp = 1
+tracks/12/loop_wrap = true
+tracks/12/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [Vector2(3, 3)]}
+tracks/13/type = "value"
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/path = NodePath("UiRoot/MenuPanel:modulate:a")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [0.0]}
+tracks/14/type = "value"
+tracks/14/imported = false
+tracks/14/enabled = true
+tracks/14/path = NodePath("UiRoot/ImpactMist:material:shader_parameter/impact_strength")
+tracks/14/interp = 1
+tracks/14/loop_wrap = true
+tracks/14/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [0.0]}
 
 [sub_resource type="Animation" id="AnimationMenuIntro"]
 resource_name = "menu_intro"
-length = 1.35
+length = 1.95
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -120,49 +177,105 @@ tracks/1/enabled = true
 tracks/1/path = NodePath("UiRoot/MenuPanel:modulate:a")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
-tracks/1/keys = {"times": PackedFloat32Array(0, 0.72, 1.35), "transitions": PackedFloat32Array(1, 0.55, 1), "update": 0, "values": [0.0, 0.0, 1.0]}
+tracks/1/keys = {"times": PackedFloat32Array(0, 1.36, 1.95), "transitions": PackedFloat32Array(1, 0.55, 1), "update": 0, "values": [0.0, 0.0, 1.0]}
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("UiRoot/VerticalLogo:modulate:a")
+tracks/2/path = NodePath("UiRoot/MistCharacter:modulate:a")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
-tracks/2/keys = {"times": PackedFloat32Array(0, 0.04, 0.14), "transitions": PackedFloat32Array(1, 0.4, 1), "update": 0, "values": [0.0, 0.0, 1.0]}
+tracks/2/keys = {"times": PackedFloat32Array(0, 0.04, 0.1), "transitions": PackedFloat32Array(1, 0.4, 1), "update": 0, "values": [0.0, 0.0, 1.0]}
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("UiRoot/VerticalLogo:scale")
+tracks/3/path = NodePath("UiRoot/MistCharacter:scale")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
-tracks/3/keys = {"times": PackedFloat32Array(0, 0.24, 0.38, 0.53, 0.68), "transitions": PackedFloat32Array(0.35, 0.65, 0.75, 0.82, 1), "update": 0, "values": [Vector2(2.25, 2.25), Vector2(0.82, 0.82), Vector2(1.12, 1.12), Vector2(0.96, 0.96), Vector2(1, 1)]}
+tracks/3/keys = {"times": PackedFloat32Array(0.04, 0.12, 0.34, 0.48, 0.62, 0.76), "transitions": PackedFloat32Array(1, 0.28, 0.62, 0.76, 0.84, 1), "update": 0, "values": [Vector2(4.2, 4.2), Vector2(4.2, 4.2), Vector2(0.84, 0.84), Vector2(1.08, 1.08), Vector2(0.97, 0.97), Vector2(1, 1)]}
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("UiRoot/VerticalLogo:rotation")
+tracks/4/path = NodePath("UiRoot/MistCharacter:rotation")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
-tracks/4/keys = {"times": PackedFloat32Array(0, 0.24, 0.38, 0.53, 0.68), "transitions": PackedFloat32Array(0.35, 0.65, 0.75, 0.82, 1), "update": 0, "values": [-0.04, -0.012, 0.02, -0.008, 0.0]}
+tracks/4/keys = {"times": PackedFloat32Array(0.04, 0.12, 0.34, 0.48, 0.62, 0.76), "transitions": PackedFloat32Array(1, 0.28, 0.62, 0.76, 0.84, 1), "update": 0, "values": [-0.025, -0.025, 0.006, -0.012, 0.005, 0.0]}
 tracks/5/type = "value"
 tracks/5/imported = false
 tracks/5/enabled = true
-tracks/5/path = NodePath("UiRoot/GameSubtitle:modulate:a")
+tracks/5/path = NodePath("UiRoot/MistCharacter:offset_top")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
-tracks/5/keys = {"times": PackedFloat32Array(0, 0.43, 0.88), "transitions": PackedFloat32Array(1, 0.5, 1), "update": 0, "values": [0.0, 0.0, 1.0]}
+tracks/5/keys = {"times": PackedFloat32Array(0, 0.76), "transitions": PackedFloat32Array(1, 1), "update": 0, "values": [0.0, 0.0]}
 tracks/6/type = "value"
 tracks/6/imported = false
 tracks/6/enabled = true
-tracks/6/path = NodePath("UiRoot/GameSubtitle:scale")
+tracks/6/path = NodePath("UiRoot/MistCharacter:offset_bottom")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
-tracks/6/keys = {"times": PackedFloat32Array(0.43, 0.67, 0.78, 0.9), "transitions": PackedFloat32Array(0.4, 0.7, 0.8, 1), "update": 0, "values": [Vector2(1.28, 1.28), Vector2(0.94, 0.94), Vector2(1.05, 1.05), Vector2(1, 1)]}
+tracks/6/keys = {"times": PackedFloat32Array(0, 0.76), "transitions": PackedFloat32Array(1, 1), "update": 0, "values": [0.0, 0.0]}
 tracks/7/type = "value"
 tracks/7/imported = false
 tracks/7/enabled = true
-tracks/7/path = NodePath("UiRoot/ImpactFlash:modulate:a")
+tracks/7/path = NodePath("UiRoot/FrontierCharacter:modulate:a")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
-tracks/7/keys = {"times": PackedFloat32Array(0, 0.18, 0.24, 0.42), "transitions": PackedFloat32Array(1, 1, 0.35, 1), "update": 0, "values": [0.0, 0.0, 0.17, 0.0]}
+tracks/7/keys = {"times": PackedFloat32Array(0, 0.52, 0.6), "transitions": PackedFloat32Array(1, 0.4, 1), "update": 0, "values": [0.0, 0.0, 1.0]}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("UiRoot/FrontierCharacter:scale")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {"times": PackedFloat32Array(0.52, 0.6, 0.84, 0.98, 1.12, 1.26), "transitions": PackedFloat32Array(1, 0.28, 0.62, 0.76, 0.84, 1), "update": 0, "values": [Vector2(4.2, 4.2), Vector2(4.2, 4.2), Vector2(0.84, 0.84), Vector2(1.08, 1.08), Vector2(0.97, 0.97), Vector2(1, 1)]}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("UiRoot/FrontierCharacter:rotation")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {"times": PackedFloat32Array(0.52, 0.6, 0.84, 0.98, 1.12, 1.26), "transitions": PackedFloat32Array(1, 0.28, 0.62, 0.76, 0.84, 1), "update": 0, "values": [0.025, 0.025, -0.006, 0.012, -0.005, 0.0]}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("UiRoot/FrontierCharacter:offset_top")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {"times": PackedFloat32Array(0, 1.26), "transitions": PackedFloat32Array(1, 1), "update": 0, "values": [0.0, 0.0]}
+tracks/11/type = "value"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("UiRoot/FrontierCharacter:offset_bottom")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {"times": PackedFloat32Array(0, 1.26), "transitions": PackedFloat32Array(1, 1), "update": 0, "values": [0.0, 0.0]}
+tracks/12/type = "value"
+tracks/12/imported = false
+tracks/12/enabled = true
+tracks/12/path = NodePath("UiRoot/GameSubtitle:modulate:a")
+tracks/12/interp = 1
+tracks/12/loop_wrap = true
+tracks/12/keys = {"times": PackedFloat32Array(0, 1.04, 1.12), "transitions": PackedFloat32Array(1, 0.42, 1), "update": 0, "values": [0.0, 0.0, 1.0]}
+tracks/13/type = "value"
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/path = NodePath("UiRoot/GameSubtitle:scale")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/keys = {"times": PackedFloat32Array(1.04, 1.12, 1.34, 1.48, 1.62), "transitions": PackedFloat32Array(1, 0.3, 0.68, 0.82, 1), "update": 0, "values": [Vector2(3, 3), Vector2(3, 3), Vector2(0.9, 0.9), Vector2(1.05, 1.05), Vector2(1, 1)]}
+tracks/14/type = "value"
+tracks/14/imported = false
+tracks/14/enabled = true
+tracks/14/path = NodePath("UiRoot/ImpactMist:material:shader_parameter/impact_strength")
+tracks/14/interp = 1
+tracks/14/loop_wrap = true
+tracks/14/keys = {"times": PackedFloat32Array(0, 0.33, 0.34, 0.55, 0.83, 0.84, 1.05, 1.33, 1.34, 1.6), "transitions": PackedFloat32Array(1, 1, 0.35, 1, 1, 0.35, 1, 1, 0.42, 1), "update": 0, "values": [0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.72, 0.0]}
+tracks/15/type = "value"
+tracks/15/imported = false
+tracks/15/enabled = true
+tracks/15/path = NodePath("UiRoot/ImpactMist:material:shader_parameter/impact_center")
+tracks/15/interp = 0
+tracks/15/loop_wrap = true
+tracks/15/keys = {"times": PackedFloat32Array(0, 0.34, 0.84, 1.34), "transitions": PackedFloat32Array(1, 1, 1, 1), "update": 0, "values": [Vector2(0.435, 0.33), Vector2(0.435, 0.33), Vector2(0.435, 0.61), Vector2(0.44, 0.845)]}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibraryMenu"]
 _data = {&"RESET": SubResource("AnimationMenuReset"), &"menu_intro": SubResource("AnimationMenuIntro")}
@@ -198,8 +311,8 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.015, 0.035, 0.045, 0.28)
 
-[node name="ImpactFlash" type="ColorRect" parent="UiRoot"]
-modulate = Color(1, 1, 1, 0)
+[node name="ImpactMist" type="ColorRect" parent="UiRoot"]
+material = SubResource("ShaderMaterialImpactMist")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -207,7 +320,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.95, 0.79, 0.48, 1)
+color = Color(1, 1, 1, 1)
 
 [node name="SettingsButton" type="Button" parent="UiRoot"]
 unique_name_in_owner = true
@@ -232,20 +345,35 @@ theme_override_styles/focus = SubResource("StyleButtonHover")
 theme_override_styles/disabled = SubResource("StyleButtonDisabled")
 text = "设置"
 
-[node name="VerticalLogo" type="TextureRect" parent="UiRoot"]
+[node name="MistCharacter" type="TextureRect" parent="UiRoot"]
 layout_mode = 1
 anchors_preset = 0
 anchor_left = 0.34
-anchor_top = 0.18
+anchor_top = 0.17
 anchor_right = 0.53
-anchor_bottom = 0.76
+anchor_bottom = 0.49
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource("2_logo")
+texture = ExtResource("2_logo_mist")
 expand_mode = 1
 stretch_mode = 5
-pivot_offset = Vector2(121.6, 208.8)
+pivot_offset = Vector2(121.6, 115.2)
+
+[node name="FrontierCharacter" type="TextureRect" parent="UiRoot"]
+layout_mode = 1
+anchors_preset = 0
+anchor_left = 0.34
+anchor_top = 0.45
+anchor_right = 0.53
+anchor_bottom = 0.77
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("5_logo_frontier")
+expand_mode = 1
+stretch_mode = 5
+pivot_offset = Vector2(121.6, 115.2)
 
 [node name="GameSubtitle" type="TextureRect" parent="UiRoot"]
 layout_mode = 1

@@ -22,9 +22,12 @@ func _verify_start_sequence_gate() -> void:
 	start_screen.request_entry()
 	assert(sequence_player.current_animation == &"opening_sequence", "entry must start the cinematic sequence")
 	assert(current_scene == start_screen, "scene routing must wait until the cinematic finishes")
+	sequence_player.seek(4.65, true)
+	assert(is_zero_approx((start_screen.get_node("Stage/SoldierLayer/PushSoldiers") as TextureRect).modulate.a), "pushing pose must be gone when the doors finish moving")
+	assert(is_equal_approx((start_screen.get_node("Stage/SoldierLayer/IdleSoldiers") as TextureRect).modulate.a, 1.0), "standing pose must be restored when the doors finish moving")
 
 	sequence_player.speed_scale = 1.0
-	sequence_player.advance(6.5)
+	sequence_player.advance(5.0)
 	await process_frame
 	assert(current_scene == start_screen, "cinematic completion must keep the start scene as the menu background")
 	var menu_overlay := start_screen.get_node("MenuOverlay")
@@ -34,7 +37,8 @@ func _verify_start_sequence_gate() -> void:
 	var fog_curtain := start_screen.get_node("Stage/FogLayer/FogCurtain") as ColorRect
 	var fog_material := fog_curtain.material as ShaderMaterial
 	assert(is_equal_approx(fog_material.get_shader_parameter(&"reveal"), 1.0), "fog curtain must remain fully revealed behind the menu")
-	assert(float(fog_material.get_shader_parameter(&"opacity")) >= 0.78, "fog curtain must remain dense behind the menu")
+	assert(float(fog_material.get_shader_parameter(&"opacity")) >= 0.86, "fog curtain must remain dense behind the menu")
+	assert(float(fog_material.get_shader_parameter(&"drift_amplitude")) >= 1.35, "fog curtain must keep a broad irregular drift")
 	assert((start_screen.get_node("Stage/FogLayer/GateMist") as GPUParticles2D).emitting, "gate mist must keep emitting after the logo appears")
 
 	current_scene.queue_free()
@@ -59,7 +63,13 @@ func _verify_inline_menu_input_gate() -> void:
 	assert(lan_button.disabled and level_button.disabled and community_button.disabled and quit_button.disabled, "menu buttons must stay disabled before reveal")
 
 	menu_overlay.call(&"reveal_menu")
-	intro_animation.advance(1.5)
+	intro_animation.advance(0.08)
+	assert((menu_overlay.get_node("UiRoot/MistCharacter") as TextureRect).scale.x >= 4.0, "the title must begin as a near-camera foreground glyph")
+	intro_animation.advance(0.22)
+	await process_frame
+	assert((menu_overlay.get_node("UiRoot/MistCharacter") as TextureRect).modulate.a > 0.9, "the mist character must strike first")
+	assert(is_zero_approx((menu_overlay.get_node("UiRoot/FrontierCharacter") as TextureRect).modulate.a), "the frontier character must wait for its own strike")
+	intro_animation.advance(1.8)
 	await process_frame
 	assert(not lan_button.disabled and not level_button.disabled and not community_button.disabled and not quit_button.disabled, "menu buttons must enable after fade-in")
 	assert(menu_overlay.visible, "inline menu must remain visible after fade-in")

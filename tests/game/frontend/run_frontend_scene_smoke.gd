@@ -24,12 +24,17 @@ func _init() -> void:
 	assert(enter_prompt.text == "点击任意位置继续")
 	assert(start_root.get_node("Stage/Environment").texture.resource_path == "res://assets/art/ui/start_sequence/gate_environment_open_v1.png")
 	assert(sequence_player.has_animation(&"opening_sequence"))
-	assert(is_equal_approx(sequence_player.get_animation(&"opening_sequence").length, 6.4))
+	assert(is_equal_approx(sequence_player.get_animation(&"opening_sequence").length, 4.85))
 	assert(start_root.get_node("Stage/DoorLayer/LeftDoor").texture.resource_path == "res://assets/art/ui/start_sequence/gate_left_door_v2.png")
 	assert(start_root.get_node("Stage/DoorLayer/RightDoor").texture.resource_path == "res://assets/art/ui/start_sequence/gate_right_door_v2.png")
 	var menu_overlay := start_root.get_node("MenuOverlay")
-	assert(menu_overlay.get_node("UiRoot/VerticalLogo").texture.resource_path == "res://assets/art/ui/start_sequence/veilfront_logo_vertical_v2.png")
-	assert(menu_overlay.get_node("UiRoot/GameSubtitle").texture.resource_path == "res://assets/art/ui/start_sequence/veilfront_subtitle_horizontal_v1.png")
+	var mist_character_texture := menu_overlay.get_node("UiRoot/MistCharacter").texture as Texture2D
+	var frontier_character_texture := menu_overlay.get_node("UiRoot/FrontierCharacter").texture as Texture2D
+	assert(mist_character_texture.resource_path == "res://assets/art/ui/start_sequence/veilfront_logo_mist_seal_v1.png")
+	assert(frontier_character_texture.resource_path == "res://assets/art/ui/start_sequence/veilfront_logo_frontier_seal_v1.png")
+	assert(mist_character_texture != frontier_character_texture, "title characters must use independent complete textures")
+	assert(menu_overlay.get_node("UiRoot/GameSubtitle").texture.resource_path == "res://assets/art/ui/start_sequence/veilfront_subtitle_seal_v1.png")
+	assert(menu_overlay.get_node("UiRoot/ImpactMist") is ColorRect, "title impacts must use a fog disturbance layer")
 	assert(menu_overlay.get_node("UiRoot/MenuPanel/LanButton").text == "联机对战")
 	assert(menu_overlay.get_node("UiRoot/MenuPanel/LevelModeButton").text == "关卡模式")
 	assert(menu_overlay.get_node("UiRoot/MenuPanel/CommunityButton").text == "社群")
@@ -38,6 +43,13 @@ func _init() -> void:
 	assert(fog_shader.code.contains("random_gradient"), "fog must use smooth gradient noise instead of moving square cells")
 	assert(fog_shader.code.contains("vec2 warp"), "fog must use a domain-warped irregular flow field")
 	assert(fog_shader.code.contains("density_boost"), "fog must expose a persistent density control")
+	assert(fog_shader.code.contains("full_screen_lock"), "fully revealed fog must cover the complete viewport")
+	assert(fog_shader.code.contains("drift_amplitude"), "fog must expose a broad irregular drift control")
+	var impact_mist_shader := load("res://assets/shaders/ui/title_impact_mist.gdshader") as Shader
+	assert(impact_mist_shader.code.contains("impact_strength"), "title impacts must drive an irregular fog pulse")
+	var door_shader := load("res://assets/shaders/ui/gate_door_open.gdshader") as Shader
+	assert(door_shader.code.contains("edge_feather_pixels"), "door edges must be feathered into the gate frame")
+	assert(door_shader.code.contains("shadow_lift"), "door shadows must be lifted so the general and marshal marks remain readable")
 	var prompt_font := enter_prompt.get_theme_font(&"font") as FontVariation
 	assert(prompt_font.resource_path == "res://resources/game/ui/start_prompt_font.tres")
 	assert(prompt_font.base_font.resource_path == "res://assets/fonts/ramega_zhang_qingping/ramega_zhang_qingping_xingshu.ttf")
