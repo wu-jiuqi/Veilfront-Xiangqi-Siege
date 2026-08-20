@@ -1,10 +1,11 @@
-[gd_scene load_steps=16 format=3]
+[gd_scene load_steps=21 format=3]
 
 [ext_resource type="Script" path="res://scripts/game/frontend/start_menu_overlay.gd" id="1_script"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/start_sequence/veilfront_logo_gold_pair_v2.png" id="2_logo_pair"]
 [ext_resource type="FontFile" path="res://assets/fonts/noto_sans_sc/NotoSansSC-VariableFont_wght.ttf" id="3_ui_font"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/start_sequence/veilfront_subtitle_square_seal_v2.png" id="4_subtitle"]
 [ext_resource type="Shader" path="res://assets/shaders/ui/title_impact_mist.gdshader" id="6_impact_mist"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/start_sequence/menu_bronze_sword_button_v1.png" id="7_sword_button"]
 
 [sub_resource type="AtlasTexture" id="AtlasTextureMist"]
 atlas = ExtResource("2_logo_pair")
@@ -53,6 +54,27 @@ border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
 border_color = Color(0.3, 0.31, 0.29, 0.35)
+
+[sub_resource type="StyleBoxTexture" id="StyleSwordNormal"]
+content_margin_right = 62.0
+texture = ExtResource("7_sword_button")
+modulate_color = Color(0.82, 0.8, 0.72, 0.96)
+
+[sub_resource type="StyleBoxTexture" id="StyleSwordHover"]
+content_margin_right = 62.0
+texture = ExtResource("7_sword_button")
+modulate_color = Color(1.16, 1.06, 0.78, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleSwordPressed"]
+content_margin_right = 62.0
+content_margin_top = 2.0
+texture = ExtResource("7_sword_button")
+modulate_color = Color(0.72, 0.62, 0.43, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleSwordDisabled"]
+content_margin_right = 62.0
+texture = ExtResource("7_sword_button")
+modulate_color = Color(0.32, 0.34, 0.32, 0.5)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterialImpactMist"]
 shader = ExtResource("6_impact_mist")
@@ -167,10 +189,38 @@ tracks/14/path = NodePath("UiRoot/ImpactMist:material:shader_parameter/impact_st
 tracks/14/interp = 1
 tracks/14/loop_wrap = true
 tracks/14/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [0.0]}
+tracks/15/type = "value"
+tracks/15/imported = false
+tracks/15/enabled = true
+tracks/15/path = NodePath("UiRoot/MenuPanel/LanButton:offset_transform_position")
+tracks/15/interp = 1
+tracks/15/loop_wrap = true
+tracks/15/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [Vector2(600, 0)]}
+tracks/16/type = "value"
+tracks/16/imported = false
+tracks/16/enabled = true
+tracks/16/path = NodePath("UiRoot/MenuPanel/LevelModeButton:offset_transform_position")
+tracks/16/interp = 1
+tracks/16/loop_wrap = true
+tracks/16/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [Vector2(620, 0)]}
+tracks/17/type = "value"
+tracks/17/imported = false
+tracks/17/enabled = true
+tracks/17/path = NodePath("UiRoot/MenuPanel/CommunityButton:offset_transform_position")
+tracks/17/interp = 1
+tracks/17/loop_wrap = true
+tracks/17/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [Vector2(640, 0)]}
+tracks/18/type = "value"
+tracks/18/imported = false
+tracks/18/enabled = true
+tracks/18/path = NodePath("UiRoot/MenuPanel/QuitButton:offset_transform_position")
+tracks/18/interp = 1
+tracks/18/loop_wrap = true
+tracks/18/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [Vector2(660, 0)]}
 
 [sub_resource type="Animation" id="AnimationMenuIntro"]
 resource_name = "menu_intro"
-length = 1.95
+length = 2.15
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -184,7 +234,7 @@ tracks/1/enabled = true
 tracks/1/path = NodePath("UiRoot/MenuPanel:modulate:a")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
-tracks/1/keys = {"times": PackedFloat32Array(0, 1.36, 1.95), "transitions": PackedFloat32Array(1, 0.55, 1), "update": 0, "values": [0.0, 0.0, 1.0]}
+tracks/1/keys = {"times": PackedFloat32Array(0, 1.28, 1.5), "transitions": PackedFloat32Array(1, 0.48, 1), "update": 0, "values": [0.0, 0.0, 1.0]}
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
@@ -283,6 +333,34 @@ tracks/15/path = NodePath("UiRoot/ImpactMist:material:shader_parameter/impact_ce
 tracks/15/interp = 0
 tracks/15/loop_wrap = true
 tracks/15/keys = {"times": PackedFloat32Array(0, 0.34, 0.84, 1.34), "transitions": PackedFloat32Array(1, 1, 1, 1), "update": 0, "values": [Vector2(0.435, 0.33), Vector2(0.435, 0.33), Vector2(0.435, 0.61), Vector2(0.56, 0.77)]}
+tracks/16/type = "value"
+tracks/16/imported = false
+tracks/16/enabled = true
+tracks/16/path = NodePath("UiRoot/MenuPanel/LanButton:offset_transform_position")
+tracks/16/interp = 1
+tracks/16/loop_wrap = true
+tracks/16/keys = {"times": PackedFloat32Array(0, 1.28, 1.67, 1.82), "transitions": PackedFloat32Array(1, 1, 0.42, 0.78), "update": 0, "values": [Vector2(600, 0), Vector2(600, 0), Vector2(-14, 0), Vector2(0, 0)]}
+tracks/17/type = "value"
+tracks/17/imported = false
+tracks/17/enabled = true
+tracks/17/path = NodePath("UiRoot/MenuPanel/LevelModeButton:offset_transform_position")
+tracks/17/interp = 1
+tracks/17/loop_wrap = true
+tracks/17/keys = {"times": PackedFloat32Array(0, 1.36, 1.75, 1.9), "transitions": PackedFloat32Array(1, 1, 0.42, 0.78), "update": 0, "values": [Vector2(620, 0), Vector2(620, 0), Vector2(-12, 0), Vector2(0, 0)]}
+tracks/18/type = "value"
+tracks/18/imported = false
+tracks/18/enabled = true
+tracks/18/path = NodePath("UiRoot/MenuPanel/CommunityButton:offset_transform_position")
+tracks/18/interp = 1
+tracks/18/loop_wrap = true
+tracks/18/keys = {"times": PackedFloat32Array(0, 1.44, 1.83, 1.98), "transitions": PackedFloat32Array(1, 1, 0.42, 0.78), "update": 0, "values": [Vector2(640, 0), Vector2(640, 0), Vector2(-10, 0), Vector2(0, 0)]}
+tracks/19/type = "value"
+tracks/19/imported = false
+tracks/19/enabled = true
+tracks/19/path = NodePath("UiRoot/MenuPanel/QuitButton:offset_transform_position")
+tracks/19/interp = 1
+tracks/19/loop_wrap = true
+tracks/19/keys = {"times": PackedFloat32Array(0, 1.52, 1.91, 2.08, 2.15), "transitions": PackedFloat32Array(1, 1, 0.42, 0.78, 1), "update": 0, "values": [Vector2(660, 0), Vector2(660, 0), Vector2(-8, 0), Vector2(3, 0), Vector2(0, 0)]}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibraryMenu"]
 _data = {&"RESET": SubResource("AnimationMenuReset"), &"menu_intro": SubResource("AnimationMenuIntro")}
@@ -398,33 +476,39 @@ pivot_offset = Vector2(51.2, 51.2)
 
 [node name="MenuPanel" type="VBoxContainer" parent="UiRoot"]
 layout_mode = 1
-anchor_left = 0.72
-anchor_top = 0.19
-anchor_right = 0.97
-anchor_bottom = 0.79
+anchor_left = 0.64
+anchor_top = 0.2
+anchor_right = 0.99
+anchor_bottom = 0.78
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 22
+theme_override_constants/separation = 20
 
 [node name="LanButton" type="Button" parent="UiRoot/MenuPanel"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 78)
 layout_mode = 2
 size_flags_vertical = 3
+offset_transform_enabled = true
+offset_transform_position = Vector2(600, 0)
 focus_mode = 2
 mouse_default_cursor_shape = 2
-theme_override_colors/font_color = Color(0.76, 0.76, 0.7, 1)
-theme_override_colors/font_hover_color = Color(0.92, 0.8, 0.52, 1)
-theme_override_colors/font_pressed_color = Color(0.98, 0.86, 0.58, 1)
-theme_override_colors/font_focus_color = Color(0.9, 0.78, 0.5, 1)
-theme_override_colors/font_disabled_color = Color(0.46, 0.48, 0.46, 0.55)
+theme_override_colors/font_color = Color(0.76, 0.64, 0.38, 1)
+theme_override_colors/font_hover_color = Color(1, 0.87, 0.56, 1)
+theme_override_colors/font_pressed_color = Color(0.88, 0.73, 0.42, 1)
+theme_override_colors/font_focus_color = Color(1, 0.87, 0.56, 1)
+theme_override_colors/font_disabled_color = Color(0.46, 0.42, 0.32, 0.58)
+theme_override_colors/font_outline_color = Color(0.035, 0.025, 0.015, 0.96)
+theme_override_colors/font_shadow_color = Color(0.02, 0.015, 0.01, 0.9)
+theme_override_constants/outline_size = 2
+theme_override_constants/shadow_offset_y = -1
 theme_override_fonts/font = ExtResource("3_ui_font")
-theme_override_font_sizes/font_size = 29
-theme_override_styles/normal = SubResource("StyleButtonNormal")
-theme_override_styles/hover = SubResource("StyleButtonHover")
-theme_override_styles/pressed = SubResource("StyleButtonPressed")
-theme_override_styles/focus = SubResource("StyleButtonHover")
-theme_override_styles/disabled = SubResource("StyleButtonDisabled")
+theme_override_font_sizes/font_size = 27
+theme_override_styles/normal = SubResource("StyleSwordNormal")
+theme_override_styles/hover = SubResource("StyleSwordHover")
+theme_override_styles/pressed = SubResource("StyleSwordPressed")
+theme_override_styles/focus = SubResource("StyleSwordHover")
+theme_override_styles/disabled = SubResource("StyleSwordDisabled")
 text = "联机对战"
 
 [node name="LevelModeButton" type="Button" parent="UiRoot/MenuPanel"]
@@ -432,20 +516,26 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 78)
 layout_mode = 2
 size_flags_vertical = 3
+offset_transform_enabled = true
+offset_transform_position = Vector2(620, 0)
 focus_mode = 2
 mouse_default_cursor_shape = 2
-theme_override_colors/font_color = Color(0.76, 0.76, 0.7, 1)
-theme_override_colors/font_hover_color = Color(0.92, 0.8, 0.52, 1)
-theme_override_colors/font_pressed_color = Color(0.98, 0.86, 0.58, 1)
-theme_override_colors/font_focus_color = Color(0.9, 0.78, 0.5, 1)
-theme_override_colors/font_disabled_color = Color(0.46, 0.48, 0.46, 0.55)
+theme_override_colors/font_color = Color(0.76, 0.64, 0.38, 1)
+theme_override_colors/font_hover_color = Color(1, 0.87, 0.56, 1)
+theme_override_colors/font_pressed_color = Color(0.88, 0.73, 0.42, 1)
+theme_override_colors/font_focus_color = Color(1, 0.87, 0.56, 1)
+theme_override_colors/font_disabled_color = Color(0.46, 0.42, 0.32, 0.58)
+theme_override_colors/font_outline_color = Color(0.035, 0.025, 0.015, 0.96)
+theme_override_colors/font_shadow_color = Color(0.02, 0.015, 0.01, 0.9)
+theme_override_constants/outline_size = 2
+theme_override_constants/shadow_offset_y = -1
 theme_override_fonts/font = ExtResource("3_ui_font")
-theme_override_font_sizes/font_size = 29
-theme_override_styles/normal = SubResource("StyleButtonNormal")
-theme_override_styles/hover = SubResource("StyleButtonHover")
-theme_override_styles/pressed = SubResource("StyleButtonPressed")
-theme_override_styles/focus = SubResource("StyleButtonHover")
-theme_override_styles/disabled = SubResource("StyleButtonDisabled")
+theme_override_font_sizes/font_size = 27
+theme_override_styles/normal = SubResource("StyleSwordNormal")
+theme_override_styles/hover = SubResource("StyleSwordHover")
+theme_override_styles/pressed = SubResource("StyleSwordPressed")
+theme_override_styles/focus = SubResource("StyleSwordHover")
+theme_override_styles/disabled = SubResource("StyleSwordDisabled")
 text = "关卡模式"
 
 [node name="CommunityButton" type="Button" parent="UiRoot/MenuPanel"]
@@ -453,20 +543,26 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 78)
 layout_mode = 2
 size_flags_vertical = 3
+offset_transform_enabled = true
+offset_transform_position = Vector2(640, 0)
 focus_mode = 2
 mouse_default_cursor_shape = 2
-theme_override_colors/font_color = Color(0.76, 0.76, 0.7, 1)
-theme_override_colors/font_hover_color = Color(0.92, 0.8, 0.52, 1)
-theme_override_colors/font_pressed_color = Color(0.98, 0.86, 0.58, 1)
-theme_override_colors/font_focus_color = Color(0.9, 0.78, 0.5, 1)
-theme_override_colors/font_disabled_color = Color(0.46, 0.48, 0.46, 0.55)
+theme_override_colors/font_color = Color(0.76, 0.64, 0.38, 1)
+theme_override_colors/font_hover_color = Color(1, 0.87, 0.56, 1)
+theme_override_colors/font_pressed_color = Color(0.88, 0.73, 0.42, 1)
+theme_override_colors/font_focus_color = Color(1, 0.87, 0.56, 1)
+theme_override_colors/font_disabled_color = Color(0.46, 0.42, 0.32, 0.58)
+theme_override_colors/font_outline_color = Color(0.035, 0.025, 0.015, 0.96)
+theme_override_colors/font_shadow_color = Color(0.02, 0.015, 0.01, 0.9)
+theme_override_constants/outline_size = 2
+theme_override_constants/shadow_offset_y = -1
 theme_override_fonts/font = ExtResource("3_ui_font")
-theme_override_font_sizes/font_size = 29
-theme_override_styles/normal = SubResource("StyleButtonNormal")
-theme_override_styles/hover = SubResource("StyleButtonHover")
-theme_override_styles/pressed = SubResource("StyleButtonPressed")
-theme_override_styles/focus = SubResource("StyleButtonHover")
-theme_override_styles/disabled = SubResource("StyleButtonDisabled")
+theme_override_font_sizes/font_size = 27
+theme_override_styles/normal = SubResource("StyleSwordNormal")
+theme_override_styles/hover = SubResource("StyleSwordHover")
+theme_override_styles/pressed = SubResource("StyleSwordPressed")
+theme_override_styles/focus = SubResource("StyleSwordHover")
+theme_override_styles/disabled = SubResource("StyleSwordDisabled")
 text = "社群"
 
 [node name="QuitButton" type="Button" parent="UiRoot/MenuPanel"]
@@ -474,20 +570,26 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 78)
 layout_mode = 2
 size_flags_vertical = 3
+offset_transform_enabled = true
+offset_transform_position = Vector2(660, 0)
 focus_mode = 2
 mouse_default_cursor_shape = 2
-theme_override_colors/font_color = Color(0.76, 0.76, 0.7, 1)
-theme_override_colors/font_hover_color = Color(0.92, 0.8, 0.52, 1)
-theme_override_colors/font_pressed_color = Color(0.98, 0.86, 0.58, 1)
-theme_override_colors/font_focus_color = Color(0.9, 0.78, 0.5, 1)
-theme_override_colors/font_disabled_color = Color(0.46, 0.48, 0.46, 0.55)
+theme_override_colors/font_color = Color(0.76, 0.64, 0.38, 1)
+theme_override_colors/font_hover_color = Color(1, 0.87, 0.56, 1)
+theme_override_colors/font_pressed_color = Color(0.88, 0.73, 0.42, 1)
+theme_override_colors/font_focus_color = Color(1, 0.87, 0.56, 1)
+theme_override_colors/font_disabled_color = Color(0.46, 0.42, 0.32, 0.58)
+theme_override_colors/font_outline_color = Color(0.035, 0.025, 0.015, 0.96)
+theme_override_colors/font_shadow_color = Color(0.02, 0.015, 0.01, 0.9)
+theme_override_constants/outline_size = 2
+theme_override_constants/shadow_offset_y = -1
 theme_override_fonts/font = ExtResource("3_ui_font")
-theme_override_font_sizes/font_size = 29
-theme_override_styles/normal = SubResource("StyleButtonNormal")
-theme_override_styles/hover = SubResource("StyleButtonHover")
-theme_override_styles/pressed = SubResource("StyleButtonPressed")
-theme_override_styles/focus = SubResource("StyleButtonHover")
-theme_override_styles/disabled = SubResource("StyleButtonDisabled")
+theme_override_font_sizes/font_size = 27
+theme_override_styles/normal = SubResource("StyleSwordNormal")
+theme_override_styles/hover = SubResource("StyleSwordHover")
+theme_override_styles/pressed = SubResource("StyleSwordPressed")
+theme_override_styles/focus = SubResource("StyleSwordHover")
+theme_override_styles/disabled = SubResource("StyleSwordDisabled")
 text = "退出游戏"
 
 [node name="VersionLabel" type="Label" parent="UiRoot"]

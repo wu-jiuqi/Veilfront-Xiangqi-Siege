@@ -69,9 +69,18 @@ func _verify_inline_menu_input_gate() -> void:
 	await process_frame
 	assert((menu_overlay.get_node("UiRoot/MistCharacter") as TextureRect).modulate.a > 0.9, "the mist character must strike first")
 	assert(is_zero_approx((menu_overlay.get_node("UiRoot/FrontierCharacter") as TextureRect).modulate.a), "the frontier character must wait for its own strike")
-	intro_animation.advance(1.8)
+	intro_animation.advance(1.0)
+	assert(lan_button.offset_transform_position.x >= 500.0, "sword buttons must begin outside the right edge")
+	assert(level_button.offset_transform_position.x > lan_button.offset_transform_position.x, "sword buttons must use a staggered right-side entry")
+	assert(community_button.offset_transform_position.x > level_button.offset_transform_position.x, "later sword buttons must start farther right")
+	assert(quit_button.offset_transform_position.x > community_button.offset_transform_position.x, "quit sword must be the final staggered entry")
+	intro_animation.advance(1.0)
 	await process_frame
 	assert(not lan_button.disabled and not level_button.disabled and not community_button.disabled and not quit_button.disabled, "menu buttons must enable after fade-in")
+	assert(lan_button.offset_transform_position.is_zero_approx(), "LAN sword must settle at its responsive container position")
+	assert(level_button.offset_transform_position.is_zero_approx(), "level sword must settle at its responsive container position")
+	assert(community_button.offset_transform_position.is_zero_approx(), "community sword must settle at its responsive container position")
+	assert(quit_button.offset_transform_position.is_zero_approx(), "quit sword must settle at its responsive container position")
 	assert(menu_overlay.visible, "inline menu must remain visible after fade-in")
 
 	start_screen.queue_free()

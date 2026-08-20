@@ -43,6 +43,13 @@ func _init() -> void:
 	assert(menu_overlay.get_node("UiRoot/MenuPanel/LevelModeButton").text == "关卡模式")
 	assert(menu_overlay.get_node("UiRoot/MenuPanel/CommunityButton").text == "社群")
 	assert(menu_overlay.get_node("UiRoot/MenuPanel/QuitButton").text == "退出游戏")
+	var sword_button_texture := load("res://assets/art/ui/start_sequence/menu_bronze_sword_button_v1.png") as Texture2D
+	assert(sword_button_texture != null, "bronze sword menu texture must load")
+	for button_name: String in ["LanButton", "LevelModeButton", "CommunityButton", "QuitButton"]:
+		var sword_button := menu_overlay.get_node("UiRoot/MenuPanel/%s" % button_name) as Button
+		assert(sword_button.offset_transform_enabled, "%s must use visual-only entry motion" % button_name)
+		assert(sword_button.get_theme_stylebox(&"normal") is StyleBoxTexture, "%s must use the bronze sword texture style" % button_name)
+		assert((sword_button.get_theme_stylebox(&"normal") as StyleBoxTexture).texture.resource_path == sword_button_texture.resource_path)
 	var fog_shader := load("res://assets/shaders/ui/gate_fog_curtain.gdshader") as Shader
 	assert(fog_shader.code.contains("random_gradient"), "fog must use smooth gradient noise instead of moving square cells")
 	assert(fog_shader.code.contains("vec2 warp"), "fog must use a domain-warped irregular flow field")

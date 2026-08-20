@@ -14,6 +14,9 @@ const MENU_CAPTURE_TIMES := {
 	"07_mist_impact": 0.34,
 	"08_frontier_impact": 0.84,
 	"09_subtitle_impact": 1.34,
+	"10_sword_entry_first": 1.62,
+	"11_sword_entry_stagger": 1.84,
+	"12_sword_menu_final": 2.15,
 }
 
 
@@ -56,7 +59,7 @@ func _capture() -> void:
 			gate_mist.request_particles_process(maxf(capture_time - 1.45, 0.0))
 		if capture_name == "05_menu":
 			menu_overlay.call(&"reveal_menu")
-			(menu_overlay.get_node("MenuIntroPlayer") as AnimationPlayer).advance(2.1)
+			(menu_overlay.get_node("MenuIntroPlayer") as AnimationPlayer).advance(2.3)
 		await process_frame
 		RenderingServer.force_draw(false)
 		await process_frame
