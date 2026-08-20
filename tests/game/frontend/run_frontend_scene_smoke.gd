@@ -37,6 +37,17 @@ func _init() -> void:
 	assert(mist_character_texture.region == Rect2(0.0, 0.0, 887.0, 887.0))
 	assert(frontier_character_texture.region == Rect2(887.0, 0.0, 887.0, 887.0))
 	assert(mist_character_texture != frontier_character_texture, "title characters must use independent atlas regions")
+	var settings_button := menu_overlay.get_node("UiRoot/SettingsButton") as Button
+	var mist_character := menu_overlay.get_node("UiRoot/MistCharacter") as TextureRect
+	var frontier_character := menu_overlay.get_node("UiRoot/FrontierCharacter") as TextureRect
+	var game_subtitle := menu_overlay.get_node("UiRoot/GameSubtitle") as TextureRect
+	assert(_anchors_match(settings_button, Rect2(0.0125, 0.022222, 0.05, 0.055556)))
+	assert(_anchors_match(mist_character, Rect2(0.3875, 0.166667, 0.19, 0.32)))
+	assert(_is_vector_near(mist_character.pivot_offset, Vector2(121.6, 115.2)))
+	assert(_anchors_match(frontier_character, Rect2(0.4125, 0.477778, 0.18125, 0.311111)))
+	assert(_is_vector_near(frontier_character.pivot_offset, Vector2(116.0, 112.0)))
+	assert(_anchors_match(game_subtitle, Rect2(0.55, 0.688889, 0.0625, 0.111111)))
+	assert(_is_vector_near(game_subtitle.pivot_offset, Vector2(40.0, 40.0)))
 	assert(menu_overlay.get_node("UiRoot/GameSubtitle").texture.resource_path == "res://assets/art/ui/start_sequence/veilfront_subtitle_square_seal_v2.png")
 	assert(menu_overlay.get_node("UiRoot/ImpactMist") is ColorRect, "title impacts must use a fog disturbance layer")
 	assert(menu_overlay.get_node("UiRoot/MenuPanel/LanButton").text == "联机对战")
@@ -45,11 +56,32 @@ func _init() -> void:
 	assert(menu_overlay.get_node("UiRoot/MenuPanel/QuitButton").text == "退出游戏")
 	var sword_button_texture := load("res://assets/art/ui/start_sequence/menu_bronze_sword_button_v1.png") as Texture2D
 	assert(sword_button_texture != null, "bronze sword menu texture must load")
+	var menu_panel := menu_overlay.get_node("UiRoot/MenuPanel") as VBoxContainer
+	assert(_anchors_match(menu_panel, Rect2(0.73125, 0.2, 0.25625, 0.555556)))
+	for spacer_name: String in ["LanLevelSpacer", "LevelCommunitySpacer", "CommunityQuitSpacer"]:
+		var spacer := menu_panel.get_node(spacer_name) as Control
+		assert(_is_vector_near(spacer.custom_minimum_size, Vector2(0.0, 37.3333)), "%s must preserve equal sword spacing" % spacer_name)
 	for button_name: String in ["LanButton", "LevelModeButton", "CommunityButton", "QuitButton"]:
 		var sword_button := menu_overlay.get_node("UiRoot/MenuPanel/%s" % button_name) as Button
 		assert(sword_button.offset_transform_enabled, "%s must use visual-only entry motion" % button_name)
+		assert(_is_vector_near(sword_button.custom_minimum_size, Vector2(0.0, 72.0)), "%s must match the authored layout height" % button_name)
 		assert(sword_button.get_theme_stylebox(&"normal") is StyleBoxTexture, "%s must use the bronze sword texture style" % button_name)
 		assert((sword_button.get_theme_stylebox(&"normal") as StyleBoxTexture).texture.resource_path == sword_button_texture.resource_path)
+	var impact_material := menu_overlay.get_node("UiRoot/ImpactMist").material as ShaderMaterial
+	var initial_impact_center: Vector2 = impact_material.get_shader_parameter(&"impact_center")
+	assert(initial_impact_center.is_equal_approx(Vector2(0.4825, 0.326667)), "impact mist must start at the relocated mist character")
+	var menu_intro := (menu_overlay.get_node("MenuIntroPlayer") as AnimationPlayer).get_animation(&"menu_intro")
+	var impact_center_track := menu_intro.find_track(NodePath("UiRoot/ImpactMist:material:shader_parameter/impact_center"), Animation.TYPE_VALUE)
+	assert(impact_center_track >= 0, "menu intro must animate the impact center")
+	var expected_impact_centers: Array[Vector2] = [
+		Vector2(0.4825, 0.326667),
+		Vector2(0.4825, 0.326667),
+		Vector2(0.503125, 0.633333),
+		Vector2(0.58125, 0.744444),
+	]
+	for key_index: int in expected_impact_centers.size():
+		var impact_center: Vector2 = menu_intro.track_get_key_value(impact_center_track, key_index)
+		assert(impact_center.is_equal_approx(expected_impact_centers[key_index]), "impact mist key %d must follow the authored logo position" % key_index)
 	var fog_shader := load("res://assets/shaders/ui/gate_fog_curtain.gdshader") as Shader
 	assert(fog_shader.code.contains("random_gradient"), "fog must use smooth gradient noise instead of moving square cells")
 	assert(fog_shader.code.contains("vec2 warp"), "fog must use a domain-warped irregular flow field")
@@ -99,3 +131,16 @@ func _init() -> void:
 	assert(level_root.get_node("%BackButton").focus_mode != Control.FOCUS_NONE)
 	print("FRONTEND_SCENE_SMOKE_PASS catalog=14 tutorial=11 challenge=3")
 	quit()
+
+
+func _is_vector_near(actual: Vector2, expected: Vector2, tolerance: float = 0.01) -> bool:
+	return actual.distance_to(expected) <= tolerance
+
+
+func _anchors_match(control: Control, expected: Rect2, tolerance: float = 0.000001) -> bool:
+	return (
+		absf(control.anchor_left - expected.position.x) <= tolerance
+		and absf(control.anchor_top - expected.position.y) <= tolerance
+		and absf(control.anchor_right - expected.end.x) <= tolerance
+		and absf(control.anchor_bottom - expected.end.y) <= tolerance
+	)

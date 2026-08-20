@@ -56,30 +56,30 @@ border_width_bottom = 1
 border_color = Color(0.3, 0.31, 0.29, 0.35)
 
 [sub_resource type="StyleBoxTexture" id="StyleSwordNormal"]
-content_margin_right = 62.0
+content_margin_right = 45.5
 texture = ExtResource("7_sword_button")
 modulate_color = Color(0.82, 0.8, 0.72, 0.96)
 
 [sub_resource type="StyleBoxTexture" id="StyleSwordHover"]
-content_margin_right = 62.0
+content_margin_right = 45.5
 texture = ExtResource("7_sword_button")
 modulate_color = Color(1.16, 1.06, 0.78, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleSwordPressed"]
-content_margin_right = 62.0
+content_margin_right = 45.5
 content_margin_top = 2.0
 texture = ExtResource("7_sword_button")
 modulate_color = Color(0.72, 0.62, 0.43, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleSwordDisabled"]
-content_margin_right = 62.0
+content_margin_right = 45.5
 texture = ExtResource("7_sword_button")
 modulate_color = Color(0.32, 0.34, 0.32, 0.5)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterialImpactMist"]
 shader = ExtResource("6_impact_mist")
 shader_parameter/impact_strength = 0.0
-shader_parameter/impact_center = Vector2(0.435, 0.35)
+shader_parameter/impact_center = Vector2(0.4825, 0.326667)
 shader_parameter/mist_color = Color(0.36, 0.45, 0.48, 1)
 
 [sub_resource type="Animation" id="AnimationMenuReset"]
@@ -332,7 +332,7 @@ tracks/15/enabled = true
 tracks/15/path = NodePath("UiRoot/ImpactMist:material:shader_parameter/impact_center")
 tracks/15/interp = 0
 tracks/15/loop_wrap = true
-tracks/15/keys = {"times": PackedFloat32Array(0, 0.34, 0.84, 1.34), "transitions": PackedFloat32Array(1, 1, 1, 1), "update": 0, "values": [Vector2(0.435, 0.33), Vector2(0.435, 0.33), Vector2(0.435, 0.61), Vector2(0.56, 0.77)]}
+tracks/15/keys = {"times": PackedFloat32Array(0, 0.34, 0.84, 1.34), "transitions": PackedFloat32Array(1, 1, 1, 1), "update": 0, "values": [Vector2(0.4825, 0.326667), Vector2(0.4825, 0.326667), Vector2(0.503125, 0.633333), Vector2(0.58125, 0.744444)]}
 tracks/16/type = "value"
 tracks/16/imported = false
 tracks/16/enabled = true
@@ -410,10 +410,10 @@ color = Color(1, 1, 1, 1)
 [node name="SettingsButton" type="Button" parent="UiRoot"]
 unique_name_in_owner = true
 layout_mode = 1
-offset_left = 18.0
-offset_top = 18.0
-offset_right = 126.0
-offset_bottom = 88.0
+anchor_left = 0.0125
+anchor_top = 0.022222
+anchor_right = 0.0625
+anchor_bottom = 0.077778
 focus_mode = 2
 mouse_default_cursor_shape = 2
 theme_override_colors/font_color = Color(0.76, 0.76, 0.7, 1)
@@ -433,10 +433,10 @@ text = "设置"
 [node name="MistCharacter" type="TextureRect" parent="UiRoot"]
 layout_mode = 1
 anchors_preset = 0
-anchor_left = 0.34
-anchor_top = 0.17
-anchor_right = 0.53
-anchor_bottom = 0.49
+anchor_left = 0.3875
+anchor_top = 0.166667
+anchor_right = 0.5775
+anchor_bottom = 0.486667
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -448,47 +448,46 @@ pivot_offset = Vector2(121.6, 115.2)
 [node name="FrontierCharacter" type="TextureRect" parent="UiRoot"]
 layout_mode = 1
 anchors_preset = 0
-anchor_left = 0.34
-anchor_top = 0.45
-anchor_right = 0.53
-anchor_bottom = 0.77
+anchor_left = 0.4125
+anchor_top = 0.477778
+anchor_right = 0.59375
+anchor_bottom = 0.788889
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 texture = SubResource("AtlasTextureFrontier")
 expand_mode = 1
 stretch_mode = 5
-pivot_offset = Vector2(121.6, 115.2)
+pivot_offset = Vector2(116, 112)
 
 [node name="GameSubtitle" type="TextureRect" parent="UiRoot"]
 layout_mode = 1
-anchor_left = 0.52
-anchor_top = 0.7
-anchor_right = 0.6
-anchor_bottom = 0.842222
+anchor_left = 0.55
+anchor_top = 0.688889
+anchor_right = 0.6125
+anchor_bottom = 0.8
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 texture = ExtResource("4_subtitle")
 expand_mode = 1
 stretch_mode = 5
-pivot_offset = Vector2(51.2, 51.2)
+pivot_offset = Vector2(40, 40)
 
 [node name="MenuPanel" type="VBoxContainer" parent="UiRoot"]
 layout_mode = 1
-anchor_left = 0.64
+anchor_left = 0.73125
 anchor_top = 0.2
-anchor_right = 0.99
-anchor_bottom = 0.78
+anchor_right = 0.9875
+anchor_bottom = 0.755556
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 20
+theme_override_constants/separation = 0
 
 [node name="LanButton" type="Button" parent="UiRoot/MenuPanel"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 78)
+custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
-size_flags_vertical = 3
 offset_transform_enabled = true
 offset_transform_position = Vector2(600, 0)
 focus_mode = 2
@@ -511,11 +510,15 @@ theme_override_styles/focus = SubResource("StyleSwordHover")
 theme_override_styles/disabled = SubResource("StyleSwordDisabled")
 text = "联机对战"
 
+[node name="LanLevelSpacer" type="Control" parent="UiRoot/MenuPanel"]
+custom_minimum_size = Vector2(0, 37.3333)
+layout_mode = 2
+mouse_filter = 2
+
 [node name="LevelModeButton" type="Button" parent="UiRoot/MenuPanel"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 78)
+custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
-size_flags_vertical = 3
 offset_transform_enabled = true
 offset_transform_position = Vector2(620, 0)
 focus_mode = 2
@@ -538,11 +541,15 @@ theme_override_styles/focus = SubResource("StyleSwordHover")
 theme_override_styles/disabled = SubResource("StyleSwordDisabled")
 text = "关卡模式"
 
+[node name="LevelCommunitySpacer" type="Control" parent="UiRoot/MenuPanel"]
+custom_minimum_size = Vector2(0, 37.3333)
+layout_mode = 2
+mouse_filter = 2
+
 [node name="CommunityButton" type="Button" parent="UiRoot/MenuPanel"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 78)
+custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
-size_flags_vertical = 3
 offset_transform_enabled = true
 offset_transform_position = Vector2(640, 0)
 focus_mode = 2
@@ -565,11 +572,15 @@ theme_override_styles/focus = SubResource("StyleSwordHover")
 theme_override_styles/disabled = SubResource("StyleSwordDisabled")
 text = "社群"
 
+[node name="CommunityQuitSpacer" type="Control" parent="UiRoot/MenuPanel"]
+custom_minimum_size = Vector2(0, 37.3333)
+layout_mode = 2
+mouse_filter = 2
+
 [node name="QuitButton" type="Button" parent="UiRoot/MenuPanel"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 78)
+custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
-size_flags_vertical = 3
 offset_transform_enabled = true
 offset_transform_position = Vector2(660, 0)
 focus_mode = 2
