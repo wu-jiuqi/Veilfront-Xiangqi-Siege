@@ -1,0 +1,159 @@
+exception_subject:
+  schema_version: veilfront-production-scope-exception/v1
+  subject_id: EXCEPTION-STATIC-14-PIECE-BATCH-001@v1
+  project_id: veilfront-xiangqi-siege
+  title: 兵马俑管线14枚静态棋子追认与有限继续使用例外
+  parent_contract:
+    contract_id: LOOP-CTR-FORMAL-FOUNDATION-GATE2-001
+    version: 2
+    approval_id: approval:veilfront-xiangqi-siege:loop-contract:ce2d6174f82a
+    subject_digest: ce2d6174f82af003b023f80e2ae3676510df541f4a6ac129bfcf69847361b20d
+    exceeded_boundary: Contract v2只允许红黑步兵与骑兵最小样片，不允许14枚静态棋子批量生产。
+  governance_correction:
+    prior_record_path: game-pipeline/approvals/approval-static-14-piece-batch-owner-exception-20260820.yaml
+    prior_record_status: invalid_removed_from_active_approval_store
+    reason:
+    - 旧记录不符合game-production-approval/v1。
+    - 实现指令“完成以后同理制作所有棋子”未绑定待批准对象的精确摘要，不能作为人工闸门批准。
+    - 本次审批不得被描述为事前授权；它只处理已经发生的范围偏差及后续有限使用。
+  decision_requested:
+    decision_type: retrospective_scope_exception_and_limited_continued_use
+    question: 是否追认兵马俑管线已经完成的14枚静态棋子范围偏差，并允许这些既有资产继续作为GATE-2前美术测试资产留存、验证和接入测试场？
+    designated_decider: project-owner
+    decisions: [approved, rejected, revise]
+  exact_scope:
+    style_pipeline:
+      id: terracotta-warriors
+      display_name: 兵马俑
+      is_global_style: false
+    factions:
+      red: 高明度银白钨钢
+      black: 深墨绿青铜
+    roles: [兵, 炮, 车, 马, 相, 士, 将]
+    unique_static_piece_count: 14
+    runtime_assets:
+    - id: TW-PIECE-RED-BING
+      faction: red
+      role: 兵
+      texture: assets/art/pieces/terracotta_warriors/red_infantry_idle.png
+      prefab: scenes/dev/art/terracotta_warriors/pieces/red_infantry_piece_3d.tscn
+    - id: TW-PIECE-RED-PAO
+      faction: red
+      role: 炮
+      texture: assets/art/pieces/terracotta_warriors/red_trebuchet_idle.png
+      prefab: scenes/dev/art/terracotta_warriors/pieces/red_trebuchet_piece_3d.tscn
+    - id: TW-PIECE-RED-JU
+      faction: red
+      role: 车
+      texture: assets/art/pieces/terracotta_warriors/red_chariot_idle.png
+      prefab: scenes/dev/art/terracotta_warriors/pieces/red_chariot_piece_3d.tscn
+    - id: TW-PIECE-RED-MA
+      faction: red
+      role: 马
+      texture: assets/art/pieces/terracotta_warriors/red_cavalry_idle.png
+      prefab: scenes/dev/art/terracotta_warriors/pieces/red_cavalry_piece_3d.tscn
+    - id: TW-PIECE-RED-XIANG
+      faction: red
+      role: 相
+      texture: assets/art/pieces/terracotta_warriors/red_minister_idle.png
+      prefab: scenes/dev/art/terracotta_warriors/pieces/red_minister_piece_3d.tscn
+    - id: TW-PIECE-RED-SHI
+      faction: red
+      role: 士
+      texture: assets/art/pieces/terracotta_warriors/red_guard_idle.png
+      prefab: scenes/dev/art/terracotta_warriors/pieces/red_guard_piece_3d.tscn
+    - id: TW-PIECE-RED-JIANG
+      faction: red
+      role: 将
+      texture: assets/art/pieces/terracotta_warriors/red_general_idle.png
+      prefab: scenes/dev/art/terracotta_warriors/pieces/red_general_piece_3d.tscn
+    - id: TW-PIECE-BLACK-BING
+      faction: black
+      role: 兵
+      texture: assets/art/pieces/terracotta_warriors/black_infantry_idle.png
+      prefab: scenes/dev/art/terracotta_warriors/pieces/black_infantry_piece_3d.tscn
+    - id: TW-PIECE-BLACK-PAO
+      faction: black
+      role: 炮
+      texture: assets/art/pieces/terracotta_warriors/black_trebuchet_idle.png
+      prefab: scenes/dev/art/terracotta_warriors/pieces/black_trebuchet_piece_3d.tscn
+    - id: TW-PIECE-BLACK-JU
+      faction: black
+      role: 车
+      texture: assets/art/pieces/terracotta_warriors/black_chariot_idle.png
+      prefab: scenes/dev/art/terracotta_warriors/pieces/black_chariot_piece_3d.tscn
+    - id: TW-PIECE-BLACK-MA
+      faction: black
+      role: 马
+      texture: assets/art/pieces/terracotta_warriors/black_cavalry_idle.png
+      prefab: scenes/dev/art/terracotta_warriors/pieces/black_cavalry_piece_3d.tscn
+    - id: TW-PIECE-BLACK-XIANG
+      faction: black
+      role: 相
+      texture: assets/art/pieces/terracotta_warriors/black_minister_idle.png
+      prefab: scenes/dev/art/terracotta_warriors/pieces/black_minister_piece_3d.tscn
+    - id: TW-PIECE-BLACK-SHI
+      faction: black
+      role: 士
+      texture: assets/art/pieces/terracotta_warriors/black_guard_idle.png
+      prefab: scenes/dev/art/terracotta_warriors/pieces/black_guard_piece_3d.tscn
+    - id: TW-PIECE-BLACK-JIANG
+      faction: black
+      role: 将
+      texture: assets/art/pieces/terracotta_warriors/black_general_idle.png
+      prefab: scenes/dev/art/terracotta_warriors/pieces/black_general_piece_3d.tscn
+    source_and_runtime_pipeline:
+    - 纯紫幕源图生成或编辑，不以灰色背景直接抠图。
+    - 从紫幕源执行色键，输出真实RGBA并处理半透明边缘紫边。
+    - 人形运行时纹理为512×768；炮、车、马为768×768；禁止非等比拉伸。
+    - Godot导入启用VRAM Compressed、mipmap和Fix Alpha Border。
+    test_scene_integration:
+      scene: scenes/dev/art/piece_art_test_3d.tscn
+      instance_count: 32
+      formation_per_faction: 5兵、2炮、2车、2马、2相、2士、1将
+      purpose: 仅用于美术尺寸、锚点、遮挡、阵营和轮廓审查，不接管规则事实。
+  approval_effect:
+    allowed:
+    - 将上述14张既有运行时纹理、14个既有棋子预置和32实例测试场保留为GATE-2前美术测试资产与证据。
+    - 继续执行机械校验、Godot导入校验、尺寸/锚点/透明边缘修复以及测试场内可读性审查。
+    - 在不新增角色、姿态、动作帧或视觉设计的前提下，修复命名、导入参数、透明边缘、锚点和显示尺寸。
+    - 在资产清单中把本例外标记为项目所有者批准的有限例外，但不得标记GATE-2已通过。
+    forbidden:
+    - 把“兵马俑”提升为项目全局美术风格。
+    - 新增或重做棋子造型、姿态、动作帧、头像、皮肤、受损差分或其他批量美术资产。
+    - 制作或批准完整UI、VFX、动画、音频、环境资产及任何高成本外包。
+    - 把当前生成式金色职位字视为经字源校对和授权的正式秦小篆矢量母版。
+    - 接入正式对局规则、修改PlayerView、回放、随机消费、教学语义或批准GATE-2。
+    - 将本次追认描述为2026-08-20批量制作之前已经存在的授权。
+  resources_and_limits:
+    new_external_spend_limit: 0
+    new_agent_instance_limit: 0
+    new_asset_count_limit: 0
+    time_limit: 仅覆盖既有资产的留存、验证和非创意技术修复；任何新增生产都需要新Contract或新例外。
+  evidence:
+    production_brief: evidence/gate2/art-samples/TW-PIECE-01-14-static-batch-production-brief-v2.md
+    runtime_review: evidence/gate2/art-samples/TW-PIECE-01-14-runtime-review-v2.md
+    mechanical_validation: evidence/gate2/art-samples/TW-PIECE-01-14-runtime-validation-v2.json
+    alpha_review_sheet: evidence/gate2/art-samples/review/TW-PIECE-01-14-runtime-alpha-review-v2.png
+    godot_integration_review: evidence/gate2/art-samples/TW-PIECE-01-14-godot-integration-review-v1.md
+    formation_review: evidence/gate2/art-samples/review/piece-art-test-3d-full-formation-v1.png
+  acceptance_and_residual_risk:
+    observed_passes:
+    - 14张运行时PNG均为RGBA，尺寸与命名通过机械校验，边角Alpha为0且未检出紫边。
+    - 14个棋子预置和32实例测试场可由Godot 4.7.1解析并无头加载。
+    - 红方银白钨钢、黑方深墨绿青铜及七角色轮廓已形成可审查差异。
+    unresolved:
+    - 正式96px盘内可读性、三目标分辨率、双方180°视角、遮挡和色觉弱化仍需独立QA。
+    - 七个正式秦小篆职位字仍需字源校对、同系列矢量重绘和授权记录。
+    - 炮、车、马方形源为1254×1254，低于1536×1536目标，不得冒充原生1536细节。
+    - 本例外不能把任何未通过的自动检查或GATE-2人工判断改写为通过。
+  decision_consequences:
+    approved: 创建符合game-production-approval/v1且绑定本摘要哈希的批准记录；既有资产可按approval_effect有限留存、验证和测试接入。
+    rejected: 不创建批准记录；既有资产只保留为越界生产的历史证据，不得作为已批准生产基线，后续处置另请项目所有者决定。
+    revise: 根据项目所有者指出的范围修改本摘要，生成新哈希并重新请求确认；旧哈希立即失效。
+review:
+  gate_result: awaiting_human
+  designated_decider: project-owner
+  canonicalization: exception_subject使用UTF-8 canonical JSON；键排序；无额外空白；ensure_ascii=false；SHA-256。
+  approval_digest: 95214ab75a156a4570e561f2780e9e9e9bb442291085cfd41cd13be793a90c5f
+  confirmation_rule: 项目所有者必须回复完整64位approval_digest；缩写、意译、实现指令或仅回复“可以”均不构成批准。

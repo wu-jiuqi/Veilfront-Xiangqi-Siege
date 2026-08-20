@@ -3,7 +3,7 @@ art_pipeline_inventory:
   project_id: veilfront-xiangqi-siege
   pipeline_id: terracotta-warriors
   display_name: 兵马俑
-  status: static_piece_batch_v2_completed_other_batch_pending_gate2
+  status: static_piece_batch_v2_completed_exception_awaiting_owner_confirmation
   global_baseline_ref: docs/art/veilfront-visual-baseline-v1.md
   pipeline_spec_ref: docs/art/pipelines/terracotta-warriors/terracotta-warriors-art-pipeline-v1.md
   source_authority: codex-thread://current#owner-name-terracotta-warriors-pipeline
@@ -22,12 +22,12 @@ art_pipeline_inventory:
     - 规格与清单
     - 轮廓审查页
     - Contract v2列明的最小视觉样片
-    - 项目所有者例外批准的14枚静态单体棋子
+    - Contract v2列明的最小视觉样片；已完成的其余静态棋子仅作为待追认历史产物，不视为已批准生产
     batch_allowed: false
     static_piece_batch_exception:
-      allowed: true
-      status: completed_v2
-      approval_ref: game-pipeline/approvals/approval-static-14-piece-batch-owner-exception-20260820.yaml
+      allowed: false
+      status: awaiting_owner_exact_digest_confirmation
+      decision_package_ref: game-pipeline/loops/evidence/STATIC-14-PIECE-OWNER-EXCEPTION-decision-package-v1.yaml
     batch_requires:
     - GATE-2项目所有者批准
     - 新批量生产Contract
@@ -79,8 +79,8 @@ art_pipeline_inventory:
       - evidence/gate2/art-samples/sources/vs-piece-01-red-infantry-source-v1.png
       - evidence/gate2/art-samples/TW-PIECE-01-04-source-sample-review-v1.md
       - evidence/gate2/art-samples/runtime/vs-piece-01-red-infantry-512x768-alpha-v2.png
-    - {id: TW-PIECE-RED-PAO, faction: red, role: 炮, quantity: 1, phase: owner_exception_static_batch, status: rgba_runtime_v2_completed, evidence: evidence/gate2/art-samples/runtime/vs-piece-05-red-trebuchet-768x768-alpha-v2.png}
-    - {id: TW-PIECE-RED-JU, faction: red, role: 车, quantity: 1, phase: owner_exception_static_batch, status: rgba_runtime_v2_completed, evidence: evidence/gate2/art-samples/runtime/vs-piece-07-red-chariot-768x768-alpha-v2.png}
+    - {id: TW-PIECE-RED-PAO, faction: red, role: 炮, quantity: 1, phase: retrospective_exception_pending, status: rgba_runtime_v2_completed, evidence: evidence/gate2/art-samples/runtime/vs-piece-05-red-trebuchet-768x768-alpha-v2.png}
+    - {id: TW-PIECE-RED-JU, faction: red, role: 车, quantity: 1, phase: retrospective_exception_pending, status: rgba_runtime_v2_completed, evidence: evidence/gate2/art-samples/runtime/vs-piece-07-red-chariot-768x768-alpha-v2.png}
     - id: TW-PIECE-RED-MA
       faction: red
       role: 马
@@ -94,9 +94,9 @@ art_pipeline_inventory:
       - evidence/gate2/art-samples/sources/vs-piece-03-red-cavalry-source-v1.png
       - evidence/gate2/art-samples/TW-PIECE-01-04-source-sample-review-v1.md
       - evidence/gate2/art-samples/runtime/vs-piece-03-red-cavalry-768x768-alpha-v2.png
-    - {id: TW-PIECE-RED-XIANG, faction: red, role: 相, quantity: 1, phase: owner_exception_static_batch, status: rgba_runtime_v2_completed, evidence: evidence/gate2/art-samples/runtime/vs-piece-09-red-minister-512x768-alpha-v2.png}
-    - {id: TW-PIECE-RED-SHI, faction: red, role: 士, quantity: 1, phase: owner_exception_static_batch, status: rgba_runtime_v2_completed, evidence: evidence/gate2/art-samples/runtime/vs-piece-11-red-guard-512x768-alpha-v2.png}
-    - {id: TW-PIECE-RED-JIANG, faction: red, role: 将, quantity: 1, phase: owner_exception_static_batch, status: rgba_runtime_v2_completed, evidence: evidence/gate2/art-samples/runtime/vs-piece-13-red-general-512x768-alpha-v2.png}
+    - {id: TW-PIECE-RED-XIANG, faction: red, role: 相, quantity: 1, phase: retrospective_exception_pending, status: rgba_runtime_v2_completed, evidence: evidence/gate2/art-samples/runtime/vs-piece-09-red-minister-512x768-alpha-v2.png}
+    - {id: TW-PIECE-RED-SHI, faction: red, role: 士, quantity: 1, phase: retrospective_exception_pending, status: rgba_runtime_v2_completed, evidence: evidence/gate2/art-samples/runtime/vs-piece-11-red-guard-512x768-alpha-v2.png}
+    - {id: TW-PIECE-RED-JIANG, faction: red, role: 将, quantity: 1, phase: retrospective_exception_pending, status: rgba_runtime_v2_completed, evidence: evidence/gate2/art-samples/runtime/vs-piece-13-red-general-512x768-alpha-v2.png}
     - id: TW-PIECE-BLACK-BING
       faction: black
       role: 兵
@@ -107,8 +107,8 @@ art_pipeline_inventory:
       - evidence/gate2/art-samples/sources/vs-piece-02-black-infantry-source-v1.png
       - evidence/gate2/art-samples/TW-PIECE-01-04-source-sample-review-v1.md
       - evidence/gate2/art-samples/runtime/vs-piece-02-black-infantry-512x768-alpha-v2.png
-    - {id: TW-PIECE-BLACK-PAO, faction: black, role: 炮, quantity: 1, phase: owner_exception_static_batch, status: rgba_runtime_v2_completed, evidence: evidence/gate2/art-samples/runtime/vs-piece-06-black-trebuchet-768x768-alpha-v2.png}
-    - {id: TW-PIECE-BLACK-JU, faction: black, role: 车, quantity: 1, phase: owner_exception_static_batch, status: rgba_runtime_v2_completed, evidence: evidence/gate2/art-samples/runtime/vs-piece-08-black-chariot-768x768-alpha-v2.png}
+    - {id: TW-PIECE-BLACK-PAO, faction: black, role: 炮, quantity: 1, phase: retrospective_exception_pending, status: rgba_runtime_v2_completed, evidence: evidence/gate2/art-samples/runtime/vs-piece-06-black-trebuchet-768x768-alpha-v2.png}
+    - {id: TW-PIECE-BLACK-JU, faction: black, role: 车, quantity: 1, phase: retrospective_exception_pending, status: rgba_runtime_v2_completed, evidence: evidence/gate2/art-samples/runtime/vs-piece-08-black-chariot-768x768-alpha-v2.png}
     - id: TW-PIECE-BLACK-MA
       faction: black
       role: 马
@@ -122,9 +122,9 @@ art_pipeline_inventory:
       - evidence/gate2/art-samples/sources/vs-piece-04-black-cavalry-source-v1.png
       - evidence/gate2/art-samples/TW-PIECE-01-04-source-sample-review-v1.md
       - evidence/gate2/art-samples/runtime/vs-piece-04-black-cavalry-768x768-alpha-v2.png
-    - {id: TW-PIECE-BLACK-XIANG, faction: black, role: 相, quantity: 1, phase: owner_exception_static_batch, status: rgba_runtime_v2_completed, evidence: evidence/gate2/art-samples/runtime/vs-piece-10-black-minister-512x768-alpha-v2.png}
-    - {id: TW-PIECE-BLACK-SHI, faction: black, role: 士, quantity: 1, phase: owner_exception_static_batch, status: rgba_runtime_v2_completed, evidence: evidence/gate2/art-samples/runtime/vs-piece-12-black-guard-512x768-alpha-v2.png}
-    - {id: TW-PIECE-BLACK-JIANG, faction: black, role: 将, quantity: 1, phase: owner_exception_static_batch, status: rgba_runtime_v2_completed, evidence: evidence/gate2/art-samples/runtime/vs-piece-14-black-general-512x768-alpha-v2.png}
+    - {id: TW-PIECE-BLACK-XIANG, faction: black, role: 相, quantity: 1, phase: retrospective_exception_pending, status: rgba_runtime_v2_completed, evidence: evidence/gate2/art-samples/runtime/vs-piece-10-black-minister-512x768-alpha-v2.png}
+    - {id: TW-PIECE-BLACK-SHI, faction: black, role: 士, quantity: 1, phase: retrospective_exception_pending, status: rgba_runtime_v2_completed, evidence: evidence/gate2/art-samples/runtime/vs-piece-12-black-guard-512x768-alpha-v2.png}
+    - {id: TW-PIECE-BLACK-JIANG, faction: black, role: 将, quantity: 1, phase: retrospective_exception_pending, status: rgba_runtime_v2_completed, evidence: evidence/gate2/art-samples/runtime/vs-piece-14-black-general-512x768-alpha-v2.png}
   - id: piece_support
     name: 棋子共用资源
     items:
@@ -147,7 +147,7 @@ art_pipeline_inventory:
     - id: TW-PIECE-PREFABS
       name: Godot棋子预置场景
       quantity: 14
-      phase: owner_exception_static_batch
+      phase: retrospective_exception_pending
       status: godot_sample_completed
       evidence:
       - scenes/dev/art/terracotta_warriors/pieces/
