@@ -9,6 +9,14 @@ game-pipeline/organization/views/*.svg
 # Godot editor/import cache
 .godot/
 
+# Non-runtime evidence and pipeline import metadata
+evidence/**/*.import
+game-pipeline/**/*.import
+
+# Python bytecode and cache directories
+__pycache__/
+*.py[cod]
+
 # Local and exported build artifacts
 .tmp/
 .mono/
