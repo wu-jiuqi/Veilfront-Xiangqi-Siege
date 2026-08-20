@@ -24,13 +24,18 @@ func _verify_start_sequence_gate() -> void:
 	assert(current_scene == start_screen, "scene routing must wait until the cinematic finishes")
 
 	sequence_player.speed_scale = 1.0
-	sequence_player.advance(5.2)
+	sequence_player.advance(6.5)
 	await process_frame
 	assert(current_scene == start_screen, "cinematic completion must keep the start scene as the menu background")
 	var menu_overlay := start_screen.get_node("MenuOverlay")
 	assert(menu_overlay.call(&"is_active"), "cinematic completion must activate the inline menu")
 	assert(is_equal_approx((start_screen.get_node("Stage/SoldierLayer/IdleSoldiers") as TextureRect).modulate.a, 1.0), "soldiers must return to their standing pose")
 	assert(is_zero_approx((start_screen.get_node("Stage/SoldierLayer/PushSoldiers") as TextureRect).modulate.a), "pushing pose must be hidden after the doors open")
+	var fog_curtain := start_screen.get_node("Stage/FogLayer/FogCurtain") as ColorRect
+	var fog_material := fog_curtain.material as ShaderMaterial
+	assert(is_equal_approx(fog_material.get_shader_parameter(&"reveal"), 1.0), "fog curtain must remain fully revealed behind the menu")
+	assert(float(fog_material.get_shader_parameter(&"opacity")) >= 0.78, "fog curtain must remain dense behind the menu")
+	assert((start_screen.get_node("Stage/FogLayer/GateMist") as GPUParticles2D).emitting, "gate mist must keep emitting after the logo appears")
 
 	current_scene.queue_free()
 	await process_frame
@@ -54,7 +59,7 @@ func _verify_inline_menu_input_gate() -> void:
 	assert(lan_button.disabled and level_button.disabled and community_button.disabled and quit_button.disabled, "menu buttons must stay disabled before reveal")
 
 	menu_overlay.call(&"reveal_menu")
-	intro_animation.advance(1.0)
+	intro_animation.advance(1.5)
 	await process_frame
 	assert(not lan_button.disabled and not level_button.disabled and not community_button.disabled and not quit_button.disabled, "menu buttons must enable after fade-in")
 	assert(menu_overlay.visible, "inline menu must remain visible after fade-in")

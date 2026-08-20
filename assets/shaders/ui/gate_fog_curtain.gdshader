@@ -3,6 +3,7 @@ render_mode unshaded, blend_mix;
 
 uniform float reveal : hint_range(0.0, 1.0, 0.001) = 0.0;
 uniform float opacity : hint_range(0.0, 1.0, 0.001) = 0.92;
+uniform float density_boost : hint_range(0.5, 1.5, 0.01) = 1.0;
 uniform float flow_speed : hint_range(0.0, 1.0, 0.01) = 0.08;
 uniform vec4 fog_color : source_color = vec4(0.19, 0.25, 0.29, 1.0);
 
@@ -66,7 +67,7 @@ void fragment() {
 	float soft_density = smoothstep(0.20, 0.82, shaped_noise);
 	float torn_edges = smoothstep(0.27, 0.74, medium_noise + wisp_noise * 0.18);
 	float depth = mix(0.24, 0.96, soft_density) * mix(0.62, 1.0, torn_edges);
-	float alpha = coverage * depth * opacity;
+	float alpha = clamp(coverage * depth * density_boost * opacity, 0.0, 1.0);
 	vec3 color = fog_color.rgb * mix(0.72, 1.14, large_noise * 0.7 + wisp_noise * 0.3);
 	COLOR = vec4(color, alpha * fog_color.a);
 }

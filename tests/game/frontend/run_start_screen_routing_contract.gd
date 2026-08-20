@@ -1,6 +1,7 @@
 extends SceneTree
 
 const START_SCREEN_SCENE := preload("res://scenes/game/frontend/start_screen.tscn")
+const SEQUENCE_COMPLETION_TIME := 6.5
 
 
 func _init() -> void:
@@ -12,7 +13,7 @@ func _init() -> void:
 	click_event.pressed = true
 	start_screen._gui_input(click_event)
 	start_screen._gui_input(click_event)
-	(start_screen.get_node("SequencePlayer") as AnimationPlayer).advance(5.2)
+	(start_screen.get_node("SequencePlayer") as AnimationPlayer).advance(SEQUENCE_COMPLETION_TIME)
 	await process_frame
 	_assert_inline_menu(start_screen, "left_click")
 
@@ -23,7 +24,7 @@ func _init() -> void:
 	var touch_event := InputEventScreenTouch.new()
 	touch_event.pressed = true
 	start_screen._gui_input(touch_event)
-	(start_screen.get_node("SequencePlayer") as AnimationPlayer).advance(5.2)
+	(start_screen.get_node("SequencePlayer") as AnimationPlayer).advance(SEQUENCE_COMPLETION_TIME)
 	await process_frame
 	_assert_inline_menu(start_screen, "touch")
 
@@ -35,7 +36,7 @@ func _init() -> void:
 	accept_event.action = &"ui_accept"
 	accept_event.pressed = true
 	start_screen._unhandled_input(accept_event)
-	(start_screen.get_node("SequencePlayer") as AnimationPlayer).advance(5.2)
+	(start_screen.get_node("SequencePlayer") as AnimationPlayer).advance(SEQUENCE_COMPLETION_TIME)
 	await process_frame
 	_assert_inline_menu(start_screen, "ui_accept")
 
