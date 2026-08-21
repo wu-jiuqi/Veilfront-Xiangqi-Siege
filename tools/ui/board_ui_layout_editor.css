@@ -121,6 +121,23 @@ h1 {
 .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
 .field-grid.three { grid-template-columns: 0.72fr 1fr 1fr; margin-top: 9px; }
 .field-grid.four { grid-template-columns: repeat(4, 1fr); }
+.field-grid.two-align { grid-template-columns: 1fr 1fr; margin-top: 9px; }
+
+.font-size-control {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  align-items: end;
+  gap: 10px;
+  margin-top: 9px;
+}
+
+.font-size-slider input[type="range"] {
+  width: 100%;
+  height: 36px;
+  margin: 0;
+  accent-color: var(--gold);
+  cursor: ew-resize;
+}
 
 .field-label {
   color: var(--muted);
@@ -471,6 +488,21 @@ main { min-width: 0; display: grid; grid-template-rows: 52px minmax(0, 1fr) 32px
 .text-layer-box.valign-center { align-items: center; }
 .text-layer-box.valign-bottom { align-items: flex-end; }
 .text-layer-box.is-hidden { display: none; }
+.text-layer-box.is-hidden.selected {
+  display: flex;
+  opacity: 0.5;
+  background: repeating-linear-gradient(-45deg, rgba(200, 166, 97, 0.12) 0 5px, rgba(25, 21, 11, 0.3) 5px 10px);
+}
+.text-layer-box.container-managed {
+  border-color: rgba(99, 207, 218, 0.28);
+  cursor: default;
+}
+.text-layer-box.container-managed.selected {
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 1px rgba(4, 8, 8, 0.9), 0 0 14px rgba(99, 207, 218, 0.13);
+  cursor: default;
+}
+.text-layer-box.container-managed .selection-handles { display: none; }
 .ui-element.selected .text-layer-box:hover {
   border-color: rgba(200, 166, 97, 0.66);
   background: rgba(200, 166, 97, 0.05);
@@ -497,6 +529,11 @@ main { min-width: 0; display: grid; grid-template-rows: 52px minmax(0, 1fr) 32px
 }
 
 .ui-element.text-editing > .selection-handles { display: none; }
+
+.ui-element[data-id="custom-ui-1787293016650-4"] .text-layer-box {
+  font-family: "STKaiti", "KaiTi", serif;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.78);
+}
 
 .ui-tag {
   position: absolute;
@@ -659,6 +696,7 @@ main { min-width: 0; display: grid; grid-template-rows: 52px minmax(0, 1fr) 32px
   .workspace { padding: 18px; }
   .field-grid.four { grid-template-columns: 1fr 1fr; }
   .field-grid.three { grid-template-columns: 1fr; }
+  .font-size-control { grid-template-columns: 64px minmax(0, 1fr); }
   .toggle-grid { grid-template-columns: 1fr; }
 }
 

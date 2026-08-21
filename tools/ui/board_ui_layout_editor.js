@@ -2,7 +2,7 @@
   "use strict";
 
   const BOARD_ID = "board-visible-region";
-  const STORAGE_KEY = "veilfront.board-ui-layout-editor.v2";
+  const STORAGE_KEY = "veilfront.board-ui-layout-editor.v3";
   const MIN_UI_SIZE = { w: 40, h: 32 };
   const MIN_BOARD_SIZE = { w: 160, h: 120 };
   const MIN_TEXT_SIZE = { w: 16, h: 12 };
@@ -10,7 +10,8 @@
     "custom-ui-1787265872199-1": "res://assets/art/ui/terracotta_hud_v2/incense_assembly/round_incense_vertical_v1.png",
     "custom-ui-1787292062912-1": "res://assets/art/ui/terracotta_hud_v2/incense_assembly/piece_info_drawer_frame_v1.png",
     "custom-ui-1787292347530-2": "res://assets/art/ui/terracotta_hud_v2/incense_assembly/dual_incense_bronze_stand_v1.png",
-    "custom-ui-1787292377548-3": "res://assets/art/ui/terracotta_hud_v2/incense_assembly/timer_incense_vertical_v1.png"
+    "custom-ui-1787292377548-3": "res://assets/art/ui/terracotta_hud_v2/incense_assembly/timer_incense_vertical_v1.png",
+    "custom-ui-1787293016650-4": "res://assets/art/ui/terracotta_hud_v2/incense_assembly/round_smoke_display_frame_v1.png"
   };
 
   const PROFILE_DEFS = {
@@ -29,7 +30,7 @@
     lockAspect: false
   };
 
-  const textLayer = (id, name, text, rect, fontSize, horizontal = "left", binding = "static") => ({
+  const textLayer = (id, name, text, rect, fontSize, horizontal = "left", binding = "static", options = {}) => ({
     id,
     name,
     text,
@@ -38,7 +39,8 @@
     fontSize,
     horizontal,
     vertical: "center",
-    normalizedRect: rect
+    normalizedRect: rect,
+    ...options
   });
 
   const DEFAULT_TEXT_LAYERS = {
@@ -67,7 +69,19 @@
       textLayer("pass", "敌方阵亡:", "敌方阵亡:", { x: 0.2951388888888889, y: 0.5833333333333334, w: 0.5, h: 0.06481481481481481 }, 12, "center"),
       textLayer("text-1787297730520-1", "位置", "位置: (x, y)", { x: 0.2951388888888889, y: 0.6921296296296297, w: 0.5, h: 0.06481481481481481 }, 14, "center")
     ],
-    "minimap": [textLayer("title", "小地图标题", "战场态势", { x: 0.18, y: 0.04, w: 0.64, h: 0.1 }, 12, "center")]
+    "minimap": [textLayer("title", "小地图标题", "战场态势", { x: 0.18, y: 0.04, w: 0.64, h: 0.1 }, 12, "center")],
+    "custom-ui-1787292062912-1": [
+      textLayer("movement-caption", "移动逻辑标题", "移动逻辑", { x: 0.0524691358, y: 0.1071428571, w: 0.2839506173, h: 0.2678571429 }, 11, "left", "static", { layoutManagedByContainer: true }),
+      textLayer("movement-summary", "移动逻辑说明", "选择棋子后显示移动逻辑。", { x: 0.0524691358, y: 0.375, w: 0.2839506173, h: 0.5178571429 }, 10, "left", "movement_summary", { layoutManagedByContainer: true }),
+      textLayer("move-button", "移动按钮", "移动", { x: 0.3549382716, y: 0.1071428571, w: 0.1388888889, h: 0.7857142857 }, 11, "center", "move_action", { layoutManagedByContainer: true }),
+      textLayer("bombard-button", "轰炸按钮", "轰炸", { x: 0.5061728395, y: 0.1071428571, w: 0.1388888889, h: 0.7857142857 }, 11, "center", "bombard_action", { layoutManagedByContainer: true }),
+      textLayer("resurrect-button", "复活按钮", "复活", { x: 0.6574074074, y: 0.1071428571, w: 0.1388888889, h: 0.7857142857 }, 11, "center", "resurrect_action", { layoutManagedByContainer: true }),
+      textLayer("no-skill-button", "无技能按钮", "无技能", { x: 0.8086419753, y: 0.1071428571, w: 0.1388888889, h: 0.7857142857 }, 11, "center", "no_skill_action", { layoutManagedByContainer: true })
+    ],
+    "custom-ui-1787293016650-4": [
+      textLayer("round-number", "回合数字", "一", { x: 0.14, y: 0.19, w: 0.72, h: 0.53 }, 38, "center", "round_number"),
+      textLayer("round-caption", "回合标题", "回合", { x: 0.24, y: 0.7, w: 0.52, h: 0.21 }, 14, "center")
+    ]
   };
 
   const DEFAULT_BOARD_RECT = { x: 340, y: 32, w: 600, h: 544 };
@@ -167,7 +181,8 @@
       id: "custom-ui-1787293016650-4",
       name: "回合数显示区",
       function: "回合数显示区",
-      kind: "custom",
+      kind: "image",
+      asset: "res://assets/art/ui/terracotta_hud_v2/incense_assembly/round_smoke_display_frame_v1.png",
       visible: true,
       lockAspect: false,
       baseRect: { x: 1104, y: 160, w: 104, h: 96 }
@@ -325,6 +340,7 @@
     textLayerName: document.getElementById("text-layer-name"),
     textContent: document.getElementById("text-content"),
     textFontSize: document.getElementById("text-font-size"),
+    textFontSizeRange: document.getElementById("text-font-size-range"),
     textAlign: document.getElementById("text-align"),
     textVerticalAlign: document.getElementById("text-vertical-align"),
     textVisible: document.getElementById("text-visible"),
@@ -444,7 +460,10 @@
     node.className = "text-layer-box";
     node.dataset.uiId = definition.id;
     node.dataset.textId = layer.id;
-    node.title = `${layer.name} · 拖动或八向缩放`;
+    node.classList.toggle("container-managed", Boolean(layer.layoutManagedByContainer));
+    node.title = layer.layoutManagedByContainer
+      ? `${layer.name} · 位置由 Godot Container 管理`
+      : `${layer.name} · 拖动或八向缩放`;
     const content = document.createElement("span");
     content.className = "text-layer-content";
     content.textContent = layer.text || "文字";
@@ -609,16 +628,19 @@
 
     const layer = currentTextLayer();
     const hasLayer = Boolean(layer);
+    const positionEditable = hasLayer && !layer.layoutManagedByContainer;
     dom.deleteTextButton.disabled = !hasLayer;
     dom.textEditorFields.classList.toggle("is-disabled", !hasLayer);
-    for (const input of [dom.textLayerName, dom.textContent, dom.textFontSize, dom.textAlign, dom.textVerticalAlign, dom.textVisible, ...Object.values(dom.textRectInputs)]) {
+    for (const input of [dom.textLayerName, dom.textContent, dom.textFontSize, dom.textFontSizeRange, dom.textAlign, dom.textVerticalAlign, dom.textVisible]) {
       input.disabled = !hasLayer;
     }
+    for (const input of Object.values(dom.textRectInputs)) input.disabled = !positionEditable;
     if (!layer) {
       dom.textLayerName.value = "";
       dom.textContent.value = "";
       for (const input of Object.values(dom.textRectInputs)) input.value = "";
       dom.textFontSize.value = "";
+      dom.textFontSizeRange.value = "12";
       dom.textBindingHint.textContent = layers.length ? "选择一个文字框后，可编辑内容、位置和尺寸。" : "点击“添加文字框”创建第一段文字。";
       return;
     }
@@ -631,12 +653,16 @@
     dom.textRectInputs.w.value = Math.round(textRect.w);
     dom.textRectInputs.h.value = Math.round(textRect.h);
     dom.textFontSize.value = layer.fontSize;
+    dom.textFontSizeRange.value = layer.fontSize;
     dom.textAlign.value = layer.horizontal;
     dom.textVerticalAlign.value = layer.vertical;
     dom.textVisible.checked = layer.visible !== false;
-    dom.textBindingHint.textContent = layer.binding === "static"
+    const bindingDescription = layer.binding === "static"
       ? "STATIC · 文字内容会作为静态文案导出。"
       : `DATA · ${layer.binding} · 当前内容用于编辑器预览，游戏运行时可由数据覆盖。`;
+    dom.textBindingHint.textContent = layer.layoutManagedByContainer
+      ? `${bindingDescription} 位置由预置 Container 管理；此处可调整文案、字号、对齐与显示状态。`
+      : bindingDescription;
   }
 
   function renderCanvas() {
@@ -765,6 +791,7 @@
     const point = pointerInUi(event, uiId);
     const uiRect = rectById(uiId);
     const layer = textLayerById(uiId, textId);
+    if (layer.layoutManagedByContainer) return;
     const origin = textRectPixels(layer, uiRect);
     textInteraction = {
       pointerId: event.pointerId,
@@ -1024,6 +1051,7 @@
       font_size: Math.round(clamp(safeNumber(layer.fontSize, 12), 6, 96)),
       horizontal_alignment: layer.horizontal || "left",
       vertical_alignment: layer.vertical || "center",
+      layout_managed_by_container: Boolean(layer.layoutManagedByContainer),
       normalized_rect: { x: rect.x, y: rect.y, width: rect.w, height: rect.h }
     };
   }
@@ -1077,6 +1105,7 @@
         fontSize: Math.round(clamp(safeNumber(entry.font_size, 12), 6, 96)),
         horizontal: ["left", "center", "right"].includes(entry.horizontal_alignment) ? entry.horizontal_alignment : "left",
         vertical: ["top", "center", "bottom"].includes(entry.vertical_alignment) ? entry.vertical_alignment : "center",
+        layoutManagedByContainer: Boolean(entry.layout_managed_by_container),
         normalizedRect: {
           x: clamp(safeNumber(source.x), 0, 1.0 - width),
           y: clamp(safeNumber(source.y), 0, 1.0 - height),
@@ -1290,12 +1319,17 @@
     });
   }
 
-  dom.textFontSize.addEventListener("change", () => {
+  function applyTextFontSize(value) {
     const layer = currentTextLayer();
     if (!layer) return;
-    layer.fontSize = Math.round(clamp(safeNumber(dom.textFontSize.value, 12), 6, 96));
+    layer.fontSize = Math.round(clamp(safeNumber(value, 12), 6, 96));
+    dom.textFontSize.value = layer.fontSize;
+    dom.textFontSizeRange.value = layer.fontSize;
     render();
-  });
+  }
+
+  dom.textFontSize.addEventListener("change", () => applyTextFontSize(dom.textFontSize.value));
+  dom.textFontSizeRange.addEventListener("input", () => applyTextFontSize(dom.textFontSizeRange.value));
 
   dom.textAlign.addEventListener("change", () => {
     const layer = currentTextLayer();
@@ -1402,6 +1436,10 @@
     const amount = event.shiftKey ? 10 : 1;
     const layer = currentTextLayer();
     if (layer) {
+      if (layer.layoutManagedByContainer) {
+        dom.status.textContent = `“${layer.name}”由 Godot Container 管理位置，请调整字号或所属 HUD 尺寸。`;
+        return;
+      }
       const uiRect = rectById(selectedId);
       const textRect = textRectPixels(layer, uiRect);
       textRect.x += dx * amount;

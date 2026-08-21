@@ -9,9 +9,9 @@
 <body>
   <aside class="inspector">
     <header class="tool-head">
-      <div class="eyebrow"><span>Veilfront · Layout Tool</span><span class="version-badge">V2</span></div>
+      <div class="eyebrow"><span>Veilfront · Match HUD Lab</span><span class="version-badge">V3</span></div>
       <h1>棋盘与 HUD 布局</h1>
-      <p class="subtitle">调整棋盘默认可视区域、HUD 尺寸与位置，也可以编辑 UI 内的文字内容和文字框。</p>
+      <p class="subtitle">对应 match_hud_v2_interaction_lab.tscn；调整棋盘、完整 HUD 组件及其文字内容、字号与文字框。</p>
     </header>
 
     <div class="inspector-body" id="inspector-body">
@@ -101,8 +101,11 @@
               <label class="field"><span class="field-label">文字 H</span><input id="text-rect-h" type="number" min="12" step="1"></label>
             </div>
             <p class="field-help">坐标相对于当前 UI 左上角；切换分辨率时会按 UI 比例同步。</p>
-            <div class="field-grid three">
+            <div class="font-size-control">
               <label class="field"><span class="field-label">字号</span><input id="text-font-size" type="number" min="6" max="96" step="1"></label>
+              <label class="field font-size-slider"><span class="field-label">拖动微调</span><input id="text-font-size-range" type="range" min="6" max="96" step="1"></label>
+            </div>
+            <div class="field-grid two-align">
               <label class="field"><span class="field-label">水平</span><select id="text-align"><option value="left">左对齐</option><option value="center">居中</option><option value="right">右对齐</option></select></label>
               <label class="field"><span class="field-label">垂直</span><select id="text-vertical-align"><option value="top">顶部</option><option value="center">居中</option><option value="bottom">底部</option></select></label>
             </div>
@@ -170,7 +173,7 @@
     </div>
 
     <footer class="footerbar">
-      <span>选择对象 · 拖动位置 · 八向缩放 · 文字框编辑 · 框选添加</span>
+      <span>选择对象 · 拖动位置 · 八向缩放 · 完整文字节点 · Container 安全编辑</span>
       <span id="footer-meaning">输出：board_rect + ui_layout + text_layers</span>
     </footer>
   </main>
