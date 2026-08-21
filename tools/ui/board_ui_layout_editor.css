@@ -119,6 +119,7 @@ h1 {
 
 .field { display: grid; gap: 5px; }
 .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+.field-grid.three { grid-template-columns: 0.72fr 1fr 1fr; margin-top: 9px; }
 .field-grid.four { grid-template-columns: repeat(4, 1fr); }
 
 .field-label {
@@ -202,6 +203,7 @@ input:disabled, textarea:disabled { color: #748079; background: #0b0f0d; }
 
 .visibility-button:hover { color: var(--gold-bright); }
 .object-actions, .button-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.text-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
 
 .tool-button {
   min-height: 39px;
@@ -265,6 +267,31 @@ input:disabled, textarea:disabled { color: #748079; background: #0b0f0d; }
 }
 
 .toggle-row input { accent-color: var(--gold); }
+
+.section-note, .field-help {
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.field-help { margin: 6px 0 0; color: #718078; font-size: 10px; }
+
+#text-editor-fields.is-disabled {
+  opacity: 0.42;
+  pointer-events: none;
+}
+
+.binding-hint {
+  margin-top: 8px;
+  padding: 7px 8px;
+  color: #90a09a;
+  background: rgba(255, 255, 255, 0.018);
+  border: 1px solid var(--line);
+  font: 10px/1.45 Consolas, "Microsoft YaHei UI", sans-serif;
+  text-wrap: pretty;
+}
 
 .status {
   padding: 10px 11px;
@@ -400,6 +427,63 @@ main { min-width: 0; display: grid; grid-template-rows: 52px minmax(0, 1fr) 32px
   filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.48));
 }
 
+.text-layer-host {
+  position: absolute;
+  inset: 0;
+  z-index: 24;
+  pointer-events: none;
+}
+
+.text-layer-box {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  min-width: 16px;
+  min-height: 12px;
+  overflow: hidden;
+  color: #eee1bd;
+  border: 1px dashed transparent;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.92);
+  white-space: pre-wrap;
+  word-break: break-word;
+  pointer-events: auto;
+  cursor: text;
+}
+
+.text-layer-box.align-left { justify-content: flex-start; text-align: left; }
+.text-layer-box.align-center { justify-content: center; text-align: center; }
+.text-layer-box.align-right { justify-content: flex-end; text-align: right; }
+.text-layer-box.valign-top { align-items: flex-start; }
+.text-layer-box.valign-center { align-items: center; }
+.text-layer-box.valign-bottom { align-items: flex-end; }
+.text-layer-box.is-hidden { display: none; }
+.ui-element.selected .text-layer-box:hover {
+  border-color: rgba(200, 166, 97, 0.66);
+  background: rgba(200, 166, 97, 0.05);
+}
+
+.text-layer-box.selected {
+  z-index: 28;
+  overflow: visible;
+  color: #fff2cc;
+  border: 2px dashed var(--gold-bright);
+  background: rgba(25, 21, 11, 0.3);
+  box-shadow: 0 0 0 1px rgba(4, 8, 8, 0.9), 0 0 14px rgba(200, 166, 97, 0.14);
+  cursor: move;
+}
+
+.text-layer-box .selection-handles { pointer-events: none; }
+.text-layer-box .resize-handle {
+  width: 10px;
+  height: 10px;
+  background: var(--gold-bright);
+  border-width: 1px;
+  box-shadow: 0 0 0 1px var(--gold), 0 2px 6px rgba(0,0,0,.5);
+  pointer-events: auto;
+}
+
+.ui-element.text-editing > .selection-handles { display: none; }
+
 .ui-tag {
   position: absolute;
   left: 3px;
@@ -507,6 +591,7 @@ main { min-width: 0; display: grid; grid-template-rows: 52px minmax(0, 1fr) 32px
 .wireframe .ui-element img { opacity: 0.2; filter: none; }
 .wireframe .ui-element::after { content: ""; position: absolute; inset: 0; border: 1px solid rgba(200, 166, 97, 0.62); background: rgba(200, 166, 97, 0.04); }
 .wireframe .ui-tag { display: block; top: 3px; }
+.wireframe .text-layer-box { border-color: rgba(200, 166, 97, 0.42); background: rgba(200, 166, 97, 0.035); }
 .board-focus .ui-element { opacity: 0.17; }
 .board-focus .ui-element.selected { opacity: 1; }
 
@@ -559,6 +644,7 @@ main { min-width: 0; display: grid; grid-template-rows: 52px minmax(0, 1fr) 32px
   body { grid-template-columns: 310px minmax(0, 1fr); }
   .workspace { padding: 18px; }
   .field-grid.four { grid-template-columns: 1fr 1fr; }
+  .field-grid.three { grid-template-columns: 1fr; }
   .toggle-grid { grid-template-columns: 1fr; }
 }
 

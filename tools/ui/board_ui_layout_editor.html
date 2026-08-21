@@ -9,9 +9,9 @@
 <body>
   <aside class="inspector">
     <header class="tool-head">
-      <div class="eyebrow"><span>Veilfront · Layout Tool</span><span class="version-badge">V1</span></div>
+      <div class="eyebrow"><span>Veilfront · Layout Tool</span><span class="version-badge">V2</span></div>
       <h1>棋盘与 HUD 布局</h1>
-      <p class="subtitle">调整棋盘默认可视区域，也可以移动、缩放、添加或删除任意 HUD 区域。</p>
+      <p class="subtitle">调整棋盘默认可视区域、HUD 尺寸与位置，也可以编辑 UI 内的文字内容和文字框。</p>
     </header>
 
     <div class="inspector-body">
@@ -72,8 +72,47 @@
         </div>
       </section>
 
+      <section class="section" id="text-section">
+        <div class="section-title">文字图层 <span>04</span></div>
+        <p class="section-note" id="text-unavailable">棋盘可视区域不包含文字图层，请先选择一个 HUD。</p>
+        <div id="text-editor" hidden>
+          <label class="field">
+            <span class="field-label">文字框</span>
+            <select id="text-layer-select" aria-label="选择文字框"></select>
+          </label>
+          <div class="text-actions">
+            <button class="tool-button primary" id="add-text-layer" type="button">添加文字框</button>
+            <button class="tool-button danger" id="delete-text-layer" type="button" disabled>删除文字框</button>
+          </div>
+          <div id="text-editor-fields">
+            <label class="field" style="margin-top: 10px;">
+              <span class="field-label">图层名称</span>
+              <input id="text-layer-name" type="text" maxlength="32" placeholder="例如：标题">
+            </label>
+            <label class="field" style="margin-top: 9px;">
+              <span class="field-label">显示文字</span>
+              <textarea id="text-content" rows="3" maxlength="240" placeholder="输入 UI 上显示的文字"></textarea>
+            </label>
+            <div class="field-grid four" style="margin-top: 10px;">
+              <label class="field"><span class="field-label">文字 X</span><input id="text-rect-x" type="number" step="1"></label>
+              <label class="field"><span class="field-label">文字 Y</span><input id="text-rect-y" type="number" step="1"></label>
+              <label class="field"><span class="field-label">文字 W</span><input id="text-rect-w" type="number" min="16" step="1"></label>
+              <label class="field"><span class="field-label">文字 H</span><input id="text-rect-h" type="number" min="12" step="1"></label>
+            </div>
+            <p class="field-help">坐标相对于当前 UI 左上角；切换分辨率时会按 UI 比例同步。</p>
+            <div class="field-grid three">
+              <label class="field"><span class="field-label">字号</span><input id="text-font-size" type="number" min="6" max="96" step="1"></label>
+              <label class="field"><span class="field-label">水平</span><select id="text-align"><option value="left">左对齐</option><option value="center">居中</option><option value="right">右对齐</option></select></label>
+              <label class="field"><span class="field-label">垂直</span><select id="text-vertical-align"><option value="top">顶部</option><option value="center">居中</option><option value="bottom">底部</option></select></label>
+            </div>
+            <label class="toggle-row"><span>显示文字</span><input id="text-visible" type="checkbox" checked></label>
+            <div class="binding-hint" id="text-binding-hint">STATIC · 文字会作为静态内容导出</div>
+          </div>
+        </div>
+      </section>
+
       <section class="section">
-        <div class="section-title">显示辅助 <span>04</span></div>
+        <div class="section-title">显示辅助 <span>05</span></div>
         <div class="toggle-grid single">
           <label class="toggle-row"><span>安全区</span><input id="show-safe" type="checkbox" checked></label>
           <label class="toggle-row"><span>坐标网格</span><input id="show-grid" type="checkbox" checked></label>
@@ -81,7 +120,7 @@
       </section>
 
       <section class="section">
-        <div class="section-title">布局数据 <span>05</span></div>
+        <div class="section-title">布局数据 <span>06</span></div>
         <div class="button-grid">
           <button class="tool-button primary" id="copy-json" type="button">复制 JSON</button>
           <button class="tool-button" id="download-json" type="button">下载 JSON</button>
@@ -93,7 +132,7 @@
         <input id="file-input" type="file" accept="application/json,.json" hidden>
       </section>
 
-      <div class="status" id="status">已选择棋盘默认可视区域。选择任意 HUD 后即可调整它的位置和大小。</div>
+      <div class="status" id="status">已选择棋盘默认可视区域。选择任意 HUD 后即可调整它的外框与内部文字框。</div>
     </div>
   </aside>
 
@@ -130,8 +169,8 @@
     </div>
 
     <footer class="footerbar">
-      <span>选择对象 · 拖动位置 · 八向缩放 · 框选添加 · 删除/撤销</span>
-      <span id="footer-meaning">输出：default_visible_board_screen_rect + ui_elements</span>
+      <span>选择对象 · 拖动位置 · 八向缩放 · 文字框编辑 · 框选添加</span>
+      <span id="footer-meaning">输出：board_rect + ui_layout + text_layers</span>
     </footer>
   </main>
 
