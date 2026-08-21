@@ -279,6 +279,7 @@
   let lastDeleted = null;
 
   const dom = {
+    inspector: document.querySelector(".inspector"),
     workspace: document.getElementById("workspace"),
     stageShell: document.getElementById("stage-shell"),
     stage: document.getElementById("stage"),
@@ -305,7 +306,9 @@
     deleteButton: document.getElementById("delete-ui"),
     undoButton: document.getElementById("undo-delete"),
     addButton: document.getElementById("add-ui"),
+    editTextButton: document.getElementById("edit-text"),
     fileInput: document.getElementById("file-input"),
+    textSection: document.getElementById("text-section"),
     textUnavailable: document.getElementById("text-unavailable"),
     textEditor: document.getElementById("text-editor"),
     textEditorFields: document.getElementById("text-editor-fields"),
@@ -556,6 +559,7 @@
     dom.lockAspect.checked = Boolean(definition.lockAspect);
     dom.lockAspect.disabled = isBoard;
     dom.deleteButton.disabled = isBoard;
+    dom.editTextButton.disabled = isBoard;
     dom.undoButton.disabled = !lastDeleted;
 
     for (const key of ["x", "y", "w", "h"]) dom.rectInputs[key].value = Math.round(rect[key]);
@@ -1311,6 +1315,16 @@
   dom.deleteButton.addEventListener("click", deleteSelected);
   dom.undoButton.addEventListener("click", undoDelete);
   document.getElementById("center-object").addEventListener("click", centerSelected);
+  dom.editTextButton.addEventListener("click", () => {
+    if (selectedId === BOARD_ID) return;
+    const definition = definitionById(selectedId);
+    const layers = Array.isArray(definition.textLayers) ? definition.textLayers : [];
+    if (!selectedTextId && layers.length) selectedTextId = layers[0].id;
+    if (!layers.length) addTextLayer();
+    else render();
+    dom.inspector.scrollTop = Math.max(0, dom.textSection.offsetTop - 12);
+    requestAnimationFrame(() => dom.textContent.focus());
+  });
 
   document.getElementById("copy-json").addEventListener("click", async () => {
     const copied = await copyText(JSON.stringify(exportPayload(), null, 2));
