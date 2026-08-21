@@ -1,0 +1,125 @@
+exception_subject:
+  schema_version: veilfront-production-scope-exception/v1
+  subject_id: EXCEPTION-FORMAL-LAN-ASSEMBLY-001@v1
+  project_id: veilfront-xiangqi-siege
+  title: 正式二维对局壳与局域网人对人联机完整组装有限例外
+  parent_contract:
+    contract_id: LOOP-CTR-FORMAL-FOUNDATION-GATE2-001
+    version: 3
+    approval_id: approval:veilfront-xiangqi-siege:loop-contract:9d9e3cfc5e92
+    registry_loop_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+    registry_revision_at_audit: 56
+    exceeded_boundary: 当前v3仅授权正式二维表现、UI、迷雾、二维视觉基线与独立QA；既有LAN棋子接入例外明确禁止修改RPC、协议、正式比赛场和正式联机验收。
+  decision_requested:
+    decision_type: prospective_limited_scope_exception
+    question: 是否允许在不改变owner rule revision 5、确定性随机消费、PlayerView信息边界和互联网范围的前提下，把现有UX、正式二维MatchScreen、雾气样片、新版HUD与房主权威ENet局域网会话组装为可完整双人对局的正式LAN里程碑？
+    designated_decider: project-owner
+    decisions: [approved, rejected, revise]
+  objective:
+    milestone: formal-lan-playable
+    outcome: 从启动页和主菜单进入LAN房间，完成建房、加入、双方就绪、开局、正式走子、特殊行动、逐观察者迷雾、回合切换、结算、断线返回和再次建房的双机闭环。
+    release_semantics: 本里程碑是正式代码路径上的LAN可玩版本，不等于Steam互联网版本、发布候选或GATE-4发布批准。
+  exact_scope:
+    ux_flow:
+    - 启动页到主菜单到正式LAN房间到正式MatchScreen到结算或断线返回的完整路由。
+    - 保留当前已调整的LAN房间UI与Match HUD视觉成果；固定结构使用预置Control、Container和场景实例。
+    - 房主创建、客户端加入、席位展示、双方就绪、房主开局、连接失败、协议不匹配、主动断开和服务器断开均有明确状态反馈。
+    formal_match_integration:
+    - LAN对局必须实例化scenes/game下的正式二维对局壳、正式棋盘、正式雾层和正式HUD，不再把gate1_logic_lab作为联机比赛场。
+    - 双端均通过ApplicationHost与MatchClientPort边界驱动MatchScreen；Presentation不得读取FullState、规则seed或对手隐藏状态。
+    - 正式雾气视觉只消费当前端PlayerView中的visible_cells、detection_cells及已授权情报字段；未授权棋子和旗位不创建表现节点。
+    network_authority:
+    - 使用Godot 4.7.1 ENetMultiplayerPeer，最多一名房主和一名远端客户端；peer 1为唯一权威主机。
+    - 权威FormalMatchApplication只存在于房主；客户端只提交带expected_action_index的规范化意图并接收观察者安全批次。
+    - 走子链路为选择棋子、请求公开预览、选择目标、准备、确认、可靠RPC提交、房主校验、规则结算、红黑分别投影、可靠下发、回合切换。
+    - 普通移动、普通吃子、炮击、士献祭、跳过、超时和终局均复用正式规则核心；不得在网络层复制合法性或结算规则。
+    - 协议使用显式版本、白名单字段、请求ID和action_index防重放或过期提交；任何PlayerView、VisibleEvent、VisibleError和ActionPreview必须通过正式codec校验后发布给UI。
+    formal_code_boundary:
+      allowed_roots:
+      - scripts/game/application
+      - scripts/game/contracts
+      - scripts/game/frontend
+      - scripts/game/ports
+      - scripts/game/presentation
+      - scripts/integration
+      - scenes/game/app
+      - scenes/game/frontend
+      - scenes/game/match
+      - scenes/game/ui
+      - resources/game/ui
+      - resources/game/content/boards
+      - tests/game
+      - evidence/formal-lan
+      - docs/godot-prompter/specs
+      - project.godot
+      protected_roots:
+      - scripts/game/domain
+      - scripts/game/projection
+      - scripts/prototype/core
+      - scripts/prototype/view
+      - scripts/prototype/network
+      rule: protected_roots只允许读取和回归验证；若实现证明必须修改其语义或协议，立即停止并返回项目所有者修订范围。
+    migration_policy:
+    - 现有prototype LAN保留为历史回归基线，不在原型路径上继续堆叠正式功能。
+    - 可复用既有LAN房间美术资源，但正式场景和脚本进入scenes/game与scripts/game路径。
+    - 当前未提交UI与资源改动视为项目所有者已有成果；实现者只做兼容性接入，不擅自回退或重做。
+  approval_effect:
+    allowed:
+    - 新增正式LAN会话预置、正式LAN协议、正式LAN MatchClientPort、正式LAN组合根及集成测试。
+    - 为支持同一权威状态向红黑双方生成独立观察者安全批次，在application层提取或扩展无规则语义变化的多观察者用例。
+    - 把现有主菜单LAN入口从prototype场景切换到正式LAN组合根。
+    - 把已完成的雾气视觉样片、新版HUD和二维棋子表现接入正式PlayerView驱动链路。
+    - 执行同机双MultiplayerAPI、同机双进程和真实局域网双机验证，并修复本范围内缺陷。
+    forbidden:
+    - 修改owner rule revision 5、棋子合法性、特殊行动语义、结算优先级、确定性随机消费、回放摘要或PlayerView信息权限。
+    - 客户端持有FullState、match seed、隐藏旗位、隐藏棋子、敌方视野源或任何可反推未发现事实的数据。
+    - 实现Steam Networking、SDR、Relay、NAT穿透、互联网匹配、账号、聊天、观战、房主迁移、断线重连或专用服务器。
+    - 把本里程碑标记为互联网完成、发布候选、GATE-3通过、GATE-4通过或可对外发布。
+    - 新增高成本美术生产、改变已确认二维视觉方向或覆盖项目所有者尚未提交的工作区改动。
+  acceptance:
+    automated:
+    - 项目实例、Contract v3、Registry和生成Agent适配器校验通过。
+    - Godot 4.7.1无头导入与正式场景加载无错误，依赖护栏证明Presentation未反向依赖domain/projection或prototype。
+    - 双MultiplayerAPI loopback测试完成建房、加入、双方就绪、开局、至少红黑各一个正式动作、action_index一致、回合权切换和断线清理。
+    - 正式动作合同覆盖普通移动、普通吃子、炮击、士献祭、跳过、过期请求拒绝、重复请求拒绝和终局下发。
+    - 红黑双方只收到各自PlayerView；隐藏等价输入产生相同下行字节，未发现旗位、隐藏棋子、seed、RNG和FullState零泄露。
+    - 正式MatchScreen在960x540、1280x720、1920x1080下加载新版HUD、雾层、九路棋盘和交互高亮且不裁切。
+    - 现有正式规则、观察者合同、回放、教学、UI、雾气和prototype LAN回归保持通过。
+    manual:
+    - 两台同一局域网内的桌面设备完成房主红方和客户端黑方互联、双方各至少五个有效动作、一次取消确认、一次特殊行动与一次断线返回。
+    - 双端目视确认己方大本营在底、棋子落点一致、当前回合明确、雾气和已发现情报一致且不存在隐藏轮廓或错误高亮。
+    - 项目所有者体验确认UX闭环可作为后续互联网技术基线的LAN里程碑。
+  quality_and_release:
+    independent_review_required: true
+    clean_worktree_required_for_final_qa: true
+    target_engine: Godot 4.7.1
+    target_platform: desktop LAN
+    human_gate_after_implementation: 项目所有者只批准是否接受正式LAN里程碑；不构成互联网或发布批准。
+  resources_and_limits:
+    new_external_spend_limit: 0
+    new_agent_instance_limit: 0
+    internet_service_purchase_limit: 0
+    implementation_budget: 仅限现有正式架构、现有美术与Godot ENet；发现需要第三方服务或规则重写时停止。
+  failure_and_rollback:
+    stop_conditions:
+    - 无法在不改变规则语义或PlayerView边界的前提下支持红黑双观察者。
+    - 任一端出现隐藏信息泄露、权威状态分叉、重复结算、回合权错误或无法可靠清理MultiplayerPeer。
+    - 现有未提交UI成果与正式组合根存在需要重做视觉方向的冲突。
+    rollback: 主菜单LAN入口恢复到实施前路径或暂时禁用；正式LAN新增场景和端口保持独立可移除；prototype LAN与正式本地/教学路径继续可用，保留失败证据并回到项目所有者修订范围。
+  decision_consequences:
+    approved: 创建绑定本摘要哈希的game-production-approval/v1记录后，恢复生产循环并按UX、正式权威会话、雾气UI接入、自动验证、独立QA和人工LAN验收的顺序执行。
+    rejected: 不修改运行时代码；当前v3继续只完成二维表现、UI、迷雾和视觉基线，LAN保持prototype里程碑。
+    revise: 根据项目所有者意见更新范围包、生成新摘要并重新请求确认；旧摘要立即失效。
+review:
+  gate_result: awaiting_human
+  designated_decider: project-owner
+  observed_facts:
+  - 主菜单LAN入口当前指向res://scenes/prototype/network/lan_lobby.tscn。
+  - prototype LAN当前使用scripts/prototype/core、prototype PlayerView与gate1_logic_lab比赛场。
+  - 正式MatchScreen、正式雾层、正式HUD和MatchClientPort尚未绑定ENet会话。
+  - 现有LAN棋子视觉例外禁止RPC、协议和正式比赛场变更。
+  recommendation: approved
+  recommendation_reason: 项目简报已确认首版Demo最终需要人对人联机；先形成正式LAN权威链路能验证双观察者信息安全和UX闭环，同时把Steam、互联网服务与发布风险留在后续独立基线。
+  canonicalization: exception_subject使用UTF-8 canonical JSON；键排序；无额外空白；ensure_ascii=false；SHA-256。
+  approval_digest: 9e65df07d19398a083e8d024336180e37d5fc1fd998829cafc7559e7c04031b1
+  confirmation_rule: 项目所有者必须回复完整64位approval_digest；缩写、意译或仅回复“可以”不构成批准。
