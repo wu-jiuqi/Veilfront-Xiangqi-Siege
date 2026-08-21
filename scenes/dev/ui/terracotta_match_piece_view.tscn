@@ -41,4 +41,4 @@ z_index = -1
 texture = ExtResource("2_shadow")
 
 [node name="Artwork" type="Sprite2D" parent="."]
-texture_filter = 1
+texture_filter = 4

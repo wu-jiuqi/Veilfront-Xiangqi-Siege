@@ -24,7 +24,7 @@ board_theme = ExtResource("1_theme")
 visible = false
 z_index = -100
 position = Vector2(576, 1536)
-texture_filter = 2
+texture_filter = 4
 
 [node name="TerrainLayer" type="TileMapLayer" parent="."]
 

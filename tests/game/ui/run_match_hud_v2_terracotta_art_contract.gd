@@ -5,7 +5,7 @@ const LAB_SCENE: PackedScene = preload(
 )
 const FORMAL_MATCH_STATE = preload("res://scripts/game/domain/match_state.gd")
 const EXPECTED_MAP_PATH := \
-	"res://assets/art/boards/terracotta_warriors/terracotta_battlefield_board_bg_gridless_v6_sharp.png"
+	"res://assets/art/boards/terracotta_warriors/terracotta_battlefield_board_bg_gridless_v7_low_noise.png"
 const EXPECTED_PIECE_PATHS: Array[String] = [
 	"res://assets/art/pieces/terracotta_warriors/red_chariot_idle.png",
 	"res://assets/art/pieces/terracotta_warriors/red_cavalry_idle.png",
@@ -56,6 +56,8 @@ func _run() -> void:
 	_expect(unique_paths.size() == 14, "art showcase did not cover 14 unique piece textures")
 	for path: String in EXPECTED_PIECE_PATHS:
 		_expect(path in rendered_paths, "missing terracotta piece texture: %s" % path)
+		_expect_texture_import(path, 0, true)
+	_expect_texture_import(EXPECTED_MAP_PATH, 0, true)
 
 	var formal_state: Dictionary = FORMAL_MATCH_STATE.create(471001)
 	var player_view: Dictionary = match_screen.get_player_view_snapshot()
@@ -90,8 +92,8 @@ func _run() -> void:
 	_expect(background.visible, "preset map background node remained hidden")
 	_expect(is_equal_approx(background.scale.x, background.scale.y), "map background was stretched non-uniformly")
 	_expect(
-		background.texture_filter == CanvasItem.TEXTURE_FILTER_LINEAR,
-		"high-detail map background did not use stable linear sampling"
+		background.texture_filter == CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS,
+		"map background did not use stable mipmapped linear sampling"
 	)
 	_expect(
 		background.material == null,
@@ -109,6 +111,10 @@ func _run() -> void:
 		_expect(artwork != null and artwork.texture != null, "rendered piece artwork was missing")
 		if artwork == null or artwork.texture == null:
 			continue
+		_expect(
+			artwork.texture_filter == CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS,
+			"piece artwork did not use stable mipmapped linear sampling"
+		)
 		var artwork_bottom: float = artwork.position.y \
 			+ artwork.texture.get_height() * artwork.scale.y * 0.5
 		_expect(
@@ -151,6 +157,22 @@ func _capture_screenshot(viewport: SubViewport) -> void:
 		"res://.codex-temp/match-hud-v2-terracotta-art-integration.png"
 	)
 	_expect(image.save_png(output_path) == OK, "failed to save art integration screenshot")
+
+
+func _expect_texture_import(path: String, compress_mode: int, mipmaps: bool) -> void:
+	var config := ConfigFile.new()
+	var error := config.load(ProjectSettings.globalize_path(path + ".import"))
+	_expect(error == OK, "texture import metadata was unavailable: %s" % path)
+	if error != OK:
+		return
+	_expect(
+		int(config.get_value("params", "compress/mode", -1)) == compress_mode,
+		"texture was not imported losslessly: %s" % path
+	)
+	_expect(
+		bool(config.get_value("params", "mipmaps/generate", false)) == mipmaps,
+		"texture mipmap policy mismatch: %s" % path
+	)
 
 
 func _expect(condition: bool, message: String) -> void:
