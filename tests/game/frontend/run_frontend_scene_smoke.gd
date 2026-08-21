@@ -125,11 +125,17 @@ func _init() -> void:
 	assert(level_root.get_node("%TutorialGrid").get_child_count() == 11)
 	assert(level_root.get_node("%ChallengeGrid").get_child_count() == 3)
 	for card: Control in level_root.get_node("%TutorialGrid").get_children():
-		assert(not card.get_node("CardMargin/CardColumn/PlayButton").disabled, "tutorial test card must be open")
+		assert(not card.get_node("%NodeButton").disabled, "tutorial test node must be open")
 	for card: Control in level_root.get_node("%ChallengeGrid").get_children():
-		assert(not card.get_node("CardMargin/CardColumn/PlayButton").disabled, "challenge test card must be open")
+		assert(not card.get_node("%NodeButton").disabled, "challenge test node must be open")
+	assert(level_root.get_node("CampaignBackground").texture.resource_path == "res://assets/art/ui/level_select/level_campaign_map_background_v1.png")
+	assert(level_root.get_node("%DetailCode").text == "T0")
+	assert(level_root.get_node("%EnterButton").custom_minimum_size.y >= 44.0)
+	var first_node_texture := level_root.get_node("%TutorialGrid").get_child(0).get_node("%SelectedState").texture as AtlasTexture
+	assert(first_node_texture.atlas.resource_path == "res://assets/art/ui/level_select/level_node_states_v1.png")
+	assert(first_node_texture.region == Rect2(868.0, 0.0, 436.0, 600.0))
 	assert(level_root.get_node("%BackButton").focus_mode != Control.FOCUS_NONE)
-	print("FRONTEND_SCENE_SMOKE_PASS catalog=14 tutorial=11 challenge=3")
+	print("FRONTEND_SCENE_SMOKE_PASS catalog=14 tutorial=11 challenge=3 level_ui=campaign_map")
 	quit()
 
 

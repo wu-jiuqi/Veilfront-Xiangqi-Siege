@@ -1,52 +1,155 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scripts/game/frontend/level_card.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/level_select/level_node_states_v1.png" id="2_states"]
 
-[node name="LevelCard" type="PanelContainer"]
-custom_minimum_size = Vector2(250, 220)
+[sub_resource type="AtlasTexture" id="AtlasNormal"]
+atlas = ExtResource("2_states")
+region = Rect2(0, 0, 434, 600)
+
+[sub_resource type="AtlasTexture" id="AtlasFocus"]
+atlas = ExtResource("2_states")
+region = Rect2(434, 0, 434, 600)
+
+[sub_resource type="AtlasTexture" id="AtlasSelected"]
+atlas = ExtResource("2_states")
+region = Rect2(868, 0, 436, 600)
+
+[sub_resource type="AtlasTexture" id="AtlasCompleted"]
+atlas = ExtResource("2_states")
+region = Rect2(1304, 0, 434, 600)
+
+[sub_resource type="AtlasTexture" id="AtlasLocked"]
+atlas = ExtResource("2_states")
+region = Rect2(1738, 0, 434, 600)
+
+[node name="LevelCard" type="Control"]
+custom_minimum_size = Vector2(142, 164)
+layout_mode = 3
+anchors_preset = 0
 script = ExtResource("1_script")
 
-[node name="CardMargin" type="MarginContainer" parent="."]
-layout_mode = 2
-theme_override_constants/margin_left = 16
-theme_override_constants/margin_top = 14
-theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 14
-
-[node name="CardColumn" type="VBoxContainer" parent="CardMargin"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="CodeLabel" type="Label" parent="CardMargin/CardColumn"]
+[node name="NormalState" type="TextureRect" parent="."]
 unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.82, 0.48, 1)
-theme_override_font_sizes/font_size = 20
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("AtlasNormal")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="TitleLabel" type="Label" parent="CardMargin/CardColumn"]
+[node name="FocusState" type="TextureRect" parent="."]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 28)
-layout_mode = 2
-autowrap_mode = 2
-theme_override_font_sizes/font_size = 19
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("AtlasFocus")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="SummaryLabel" type="Label" parent="CardMargin/CardColumn"]
+[node name="SelectedState" type="TextureRect" parent="."]
 unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 3
-autowrap_mode = 2
-theme_override_colors/font_color = Color(0.75, 0.79, 0.85, 1)
-theme_override_font_sizes/font_size = 15
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("AtlasSelected")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="StatusLabel" type="Label" parent="CardMargin/CardColumn"]
+[node name="CompletedState" type="TextureRect" parent="."]
 unique_name_in_owner = true
-layout_mode = 2
-text = "灰盒入口待接入"
-theme_override_colors/font_color = Color(0.6, 0.66, 0.74, 1)
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("AtlasCompleted")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="PlayButton" type="Button" parent="CardMargin/CardColumn"]
+[node name="LockedState" type="TextureRect" parent="."]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 44)
-layout_mode = 2
-text = "待解锁"
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("AtlasLocked")
+expand_mode = 1
+stretch_mode = 5
 
+[node name="CodeLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -48.0
+offset_top = -26.0
+offset_right = 48.0
+offset_bottom = 16.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.96, 0.82, 0.53, 1)
+theme_override_colors/font_outline_color = Color(0.06, 0.05, 0.04, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 25
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="StatusLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 12
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -28.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_type_variation = &"MutedLabel"
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NodeButton" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 2
+mouse_default_cursor_shape = 2
+flat = true
+
+[connection signal="focus_entered" from="NodeButton" to="." method="_on_focus_entered"]
+[connection signal="focus_exited" from="NodeButton" to="." method="_on_focus_exited"]
+[connection signal="mouse_entered" from="NodeButton" to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="NodeButton" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="NodeButton" to="." method="_on_pressed"]
