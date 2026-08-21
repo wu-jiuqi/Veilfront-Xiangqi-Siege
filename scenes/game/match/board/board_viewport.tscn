@@ -15,6 +15,15 @@ render_target_update_mode = 4
 
 [node name="BoardWorld" parent="BoardSubViewport" instance=ExtResource("1_world")]
 
+[node name="ScreenInputSurface" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+
 [node name="VerticalScrollBar" type="VScrollBar" parent="."]
 layout_mode = 1
 anchor_left = 1.0
