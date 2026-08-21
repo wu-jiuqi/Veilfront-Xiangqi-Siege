@@ -238,6 +238,18 @@ func _apply_catalog_text_layout() -> void:
 			"message": $ObjectiveEvents/MessageValue,
 		},
 		"minimap": {"title": $Minimap/Title},
+		"custom-ui-1787292062912-1": {
+			"movement-caption": $PieceInfoDrawer/ContentMargin/ContentRow/TextArea/MovementCaption,
+			"movement-summary": $PieceInfoDrawer/ContentMargin/ContentRow/TextArea/MovementSummary,
+			"move-button": $PieceInfoDrawer/ContentMargin/ContentRow/SkillButtons/MoveButton,
+			"bombard-button": $PieceInfoDrawer/ContentMargin/ContentRow/SkillButtons/BombardButton,
+			"resurrect-button": $PieceInfoDrawer/ContentMargin/ContentRow/SkillButtons/ResurrectButton,
+			"no-skill-button": $PieceInfoDrawer/ContentMargin/ContentRow/SkillButtons/NoSkillButton,
+		},
+		"custom-ui-1787293016650-4": {
+			"round-number": $IncenseTurnClock/RoundDisplaySlot/NumberFloat/SmokeNumber,
+			"round-caption": $IncenseTurnClock/RoundDisplaySlot/NumberFloat/RoundCaption,
+		},
 	}
 	_text_layer_visibility.clear()
 	for panel_binding_value: Variant in bindings.values():
@@ -266,15 +278,16 @@ func _apply_catalog_text_layout() -> void:
 			var control: Control = panel_bindings.get(layer_id) as Control
 			if control == null:
 				continue
-			var rect: Dictionary = layer.get("normalized_rect", {})
-			control.anchor_left = float(rect.get("x", control.anchor_left))
-			control.anchor_top = float(rect.get("y", control.anchor_top))
-			control.anchor_right = control.anchor_left + float(rect.get("width", control.anchor_right - control.anchor_left))
-			control.anchor_bottom = control.anchor_top + float(rect.get("height", control.anchor_bottom - control.anchor_top))
-			control.offset_left = 0.0
-			control.offset_top = 0.0
-			control.offset_right = 0.0
-			control.offset_bottom = 0.0
+			if not bool(layer.get("layout_managed_by_container", false)):
+				var rect: Dictionary = layer.get("normalized_rect", {})
+				control.anchor_left = float(rect.get("x", control.anchor_left))
+				control.anchor_top = float(rect.get("y", control.anchor_top))
+				control.anchor_right = control.anchor_left + float(rect.get("width", control.anchor_right - control.anchor_left))
+				control.anchor_bottom = control.anchor_top + float(rect.get("height", control.anchor_bottom - control.anchor_top))
+				control.offset_left = 0.0
+				control.offset_top = 0.0
+				control.offset_right = 0.0
+				control.offset_bottom = 0.0
 			control.visible = bool(layer.get("visible", true))
 			_text_layer_visibility["%s/%s" % [str(catalog.get("id", "")), layer_id]] = control.visible
 			control.add_theme_font_size_override("font_size", int(layer.get("font_size", 12)))

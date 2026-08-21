@@ -271,6 +271,14 @@ func _check_catalog_text_layout(screen: Control) -> void:
 		"objective-events/pass": "MatchHudV2/ObjectiveEvents/EnemyCasualties",
 		"objective-events/text-1787297730520-1": "MatchHudV2/ObjectiveEvents/BoardPosition",
 		"minimap/title": "MatchHudV2/Minimap/Title",
+		"custom-ui-1787292062912-1/movement-caption": "MatchHudV2/PieceInfoDrawer/ContentMargin/ContentRow/TextArea/MovementCaption",
+		"custom-ui-1787292062912-1/movement-summary": "MatchHudV2/PieceInfoDrawer/ContentMargin/ContentRow/TextArea/MovementSummary",
+		"custom-ui-1787292062912-1/move-button": "MatchHudV2/PieceInfoDrawer/ContentMargin/ContentRow/SkillButtons/MoveButton",
+		"custom-ui-1787292062912-1/bombard-button": "MatchHudV2/PieceInfoDrawer/ContentMargin/ContentRow/SkillButtons/BombardButton",
+		"custom-ui-1787292062912-1/resurrect-button": "MatchHudV2/PieceInfoDrawer/ContentMargin/ContentRow/SkillButtons/ResurrectButton",
+		"custom-ui-1787292062912-1/no-skill-button": "MatchHudV2/PieceInfoDrawer/ContentMargin/ContentRow/SkillButtons/NoSkillButton",
+		"custom-ui-1787293016650-4/round-number": "MatchHudV2/IncenseTurnClock/RoundDisplaySlot/NumberFloat/SmokeNumber",
+		"custom-ui-1787293016650-4/round-caption": "MatchHudV2/IncenseTurnClock/RoundDisplaySlot/NumberFloat/RoundCaption",
 	}
 	for catalog_value: Variant in layout.get("ui_catalog", []):
 		if not catalog_value is Dictionary:
@@ -286,13 +294,14 @@ func _check_catalog_text_layout(screen: Control) -> void:
 			if not paths.has(binding_key):
 				continue
 			var control: Control = screen.get_node(str(paths[binding_key])) as Control
-			var rect: Dictionary = layer.get("normalized_rect", {})
-			_expect_anchor_rect(control, Rect2(
-				float(rect.get("x", 0.0)),
-				float(rect.get("y", 0.0)),
-				float(rect.get("width", 0.0)),
-				float(rect.get("height", 0.0))
-			), binding_key)
+			if not bool(layer.get("layout_managed_by_container", false)):
+				var rect: Dictionary = layer.get("normalized_rect", {})
+				_expect_anchor_rect(control, Rect2(
+					float(rect.get("x", 0.0)),
+					float(rect.get("y", 0.0)),
+					float(rect.get("width", 0.0)),
+					float(rect.get("height", 0.0))
+				), binding_key)
 			_expect(control.visible == bool(layer.get("visible", true)), "%s visibility does not match JSON" % binding_key)
 			_expect(control.get_theme_font_size("font_size") == int(layer.get("font_size", 12)), "%s font size does not match JSON" % binding_key)
 

@@ -377,7 +377,110 @@
       "mirror_x": false,
       "visible": true,
       "lock_aspect": false,
-      "text_layers": []
+      "text_layers": [
+        {
+          "id": "movement-caption",
+          "name": "移动逻辑标题",
+          "text": "移动逻辑",
+          "binding": "static",
+          "visible": true,
+          "layout_managed_by_container": true,
+          "font_size": 11,
+          "horizontal_alignment": "left",
+          "vertical_alignment": "center",
+          "normalized_rect": {
+            "x": 0.0524691358,
+            "y": 0.1071428571,
+            "width": 0.2839506173,
+            "height": 0.2678571429
+          }
+        },
+        {
+          "id": "movement-summary",
+          "name": "移动逻辑说明",
+          "text": "选择棋子后显示移动逻辑。",
+          "binding": "movement_summary",
+          "visible": true,
+          "layout_managed_by_container": true,
+          "font_size": 10,
+          "horizontal_alignment": "left",
+          "vertical_alignment": "center",
+          "normalized_rect": {
+            "x": 0.0524691358,
+            "y": 0.375,
+            "width": 0.2839506173,
+            "height": 0.5178571429
+          }
+        },
+        {
+          "id": "move-button",
+          "name": "移动按钮",
+          "text": "移动",
+          "binding": "move_action",
+          "visible": true,
+          "layout_managed_by_container": true,
+          "font_size": 11,
+          "horizontal_alignment": "center",
+          "vertical_alignment": "center",
+          "normalized_rect": {
+            "x": 0.3549382716,
+            "y": 0.1071428571,
+            "width": 0.1388888889,
+            "height": 0.7857142857
+          }
+        },
+        {
+          "id": "bombard-button",
+          "name": "轰炸按钮",
+          "text": "轰炸",
+          "binding": "bombard_action",
+          "visible": true,
+          "layout_managed_by_container": true,
+          "font_size": 11,
+          "horizontal_alignment": "center",
+          "vertical_alignment": "center",
+          "normalized_rect": {
+            "x": 0.5061728395,
+            "y": 0.1071428571,
+            "width": 0.1388888889,
+            "height": 0.7857142857
+          }
+        },
+        {
+          "id": "resurrect-button",
+          "name": "复活按钮",
+          "text": "复活",
+          "binding": "resurrect_action",
+          "visible": true,
+          "layout_managed_by_container": true,
+          "font_size": 11,
+          "horizontal_alignment": "center",
+          "vertical_alignment": "center",
+          "normalized_rect": {
+            "x": 0.6574074074,
+            "y": 0.1071428571,
+            "width": 0.1388888889,
+            "height": 0.7857142857
+          }
+        },
+        {
+          "id": "no-skill-button",
+          "name": "无技能按钮",
+          "text": "无技能",
+          "binding": "no_skill_action",
+          "visible": true,
+          "layout_managed_by_container": true,
+          "font_size": 11,
+          "horizontal_alignment": "center",
+          "vertical_alignment": "center",
+          "normalized_rect": {
+            "x": 0.8086419753,
+            "y": 0.1071428571,
+            "width": 0.1388888889,
+            "height": 0.7857142857
+          }
+        }
+      ]
     },
     {
       "id": "custom-ui-1787292347530-2",
@@ -405,12 +508,45 @@
       "id": "custom-ui-1787293016650-4",
       "name": "回合数显示区",
       "function": "回合数显示区",
-      "kind": "custom",
-      "asset": null,
+      "kind": "image",
+      "asset": "res://assets/art/ui/terracotta_hud_v2/incense_assembly/round_smoke_display_frame_v1.png",
       "mirror_x": false,
       "visible": true,
       "lock_aspect": false,
-      "text_layers": []
+      "text_layers": [
+        {
+          "id": "round-number",
+          "name": "回合数字",
+          "text": "一",
+          "binding": "round_number",
+          "visible": true,
+          "font_size": 38,
+          "horizontal_alignment": "center",
+          "vertical_alignment": "center",
+          "normalized_rect": {
+            "x": 0.14,
+            "y": 0.19,
+            "width": 0.72,
+            "height": 0.53
+          }
+        },
+        {
+          "id": "round-caption",
+          "name": "回合标题",
+          "text": "回合",
+          "binding": "static",
+          "visible": true,
+          "font_size": 14,
+          "horizontal_alignment": "center",
+          "vertical_alignment": "center",
+          "normalized_rect": {
+            "x": 0.24,
+            "y": 0.7,
+            "width": 0.52,
+            "height": 0.21
+          }
+        }
+      ]
     }
   ],
   "profiles": {
