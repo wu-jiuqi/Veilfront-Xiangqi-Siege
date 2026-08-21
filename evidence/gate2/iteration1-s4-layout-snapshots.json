@@ -4,9 +4,9 @@
 		{
 			"board_rect": [
 				255.0,
-				36.0,
+				24.0,
 				450.0,
-				402.0
+				408.0
 			],
 			"compact": true,
 			"confirmation_button_min_height": 44.0,
@@ -28,9 +28,9 @@
 		{
 			"board_rect": [
 				340.0,
-				48.0,
+				32.0,
 				600.0,
-				536.0
+				544.0
 			],
 			"compact": false,
 			"confirmation_button_min_height": 44.0,
@@ -124,9 +124,9 @@
 		{
 			"board_rect": [
 				510.0,
-				72.0,
+				48.0,
 				900.0,
-				804.0
+				816.0
 			],
 			"compact": false,
 			"confirmation_button_min_height": 44.0,

@@ -234,6 +234,7 @@ func _apply_catalog_text_layout() -> void:
 			"move": $ObjectiveEvents/OwnFlags,
 			"bombard": $ObjectiveEvents/OwnCasualties,
 			"pass": $ObjectiveEvents/EnemyCasualties,
+			"text-1787297730520-1": $ObjectiveEvents/BoardPosition,
 			"message": $ObjectiveEvents/MessageValue,
 		},
 		"minimap": {"title": $Minimap/Title},

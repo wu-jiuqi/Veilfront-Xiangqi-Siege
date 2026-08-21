@@ -52,9 +52,9 @@ script = ExtResource("1_layout")
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 340.0
-offset_top = 48.0
+offset_top = 32.0
 offset_right = 940.0
-offset_bottom = 584.0
+offset_bottom = 576.0
 clip_contents = true
 
 [node name="BoardViewport" parent="BoardFrame" instance=ExtResource("2_board")]
@@ -86,9 +86,9 @@ draw_center = false
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 48.0
-offset_top = 48.0
+offset_top = 10.0
 offset_right = 354.0
-offset_bottom = 168.0
+offset_bottom = 130.0
 mouse_filter = 1
 
 [node name="Background" type="TextureRect" parent="FactionLeft"]
@@ -176,9 +176,9 @@ unique_name_in_owner = true
 z_index = 1
 layout_mode = 0
 offset_left = 928.0
-offset_top = 48.0
+offset_top = 10.0
 offset_right = 1231.0
-offset_bottom = 167.0
+offset_bottom = 129.0
 mouse_filter = 1
 
 [node name="Background" type="TextureRect" parent="FactionRight"]
@@ -270,9 +270,9 @@ unique_name_in_owner = true
 z_index = 2
 layout_mode = 0
 offset_left = 129.0
-offset_top = 424.0
+offset_top = 408.0
 offset_right = 313.0
-offset_bottom = 670.0
+offset_bottom = 654.0
 mouse_filter = 1
 
 [node name="Background" type="TextureRect" parent="UnitInfo"]
@@ -410,7 +410,7 @@ layout_mode = 1
 anchor_left = 0.2951388888888889
 anchor_top = 0.37037037037037035
 anchor_right = 0.7951388888888888
-anchor_bottom = 0.4444444444444444
+anchor_bottom = 0.4351851851851852
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.76, 0.77, 0.7, 1)
 theme_override_font_sizes/font_size = 12
@@ -424,7 +424,7 @@ layout_mode = 1
 anchor_left = 0.2951388888888889
 anchor_top = 0.48148148148148145
 anchor_right = 0.7951388888888888
-anchor_bottom = 0.5555555555555556
+anchor_bottom = 0.5462962962962963
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.76, 0.77, 0.7, 1)
 theme_override_font_sizes/font_size = 12
@@ -436,13 +436,27 @@ vertical_alignment = 1
 unique_name_in_owner = true
 layout_mode = 1
 anchor_left = 0.2951388888888889
-anchor_top = 0.5787037037037037
+anchor_top = 0.5833333333333334
 anchor_right = 0.7951388888888888
-anchor_bottom = 0.6527777777777778
+anchor_bottom = 0.6481481481481481
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.76, 0.77, 0.7, 1)
 theme_override_font_sizes/font_size = 12
 text = "敌方阵亡:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BoardPosition" type="Label" parent="ObjectiveEvents"]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_left = 0.2951388888888889
+anchor_top = 0.6921296296296297
+anchor_right = 0.7951388888888888
+anchor_bottom = 0.7569444444444445
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.76, 0.77, 0.7, 1)
+theme_override_font_sizes/font_size = 14
+text = "位置: (x, y)"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -484,9 +498,9 @@ unique_name_in_owner = true
 z_index = 4
 layout_mode = 0
 offset_left = 64.0
-offset_top = 152.0
+offset_top = 130.0
 offset_right = 305.0
-offset_bottom = 416.0
+offset_bottom = 394.0
 mouse_filter = 2
 
 [node name="TacticalMinimap" type="Control" parent="Minimap"]
@@ -529,9 +543,9 @@ unique_name_in_owner = true
 z_index = 6
 layout_mode = 0
 offset_left = 296.0
-offset_top = 592.0
+offset_top = 584.0
 offset_right = 944.0
-offset_bottom = 656.0
+offset_bottom = 640.0
 
 [node name="IncenseTurnClock" parent="." instance=ExtResource("8_incense")]
 unique_name_in_owner = true

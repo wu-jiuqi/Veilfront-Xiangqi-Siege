@@ -34,11 +34,11 @@ corner_radius_bottom_left = 2
 bg_color = Color(0.05, 0.05, 0.05, 0.26)
 
 [node name="PieceInfoDrawer" type="Control"]
-custom_minimum_size = Vector2(480, 64)
+custom_minimum_size = Vector2(480, 44)
 layout_mode = 3
 anchors_preset = 0
 offset_right = 648.0
-offset_bottom = 64.0
+offset_bottom = 56.0
 clip_contents = true
 mouse_filter = 1
 script = ExtResource("1_script")

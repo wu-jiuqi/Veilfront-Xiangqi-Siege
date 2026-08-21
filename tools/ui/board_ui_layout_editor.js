@@ -36,42 +36,35 @@
   });
 
   const DEFAULT_TEXT_LAYERS = {
-    "turn-status": [textLayer("status", "回合状态", "第十八回合 · 赤方行动", { x: 0.12, y: 0.22, w: 0.76, h: 0.56 }, 16, "center", "turn_status")],
     "faction-left": [
-      textLayer("portrait", "阵营字", "赤", { x: 0.02, y: 0.08, w: 0.24, h: 0.78 }, 30, "center", "faction_glyph"),
-      textLayer("name", "阵营名称", "赤方军势", { x: 0.28, y: 0.20, w: 0.44, h: 0.28 }, 14, "left", "faction_name"),
-      textLayer("turn", "行动状态", "等待行动", { x: 0.28, y: 0.44, w: 0.46, h: 0.17 }, 11, "left", "turn_state"),
-      textLayer("stats", "阵营数据", "墙 完好 · 旗 0 · 损 0", { x: 0.28, y: 0.60, w: 0.50, h: 0.16 }, 10, "left", "faction_stats"),
-      textLayer("return", "返回按钮", "返回", { x: 0.77, y: 0.31, w: 0.20, h: 0.44 }, 11, "center")
+      textLayer("portrait", "阵营字", "赤", { x: 0.09411764705882353, y: 0.16, w: 0.18823529411764706, h: 0.64 }, 30, "center", "faction_glyph"),
+      textLayer("name", "阵营名称", "赤方军势", { x: 0.3202614379084967, y: 0.2916666666666667, w: 0.44, h: 0.20833333333333334 }, 14, "left", "faction_name"),
+      textLayer("stats", "阵营数据", "墙 完好 · 旗 0 · 损 0", { x: 0.32679738562091504, y: 0.5, w: 0.5065359477124183, h: 0.16666666666666666 }, 10, "left", "faction_stats")
     ],
     "faction-right": [
-      textLayer("portrait", "阵营字", "玄", { x: 0.74, y: 0.08, w: 0.24, h: 0.78 }, 30, "center", "faction_glyph"),
-      textLayer("name", "阵营名称", "玄方军势", { x: 0.28, y: 0.20, w: 0.44, h: 0.28 }, 14, "right", "faction_name"),
-      textLayer("turn", "行动状态", "等待行动", { x: 0.26, y: 0.44, w: 0.46, h: 0.17 }, 11, "right", "turn_state"),
-      textLayer("stats", "阵营数据", "墙 完好 · 旗 0 · 损 0", { x: 0.22, y: 0.60, w: 0.50, h: 0.16 }, 10, "right", "faction_stats"),
-      textLayer("mirror", "镜像按钮", "镜像", { x: 0.03, y: 0.31, w: 0.22, h: 0.44 }, 10, "center")
+      textLayer("portrait", "阵营字", "玄", { x: 0.7215686274509804, y: 0.16, w: 0.18823529411764706, h: 0.64 }, 30, "center", "faction_glyph"),
+      textLayer("name", "阵营名称", "玄方军势", { x: 0.21960784313725493, y: 0.29455445544554454, w: 0.44554455445544555, h: 0.2103960396039604 }, 14, "right", "faction_name"),
+      textLayer("stats", "阵营数据", "墙 完好 · 旗 0 · 损 0", { x: 0.16501650165016502, y: 0.504950495049505, w: 0.5115511551155115, h: 0.1683168316831683 }, 10, "right", "faction_stats")
     ],
     "unit-info": [
       textLayer("name", "单位名称", "未选择单位", { x: 0.14, y: 0.055, w: 0.72, h: 0.09 }, 14, "center", "unit_name"),
-      textLayer("glyph", "棋子字", "—", { x: 0.15, y: 0.18, w: 0.70, h: 0.40 }, 44, "center", "unit_glyph"),
-      textLayer("side", "阵营状态", "阵营：—", { x: 0.20, y: 0.685, w: 0.60, h: 0.06 }, 11, "left", "unit_side"),
-      textLayer("position", "单位坐标", "坐标：—", { x: 0.20, y: 0.77, w: 0.60, h: 0.06 }, 11, "left", "unit_position"),
-      textLayer("state", "单位状态", "状态：—", { x: 0.20, y: 0.855, w: 0.60, h: 0.065 }, 11, "left", "unit_state")
+      textLayer("glyph", "棋子字", "—", { x: 0.1348314606741573, y: 0.16806722689075632, w: 0.7, h: 0.4 }, 44, "center", "unit_glyph"),
+      textLayer("side", "阵营状态", "阵营：—", { x: 0.24456521739130435, y: 0.6706704420898795, w: 0.6, h: 0.06 }, 11, "left", "unit_side"),
+      textLayer("position", "单位坐标", "坐标：—", { x: 0.24456521739130435, y: 0.7519638290098648, w: 0.6, h: 0.06 }, 11, "left", "unit_position"),
+      textLayer("state", "单位状态", "状态：—", { x: 0.24456521739130435, y: 0.8332572159298502, w: 0.6, h: 0.065 }, 11, "left", "unit_state")
     ],
     "objective-events": [
-      textLayer("heading", "面板标题", "战局与行动", { x: 0.15, y: 0.155, w: 0.70, h: 0.065 }, 14, "center"),
-      textLayer("selection", "选择状态", "行动方：— · 已选：无", { x: 0.14, y: 0.21, w: 0.72, h: 0.065 }, 11, "center", "selection_status"),
-      textLayer("move", "移动按钮", "移动", { x: 0.14, y: 0.285, w: 0.36, h: 0.1825 }, 12, "center"),
-      textLayer("bombard", "炮击按钮", "炮击", { x: 0.50, y: 0.285, w: 0.36, h: 0.1825 }, 12, "center"),
-      textLayer("resurrect", "复活按钮", "复活", { x: 0.14, y: 0.4675, w: 0.36, h: 0.1825 }, 12, "center"),
-      textLayer("pass", "跳过按钮", "跳过", { x: 0.50, y: 0.4675, w: 0.36, h: 0.1825 }, 12, "center"),
-      textLayer("message", "提示信息", "提示：选择棋子后选择目标交点。", { x: 0.15, y: 0.675, w: 0.70, h: 0.125 }, 10, "left", "message")
+      textLayer("heading", "面板标题", "战局与行动", { x: 0.19444444444444445, y: 0.16666666666666666, w: 0.6111111111111112, h: 0.065 }, 14, "center"),
+      textLayer("selection", "选择状态", "行动方：— · 已选：无", { x: 0.2951388888888889, y: 0.2777777777777778, w: 0.5, h: 0.065 }, 11, "center", "selection_status"),
+      textLayer("move", "我方已发现旗帜数", "我方已发现旗帜: 0/3", { x: 0.2951388888888889, y: 0.37037037037037035, w: 0.5, h: 0.06481481481481481 }, 12, "center"),
+      textLayer("bombard", "我方阵亡:", "我方阵亡:", { x: 0.2951388888888889, y: 0.48148148148148145, w: 0.5, h: 0.06481481481481481 }, 12, "center"),
+      textLayer("pass", "敌方阵亡:", "敌方阵亡:", { x: 0.2951388888888889, y: 0.5833333333333334, w: 0.5, h: 0.06481481481481481 }, 12, "center"),
+      textLayer("text-1787297730520-1", "位置", "位置: (x, y)", { x: 0.2951388888888889, y: 0.6921296296296297, w: 0.5, h: 0.06481481481481481 }, 14, "center")
     ],
-    "action-bar": [textLayer("actions", "行动指令", "移动　攻击　技能　结束回合", { x: 0.08, y: 0.20, w: 0.84, h: 0.60 }, 14, "center")],
-    "minimap": [textLayer("title", "小地图标题", "战场态势", { x: 0.18, y: 0.04, w: 0.64, h: 0.10 }, 12, "center")]
+    "minimap": [textLayer("title", "小地图标题", "战场态势", { x: 0.18, y: 0.04, w: 0.64, h: 0.1 }, 12, "center")]
   };
 
-  const DEFAULT_BOARD_RECT = { x: 340, y: 48, w: 600, h: 536 };
+  const DEFAULT_BOARD_RECT = { x: 340, y: 32, w: 600, h: 544 };
   const DEFAULT_CATALOG = [
     {
       id: "faction-left",
@@ -81,7 +74,7 @@
       asset: "res://assets/art/ui/terracotta_hud_v2/faction_status_plate_v1.png",
       visible: true,
       lockAspect: true,
-      baseRect: { x: 48, y: 48, w: 255, h: 100 }
+      baseRect: { x: 48, y: 10, w: 306, h: 120 }
     },
     {
       id: "faction-right",
@@ -92,7 +85,7 @@
       mirrorX: true,
       visible: true,
       lockAspect: true,
-      baseRect: { x: 976, y: 48, w: 255, h: 100 }
+      baseRect: { x: 928, y: 10, w: 303, h: 119 }
     },
     {
       id: "unit-info",
@@ -102,7 +95,7 @@
       asset: "res://assets/art/ui/terracotta_hud_v2/unit_info_card_v1.png",
       visible: true,
       lockAspect: true,
-      baseRect: { x: 64, y: 448, w: 178, h: 238 }
+      baseRect: { x: 129, y: 408, w: 184, h: 246 }
     },
     {
       id: "objective-events",
@@ -112,7 +105,7 @@
       asset: "res://assets/art/ui/terracotta_hud_v2/objective_event_panel_v1.png",
       visible: true,
       lockAspect: true,
-      baseRect: { x: 952, y: 80, w: 296, h: 512 }
+      baseRect: { x: 916, y: 220, w: 288, h: 432 }
     },
     {
       id: "minimap",
@@ -122,30 +115,70 @@
       asset: "res://assets/art/ui/terracotta_hud_v2/minimap_frame_v1.png",
       visible: true,
       lockAspect: true,
-      baseRect: { x: 64, y: 152, w: 234, h: 256 }
+      baseRect: { x: 64, y: 130, w: 241, h: 264 }
     },
     {
       id: "custom-ui-1787265872199-1",
-      name: "回合进度条",
+      name: "回合香",
       function: "用燃香展示当前回合进度。",
       kind: "image",
       asset: "res://assets/art/ui/terracotta_hud_v2/turn_progress_incense/turn_progress_incense_preview_v1.png",
       visible: true,
       lockAspect: false,
-      baseRect: { x: 256, y: 600, w: 952, h: 72 }
+      baseRect: { x: 1168, y: 272, w: 40, h: 408 }
+    },
+    {
+      id: "custom-ui-1787292062912-1",
+      name: "棋子信息展开栏",
+      function: "需要包含棋子的移动技能",
+      kind: "custom",
+      visible: true,
+      lockAspect: false,
+      baseRect: { x: 296, y: 584, w: 648, h: 56 }
+    },
+    {
+      id: "custom-ui-1787292347530-2",
+      name: "香盘",
+      function: "香盘",
+      kind: "custom",
+      visible: true,
+      lockAspect: false,
+      baseRect: { x: 64, y: 676, w: 1152, h: 40 }
+    },
+    {
+      id: "custom-ui-1787292377548-3",
+      name: "计时香",
+      function: "倒计时",
+      kind: "custom",
+      visible: true,
+      lockAspect: false,
+      baseRect: { x: 72, y: 443, w: 48, h: 232 }
+    },
+    {
+      id: "custom-ui-1787293016650-4",
+      name: "回合数显示区",
+      function: "回合数显示区",
+      kind: "custom",
+      visible: true,
+      lockAspect: false,
+      baseRect: { x: 1104, y: 160, w: 104, h: 96 }
     }
   ];
 
   const DEFAULT_PROFILE_LAYOUTS = {
     "1280x720": {
-      board: { x: 340, y: 48, w: 600, h: 536 },
+      board: { x: 340, y: 32, w: 600, h: 544 },
       uiRects: {
-        "faction-left": { x: 48, y: 48, w: 255, h: 100 },
-        "faction-right": { x: 976, y: 48, w: 255, h: 100 },
-        "unit-info": { x: 64, y: 448, w: 178, h: 238 },
-        "objective-events": { x: 952, y: 80, w: 296, h: 512 },
-        "minimap": { x: 64, y: 152, w: 234, h: 256 },
-        "custom-ui-1787265872199-1": { x: 256, y: 600, w: 952, h: 72 }
+        "faction-left": { x: 48, y: 10, w: 306, h: 120 },
+        "faction-right": { x: 928, y: 10, w: 303, h: 118.8235294117647 },
+        "unit-info": { x: 129, y: 408, w: 184, h: 246.02247191011238 },
+        "objective-events": { x: 916, y: 220, w: 288, h: 432 },
+        "minimap": { x: 64, y: 130, w: 241.3125, h: 264 },
+        "custom-ui-1787265872199-1": { x: 1168, y: 272, w: 40, h: 408 },
+        "custom-ui-1787292062912-1": { x: 296, y: 584, w: 648, h: 56 },
+        "custom-ui-1787292347530-2": { x: 64, y: 676, w: 1152, h: 40 },
+        "custom-ui-1787292377548-3": { x: 72, y: 443, w: 48, h: 232 },
+        "custom-ui-1787293016650-4": { x: 1104, y: 160, w: 104, h: 96 }
       }
     },
     "1680x720": {
@@ -156,7 +189,11 @@
         "unit-info": { x: 24, y: 458, w: 234, h: 238 },
         "objective-events": { x: 1412, y: 183, w: 244, h: 268 },
         "minimap": { x: 1436, y: 516, w: 221, h: 184 },
-        "custom-ui-1787265872199-1": { x: 420, y: 600, w: 1155, h: 72 }
+        "custom-ui-1787265872199-1": { x: 1533, y: 168, w: 53, h: 496 },
+        "custom-ui-1787292062912-1": { x: 304.5, y: 592, w: 903, h: 88 },
+        "custom-ui-1787292347530-2": { x: 84, y: 664, w: 1512, h: 40 },
+        "custom-ui-1787292377548-3": { x: 94.5, y: 432, w: 63, h: 232 },
+        "custom-ui-1787293016650-4": { x: 1449, y: 160, w: 136.5, h: 96 }
       }
     },
     "1280x800": {
@@ -167,7 +204,11 @@
         "unit-info": { x: 18, y: 509, w: 178, h: 264 },
         "objective-events": { x: 1076, y: 203, w: 186, h: 298 },
         "minimap": { x: 1094, y: 573, w: 168, h: 204 },
-        "custom-ui-1787265872199-1": { x: 320, y: 667, w: 880, h: 80 }
+        "custom-ui-1787265872199-1": { x: 1168, y: 187, w: 40, h: 551 },
+        "custom-ui-1787292062912-1": { x: 232, y: 657.7777777777778, w: 688, h: 97.77777777777777 },
+        "custom-ui-1787292347530-2": { x: 64, y: 737.7777777777778, w: 1152, h: 44.44444444444444 },
+        "custom-ui-1787292377548-3": { x: 72, y: 480, w: 48, h: 257.77777777777777 },
+        "custom-ui-1787293016650-4": { x: 1104, y: 177.77777777777777, w: 104, h: 106.66666666666667 }
       }
     },
     "1280x960": {
@@ -178,7 +219,11 @@
         "unit-info": { x: 18, y: 611, w: 178, h: 317 },
         "objective-events": { x: 1076, y: 244, w: 186, h: 357 },
         "minimap": { x: 1094, y: 688, w: 168, h: 245 },
-        "custom-ui-1787265872199-1": { x: 320, y: 800, w: 880, h: 96 }
+        "custom-ui-1787265872199-1": { x: 1168, y: 224, w: 40, h: 661 },
+        "custom-ui-1787292062912-1": { x: 232, y: 789.3333333333333, w: 688, h: 117.33333333333333 },
+        "custom-ui-1787292347530-2": { x: 64, y: 885.3333333333334, w: 1152, h: 53.33333333333333 },
+        "custom-ui-1787292377548-3": { x: 72, y: 576, w: 48, h: 309.33333333333337 },
+        "custom-ui-1787293016650-4": { x: 1104, y: 213.33333333333331, w: 104, h: 128 }
       }
     }
   };

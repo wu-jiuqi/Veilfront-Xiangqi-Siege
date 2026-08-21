@@ -53,9 +53,12 @@ func _run() -> void:
 	)
 	_expect_anchor_rect(
 		screen.get_node("MatchHudV2/ObjectiveEvents/OwnFlags") as Control,
-		Rect2(0.2951388889, 0.3703703704, 0.5, 0.0740740741),
+		Rect2(0.2951388889, 0.3703703704, 0.5, 0.0648148148),
 		"objective flag text"
 	)
+	var board_position: Label = screen.get_node("MatchHudV2/ObjectiveEvents/BoardPosition") as Label
+	_expect(board_position.text == "位置: (x, y)", "new objective position layer did not preserve JSON text")
+	_expect(board_position.visible, "new objective position layer is not visible")
 	screen.set_tutorial_navigation_enabled(true)
 	_expect(return_button.visible, "tutorial navigation could not override the formal HUD deletion")
 	screen.set_tutorial_navigation_enabled(false)
@@ -147,6 +150,7 @@ func _check_catalog_text_layout(screen: Control) -> void:
 		"objective-events/move": "MatchHudV2/ObjectiveEvents/OwnFlags",
 		"objective-events/bombard": "MatchHudV2/ObjectiveEvents/OwnCasualties",
 		"objective-events/pass": "MatchHudV2/ObjectiveEvents/EnemyCasualties",
+		"objective-events/text-1787297730520-1": "MatchHudV2/ObjectiveEvents/BoardPosition",
 		"minimap/title": "MatchHudV2/Minimap/Title",
 	}
 	for catalog_value: Variant in layout.get("ui_catalog", []):
