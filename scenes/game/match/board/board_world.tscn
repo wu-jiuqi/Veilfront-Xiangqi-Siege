@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3]
+[gd_scene load_steps=17 format=3]
 
 [ext_resource type="Resource" path="res://resources/game/content/boards/ancient_battlefield_board_theme.tres" id="1_theme"]
 [ext_resource type="PackedScene" path="res://scenes/game/match/board/fog_overlay.tscn" id="2_fog"]
@@ -16,12 +16,6 @@
 [ext_resource type="PackedScene" path="res://scenes/game/match/board/wall_view.tscn" id="14_wall_scene"]
 [ext_resource type="PackedScene" path="res://scenes/game/match/board/flag_view.tscn" id="15_flag_scene"]
 [ext_resource type="PackedScene" path="res://scenes/game/match/board/capture_ghost_view.tscn" id="16_ghost_scene"]
-[ext_resource type="Shader" path="res://shaders/game/board_background_sharpen.gdshader" id="17_board_sharpen"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterialBoardSharpen"]
-shader = ExtResource("17_board_sharpen")
-shader_parameter/sharpness = 0.42
-
 [node name="BoardWorld" type="Node2D"]
 script = ExtResource("6_world_script")
 board_theme = ExtResource("1_theme")
@@ -29,7 +23,6 @@ board_theme = ExtResource("1_theme")
 [node name="MapBackground" type="Sprite2D" parent="."]
 visible = false
 z_index = -100
-material = SubResource("ShaderMaterialBoardSharpen")
 position = Vector2(576, 1536)
 texture_filter = 2
 

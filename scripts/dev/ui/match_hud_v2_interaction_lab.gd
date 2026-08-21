@@ -1,5 +1,7 @@
 extends Control
 
+const FORMAL_MATCH_STATE = preload("res://scripts/game/domain/match_state.gd")
+
 @export var board_theme: BoardTheme
 @export var map_option: BoardMapOption
 
@@ -17,7 +19,7 @@ func _seed_preview() -> void:
 
 
 func _on_action_previews_requested(piece_id: String, action_type: String) -> void:
-	if piece_id != "ui-test-cannon":
+	if piece_id != "red-cannon-1":
 		_match_screen.render_action_previews_from_port([])
 		return
 	var target_cell: Array = [5, 6] if action_type == "move" else [6, 6]
@@ -33,7 +35,7 @@ func _on_action_previews_requested(piece_id: String, action_type: String) -> voi
 
 func _build_player_view() -> Dictionary:
 	var visible_cells: Array = []
-	for authority_y: int in range(1, 10):
+	for authority_y: int in range(1, 25):
 		for authority_x: int in range(1, 10):
 			visible_cells.append([authority_x, authority_y])
 	return {
@@ -47,7 +49,7 @@ func _build_player_view() -> Dictionary:
 		"board": {"width": 9, "height": 24},
 		"visible_cells": visible_cells,
 		"hidden_detection_cells": [],
-		"pieces": _build_piece_showcase(),
+		"pieces": _build_formal_initial_pieces(),
 		"flags": [{
 			"capture_progress": 0,
 			"capturing_side": "",
@@ -76,29 +78,10 @@ func _build_player_view() -> Dictionary:
 	}
 
 
-func _build_piece_showcase() -> Array:
-	var piece_types: Array[String] = [
-		"rook", "horse", "elephant", "advisor", "cannon", "pawn", "general",
-	]
+func _build_formal_initial_pieces() -> Array:
+	var formal_state: Dictionary = FORMAL_MATCH_STATE.create(471001)
 	var pieces: Array = []
-	for index: int in piece_types.size():
-		var piece_type: String = piece_types[index]
-		pieces.append({
-			"alive": true,
-			"id": "ui-test-cannon" if piece_type == "cannon" else "ui-test-red-%s" % piece_type,
-			"in_reserve": false,
-			"piece_type": piece_type,
-			"position": [index + 1, 5],
-			"side": "red",
-			"status_tags": ["READY", "测试棋子"] if piece_type == "cannon" else ["美术预览"],
-		})
-		pieces.append({
-			"alive": true,
-			"id": "ui-test-black-%s" % piece_type,
-			"in_reserve": false,
-			"piece_type": piece_type,
-			"position": [index + 1, 8],
-			"side": "black",
-			"status_tags": ["美术预览"],
-		})
+	for piece_value: Variant in formal_state.get("pieces", {}).values():
+		var piece: Dictionary = piece_value
+		pieces.append(piece.duplicate(true))
 	return pieces
