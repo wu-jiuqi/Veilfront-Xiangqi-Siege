@@ -71,3 +71,5 @@ mouse_filter = 0
 
 [node name="BoardCamera2D" type="Camera2D" parent="."]
 position = Vector2(576, 1536)
+position_smoothing_enabled = true
+position_smoothing_speed = 8.0

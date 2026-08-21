@@ -153,7 +153,10 @@ func _check_resolution(resolution: Vector2i) -> Dictionary:
 	var snapshot: Dictionary = match_screen.get_layout_snapshot()
 	var spacing: Vector2 = snapshot.get("point_spacing", Vector2.ZERO)
 	var board_rect: Rect2 = snapshot.get("board_rect", Rect2())
+	var board_camera: Camera2D = match_screen.get_node("MatchHudV2/BoardFrame/BoardViewport/BoardSubViewport/BoardWorld/BoardCamera2D") as Camera2D
 	var resolution_key := "%dx%d" % [resolution.x, resolution.y]
+	_expect(board_camera.position_smoothing_enabled, "%s board camera scrolling is not smoothed" % resolution)
+	_expect(board_camera.position_smoothing_speed >= 6.0, "%s board camera smoothing is too sluggish" % resolution)
 	_expect(absf(spacing.x - spacing.y) <= 0.01, "%s point spacing is not square: %s" % [resolution, spacing])
 	_expect(spacing.x > 0.0, "%s point spacing must be positive" % resolution)
 	_expect(board_rect.position.x >= 0.0 and board_rect.end.x <= resolution.x + 0.5, "%s board is horizontally clipped" % resolution)
