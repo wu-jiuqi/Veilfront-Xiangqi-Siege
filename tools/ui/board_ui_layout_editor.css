@@ -418,13 +418,27 @@ main { min-width: 0; display: grid; grid-template-rows: 52px minmax(0, 1fr) 32px
 .ui-element.selected { z-index: 20 !important; }
 .ui-element.selected::after { border: 2px solid var(--gold-bright); box-shadow: 0 0 0 1px rgba(7, 10, 9, 0.9), 0 0 18px rgba(200, 166, 97, 0.15); }
 
-.ui-element img {
+.ui-element > .ui-art {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: contain;
   pointer-events: none;
   filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.48));
+}
+
+.incense-stick-preview > .ui-art,
+.piece-drawer-preview > .ui-art {
+  object-fit: fill;
+}
+
+.incense-stand-preview > .ui-art {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
 }
 
 .text-layer-host {
@@ -588,7 +602,7 @@ main { min-width: 0; display: grid; grid-template-rows: 52px minmax(0, 1fr) 32px
 .resize-handle[data-handle="sw"] { left: -8px; bottom: -8px; cursor: nesw-resize; }
 .resize-handle[data-handle="w"] { left: -8px; top: 50%; transform: translateY(-50%); cursor: ew-resize; }
 
-.wireframe .ui-element img { opacity: 0.2; filter: none; }
+.wireframe .ui-element > .ui-art { opacity: 0.2; filter: none; }
 .wireframe .ui-element::after { content: ""; position: absolute; inset: 0; border: 1px solid rgba(200, 166, 97, 0.62); background: rgba(200, 166, 97, 0.04); }
 .wireframe .ui-tag { display: block; top: 3px; }
 .wireframe .text-layer-box { border-color: rgba(200, 166, 97, 0.42); background: rgba(200, 166, 97, 0.035); }

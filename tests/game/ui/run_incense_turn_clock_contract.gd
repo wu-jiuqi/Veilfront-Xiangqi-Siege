@@ -21,6 +21,20 @@ func _run() -> void:
 	root.add_child(clock)
 	await process_frame
 	clock.refresh_layout()
+	var stand_texture := clock.get_node("%IncenseStandBaseArt").texture as AtlasTexture
+	_expect(
+		stand_texture != null
+		and stand_texture.atlas.resource_path == "res://assets/art/ui/terracotta_hud_v2/incense_assembly/dual_incense_bronze_stand_v1.png",
+		"香盘没有使用龙虎青铜摆件正式资源"
+	)
+	_expect(
+		clock.get_node("%TimerBody").texture.resource_path == "res://assets/art/ui/terracotta_hud_v2/incense_assembly/timer_incense_vertical_v1.png",
+		"计时香没有使用竖版正式资源"
+	)
+	_expect(
+		clock.get_node("%RoundBody").texture.resource_path == "res://assets/art/ui/terracotta_hud_v2/incense_assembly/round_incense_vertical_v1.png",
+		"回合香没有使用竖版正式资源"
+	)
 	var initial_state := clock.get_state_snapshot()
 	_expect(
 		bool(initial_state.get("timer_behind_stand", false)),
@@ -84,6 +98,10 @@ func _run() -> void:
 	var drawer := DRAWER_SCENE.instantiate() as PieceInfoDrawer
 	root.add_child(drawer)
 	await process_frame
+	_expect(
+		drawer.get_node("Background").texture.resource_path == "res://assets/art/ui/terracotta_hud_v2/incense_assembly/piece_info_drawer_frame_v1.png",
+		"棋子信息展开栏没有使用正式边框资源"
+	)
 	_expect(not drawer.visible, "棋子信息展开栏默认没有隐藏")
 	drawer.show_piece({"id": "red-cannon", "piece_type": "cannon"}, true, false)
 	var cannon_state := drawer.get_state_snapshot()

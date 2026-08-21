@@ -6,6 +6,12 @@
   const MIN_UI_SIZE = { w: 40, h: 32 };
   const MIN_BOARD_SIZE = { w: 160, h: 120 };
   const MIN_TEXT_SIZE = { w: 16, h: 12 };
+  const OFFICIAL_ASSET_OVERRIDES = {
+    "custom-ui-1787265872199-1": "res://assets/art/ui/terracotta_hud_v2/incense_assembly/round_incense_vertical_v1.png",
+    "custom-ui-1787292062912-1": "res://assets/art/ui/terracotta_hud_v2/incense_assembly/piece_info_drawer_frame_v1.png",
+    "custom-ui-1787292347530-2": "res://assets/art/ui/terracotta_hud_v2/incense_assembly/dual_incense_bronze_stand_v1.png",
+    "custom-ui-1787292377548-3": "res://assets/art/ui/terracotta_hud_v2/incense_assembly/timer_incense_vertical_v1.png"
+  };
 
   const PROFILE_DEFS = {
     "1280x720": { width: 1280, height: 720, label: "16:9" },
@@ -122,7 +128,7 @@
       name: "回合香",
       function: "用燃香展示当前回合进度。",
       kind: "image",
-      asset: "res://assets/art/ui/terracotta_hud_v2/turn_progress_incense/turn_progress_incense_preview_v1.png",
+      asset: "res://assets/art/ui/terracotta_hud_v2/incense_assembly/round_incense_vertical_v1.png",
       visible: true,
       lockAspect: false,
       baseRect: { x: 1168, y: 272, w: 40, h: 408 }
@@ -131,7 +137,8 @@
       id: "custom-ui-1787292062912-1",
       name: "棋子信息展开栏",
       function: "需要包含棋子的移动技能",
-      kind: "custom",
+      kind: "image",
+      asset: "res://assets/art/ui/terracotta_hud_v2/incense_assembly/piece_info_drawer_frame_v1.png",
       visible: true,
       lockAspect: false,
       baseRect: { x: 296, y: 584, w: 648, h: 56 }
@@ -140,7 +147,8 @@
       id: "custom-ui-1787292347530-2",
       name: "香盘",
       function: "香盘",
-      kind: "custom",
+      kind: "image",
+      asset: "res://assets/art/ui/terracotta_hud_v2/incense_assembly/dual_incense_bronze_stand_v1.png",
       visible: true,
       lockAspect: false,
       baseRect: { x: 64, y: 676, w: 1152, h: 40 }
@@ -149,7 +157,8 @@
       id: "custom-ui-1787292377548-3",
       name: "计时香",
       function: "倒计时",
-      kind: "custom",
+      kind: "image",
+      asset: "res://assets/art/ui/terracotta_hud_v2/incense_assembly/timer_incense_vertical_v1.png",
       visible: true,
       lockAspect: false,
       baseRect: { x: 72, y: 443, w: 48, h: 232 }
@@ -462,8 +471,19 @@
     node.dataset.id = definition.id;
     node.style.zIndex = String(10 + index);
 
+    if (definition.id === "custom-ui-1787292347530-2") {
+      node.classList.add("incense-stand-preview");
+      node.style.zIndex = "19";
+    } else if (["custom-ui-1787265872199-1", "custom-ui-1787292377548-3"].includes(definition.id)) {
+      node.classList.add("incense-stick-preview");
+      node.style.zIndex = "18";
+    } else if (definition.id === "custom-ui-1787292062912-1") {
+      node.classList.add("piece-drawer-preview");
+    }
+
     if (definition.kind === "image" && definition.asset) {
       const image = document.createElement("img");
+      image.className = "ui-art";
       image.src = webAssetPath(definition.asset);
       image.alt = definition.name;
       if (definition.mirrorX) image.style.transform = "scaleX(-1)";
@@ -1098,12 +1118,13 @@
       const id = String(item.id || `imported-ui-${index + 1}`);
       if (id === BOARD_ID || ids.has(id)) throw new Error(`UI id 重复或保留：${id}`);
       ids.add(id);
+      const officialAsset = OFFICIAL_ASSET_OVERRIDES[id];
       return {
         id,
         name: String(item.name || `未命名 UI ${index + 1}`).slice(0, 40),
         function: String(item.function || "").slice(0, 240),
-        kind: item.kind === "image" && typeof item.asset === "string" ? "image" : "custom",
-        asset: typeof item.asset === "string" ? item.asset : null,
+        kind: officialAsset || (item.kind === "image" && typeof item.asset === "string") ? "image" : "custom",
+        asset: officialAsset || (typeof item.asset === "string" ? item.asset : null),
         mirrorX: Boolean(item.mirror_x),
         visible: item.visible !== false,
         lockAspect: Boolean(item.lock_aspect),

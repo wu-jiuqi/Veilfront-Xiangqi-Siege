@@ -222,6 +222,12 @@ func _check_layout_source() -> void:
 	_expect(str(layout.get("schema_version", "")) == "veilfront-board-ui-layout-v2", "HUD layout schema drifted")
 	_expect(str(layout.get("board_rect_meaning", "")) == "default_visible_board_screen_rect", "HUD layout lost its board rectangle semantics")
 	_expect(int(layout.get("ui_catalog", []).size()) == 10, "HUD catalog must contain all ten exported slots")
+	var assembly_assets := {
+		"custom-ui-1787265872199-1": "res://assets/art/ui/terracotta_hud_v2/incense_assembly/round_incense_vertical_v1.png",
+		"custom-ui-1787292062912-1": "res://assets/art/ui/terracotta_hud_v2/incense_assembly/piece_info_drawer_frame_v1.png",
+		"custom-ui-1787292347530-2": "res://assets/art/ui/terracotta_hud_v2/incense_assembly/dual_incense_bronze_stand_v1.png",
+		"custom-ui-1787292377548-3": "res://assets/art/ui/terracotta_hud_v2/incense_assembly/timer_incense_vertical_v1.png",
+	}
 	var catalog_ids: Array[String] = []
 	for catalog_value: Variant in layout.get("ui_catalog", []):
 		if not catalog_value is Dictionary:
@@ -231,6 +237,10 @@ func _check_layout_source() -> void:
 		var asset_path := str(asset_value) if asset_value is String else ""
 		if not asset_path.is_empty():
 			_expect(ResourceLoader.exists(asset_path), "HUD asset is missing: %s" % asset_path)
+		var catalog_id := str(catalog_value.get("id", ""))
+		if assembly_assets.has(catalog_id):
+			_expect(str(catalog_value.get("kind", "")) == "image", "%s 没有使用正式图片资源" % catalog_id)
+			_expect(asset_path == str(assembly_assets[catalog_id]), "%s 没有引用燃香组合正式资源" % catalog_id)
 	for required_id: String in [
 		"faction-left", "faction-right", "unit-info", "objective-events", "minimap",
 		"custom-ui-1787265872199-1", "custom-ui-1787292062912-1",
