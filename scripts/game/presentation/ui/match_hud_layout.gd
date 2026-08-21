@@ -223,10 +223,7 @@ func _apply_catalog_text_layout() -> void:
 		},
 		"unit-info": {
 			"name": $UnitInfo/UnitName,
-			"glyph": $UnitInfo/UnitPortraitGlyph,
-			"side": $UnitInfo/UnitSideStatus,
-			"position": $UnitInfo/UnitPosition,
-			"state": $UnitInfo/UnitState,
+			"portrait": $UnitInfo/UnitPortrait,
 		},
 		"objective-events": {
 			"heading": $ObjectiveEvents/Heading,

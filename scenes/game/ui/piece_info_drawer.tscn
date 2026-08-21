@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scripts/game/presentation/ui/piece_info_drawer.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/incense_assembly/piece_info_drawer_frame_v1.png" id="2_frame"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/incense_assembly/piece_info_drawer_frame_v2.png" id="2_frame"]
 [ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button.tscn" id="3_button"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxEmpty_normal"]
@@ -76,15 +76,15 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 34.0
-offset_top = 6.0
-offset_right = -34.0
-offset_bottom = -6.0
+offset_top = 8.0
+offset_right = -14.0
+offset_bottom = -8.0
 grow_horizontal = 2
 grow_vertical = 2
 
 [node name="ContentRow" type="HBoxContainer" parent="ContentMargin"]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 8
 
 [node name="TextArea" type="VBoxContainer" parent="ContentMargin/ContentRow"]
 layout_mode = 2
@@ -97,7 +97,7 @@ custom_minimum_size = Vector2(0, 15)
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.91, 0.77, 0.48, 1)
 theme_override_font_sizes/font_size = 11
-text = "移动逻辑"
+text = "棋子介绍"
 vertical_alignment = 1
 
 [node name="MovementSummary" type="Label" parent="ContentMargin/ContentRow/TextArea"]
@@ -113,15 +113,15 @@ vertical_alignment = 1
 
 [node name="SkillButtons" type="HBoxContainer" parent="ContentMargin/ContentRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(188, 44)
+custom_minimum_size = Vector2(154, 40)
 layout_mode = 2
 size_flags_vertical = 4
-theme_override_constants/separation = 8
+theme_override_constants/separation = 6
 alignment = 1
 
 [node name="MoveButton" parent="ContentMargin/ContentRow/SkillButtons" instance=ExtResource("3_button")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(90, 44)
+custom_minimum_size = Vector2(74, 40)
 layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
@@ -135,7 +135,7 @@ text = "移动"
 
 [node name="BombardButton" parent="ContentMargin/ContentRow/SkillButtons" instance=ExtResource("3_button")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(90, 44)
+custom_minimum_size = Vector2(74, 40)
 layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
@@ -149,7 +149,7 @@ text = "轰炸"
 
 [node name="ResurrectButton" parent="ContentMargin/ContentRow/SkillButtons" instance=ExtResource("3_button")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(90, 44)
+custom_minimum_size = Vector2(74, 40)
 layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
@@ -163,7 +163,7 @@ text = "复活"
 
 [node name="NoSkillButton" parent="ContentMargin/ContentRow/SkillButtons" instance=ExtResource("3_button")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(90, 44)
+custom_minimum_size = Vector2(74, 40)
 layout_mode = 2
 size_flags_horizontal = 3
 disabled = true

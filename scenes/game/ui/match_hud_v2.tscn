@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3]
+[gd_scene load_steps=21 format=3]
 
 [ext_resource type="Script" path="res://scripts/game/presentation/ui/match_hud_layout.gd" id="1_layout"]
 [ext_resource type="PackedScene" path="res://scenes/game/match/board/board_viewport.tscn" id="2_board"]
@@ -11,6 +11,22 @@
 [ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button.tscn" id="9_motion_button"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/hud_panel_9slice_v1.png" id="10_border"]
 [ext_resource type="PackedScene" path="res://scenes/game/ui/piece_info_drawer.tscn" id="11_piece_drawer"]
+[ext_resource type="Texture2D" path="res://assets/art/pieces/terracotta_warriors/red_general_idle.png" id="12_red_general"]
+[ext_resource type="Texture2D" path="res://assets/art/pieces/terracotta_warriors/black_general_idle.png" id="13_black_general"]
+
+[sub_resource type="AtlasTexture" id="AtlasTextureRedGeneralPortrait"]
+atlas = ExtResource("12_red_general")
+region = Rect2(96, 40, 320, 400)
+
+[sub_resource type="AtlasTexture" id="AtlasTextureBlackGeneralPortrait"]
+atlas = ExtResource("13_black_general")
+region = Rect2(96, 40, 320, 400)
+
+[sub_resource type="Shader" id="ShaderCircularPortrait"]
+code = "shader_type canvas_item;\n\nvoid fragment() {\n\tvec4 source = texture(TEXTURE, UV);\n\tfloat distance_from_center = length(UV - vec2(0.5));\n\tfloat circle_alpha = 1.0 - smoothstep(0.47, 0.5, distance_from_center);\n\tCOLOR = vec4(source.rgb, source.a * circle_alpha);\n}\n"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterialCircularPortrait"]
+shader = SubResource("ShaderCircularPortrait")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxActionEmpty"]
 
@@ -103,20 +119,27 @@ texture = ExtResource("3_faction")
 expand_mode = 1
 stretch_mode = 0
 
-[node name="Portrait" type="Label" parent="FactionLeft"]
+[node name="Portrait" type="Control" parent="FactionLeft"]
 layout_mode = 1
-anchor_left = 0.09411764705882353
-anchor_top = 0.16
-anchor_right = 0.2823529411764706
-anchor_bottom = 0.8
+anchor_left = 0.09
+anchor_top = 0.18
+anchor_right = 0.28
+anchor_bottom = 0.78
+clip_contents = true
 mouse_filter = 2
-theme_override_colors/font_color = Color(0.76, 0.28, 0.2, 1)
-theme_override_colors/font_outline_color = Color(0.05, 0.04, 0.03, 1)
-theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 30
-text = "赤"
-horizontal_alignment = 1
-vertical_alignment = 1
+
+[node name="Image" type="TextureRect" parent="FactionLeft/Portrait"]
+material = SubResource("ShaderMaterialCircularPortrait")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("AtlasTextureRedGeneralPortrait")
+expand_mode = 1
+stretch_mode = 6
 
 [node name="FactionLeftName" type="Label" parent="FactionLeft"]
 unique_name_in_owner = true
@@ -194,20 +217,27 @@ expand_mode = 1
 stretch_mode = 0
 flip_h = true
 
-[node name="Portrait" type="Label" parent="FactionRight"]
+[node name="Portrait" type="Control" parent="FactionRight"]
 layout_mode = 1
-anchor_left = 0.7215686274509804
-anchor_top = 0.16
-anchor_right = 0.9098039215686274
-anchor_bottom = 0.8
+anchor_left = 0.725
+anchor_top = 0.18
+anchor_right = 0.915
+anchor_bottom = 0.78
+clip_contents = true
 mouse_filter = 2
-theme_override_colors/font_color = Color(0.28, 0.49, 0.39, 1)
-theme_override_colors/font_outline_color = Color(0.05, 0.04, 0.03, 1)
-theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 30
-text = "玄"
-horizontal_alignment = 1
-vertical_alignment = 1
+
+[node name="Image" type="TextureRect" parent="FactionRight/Portrait"]
+material = SubResource("ShaderMaterialCircularPortrait")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("AtlasTextureBlackGeneralPortrait")
+expand_mode = 1
+stretch_mode = 6
 
 [node name="FactionRightName" type="Label" parent="FactionRight"]
 unique_name_in_owner = true
@@ -297,62 +327,29 @@ anchor_bottom = 0.145
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.91, 0.77, 0.48, 1)
 theme_override_font_sizes/font_size = 14
-text = "未选择单位"
+text = "未选择棋子"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="UnitPortraitGlyph" type="Label" parent="UnitInfo"]
-unique_name_in_owner = true
+[node name="PortraitBackdrop" type="ColorRect" parent="UnitInfo"]
 layout_mode = 1
-anchor_left = 0.1348314606741573
-anchor_top = 0.16806722689075632
-anchor_right = 0.8348314606741573
-anchor_bottom = 0.5680672268907564
+anchor_left = 0.11
+anchor_top = 0.16
+anchor_right = 0.89
+anchor_bottom = 0.92
 mouse_filter = 2
-theme_override_colors/font_color = Color(0.58, 0.6, 0.54, 0.72)
-theme_override_colors/font_outline_color = Color(0.05, 0.04, 0.03, 1)
-theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 44
-text = "—"
-horizontal_alignment = 1
-vertical_alignment = 1
+color = Color(0.035, 0.034, 0.029, 0.98)
 
-[node name="UnitSideStatus" type="Label" parent="UnitInfo"]
+[node name="UnitPortrait" type="TextureRect" parent="UnitInfo"]
 unique_name_in_owner = true
 layout_mode = 1
-anchor_left = 0.24456521739130435
-anchor_top = 0.6706704420898795
-anchor_right = 0.8445652173913043
-anchor_bottom = 0.7306704420898795
+anchor_left = 0.13
+anchor_top = 0.18
+anchor_right = 0.87
+anchor_bottom = 0.9
 mouse_filter = 2
-theme_override_font_sizes/font_size = 11
-text = "阵营：—"
-vertical_alignment = 1
-
-[node name="UnitPosition" type="Label" parent="UnitInfo"]
-unique_name_in_owner = true
-layout_mode = 1
-anchor_left = 0.24456521739130435
-anchor_top = 0.7519638290098648
-anchor_right = 0.8445652173913043
-anchor_bottom = 0.8119638290098649
-mouse_filter = 2
-theme_override_font_sizes/font_size = 11
-text = "坐标：—"
-vertical_alignment = 1
-
-[node name="UnitState" type="Label" parent="UnitInfo"]
-unique_name_in_owner = true
-layout_mode = 1
-anchor_left = 0.24456521739130435
-anchor_top = 0.8332572159298502
-anchor_right = 0.8445652173913043
-anchor_bottom = 0.8982572159298502
-mouse_filter = 2
-theme_override_font_sizes/font_size = 11
-text = "状态：—"
-text_overrun_behavior = 3
-vertical_alignment = 1
+expand_mode = 1
+stretch_mode = 5
 
 [node name="ObjectiveEvents" type="Control" parent="."]
 unique_name_in_owner = true
@@ -399,7 +396,7 @@ anchor_bottom = 0.3427777777777778
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.71, 0.73, 0.66, 1)
 theme_override_font_sizes/font_size = 11
-text = "行动方：— · 已选：无"
+text = "行动方: — 已选: 无"
 text_overrun_behavior = 3
 horizontal_alignment = 1
 vertical_alignment = 1

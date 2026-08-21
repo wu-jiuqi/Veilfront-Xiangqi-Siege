@@ -20,6 +20,26 @@ const PREVIEW_SELECTED: String = "PREVIEW_SELECTED"
 const CONFIRMING: String = "CONFIRMING"
 const MARKER_MENU: String = "MARKER_MENU"
 const Presenter = preload("res://scripts/game/presentation/match_screen_presenter.gd")
+const PIECE_PORTRAITS := {
+	"red": {
+		"general": preload("res://assets/art/pieces/terracotta_warriors/red_general_idle.png"),
+		"guard": preload("res://assets/art/pieces/terracotta_warriors/red_guard_idle.png"),
+		"minister": preload("res://assets/art/pieces/terracotta_warriors/red_minister_idle.png"),
+		"cavalry": preload("res://assets/art/pieces/terracotta_warriors/red_cavalry_idle.png"),
+		"chariot": preload("res://assets/art/pieces/terracotta_warriors/red_chariot_idle.png"),
+		"trebuchet": preload("res://assets/art/pieces/terracotta_warriors/red_trebuchet_idle.png"),
+		"infantry": preload("res://assets/art/pieces/terracotta_warriors/red_infantry_idle.png"),
+	},
+	"black": {
+		"general": preload("res://assets/art/pieces/terracotta_warriors/black_general_idle.png"),
+		"guard": preload("res://assets/art/pieces/terracotta_warriors/black_guard_idle.png"),
+		"minister": preload("res://assets/art/pieces/terracotta_warriors/black_minister_idle.png"),
+		"cavalry": preload("res://assets/art/pieces/terracotta_warriors/black_cavalry_idle.png"),
+		"chariot": preload("res://assets/art/pieces/terracotta_warriors/black_chariot_idle.png"),
+		"trebuchet": preload("res://assets/art/pieces/terracotta_warriors/black_trebuchet_idle.png"),
+		"infantry": preload("res://assets/art/pieces/terracotta_warriors/black_infantry_idle.png"),
+	},
+}
 
 @export var allow_known_illegal_previews: bool = false
 @export var turn_timeout_enabled: bool = false
@@ -51,10 +71,7 @@ const Presenter = preload("res://scripts/game/presentation/match_screen_presente
 @onready var _faction_right_turn: Label = $MatchHudV2/FactionRight/FactionRightTurn
 @onready var _faction_right_stats: Label = $MatchHudV2/FactionRight/FactionRightStats
 @onready var _unit_name: Label = $MatchHudV2/UnitInfo/UnitName
-@onready var _unit_portrait_glyph: Label = $MatchHudV2/UnitInfo/UnitPortraitGlyph
-@onready var _unit_side_status: Label = $MatchHudV2/UnitInfo/UnitSideStatus
-@onready var _unit_position: Label = $MatchHudV2/UnitInfo/UnitPosition
-@onready var _unit_state: Label = $MatchHudV2/UnitInfo/UnitState
+@onready var _unit_portrait: TextureRect = $MatchHudV2/UnitInfo/UnitPortrait
 @onready var _tactical_minimap: TacticalMinimap = $MatchHudV2/Minimap/TacticalMinimap
 @onready var _action_prompt: Label = $ActionConfirmationPanel/Content/Prompt
 @onready var _action_cancel_button: Button = $ActionConfirmationPanel/Content/Buttons/CancelButton
@@ -451,10 +468,8 @@ func get_hud_snapshot() -> Dictionary:
 		},
 		"unit": {
 			"name": _unit_name.text,
-			"glyph": _unit_portrait_glyph.text,
-			"side": _unit_side_status.text,
-			"position": _unit_position.text,
-			"state": _unit_state.text,
+			"portrait": _unit_portrait.texture.resource_path \
+				if _unit_portrait.texture != null else "",
 		},
 		"objective": {
 			"selection": _selection_status.text,
@@ -708,9 +723,13 @@ func _refresh_selected_previews() -> void:
 func _update_status_controls() -> void:
 	if not is_instance_valid(_selection_status):
 		return
-	_selection_status.text = "行动方：%s · 已选：%s" % [
-		str(_current_view.get("active_side", "--")),
-		_selected_piece_id if not _selected_piece_id.is_empty() else "无",
+	var selected_piece := _piece_by_id(_selected_piece_id)
+	var selected_name := "无"
+	if not selected_piece.is_empty():
+		selected_name = _piece_display_name(str(selected_piece.get("piece_type", "")))
+	_selection_status.text = "行动方: %s 已选: %s" % [
+		_side_display_name(str(_current_view.get("active_side", ""))),
+		selected_name,
 	]
 	var disabled := not _can_submit_action()
 	_move_button.disabled = disabled
@@ -748,31 +767,17 @@ func _update_unit_card() -> void:
 		return
 	var piece := _piece_by_id(_selected_piece_id)
 	if piece.is_empty():
-		_unit_name.text = "未选择单位"
-		_unit_portrait_glyph.text = "—"
-		_unit_side_status.text = "阵营：—"
-		_unit_position.text = "坐标：—"
-		_unit_state.text = "状态：—"
+		_unit_name.text = "未选择棋子"
+		_unit_portrait.texture = null
+		_unit_portrait.visible = true
 		_piece_info_drawer.hide_drawer()
 		return
 
 	var piece_type := str(piece.get("piece_type", "unknown"))
 	var piece_name := _piece_display_name(piece_type)
-	_unit_name.text = "%s · %s" % [piece_name, _selected_piece_id]
-	_unit_portrait_glyph.text = piece_name.left(1)
-	_unit_side_status.text = "阵营：%s" % ("赤方" if str(piece.get("side", "")) == "red" else "玄方")
-	var cell := BoardCoordinateMapper.coordinate_from_variant(piece.get("position", []))
-	_unit_position.text = "坐标：（%d, %d）" % [cell.x, cell.y] \
-		if BoardCoordinateMapper.is_authority_cell_valid(cell) else "坐标：—"
-	var state_text := "在场" if bool(piece.get("alive", false)) else "阵亡"
-	if bool(piece.get("in_reserve", false)):
-		state_text = "预备队"
-	var tag_parts := PackedStringArray()
-	for tag_value: Variant in piece.get("status_tags", []):
-		tag_parts.append(str(tag_value))
-	if not tag_parts.is_empty():
-		state_text += " · " + " / ".join(tag_parts)
-	_unit_state.text = "状态：%s" % state_text
+	_unit_name.text = piece_name
+	_unit_portrait.texture = _piece_portrait_texture(str(piece.get("side", "")), piece_type)
+	_unit_portrait.visible = _unit_portrait.texture != null
 	_piece_info_drawer.show_piece(piece, _can_submit_action())
 
 
@@ -840,6 +845,24 @@ func _piece_display_name(piece_type: String) -> String:
 		"trebuchet": "砲", "cannon": "炮",
 		"infantry": "兵", "soldier": "兵", "pawn": "兵",
 	}.get(piece_type, piece_type if not piece_type.is_empty() else "未知")
+
+
+func _side_display_name(side: String) -> String:
+	return {"red": "赤", "black": "玄"}.get(side, "—")
+
+
+func _piece_portrait_texture(side: String, piece_type: String) -> Texture2D:
+	var canonical_type: String = str({
+		"advisor": "guard",
+		"elephant": "minister",
+		"horse": "cavalry",
+		"rook": "chariot",
+		"cannon": "trebuchet",
+		"soldier": "infantry",
+		"pawn": "infantry",
+	}.get(piece_type, piece_type))
+	var side_portraits: Dictionary = PIECE_PORTRAITS.get(side, {})
+	return side_portraits.get(canonical_type) as Texture2D
 
 
 func _on_turn_timeout_requested(expected_action_index: int) -> void:

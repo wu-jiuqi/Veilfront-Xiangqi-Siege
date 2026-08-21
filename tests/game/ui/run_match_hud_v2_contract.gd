@@ -48,11 +48,21 @@ func _run() -> void:
 	_expect(not return_button.visible, "deleted return node remained visible")
 	_expect(not pass_button.visible, "deleted pass button remained visible")
 	_expect(not message_value.visible, "deleted message layer remained visible")
+	_expect(screen.get_node_or_null("MatchHudV2/UnitInfo/UnitSideStatus") == null, "unit card still contains the removed side row")
+	_expect(screen.get_node_or_null("MatchHudV2/UnitInfo/UnitPosition") == null, "unit card still contains the removed position row")
+	_expect(screen.get_node_or_null("MatchHudV2/UnitInfo/UnitState") == null, "unit card still contains the removed state row")
+	var incense_stand := screen.get_node("MatchHudV2/IncenseTurnClock/IncenseStandSlot") as Control
+	var timer_incense := screen.get_node("MatchHudV2/IncenseTurnClock/TimerIncenseSlot") as Control
+	_expect(incense_stand.z_index > timer_incense.z_index, "timer incense is not behind the incense stand")
 	_expect_anchor_rect(
 		screen.get_node("MatchHudV2/FactionLeft/Portrait") as Control,
-		Rect2(0.0941176471, 0.16, 0.1882352941, 0.64),
+		Rect2(0.09, 0.18, 0.19, 0.6),
 		"left portrait"
 	)
+	var left_portrait := screen.get_node("MatchHudV2/FactionLeft/Portrait/Image") as TextureRect
+	var right_portrait := screen.get_node("MatchHudV2/FactionRight/Portrait/Image") as TextureRect
+	_expect(left_portrait.texture is AtlasTexture, "red faction plate did not replace the glyph with a portrait")
+	_expect(right_portrait.texture is AtlasTexture, "black faction plate did not replace the glyph with a portrait")
 	_expect_anchor_rect(
 		screen.get_node("MatchHudV2/ObjectiveEvents/OwnFlags") as Control,
 		Rect2(0.2951388889, 0.3703703704, 0.5, 0.0648148148),
@@ -79,10 +89,9 @@ func _run() -> void:
 	_click_board(screen, TEST_CELL)
 	await create_timer(0.3).timeout
 	hud = screen.get_hud_snapshot()
-	_expect("车" in str(hud.get("unit", {}).get("name", "")), "unit card did not map the selected rook")
-	_expect("赤方" in str(hud.get("unit", {}).get("side", "")), "unit card did not show the selected side")
-	_expect("5, 5" in str(hud.get("unit", {}).get("position", "")), "unit card did not show the selected coordinate")
-	_expect("已选：hud-rook" in str(hud.get("objective", {}).get("selection", "")), "objective panel did not reflect selection")
+	_expect(str(hud.get("unit", {}).get("name", "")) == "车", "unit card did not reduce the title to the piece name")
+	_expect("red_chariot_idle.png" in str(hud.get("unit", {}).get("portrait", "")), "unit card did not show the selected piece portrait")
+	_expect(str(hud.get("objective", {}).get("selection", "")) == "行动方: 赤 已选: 车", "objective panel did not reduce selection to side and piece name")
 	_expect(bool(hud.get("piece_info_drawer", {}).get("visible", false)), "piece drawer did not open for the selected piece")
 	_expect(str(hud.get("piece_info_drawer", {}).get("layout_structure", "")) == "text_left_actions_right", "piece drawer did not use the requested split layout")
 	_expect(int(hud.get("piece_info_drawer", {}).get("visible_action_button_count", 0)) == 2, "rook drawer did not show two rectangular actions")
@@ -224,7 +233,7 @@ func _check_layout_source() -> void:
 	_expect(int(layout.get("ui_catalog", []).size()) == 10, "HUD catalog must contain all ten exported slots")
 	var assembly_assets := {
 		"custom-ui-1787265872199-1": "res://assets/art/ui/terracotta_hud_v2/incense_assembly/round_incense_vertical_v1.png",
-		"custom-ui-1787292062912-1": "res://assets/art/ui/terracotta_hud_v2/incense_assembly/piece_info_drawer_frame_v1.png",
+		"custom-ui-1787292062912-1": "res://assets/art/ui/terracotta_hud_v2/incense_assembly/piece_info_drawer_frame_v2.png",
 		"custom-ui-1787292347530-2": "res://assets/art/ui/terracotta_hud_v2/incense_assembly/dual_incense_bronze_stand_v1.png",
 		"custom-ui-1787292377548-3": "res://assets/art/ui/terracotta_hud_v2/incense_assembly/timer_incense_vertical_v1.png",
 	}
@@ -260,10 +269,7 @@ func _check_catalog_text_layout(screen: Control) -> void:
 		"faction-right/name": "MatchHudV2/FactionRight/FactionRightName",
 		"faction-right/stats": "MatchHudV2/FactionRight/FactionRightStats",
 		"unit-info/name": "MatchHudV2/UnitInfo/UnitName",
-		"unit-info/glyph": "MatchHudV2/UnitInfo/UnitPortraitGlyph",
-		"unit-info/side": "MatchHudV2/UnitInfo/UnitSideStatus",
-		"unit-info/position": "MatchHudV2/UnitInfo/UnitPosition",
-		"unit-info/state": "MatchHudV2/UnitInfo/UnitState",
+		"unit-info/portrait": "MatchHudV2/UnitInfo/UnitPortrait",
 		"objective-events/heading": "MatchHudV2/ObjectiveEvents/Heading",
 		"objective-events/selection": "MatchHudV2/ObjectiveEvents/SelectionStatus",
 		"objective-events/move": "MatchHudV2/ObjectiveEvents/OwnFlags",

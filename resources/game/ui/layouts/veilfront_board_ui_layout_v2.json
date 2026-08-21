@@ -21,18 +21,18 @@
       "text_layers": [
         {
           "id": "portrait",
-          "name": "阵营字",
-          "text": "赤",
-          "binding": "faction_glyph",
+          "name": "赤方将帅头像",
+          "text": "",
+          "binding": "faction_portrait",
           "visible": true,
           "font_size": 30,
           "horizontal_alignment": "center",
           "vertical_alignment": "center",
           "normalized_rect": {
-            "x": 0.09411764705882353,
-            "y": 0.16,
-            "width": 0.18823529411764706,
-            "height": 0.64
+            "x": 0.09,
+            "y": 0.18,
+            "width": 0.19,
+            "height": 0.6
           }
         },
         {
@@ -81,18 +81,18 @@
       "text_layers": [
         {
           "id": "portrait",
-          "name": "阵营字",
-          "text": "玄",
-          "binding": "faction_glyph",
+          "name": "玄方将帅头像",
+          "text": "",
+          "binding": "faction_portrait",
           "visible": true,
           "font_size": 30,
           "horizontal_alignment": "center",
           "vertical_alignment": "center",
           "normalized_rect": {
-            "x": 0.7215686274509804,
-            "y": 0.16,
-            "width": 0.18823529411764706,
-            "height": 0.64
+            "x": 0.725,
+            "y": 0.18,
+            "width": 0.19,
+            "height": 0.6
           }
         },
         {
@@ -132,7 +132,7 @@
     {
       "id": "unit-info",
       "name": "单位信息卡",
-      "function": "显示当前选中棋子的身份、属性与状态。",
+      "function": "上方显示棋子名称，下方只显示对应兵马俑立绘。",
       "kind": "image",
       "asset": "res://assets/art/ui/terracotta_hud_v2/unit_info_card_v1.png",
       "mirror_x": false,
@@ -142,7 +142,7 @@
         {
           "id": "name",
           "name": "单位名称",
-          "text": "未选择单位",
+          "text": "未选择棋子",
           "binding": "unit_name",
           "visible": true,
           "font_size": 14,
@@ -156,67 +156,19 @@
           }
         },
         {
-          "id": "glyph",
-          "name": "棋子字",
-          "text": "—",
-          "binding": "unit_glyph",
+          "id": "portrait",
+          "name": "棋子立绘",
+          "text": "",
+          "binding": "unit_portrait",
           "visible": true,
-          "font_size": 44,
+          "font_size": 12,
           "horizontal_alignment": "center",
           "vertical_alignment": "center",
           "normalized_rect": {
-            "x": 0.1348314606741573,
-            "y": 0.16806722689075632,
-            "width": 0.7,
-            "height": 0.4000000000000001
-          }
-        },
-        {
-          "id": "side",
-          "name": "阵营状态",
-          "text": "阵营：—",
-          "binding": "unit_side",
-          "visible": true,
-          "font_size": 11,
-          "horizontal_alignment": "left",
-          "vertical_alignment": "center",
-          "normalized_rect": {
-            "x": 0.24456521739130435,
-            "y": 0.6706704420898795,
-            "width": 0.6,
-            "height": 0.060000000000000005
-          }
-        },
-        {
-          "id": "position",
-          "name": "单位坐标",
-          "text": "坐标：—",
-          "binding": "unit_position",
-          "visible": true,
-          "font_size": 11,
-          "horizontal_alignment": "left",
-          "vertical_alignment": "center",
-          "normalized_rect": {
-            "x": 0.24456521739130435,
-            "y": 0.7519638290098648,
-            "width": 0.6,
-            "height": 0.060000000000000005
-          }
-        },
-        {
-          "id": "state",
-          "name": "单位状态",
-          "text": "状态：—",
-          "binding": "unit_state",
-          "visible": true,
-          "font_size": 11,
-          "horizontal_alignment": "left",
-          "vertical_alignment": "center",
-          "normalized_rect": {
-            "x": 0.24456521739130435,
-            "y": 0.8332572159298502,
-            "width": 0.6,
-            "height": 0.065
+            "x": 0.13,
+            "y": 0.18,
+            "width": 0.74,
+            "height": 0.72
           }
         }
       ]
@@ -250,7 +202,7 @@
         {
           "id": "selection",
           "name": "选择状态",
-          "text": "行动方：— · 已选：无",
+          "text": "行动方: — 已选: 无",
           "binding": "selection_status",
           "visible": true,
           "font_size": 11,
@@ -371,17 +323,17 @@
     {
       "id": "custom-ui-1787292062912-1",
       "name": "棋子信息展开栏",
-      "function": "需要包含棋子的移动技能",
+      "function": "左侧显示棋子介绍，右侧固定两个操作按钮槽。",
       "kind": "image",
-      "asset": "res://assets/art/ui/terracotta_hud_v2/incense_assembly/piece_info_drawer_frame_v1.png",
+      "asset": "res://assets/art/ui/terracotta_hud_v2/incense_assembly/piece_info_drawer_frame_v2.png",
       "mirror_x": false,
       "visible": true,
       "lock_aspect": false,
       "text_layers": [
         {
           "id": "movement-caption",
-          "name": "移动逻辑标题",
-          "text": "移动逻辑",
+          "name": "棋子介绍标题",
+          "text": "棋子介绍",
           "binding": "static",
           "visible": true,
           "layout_managed_by_container": true,
@@ -391,13 +343,13 @@
           "normalized_rect": {
             "x": 0.0524691358,
             "y": 0.1071428571,
-            "width": 0.2839506173,
+            "width": 0.66,
             "height": 0.2678571429
           }
         },
         {
           "id": "movement-summary",
-          "name": "移动逻辑说明",
+          "name": "棋子介绍说明",
           "text": "选择棋子后显示移动逻辑。",
           "binding": "movement_summary",
           "visible": true,
@@ -408,7 +360,7 @@
           "normalized_rect": {
             "x": 0.0524691358,
             "y": 0.375,
-            "width": 0.2839506173,
+            "width": 0.66,
             "height": 0.5178571429
           }
         },
@@ -423,9 +375,9 @@
           "horizontal_alignment": "center",
           "vertical_alignment": "center",
           "normalized_rect": {
-            "x": 0.3549382716,
+            "x": 0.76,
             "y": 0.1071428571,
-            "width": 0.1388888889,
+            "width": 0.1,
             "height": 0.7857142857
           }
         },
@@ -434,15 +386,15 @@
           "name": "轰炸按钮",
           "text": "轰炸",
           "binding": "bombard_action",
-          "visible": true,
+          "visible": false,
           "layout_managed_by_container": true,
           "font_size": 11,
           "horizontal_alignment": "center",
           "vertical_alignment": "center",
           "normalized_rect": {
-            "x": 0.5061728395,
+            "x": 0.87,
             "y": 0.1071428571,
-            "width": 0.1388888889,
+            "width": 0.1,
             "height": 0.7857142857
           }
         },
@@ -451,15 +403,15 @@
           "name": "复活按钮",
           "text": "复活",
           "binding": "resurrect_action",
-          "visible": true,
+          "visible": false,
           "layout_managed_by_container": true,
           "font_size": 11,
           "horizontal_alignment": "center",
           "vertical_alignment": "center",
           "normalized_rect": {
-            "x": 0.6574074074,
+            "x": 0.87,
             "y": 0.1071428571,
-            "width": 0.1388888889,
+            "width": 0.1,
             "height": 0.7857142857
           }
         },
@@ -474,9 +426,9 @@
           "horizontal_alignment": "center",
           "vertical_alignment": "center",
           "normalized_rect": {
-            "x": 0.8086419753,
+            "x": 0.87,
             "y": 0.1071428571,
-            "width": 0.1388888889,
+            "width": 0.1,
             "height": 0.7857142857
           }
         }
@@ -692,7 +644,7 @@
         },
         {
           "id": "custom-ui-1787292347530-2",
-          "z_index": 7,
+          "z_index": 8,
           "visible": true,
           "pixel_rect": {
             "x": 64,
@@ -709,7 +661,7 @@
         },
         {
           "id": "custom-ui-1787292377548-3",
-          "z_index": 8,
+          "z_index": 7,
           "visible": true,
           "pixel_rect": {
             "x": 72,
@@ -885,7 +837,7 @@
         },
         {
           "id": "custom-ui-1787292347530-2",
-          "z_index": 7,
+          "z_index": 8,
           "visible": true,
           "pixel_rect": {
             "x": 84,
@@ -902,7 +854,7 @@
         },
         {
           "id": "custom-ui-1787292377548-3",
-          "z_index": 8,
+          "z_index": 7,
           "visible": true,
           "pixel_rect": {
             "x": 95,
@@ -1078,7 +1030,7 @@
         },
         {
           "id": "custom-ui-1787292347530-2",
-          "z_index": 7,
+          "z_index": 8,
           "visible": true,
           "pixel_rect": {
             "x": 64,
@@ -1095,7 +1047,7 @@
         },
         {
           "id": "custom-ui-1787292377548-3",
-          "z_index": 8,
+          "z_index": 7,
           "visible": true,
           "pixel_rect": {
             "x": 72,
@@ -1271,7 +1223,7 @@
         },
         {
           "id": "custom-ui-1787292347530-2",
-          "z_index": 7,
+          "z_index": 8,
           "visible": true,
           "pixel_rect": {
             "x": 64,
@@ -1288,7 +1240,7 @@
         },
         {
           "id": "custom-ui-1787292377548-3",
-          "z_index": 8,
+          "z_index": 7,
           "visible": true,
           "pixel_rect": {
             "x": 72,
