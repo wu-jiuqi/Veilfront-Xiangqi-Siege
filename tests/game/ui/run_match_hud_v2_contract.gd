@@ -32,10 +32,11 @@ func _run() -> void:
 	_expect(not bool(hud.get("layout", {}).get("text_layer_visibility", {}).get("faction-right/mirror", false)), "deleted mirror layer remained enabled")
 	_expect(str(hud.get("faction_left", {}).get("turn", "")) == "正在行动", "red faction plate did not show the active side")
 	_expect("旗 1" in str(hud.get("faction_left", {}).get("stats", "")), "red faction plate did not show owned flags")
-	_expect("损 1" in str(hud.get("faction_right", {}).get("stats", "")), "black faction plate did not show casualties")
+	_expect("损 3" in str(hud.get("faction_left", {}).get("stats", "")), "red faction plate did not show casualties")
+	_expect("损 2" in str(hud.get("faction_right", {}).get("stats", "")), "black faction plate did not show casualties")
 	_expect(str(hud.get("objective", {}).get("own_flags", "")) == "我方已发现旗帜: 1/3", "objective label did not preserve the JSON text prefix")
-	_expect(str(hud.get("objective", {}).get("own_casualties", "")) == "我方阵亡: 0", "own casualty label did not preserve the JSON text prefix")
-	_expect(str(hud.get("objective", {}).get("enemy_casualties", "")) == "敌方阵亡: 1", "enemy casualty label did not preserve the JSON text prefix")
+	_expect(str(hud.get("objective", {}).get("own_casualties", "")) == "我方阵亡: 兵*2, 士*1", "own casualty label did not list concrete pieces")
+	_expect(str(hud.get("objective", {}).get("enemy_casualties", "")) == "敌方阵亡: 炮*1, 兵*1", "enemy casualty label did not list concrete pieces")
 
 	var left_turn: Label = screen.get_node("MatchHudV2/FactionLeft/FactionLeftTurn") as Label
 	var return_button: Button = screen.get_node("MatchHudV2/FactionLeft/ReturnButton") as Button
@@ -83,6 +84,9 @@ func _run() -> void:
 	_expect("5, 5" in str(hud.get("unit", {}).get("position", "")), "unit card did not show the selected coordinate")
 	_expect("已选：hud-rook" in str(hud.get("objective", {}).get("selection", "")), "objective panel did not reflect selection")
 	_expect(bool(hud.get("piece_info_drawer", {}).get("visible", false)), "piece drawer did not open for the selected piece")
+	_expect(str(hud.get("piece_info_drawer", {}).get("layout_structure", "")) == "text_left_actions_right", "piece drawer did not use the requested split layout")
+	_expect(int(hud.get("piece_info_drawer", {}).get("visible_action_button_count", 0)) == 2, "rook drawer did not show two rectangular actions")
+	_expect(bool(hud.get("piece_info_drawer", {}).get("buttons_horizontal", false)), "rook drawer actions are not horizontal")
 	screen.apply_layout_for_size(Vector2(1280, 720))
 	await process_frame
 	_expect(bool(screen.get_hud_snapshot().get("piece_info_drawer", {}).get("visible", false)), "piece drawer closed during a same-profile layout refresh")
@@ -171,6 +175,22 @@ func _run() -> void:
 		"mouse-wheel board scroll did not interpolate between start and target"
 	)
 	await create_timer(0.5).timeout
+	_zoom_board(screen, 6)
+	await process_frame
+	var zoomed_minimap: Dictionary = screen.get_hud_snapshot().get("minimap", {})
+	var zoomed_overview_rect: Rect2 = zoomed_minimap.get("viewport_rect_normalized", Rect2())
+	_expect(zoomed_overview_rect.size.x > 0.0 and zoomed_overview_rect.size.x < 1.0, "zoomed minimap did not expose a horizontally movable gray area")
+	var horizontal_before: Vector2 = screen.get_board_render_snapshot().get("camera_position", Vector2.ZERO)
+	_navigate_minimap(screen, Vector2(0.1, 0.5))
+	await process_frame
+	var horizontal_motion: Dictionary = screen.get_board_render_snapshot()
+	var horizontal_after: Vector2 = horizontal_motion.get("camera_position", Vector2.ZERO)
+	var horizontal_target: Vector2 = horizontal_motion.get("camera_target_position", horizontal_after)
+	_expect(horizontal_after.x < horizontal_before.x, "minimap click did not move the zoomed board horizontally")
+	_expect(horizontal_after.x > horizontal_target.x + 1.0, "horizontal minimap navigation jumped directly to its destination")
+	await create_timer(0.3).timeout
+	var horizontal_finished: Vector2 = screen.get_board_render_snapshot().get("camera_position", Vector2.ZERO)
+	_expect(horizontal_finished.distance_to(horizontal_target) <= 1.0, "two-dimensional minimap navigation did not settle on its target")
 	var mirror_button: Button = screen.find_child("MirrorButton", true, false) as Button
 	_expect(mirror_button != null, "HUD mirror button is missing")
 	if mirror_button != null:
@@ -300,7 +320,13 @@ func _player_view() -> Dictionary:
 			{"side": "red", "status": "INTACT"},
 			{"side": "black", "status": "BREACHED"},
 		],
-		"casualties": [{"side": "black", "piece_type": "soldier"}],
+		"casualties": [
+			{"side": "red", "piece_type": "soldier"},
+			{"side": "red", "piece_type": "guard"},
+			{"side": "red", "piece_type": "soldier"},
+			{"side": "black", "piece_type": "cannon"},
+			{"side": "black", "piece_type": "soldier"},
+		],
 		"capture_ghosts": [],
 		"vision_overlays": {"rook_paths": [], "elephant_reveal_zones": [], "elephant_block_fields": []},
 	}
@@ -345,11 +371,16 @@ func _click_board(screen: Control, cell: Vector2i) -> void:
 
 
 func _navigate_minimap_to_top(screen: Control) -> void:
+	_navigate_minimap(screen, Vector2(0.5, 0.08))
+
+
+func _navigate_minimap(screen: Control, ratio: Vector2) -> void:
 	var minimap: Control = screen.get_node("MatchHudV2/Minimap/TacticalMinimap") as Control
+	var board_rect: Rect2 = minimap._board_rect()
 	var press := InputEventMouseButton.new()
 	press.button_index = MOUSE_BUTTON_LEFT
 	press.pressed = true
-	press.position = Vector2(minimap.size.x * 0.5, minimap.size.y * 0.08)
+	press.position = board_rect.position + board_rect.size * ratio.clamp(Vector2.ZERO, Vector2.ONE)
 	minimap._gui_input(press)
 	var release := InputEventMouseButton.new()
 	release.button_index = MOUSE_BUTTON_LEFT
@@ -368,6 +399,20 @@ func _scroll_board(screen: Control, button_index: MouseButton) -> void:
 	event.factor = 1.0
 	event.position = input_surface.size * 0.5
 	input_surface.gui_input.emit(event)
+
+
+func _zoom_board(screen: Control, steps: int) -> void:
+	var input_surface: Control = screen.get_node(
+		"MatchHudV2/BoardFrame/BoardViewport/ScreenInputSurface"
+	) as Control
+	for _step: int in steps:
+		var event := InputEventMouseButton.new()
+		event.button_index = MOUSE_BUTTON_WHEEL_UP
+		event.pressed = true
+		event.ctrl_pressed = true
+		event.factor = 1.0
+		event.position = input_surface.size * 0.5
+		input_surface.gui_input.emit(event)
 
 
 func _expect_anchor_rect(control: Control, expected: Rect2, label: String) -> void:

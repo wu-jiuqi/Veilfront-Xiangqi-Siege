@@ -170,12 +170,17 @@ func _check_resolution(resolution: Vector2i) -> Dictionary:
 	var spacing: Vector2 = snapshot.get("point_spacing", Vector2.ZERO)
 	var board_rect: Rect2 = snapshot.get("board_rect", Rect2())
 	var board_camera: Camera2D = match_screen.get_node("MatchHudV2/BoardFrame/BoardViewport/BoardSubViewport/BoardWorld/BoardCamera2D") as Camera2D
+	var board_scroll_bar: Control = match_screen.get_node_or_null(
+		"MatchHudV2/BoardFrame/BoardViewport/VerticalScrollBar"
+	) as Control
 	var board_motion: Dictionary = match_screen.get_board_render_snapshot()
 	var resolution_key := "%dx%d" % [resolution.x, resolution.y]
 	_expect(
 		not board_camera.position_smoothing_enabled,
 		"%s native camera smoothing competes with explicit scroll tween" % resolution
 	)
+	_expect(board_scroll_bar == null, "%s board still exposes an unwanted scroll bar" % resolution)
+	_expect(str(board_motion.get("camera_pan_axes", "")) == "xy", "%s board camera is not configured for two-dimensional navigation" % resolution)
 	var scroll_duration := float(board_motion.get("camera_scroll_duration", 0.0))
 	_expect(scroll_duration > 0.0, "%s board camera scrolling has no interpolation duration" % resolution)
 	_expect(scroll_duration <= 0.5, "%s board camera interpolation is too sluggish" % resolution)

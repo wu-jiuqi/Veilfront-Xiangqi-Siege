@@ -18,7 +18,6 @@ const HOVER_RADIUS_RATIO: float = 0.46
 @onready var _board_world: Node2D = $BoardSubViewport/BoardWorld
 @onready var _camera: Camera2D = $BoardSubViewport/BoardWorld/BoardCamera2D
 @onready var _screen_input_surface: Control = $ScreenInputSurface
-@onready var _scroll_bar: VScrollBar = $VerticalScrollBar
 
 var _fit_zoom: float = 1.0
 var _zoom_multiplier: float = 1.0
@@ -26,8 +25,8 @@ var _focused_cell := Vector2i.ZERO
 var _hovered_cell := Vector2i.ZERO
 var _hover_pointer_local := Vector2(INF, INF)
 var _camera_motion_tween: Tween
-var _camera_target_y: float = BOARD_WORLD_SIZE.y * 0.5
-var _keyboard_pan_velocity: float = 0.0
+var _camera_target_position: Vector2 = BOARD_WORLD_SIZE * 0.5
+var _keyboard_pan_velocity: Vector2 = Vector2.ZERO
 
 
 func _ready() -> void:
@@ -38,7 +37,6 @@ func _ready() -> void:
 	_board_world.pan_requested.connect(_on_pan_requested)
 	_screen_input_surface.gui_input.connect(_on_screen_input_surface_gui_input)
 	_screen_input_surface.mouse_exited.connect(_clear_hover)
-	_scroll_bar.value_changed.connect(_on_scroll_bar_value_changed)
 	var world_input_surface := _board_world.get_node_or_null("InputSurface") as Control
 	if world_input_surface != null:
 		world_input_surface.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -50,17 +48,16 @@ func _process(delta: float) -> void:
 	var direction: Vector2 = Input.get_vector(
 		&"board_pan_left", &"board_pan_right", &"board_pan_up", &"board_pan_down"
 	)
-	var zoom_y := maxf(_camera.zoom.y, 0.01)
-	var target_velocity := direction.y * PAN_SPEED / zoom_y
-	_keyboard_pan_velocity = move_toward(
-		_keyboard_pan_velocity,
+	var zoom_value := maxf(_camera.zoom.x, 0.01)
+	var target_velocity := direction * PAN_SPEED / zoom_value
+	_keyboard_pan_velocity = _keyboard_pan_velocity.move_toward(
 		target_velocity,
-		PAN_ACCELERATION * delta / zoom_y
+		PAN_ACCELERATION * delta / zoom_value
 	)
-	if is_zero_approx(_keyboard_pan_velocity):
+	if _keyboard_pan_velocity.is_zero_approx():
 		return
 	_cancel_camera_motion()
-	_apply_camera_y(_clamp_camera_y(_camera.position.y + _keyboard_pan_velocity * delta))
+	_apply_camera_position(_camera.position + _keyboard_pan_velocity * delta)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -128,8 +125,7 @@ func focus_authority_cell(cell: Vector2i) -> void:
 		str(_board_world.get_display_side()),
 		_board_world.get_cell_size()
 	)
-	_camera.position = Vector2(BOARD_WORLD_SIZE.x * 0.5, world_position.y)
-	_clamp_camera()
+	_set_camera_position_immediate(world_position)
 
 
 func set_tutorial_target(cell: Vector2i) -> void:
@@ -140,11 +136,10 @@ func reset_camera() -> void:
 	_zoom_multiplier = 1.0
 	_update_camera_zoom()
 	var visible_world_height: float = size.y / maxf(_camera.zoom.y, 0.01)
-	_camera.position = Vector2(
+	_set_camera_position_immediate(Vector2(
 		BOARD_WORLD_SIZE.x * 0.5,
 		BOARD_WORLD_SIZE.y - visible_world_height * 0.5
-	)
-	_clamp_camera()
+	))
 
 
 func get_point_spacing() -> Vector2:
@@ -162,7 +157,9 @@ func get_render_snapshot() -> Dictionary:
 	snapshot["focused_cell_visible"] = _is_cell_visible(_focused_cell)
 	snapshot["camera_position"] = _camera.position
 	snapshot["camera_zoom"] = _camera.zoom
-	snapshot["camera_target_y"] = _camera_target_y
+	snapshot["camera_target_position"] = _camera_target_position
+	snapshot["camera_target_y"] = _camera_target_position.y
+	snapshot["camera_pan_axes"] = "xy"
 	snapshot["camera_motion_active"] = _camera_motion_tween != null \
 		and _camera_motion_tween.is_valid() and _camera_motion_tween.is_running()
 	snapshot["camera_scroll_duration"] = CAMERA_SCROLL_DURATION
@@ -202,8 +199,8 @@ func get_overview_state() -> Dictionary:
 
 func navigate_to_overview_ratio(display_ratio: Vector2) -> void:
 	_focused_cell = Vector2i.ZERO
-	_animate_camera_y_to(
-		clampf(display_ratio.y, 0.0, 1.0) * BOARD_WORLD_SIZE.y,
+	_animate_camera_to(
+		display_ratio.clamp(Vector2.ZERO, Vector2.ONE) * BOARD_WORLD_SIZE,
 		MINIMAP_NAVIGATION_DURATION
 	)
 
@@ -238,9 +235,11 @@ func _is_cell_visible(cell: Vector2i) -> bool:
 		str(_board_world.get_display_side()),
 		_board_world.get_cell_size()
 	)
-	var half_height: float = size.y / maxf(_camera.zoom.y, 0.01) * 0.5
-	return world_position.y >= _camera.position.y - half_height \
-		and world_position.y <= _camera.position.y + half_height
+	var zoom := Vector2(maxf(_camera.zoom.x, 0.01), maxf(_camera.zoom.y, 0.01))
+	var half_visible_size := size / zoom * 0.5
+	return Rect2(_camera.position - half_visible_size, half_visible_size * 2.0).has_point(
+		world_position
+	)
 
 
 func _apply_zoom_step(step: float) -> void:
@@ -252,44 +251,24 @@ func _apply_zoom_step(step: float) -> void:
 func _update_camera_zoom() -> void:
 	var zoom_value: float = _fit_zoom * _zoom_multiplier
 	_camera.zoom = Vector2(zoom_value, zoom_value)
-	_sync_scroll_bar()
 
 
 func _clamp_camera() -> void:
-	_set_camera_y_immediate(_camera.position.y)
+	_set_camera_position_immediate(_camera.position)
 
 
 func _pan_camera(amount: float) -> void:
 	if is_zero_approx(amount):
 		return
-	var start_y := _camera_target_y if _camera_motion_tween != null \
-		and _camera_motion_tween.is_valid() else _camera.position.y
-	_animate_camera_y_to(start_y + amount / maxf(_camera.zoom.y, 0.01))
+	var start_position := _camera_target_position if _camera_motion_tween != null \
+		and _camera_motion_tween.is_valid() else _camera.position
+	_animate_camera_to(
+		start_position + Vector2(0.0, amount / maxf(_camera.zoom.y, 0.01))
+	)
 
 
 func _on_pan_requested(amount: float) -> void:
 	_pan_camera(amount * WHEEL_PAN_SPEED)
-
-
-func _on_scroll_bar_value_changed(value: float) -> void:
-	var visible_world_height: float = size.y / maxf(_camera.zoom.y, 0.01)
-	var scrollable_height := maxf(0.0, BOARD_WORLD_SIZE.y - visible_world_height)
-	if scrollable_height <= 0.0:
-		return
-	_animate_camera_y_to(visible_world_height * 0.5 + value * scrollable_height, 0.2)
-
-
-func _sync_scroll_bar() -> void:
-	if not is_instance_valid(_scroll_bar):
-		return
-	var visible_world_height: float = size.y / maxf(_camera.zoom.y, 0.01)
-	var scrollable_height := maxf(0.0, BOARD_WORLD_SIZE.y - visible_world_height)
-	_scroll_bar.visible = scrollable_height > 0.0
-	if scrollable_height <= 0.0:
-		_scroll_bar.set_value_no_signal(0.0)
-		return
-	var normalized := (_camera.position.y - visible_world_height * 0.5) / scrollable_height
-	_scroll_bar.set_value_no_signal(clampf(normalized, 0.0, 1.0))
 
 
 func _on_point_activated(cell: Vector2i) -> void:
@@ -385,28 +364,28 @@ func _clear_hover() -> void:
 	_set_hovered_cell(Vector2i.ZERO)
 
 
-func _set_camera_y_immediate(value: float) -> void:
+func _set_camera_position_immediate(value: Vector2) -> void:
 	_cancel_camera_motion()
-	_camera_target_y = _clamp_camera_y(value)
-	_apply_camera_y(_camera_target_y)
+	_camera_target_position = _clamp_camera_position(value)
+	_apply_camera_position(_camera_target_position)
 
 
-func _animate_camera_y_to(value: float, duration: float = CAMERA_SCROLL_DURATION) -> void:
-	_keyboard_pan_velocity = 0.0
-	var target_y := _clamp_camera_y(value)
+func _animate_camera_to(value: Vector2, duration: float = CAMERA_SCROLL_DURATION) -> void:
+	_keyboard_pan_velocity = Vector2.ZERO
+	var target_position := _clamp_camera_position(value)
 	_cancel_camera_motion()
-	_camera_target_y = target_y
-	if is_equal_approx(_camera.position.y, target_y) or duration <= 0.0:
-		_apply_camera_y(target_y)
+	_camera_target_position = target_position
+	if _camera.position.is_equal_approx(target_position) or duration <= 0.0:
+		_apply_camera_position(target_position)
 		return
 	var tween := create_tween()
 	_camera_motion_tween = tween
 	tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	tween.tween_method(_apply_camera_y, _camera.position.y, target_y, duration)
+	tween.tween_method(_apply_camera_position, _camera.position, target_position, duration)
 	tween.finished.connect(func() -> void:
 		if _camera_motion_tween == tween:
 			_camera_motion_tween = null
-			_apply_camera_y(_camera_target_y)
+			_apply_camera_position(_camera_target_position)
 	)
 
 
@@ -414,23 +393,26 @@ func _cancel_camera_motion() -> void:
 	if _camera_motion_tween != null and _camera_motion_tween.is_valid():
 		_camera_motion_tween.kill()
 	_camera_motion_tween = null
-	_camera_target_y = _camera.position.y
+	_camera_target_position = _camera.position
 
 
-func _clamp_camera_y(value: float) -> float:
-	var visible_world_height: float = size.y / maxf(_camera.zoom.y, 0.01)
-	if visible_world_height >= BOARD_WORLD_SIZE.y:
-		return BOARD_WORLD_SIZE.y * 0.5
-	return clampf(
-		value,
-		visible_world_height * 0.5,
-		BOARD_WORLD_SIZE.y - visible_world_height * 0.5
-	)
+func _clamp_camera_position(value: Vector2) -> Vector2:
+	var zoom := Vector2(maxf(_camera.zoom.x, 0.01), maxf(_camera.zoom.y, 0.01))
+	var visible_world_size := size / zoom
+	var result := value
+	for axis: int in 2:
+		if visible_world_size[axis] >= BOARD_WORLD_SIZE[axis]:
+			result[axis] = BOARD_WORLD_SIZE[axis] * 0.5
+		else:
+			var half_visible := visible_world_size[axis] * 0.5
+			result[axis] = clampf(
+				value[axis], half_visible, BOARD_WORLD_SIZE[axis] - half_visible
+			)
+	return result
 
 
-func _apply_camera_y(value: float) -> void:
-	_camera.position = Vector2(BOARD_WORLD_SIZE.x * 0.5, _clamp_camera_y(value))
-	_sync_scroll_bar()
+func _apply_camera_position(value: Vector2) -> void:
+	_camera.position = _clamp_camera_position(value)
 	_emit_overview_changed()
 	if is_finite(_hover_pointer_local.x) and is_finite(_hover_pointer_local.y):
 		_update_hover_from_container_position(_hover_pointer_local)
