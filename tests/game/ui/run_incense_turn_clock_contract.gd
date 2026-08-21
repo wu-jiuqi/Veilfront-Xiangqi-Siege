@@ -40,6 +40,16 @@ func _run() -> void:
 		bool(initial_state.get("timer_behind_stand", false)),
 		"左侧计时香没有被香盘前景遮挡"
 	)
+	var timer_smoke_player: AnimationPlayer = clock.get_node("%TimerSmokeAnimationPlayer") as AnimationPlayer
+	var timer_smoke_loop: Animation = timer_smoke_player.get_animation(&"smoke_loop")
+	_expect(timer_smoke_loop != null and timer_smoke_loop.get_track_count() == 2, "左侧计时香烟雾缺少独立序列动画")
+	if timer_smoke_loop != null and timer_smoke_loop.get_track_count() >= 2:
+		_expect(
+			str(timer_smoke_loop.track_get_path(1)) == "TimerSmokeVisual/TimerSmokeFrame:position",
+			"左侧计时香烟雾补偿轨道没有绑定到 TimerSmokeFrame 位置"
+		)
+	var timer_smoke_visual := clock.get_node("%TimerSmokeVisual") as Node2D
+	_expect(timer_smoke_visual.scale.y < 0.0, "左侧计时香烟雾没有与右侧烟雾形成镜像")
 	var smoke_player: AnimationPlayer = clock.get_node("%SmokeAnimationPlayer") as AnimationPlayer
 	var smoke_loop: Animation = smoke_player.get_animation(&"smoke_loop")
 	_expect(smoke_loop != null and smoke_loop.get_track_count() == 2, "右侧烟雾缺少序列帧原点补偿轨道")
@@ -55,6 +65,16 @@ func _run() -> void:
 			"烟雾图集跨行时没有抵消帧内基线跳变"
 		)
 	clock.set_reduced_motion(true)
+	var timer_smoke_initial := clock.get_state_snapshot()
+	_expect(int(timer_smoke_initial.get("timer_smoke_frame_count", 0)) == 8, "左侧计时香烟雾没有使用 8 帧序列")
+	_expect(bool(timer_smoke_initial.get("timer_smoke_mirrored", false)), "左侧计时香烟雾镜像状态没有写入快照")
+	clock.set_timer_remaining_for_test(30.0, false)
+	var timer_smoke_middle := clock.get_state_snapshot()
+	_expect(
+		float(timer_smoke_middle.get("timer_smoke_length", 0.0)) > float(timer_smoke_initial.get("timer_smoke_length", 0.0)),
+		"计时香变短后左侧烟雾没有随燃烧端延长"
+	)
+	clock.set_timer_remaining_for_test(60.0, false)
 
 	clock.set_round(1, 50, false)
 	var first := clock.get_state_snapshot()

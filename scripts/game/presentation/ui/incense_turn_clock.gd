@@ -9,6 +9,7 @@ const EMBER_SIZE := Vector2(18.0, 14.0)
 const SMOKE_SOURCE_VISIBLE_LENGTH: float = 330.0
 const SMOKE_CROSS_SCALE: float = 0.18
 const MIN_SMOKE_LENGTH: float = 56.0
+const TIMER_SMOKE_TARGET_OFFSET := Vector2(32.0, -33.28)
 const SCATTER_OUT_SECONDS: float = 0.24
 const GATHER_IN_SECONDS: float = 0.34
 const ROUND_TWEEN_SECONDS: float = 0.48
@@ -26,6 +27,9 @@ const CHINESE_DIGITS: PackedStringArray = ["零", "一", "二", "三", "四", "�
 @onready var _timer_clip: Control = %TimerBodyClip
 @onready var _timer_body: TextureRect = %TimerBody
 @onready var _timer_ember: TextureRect = %TimerEmber
+@onready var _timer_smoke_visual: Node2D = %TimerSmokeVisual
+@onready var _timer_smoke_frame: Sprite2D = %TimerSmokeFrame
+@onready var _timer_smoke_animation: AnimationPlayer = %TimerSmokeAnimationPlayer
 @onready var _round_slot: Control = %RoundIncenseSlot
 @onready var _round_clip: Control = %RoundBodyClip
 @onready var _round_body: TextureRect = %RoundBody
@@ -121,9 +125,11 @@ func set_reduced_motion(enabled: bool) -> void:
 		_apply_round_text(_current_round)
 		_set_scatter(0.0)
 		_smoke_animation.pause()
+		_timer_smoke_animation.pause()
 		_number_float_animation.pause()
 	else:
 		_smoke_animation.play(&"smoke_loop")
+		_timer_smoke_animation.play(&"smoke_loop")
 		_number_float_animation.play(&"number_float")
 
 
@@ -178,6 +184,10 @@ func get_state_snapshot() -> Dictionary:
 		"smoke_length": _current_smoke_length(),
 		"smoke_frame_count": _smoke_frame.hframes * _smoke_frame.vframes,
 		"smoke_animation": _smoke_animation.current_animation,
+		"timer_smoke_length": _current_timer_smoke_length(),
+		"timer_smoke_frame_count": _timer_smoke_frame.hframes * _timer_smoke_frame.vframes,
+		"timer_smoke_animation": _timer_smoke_animation.current_animation,
+		"timer_smoke_mirrored": _timer_smoke_visual.scale.y < 0.0,
 		"number_float_animation": _number_float_animation.current_animation,
 		"scatter": _get_scatter(),
 		"timer_behind_stand": _timer_slot.z_index < _stand_slot.z_index,
@@ -202,13 +212,15 @@ static func chinese_number(value: int) -> String:
 
 
 func _set_timer_ratio(value: float) -> void:
+	var remaining_ratio := clampf(value, 0.0, MAX_INCENSE_HEIGHT_RATIO)
 	_apply_vertical_incense(
 		_timer_slot,
 		_timer_clip,
 		_timer_body,
 		_timer_ember,
-		clampf(value, 0.0, MAX_INCENSE_HEIGHT_RATIO)
+		remaining_ratio
 	)
+	_update_timer_smoke(remaining_ratio)
 
 
 func _set_round_progress(value: float) -> void:
@@ -267,6 +279,45 @@ func _update_smoke_bridge() -> void:
 	var smoke_color := _smoke_visual.modulate
 	smoke_color.a = lerpf(0.76, 0.96, _round_progress)
 	_smoke_visual.modulate = smoke_color
+
+
+func _update_timer_smoke(remaining_ratio: float) -> void:
+	if not is_instance_valid(_timer_smoke_visual) or _timer_slot.size.y <= 0.0:
+		return
+	var source := _timer_slot.position + Vector2(
+		_timer_slot.size.x * 0.5,
+		_timer_slot.size.y * (1.0 - clampf(remaining_ratio, 0.0, 1.0))
+	)
+	var target := _timer_slot.position + Vector2(
+		_timer_slot.size.x * 0.5,
+		0.0
+	) + TIMER_SMOKE_TARGET_OFFSET
+	var bridge := target - source
+	var bridge_length := maxf(MIN_SMOKE_LENGTH, bridge.length())
+	_timer_smoke_visual.position = source
+	_timer_smoke_visual.rotation = bridge.angle()
+	_timer_smoke_visual.scale = Vector2(
+		bridge_length / SMOKE_SOURCE_VISIBLE_LENGTH,
+		-SMOKE_CROSS_SCALE
+	)
+	var smoke_color := _timer_smoke_visual.modulate
+	smoke_color.a = lerpf(0.76, 0.96, 1.0 - remaining_ratio)
+	_timer_smoke_visual.modulate = smoke_color
+
+
+func _current_timer_smoke_length() -> float:
+	if not is_instance_valid(_timer_slot):
+		return 0.0
+	var remaining_ratio := _remaining_seconds / maxf(turn_duration_seconds, 0.001)
+	var source := _timer_slot.position + Vector2(
+		_timer_slot.size.x * 0.5,
+		_timer_slot.size.y * (1.0 - clampf(remaining_ratio, 0.0, 1.0))
+	)
+	var target := _timer_slot.position + Vector2(
+		_timer_slot.size.x * 0.5,
+		0.0
+	) + TIMER_SMOKE_TARGET_OFFSET
+	return maxf(MIN_SMOKE_LENGTH, source.distance_to(target))
 
 
 func _current_smoke_length() -> float:
