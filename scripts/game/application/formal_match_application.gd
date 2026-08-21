@@ -12,6 +12,7 @@ const ScenarioBootstrap = preload("res://scripts/game/domain/scenario_bootstrap.
 
 var _state: Dictionary = {}
 var _viewer_context: RefCounted
+var _viewer_contexts: Dictionary = {}
 var _preparation: Dictionary = {}
 var _observer_frames: Array = []
 var _initial_player_view: Dictionary = {}
@@ -27,6 +28,25 @@ static func create_trusted(
 	var application: RefCounted = new()
 	application._state = RuleEngine.create_match(seed_value, configuration)
 	application._viewer_context = ViewerContext.create_trusted(bound_seat)
+	application._viewer_contexts[bound_seat] = application._viewer_context
+	application._prepare_authority_turn()
+	application._initial_player_view = application.current_player_view().duplicate(true)
+	return application
+
+
+static func create_authoritative(
+	seed_value: int,
+	configuration: Dictionary = {}
+) -> RefCounted:
+	var application: RefCounted = new()
+	application._state = RuleEngine.create_match(seed_value, configuration)
+	application._viewer_contexts = {
+		"red": ViewerContext.create_trusted("red"),
+		"black": ViewerContext.create_trusted("black"),
+	}
+	# Keep the existing single-observer replay API bound to red. Network callers
+	# must use the explicit per-seat application methods below.
+	application._viewer_context = application._viewer_contexts["red"]
 	application._prepare_authority_turn()
 	application._initial_player_view = application.current_player_view().duplicate(true)
 	return application
@@ -46,6 +66,7 @@ static func create_trusted_scenario(
 	application._state = bootstrap_result.get("state", {}).duplicate(true)
 	application._tutorial_scenario = scenario
 	application._viewer_context = ViewerContext.create_trusted(scenario.bound_seat)
+	application._viewer_contexts[scenario.bound_seat] = application._viewer_context
 	application._prepare_authority_turn()
 	application._initial_player_view = application.current_player_view().duplicate(true)
 	return application
@@ -63,6 +84,35 @@ func current_action_previews() -> Array:
 	return _action_previews_for_view(current_player_view())
 
 
+func current_payload_for_side(side: String) -> Dictionary:
+	var context: RefCounted = _context_for_side(side)
+	if context == null:
+		return {}
+	var player_view: Dictionary = ObserverProjector.project_player_view(_state, context)
+	return {
+		"player_view": player_view,
+		"visible_events": VisibleOutcomeProjector.project_visible_events(_state, context),
+		"visible_error": {},
+		"action_previews": _action_previews_for_view(player_view),
+	}
+
+
+func current_player_view_for_side(side: String) -> Dictionary:
+	return current_payload_for_side(side).get("player_view", {}).duplicate(true)
+
+
+func preview_intent_for_side(side: String, intent: Dictionary) -> Dictionary:
+	var context: RefCounted = _context_for_side(side)
+	if context == null:
+		return {}
+	var player_view: Dictionary = ObserverProjector.project_player_view(_state, context)
+	var preview: Dictionary = PublicActionPreviewer.preview_intent(player_view, intent)
+	if str(player_view.get("active_side", "")) != side:
+		preview["classification"] = "KNOWN_ILLEGAL"
+		preview["message_key"] = "action.known_illegal"
+	return preview
+
+
 func preview_intent(intent: Dictionary) -> Dictionary:
 	var player_view: Dictionary = current_player_view()
 	var preview: Dictionary = PublicActionPreviewer.preview_intent(player_view, intent)
@@ -73,18 +123,48 @@ func preview_intent(intent: Dictionary) -> Dictionary:
 
 
 func submit_intent(normalized_intent: Dictionary) -> Dictionary:
+	return _submit_intent_for_context(normalized_intent, _viewer_context, true)
+
+
+func submit_intent_for_side(side: String, normalized_intent: Dictionary) -> Dictionary:
+	var context: RefCounted = _context_for_side(side)
+	if context == null:
+		return {}
+	return _submit_intent_for_context(normalized_intent, context, false)
+
+
+func reject_request_for_side(
+	side: String,
+	intent_id: String,
+	public_code: String = "invalid_request"
+) -> Dictionary:
+	var context: RefCounted = _context_for_side(side)
+	if context == null:
+		return {}
+	return _safe_rejection_for_context(
+		{"intent_id": intent_id},
+		public_code,
+		context
+	)
+
+
+func _submit_intent_for_context(
+	normalized_intent: Dictionary,
+	context: RefCounted,
+	record_observer_frame: bool
+) -> Dictionary:
 	var encoded: Dictionary = NormalizedIntentCodec.encode(normalized_intent)
 	if not bool(encoded.get("ok", false)):
-		return _safe_rejection(normalized_intent, "invalid_request")
+		return _safe_rejection_for_context(normalized_intent, "invalid_request", context)
 	var intent_id: String = str(normalized_intent["intent_id"])
 	var expected_index: int = int(normalized_intent["expected_action_index"])
 	if expected_index != int(_state["action_index"]):
-		return _safe_rejection(normalized_intent, "stale_intent")
-	if str(_state["active_side"]) != str(_viewer_context.call("side")):
-		return _safe_rejection(normalized_intent, "known_illegal")
+		return _safe_rejection_for_context(normalized_intent, "stale_intent", context)
+	if str(_state["active_side"]) != str(context.call("side")):
+		return _safe_rejection_for_context(normalized_intent, "known_illegal", context)
 	var domain_intent: Dictionary = NormalizedIntentCodec.to_domain_intent(normalized_intent)
 	var preview: Dictionary = PublicActionPreviewer.preview_intent(
-		current_player_view(), domain_intent
+		ObserverProjector.project_player_view(_state, context), domain_intent
 	)
 	var result: Dictionary = RuleEngine.submit_action(_state, domain_intent, {
 		"trusted_generated_action": false,
@@ -98,9 +178,10 @@ func submit_intent(normalized_intent: Dictionary) -> Dictionary:
 	if bool(result.get("consumed", false)) and not bool(_state.get("terminal", false)):
 		_prepare_authority_turn()
 	var frame: Dictionary = _compose_safe_frame(
-		_state, _viewer_context, visible_error, _observer_frames.size() + 1
+		_state, context, visible_error, _observer_frames.size() + 1
 	)
-	_observer_frames.append(frame)
+	if record_observer_frame:
+		_observer_frames.append(frame)
 	return {
 		"ok": bool(result.get("ok", false)),
 		"consumed": bool(result.get("consumed", false)),
@@ -158,17 +239,37 @@ func advance_trusted_scripted_pass() -> Dictionary:
 
 
 func submit_trusted_timeout(expected_action_index: int) -> Dictionary:
+	return _submit_trusted_timeout_for_context(
+		expected_action_index,
+		_viewer_context,
+		true
+	)
+
+
+func submit_trusted_timeout_for_side(side: String, expected_action_index: int) -> Dictionary:
+	var context: RefCounted = _context_for_side(side)
+	if context == null:
+		return {}
+	return _submit_trusted_timeout_for_context(expected_action_index, context, false)
+
+
+func _submit_trusted_timeout_for_context(
+	expected_action_index: int,
+	context: RefCounted,
+	record_observer_frame: bool
+) -> Dictionary:
 	if bool(_state.get("terminal", false)) \
 	or expected_action_index != int(_state.get("action_index", -1)) \
-	or str(_state.get("active_side", "")) != str(_viewer_context.call("side")):
+	or str(_state.get("active_side", "")) != str(context.call("side")):
+		var rejected_view: Dictionary = ObserverProjector.project_player_view(_state, context)
 		return {
 			"ok": false,
 			"consumed": false,
 			"error_code": "stale_or_unauthorized_timeout",
-			"player_view": current_player_view(),
-			"visible_events": current_visible_events(),
+			"player_view": rejected_view,
+			"visible_events": VisibleOutcomeProjector.project_visible_events(_state, context),
 			"visible_error": {},
-			"action_previews": current_action_previews(),
+			"action_previews": _action_previews_for_view(rejected_view),
 		}
 	var result: Dictionary = RuleEngine.submit_timeout_random_move(_state, {
 		"include_state_summary": false,
@@ -177,9 +278,10 @@ func submit_trusted_timeout(expected_action_index: int) -> Dictionary:
 	if bool(result.get("consumed", false)) and not bool(_state.get("terminal", false)):
 		_prepare_authority_turn()
 	var frame: Dictionary = _compose_safe_frame(
-		_state, _viewer_context, {}, _observer_frames.size() + 1
+		_state, context, {}, _observer_frames.size() + 1
 	)
-	_observer_frames.append(frame)
+	if record_observer_frame:
+		_observer_frames.append(frame)
 	return {
 		"ok": bool(result.get("ok", false)),
 		"consumed": bool(result.get("consumed", false)),
@@ -300,6 +402,14 @@ func _prepare_authority_turn() -> void:
 
 
 func _safe_rejection(intent: Dictionary, public_code: String) -> Dictionary:
+	return _safe_rejection_for_context(intent, public_code, _viewer_context)
+
+
+func _safe_rejection_for_context(
+	intent: Dictionary,
+	public_code: String,
+	context: RefCounted
+) -> Dictionary:
 	var intent_id: String = str(intent.get("intent_id", "invalid-intent"))
 	var action_index: int = int(_state.get("action_index", 0))
 	var domain_result: Dictionary = {
@@ -314,10 +424,18 @@ func _safe_rejection(intent: Dictionary, public_code: String) -> Dictionary:
 	return {
 		"ok": false,
 		"consumed": false,
-		"player_view": current_player_view(),
-		"visible_events": current_visible_events(),
+		"player_view": ObserverProjector.project_player_view(_state, context),
+		"visible_events": VisibleOutcomeProjector.project_visible_events(_state, context),
 		"visible_error": VisibleOutcomeProjector.project_visible_error(
 			domain_result, intent_id, action_index
 		),
-		"action_previews": current_action_previews(),
+		"action_previews": _action_previews_for_view(
+			ObserverProjector.project_player_view(_state, context)
+		),
 	}
+
+
+func _context_for_side(side: String) -> RefCounted:
+	if side not in ["red", "black"] or not _viewer_contexts.has(side):
+		return null
+	return _viewer_contexts[side]

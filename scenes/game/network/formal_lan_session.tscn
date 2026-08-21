@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/application/formal_lan_session.gd" id="1_formal_lan"]
+
+[node name="FormalLanSession" type="Node"]
+script = ExtResource("1_formal_lan")
+default_port = 27772
+maximum_remote_clients = 1
