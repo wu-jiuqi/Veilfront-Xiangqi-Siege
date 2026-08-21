@@ -9,6 +9,9 @@ const ApplicationHostScript = preload(
 const FormalLanProtocol = preload(
 	"res://scripts/game/contracts/formal_lan_protocol.gd"
 )
+const MatchState = preload(
+	"res://scripts/game/domain/match_state.gd"
+)
 
 var _failures: Array[String] = []
 var _server_root: Node
@@ -172,6 +175,109 @@ func _run() -> void:
 	_check(_all_views_belong_to(_server_views, "red"), "多批次后红方端仍未串入黑方视图")
 	_check(_all_views_belong_to(_client_views, "black"), "多批次后黑方端仍未串入红方视图")
 
+	_server_host.request_skip()
+	var skip_completed: bool = await _wait_until(func() -> bool:
+		return int(_server_state.get("action_index", -1)) == 3 \
+			and int(_client_state.get("action_index", -1)) == 3 \
+			and str(_client_state.get("active_side", "")) == "black"
+	, 360)
+	_check(skip_completed, "房主跳过行动经正式 LAN 结算并切换玄方")
+
+	_client_host.request_turn_timeout(3)
+	var timeout_completed: bool = await _wait_until(func() -> bool:
+		return int(_server_state.get("action_index", -1)) == 4 \
+			and int(_client_state.get("action_index", -1)) == 4 \
+			and str(_server_state.get("active_side", "")) == "red"
+	, 360)
+	_check(timeout_completed, "客户端回合超时经房主权威结算并切回赤方")
+	if not timeout_completed:
+		_finish()
+		return
+
+	var authoritative_state: Dictionary = _server_session._application._state
+	var rook_position: Vector2i = _piece_position(authoritative_state, "red-rook-1")
+	MatchState.register_casualty(
+		authoritative_state,
+		"red-rook-1",
+		"network_fixture",
+		rook_position
+	)
+	_server_session._application._prepare_authority_turn()
+	_publish_authority_fixture()
+	var resurrection_ready: bool = await _wait_until(func() -> bool:
+		return not _first_legal_action(_server_previews, "resurrect").is_empty()
+	, 360)
+	_check(resurrection_ready, "权威伤亡池经观察者协议生成赤方复活预览")
+	if not resurrection_ready:
+		_finish()
+		return
+	var resurrection_preview: Dictionary = _first_legal_action(
+		_server_previews, "resurrect"
+	)
+	_server_host.prepare_action(str(resurrection_preview.get("preview_id", "")))
+	_server_host.confirm_prepared_action(str(resurrection_preview.get("preview_id", "")))
+	var resurrection_completed: bool = await _wait_until(func() -> bool:
+		return int(_server_state.get("action_index", -1)) == 5 \
+			and int(_client_state.get("action_index", -1)) == 5 \
+			and str(_client_state.get("active_side", "")) == "black" \
+			and bool(_server_session._application._state["pieces"]["red-rook-1"].get(
+				"alive", false
+			))
+	, 360)
+	_check(resurrection_completed, "赤方士献祭复活经正式 LAN 结算并同步玄方")
+	if not resurrection_completed:
+		_finish()
+		return
+
+	var bombard_ready: bool = await _wait_until(func() -> bool:
+		return not _first_legal_action(_client_previews, "bombard").is_empty()
+	, 360)
+	_check(bombard_ready, "玄方获得正式炮击预览")
+	if not bombard_ready:
+		_finish()
+		return
+	var bombard_preview: Dictionary = _first_legal_action(_client_previews, "bombard")
+	_client_host.prepare_action(str(bombard_preview.get("preview_id", "")))
+	_client_host.confirm_prepared_action(str(bombard_preview.get("preview_id", "")))
+	var bombard_completed: bool = await _wait_until(func() -> bool:
+		return int(_server_state.get("action_index", -1)) == 6 \
+			and int(_client_state.get("action_index", -1)) == 6 \
+			and str(_server_state.get("active_side", "")) == "red"
+	, 360)
+	_check(bombard_completed, "玄方炮击经可靠 RPC 与房主随机权威结算")
+	if not bombard_completed:
+		_finish()
+		return
+
+	_arrange_terminal_capture_fixture()
+	_server_session._application._prepare_authority_turn()
+	_publish_authority_fixture()
+	var capture_ready: bool = await _wait_until(func() -> bool:
+		return not _find_legal_move(
+			_server_previews, "red-rook-1", Vector2i(6, 11)
+		).is_empty()
+	, 360)
+	_check(capture_ready, "赤方仅凭 PlayerView 获得吃将预览")
+	if not capture_ready:
+		_finish()
+		return
+	var capture_preview: Dictionary = _find_legal_move(
+		_server_previews, "red-rook-1", Vector2i(6, 11)
+	)
+	_server_host.prepare_action(str(capture_preview.get("preview_id", "")))
+	_server_host.confirm_prepared_action(str(capture_preview.get("preview_id", "")))
+	var terminal_completed: bool = await _wait_until(func() -> bool:
+		return int(_server_state.get("action_index", -1)) == 7 \
+			and int(_client_state.get("action_index", -1)) == 7 \
+			and bool(_server_state.get("terminal", false)) \
+			and bool(_client_state.get("terminal", false)) \
+			and str(_latest_view(_server_views).get("winner", "")) == "red" \
+			and str(_latest_view(_client_views).get("winner", "")) == "red"
+	, 360)
+	_check(terminal_completed, "吃将终局由房主权威结算并向双方下发同一胜方")
+	_check(_all_views_are_observer_safe(_server_views), "特殊行动后赤方仍无权威状态泄露")
+	_check(_all_views_are_observer_safe(_client_views), "特殊行动后玄方仍无权威状态泄露")
+
 	_client_session.disconnect_from_game()
 	var disconnected: bool = await _wait_until(func() -> bool:
 		return str(_server_state.get("state", "")) == "peer_disconnected" \
@@ -315,12 +421,74 @@ func _all_action_types_are_whitelisted() -> bool:
 
 
 func _first_legal_move(previews: Array) -> Dictionary:
+	return _first_legal_action(previews, "move")
+
+
+func _first_legal_action(previews: Array, action_type: String) -> Dictionary:
 	for preview_value: Variant in previews:
 		if preview_value is Dictionary \
-		and str(preview_value.get("action_type", "")) == "move" \
+		and str(preview_value.get("action_type", "")) == action_type \
 		and str(preview_value.get("classification", "")) == "KNOWN_LEGAL":
 			return preview_value.duplicate(true)
 	return {}
+
+
+func _find_legal_move(
+	previews: Array,
+	piece_id: String,
+	target: Vector2i
+) -> Dictionary:
+	for preview_value: Variant in previews:
+		if preview_value is Dictionary \
+		and str(preview_value.get("piece_id", "")) == piece_id \
+		and str(preview_value.get("action_type", "")) == "move" \
+		and str(preview_value.get("classification", "")) == "KNOWN_LEGAL" \
+		and preview_value.get("target_cell", []) == [target.x, target.y]:
+			return preview_value.duplicate(true)
+	return {}
+
+
+func _publish_authority_fixture() -> void:
+	for peer_id: int in _server_session._seated_peer_ids():
+		var side: String = str(_server_session._peer_to_side[peer_id])
+		_server_session._deliver_payload_to_peer(
+			peer_id,
+			_server_session._application.current_payload_for_side(side)
+		)
+
+
+func _arrange_terminal_capture_fixture() -> void:
+	var state: Dictionary = _server_session._application._state
+	_clear_fixture_cell(state, Vector2i(6, 10), ["red-rook-1", "black-general-1"])
+	_clear_fixture_cell(state, Vector2i(6, 11), ["red-rook-1", "black-general-1"])
+	MatchState.relocate_piece(state, "red-rook-1", Vector2i(6, 10))
+	MatchState.relocate_piece(state, "black-general-1", Vector2i(6, 11))
+
+
+func _clear_fixture_cell(
+	state: Dictionary,
+	cell: Vector2i,
+	preserved_piece_ids: Array[String]
+) -> void:
+	var occupying: Dictionary = MatchState.piece_at(state, cell)
+	if occupying.is_empty():
+		return
+	var occupying_id: String = str(occupying.get("id", ""))
+	if occupying_id in preserved_piece_ids:
+		MatchState.remove_piece_from_board(state, occupying_id)
+		return
+	MatchState.register_casualty(state, occupying_id, "network_fixture", cell)
+
+
+func _piece_position(state: Dictionary, piece_id: String) -> Vector2i:
+	var position: Array = state["pieces"][piece_id].get("position", [])
+	if position.size() != 2:
+		return Vector2i(-1, -1)
+	return Vector2i(int(position[0]), int(position[1]))
+
+
+func _latest_view(views: Array[Dictionary]) -> Dictionary:
+	return {} if views.is_empty() else views.back()
 
 
 func _all_views_belong_to(views: Array[Dictionary], side: String) -> bool:

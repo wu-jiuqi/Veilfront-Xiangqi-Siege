@@ -275,12 +275,15 @@ func _receive_public_state(encoded_state: String) -> void:
 @rpc("authority", "call_remote", "reliable", 0)
 func _receive_observer_batch(
 	compressed_batch: PackedByteArray,
-	uncompressed_size: int
+	uncompressed_size: int,
+	compressed_digest: String
 ) -> void:
 	if uncompressed_size <= 0 \
 	or uncompressed_size > MAX_OBSERVER_BATCH_BYTES \
 	or compressed_batch.is_empty() \
-	or compressed_batch.size() > MAX_OBSERVER_BATCH_BYTES:
+	or compressed_batch.size() > MAX_OBSERVER_BATCH_BYTES \
+	or compressed_digest.length() != 64 \
+	or compressed_digest != _observer_transport_digest(compressed_batch):
 		abort_protocol_error("observer_transport_invalid")
 		return
 	var raw_batch: PackedByteArray = compressed_batch.decompress(
@@ -493,7 +496,25 @@ func _deliver_payload_to_peer(peer_id: int, payload: Dictionary) -> void:
 		or compressed_batch.size() > MAX_OBSERVER_BATCH_BYTES:
 			abort_protocol_error("observer_transport_compression_failed")
 			return
-		_receive_observer_batch.rpc_id(peer_id, compressed_batch, raw_batch.size())
+		var compressed_digest: String = _observer_transport_digest(compressed_batch)
+		if compressed_digest.is_empty():
+			abort_protocol_error("observer_transport_compression_failed")
+			return
+		_receive_observer_batch.rpc_id(
+			peer_id,
+			compressed_batch,
+			raw_batch.size(),
+			compressed_digest
+		)
+
+
+func _observer_transport_digest(payload: PackedByteArray) -> String:
+	var hashing_context := HashingContext.new()
+	if hashing_context.start(HashingContext.HASH_SHA256) != OK:
+		return ""
+	if hashing_context.update(payload) != OK:
+		return ""
+	return hashing_context.finish().hex_encode()
 
 
 func _apply_observer_batch_bytes(encoded_batch: String) -> void:

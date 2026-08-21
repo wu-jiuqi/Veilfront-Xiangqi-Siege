@@ -52,12 +52,33 @@ func _run() -> void:
 	session.disconnect_from_game()
 	var raw_batch: PackedByteArray = batch_bytes.to_utf8_buffer()
 	var compressed_batch: PackedByteArray = raw_batch.compress(FileAccess.COMPRESSION_DEFLATE)
+	var compressed_digest: String = session._observer_transport_digest(compressed_batch)
 	_expect(compressed_batch.size() < raw_batch.size(), "observer transport compresses the canonical batch")
-	session._receive_observer_batch(compressed_batch, raw_batch.size())
+	session._receive_observer_batch(
+		PackedByteArray([1, 2, 3, 4]),
+		raw_batch.size(),
+		compressed_digest
+	)
+	_expect(str(session.get_public_state_snapshot().get("error_code", "")) == "observer_transport_invalid", "observer transport rejects corrupt compressed bytes")
+
+	session.disconnect_from_game()
+	session._receive_observer_batch(
+		compressed_batch,
+		raw_batch.size() + 1,
+		compressed_digest
+	)
+	_expect(str(session.get_public_state_snapshot().get("error_code", "")) == "observer_transport_invalid", "observer transport rejects decompressed length mismatch")
+
+	session.disconnect_from_game()
+	session._receive_observer_batch(compressed_batch, raw_batch.size(), compressed_digest)
 	_expect(port._last_frame_sequence == 1 and port._bound_side == "red", "compressed observer transport restores and validates the canonical frame")
 
 	session.disconnect_from_game()
-	session._receive_observer_batch(PackedByteArray([1]), 4 * 1024 * 1024 + 1)
+	session._receive_observer_batch(
+		PackedByteArray([1]),
+		4 * 1024 * 1024 + 1,
+		"0".repeat(64)
+	)
 	_expect(str(session.get_public_state_snapshot().get("error_code", "")) == "observer_transport_invalid", "observer transport rejects declared payloads above the allocation bound")
 
 	session.disconnect_from_game()
