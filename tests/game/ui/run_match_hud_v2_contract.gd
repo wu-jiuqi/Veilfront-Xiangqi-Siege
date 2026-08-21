@@ -97,6 +97,10 @@ func _run() -> void:
 		"minimap did not reuse the formal bird-eye board renderer"
 	)
 	_expect(bool(minimap.get("interactive_navigation", false)), "minimap navigation is not interactive")
+	_expect(
+		str(minimap.get("viewport_indicator_style", "")) == "gray_viewport_area",
+		"minimap does not use the gray current-view area"
+	)
 	_expect(int(minimap.get("wall_segment_count", 0)) == 18, "minimap did not mirror board wall semantics")
 	var overview_rect: Rect2 = minimap.get("viewport_rect_normalized", Rect2())
 	_expect(overview_rect.size.y > 0.0 and overview_rect.size.y < 1.0, "minimap did not show the main-board viewport")
@@ -111,6 +115,13 @@ func _run() -> void:
 	var motion_snapshot: Dictionary = screen.get_board_render_snapshot()
 	var camera_after: Vector2 = motion_snapshot.get("camera_position", Vector2.ZERO)
 	var camera_target_y := float(motion_snapshot.get("camera_target_y", camera_after.y))
+	var minimap_navigation_duration := float(
+		motion_snapshot.get("minimap_navigation_duration", 0.0)
+	)
+	_expect(
+		minimap_navigation_duration > 0.0 and minimap_navigation_duration <= 0.2,
+		"minimap navigation is not configured as a rapid smooth move"
+	)
 	_expect(camera_after.y < camera_before.y, "minimap click did not navigate the main board")
 	_expect(
 		bool(motion_snapshot.get("camera_motion_active", false)),
@@ -119,6 +130,14 @@ func _run() -> void:
 	_expect(
 		camera_after.y > camera_target_y + 1.0,
 		"minimap navigation jumped directly to its destination"
+	)
+	var moving_minimap: Dictionary = screen.get_hud_snapshot().get("minimap", {})
+	var moving_overview_rect: Rect2 = moving_minimap.get(
+		"viewport_rect_normalized", Rect2()
+	)
+	_expect(
+		moving_overview_rect.position.y < overview_rect.position.y,
+		"minimap gray view area did not follow the moving main-board camera"
 	)
 	await create_timer(0.5).timeout
 	var camera_finished: Vector2 = screen.get_board_render_snapshot().get(

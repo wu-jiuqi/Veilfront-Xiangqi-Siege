@@ -11,6 +11,7 @@ const PAN_SPEED: float = 720.0
 const PAN_ACCELERATION: float = 3600.0
 const WHEEL_PAN_SPEED: float = 420.0
 const CAMERA_SCROLL_DURATION: float = 0.32
+const MINIMAP_NAVIGATION_DURATION: float = 0.16
 const HOVER_RADIUS_RATIO: float = 0.46
 
 @onready var _sub_viewport: SubViewport = $BoardSubViewport
@@ -165,6 +166,7 @@ func get_render_snapshot() -> Dictionary:
 	snapshot["camera_motion_active"] = _camera_motion_tween != null \
 		and _camera_motion_tween.is_valid() and _camera_motion_tween.is_running()
 	snapshot["camera_scroll_duration"] = CAMERA_SCROLL_DURATION
+	snapshot["minimap_navigation_duration"] = MINIMAP_NAVIGATION_DURATION
 	snapshot["hovered_cell"] = _hovered_cell
 	snapshot["coordinate_text"] = "坐标：（%d, %d）" % [_hovered_cell.x, _hovered_cell.y] \
 		if BoardCoordinateMapper.is_authority_cell_valid(_hovered_cell) else "坐标：—"
@@ -201,7 +203,8 @@ func get_overview_state() -> Dictionary:
 func navigate_to_overview_ratio(display_ratio: Vector2) -> void:
 	_focused_cell = Vector2i.ZERO
 	_animate_camera_y_to(
-		clampf(display_ratio.y, 0.0, 1.0) * BOARD_WORLD_SIZE.y
+		clampf(display_ratio.y, 0.0, 1.0) * BOARD_WORLD_SIZE.y,
+		MINIMAP_NAVIGATION_DURATION
 	)
 
 

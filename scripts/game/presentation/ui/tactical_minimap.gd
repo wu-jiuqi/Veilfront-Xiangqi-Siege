@@ -6,8 +6,8 @@ signal overview_navigation_requested(display_ratio: Vector2)
 const Mapper = preload("res://scripts/game/presentation/board/board_coordinate_mapper.gd")
 const BOARD_SIZE := Vector2i(9, 24)
 const BOARD_WORLD_SIZE := Vector2(1152.0, 3072.0)
-const VIEWPORT_COLOR := Color(0.94, 0.72, 0.28, 0.98)
-const VIEWPORT_FILL := Color(0.94, 0.72, 0.28, 0.1)
+const VIEWPORT_BORDER_COLOR := Color(0.76, 0.78, 0.8, 0.96)
+const VIEWPORT_AREA_COLOR := Color(0.42, 0.44, 0.46, 0.48)
 
 @onready var _bird_eye_viewport: SubViewport = $BirdEyeViewportContainer/BirdEyeViewport
 @onready var _bird_eye_world: Node2D = $BirdEyeViewportContainer/BirdEyeViewport/BoardWorld
@@ -95,6 +95,7 @@ func get_state_snapshot() -> Dictionary:
 		"bird_eye_mode": true,
 		"uses_board_world_renderer": true,
 		"interactive_navigation": true,
+		"viewport_indicator_style": "gray_viewport_area",
 		"viewport_rect_normalized": _overview_state.get(
 			"viewport_rect_normalized", Rect2(0.0, 0.0, 1.0, 1.0)
 		),
@@ -153,8 +154,8 @@ func _draw_camera_viewport(board_rect: Rect2) -> void:
 	).intersection(board_rect)
 	if viewport_rect.size.x <= 0.0 or viewport_rect.size.y <= 0.0:
 		return
-	draw_rect(viewport_rect, VIEWPORT_FILL, true)
-	draw_rect(viewport_rect.grow(-0.75), VIEWPORT_COLOR, false, 1.5)
+	draw_rect(viewport_rect, VIEWPORT_AREA_COLOR, true)
+	draw_rect(viewport_rect.grow(-0.75), VIEWPORT_BORDER_COLOR, false, 1.5)
 
 
 func _request_navigation(local_position: Vector2) -> void:

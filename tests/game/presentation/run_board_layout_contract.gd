@@ -179,6 +179,9 @@ func _check_resolution(resolution: Vector2i) -> Dictionary:
 	var scroll_duration := float(board_motion.get("camera_scroll_duration", 0.0))
 	_expect(scroll_duration > 0.0, "%s board camera scrolling has no interpolation duration" % resolution)
 	_expect(scroll_duration <= 0.5, "%s board camera interpolation is too sluggish" % resolution)
+	var minimap_duration := float(board_motion.get("minimap_navigation_duration", 0.0))
+	_expect(minimap_duration > 0.0, "%s minimap navigation has no interpolation duration" % resolution)
+	_expect(minimap_duration <= 0.2, "%s minimap navigation is not rapid enough" % resolution)
 	_expect(absf(spacing.x - spacing.y) <= 0.01, "%s point spacing is not square: %s" % [resolution, spacing])
 	_expect(spacing.x > 0.0, "%s point spacing must be positive" % resolution)
 	_expect(board_rect.position.x >= 0.0 and board_rect.end.x <= resolution.x + 0.5, "%s board is horizontally clipped" % resolution)
@@ -213,6 +216,10 @@ func _check_resolution(resolution: Vector2i) -> Dictionary:
 	_expect(
 		bool(minimap.get("uses_board_world_renderer", false)),
 		"%s minimap does not reuse the formal board renderer" % resolution
+	)
+	_expect(
+		str(minimap.get("viewport_indicator_style", "")) == "gray_viewport_area",
+		"%s minimap does not use the gray current-view area" % resolution
 	)
 	_expect(int(minimap.get("piece_count", 0)) == 3, "%s minimap did not consume visible pieces" % resolution)
 	_expect(int(minimap.get("flag_count", 0)) == 1, "%s minimap did not consume discovered flags" % resolution)
