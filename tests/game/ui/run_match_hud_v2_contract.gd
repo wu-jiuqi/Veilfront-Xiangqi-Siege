@@ -92,17 +92,66 @@ func _run() -> void:
 	_expect(int(minimap.get("piece_count", 0)) == 1, "minimap visible piece count mismatch")
 	_expect(int(minimap.get("flag_count", 0)) == 1, "minimap discovered flag count mismatch")
 	_expect(bool(minimap.get("bird_eye_mode", false)), "minimap did not enter bird-eye mode")
+	_expect(
+		bool(minimap.get("uses_board_world_renderer", false)),
+		"minimap did not reuse the formal bird-eye board renderer"
+	)
 	_expect(bool(minimap.get("interactive_navigation", false)), "minimap navigation is not interactive")
 	_expect(int(minimap.get("wall_segment_count", 0)) == 18, "minimap did not mirror board wall semantics")
 	var overview_rect: Rect2 = minimap.get("viewport_rect_normalized", Rect2())
 	_expect(overview_rect.size.y > 0.0 and overview_rect.size.y < 1.0, "minimap did not show the main-board viewport")
 	if "--capture-screenshot" in OS.get_cmdline_user_args():
+		_hover_board(screen, TEST_CELL)
+		await process_frame
 		_capture_screenshot(viewport)
+		_hover_board_away(screen)
 	var camera_before: Vector2 = screen.get_board_render_snapshot().get("camera_position", Vector2.ZERO)
 	_navigate_minimap_to_top(screen)
 	await process_frame
-	var camera_after: Vector2 = screen.get_board_render_snapshot().get("camera_position", Vector2.ZERO)
+	var motion_snapshot: Dictionary = screen.get_board_render_snapshot()
+	var camera_after: Vector2 = motion_snapshot.get("camera_position", Vector2.ZERO)
+	var camera_target_y := float(motion_snapshot.get("camera_target_y", camera_after.y))
 	_expect(camera_after.y < camera_before.y, "minimap click did not navigate the main board")
+	_expect(
+		bool(motion_snapshot.get("camera_motion_active", false)),
+		"minimap navigation did not start smooth camera motion"
+	)
+	_expect(
+		camera_after.y > camera_target_y + 1.0,
+		"minimap navigation jumped directly to its destination"
+	)
+	await create_timer(0.5).timeout
+	var camera_finished: Vector2 = screen.get_board_render_snapshot().get(
+		"camera_position", Vector2.ZERO
+	)
+	_expect(
+		absf(camera_finished.y - camera_target_y) <= 1.0,
+		"smooth minimap navigation did not settle on its destination"
+	)
+	_hover_board(screen, Vector2i(5, 20))
+	await process_frame
+	_expect(
+		board_position.text == "位置: (5, 20)",
+		"board hover coordinate drifted after camera navigation"
+	)
+	_hover_board_away(screen)
+	var wheel_camera_before: Vector2 = screen.get_board_render_snapshot().get(
+		"camera_position", Vector2.ZERO
+	)
+	_scroll_board(screen, MOUSE_BUTTON_WHEEL_DOWN)
+	await process_frame
+	var wheel_motion: Dictionary = screen.get_board_render_snapshot()
+	var wheel_camera_after: Vector2 = wheel_motion.get("camera_position", Vector2.ZERO)
+	var wheel_target_y := float(wheel_motion.get("camera_target_y", wheel_camera_after.y))
+	_expect(
+		bool(wheel_motion.get("camera_motion_active", false)),
+		"mouse-wheel board scroll did not start smooth camera motion"
+	)
+	_expect(
+		wheel_camera_after.y > wheel_camera_before.y and wheel_camera_after.y < wheel_target_y,
+		"mouse-wheel board scroll did not interpolate between start and target"
+	)
+	await create_timer(0.5).timeout
 	var mirror_button: Button = screen.find_child("MirrorButton", true, false) as Button
 	_expect(mirror_button != null, "HUD mirror button is missing")
 	if mirror_button != null:
@@ -244,38 +293,36 @@ func _expect(condition: bool, message: String) -> void:
 
 
 func _hover_board(screen: Control, cell: Vector2i) -> void:
-	var board_world: Node2D = screen.get_node(
-		"MatchHudV2/BoardFrame/BoardViewport/BoardSubViewport/BoardWorld"
-	) as Node2D
-	var input_surface: Control = board_world.get_node("InputSurface") as Control
-	var event := InputEventMouseMotion.new()
-	event.position = BoardCoordinateMapper.authority_to_world(
-		cell, "red", board_world.get_cell_size()
+	var board_viewport: SubViewportContainer = screen.get_node(
+		"MatchHudV2/BoardFrame/BoardViewport"
+	) as SubViewportContainer
+	var hover_surface: Control = board_viewport.get_node("ScreenInputSurface") as Control
+	_expect(
+		hover_surface.mouse_filter == Control.MOUSE_FILTER_STOP,
+		"board screen interaction surface does not own GUI input"
 	)
-	input_surface._gui_input(event)
+	var event := InputEventMouseMotion.new()
+	event.position = board_viewport.get_container_position_for_authority_cell(cell)
+	hover_surface.gui_input.emit(event)
 
 
 func _hover_board_away(screen: Control) -> void:
-	var input_surface: Control = screen.get_node(
-		"MatchHudV2/BoardFrame/BoardViewport/BoardSubViewport/BoardWorld/InputSurface"
+	var hover_surface: Control = screen.get_node(
+		"MatchHudV2/BoardFrame/BoardViewport/ScreenInputSurface"
 	) as Control
-	var event := InputEventMouseMotion.new()
-	event.position = Vector2(128.0, 128.0)
-	input_surface._gui_input(event)
+	hover_surface.mouse_exited.emit()
 
 
 func _click_board(screen: Control, cell: Vector2i) -> void:
-	var board_world: Node2D = screen.get_node(
-		"MatchHudV2/BoardFrame/BoardViewport/BoardSubViewport/BoardWorld"
-	) as Node2D
-	var input_surface: Control = board_world.get_node("InputSurface") as Control
+	var board_viewport: SubViewportContainer = screen.get_node(
+		"MatchHudV2/BoardFrame/BoardViewport"
+	) as SubViewportContainer
+	var input_surface: Control = board_viewport.get_node("ScreenInputSurface") as Control
 	var event := InputEventMouseButton.new()
 	event.button_index = MOUSE_BUTTON_LEFT
 	event.pressed = true
-	event.position = BoardCoordinateMapper.authority_to_world(
-		cell, "red", board_world.get_cell_size()
-	)
-	input_surface._gui_input(event)
+	event.position = board_viewport.get_container_position_for_authority_cell(cell)
+	input_surface.gui_input.emit(event)
 
 
 func _navigate_minimap_to_top(screen: Control) -> void:
@@ -290,6 +337,18 @@ func _navigate_minimap_to_top(screen: Control) -> void:
 	release.pressed = false
 	release.position = press.position
 	minimap._gui_input(release)
+
+
+func _scroll_board(screen: Control, button_index: MouseButton) -> void:
+	var input_surface: Control = screen.get_node(
+		"MatchHudV2/BoardFrame/BoardViewport/ScreenInputSurface"
+	) as Control
+	var event := InputEventMouseButton.new()
+	event.button_index = button_index
+	event.pressed = true
+	event.factor = 1.0
+	event.position = input_surface.size * 0.5
+	input_surface.gui_input.emit(event)
 
 
 func _expect_anchor_rect(control: Control, expected: Rect2, label: String) -> void:

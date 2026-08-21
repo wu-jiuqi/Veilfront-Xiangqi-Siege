@@ -18,6 +18,7 @@ const COMPONENT_SCENE_PATHS: Array[String] = [
 	"res://scenes/game/match/board/capture_ghost_view.tscn",
 	"res://scenes/game/match/board/wall_view.tscn",
 	"res://scenes/game/ui/match_hud_v2.tscn",
+	"res://scenes/game/ui/tactical_minimap.tscn",
 	"res://scenes/game/ui/match_header.tscn",
 	"res://scenes/game/ui/turn_progress_incense.tscn",
 	"res://scenes/game/ui/match_status_panel.tscn",
@@ -175,11 +176,13 @@ func _check_match_screen(instance: Node) -> void:
 	for required_path: String in [
 		"MatchHudV2",
 		"MatchHudV2/BoardFrame/BoardViewport",
+		"MatchHudV2/BoardFrame/BoardViewport/ScreenInputSurface",
 		"MatchHudV2/FactionLeft",
 		"MatchHudV2/FactionRight",
 		"MatchHudV2/UnitInfo",
 		"MatchHudV2/ObjectiveEvents",
 		"MatchHudV2/Minimap/TacticalMinimap",
+		"MatchHudV2/Minimap/TacticalMinimap/BirdEyeViewportContainer/BirdEyeViewport/BoardWorld",
 		"MatchHudV2/PieceInfoDrawer",
 		"MatchHudV2/IncenseTurnClock",
 		"MatchHudV2/IncenseTurnClock/TimerIncenseSlot",
@@ -211,10 +214,17 @@ func _check_match_screen(instance: Node) -> void:
 			_failures.append("pure draw overlay must ignore mouse: %s" % overlay_name)
 	var input_surface: Control = _find_named_node(board_world, "InputSurface") as Control
 	if input_surface != null:
-		if input_surface.mouse_filter != Control.MOUSE_FILTER_STOP:
-			_failures.append("InputSurface must stop mouse input")
+		if input_surface.mouse_filter != Control.MOUSE_FILTER_IGNORE:
+			_failures.append("nested BoardWorld InputSurface must defer to the screen interaction surface")
 		if input_surface.focus_mode != Control.FOCUS_ALL:
 			_failures.append("InputSurface must accept keyboard focus")
+	var screen_input_surface: Control = instance.get_node_or_null(
+		"MatchHudV2/BoardFrame/BoardViewport/ScreenInputSurface"
+	) as Control
+	if screen_input_surface == null:
+		_failures.append("MatchScreen missing screen-space board interaction surface")
+	elif screen_input_surface.mouse_filter != Control.MOUSE_FILTER_STOP:
+		_failures.append("screen-space board interaction surface must stop GUI input")
 	if _count_tree_nodes(board_world) >= 100:
 		_failures.append("BoardWorld preset tree is unexpectedly large; do not create 216 cell nodes")
 

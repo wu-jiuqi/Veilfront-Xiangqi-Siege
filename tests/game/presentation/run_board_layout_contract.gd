@@ -170,9 +170,15 @@ func _check_resolution(resolution: Vector2i) -> Dictionary:
 	var spacing: Vector2 = snapshot.get("point_spacing", Vector2.ZERO)
 	var board_rect: Rect2 = snapshot.get("board_rect", Rect2())
 	var board_camera: Camera2D = match_screen.get_node("MatchHudV2/BoardFrame/BoardViewport/BoardSubViewport/BoardWorld/BoardCamera2D") as Camera2D
+	var board_motion: Dictionary = match_screen.get_board_render_snapshot()
 	var resolution_key := "%dx%d" % [resolution.x, resolution.y]
-	_expect(board_camera.position_smoothing_enabled, "%s board camera scrolling is not smoothed" % resolution)
-	_expect(board_camera.position_smoothing_speed >= 6.0, "%s board camera smoothing is too sluggish" % resolution)
+	_expect(
+		not board_camera.position_smoothing_enabled,
+		"%s native camera smoothing competes with explicit scroll tween" % resolution
+	)
+	var scroll_duration := float(board_motion.get("camera_scroll_duration", 0.0))
+	_expect(scroll_duration > 0.0, "%s board camera scrolling has no interpolation duration" % resolution)
+	_expect(scroll_duration <= 0.5, "%s board camera interpolation is too sluggish" % resolution)
 	_expect(absf(spacing.x - spacing.y) <= 0.01, "%s point spacing is not square: %s" % [resolution, spacing])
 	_expect(spacing.x > 0.0, "%s point spacing must be positive" % resolution)
 	_expect(board_rect.position.x >= 0.0 and board_rect.end.x <= resolution.x + 0.5, "%s board is horizontally clipped" % resolution)
@@ -204,6 +210,10 @@ func _check_resolution(resolution: Vector2i) -> Dictionary:
 			_expect(ui_rect.end.x <= resolution.x + 0.5 and ui_rect.end.y <= resolution.y + 0.5, "%s %s exceeds screen" % [resolution, ui_id])
 	var minimap: Dictionary = snapshot.get("minimap", {})
 	_expect(bool(minimap.get("uses_player_view_only", false)), "%s minimap is not PlayerView-only" % resolution)
+	_expect(
+		bool(minimap.get("uses_board_world_renderer", false)),
+		"%s minimap does not reuse the formal board renderer" % resolution
+	)
 	_expect(int(minimap.get("piece_count", 0)) == 3, "%s minimap did not consume visible pieces" % resolution)
 	_expect(int(minimap.get("flag_count", 0)) == 1, "%s minimap did not consume discovered flags" % resolution)
 

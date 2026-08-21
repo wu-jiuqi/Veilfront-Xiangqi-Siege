@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/unit_info_card_v1.png" id="4_unit"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/objective_event_panel_v1.png" id="5_objective"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/minimap_frame_v1.png" id="6_minimap"]
-[ext_resource type="Script" path="res://scripts/game/presentation/ui/tactical_minimap.gd" id="7_minimap_script"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/tactical_minimap.tscn" id="7_minimap_scene"]
 [ext_resource type="PackedScene" path="res://scenes/game/ui/incense_turn_clock.tscn" id="8_incense"]
 [ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button.tscn" id="9_motion_button"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/hud_panel_9slice_v1.png" id="10_border"]
@@ -503,7 +503,7 @@ offset_right = 305.0
 offset_bottom = 394.0
 mouse_filter = 1
 
-[node name="TacticalMinimap" type="Control" parent="Minimap"]
+[node name="TacticalMinimap" parent="Minimap" instance=ExtResource("7_minimap_scene")]
 unique_name_in_owner = true
 layout_mode = 1
 anchor_left = 0.08
@@ -512,7 +512,6 @@ anchor_right = 0.92
 anchor_bottom = 0.93
 mouse_default_cursor_shape = 2
 tooltip_text = "鸟瞰全局；单击或拖动可平滑定位主棋盘"
-script = ExtResource("7_minimap_script")
 
 [node name="Frame" type="TextureRect" parent="Minimap"]
 layout_mode = 1

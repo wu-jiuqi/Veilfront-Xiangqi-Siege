@@ -1,0 +1,38 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/presentation/ui/tactical_minimap.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://scenes/game/match/board/board_world.tscn" id="2_board_world"]
+
+[node name="TacticalMinimap" type="Control"]
+clip_contents = true
+mouse_filter = 0
+script = ExtResource("1_script")
+
+[node name="Background" type="ColorRect" parent="."]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.018, 0.025, 0.022, 0.98)
+
+[node name="BirdEyeViewportContainer" type="SubViewportContainer" parent="."]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+stretch = true
+
+[node name="BirdEyeViewport" type="SubViewport" parent="BirdEyeViewportContainer"]
+handle_input_locally = false
+size = Vector2i(216, 216)
+render_target_update_mode = 2
+
+[node name="BoardWorld" parent="BirdEyeViewportContainer/BirdEyeViewport" instance=ExtResource("2_board_world")]
