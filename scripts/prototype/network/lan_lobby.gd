@@ -1,6 +1,9 @@
 extends Control
 
 const MAIN_MENU_SCENE: String = "res://scenes/game/frontend/main_menu.tscn"
+const DEFAULT_DISPLAY_ADDRESS: String = "192.168.1.20:27771"
+const ADDRESS_TEXT_COLOR: Color = Color(0.79, 0.72, 0.56, 1.0)
+const ADDRESS_TEXT_HIDDEN: Color = Color(0.79, 0.72, 0.56, 0.0)
 
 const STATUS_TEXT: Dictionary[String, String] = {
 	"disconnected": "●  等待创建或加入房间",
@@ -19,6 +22,7 @@ const STATUS_TEXT: Dictionary[String, String] = {
 
 @onready var network_session: Node = $LanNetworkSession
 @onready var address_input: LineEdit = %AddressInput
+@onready var address_mask: ColorRect = %AddressMask
 @onready var port_input: SpinBox = %PortInput
 @onready var address_preview: Label = %AddressPreview
 @onready var copy_address_button: Button = %CopyAddressButton
@@ -44,11 +48,14 @@ func _ready() -> void:
 	back_to_lobby_button.pressed.connect(_on_disconnect_pressed)
 	return_to_main_menu_button.pressed.connect(_on_return_to_main_menu_pressed)
 	address_input.text_changed.connect(_on_address_changed)
+	address_input.focus_entered.connect(_on_address_focus_entered)
+	address_input.focus_exited.connect(_on_address_focus_exited)
 	port_input.value_changed.connect(_on_port_changed)
 	network_session.connection_state_changed.connect(_on_connection_state_changed)
 	network_session.seat_assigned.connect(_on_seat_assigned)
 	network_session.player_view_received.connect(_on_player_view_received)
 	port_input.value = float(network_session.default_port)
+	_sync_port_from_address()
 	_refresh_address_preview()
 	host_button.grab_focus()
 
@@ -58,17 +65,24 @@ func get_network_session() -> Node:
 
 
 func _on_host_pressed() -> void:
+	_sync_port_from_address()
 	var private_rng := RandomNumberGenerator.new()
 	private_rng.randomize()
 	var private_match_seed: int = int(private_rng.randi())
 	var result: Dictionary = network_session.host_game(private_match_seed, int(port_input.value))
 	if not bool(result.get("ok", false)):
+		status_value.visible = true
 		status_value.text = "●  创建失败：%s" % str(result.get("error", "unknown"))
 
 
 func _on_join_pressed() -> void:
-	var result: Dictionary = network_session.join_game(address_input.text, int(port_input.value))
+	var endpoint := _read_endpoint()
+	var result: Dictionary = network_session.join_game(
+		str(endpoint["address"]),
+		int(endpoint["port"]),
+	)
 	if not bool(result.get("ok", false)):
+		status_value.visible = true
 		status_value.text = "●  加入失败：%s" % str(result.get("error", "unknown"))
 
 
@@ -78,8 +92,9 @@ func _on_disconnect_pressed() -> void:
 
 
 func _on_copy_address_pressed() -> void:
-	DisplayServer.clipboard_set(address_preview.text)
-	copy_address_button.text = "已复制房间地址"
+	DisplayServer.clipboard_set(address_input.text.strip_edges())
+	status_value.visible = true
+	status_value.text = "房间地址已复制"
 	copy_address_button.grab_focus()
 
 
@@ -89,22 +104,61 @@ func _on_return_to_main_menu_pressed() -> void:
 
 
 func _on_address_changed(_next_text: String) -> void:
-	copy_address_button.text = "复制房间地址"
+	_show_address_editor()
+	_sync_port_from_address()
 	_refresh_address_preview()
 
 
+func _on_address_focus_entered() -> void:
+	_show_address_editor()
+
+
+func _on_address_focus_exited() -> void:
+	if address_input.text.strip_edges() != DEFAULT_DISPLAY_ADDRESS:
+		return
+	address_mask.visible = false
+	address_input.add_theme_color_override("font_color", ADDRESS_TEXT_HIDDEN)
+
+
+func _show_address_editor() -> void:
+	address_mask.visible = true
+	address_input.add_theme_color_override("font_color", ADDRESS_TEXT_COLOR)
+
+
 func _on_port_changed(_next_value: float) -> void:
-	copy_address_button.text = "复制房间地址"
 	_refresh_address_preview()
 
 
 func _refresh_address_preview() -> void:
-	address_preview.text = "%s:%d" % [address_input.text.strip_edges(), int(port_input.value)]
+	address_preview.text = address_input.text.strip_edges()
+
+
+func _sync_port_from_address() -> void:
+	var endpoint := _read_endpoint()
+	port_input.value = float(endpoint["port"])
+
+
+func _read_endpoint() -> Dictionary:
+	var raw_address := address_input.text.strip_edges()
+	var result := {
+		"address": raw_address,
+		"port": int(port_input.value),
+	}
+	var separator_index := raw_address.rfind(":")
+	if separator_index <= 0:
+		return result
+	var port_text := raw_address.substr(separator_index + 1)
+	if not port_text.is_valid_int():
+		return result
+	result["address"] = raw_address.substr(0, separator_index)
+	result["port"] = clampi(int(port_text), 1024, 65535)
+	return result
 
 
 func _on_connection_state_changed(snapshot: Dictionary) -> void:
 	var state := str(snapshot.get("state", "unknown"))
 	status_value.text = STATUS_TEXT.get(state, "●  联机状态：%s" % state)
+	status_value.visible = state != "disconnected"
 	var connected: bool = state not in [
 		"disconnected",
 		"connection_error",
@@ -151,6 +205,7 @@ func _show_lobby() -> void:
 
 
 func _reset_seat_display() -> void:
+	status_value.visible = false
 	seat_value.text = "未分配"
 	red_ready_state.text = "房主 · 等待开房"
 	black_player_name.text = "等待同袍加入…"

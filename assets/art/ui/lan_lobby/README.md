@@ -1,6 +1,13 @@
 # 联机房间 UI 资产
 
-- `lan_lobby_board_backdrop_v1.png`：从已确认的“战场本身即棋盘”视觉样片复制出的房间背景。
-- 运行时双方席位直接复用 `red_general_idle.png` 与 `black_general_idle.png`，不复制、不重绘棋子。
-- 面板继续复用 `terracotta_hud_v2/hud_panel_9slice_v1.png` 的黑铁、旧金和低反射金属语言。
-- 背景只承担环境识别，实际房间文字、席位状态、连接输入与按钮全部由 Godot 预置 Control 节点提供。
+- `lan_lobby_full_plate_v2.png`：项目所有者指定的联机房间高保真整屏母版。Godot 以全屏 `TextureRect` 显示，并叠加预置交互热区。
+- `lan_lobby_board_backdrop_v1.png`：V1 拆分方案使用的棋盘背景，保留作对照，不再由 V2 场景直接引用。
+- V2 母版中的双方将领来自 `red_general_idle.png` 与 `black_general_idle.png`，材质与项目正式棋子一致。
+- V2 母版沿用 HUD V2 的黑铁、旧金和低反射金属语言；运行时交互仍由 Godot 预置 Control 节点提供。
+
+## V2 运行时策略
+
+- 当前优先保证 1280×720、16:9 下与批准参考图的像素接近度。
+- 返回、地址编辑、复制、离开、加入、创建仍是独立 Godot 控件，不把交互逻辑写进贴图。
+- 地址默认露出母版原字；获得焦点或内容发生修改时，显示真实 `LineEdit` 编辑层。
+- 若后续需要本地化、超宽屏或自定义房间规则，再把母版拆成独立九宫格与无字面板。

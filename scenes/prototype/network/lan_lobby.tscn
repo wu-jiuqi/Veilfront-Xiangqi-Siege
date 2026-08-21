@@ -1,138 +1,38 @@
-[gd_scene load_steps=19 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://scripts/prototype/network/lan_lobby.gd" id="1_lobby"]
 [ext_resource type="PackedScene" path="res://scenes/prototype/network/lan_network_session.tscn" id="2_network"]
 [ext_resource type="PackedScene" path="res://scenes/game/ui/ui_theme_binder.tscn" id="3_binder"]
 [ext_resource type="PackedScene" path="res://scenes/prototype/gate1_logic_lab.tscn" id="4_board"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/lan_lobby_board_backdrop_v1.png" id="5_backdrop"]
-[ext_resource type="Texture2D" path="res://assets/art/pieces/terracotta_warriors/red_general_idle.png" id="6_red_general"]
-[ext_resource type="Texture2D" path="res://assets/art/pieces/terracotta_warriors/black_general_idle.png" id="7_black_general"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/hud_panel_9slice_v1.png" id="8_panel"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_metal/icons/system/network.svg" id="9_network_icon"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/lan_lobby_full_plate_v2.png" id="5_plate"]
+[ext_resource type="FontFile" path="res://assets/fonts/ramega_zhang_qingping/ramega_zhang_qingping_xingshu.ttf" id="6_display_font"]
+[ext_resource type="FontFile" path="res://assets/fonts/noto_sans_sc/NotoSansSC-VariableFont_wght.ttf" id="7_input_font"]
 
-[sub_resource type="StyleBoxTexture" id="StylePanel"]
-texture = ExtResource("8_panel")
-texture_margin_left = 72.0
-texture_margin_top = 72.0
-texture_margin_right = 72.0
-texture_margin_bottom = 72.0
-content_margin_left = 22.0
-content_margin_top = 20.0
-content_margin_right = 22.0
-content_margin_bottom = 20.0
-draw_center = true
+[sub_resource type="StyleBoxEmpty" id="StyleEmpty"]
 
-[sub_resource type="StyleBoxTexture" id="StylePanelDim"]
-texture = ExtResource("8_panel")
-texture_margin_left = 72.0
-texture_margin_top = 72.0
-texture_margin_right = 72.0
-texture_margin_bottom = 72.0
-content_margin_left = 18.0
-content_margin_top = 18.0
-content_margin_right = 18.0
-content_margin_bottom = 18.0
-draw_center = true
-modulate_color = Color(0.68, 0.72, 0.67, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleTopBar"]
-bg_color = Color(0.018, 0.023, 0.024, 0.98)
-border_width_bottom = 2
-border_color = Color(0.48, 0.37, 0.2, 0.95)
-content_margin_left = 18.0
-content_margin_top = 10.0
-content_margin_right = 18.0
-content_margin_bottom = 10.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBottomBar"]
-bg_color = Color(0.015, 0.02, 0.021, 0.98)
-border_width_top = 2
-border_color = Color(0.48, 0.37, 0.2, 0.95)
-content_margin_left = 22.0
-content_margin_top = 10.0
-content_margin_right = 22.0
-content_margin_bottom = 10.0
-
-[sub_resource type="StyleBoxFlat" id="StyleInput"]
-bg_color = Color(0.012, 0.017, 0.018, 0.98)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.39, 0.33, 0.23, 1)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-content_margin_left = 12.0
-content_margin_top = 8.0
-content_margin_right = 12.0
-content_margin_bottom = 8.0
-
-[sub_resource type="StyleBoxFlat" id="StyleInputFocus"]
-bg_color = Color(0.02, 0.028, 0.029, 1)
+[sub_resource type="StyleBoxFlat" id="StyleFocus"]
+bg_color = Color(0.53, 0.38, 0.12, 0.12)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.77, 0.61, 0.31, 1)
+border_color = Color(0.9, 0.7, 0.28, 0.95)
 corner_radius_top_left = 2
 corner_radius_top_right = 2
 corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
-content_margin_left = 11.0
-content_margin_top = 7.0
-content_margin_right = 11.0
-content_margin_bottom = 7.0
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
 
-[sub_resource type="StyleBoxFlat" id="StyleRedSeat"]
-bg_color = Color(0.12, 0.03, 0.027, 0.82)
+[sub_resource type="StyleBoxFlat" id="StylePressed"]
+bg_color = Color(0.6, 0.43, 0.12, 0.2)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.46, 0.17, 0.12, 0.96)
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
-
-[sub_resource type="StyleBoxFlat" id="StyleBlackSeat"]
-bg_color = Color(0.018, 0.075, 0.061, 0.84)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.14, 0.31, 0.25, 0.96)
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
-
-[sub_resource type="StyleBoxFlat" id="StyleVersus"]
-bg_color = Color(0.045, 0.04, 0.029, 0.98)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.67, 0.51, 0.25, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-content_margin_left = 8.0
-content_margin_top = 8.0
-content_margin_right = 8.0
-content_margin_bottom = 8.0
-
-[sub_resource type="StyleBoxFlat" id="StyleRuleRow"]
-bg_color = Color(0.01, 0.016, 0.017, 0.62)
-border_width_bottom = 1
-border_color = Color(0.34, 0.28, 0.18, 0.9)
-content_margin_left = 9.0
-content_margin_top = 10.0
-content_margin_right = 9.0
-content_margin_bottom = 10.0
+border_color = Color(0.84, 0.62, 0.23, 0.9)
 
 [node name="LanLobby" type="Control"]
 layout_mode = 3
@@ -156,434 +56,206 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Backdrop" type="TextureRect" parent="LobbyChrome"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-modulate = Color(0.52, 0.5, 0.43, 1)
-texture = ExtResource("5_backdrop")
-expand_mode = 1
-stretch_mode = 6
-
-[node name="DarkVeil" type="ColorRect" parent="LobbyChrome"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-color = Color(0.01, 0.016, 0.018, 0.63)
-
-[node name="TopBar" type="PanelContainer" parent="LobbyChrome"]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_bottom = 76.0
-grow_horizontal = 2
-theme_override_styles/panel = SubResource("StyleTopBar")
-
-[node name="Row" type="HBoxContainer" parent="LobbyChrome/TopBar"]
-layout_mode = 2
-theme_override_constants/separation = 14
-
-[node name="ReturnToMainMenuButton" type="Button" parent="LobbyChrome/TopBar/Row"]
+[node name="FullPlate" type="TextureRect" parent="LobbyChrome"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(148, 48)
-layout_mode = 2
-text = "←  返回主界面"
-theme_type_variation = &"SecondaryButton"
-
-[node name="Title" type="Label" parent="LobbyChrome/TopBar/Row"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "联 机 房 间"
-horizontal_alignment = 1
-vertical_alignment = 1
-theme_type_variation = &"ScreenTitle"
-
-[node name="NetworkState" type="HBoxContainer" parent="LobbyChrome/TopBar/Row"]
-custom_minimum_size = Vector2(170, 0)
-layout_mode = 2
-alignment = 2
-theme_override_constants/separation = 8
-
-[node name="Icon" type="TextureRect" parent="LobbyChrome/TopBar/Row/NetworkState"]
-custom_minimum_size = Vector2(28, 28)
-layout_mode = 2
-texture = ExtResource("9_network_icon")
-expand_mode = 1
-stretch_mode = 5
-modulate = Color(0.53, 0.72, 0.45, 1)
-
-[node name="Text" type="Label" parent="LobbyChrome/TopBar/Row/NetworkState"]
-layout_mode = 2
-text = "局域网可用"
-vertical_alignment = 1
-theme_override_colors/font_color = Color(0.55, 0.73, 0.46, 1)
-
-[node name="SafeMargin" type="MarginContainer" parent="LobbyChrome"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("5_plate")
+expand_mode = 1
+stretch_mode = 0
+
+[node name="InteractionLayer" type="Control" parent="LobbyChrome"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ReturnToMainMenuButton" type="Button" parent="LobbyChrome/InteractionLayer"]
+unique_name_in_owner = true
+layout_mode = 0
 offset_left = 18.0
-offset_top = 88.0
-offset_right = -18.0
-offset_bottom = -92.0
-grow_horizontal = 2
-grow_vertical = 2
+offset_top = 16.0
+offset_right = 91.0
+offset_bottom = 67.0
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("StyleEmpty")
+theme_override_styles/hover = SubResource("StyleFocus")
+theme_override_styles/pressed = SubResource("StylePressed")
+theme_override_styles/disabled = SubResource("StyleEmpty")
+theme_override_styles/focus = SubResource("StyleFocus")
 
-[node name="MainColumns" type="HBoxContainer" parent="LobbyChrome/SafeMargin"]
-layout_mode = 2
-theme_override_constants/separation = 12
-
-[node name="CredentialPanel" type="PanelContainer" parent="LobbyChrome/SafeMargin/MainColumns"]
-custom_minimum_size = Vector2(270, 0)
-layout_mode = 2
-theme_override_styles/panel = SubResource("StylePanelDim")
-
-[node name="Content" type="VBoxContainer" parent="LobbyChrome/SafeMargin/MainColumns/CredentialPanel"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="Title" type="Label" parent="LobbyChrome/SafeMargin/MainColumns/CredentialPanel/Content"]
-layout_mode = 2
-text = "房 间 凭 证"
-horizontal_alignment = 1
-theme_type_variation = &"SectionTitle"
-
-[node name="RoomCodeCaption" type="Label" parent="LobbyChrome/SafeMargin/MainColumns/CredentialPanel/Content"]
-layout_mode = 2
-text = "房间代号"
-horizontal_alignment = 1
-theme_type_variation = &"MutedLabel"
-
-[node name="RoomCode" type="Label" parent="LobbyChrome/SafeMargin/MainColumns/CredentialPanel/Content"]
-layout_mode = 2
-text = "雾疆-0771"
-horizontal_alignment = 1
-theme_override_colors/font_color = Color(0.88, 0.69, 0.37, 1)
-theme_override_font_sizes/font_size = 27
-
-[node name="Divider" type="HSeparator" parent="LobbyChrome/SafeMargin/MainColumns/CredentialPanel/Content"]
-layout_mode = 2
-
-[node name="AddressLabel" type="Label" parent="LobbyChrome/SafeMargin/MainColumns/CredentialPanel/Content"]
-layout_mode = 2
-text = "房主 IP / 地址"
-theme_type_variation = &"MutedLabel"
-
-[node name="AddressInput" type="LineEdit" parent="LobbyChrome/SafeMargin/MainColumns/CredentialPanel/Content"]
+[node name="AddressMask" type="ColorRect" parent="LobbyChrome/InteractionLayer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 42)
-layout_mode = 2
-text = "127.0.0.1"
-placeholder_text = "例如 192.168.1.20"
-theme_override_colors/font_color = Color(0.86, 0.82, 0.7, 1)
-theme_override_colors/font_placeholder_color = Color(0.44, 0.46, 0.42, 1)
-theme_override_styles/normal = SubResource("StyleInput")
-theme_override_styles/focus = SubResource("StyleInputFocus")
+visible = false
+layout_mode = 0
+offset_left = 70.0
+offset_top = 337.0
+offset_right = 274.0
+offset_bottom = 376.0
+mouse_filter = 2
+color = Color(0.035, 0.039, 0.037, 0.98)
 
-[node name="PortLabel" type="Label" parent="LobbyChrome/SafeMargin/MainColumns/CredentialPanel/Content"]
-layout_mode = 2
-text = "端口"
-theme_type_variation = &"MutedLabel"
-
-[node name="PortInput" type="SpinBox" parent="LobbyChrome/SafeMargin/MainColumns/CredentialPanel/Content"]
+[node name="AddressInput" type="LineEdit" parent="LobbyChrome/InteractionLayer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 42)
-layout_mode = 2
+layout_mode = 0
+offset_left = 70.0
+offset_top = 337.0
+offset_right = 274.0
+offset_bottom = 376.0
+mouse_default_cursor_shape = 1
+text = "192.168.1.20:27771"
+alignment = 1
+placeholder_text = "192.168.1.20:27771"
+theme_override_colors/font_color = Color(0.79, 0.72, 0.56, 0)
+theme_override_colors/font_selected_color = Color(0.12, 0.1, 0.06, 1)
+theme_override_colors/selection_color = Color(0.76, 0.59, 0.28, 0.8)
+theme_override_fonts/font = ExtResource("7_input_font")
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("StyleEmpty")
+theme_override_styles/focus = SubResource("StyleEmpty")
+theme_override_styles/read_only = SubResource("StyleEmpty")
+
+[node name="PortInput" type="SpinBox" parent="LobbyChrome/InteractionLayer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 70.0
+offset_top = 380.0
+offset_right = 250.0
+offset_bottom = 420.0
 min_value = 1024.0
 max_value = 65535.0
 value = 27771.0
 allow_greater = false
 allow_lesser = false
 
-[node name="AddressPreviewCaption" type="Label" parent="LobbyChrome/SafeMargin/MainColumns/CredentialPanel/Content"]
-layout_mode = 2
-text = "房间入口"
-theme_type_variation = &"MutedLabel"
-
-[node name="AddressPreview" type="Label" parent="LobbyChrome/SafeMargin/MainColumns/CredentialPanel/Content"]
+[node name="AddressPreview" type="Label" parent="LobbyChrome/InteractionLayer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 38)
-layout_mode = 2
-text = "127.0.0.1:27771"
-horizontal_alignment = 1
+visible = false
+layout_mode = 0
+offset_left = 70.0
+offset_top = 380.0
+offset_right = 274.0
+offset_bottom = 414.0
+text = "192.168.1.20:27771"
+
+[node name="CopyAddressButton" type="Button" parent="LobbyChrome/InteractionLayer"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 61.0
+offset_top = 377.0
+offset_right = 256.0
+offset_bottom = 425.0
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("StyleEmpty")
+theme_override_styles/hover = SubResource("StyleFocus")
+theme_override_styles/pressed = SubResource("StylePressed")
+theme_override_styles/disabled = SubResource("StyleEmpty")
+theme_override_styles/focus = SubResource("StyleFocus")
+
+[node name="StatusValue" type="Label" parent="LobbyChrome/InteractionLayer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 72.0
+offset_top = 644.0
+offset_right = 595.0
+offset_bottom = 700.0
+text = "等待创建或加入房间"
 vertical_alignment = 1
-theme_override_colors/font_color = Color(0.79, 0.69, 0.48, 1)
-
-[node name="CopyAddressButton" type="Button" parent="LobbyChrome/SafeMargin/MainColumns/CredentialPanel/Content"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 42)
-layout_mode = 2
-text = "复制房间地址"
-theme_type_variation = &"QuietButton"
-
-[node name="Spacer" type="Control" parent="LobbyChrome/SafeMargin/MainColumns/CredentialPanel/Content"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="ScopeNote" type="Label" parent="LobbyChrome/SafeMargin/MainColumns/CredentialPanel/Content"]
-layout_mode = 2
-text = "房主为赤方 · 加入者为玄方\n仅限同一局域网内联机"
-horizontal_alignment = 1
-theme_type_variation = &"MutedLabel"
-
-[node name="RoomPanel" type="PanelContainer" parent="LobbyChrome/SafeMargin/MainColumns"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_styles/panel = SubResource("StylePanel")
-
-[node name="Content" type="VBoxContainer" parent="LobbyChrome/SafeMargin/MainColumns/RoomPanel"]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="Title" type="Label" parent="LobbyChrome/SafeMargin/MainColumns/RoomPanel/Content"]
-layout_mode = 2
-text = "双 方 席 位"
-horizontal_alignment = 1
-theme_type_variation = &"SectionTitle"
-
-[node name="Seats" type="HBoxContainer" parent="LobbyChrome/SafeMargin/MainColumns/RoomPanel/Content"]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/separation = 8
-
-[node name="RedSeat" type="PanelContainer" parent="LobbyChrome/SafeMargin/MainColumns/RoomPanel/Content/Seats"]
-custom_minimum_size = Vector2(186, 0)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_styles/panel = SubResource("StyleRedSeat")
-
-[node name="Column" type="VBoxContainer" parent="LobbyChrome/SafeMargin/MainColumns/RoomPanel/Content/Seats/RedSeat"]
-layout_mode = 2
-theme_override_constants/separation = 4
-
-[node name="Faction" type="Label" parent="LobbyChrome/SafeMargin/MainColumns/RoomPanel/Content/Seats/RedSeat/Column"]
-layout_mode = 2
-text = "赤 方"
-horizontal_alignment = 1
-theme_override_colors/font_color = Color(0.91, 0.5, 0.36, 1)
-theme_override_font_sizes/font_size = 24
-
-[node name="Portrait" type="TextureRect" parent="LobbyChrome/SafeMargin/MainColumns/RoomPanel/Content/Seats/RedSeat/Column"]
-custom_minimum_size = Vector2(0, 302)
-layout_mode = 2
-size_flags_vertical = 3
-texture = ExtResource("6_red_general")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="PlayerName" type="Label" parent="LobbyChrome/SafeMargin/MainColumns/RoomPanel/Content/Seats/RedSeat/Column"]
-layout_mode = 2
-text = "赤军主将"
-horizontal_alignment = 1
-theme_override_colors/font_color = Color(0.83, 0.82, 0.77, 1)
+theme_override_colors/font_color = Color(0.78, 0.68, 0.45, 1)
+theme_override_fonts/font = ExtResource("6_display_font")
 theme_override_font_sizes/font_size = 20
 
-[node name="RedReadyState" type="Label" parent="LobbyChrome/SafeMargin/MainColumns/RoomPanel/Content/Seats/RedSeat/Column"]
+[node name="SeatValue" type="Label" parent="LobbyChrome/InteractionLayer"]
 unique_name_in_owner = true
-layout_mode = 2
-text = "房主 · 等待开房"
-horizontal_alignment = 1
-theme_override_colors/font_color = Color(0.77, 0.6, 0.39, 1)
-
-[node name="VersusCenter" type="CenterContainer" parent="LobbyChrome/SafeMargin/MainColumns/RoomPanel/Content/Seats"]
-custom_minimum_size = Vector2(62, 0)
-layout_mode = 2
-
-[node name="Badge" type="PanelContainer" parent="LobbyChrome/SafeMargin/MainColumns/RoomPanel/Content/Seats/VersusCenter"]
-custom_minimum_size = Vector2(58, 90)
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleVersus")
-
-[node name="Text" type="Label" parent="LobbyChrome/SafeMargin/MainColumns/RoomPanel/Content/Seats/VersusCenter/Badge"]
-layout_mode = 2
-text = "对\n阵"
-horizontal_alignment = 1
-vertical_alignment = 1
-theme_override_colors/font_color = Color(0.87, 0.7, 0.39, 1)
-theme_override_font_sizes/font_size = 22
-
-[node name="BlackSeat" type="PanelContainer" parent="LobbyChrome/SafeMargin/MainColumns/RoomPanel/Content/Seats"]
-custom_minimum_size = Vector2(186, 0)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_styles/panel = SubResource("StyleBlackSeat")
-
-[node name="Column" type="VBoxContainer" parent="LobbyChrome/SafeMargin/MainColumns/RoomPanel/Content/Seats/BlackSeat"]
-layout_mode = 2
-theme_override_constants/separation = 4
-
-[node name="Faction" type="Label" parent="LobbyChrome/SafeMargin/MainColumns/RoomPanel/Content/Seats/BlackSeat/Column"]
-layout_mode = 2
-text = "玄 方"
-horizontal_alignment = 1
-theme_override_colors/font_color = Color(0.43, 0.66, 0.55, 1)
-theme_override_font_sizes/font_size = 24
-
-[node name="Portrait" type="TextureRect" parent="LobbyChrome/SafeMargin/MainColumns/RoomPanel/Content/Seats/BlackSeat/Column"]
-custom_minimum_size = Vector2(0, 302)
-layout_mode = 2
-size_flags_vertical = 3
-modulate = Color(0.78, 0.8, 0.74, 0.9)
-texture = ExtResource("7_black_general")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="BlackPlayerName" type="Label" parent="LobbyChrome/SafeMargin/MainColumns/RoomPanel/Content/Seats/BlackSeat/Column"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "等待同袍加入…"
-horizontal_alignment = 1
-theme_override_colors/font_color = Color(0.68, 0.72, 0.67, 1)
-theme_override_font_sizes/font_size = 20
-
-[node name="BlackReadyState" type="Label" parent="LobbyChrome/SafeMargin/MainColumns/RoomPanel/Content/Seats/BlackSeat/Column"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "玄方席位 · 空缺"
-horizontal_alignment = 1
-theme_override_colors/font_color = Color(0.42, 0.55, 0.49, 1)
-
-[node name="RulesPanel" type="PanelContainer" parent="LobbyChrome/SafeMargin/MainColumns"]
-custom_minimum_size = Vector2(258, 0)
-layout_mode = 2
-theme_override_styles/panel = SubResource("StylePanelDim")
-
-[node name="Content" type="VBoxContainer" parent="LobbyChrome/SafeMargin/MainColumns/RulesPanel"]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="Title" type="Label" parent="LobbyChrome/SafeMargin/MainColumns/RulesPanel/Content"]
-layout_mode = 2
-text = "战 局 规 则"
-horizontal_alignment = 1
-theme_type_variation = &"SectionTitle"
-
-[node name="MapRow" type="PanelContainer" parent="LobbyChrome/SafeMargin/MainColumns/RulesPanel/Content"]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleRuleRow")
-
-[node name="Text" type="Label" parent="LobbyChrome/SafeMargin/MainColumns/RulesPanel/Content/MapRow"]
-layout_mode = 2
-text = "棋局地图      九路烽棋"
-
-[node name="FogRow" type="PanelContainer" parent="LobbyChrome/SafeMargin/MainColumns/RulesPanel/Content"]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleRuleRow")
-
-[node name="Text" type="Label" parent="LobbyChrome/SafeMargin/MainColumns/RulesPanel/Content/FogRow"]
-layout_mode = 2
-text = "战争迷雾      标准迷雾"
-
-[node name="TurnRow" type="PanelContainer" parent="LobbyChrome/SafeMargin/MainColumns/RulesPanel/Content"]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleRuleRow")
-
-[node name="Text" type="Label" parent="LobbyChrome/SafeMargin/MainColumns/RulesPanel/Content/TurnRow"]
-layout_mode = 2
-text = "回合时限      每回合 90 秒"
-
-[node name="VictoryRow" type="PanelContainer" parent="LobbyChrome/SafeMargin/MainColumns/RulesPanel/Content"]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleRuleRow")
-
-[node name="Text" type="Label" parent="LobbyChrome/SafeMargin/MainColumns/RulesPanel/Content/VictoryRow"]
-layout_mode = 2
-text = "胜利条件      夺旗或斩将"
-
-[node name="PrivacyRow" type="PanelContainer" parent="LobbyChrome/SafeMargin/MainColumns/RulesPanel/Content"]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleRuleRow")
-
-[node name="Text" type="Label" parent="LobbyChrome/SafeMargin/MainColumns/RulesPanel/Content/PrivacyRow"]
-layout_mode = 2
-text = "房间范围      仅限局域网"
-
-[node name="Spacer" type="Control" parent="LobbyChrome/SafeMargin/MainColumns/RulesPanel/Content"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="Fairness" type="Label" parent="LobbyChrome/SafeMargin/MainColumns/RulesPanel/Content"]
-layout_mode = 2
-text = "公平联机\n双方只接收各自可见信息"
-horizontal_alignment = 1
-theme_type_variation = &"MutedLabel"
-
-[node name="BottomBar" type="PanelContainer" parent="LobbyChrome"]
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -78.0
-grow_horizontal = 2
-grow_vertical = 0
-theme_override_styles/panel = SubResource("StyleBottomBar")
-
-[node name="Row" type="HBoxContainer" parent="LobbyChrome/BottomBar"]
-layout_mode = 2
-theme_override_constants/separation = 12
-
-[node name="StatusCaption" type="Label" parent="LobbyChrome/BottomBar/Row"]
-layout_mode = 2
-text = "连接状态"
-vertical_alignment = 1
-theme_type_variation = &"MutedLabel"
-
-[node name="StatusValue" type="Label" parent="LobbyChrome/BottomBar/Row"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(218, 0)
-layout_mode = 2
-text = "●  等待创建或加入房间"
-vertical_alignment = 1
-theme_override_colors/font_color = Color(0.55, 0.72, 0.46, 1)
-
-[node name="SeatCaption" type="Label" parent="LobbyChrome/BottomBar/Row"]
-layout_mode = 2
-text = "当前席位"
-vertical_alignment = 1
-theme_type_variation = &"MutedLabel"
-
-[node name="SeatValue" type="Label" parent="LobbyChrome/BottomBar/Row"]
-unique_name_in_owner = true
-layout_mode = 2
+visible = false
+layout_mode = 0
+offset_left = 72.0
+offset_top = 675.0
+offset_right = 300.0
+offset_bottom = 710.0
 text = "未分配"
-vertical_alignment = 1
 
-[node name="Spacer" type="Control" parent="LobbyChrome/BottomBar/Row"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="DisconnectButton" type="Button" parent="LobbyChrome/BottomBar/Row"]
+[node name="RedReadyState" type="Label" parent="LobbyChrome/InteractionLayer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(126, 48)
-layout_mode = 2
+visible = false
+layout_mode = 0
+offset_left = 390.0
+offset_top = 508.0
+offset_right = 620.0
+offset_bottom = 550.0
+text = "房主 · 已就绪"
+
+[node name="BlackPlayerName" type="Label" parent="LobbyChrome/InteractionLayer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 760.0
+offset_top = 460.0
+offset_right = 990.0
+offset_bottom = 500.0
+text = "等待同袍加入…"
+
+[node name="BlackReadyState" type="Label" parent="LobbyChrome/InteractionLayer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 760.0
+offset_top = 508.0
+offset_right = 990.0
+offset_bottom = 550.0
+text = "玄方席位 · 空缺"
+
+[node name="DisconnectButton" type="Button" parent="LobbyChrome/InteractionLayer"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 628.0
+offset_top = 634.0
+offset_right = 821.0
+offset_bottom = 702.0
+mouse_default_cursor_shape = 2
 disabled = true
-text = "离开房间"
-theme_type_variation = &"DangerButton"
+theme_override_styles/normal = SubResource("StyleEmpty")
+theme_override_styles/hover = SubResource("StyleFocus")
+theme_override_styles/pressed = SubResource("StylePressed")
+theme_override_styles/disabled = SubResource("StyleEmpty")
+theme_override_styles/focus = SubResource("StyleFocus")
 
-[node name="JoinButton" type="Button" parent="LobbyChrome/BottomBar/Row"]
+[node name="JoinButton" type="Button" parent="LobbyChrome/InteractionLayer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(136, 48)
-layout_mode = 2
-text = "加入房间"
-theme_type_variation = &"SecondaryButton"
+layout_mode = 0
+offset_left = 838.0
+offset_top = 634.0
+offset_right = 1022.0
+offset_bottom = 702.0
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("StyleEmpty")
+theme_override_styles/hover = SubResource("StyleFocus")
+theme_override_styles/pressed = SubResource("StylePressed")
+theme_override_styles/disabled = SubResource("StyleEmpty")
+theme_override_styles/focus = SubResource("StyleFocus")
 
-[node name="HostButton" type="Button" parent="LobbyChrome/BottomBar/Row"]
+[node name="HostButton" type="Button" parent="LobbyChrome/InteractionLayer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(152, 48)
-layout_mode = 2
-text = "创建房间"
-theme_type_variation = &"PrimaryButton"
+layout_mode = 0
+offset_left = 1038.0
+offset_top = 632.0
+offset_right = 1246.0
+offset_bottom = 704.0
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("StyleEmpty")
+theme_override_styles/hover = SubResource("StyleFocus")
+theme_override_styles/pressed = SubResource("StylePressed")
+theme_override_styles/disabled = SubResource("StyleEmpty")
+theme_override_styles/focus = SubResource("StyleFocus")
 
 [node name="NetworkBoard" parent="." instance=ExtResource("4_board")]
 visible = false

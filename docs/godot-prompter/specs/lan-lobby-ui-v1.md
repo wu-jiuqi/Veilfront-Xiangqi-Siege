@@ -8,15 +8,24 @@
 - 面板：复用兵马俑 HUD V2 的黑铁九宫格、旧金铆钉与低反射暗底。
 - 概念参考：`assets/art/ui/concepts/lan_lobby_reference_v2_board_metal.png`。
 
+## V2 高保真实现
+
+项目所有者否决了仅用通用九宫格和扁平颜色近似参考图的实现。V2 改为：
+
+- `FullPlate`：全屏显示批准的 `lan_lobby_full_plate_v2.png`。
+- `InteractionLayer`：叠加返回、地址输入、复制、离开、加入、创建六类预置交互节点。
+- 地址默认露出母版文字；聚焦或修改时才显示动态输入遮罩。
+- 动态连接状态显示在底部左侧空白信息条，不破坏主要构图。
+
+该方案优先保证 1280×720、16:9 下的视觉还原。需要本地化或非 16:9 后，再拆无字面板和九宫格。
+
 ## 预置节点拆分
 
 | 区域 | Godot 结构 | 职责 |
 |---|---|---|
-| 顶栏 | `TopBar/Row` | 返回主界面、页面标题、局域网可用状态 |
-| 房间凭证 | `CredentialPanel/Content` | 房间代号、房主 IP、端口、入口预览与复制 |
-| 双方席位 | `RoomPanel/Content/Seats` | 赤方房主、玄方加入者、对阵关系与就绪状态 |
-| 战局规则 | `RulesPanel/Content` | 地图、迷雾、回合时限、胜利条件与房间范围 |
-| 底栏 | `BottomBar/Row` | 连接状态、当前席位、离开/加入/创建操作 |
+| 视觉母版 | `LobbyChrome/FullPlate` | 完整金属边框、棋子裁切、静态标题和规则文字 |
+| 交互层 | `LobbyChrome/InteractionLayer` | 地址编辑、复制、返回及底部操作热区 |
+| 动态状态 | `InteractionLayer/StatusValue` | 连接、失败和复制反馈 |
 | 对局切换 | `NetworkBoard` | 收到玩家视图后隐藏房间外壳并显示共享棋盘 |
 
 ## 交互状态
@@ -30,7 +39,7 @@
 
 ## 实现约束
 
-- UI 由场景内预置 `Control / Container / TextureRect / Button / Label` 组成。
+- UI 由场景内预置 `Control / TextureRect / Button / LineEdit / Label` 组成。
 - 不从概念图裁切文字、按钮或棋子；概念图仅用于信息层级评审。
 - 联机房间脚本不访问 `FullState` 或规则核心，保持玩家可见信息边界。
 - 基准分辨率为 1280×720，主区采用锚点、边距容器与横向容器布局。

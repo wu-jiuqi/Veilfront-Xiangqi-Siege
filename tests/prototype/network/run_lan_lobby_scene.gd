@@ -19,17 +19,19 @@ func _run() -> void:
 	root.add_child(lobby)
 	await process_frame
 	_check(lobby.has_node("LanNetworkSession"), "预置 LanNetworkSession 节点存在")
-	_check(lobby.has_node("LobbyChrome/SafeMargin/MainColumns/CredentialPanel/Content/AddressInput"),
-			"预置 IP 输入框存在")
-	_check(lobby.has_node("LobbyChrome/SafeMargin/MainColumns/CredentialPanel/Content/PortInput"),
-			"预置端口输入存在")
-	_check(lobby.has_node("LobbyChrome/BottomBar/Row/HostButton"), "预置创建按钮存在")
-	_check(lobby.has_node("LobbyChrome/BottomBar/Row/JoinButton"), "预置加入按钮存在")
-	_check(lobby.has_node("LobbyChrome/SafeMargin/MainColumns/RoomPanel/Content/Seats/RedSeat/Column/Portrait"),
-			"赤方席位复用银白金属将领棋子")
-	_check(lobby.has_node("LobbyChrome/SafeMargin/MainColumns/RoomPanel/Content/Seats/BlackSeat/Column/Portrait"),
-			"玄方席位复用墨绿青铜将领棋子")
-	_check(lobby.has_node("LobbyChrome/SafeMargin/MainColumns/RulesPanel"), "预置战局规则面板存在")
+	_check(lobby.has_node("LobbyChrome/FullPlate"), "预置高保真 PNG 底板存在")
+	var full_plate := lobby.get_node("LobbyChrome/FullPlate") as TextureRect
+	_check(
+		full_plate.texture != null
+		and full_plate.texture.resource_path == "res://assets/art/ui/lan_lobby/lan_lobby_full_plate_v2.png",
+		"大厅使用项目所有者指定的高保真参考图",
+	)
+	_check(lobby.has_node("LobbyChrome/InteractionLayer/AddressInput"), "预置 IP 与端口输入框存在")
+	_check(lobby.has_node("LobbyChrome/InteractionLayer/PortInput"), "预置隐藏端口输入存在")
+	_check(lobby.has_node("LobbyChrome/InteractionLayer/CopyAddressButton"), "预置复制地址热区存在")
+	_check(lobby.has_node("LobbyChrome/InteractionLayer/HostButton"), "预置创建按钮热区存在")
+	_check(lobby.has_node("LobbyChrome/InteractionLayer/JoinButton"), "预置加入按钮热区存在")
+	_check(lobby.has_node("LobbyChrome/InteractionLayer/DisconnectButton"), "预置离开按钮热区存在")
 	_check(lobby.has_node("NetworkBoard"), "大厅预置共享棋盘 UI 实例")
 	var network_board: Control = lobby.get_node("NetworkBoard") as Control
 	_check(network_board != null and bool(network_board.get("network_mode")), "共享棋盘 UI 已启用 LAN 驱动模式")
@@ -38,12 +40,18 @@ func _run() -> void:
 	var network_session: Node = lobby.get_node("LanNetworkSession")
 	_check(int(network_session.default_port) == 27771, "预置默认端口为 27771")
 	_check(str(network_session.get_connection_snapshot().get("state", "")) == "disconnected", "大厅初始状态未连接")
-	var host_button: Button = lobby.get_node("LobbyChrome/BottomBar/Row/HostButton") as Button
+	var host_button: Button = lobby.get_node("LobbyChrome/InteractionLayer/HostButton") as Button
 	_check(host_button.has_focus(), "大厅打开后创建按钮取得键盘焦点")
-	var address_preview: Label = lobby.get_node(
-		"LobbyChrome/SafeMargin/MainColumns/CredentialPanel/Content/AddressPreview"
-	) as Label
-	_check(address_preview.text == "127.0.0.1:27771", "房间入口同步默认地址与端口")
+	var address_input := lobby.get_node("LobbyChrome/InteractionLayer/AddressInput") as LineEdit
+	var address_preview := lobby.get_node("LobbyChrome/InteractionLayer/AddressPreview") as Label
+	_check(address_input.text == "192.168.1.20:27771", "房主地址与目标参考图一致")
+	_check(address_preview.text == address_input.text, "复制地址与可见输入保持同步")
+	address_input.text = "10.0.0.8:28888"
+	address_input.text_changed.emit(address_input.text)
+	await process_frame
+	var port_input := lobby.get_node("LobbyChrome/InteractionLayer/PortInput") as SpinBox
+	_check(int(port_input.value) == 28888, "地址输入可同步提取联机端口")
+	_check(address_preview.text == "10.0.0.8:28888", "编辑后的地址继续同步到复制值")
 	var lobby_source: String = FileAccess.get_file_as_string("res://scripts/prototype/network/lan_lobby.gd")
 	_check(not lobby_source.contains("FullState") and not lobby_source.contains("RuleEngine"), "Lobby 脚本没有规则核心或 FullState 旁路")
 	lobby.queue_free()
