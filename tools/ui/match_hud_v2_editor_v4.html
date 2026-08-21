@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>《雾疆：九路烽棋》Match HUD V4 调参器</title>
+  <link rel="stylesheet" href="match_hud_v2_editor_v4.css">
+</head>
+<body>
+  <header class="command-bar">
+    <div class="brand-block">
+      <span class="brand-mark">雾疆</span>
+      <div>
+        <strong>Match HUD V4 调参器</strong>
+        <span>match_hud_v2_interaction_lab.tscn</span>
+      </div>
+    </div>
+
+    <div class="command-cluster" aria-label="画布设置">
+      <label class="compact-field">
+        <span>分辨率</span>
+        <select id="profile-select">
+          <option value="1280x720">1280 × 720 · 16:9</option>
+          <option value="1680x720">1680 × 720 · 21:9</option>
+          <option value="1280x800">1280 × 800 · 16:10</option>
+          <option value="1280x960">1280 × 960 · 4:3</option>
+        </select>
+      </label>
+      <label class="compact-field short">
+        <span>吸附</span>
+        <select id="snap-select"><option>1</option><option>4</option><option selected>8</option><option>16</option></select>
+      </label>
+      <button id="undo-button" type="button" title="撤销 (Ctrl+Z)">撤销</button>
+      <button id="redo-button" type="button" title="重做 (Ctrl+Shift+Z)">重做</button>
+    </div>
+
+    <div class="command-cluster end">
+      <button id="toggle-grid" class="is-active" type="button">网格</button>
+      <button id="toggle-safe" class="is-active" type="button">安全区</button>
+      <button id="fit-button" type="button">适合窗口</button>
+      <strong id="zoom-readout">100%</strong>
+    </div>
+  </header>
+
+  <aside class="scene-panel">
+    <div class="panel-heading">
+      <div><span class="eyebrow">SCENE TREE</span><h1>正式 HUD 节点</h1></div>
+      <span class="count">15</span>
+    </div>
+
+    <section class="preview-state">
+      <h2>预览状态</h2>
+      <label>
+        <span>行动方</span>
+        <select id="side-select"><option value="red">赤方</option><option value="black">玄方</option></select>
+      </label>
+      <label>
+        <span>选中棋子</span>
+        <select id="piece-select">
+          <option value="minister">象</option><option value="chariot">车</option><option value="trebuchet">炮</option>
+          <option value="guard">士</option><option value="cavalry">马</option><option value="infantry">兵</option><option value="none">未选择</option>
+        </select>
+      </label>
+    </section>
+
+    <nav class="scene-tree" id="scene-tree" aria-label="正式 HUD 节点树"></nav>
+
+    <div class="scene-help">
+      <strong>V4 约束</strong>
+      <p>只编辑可映射回 Godot 的正式节点。不能新增或删除对象；烟雾与香体保留为可调子图层。</p>
+    </div>
+  </aside>
+
+  <main class="workspace">
+    <div class="workspace-ruler top" id="ruler-top"></div>
+    <div class="workspace-ruler left" id="ruler-left"></div>
+    <div class="stage-shell" id="stage-shell">
+      <div class="stage" id="stage" aria-label="HUD 设计画布">
+        <div class="canvas-grid" id="canvas-grid"></div>
+        <div class="safe-area" id="safe-area"><span>SAFE 5%</span></div>
+        <div id="stage-elements"></div>
+        <div class="canvas-label"><span id="canvas-size">1280 × 720</span><span>正式资源预览</span></div>
+      </div>
+    </div>
+    <footer class="status-bar">
+      <span id="status-message">已选择：棋盘可视区域</span>
+      <span><kbd>拖动</kbd> 移动节点　<kbd>Shift</kbd> 临时关闭吸附　<kbd>Esc</kbd> 取消</span>
+    </footer>
+  </main>
+
+  <aside class="property-panel">
+    <div class="selection-head">
+      <span class="selection-kind" id="selection-kind">BOARD</span>
+      <strong id="selection-name">棋盘可视区域</strong>
+      <small id="selection-binding">board_rect</small>
+    </div>
+
+    <div class="tabs" role="tablist" aria-label="属性分类">
+      <button class="active" data-tab="layout" type="button">布局</button>
+      <button data-tab="text" type="button">文字</button>
+      <button data-tab="state" type="button">状态</button>
+      <button data-tab="data" type="button">数据</button>
+    </div>
+
+    <div class="property-scroll">
+      <section class="tab-page active" data-page="layout">
+        <div class="section-title"><span>矩形</span><small>PIXELS</small></div>
+        <div class="field-grid four">
+          <label><span>X</span><input id="rect-x" type="number" step="1"></label>
+          <label><span>Y</span><input id="rect-y" type="number" step="1"></label>
+          <label><span>W</span><input id="rect-w" type="number" min="8" step="1"></label>
+          <label><span>H</span><input id="rect-h" type="number" min="8" step="1"></label>
+        </div>
+        <div class="normalized" id="normalized-readout">X .266 · Y .044 · W .469 · H .756</div>
+
+        <div class="section-title"><span>显示与层级</span><small>CANVAS</small></div>
+        <label class="switch-row"><span>显示节点</span><input id="visible-input" type="checkbox" checked></label>
+        <label class="switch-row"><span>锁定宽高比</span><input id="aspect-input" type="checkbox"></label>
+        <label class="range-field"><span>绘制层级 <output id="z-output">0</output></span><input id="z-input" type="range" min="-5" max="10" step="1" value="0"></label>
+
+        <div class="section-title"><span>快速定位</span><small>ANCHOR</small></div>
+        <div class="anchor-grid">
+          <button data-anchor="tl" type="button">左上</button><button data-anchor="tc" type="button">上中</button><button data-anchor="tr" type="button">右上</button>
+          <button data-anchor="ml" type="button">左中</button><button data-anchor="cc" type="button">居中</button><button data-anchor="mr" type="button">右中</button>
+          <button data-anchor="bl" type="button">左下</button><button data-anchor="bc" type="button">下中</button><button data-anchor="br" type="button">右下</button>
+        </div>
+      </section>
+
+      <section class="tab-page" data-page="text">
+        <div id="no-text" class="empty-state">当前节点没有可编辑文字层。</div>
+        <div id="text-controls" hidden>
+          <label class="field"><span>文字层</span><select id="text-layer-select"></select></label>
+          <label class="field"><span>显示内容</span><textarea id="text-content" rows="4"></textarea></label>
+          <div class="field-grid two">
+            <label><span>字号</span><input id="font-size-input" type="number" min="6" max="96"></label>
+            <label><span>对齐</span><select id="align-select"><option value="left">左对齐</option><option value="center">居中</option><option value="right">右对齐</option></select></label>
+          </div>
+          <label class="range-field"><span>字号微调 <output id="font-output">14</output></span><input id="font-range" type="range" min="6" max="96" value="14"></label>
+          <div class="field-grid four text-rect">
+            <label><span>X</span><input id="text-x" type="number"></label><label><span>Y</span><input id="text-y" type="number"></label>
+            <label><span>W</span><input id="text-w" type="number"></label><label><span>H</span><input id="text-h" type="number"></label>
+          </div>
+          <div class="binding-box" id="text-binding">绑定：static</div>
+        </div>
+      </section>
+
+      <section class="tab-page" data-page="state">
+        <div class="section-title"><span>交互样片</span><small>PREVIEW ONLY</small></div>
+        <label class="field"><span>回合数</span><input id="round-input" type="number" min="1" max="99" value="18"></label>
+        <label class="range-field"><span>计时香剩余 <output id="timer-output">62%</output></span><input id="timer-input" type="range" min="0" max="100" value="62"></label>
+        <label class="switch-row"><span>播放烟雾动画</span><input id="motion-input" type="checkbox" checked></label>
+        <label class="switch-row"><span>显示详情栏</span><input id="drawer-input" type="checkbox" checked></label>
+        <p class="note">状态页只改变预览，不写入布局 JSON。用于检查象、车、炮、士等不同棋子时的文字与按钮占位。</p>
+      </section>
+
+      <section class="tab-page" data-page="data">
+        <div class="section-title"><span>布局交换</span><small>JSON V4</small></div>
+        <button class="primary wide" id="copy-json" type="button">复制当前 JSON</button>
+        <div class="button-pair"><button id="download-json" type="button">下载</button><button id="import-json" type="button">导入</button></div>
+        <button class="danger wide" id="reset-layout" type="button">恢复 V4 默认布局</button>
+        <input id="file-input" type="file" accept="application/json,.json" hidden>
+        <div class="contract-box">
+          <strong>导出契约</strong>
+          <span>schema: veilfront.match_hud_layout.v4</span>
+          <span>scene: match_hud_v2_interaction_lab.tscn</span>
+          <span>objects: protected</span>
+        </div>
+      </section>
+    </div>
+  </aside>
+
+  <script src="match_hud_v2_editor_v4.js"></script>
+</body>
+</html>
