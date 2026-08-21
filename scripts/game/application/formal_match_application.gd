@@ -157,6 +157,39 @@ func advance_trusted_scripted_pass() -> Dictionary:
 	}
 
 
+func submit_trusted_timeout(expected_action_index: int) -> Dictionary:
+	if bool(_state.get("terminal", false)) \
+	or expected_action_index != int(_state.get("action_index", -1)) \
+	or str(_state.get("active_side", "")) != str(_viewer_context.call("side")):
+		return {
+			"ok": false,
+			"consumed": false,
+			"error_code": "stale_or_unauthorized_timeout",
+			"player_view": current_player_view(),
+			"visible_events": current_visible_events(),
+			"visible_error": {},
+			"action_previews": current_action_previews(),
+		}
+	var result: Dictionary = RuleEngine.submit_timeout_random_move(_state, {
+		"include_state_summary": false,
+		"preparation_token": str(_preparation.get("token", "")),
+	})
+	if bool(result.get("consumed", false)) and not bool(_state.get("terminal", false)):
+		_prepare_authority_turn()
+	var frame: Dictionary = _compose_safe_frame(
+		_state, _viewer_context, {}, _observer_frames.size() + 1
+	)
+	_observer_frames.append(frame)
+	return {
+		"ok": bool(result.get("ok", false)),
+		"consumed": bool(result.get("consumed", false)),
+		"player_view": frame["player_view_or_digest"].duplicate(true),
+		"visible_events": frame["visible_events"].duplicate(true),
+		"visible_error": {},
+		"action_previews": frame["action_previews"].duplicate(true),
+	}
+
+
 func submit_trusted_tutorial_transition(step_id: String) -> Dictionary:
 	var result: Dictionary = RuleEngine.resolve_tutorial_transition(
 		_state,

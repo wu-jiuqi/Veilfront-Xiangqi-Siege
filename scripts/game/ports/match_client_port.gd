@@ -22,6 +22,7 @@ var _bound_side: String = ""
 @abstract func confirm_prepared_action(preview_id: String) -> void
 @abstract func cancel_prepared_action() -> void
 @abstract func request_skip() -> void
+@abstract func request_turn_timeout(expected_action_index: int) -> void
 @abstract func request_restart() -> void
 
 

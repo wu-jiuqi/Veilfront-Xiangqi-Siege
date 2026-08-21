@@ -66,6 +66,10 @@ func submit_preview(preview: Dictionary) -> Dictionary:
 	return submit_intent(intent)
 
 
+func submit_timeout(expected_action_index: int) -> Dictionary:
+	return _application.submit_trusted_timeout(expected_action_index)
+
+
 func should_auto_advance_opponent() -> bool:
 	return _scenario != null or bool(_configuration.get("scripted_opponent_pass", false))
 

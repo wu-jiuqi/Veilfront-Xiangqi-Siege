@@ -80,6 +80,11 @@ func request_skip() -> void:
 	tutorial_request_resolved.emit(TUTORIAL_REQUEST_SKIP, accepted)
 
 
+func request_turn_timeout(expected_action_index: int) -> void:
+	if _client_port != null and trusted_tutorial_scenario == null:
+		_client_port.request_turn_timeout(expected_action_index)
+
+
 func request_restart() -> void:
 	var accepted: bool = _client_port != null and _is_restart_authorized()
 	if accepted:

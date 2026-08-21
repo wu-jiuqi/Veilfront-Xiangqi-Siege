@@ -37,6 +37,7 @@ grow_vertical = 2
 
 [node name="MatchScreen" parent="ScreenHost" instance=ExtResource("2_match")]
 layout_mode = 1
+turn_timeout_enabled = true
 
 [node name="GlobalOverlayHost" type="Control" parent="."]
 layout_mode = 1
@@ -82,3 +83,4 @@ text = "状态播报"
 [connection signal="action_confirm_requested" from="ScreenHost/MatchScreen" to="ApplicationHost" method="confirm_prepared_action"]
 [connection signal="prepared_action_cancel_requested" from="ScreenHost/MatchScreen" to="ApplicationHost" method="cancel_prepared_action"]
 [connection signal="skip_requested" from="ScreenHost/MatchScreen" to="ApplicationHost" method="request_skip"]
+[connection signal="turn_timeout_requested" from="ScreenHost/MatchScreen" to="ApplicationHost" method="request_turn_timeout"]

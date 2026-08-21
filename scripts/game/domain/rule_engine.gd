@@ -99,6 +99,7 @@ static func submit_action(state: Dictionary, intent: Dictionary, options: Dictio
 		"deployments_before_action": deployments,
 		"outcome": outcome.duplicate(true),
 		"random_samples": preparation.get("random_samples", []).duplicate(true) \
+			+ options.get("trusted_random_samples", []).duplicate(true) \
 			+ state["rng"]["records"].slice(random_record_start).duplicate(true),
 	}
 	state["events"].append(event)
@@ -110,6 +111,40 @@ static func submit_action(state: Dictionary, intent: Dictionary, options: Dictio
 	if bool(options.get("include_state_summary", true)):
 		response["state_summary"] = MatchState.summary(state)
 	return response
+
+
+static func submit_timeout_random_move(
+	state: Dictionary,
+	options: Dictionary = {}
+) -> Dictionary:
+	if bool(state.get("terminal", false)):
+		return _rejected("terminal", "match_already_terminal")
+	var prepared_result: Dictionary = prepare_action(state)
+	if not bool(prepared_result.get("ok", false)):
+		return prepared_result
+	var legal_moves: Array = []
+	for intent_value: Variant in list_legal_actions(state, str(state.get("active_side", ""))):
+		if intent_value is Dictionary and str(intent_value.get("action_type", "")) == "move":
+			legal_moves.append(intent_value.duplicate(true))
+	var random_record_start: int = state["rng"]["records"].size()
+	var selected_intent := {
+		"piece_id": "",
+		"action_type": "timeout",
+		"target_cell": [],
+		"skill_type": "",
+	}
+	if not legal_moves.is_empty():
+		var selected_index := SeededRandom.draw_range(
+			state["rng"], 0, legal_moves.size() - 1, "timeout_random_legal_move"
+		)
+		selected_intent = legal_moves[selected_index].duplicate(true)
+	var submit_options := options.duplicate(true)
+	submit_options["trusted_generated_action"] = true
+	submit_options["public_classification"] = "KNOWN_LEGAL"
+	submit_options["trusted_random_samples"] = state["rng"]["records"].slice(
+		random_record_start
+	).duplicate(true)
+	return submit_action(state, selected_intent, submit_options)
 
 
 static func resolve_tutorial_transition(

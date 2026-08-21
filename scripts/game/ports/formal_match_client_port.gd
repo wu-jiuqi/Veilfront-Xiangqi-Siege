@@ -53,6 +53,19 @@ func request_skip() -> void:
 			return
 
 
+func request_turn_timeout(expected_action_index: int) -> void:
+	var submit_result: Dictionary = _session.submit_timeout(expected_action_index)
+	if bool(submit_result.get("consumed", false)):
+		_prepared_preview_id = ""
+	_publish_payload(submit_result)
+	if bool(submit_result.get("consumed", false)) \
+	and _session.has_method("should_auto_advance_opponent") \
+	and bool(_session.should_auto_advance_opponent()):
+		var scripted_result: Dictionary = _session.advance_scripted_opponent()
+		if bool(scripted_result.get("consumed", false)):
+			_publish_payload(scripted_result)
+
+
 func request_restart() -> void:
 	_prepared_preview_id = ""
 	_publish_payload(_session.restart())
