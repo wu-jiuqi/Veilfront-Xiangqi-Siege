@@ -1,0 +1,58 @@
+exception_subject:
+  schema_version: veilfront-production-scope-exception/v1
+  subject_id: EXCEPTION-LEVEL-SELECT-UI-LAB-001@v1
+  project_id: veilfront-xiangqi-siege
+  title: 关卡模式 UI 独立预览场景追加范围例外
+  parent_exception:
+    subject_id: EXCEPTION-TERRACOTTA-FULL-UI-ASSET-001@v1
+    approval_id: approval:veilfront-xiangqi-siege:production-scope-exception:bb9bb74bf65b
+    subject_digest: bb9bb74bf65b81f3bc4d253dcf3947e76947a7227c2fc98f3c2738a3ecfdec05
+    exceeded_boundary: 已批准例外的 new_development_scene_limit 为 1，现有 scenes/dev/ui/ui_button_motion_lab.tscn 已使用该额度。
+  request_context:
+    owner_request: 项目所有者要求在关卡模式 UI 之外，同样新建一个测试场景查看效果。
+    source_ref: codex-thread://current#owner-request-level-select-ui-test-scene
+    implementation_state: 关卡模式概念图、PNG 拆件、正式 level_select.tscn 组合与自动测试已完成；独立预览场景尚未创建。
+  exact_scope:
+    objective: 追加一个不含业务分支的独立 Godot 预览场景，直接实例化正式关卡模式页面以供人工查看。
+    create_only:
+    - scenes/dev/ui/level_select_ui_lab.tscn
+    scene_contract:
+    - 根节点使用预置 Control；唯一内容为正式 scenes/game/frontend/level_select.tscn 的 PackedScene 实例。
+    - 不新增脚本，不复制关卡目录、进度、路由、解锁或 PlayerView 逻辑。
+    - 默认测试开放状态沿用正式关卡页当前导出值，T0–T10 与 C1–C3 仍以 LevelCatalog 为唯一事实源。
+    - 可被 Godot 编辑器单独运行，并在 960×540、1280×720、1920×1080 无错误加载。
+  resources_and_limits:
+    additional_development_scene_limit: 1
+    resulting_development_scene_limit_for_parent_exception: 2
+    new_runtime_script_limit: 0
+    new_raster_asset_limit: 0
+    new_vector_asset_limit: 0
+    new_external_spend_limit: 0
+    new_agent_instance_limit: 0
+  approval_effect:
+    allowed:
+    - 创建并验证 exact_scope.create_only 列明的一个预览场景。
+    - 为该场景补充无副作用的场景加载测试与一张预览截图。
+    forbidden:
+    - 复制或修改关卡业务逻辑、关卡数据、进度存档、规则、PlayerView、回放、随机消费、教学语义或联网协议。
+    - 新增第二套关卡 UI、额外开发场景、脚本、位图、SVG、字体、音频或 VFX。
+    - 把本例外解释为 GATE-2、最终审美或额外批量生产批准。
+  acceptance_checks:
+  - Godot 4.7.1 可无错误加载 scenes/dev/ui/level_select_ui_lab.tscn。
+  - 预览场景只实例化正式 level_select.tscn，没有脚本和复制业务节点。
+  - 960×540、1280×720、1920×1080 下主要按钮不裁切。
+  decision_requested:
+    decision_type: prospective_single-development-scene_limit_extension
+    question: 是否把既有 UI 例外的开发场景上限从 1 精确增加到 2，仅用于本摘要列明的关卡模式 UI 独立预览场景？
+    designated_decider: project-owner
+    decisions: [approved, rejected, revise]
+  decision_consequences:
+    approved: 创建绑定本摘要哈希的批准记录，然后创建、验证并提交该预览场景。
+    rejected: 不创建预览场景；继续直接运行 scenes/game/frontend/level_select.tscn 或使用自动截图脚本查看效果。
+    revise: 按项目所有者指出的边界修改摘要，生成新哈希并重新请求确认。
+review:
+  gate_result: awaiting_human
+  designated_decider: project-owner
+  canonicalization: exception_subject 使用 UTF-8 canonical JSON；键排序；无额外空白；ensure_ascii=false；SHA-256。
+  approval_digest: 6e6b788c81ad1ce07e7975ed88db775bc9bf153de479ba7bd5135119d5d16914
+  confirmation_rule: 项目所有者必须回复完整 64 位 approval_digest；缩写、意译或仅回复“可以”不构成批准。
