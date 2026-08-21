@@ -85,6 +85,13 @@ func run_suite() -> Dictionary:
 		"FORMAL_ASSET_PROTOTYPE_REFERENCE",
 		failures
 	)
+	checks += _expect_rule(
+		scanner,
+		"res://scenes/game/app/bad_network.tscn",
+		"[ext_resource type=\"PackedScene\" path=\"res://scenes/game/network/rogue_session.tscn\" id=\"1\"]\n",
+		"FORMAL_ASSET_NETWORK_REFERENCE",
+		failures
+	)
 
 	var safe_sources: Array[Dictionary] = [
 		{
@@ -110,6 +117,10 @@ func run_suite() -> Dictionary:
 		{
 			"path": "res://scripts/game/ports/match_client_port.gd",
 			"source": "extends RefCounted\nsignal player_view_updated(view: Dictionary)\nfunc request_action_previews(piece_id: String) -> void:\n\tprint(piece_id)\n",
+		},
+		{
+			"path": "res://scenes/game/app/formal_lan_game_app.tscn",
+			"source": "[ext_resource type=\"PackedScene\" path=\"res://scenes/game/network/formal_lan_session.tscn\" id=\"1\"]\n",
 		},
 	]
 	for sample: Dictionary in safe_sources:

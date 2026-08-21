@@ -61,6 +61,13 @@ func request_skip() -> void:
 	_request_log.append({"name": "request_skip"})
 
 
+func request_turn_timeout(expected_action_index: int) -> void:
+	_request_log.append({
+		"name": "request_turn_timeout",
+		"expected_action_index": expected_action_index,
+	})
+
+
 func request_restart() -> void:
 	_request_log.append({"name": "request_restart"})
 

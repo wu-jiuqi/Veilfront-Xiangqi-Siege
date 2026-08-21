@@ -17,6 +17,8 @@ signal match_started(public_state: Dictionary)
 const HOST_PEER_ID: int = 1
 const RED: String = "red"
 const BLACK: String = "black"
+const MAX_OBSERVER_BATCH_BYTES: int = 4 * 1024 * 1024
+const OBSERVER_COMPRESSION_MODE: int = FileAccess.COMPRESSION_DEFLATE
 
 @export_range(1024, 65535, 1) var default_port: int = 27772
 @export_range(1, 1, 1) var maximum_remote_clients: int = 1
@@ -184,7 +186,8 @@ func has_authoritative_application() -> bool:
 
 
 func set_ready(ready: bool = true) -> Dictionary:
-	if _local_seat.is_empty() or _match_started:
+	if _local_seat.is_empty() or _match_started \
+	or not bool(_current_public_state.get("peer_connected", false)):
 		return {"ok": false, "error_code": "not_in_lobby"}
 	var encoded: Dictionary = FormalLanProtocol.encode_control_request(
 		_next_request_id("ready"), "ready", ready
@@ -241,6 +244,15 @@ func report_local_error(error_code: String) -> void:
 	_publish_local_state()
 
 
+func abort_protocol_error(error_code: String = "protocol_error") -> void:
+	_close_peer_only()
+	_application = null
+	_match_started = false
+	_connection_state = "protocol_error"
+	_error_code = error_code if not error_code.is_empty() else "protocol_error"
+	_publish_local_state()
+
+
 @rpc("any_peer", "call_remote", "reliable", 0)
 func _request_control(encoded_request: String) -> void:
 	if not multiplayer.is_server():
@@ -261,8 +273,24 @@ func _receive_public_state(encoded_state: String) -> void:
 
 
 @rpc("authority", "call_remote", "reliable", 0)
-func _receive_observer_batch(encoded_batch: String) -> void:
-	_apply_observer_batch_bytes(encoded_batch)
+func _receive_observer_batch(
+	compressed_batch: PackedByteArray,
+	uncompressed_size: int
+) -> void:
+	if uncompressed_size <= 0 \
+	or uncompressed_size > MAX_OBSERVER_BATCH_BYTES \
+	or compressed_batch.is_empty() \
+	or compressed_batch.size() > MAX_OBSERVER_BATCH_BYTES:
+		abort_protocol_error("observer_transport_invalid")
+		return
+	var raw_batch: PackedByteArray = compressed_batch.decompress(
+		uncompressed_size,
+		OBSERVER_COMPRESSION_MODE
+	)
+	if raw_batch.size() != uncompressed_size:
+		abort_protocol_error("observer_transport_invalid")
+		return
+	_apply_observer_batch_bytes(raw_batch.get_string_from_utf8())
 
 
 @rpc("authority", "call_remote", "reliable", 0)
@@ -281,7 +309,8 @@ func _process_control_request(peer_id: int, encoded_request: String) -> Dictiona
 		"join":
 			return _register_remote_peer(peer_id)
 		"ready":
-			if not _peer_to_side.has(peer_id) or _match_started:
+			if not _peer_to_side.has(peer_id) or _match_started \
+			or not (_side_to_peer.has(RED) and _side_to_peer.has(BLACK)):
 				return {"ok": false, "error_code": "not_in_lobby"}
 			_ready_by_side[str(_peer_to_side[peer_id])] = bool(request.get("ready"))
 			_error_code = ""
@@ -444,9 +473,7 @@ func _deliver_payload_to_peer(peer_id: int, payload: Dictionary) -> void:
 		str(_peer_to_side[peer_id]), safe_payload, next_sequence
 	)
 	if not bool(encoded.get("ok", false)):
-		_error_code = "observer_codec_rejected"
-		_connection_state = "protocol_error"
-		_broadcast_public_state()
+		abort_protocol_error("observer_codec_rejected")
 		return
 	var encoded_bytes: String = str(encoded.get("bytes", ""))
 	_frame_sequence_by_peer[peer_id] = next_sequence
@@ -455,21 +482,28 @@ func _deliver_payload_to_peer(peer_id: int, payload: Dictionary) -> void:
 	if peer_id == HOST_PEER_ID:
 		observer_batch_received.emit(encoded_bytes)
 	else:
-		_receive_observer_batch.rpc_id(peer_id, encoded_bytes)
+		var raw_batch: PackedByteArray = encoded_bytes.to_utf8_buffer()
+		if raw_batch.is_empty() or raw_batch.size() > MAX_OBSERVER_BATCH_BYTES:
+			abort_protocol_error("observer_transport_oversized")
+			return
+		var compressed_batch: PackedByteArray = raw_batch.compress(
+			OBSERVER_COMPRESSION_MODE
+		)
+		if compressed_batch.is_empty() \
+		or compressed_batch.size() > MAX_OBSERVER_BATCH_BYTES:
+			abort_protocol_error("observer_transport_compression_failed")
+			return
+		_receive_observer_batch.rpc_id(peer_id, compressed_batch, raw_batch.size())
 
 
 func _apply_observer_batch_bytes(encoded_batch: String) -> void:
 	var decoded: Dictionary = FormalLanProtocol.decode_observer_batch(encoded_batch)
 	if not bool(decoded.get("ok", false)):
-		_connection_state = "protocol_error"
-		_error_code = "observer_batch_invalid"
-		_publish_local_state()
+		abort_protocol_error("observer_batch_invalid")
 		return
 	var batch: Dictionary = decoded.get("value", {})
 	if not _local_seat.is_empty() and str(batch.get("seat", "")) != _local_seat:
-		_connection_state = "protocol_error"
-		_error_code = "observer_seat_mismatch"
-		_publish_local_state()
+		abort_protocol_error("observer_seat_mismatch")
 		return
 	var local_peer_id: int = _local_peer_id()
 	_observer_batch_by_peer[local_peer_id] = encoded_batch
@@ -489,8 +523,10 @@ func _send_feedback(peer_id: int, feedback: Dictionary) -> void:
 
 func _apply_feedback_bytes(encoded_feedback: String) -> void:
 	var decoded: Dictionary = FormalLanProtocol.decode_feedback(encoded_feedback)
-	if bool(decoded.get("ok", false)):
-		action_feedback_received.emit(decoded.get("value", {}).duplicate(true))
+	if not bool(decoded.get("ok", false)):
+		abort_protocol_error("feedback_invalid")
+		return
+	action_feedback_received.emit(decoded.get("value", {}).duplicate(true))
 
 
 func _broadcast_public_state() -> void:
@@ -525,8 +561,15 @@ func _publish_local_state() -> void:
 func _apply_public_state_bytes(encoded_state: String) -> void:
 	var decoded: Dictionary = FormalLanProtocol.decode_public_state(encoded_state)
 	if not bool(decoded.get("ok", false)):
+		abort_protocol_error("public_state_invalid")
 		return
 	var public_state: Dictionary = decoded.get("value", {}).duplicate(true)
+	if _role == "client" and _match_started \
+	and bool(public_state.get("match_started", false)) \
+	and int(public_state.get("action_index", -1)) \
+	< int(_current_public_state.get("action_index", -1)):
+		abort_protocol_error("public_action_index_rollback")
+		return
 	if _role == "client" and not _endpoint.is_empty():
 		public_state["endpoint"] = _endpoint
 	var previous_seat: String = _local_seat
@@ -594,7 +637,7 @@ func _base_public_state(
 		"peer_connected": _side_to_peer.has(RED) and _side_to_peer.has(BLACK),
 		"red_ready": bool(_ready_by_side.get(RED, false)),
 		"black_ready": bool(_ready_by_side.get(BLACK, false)),
-		"can_start": _can_start_match(),
+		"can_start": role_value == "host" and _can_start_match(),
 		"match_started": _match_started,
 		"action_index": _public_action_index(),
 		"active_side": _public_active_side(),
@@ -756,6 +799,8 @@ func _on_server_disconnected() -> void:
 
 func _reset_runtime() -> void:
 	_close_peer_only()
+	if _client_port != null and _client_port.has_method("reset_for_new_session"):
+		_client_port.reset_for_new_session()
 	_application = null
 	_role = ""
 	_local_seat = ""

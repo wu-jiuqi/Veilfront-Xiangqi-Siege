@@ -1,6 +1,6 @@
 extends RefCounted
 
-const POLICY_VERSION: String = "veilfront-dependency-boundary-v1"
+const POLICY_VERSION: String = "veilfront-dependency-boundary-v2"
 const FORMAL_ROOTS: Array[String] = [
 	"res://scripts/game",
 	"res://scenes/game",
@@ -141,12 +141,13 @@ func _scan_global_asset_references(
 			"正式 Iteration 1 运行时不得预加载 AI 资产",
 			code_line
 		))
-	if _matches("res://[^\\\"']*/network/", code_line):
+	if _matches("res://[^\\\"']*/network/", code_line) \
+	and not code_line.contains("res://scenes/game/network/formal_lan_session.tscn"):
 		violations.append(_violation(
 			"FORMAL_ASSET_NETWORK_REFERENCE",
 			path,
 			line_number,
-			"正式 Iteration 1 运行时不得预加载 LAN/网络实现",
+			"正式运行时只能引用已批准的正式 LAN 会话场景",
 			code_line
 		))
 
