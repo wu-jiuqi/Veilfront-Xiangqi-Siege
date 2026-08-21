@@ -103,6 +103,18 @@ func _run() -> void:
 	var piece_layer: Node2D = lab.get_node(
 		"MatchScreen/MatchHudV2/BoardFrame/BoardViewport/BoardSubViewport/BoardWorld/PieceLayer"
 	) as Node2D
+	var board_world: Node2D = piece_layer.get_parent() as Node2D
+	var board_theme: BoardTheme = board_world.get("board_theme") as BoardTheme
+	var grid_line_style: Dictionary = board_theme.grid_line_style
+	_expect(
+		float(grid_line_style.get("width", 0.0)) >= 5.0,
+		"terracotta board grid lines were not strengthened"
+	)
+	_expect(
+		(grid_line_style.get("color", Color.TRANSPARENT) as Color).a >= 0.9,
+		"terracotta board grid line contrast was too weak"
+	)
+	var piece_sizing_checked := false
 	for piece_view_value: Variant in piece_layer.get_children():
 		var piece_view := piece_view_value as Node2D
 		if piece_view == null:
@@ -111,6 +123,14 @@ func _run() -> void:
 		_expect(artwork != null and artwork.texture != null, "rendered piece artwork was missing")
 		if artwork == null or artwork.texture == null:
 			continue
+		if not piece_sizing_checked:
+			var scale_multipliers: Dictionary = piece_view.get("piece_scale_multipliers")
+			for piece_type: String in ["horse", "rook", "cannon"]:
+				_expect(
+					float(scale_multipliers.get(piece_type, 1.0)) > 1.0,
+					"%s did not receive an authored size increase" % piece_type
+				)
+			piece_sizing_checked = true
 		_expect(
 			artwork.texture_filter == CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS,
 			"piece artwork did not use stable mipmapped linear sampling"

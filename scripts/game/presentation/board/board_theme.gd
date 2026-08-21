@@ -7,6 +7,7 @@ extends Resource
 @export var zone_tileset: TileSet
 @export var decal_tileset: TileSet
 @export var grid_palette: Dictionary = {}
+@export var grid_line_style: Dictionary = {}
 @export var region_label_style: Dictionary = {}
 @export var wall_scene_set: Array[PackedScene] = []
 @export var piece_scene_set: Array[PackedScene] = []

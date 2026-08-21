@@ -14,6 +14,7 @@ var _board_size := Vector2i(9, 24)
 var _cell_size := Vector2(128.0, 128.0)
 var _side: String = "red"
 var _palette: Dictionary = {}
+var _grid_line_style: Dictionary = {}
 var _label_style: Dictionary = {}
 
 
@@ -22,6 +23,7 @@ func configure(board: Dictionary, side: String, board_theme: BoardTheme) -> void
 	_side = side
 	_cell_size = board_theme.cell_size
 	_palette = board_theme.grid_palette.duplicate(true)
+	_grid_line_style = board_theme.grid_line_style.duplicate(true)
 	_label_style = board_theme.region_label_style.duplicate(true)
 	queue_redraw()
 
@@ -54,7 +56,10 @@ func _draw_region_bands() -> void:
 
 
 func _draw_grid() -> void:
-	var line_color := Color(0.13, 0.1, 0.08, 0.72)
+	var line_color: Color = _grid_line_style.get(
+		"color", Color(0.13, 0.1, 0.08, 0.72)
+	)
+	var line_width: float = maxf(float(_grid_line_style.get("width", 3.0)), 1.0)
 	var first_center := _cell_size * 0.5
 	var last_center := Vector2(
 		(float(_board_size.x) - 0.5) * _cell_size.x,
@@ -62,10 +67,16 @@ func _draw_grid() -> void:
 	)
 	for display_x: int in _board_size.x:
 		var x: float = (float(display_x) + 0.5) * _cell_size.x
-		draw_line(Vector2(x, first_center.y), Vector2(x, last_center.y), line_color, 3.0, true)
+		draw_line(
+			Vector2(x, first_center.y), Vector2(x, last_center.y),
+			line_color, line_width, true
+		)
 	for display_y: int in _board_size.y:
 		var y: float = (float(display_y) + 0.5) * _cell_size.y
-		draw_line(Vector2(first_center.x, y), Vector2(last_center.x, y), line_color, 3.0, true)
+		draw_line(
+			Vector2(first_center.x, y), Vector2(last_center.x, y),
+			line_color, line_width, true
+		)
 
 
 func _draw_region_label(rect: Rect2, text: String) -> void:

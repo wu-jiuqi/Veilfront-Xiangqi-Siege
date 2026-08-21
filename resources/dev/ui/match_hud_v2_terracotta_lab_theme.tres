@@ -16,6 +16,10 @@ grid_palette = {
 "buffer": Color(0.4, 0.3, 0.2, 0.1),
 "warzone": Color(0.16, 0.14, 0.12, 0.06)
 }
+grid_line_style = {
+"color": Color(0.075, 0.055, 0.04, 0.92),
+"width": 5.0
+}
 region_label_style = {
 "font_color": Color(0.94, 0.84, 0.68, 0.34),
 "font_size": 72

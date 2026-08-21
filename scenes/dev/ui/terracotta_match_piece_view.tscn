@@ -35,6 +35,11 @@ piece_textures = {
 "red:minister": ExtResource("5_red_minister"),
 "red:trebuchet": ExtResource("8_red_trebuchet")
 }
+piece_scale_multipliers = {
+"cannon": 1.18,
+"horse": 1.18,
+"rook": 1.18
+}
 
 [node name="Shadow" type="Sprite2D" parent="."]
 z_index = -1
