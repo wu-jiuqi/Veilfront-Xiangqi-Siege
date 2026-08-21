@@ -162,6 +162,10 @@ func apply_layout_for_size(requested_size: Vector2) -> void:
 	_sync_board_position_from_board()
 
 
+func set_hud_scene_authored_layout_enabled(enabled: bool) -> void:
+	_hud_layout.set_scene_authored_layout_enabled(enabled)
+
+
 func set_tutorial_panel_width(panel_width: float) -> void:
 	_tutorial_panel_width = maxf(0.0, panel_width)
 	call_deferred("apply_layout_for_size", size)

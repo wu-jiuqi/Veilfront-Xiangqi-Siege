@@ -9,6 +9,7 @@ const FORMAL_MATCH_STATE = preload("res://scripts/game/domain/match_state.gd")
 
 
 func _ready() -> void:
+	_match_screen.set_hud_scene_authored_layout_enabled(true)
 	_match_screen.set_board_presentation_assets(board_theme, map_option)
 	_match_screen.action_previews_requested.connect(_on_action_previews_requested)
 	call_deferred("_seed_preview")

@@ -17,6 +17,7 @@ var _catalog_text_initialized: bool = false
 var _catalog_visuals_initialized: bool = false
 var _text_layer_visibility: Dictionary = {}
 var _catalog_text_values: Dictionary = {}
+var _scene_authored_layout_enabled: bool = false
 
 
 func _ready() -> void:
@@ -31,6 +32,12 @@ func apply_layout_for_size(requested_size: Vector2, reserved_right: float = 0.0)
 
 	_applied_screen_size = Vector2(maxf(1.0, requested_size.x), maxf(1.0, requested_size.y))
 	_reserved_right = clampf(reserved_right, 0.0, maxf(0.0, _applied_screen_size.x - 320.0))
+	if _scene_authored_layout_enabled:
+		_active_profile_name = "scene-authored"
+		_apply_catalog_visuals()
+		_apply_catalog_text_layout(false)
+		_incense_turn_clock.refresh_layout()
+		return
 	var available_size := Vector2(_applied_screen_size.x - _reserved_right, _applied_screen_size.y)
 	_active_profile_name = _select_profile_name(available_size)
 	var profiles: Dictionary = _layout_definition.get("profiles", {})
@@ -91,6 +98,12 @@ func apply_layout_for_size(requested_size: Vector2, reserved_right: float = 0.0)
 	_apply_catalog_visuals()
 	_apply_catalog_text_layout()
 	_incense_turn_clock.refresh_layout()
+
+
+func set_scene_authored_layout_enabled(enabled: bool) -> void:
+	_scene_authored_layout_enabled = enabled
+	if is_node_ready() and enabled:
+		apply_layout_for_size(size, 0.0)
 
 
 func get_layout_snapshot() -> Dictionary:
@@ -205,7 +218,7 @@ func _apply_rect(control: Control, target_rect: Rect2) -> void:
 	control.size = target_rect.size
 
 
-func _apply_catalog_text_layout() -> void:
+func _apply_catalog_text_layout(apply_geometry: bool = true) -> void:
 	var bindings := {
 		"faction-left": {
 			"portrait": $FactionLeft/Portrait,
@@ -275,7 +288,7 @@ func _apply_catalog_text_layout() -> void:
 			var control: Control = panel_bindings.get(layer_id) as Control
 			if control == null:
 				continue
-			if not bool(layer.get("layout_managed_by_container", false)):
+			if apply_geometry and not bool(layer.get("layout_managed_by_container", false)):
 				var rect: Dictionary = layer.get("normalized_rect", {})
 				control.anchor_left = float(rect.get("x", control.anchor_left))
 				control.anchor_top = float(rect.get("y", control.anchor_top))
