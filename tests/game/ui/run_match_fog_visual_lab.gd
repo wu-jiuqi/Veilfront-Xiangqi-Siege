@@ -41,7 +41,15 @@ func _run() -> void:
 	_expect(int(visual.get("fogged_cell_count", 0)) > 0, "fog mask had no fogged cells")
 	_expect(bool(visual.get("uses_generated_mask", false)), "generated mask texture was missing")
 	_expect(bool(visual.get("uses_player_view_only", false)), "visual fog contract was not observer-safe")
-	_expect(visual.get("mask_size") == Vector2i(72, 192), "fog mask resolution changed")
+	_expect(
+		str(visual.get("boundary_style", "")) == "shader_warped_irregular",
+		"fog boundary fell back to rectangular rendering"
+	)
+	_expect(
+		str(visual.get("mask_encoding", "")) == "visible_distance_field",
+		"fog mask fell back to square-cell encoding"
+	)
+	_expect(visual.get("mask_size") == Vector2i(144, 384), "fog mask resolution changed")
 
 	var fog_visual := lab.get_node(
 		"MatchScreen/MatchHudV2/BoardFrame/BoardViewport/BoardSubViewport/BoardWorld/FogVisualOverlayLab"
@@ -50,6 +58,14 @@ func _run() -> void:
 	_expect(material != null and material.shader != null, "fog shader material was missing")
 	if material != null and material.shader != null:
 		_expect(material.shader.resource_path == EXPECTED_SHADER_PATH, "fog shader path mismatch")
+		_expect(
+			float(material.get_shader_parameter("boundary_warp")) >= 0.75,
+			"fog boundary warp was too weak to break the cell silhouette"
+		)
+		_expect(
+			float(material.get_shader_parameter("edge_breakup")) >= 0.3,
+			"fog edge erosion was disabled"
+		)
 
 	lab.call("set_fog_enabled", false)
 	_expect(not fog_visual.visible, "fog toggle did not hide visual fog")
