@@ -2,6 +2,8 @@
 
 状态：`concept_v1_selected / godot_integration_in_progress`
 
+生成提示词：`docs/art/level-select-ui-imagegen-prompts-v1.md`
+
 ## 1. 母稿结构
 
 - 左栏：模式切换、教学完成进度。
