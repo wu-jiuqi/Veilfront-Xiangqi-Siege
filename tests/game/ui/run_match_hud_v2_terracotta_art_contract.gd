@@ -61,6 +61,46 @@ func _run() -> void:
 	) as Sprite2D
 	_expect(background.visible, "preset map background node remained hidden")
 	_expect(is_equal_approx(background.scale.x, background.scale.y), "map background was stretched non-uniformly")
+	_expect(
+		background.texture_filter == CanvasItem.TEXTURE_FILTER_LINEAR,
+		"map background did not use stable linear sampling before sharpening"
+	)
+	var board_material := background.material as ShaderMaterial
+	_expect(board_material != null, "map background sharpening material was missing")
+	if board_material != null:
+		_expect(
+			board_material.shader != null
+			and board_material.shader.resource_path == "res://shaders/game/board_background_sharpen.gdshader",
+			"map background did not use the board sharpening shader"
+		)
+
+	var piece_layer: Node2D = lab.get_node(
+		"MatchScreen/MatchHudV2/BoardFrame/BoardViewport/BoardSubViewport/BoardWorld/PieceLayer"
+	) as Node2D
+	for piece_view_value: Variant in piece_layer.get_children():
+		var piece_view := piece_view_value as Node2D
+		if piece_view == null:
+			continue
+		var artwork := piece_view.get_node_or_null("Artwork") as Sprite2D
+		_expect(artwork != null and artwork.texture != null, "rendered piece artwork was missing")
+		if artwork == null or artwork.texture == null:
+			continue
+		var artwork_bottom: float = artwork.position.y \
+			+ artwork.texture.get_height() * artwork.scale.y * 0.5
+		_expect(
+			absf(artwork_bottom) <= 0.1,
+			"piece artwork bottom was not anchored to its board intersection"
+		)
+		var authority_cell: Vector2i = piece_view.get_meta(
+			"authority_cell", Vector2i.ZERO
+		) as Vector2i
+		var expected_position := BoardCoordinateMapper.authority_to_world(
+			authority_cell, "red", Vector2(128.0, 128.0)
+		)
+		_expect(
+			piece_view.position.is_equal_approx(expected_position),
+			"piece root did not match its authority-cell board intersection"
+		)
 	if "--capture-screenshot" in OS.get_cmdline_user_args():
 		_capture_screenshot(viewport)
 

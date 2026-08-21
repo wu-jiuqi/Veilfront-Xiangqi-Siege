@@ -20,7 +20,9 @@ func configure_piece(piece: Dictionary, cell_size: Vector2) -> void:
 		target_height / maxf(texture_size.y, 1.0)
 	)
 	artwork.scale = Vector2.ONE * fit_scale
-	artwork.position = Vector2(0.0, -cell_size.y * 0.34)
+	# 棋子节点本身位于棋盘交点；把立绘底边锚到该交点，避免不同宽高素材
+	# 因统一中心偏移而出现脚底落点不一致。
+	artwork.position = Vector2(0.0, -texture_size.y * fit_scale * 0.5)
 	var base_scale: float = cell_size.x / 128.0
 	shadow.position = Vector2(0.0, cell_size.y * 0.08)
 	shadow.scale = Vector2(0.3, 0.2) * base_scale
