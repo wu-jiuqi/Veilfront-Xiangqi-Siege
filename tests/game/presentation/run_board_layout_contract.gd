@@ -29,7 +29,7 @@ const EXPECTED_UI_RECTS := {
 		"unit-info": Rect2(129, 424, 184, 246),
 		"objective-events": Rect2(916, 220, 288, 432),
 		"minimap": Rect2(64, 152, 241, 264),
-		"custom-ui-1787265872199-1": Rect2(1168, 168, 40, 496),
+		"custom-ui-1787265872199-1": Rect2(1168, 168, 40, 504),
 		"custom-ui-1787292062912-1": Rect2(296, 592, 648, 64),
 		"custom-ui-1787292347530-2": Rect2(64, 664, 1152, 40),
 		"custom-ui-1787292377548-3": Rect2(72, 432, 48, 232),

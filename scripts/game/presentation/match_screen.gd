@@ -73,6 +73,7 @@ var _current_view: Dictionary = {}
 var _action_mode: String = "move"
 var _tutorial_panel_width: float = 0.0
 var _tutorial_step: Dictionary = {}
+var _tutorial_navigation_enabled: bool = false
 
 
 func _ready() -> void:
@@ -109,7 +110,8 @@ func _update_mirror_button() -> void:
 
 
 func set_tutorial_navigation_enabled(enabled: bool) -> void:
-	_return_button.visible = enabled
+	_tutorial_navigation_enabled = enabled
+	_return_button.visible = enabled or _hud_layout.is_text_layer_enabled("faction-left", "return")
 	_return_button.text = "退出教学"
 
 
@@ -126,6 +128,8 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func apply_layout_for_size(requested_size: Vector2) -> void:
 	_hud_layout.apply_layout_for_size(requested_size, _tutorial_panel_width)
+	_return_button.visible = _tutorial_navigation_enabled \
+		or _hud_layout.is_text_layer_enabled("faction-left", "return")
 	_set_compact_layout(requested_size.x < COMPACT_BREAKPOINT)
 
 
@@ -750,9 +754,30 @@ func _update_objective_summary() -> void:
 	for flag_value: Variant in _current_view.get("flags", []):
 		if flag_value is Dictionary and bool(flag_value.get("discovered", false)):
 			discovered_flags += 1
-	_own_flags.text = "我方已发现旗帜：%d/3" % discovered_flags
-	_own_casualties.text = "我方阵亡：%d" % _side_casualty_count(viewer_side)
-	_enemy_casualties.text = "敌方阵亡：%d" % _side_casualty_count(enemy_side)
+	_own_flags.text = _format_catalog_counter(
+		_hud_layout.get_catalog_text("objective-events", "move", "我方已发现旗帜：0/3"),
+		discovered_flags,
+		3
+	)
+	_own_casualties.text = _format_catalog_counter(
+		_hud_layout.get_catalog_text("objective-events", "bombard", "我方阵亡："),
+		_side_casualty_count(viewer_side)
+	)
+	_enemy_casualties.text = _format_catalog_counter(
+		_hud_layout.get_catalog_text("objective-events", "pass", "敌方阵亡："),
+		_side_casualty_count(enemy_side)
+	)
+
+
+func _format_catalog_counter(template: String, count: int, total: int = -1) -> String:
+	if "{count}" in template or "{total}" in template:
+		return template.replace("{count}", str(count)).replace("{total}", str(total))
+	var separator_index := maxi(template.rfind("："), template.rfind(":"))
+	var prefix := template.substr(0, separator_index + 1).strip_edges() \
+		if separator_index >= 0 else template.strip_edges()
+	if total >= 0:
+		return "%s %d/%d" % [prefix, count, total]
+	return "%s %d" % [prefix, count]
 
 
 func _on_turn_timeout_requested(expected_action_index: int) -> void:

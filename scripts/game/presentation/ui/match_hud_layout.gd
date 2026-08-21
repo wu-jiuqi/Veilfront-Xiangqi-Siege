@@ -14,6 +14,9 @@ var _active_profile_name: String = ""
 var _applied_screen_size := Vector2.ZERO
 var _reserved_right: float = 0.0
 var _catalog_text_initialized: bool = false
+var _catalog_visuals_initialized: bool = false
+var _text_layer_visibility: Dictionary = {}
+var _catalog_text_values: Dictionary = {}
 
 
 func _ready() -> void:
@@ -56,18 +59,36 @@ func apply_layout_for_size(requested_size: Vector2, reserved_right: float = 0.0)
 		"custom-ui-1787292377548-3": $IncenseTurnClock/TimerIncenseSlot,
 		"custom-ui-1787293016650-4": $IncenseTurnClock/RoundDisplaySlot,
 	}
+	var configured_slots: Dictionary = {}
 	for entry_value: Variant in profile.get("ui_layout", []):
 		if not entry_value is Dictionary:
 			continue
 		var entry: Dictionary = entry_value
-		var slot: Control = slots.get(str(entry.get("id", ""))) as Control
+		var slot_id := str(entry.get("id", ""))
+		var slot: Control = slots.get(slot_id) as Control
 		if slot == null:
 			continue
+		configured_slots[slot_id] = true
 		_apply_rect(slot, _scaled_rect(entry.get("pixel_rect", {}), scale_factor))
-		if slot != _piece_info_drawer:
-			slot.visible = bool(entry.get("visible", true))
+		var slot_visible := bool(entry.get("visible", true))
+		if slot == _piece_info_drawer:
+			_piece_info_drawer.set_layout_enabled(slot_visible)
+		else:
+			slot.visible = slot_visible
 		slot.z_index = int(entry.get("z_index", 0))
+	for ui_id_value: Variant in slots.keys():
+		var ui_id := str(ui_id_value)
+		if configured_slots.has(ui_id):
+			continue
+		var disabled_slot: Control = slots.get(ui_id) as Control
+		if disabled_slot == null:
+			continue
+		if disabled_slot == _piece_info_drawer:
+			_piece_info_drawer.set_layout_enabled(false)
+		else:
+			disabled_slot.visible = false
 
+	_apply_catalog_visuals()
 	_apply_catalog_text_layout()
 	_incense_turn_clock.refresh_layout()
 
@@ -104,7 +125,16 @@ func get_layout_snapshot() -> Dictionary:
 				$IncenseTurnClock/RoundDisplaySlot.size
 			),
 		},
+		"text_layer_visibility": _text_layer_visibility.duplicate(true),
 	}
+
+
+func is_text_layer_enabled(panel_id: String, layer_id: String) -> bool:
+	return bool(_text_layer_visibility.get("%s/%s" % [panel_id, layer_id], false))
+
+
+func get_catalog_text(panel_id: String, layer_id: String, fallback: String = "") -> String:
+	return str(_catalog_text_values.get("%s/%s" % [panel_id, layer_id], fallback))
 
 
 func _load_layout_definition() -> void:
@@ -120,6 +150,24 @@ func _load_layout_definition() -> void:
 	if str(_layout_definition.get("board_rect_meaning", "")) != "default_visible_board_screen_rect":
 		push_error("MatchHudLayout 拒绝把非屏幕可视矩形当作棋盘布局。")
 		_layout_definition.clear()
+		return
+	_index_catalog_text()
+
+
+func _index_catalog_text() -> void:
+	_catalog_text_values.clear()
+	for catalog_value: Variant in _layout_definition.get("ui_catalog", []):
+		if not catalog_value is Dictionary:
+			continue
+		var catalog: Dictionary = catalog_value
+		var panel_id := str(catalog.get("id", ""))
+		for layer_value: Variant in catalog.get("text_layers", []):
+			if not layer_value is Dictionary:
+				continue
+			var layer: Dictionary = layer_value
+			_catalog_text_values["%s/%s" % [panel_id, str(layer.get("id", ""))]] = str(
+				layer.get("text", "")
+			)
 
 
 func _select_profile_name(available_size: Vector2) -> String:
@@ -162,12 +210,16 @@ func _apply_catalog_text_layout() -> void:
 		"faction-left": {
 			"portrait": $FactionLeft/Portrait,
 			"name": $FactionLeft/FactionLeftName,
+			"turn": $FactionLeft/FactionLeftTurn,
 			"stats": $FactionLeft/FactionLeftStats,
+			"return": $FactionLeft/ReturnButton,
 		},
 		"faction-right": {
 			"portrait": $FactionRight/Portrait,
 			"name": $FactionRight/FactionRightName,
+			"turn": $FactionRight/FactionRightTurn,
 			"stats": $FactionRight/FactionRightStats,
+			"mirror": $FactionRight/MirrorButton,
 		},
 		"unit-info": {
 			"name": $UnitInfo/UnitName,
@@ -182,9 +234,21 @@ func _apply_catalog_text_layout() -> void:
 			"move": $ObjectiveEvents/OwnFlags,
 			"bombard": $ObjectiveEvents/OwnCasualties,
 			"pass": $ObjectiveEvents/EnemyCasualties,
+			"message": $ObjectiveEvents/MessageValue,
 		},
 		"minimap": {"title": $Minimap/Title},
 	}
+	_text_layer_visibility.clear()
+	for panel_binding_value: Variant in bindings.values():
+		if not panel_binding_value is Dictionary:
+			continue
+		var panel_binding: Dictionary = panel_binding_value
+		for control_value: Variant in panel_binding.values():
+			var bound_control := control_value as Control
+			if bound_control != null:
+				bound_control.visible = false
+	# “跳过”已不属于当前 JSON 的目标信息层；保留预置节点和信号，仅按目录决定是否显示。
+	$ObjectiveEvents/PassButton.visible = false
 	for catalog_value: Variant in _layout_definition.get("ui_catalog", []):
 		if not catalog_value is Dictionary:
 			continue
@@ -197,25 +261,60 @@ func _apply_catalog_text_layout() -> void:
 			if not layer_value is Dictionary:
 				continue
 			var layer: Dictionary = layer_value
-			var label: Label = panel_bindings.get(str(layer.get("id", ""))) as Label
-			if label == null:
+			var layer_id := str(layer.get("id", ""))
+			var control: Control = panel_bindings.get(layer_id) as Control
+			if control == null:
 				continue
 			var rect: Dictionary = layer.get("normalized_rect", {})
-			label.anchor_left = float(rect.get("x", label.anchor_left))
-			label.anchor_top = float(rect.get("y", label.anchor_top))
-			label.anchor_right = label.anchor_left + float(rect.get("width", label.anchor_right - label.anchor_left))
-			label.anchor_bottom = label.anchor_top + float(rect.get("height", label.anchor_bottom - label.anchor_top))
-			label.offset_left = 0.0
-			label.offset_top = 0.0
-			label.offset_right = 0.0
-			label.offset_bottom = 0.0
-			label.visible = bool(layer.get("visible", true))
-			label.add_theme_font_size_override("font_size", int(layer.get("font_size", 12)))
-			label.horizontal_alignment = _horizontal_alignment(str(layer.get("horizontal_alignment", "left")))
-			label.vertical_alignment = _vertical_alignment(str(layer.get("vertical_alignment", "center")))
+			control.anchor_left = float(rect.get("x", control.anchor_left))
+			control.anchor_top = float(rect.get("y", control.anchor_top))
+			control.anchor_right = control.anchor_left + float(rect.get("width", control.anchor_right - control.anchor_left))
+			control.anchor_bottom = control.anchor_top + float(rect.get("height", control.anchor_bottom - control.anchor_top))
+			control.offset_left = 0.0
+			control.offset_top = 0.0
+			control.offset_right = 0.0
+			control.offset_bottom = 0.0
+			control.visible = bool(layer.get("visible", true))
+			_text_layer_visibility["%s/%s" % [str(catalog.get("id", "")), layer_id]] = control.visible
+			control.add_theme_font_size_override("font_size", int(layer.get("font_size", 12)))
+			if control is Label:
+				var label := control as Label
+				label.horizontal_alignment = _horizontal_alignment(str(layer.get("horizontal_alignment", "left")))
+				label.vertical_alignment = _vertical_alignment(str(layer.get("vertical_alignment", "center")))
+			elif control is Button:
+				(control as Button).alignment = _horizontal_alignment(str(layer.get("horizontal_alignment", "center")))
 			if not _catalog_text_initialized:
-				label.text = str(layer.get("text", label.text))
+				if control is Label:
+					(control as Label).text = str(layer.get("text", (control as Label).text))
+				elif control is Button:
+					(control as Button).text = str(layer.get("text", (control as Button).text))
 	_catalog_text_initialized = true
+
+
+func _apply_catalog_visuals() -> void:
+	if _catalog_visuals_initialized:
+		return
+	var backgrounds := {
+		"faction-left": $FactionLeft/Background,
+		"faction-right": $FactionRight/Background,
+		"unit-info": $UnitInfo/Background,
+		"objective-events": $ObjectiveEvents/Background,
+		"minimap": $Minimap/Frame,
+	}
+	for catalog_value: Variant in _layout_definition.get("ui_catalog", []):
+		if not catalog_value is Dictionary:
+			continue
+		var catalog: Dictionary = catalog_value
+		var background: TextureRect = backgrounds.get(str(catalog.get("id", ""))) as TextureRect
+		if background == null:
+			continue
+		var asset_path := str(catalog.get("asset", ""))
+		if not asset_path.is_empty() and ResourceLoader.exists(asset_path):
+			var texture := load(asset_path) as Texture2D
+			if texture != null:
+				background.texture = texture
+		background.flip_h = bool(catalog.get("mirror_x", false))
+	_catalog_visuals_initialized = true
 
 
 func _horizontal_alignment(value: String) -> HorizontalAlignment:

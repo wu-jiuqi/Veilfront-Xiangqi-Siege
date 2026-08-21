@@ -22,6 +22,7 @@ const MOVE_DESCRIPTIONS := {
 var reduced_motion: bool = false
 var _visibility_tween: Tween
 var _piece_id: String = ""
+var _layout_enabled: bool = true
 
 
 func _ready() -> void:
@@ -34,6 +35,8 @@ func _ready() -> void:
 
 
 func show_piece(piece: Dictionary, can_submit: bool, animate: bool = true) -> void:
+	if not _layout_enabled:
+		return
 	var piece_type := str(piece.get("piece_type", ""))
 	var next_piece_id := str(piece.get("id", ""))
 	movement_summary.text = str(MOVE_DESCRIPTIONS.get(piece_type, "该棋子的移动逻辑尚未登记。"))
@@ -82,8 +85,15 @@ func set_reduced_motion(enabled: bool) -> void:
 	reduced_motion = enabled
 
 
+func set_layout_enabled(enabled: bool) -> void:
+	_layout_enabled = enabled
+	if not _layout_enabled:
+		hide_drawer(false)
+
+
 func get_state_snapshot() -> Dictionary:
 	return {
+		"layout_enabled": _layout_enabled,
 		"visible": visible,
 		"movement_summary": movement_summary.text,
 		"move_visible": move_button.visible,
