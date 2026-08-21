@@ -2,18 +2,18 @@ class_name MatchHudLayout
 extends Control
 
 const DEFAULT_LAYOUT_PATH := "res://resources/game/ui/layouts/veilfront_board_ui_layout_v2.json"
-const INCENSE_BASE_SIZE := Vector2(560.0, 47.0)
 
 @export_file("*.json") var layout_path: String = DEFAULT_LAYOUT_PATH
 
 @onready var _board_frame: Control = $BoardFrame
-@onready var _turn_progress_slot: Control = $TurnProgressSlot
-@onready var _turn_progress_incense: Control = $TurnProgressSlot/TurnProgressIncense
+@onready var _piece_info_drawer: PieceInfoDrawer = $PieceInfoDrawer
+@onready var _incense_turn_clock: IncenseTurnClock = $IncenseTurnClock
 
 var _layout_definition: Dictionary = {}
 var _active_profile_name: String = ""
 var _applied_screen_size := Vector2.ZERO
 var _reserved_right: float = 0.0
+var _catalog_text_initialized: bool = false
 
 
 func _ready() -> void:
@@ -50,7 +50,11 @@ func apply_layout_for_size(requested_size: Vector2, reserved_right: float = 0.0)
 		"unit-info": $UnitInfo,
 		"objective-events": $ObjectiveEvents,
 		"minimap": $Minimap,
-		"custom-ui-1787265872199-1": $TurnProgressSlot,
+		"custom-ui-1787265872199-1": $IncenseTurnClock/RoundIncenseSlot,
+		"custom-ui-1787292062912-1": $PieceInfoDrawer,
+		"custom-ui-1787292347530-2": $IncenseTurnClock/IncenseStandSlot,
+		"custom-ui-1787292377548-3": $IncenseTurnClock/TimerIncenseSlot,
+		"custom-ui-1787293016650-4": $IncenseTurnClock/RoundDisplaySlot,
 	}
 	for entry_value: Variant in profile.get("ui_layout", []):
 		if not entry_value is Dictionary:
@@ -60,10 +64,12 @@ func apply_layout_for_size(requested_size: Vector2, reserved_right: float = 0.0)
 		if slot == null:
 			continue
 		_apply_rect(slot, _scaled_rect(entry.get("pixel_rect", {}), scale_factor))
-		slot.visible = bool(entry.get("visible", true))
+		if slot != _piece_info_drawer:
+			slot.visible = bool(entry.get("visible", true))
 		slot.z_index = int(entry.get("z_index", 0))
 
-	_fit_incense_to_slot()
+	_apply_catalog_text_layout()
+	_incense_turn_clock.refresh_layout()
 
 
 func get_layout_snapshot() -> Dictionary:
@@ -80,7 +86,23 @@ func get_layout_snapshot() -> Dictionary:
 			"unit-info": Rect2($UnitInfo.position, $UnitInfo.size),
 			"objective-events": Rect2($ObjectiveEvents.position, $ObjectiveEvents.size),
 			"minimap": Rect2($Minimap.position, $Minimap.size),
-			"custom-ui-1787265872199-1": Rect2($TurnProgressSlot.position, $TurnProgressSlot.size),
+			"custom-ui-1787265872199-1": Rect2(
+				$IncenseTurnClock/RoundIncenseSlot.position,
+				$IncenseTurnClock/RoundIncenseSlot.size
+			),
+			"custom-ui-1787292062912-1": Rect2($PieceInfoDrawer.position, $PieceInfoDrawer.size),
+			"custom-ui-1787292347530-2": Rect2(
+				$IncenseTurnClock/IncenseStandSlot.position,
+				$IncenseTurnClock/IncenseStandSlot.size
+			),
+			"custom-ui-1787292377548-3": Rect2(
+				$IncenseTurnClock/TimerIncenseSlot.position,
+				$IncenseTurnClock/TimerIncenseSlot.size
+			),
+			"custom-ui-1787293016650-4": Rect2(
+				$IncenseTurnClock/RoundDisplaySlot.position,
+				$IncenseTurnClock/RoundDisplaySlot.size
+			),
 		},
 	}
 
@@ -135,10 +157,82 @@ func _apply_rect(control: Control, target_rect: Rect2) -> void:
 	control.size = target_rect.size
 
 
-func _fit_incense_to_slot() -> void:
-	var scale_value := minf(
-		_turn_progress_slot.size.x / INCENSE_BASE_SIZE.x,
-		_turn_progress_slot.size.y / INCENSE_BASE_SIZE.y
-	)
-	_turn_progress_incense.scale = Vector2.ONE * scale_value
-	_turn_progress_incense.position = (_turn_progress_slot.size - INCENSE_BASE_SIZE * scale_value) * 0.5
+func _apply_catalog_text_layout() -> void:
+	var bindings := {
+		"faction-left": {
+			"portrait": $FactionLeft/Portrait,
+			"name": $FactionLeft/FactionLeftName,
+			"stats": $FactionLeft/FactionLeftStats,
+		},
+		"faction-right": {
+			"portrait": $FactionRight/Portrait,
+			"name": $FactionRight/FactionRightName,
+			"stats": $FactionRight/FactionRightStats,
+		},
+		"unit-info": {
+			"name": $UnitInfo/UnitName,
+			"glyph": $UnitInfo/UnitPortraitGlyph,
+			"side": $UnitInfo/UnitSideStatus,
+			"position": $UnitInfo/UnitPosition,
+			"state": $UnitInfo/UnitState,
+		},
+		"objective-events": {
+			"heading": $ObjectiveEvents/Heading,
+			"selection": $ObjectiveEvents/SelectionStatus,
+			"move": $ObjectiveEvents/OwnFlags,
+			"bombard": $ObjectiveEvents/OwnCasualties,
+			"pass": $ObjectiveEvents/EnemyCasualties,
+		},
+		"minimap": {"title": $Minimap/Title},
+	}
+	for catalog_value: Variant in _layout_definition.get("ui_catalog", []):
+		if not catalog_value is Dictionary:
+			continue
+		var catalog: Dictionary = catalog_value
+		var panel_bindings: Dictionary = bindings.get(str(catalog.get("id", "")), {})
+		var text_layers: Variant = catalog.get("text_layers", [])
+		if not text_layers is Array:
+			continue
+		for layer_value: Variant in text_layers:
+			if not layer_value is Dictionary:
+				continue
+			var layer: Dictionary = layer_value
+			var label: Label = panel_bindings.get(str(layer.get("id", ""))) as Label
+			if label == null:
+				continue
+			var rect: Dictionary = layer.get("normalized_rect", {})
+			label.anchor_left = float(rect.get("x", label.anchor_left))
+			label.anchor_top = float(rect.get("y", label.anchor_top))
+			label.anchor_right = label.anchor_left + float(rect.get("width", label.anchor_right - label.anchor_left))
+			label.anchor_bottom = label.anchor_top + float(rect.get("height", label.anchor_bottom - label.anchor_top))
+			label.offset_left = 0.0
+			label.offset_top = 0.0
+			label.offset_right = 0.0
+			label.offset_bottom = 0.0
+			label.visible = bool(layer.get("visible", true))
+			label.add_theme_font_size_override("font_size", int(layer.get("font_size", 12)))
+			label.horizontal_alignment = _horizontal_alignment(str(layer.get("horizontal_alignment", "left")))
+			label.vertical_alignment = _vertical_alignment(str(layer.get("vertical_alignment", "center")))
+			if not _catalog_text_initialized:
+				label.text = str(layer.get("text", label.text))
+	_catalog_text_initialized = true
+
+
+func _horizontal_alignment(value: String) -> HorizontalAlignment:
+	match value:
+		"center":
+			return HORIZONTAL_ALIGNMENT_CENTER
+		"right":
+			return HORIZONTAL_ALIGNMENT_RIGHT
+		_:
+			return HORIZONTAL_ALIGNMENT_LEFT
+
+
+func _vertical_alignment(value: String) -> VerticalAlignment:
+	match value:
+		"top":
+			return VERTICAL_ALIGNMENT_TOP
+		"bottom":
+			return VERTICAL_ALIGNMENT_BOTTOM
+		_:
+			return VERTICAL_ALIGNMENT_CENTER

@@ -24,12 +24,16 @@ const EXPECTED_BOARD_RECTS := {
 }
 const EXPECTED_UI_RECTS := {
 	"1280x720": {
-		"faction-left": Rect2(48, 48, 255, 100),
-		"faction-right": Rect2(976, 48, 255, 100),
-		"unit-info": Rect2(64, 448, 178, 238),
-		"objective-events": Rect2(952, 80, 296, 512),
-		"minimap": Rect2(64, 152, 234, 256),
-		"custom-ui-1787265872199-1": Rect2(256, 600, 952, 72),
+		"faction-left": Rect2(48, 48, 306, 120),
+		"faction-right": Rect2(928, 48, 303, 119),
+		"unit-info": Rect2(129, 424, 184, 246),
+		"objective-events": Rect2(916, 220, 288, 432),
+		"minimap": Rect2(64, 152, 241, 264),
+		"custom-ui-1787265872199-1": Rect2(1168, 168, 40, 496),
+		"custom-ui-1787292062912-1": Rect2(296, 592, 648, 64),
+		"custom-ui-1787292347530-2": Rect2(64, 664, 1152, 40),
+		"custom-ui-1787292377548-3": Rect2(72, 432, 48, 232),
+		"custom-ui-1787293016650-4": Rect2(1104, 160, 104, 96),
 	},
 	"1680x720": {
 		"faction-left": Rect2(24, 70, 335, 100),
@@ -37,7 +41,11 @@ const EXPECTED_UI_RECTS := {
 		"unit-info": Rect2(24, 458, 234, 238),
 		"objective-events": Rect2(1412, 183, 244, 268),
 		"minimap": Rect2(1436, 516, 221, 184),
-		"custom-ui-1787265872199-1": Rect2(420, 600, 1155, 72),
+		"custom-ui-1787265872199-1": Rect2(1533, 168, 53, 496),
+		"custom-ui-1787292062912-1": Rect2(305, 592, 903, 88),
+		"custom-ui-1787292347530-2": Rect2(84, 664, 1512, 40),
+		"custom-ui-1787292377548-3": Rect2(95, 432, 63, 232),
+		"custom-ui-1787293016650-4": Rect2(1449, 160, 137, 96),
 	},
 	"1280x800": {
 		"faction-left": Rect2(18, 78, 255, 111),
@@ -45,7 +53,11 @@ const EXPECTED_UI_RECTS := {
 		"unit-info": Rect2(18, 509, 178, 264),
 		"objective-events": Rect2(1076, 203, 186, 298),
 		"minimap": Rect2(1094, 573, 168, 204),
-		"custom-ui-1787265872199-1": Rect2(320, 667, 880, 80),
+		"custom-ui-1787265872199-1": Rect2(1168, 187, 40, 551),
+		"custom-ui-1787292062912-1": Rect2(232, 658, 688, 98),
+		"custom-ui-1787292347530-2": Rect2(64, 738, 1152, 44),
+		"custom-ui-1787292377548-3": Rect2(72, 480, 48, 258),
+		"custom-ui-1787293016650-4": Rect2(1104, 178, 104, 107),
 	},
 	"1280x960": {
 		"faction-left": Rect2(18, 93, 255, 133),
@@ -53,7 +65,11 @@ const EXPECTED_UI_RECTS := {
 		"unit-info": Rect2(18, 611, 178, 317),
 		"objective-events": Rect2(1076, 244, 186, 357),
 		"minimap": Rect2(1094, 688, 168, 245),
-		"custom-ui-1787265872199-1": Rect2(320, 800, 880, 96),
+		"custom-ui-1787265872199-1": Rect2(1168, 224, 40, 661),
+		"custom-ui-1787292062912-1": Rect2(232, 789, 688, 117),
+		"custom-ui-1787292347530-2": Rect2(64, 885, 1152, 53),
+		"custom-ui-1787292377548-3": Rect2(72, 576, 48, 309),
+		"custom-ui-1787293016650-4": Rect2(1104, 213, 104, 128),
 	},
 }
 
@@ -177,7 +193,9 @@ func _check_resolution(resolution: Vector2i) -> Dictionary:
 	var ui_rects: Dictionary = snapshot.get("ui_rects", {})
 	for ui_id: String in [
 		"faction-left", "faction-right", "unit-info", "objective-events", "minimap",
-		"custom-ui-1787265872199-1",
+		"custom-ui-1787265872199-1", "custom-ui-1787292062912-1",
+		"custom-ui-1787292347530-2", "custom-ui-1787292377548-3",
+		"custom-ui-1787293016650-4",
 	]:
 		_expect(ui_rects.has(ui_id), "%s missing HUD slot %s" % [resolution, ui_id])
 		if ui_rects.has(ui_id):

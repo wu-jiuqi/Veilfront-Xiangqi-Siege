@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3]
+[gd_scene load_steps=15 format=3]
 
 [ext_resource type="Script" path="res://scripts/game/presentation/ui/match_hud_layout.gd" id="1_layout"]
 [ext_resource type="PackedScene" path="res://scenes/game/match/board/board_viewport.tscn" id="2_board"]
@@ -7,9 +7,10 @@
 [ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/objective_event_panel_v1.png" id="5_objective"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/minimap_frame_v1.png" id="6_minimap"]
 [ext_resource type="Script" path="res://scripts/game/presentation/ui/tactical_minimap.gd" id="7_minimap_script"]
-[ext_resource type="PackedScene" path="res://scenes/game/ui/turn_progress_incense.tscn" id="8_incense"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/incense_turn_clock.tscn" id="8_incense"]
 [ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button.tscn" id="9_motion_button"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/hud_panel_9slice_v1.png" id="10_border"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/piece_info_drawer.tscn" id="11_piece_drawer"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxActionEmpty"]
 
@@ -83,6 +84,7 @@ draw_center = false
 
 [node name="FactionLeft" type="Control" parent="."]
 unique_name_in_owner = true
+z_index = 1
 layout_mode = 0
 offset_left = 48.0
 offset_top = 48.0
@@ -170,6 +172,7 @@ text = "返回"
 
 [node name="FactionRight" type="Control" parent="."]
 unique_name_in_owner = true
+z_index = 1
 layout_mode = 0
 offset_left = 976.0
 offset_top = 48.0
@@ -261,6 +264,7 @@ text = "镜像"
 
 [node name="UnitInfo" type="Control" parent="."]
 unique_name_in_owner = true
+z_index = 1
 layout_mode = 0
 offset_left = 64.0
 offset_top = 448.0
@@ -349,6 +353,7 @@ vertical_alignment = 1
 
 [node name="ObjectiveEvents" type="Control" parent="."]
 unique_name_in_owner = true
+z_index = 1
 layout_mode = 0
 offset_left = 952.0
 offset_top = 80.0
@@ -396,59 +401,53 @@ text_overrun_behavior = 3
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ActionMode" type="GridContainer" parent="ObjectiveEvents"]
+[node name="OwnFlags" type="Label" parent="ObjectiveEvents"]
+unique_name_in_owner = true
 layout_mode = 1
 anchor_left = 0.14
-anchor_top = 0.285
+anchor_top = 0.31
 anchor_right = 0.86
-anchor_bottom = 0.65
-theme_override_constants/h_separation = 2
-theme_override_constants/v_separation = 2
-columns = 2
-
-[node name="MoveButton" parent="ObjectiveEvents/ActionMode" instance=ExtResource("9_motion_button")]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(60, 44)
-layout_mode = 2
-toggle_mode = true
-theme_type_variation = &"QuietButton"
+anchor_bottom = 0.38
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.76, 0.77, 0.7, 1)
 theme_override_font_sizes/font_size = 12
-theme_override_styles/normal = SubResource("StyleBoxActionEmpty")
-theme_override_styles/hover = SubResource("StyleBoxActionHover")
-theme_override_styles/pressed = SubResource("StyleBoxActionPressed")
-theme_override_styles/disabled = SubResource("StyleBoxActionEmpty")
-text = "移动"
+text = "我方已发现旗帜：0/3"
+vertical_alignment = 1
 
-[node name="BombardButton" parent="ObjectiveEvents/ActionMode" instance=ExtResource("9_motion_button")]
+[node name="OwnCasualties" type="Label" parent="ObjectiveEvents"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(60, 44)
-layout_mode = 2
-toggle_mode = true
-theme_type_variation = &"QuietButton"
+layout_mode = 1
+anchor_left = 0.14
+anchor_top = 0.4
+anchor_right = 0.86
+anchor_bottom = 0.47
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.76, 0.77, 0.7, 1)
 theme_override_font_sizes/font_size = 12
-theme_override_styles/normal = SubResource("StyleBoxActionEmpty")
-theme_override_styles/hover = SubResource("StyleBoxActionHover")
-theme_override_styles/pressed = SubResource("StyleBoxActionPressed")
-theme_override_styles/disabled = SubResource("StyleBoxActionEmpty")
-text = "炮击"
+text = "我方阵亡：0"
+vertical_alignment = 1
 
-[node name="ResurrectButton" parent="ObjectiveEvents/ActionMode" instance=ExtResource("9_motion_button")]
+[node name="EnemyCasualties" type="Label" parent="ObjectiveEvents"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(60, 44)
-layout_mode = 2
-toggle_mode = true
-theme_type_variation = &"QuietButton"
+layout_mode = 1
+anchor_left = 0.14
+anchor_top = 0.49
+anchor_right = 0.86
+anchor_bottom = 0.56
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.76, 0.77, 0.7, 1)
 theme_override_font_sizes/font_size = 12
-theme_override_styles/normal = SubResource("StyleBoxActionEmpty")
-theme_override_styles/hover = SubResource("StyleBoxActionHover")
-theme_override_styles/pressed = SubResource("StyleBoxActionPressed")
-theme_override_styles/disabled = SubResource("StyleBoxActionEmpty")
-text = "复活"
+text = "敌方阵亡：0"
+vertical_alignment = 1
 
-[node name="PassButton" parent="ObjectiveEvents/ActionMode" instance=ExtResource("9_motion_button")]
+[node name="PassButton" parent="ObjectiveEvents" instance=ExtResource("9_motion_button")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(60, 44)
-layout_mode = 2
+layout_mode = 1
+anchor_left = 0.14
+anchor_top = 0.77
+anchor_right = 0.46
+anchor_bottom = 0.9
 theme_type_variation = &"QuietButton"
 theme_override_font_sizes/font_size = 12
 theme_override_styles/normal = SubResource("StyleBoxActionEmpty")
@@ -461,9 +460,9 @@ text = "跳过"
 unique_name_in_owner = true
 layout_mode = 1
 anchor_left = 0.15
-anchor_top = 0.675
+anchor_top = 0.59
 anchor_right = 0.85
-anchor_bottom = 0.8
+anchor_bottom = 0.74
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.86, 0.7, 0.39, 1)
 theme_override_font_sizes/font_size = 10
@@ -474,6 +473,7 @@ vertical_alignment = 1
 
 [node name="Minimap" type="Control" parent="."]
 unique_name_in_owner = true
+z_index = 1
 layout_mode = 0
 offset_left = 64.0
 offset_top = 152.0
@@ -516,14 +516,15 @@ text = "战场态势"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="TurnProgressSlot" type="Control" parent="."]
+[node name="PieceInfoDrawer" parent="." instance=ExtResource("11_piece_drawer")]
 unique_name_in_owner = true
+z_index = 2
 layout_mode = 0
-offset_left = 256.0
-offset_top = 600.0
-offset_right = 1208.0
-offset_bottom = 672.0
-mouse_filter = 2
+offset_left = 296.0
+offset_top = 592.0
+offset_right = 944.0
+offset_bottom = 656.0
 
-[node name="TurnProgressIncense" parent="TurnProgressSlot" instance=ExtResource("8_incense")]
+[node name="IncenseTurnClock" parent="." instance=ExtResource("8_incense")]
 unique_name_in_owner = true
+layout_mode = 1

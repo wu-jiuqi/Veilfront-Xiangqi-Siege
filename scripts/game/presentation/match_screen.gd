@@ -6,6 +6,7 @@ signal action_previews_requested(piece_id: String, action_type: String)
 signal action_prepare_requested(preview_id: String)
 signal action_confirm_requested(preview_id: String)
 signal skip_requested()
+signal turn_timeout_requested(expected_action_index: int)
 signal return_requested()
 signal selection_cancelled()
 signal marker_applied(cell: Vector2i, marker_type: String)
@@ -21,21 +22,26 @@ const MARKER_MENU: String = "MARKER_MENU"
 const Presenter = preload("res://scripts/game/presentation/match_screen_presenter.gd")
 
 @export var allow_known_illegal_previews: bool = false
+@export var turn_timeout_enabled: bool = false
 
 @onready var _hud_layout: MatchHudLayout = $MatchHudV2
 @onready var _board_frame: Control = $MatchHudV2/BoardFrame
 @onready var _board_viewport: SubViewportContainer = $MatchHudV2/BoardFrame/BoardViewport
 @onready var _marker_menu: PopupPanel = %MarkerMenu
 @onready var _confirmation_panel: PanelContainer = %ActionConfirmationPanel
-@onready var _turn_progress_incense: TurnProgressIncense = $MatchHudV2/TurnProgressSlot/TurnProgressIncense
+@onready var _incense_turn_clock: IncenseTurnClock = $MatchHudV2/IncenseTurnClock
+@onready var _piece_info_drawer: PieceInfoDrawer = $MatchHudV2/PieceInfoDrawer
 @onready var _return_button: Button = $MatchHudV2/FactionLeft/ReturnButton
 @onready var _mirror_button: Button = $MatchHudV2/FactionRight/MirrorButton
 @onready var _selection_status: Label = $MatchHudV2/ObjectiveEvents/SelectionStatus
 @onready var _message_value: Label = $MatchHudV2/ObjectiveEvents/MessageValue
-@onready var _move_button: Button = $MatchHudV2/ObjectiveEvents/ActionMode/MoveButton
-@onready var _bombard_button: Button = $MatchHudV2/ObjectiveEvents/ActionMode/BombardButton
-@onready var _resurrect_button: Button = $MatchHudV2/ObjectiveEvents/ActionMode/ResurrectButton
-@onready var _pass_button: Button = $MatchHudV2/ObjectiveEvents/ActionMode/PassButton
+@onready var _move_button: Button = $MatchHudV2/PieceInfoDrawer/SkillButtons/MoveButton
+@onready var _bombard_button: Button = $MatchHudV2/PieceInfoDrawer/SkillButtons/BombardButton
+@onready var _resurrect_button: Button = $MatchHudV2/PieceInfoDrawer/SkillButtons/ResurrectButton
+@onready var _pass_button: Button = $MatchHudV2/ObjectiveEvents/PassButton
+@onready var _own_flags: Label = $MatchHudV2/ObjectiveEvents/OwnFlags
+@onready var _own_casualties: Label = $MatchHudV2/ObjectiveEvents/OwnCasualties
+@onready var _enemy_casualties: Label = $MatchHudV2/ObjectiveEvents/EnemyCasualties
 @onready var _faction_left_turn: Label = $MatchHudV2/FactionLeft/FactionLeftTurn
 @onready var _faction_left_stats: Label = $MatchHudV2/FactionLeft/FactionLeftStats
 @onready var _faction_right_turn: Label = $MatchHudV2/FactionRight/FactionRightTurn
@@ -84,6 +90,7 @@ func _ready() -> void:
 	_bombard_button.pressed.connect(_set_action_mode.bind("bombard"))
 	_resurrect_button.pressed.connect(_set_action_mode.bind("resurrect"))
 	_pass_button.pressed.connect(_prepare_pass)
+	_incense_turn_clock.timed_out.connect(_on_turn_timeout_requested)
 	call_deferred("apply_layout_for_size", size)
 
 
@@ -161,11 +168,7 @@ func reset_tutorial_step_interaction() -> void:
 func render_player_view(view: Dictionary) -> void:
 	_current_view = view.duplicate(true)
 	_presentation_model = _presenter.player_view_model(view)
-	_turn_progress_incense.set_turn(
-		maxi(1, int(view.get("full_round_index", 1))),
-		maxi(1, int(view.get("round_limit_public", 50))),
-		true
-	)
+	_incense_turn_clock.sync_player_view(view, turn_timeout_enabled)
 	_board_viewport.render_player_view(view)
 	_tactical_minimap.render_player_view(view, _board_viewport.get_presentation_side())
 	_update_faction_panels()
@@ -390,6 +393,8 @@ func get_layout_snapshot() -> Dictionary:
 			and _control_inside_screen(_action_confirm_button),
 		"confirmation_button_min_height": confirmation_button_min_height,
 		"confirmation_prompt_text": _action_prompt.text,
+		"incense_clock": _incense_turn_clock.get_state_snapshot(),
+		"piece_info_drawer": _piece_info_drawer.get_state_snapshot(),
 	}
 
 
@@ -436,8 +441,13 @@ func get_hud_snapshot() -> Dictionary:
 			"mode": _action_mode,
 			"message": _message_value.text,
 			"event": str(_last_event_model.get("message_key", "")),
+			"own_flags": _own_flags.text,
+			"own_casualties": _own_casualties.text,
+			"enemy_casualties": _enemy_casualties.text,
 		},
 		"minimap": _tactical_minimap.get_state_snapshot(),
+		"incense_clock": _incense_turn_clock.get_state_snapshot(),
+		"piece_info_drawer": _piece_info_drawer.get_state_snapshot(),
 	}
 
 
@@ -453,6 +463,7 @@ func _clear_local_interaction() -> void:
 	_inflight_prepare_preview_id = ""
 	_confirmation_panel.visible = false
 	_board_viewport.clear_interaction()
+	_piece_info_drawer.hide_drawer()
 	_update_status_controls()
 
 
@@ -563,6 +574,10 @@ func _piece_cell_by_id(piece_id: String) -> Vector2i:
 
 func _select_piece(piece: Dictionary) -> void:
 	_selected_piece_id = str(piece.get("id", ""))
+	var piece_type := str(piece.get("piece_type", ""))
+	if (_action_mode == "bombard" and piece_type != "cannon") \
+	or (_action_mode == "resurrect" and piece_type != "advisor"):
+		_action_mode = "move"
 	_interaction_state = SELECTED
 	_message_value.text = "已选择 %s；请选择目标交点。" % _selected_piece_id
 	request_action_previews(_selected_piece_id, _action_mode)
@@ -593,12 +608,19 @@ func _set_action_mode(mode: String) -> void:
 		}.get(expected_mode, expected_mode))
 		return
 	_action_mode = mode
-	_clear_local_interaction()
+	_prepared_preview_id = ""
+	_confirmation_panel.visible = false
+	_board_viewport.clear_interaction()
 	_message_value.text = {
 		"move": "普通移动：选择己方棋子和目标交点。",
 		"bombard": "区域炮击：先选择大本营内仍有弹药的己方炮。",
 		"resurrect": "献祭复活：选择一枚在场己方士。",
 	}.get(mode, "请选择行动。")
+	if not _selected_piece_id.is_empty():
+		_interaction_state = SELECTED
+		request_action_previews(_selected_piece_id, _action_mode)
+		if _action_mode == "resurrect":
+			_prepare_empty_target_preview()
 	_update_status_controls()
 
 
@@ -660,6 +682,7 @@ func _update_status_controls() -> void:
 	_bombard_button.button_pressed = _action_mode == "bombard"
 	_resurrect_button.button_pressed = _action_mode == "resurrect"
 	_update_faction_panels()
+	_update_objective_summary()
 	_update_unit_card()
 
 
@@ -691,6 +714,7 @@ func _update_unit_card() -> void:
 		_unit_side_status.text = "阵营：—"
 		_unit_position.text = "坐标：—"
 		_unit_state.text = "状态：—"
+		_piece_info_drawer.hide_drawer()
 		return
 
 	var piece_type := str(piece.get("piece_type", "unknown"))
@@ -714,6 +738,31 @@ func _update_unit_card() -> void:
 	if not tag_parts.is_empty():
 		state_text += " · " + " / ".join(tag_parts)
 	_unit_state.text = "状态：%s" % state_text
+	_piece_info_drawer.show_piece(piece, _can_submit_action())
+
+
+func _update_objective_summary() -> void:
+	if not is_instance_valid(_own_flags):
+		return
+	var viewer_side := str(_current_view.get("viewer_side", "red"))
+	var enemy_side := "black" if viewer_side == "red" else "red"
+	var discovered_flags := 0
+	for flag_value: Variant in _current_view.get("flags", []):
+		if flag_value is Dictionary and bool(flag_value.get("discovered", false)):
+			discovered_flags += 1
+	_own_flags.text = "我方已发现旗帜：%d/3" % discovered_flags
+	_own_casualties.text = "我方阵亡：%d" % _side_casualty_count(viewer_side)
+	_enemy_casualties.text = "敌方阵亡：%d" % _side_casualty_count(enemy_side)
+
+
+func _on_turn_timeout_requested(expected_action_index: int) -> void:
+	if not turn_timeout_enabled \
+	or expected_action_index != int(_current_view.get("action_index", -1)) \
+	or not _can_submit_action():
+		return
+	_clear_local_interaction()
+	_message_value.text = "计时香已燃尽，系统正在选择一条合法移动。"
+	turn_timeout_requested.emit(expected_action_index)
 
 
 func _piece_by_id(piece_id: String) -> Dictionary:

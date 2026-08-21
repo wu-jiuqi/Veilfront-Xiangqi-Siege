@@ -1,0 +1,105 @@
+extends SceneTree
+
+const CLOCK_SCENE: PackedScene = preload("res://scenes/game/ui/incense_turn_clock.tscn")
+const DRAWER_SCENE: PackedScene = preload("res://scenes/game/ui/piece_info_drawer.tscn")
+const ClockScript = preload("res://scripts/game/presentation/ui/incense_turn_clock.gd")
+
+var _failures: Array[String] = []
+
+
+func _init() -> void:
+	call_deferred("_run")
+
+
+func _run() -> void:
+	_check_chinese_numbers()
+	var clock := CLOCK_SCENE.instantiate() as IncenseTurnClock
+	_expect(clock != null, "燃香组合预置场景无法实例化")
+	if clock == null:
+		_finish()
+		return
+	root.add_child(clock)
+	await process_frame
+	clock.refresh_layout()
+	clock.set_reduced_motion(true)
+
+	clock.set_round(1, 50, false)
+	var first := clock.get_state_snapshot()
+	_expect(is_equal_approx(float(first.get("round_remaining_ratio", -1.0)), 0.98), "第一回合的回合香应剩余 49/50")
+	_expect(first.get("chinese_round", "") == "一", "第一回合没有显示中文烟字")
+	clock.set_round(25, 50, false)
+	var middle := clock.get_state_snapshot()
+	_expect(is_equal_approx(float(middle.get("round_remaining_ratio", -1.0)), 0.5), "第二十五回合的回合香应剩余一半")
+	_expect(float(middle.get("smoke_length", 0.0)) > float(first.get("smoke_length", 0.0)), "回合香变短后烟没有变长")
+	clock.set_round(50, 50, false)
+	var final := clock.get_state_snapshot()
+	_expect(is_zero_approx(float(final.get("round_remaining_ratio", -1.0))), "第五十回合的回合香没有烧完")
+	_expect(final.get("chinese_round", "") == "五十", "第五十回合中文烟字错误")
+	_expect(int(final.get("smoke_frame_count", 0)) == 8, "上飘烟雾没有使用 8 帧序列")
+
+	var timeout_actions: Array[int] = []
+	clock.timed_out.connect(func(action_index: int) -> void: timeout_actions.append(action_index))
+	clock.sync_player_view({
+		"action_index": 7,
+		"full_round_index": 3,
+		"round_limit_public": 50,
+		"viewer_side": "red",
+		"active_side": "red",
+		"terminal": false,
+	}, true)
+	clock.set_timer_remaining_for_test(0.03, true)
+	await create_timer(0.08).timeout
+	_expect(timeout_actions == [7], "计时香烧完后没有且仅没有发送当前行动序号")
+	clock.sync_player_view({
+		"action_index": 8,
+		"full_round_index": 3,
+		"round_limit_public": 50,
+		"viewer_side": "red",
+		"active_side": "red",
+		"terminal": false,
+	}, true)
+	var reset := clock.get_state_snapshot()
+	_expect(is_equal_approx(float(reset.get("remaining_seconds", 0.0)), 60.0), "新行动没有把计时香重置为 60 秒")
+	_expect(bool(reset.get("timer_running", false)), "轮到本地玩家时计时香没有开始燃烧")
+
+	var drawer := DRAWER_SCENE.instantiate() as PieceInfoDrawer
+	root.add_child(drawer)
+	await process_frame
+	_expect(not drawer.visible, "棋子信息展开栏默认没有隐藏")
+	drawer.show_piece({"id": "red-cannon", "piece_type": "cannon"}, true, false)
+	var cannon_state := drawer.get_state_snapshot()
+	_expect(bool(cannon_state.get("visible", false)), "选中棋子后展开栏没有显示")
+	_expect(bool(cannon_state.get("bombard_visible", false)), "选中炮后没有显示轰炸技能")
+	_expect(not bool(cannon_state.get("resurrect_visible", true)), "选中炮后错误显示了复活技能")
+	drawer.show_piece({"id": "red-advisor", "piece_type": "advisor"}, true, false)
+	var advisor_state := drawer.get_state_snapshot()
+	_expect(bool(advisor_state.get("resurrect_visible", false)), "选中士后没有显示复活技能")
+	drawer.hide_drawer(false)
+	_expect(not drawer.visible, "取消选择后展开栏没有隐藏")
+
+	drawer.queue_free()
+	clock.queue_free()
+	await process_frame
+	_finish()
+
+
+func _check_chinese_numbers() -> void:
+	var expected := {1: "一", 10: "十", 11: "十一", 20: "二十", 25: "二十五", 50: "五十"}
+	for round_number: int in expected:
+		_expect(ClockScript.chinese_number(round_number) == expected[round_number], "中文回合数字错误：%d" % round_number)
+
+
+func _finish() -> void:
+	if _failures.is_empty():
+		print("INCENSE_TURN_CLOCK_CONTRACT_PASS rounds=50 timer_seconds=60 smoke_frames=8")
+		quit(0)
+		return
+	for failure: String in _failures:
+		push_error(failure)
+	print("INCENSE_TURN_CLOCK_CONTRACT_FAIL failures=%d" % _failures.size())
+	quit(1)
+
+
+func _expect(condition: bool, message: String) -> void:
+	if not condition:
+		_failures.append(message)

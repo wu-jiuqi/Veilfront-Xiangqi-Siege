@@ -3,63 +3,1171 @@
   "coordinate_space": "design_canvas",
   "board_rect_meaning": "default_visible_board_screen_rect",
   "board_rect_explicitly_not": "full_board_world_size",
-  "full_board_world_reference": {"width": 1152, "height": 3072},
+  "full_board_world_reference": {
+    "width": 1152,
+    "height": 3072
+  },
   "active_profile": "1280x720",
   "ui_catalog": [
-    {"id": "faction-left", "name": "左方阵营状态", "function": "显示左方阵营信息、资源和状态。", "kind": "image", "asset": "res://assets/art/ui/terracotta_hud_v2/faction_status_plate_v1.png", "mirror_x": false, "visible": true, "lock_aspect": true},
-    {"id": "faction-right", "name": "右方阵营状态", "function": "显示右方阵营信息、资源和状态。", "kind": "image", "asset": "res://assets/art/ui/terracotta_hud_v2/faction_status_plate_v1.png", "mirror_x": true, "visible": true, "lock_aspect": true},
-    {"id": "unit-info", "name": "单位信息卡", "function": "显示当前选中棋子的身份、属性与状态。", "kind": "image", "asset": "res://assets/art/ui/terracotta_hud_v2/unit_info_card_v1.png", "mirror_x": false, "visible": true, "lock_aspect": true},
-    {"id": "objective-events", "name": "回合进度条", "function": "目标与事件回合进度条", "kind": "image", "asset": "res://assets/art/ui/terracotta_hud_v2/objective_event_panel_v1.png", "mirror_x": false, "visible": true, "lock_aspect": true},
-    {"id": "minimap", "name": "小地图", "function": "显示完整棋盘概览、视野和战场标记。", "kind": "image", "asset": "res://assets/art/ui/terracotta_hud_v2/minimap_frame_v1.png", "mirror_x": false, "visible": true, "lock_aspect": true},
-    {"id": "custom-ui-1787265872199-1", "name": "回合进度条", "function": "用来展示游戏进度回合数", "kind": "custom", "asset": null, "mirror_x": false, "visible": true, "lock_aspect": false}
+    {
+      "id": "faction-left",
+      "name": "左方阵营状态",
+      "function": "显示左方阵营信息、资源和状态。",
+      "kind": "image",
+      "asset": "res://assets/art/ui/terracotta_hud_v2/faction_status_plate_v1.png",
+      "mirror_x": false,
+      "visible": true,
+      "lock_aspect": true,
+      "text_layers": [
+        {
+          "id": "portrait",
+          "name": "阵营字",
+          "text": "赤",
+          "binding": "faction_glyph",
+          "visible": true,
+          "font_size": 30,
+          "horizontal_alignment": "center",
+          "vertical_alignment": "center",
+          "normalized_rect": {
+            "x": 0.09411764705882353,
+            "y": 0.16,
+            "width": 0.18823529411764706,
+            "height": 0.64
+          }
+        },
+        {
+          "id": "name",
+          "name": "阵营名称",
+          "text": "赤方军势",
+          "binding": "faction_name",
+          "visible": true,
+          "font_size": 14,
+          "horizontal_alignment": "left",
+          "vertical_alignment": "center",
+          "normalized_rect": {
+            "x": 0.3202614379084967,
+            "y": 0.2916666666666667,
+            "width": 0.44000000000000006,
+            "height": 0.20833333333333334
+          }
+        },
+        {
+          "id": "stats",
+          "name": "阵营数据",
+          "text": "墙 完好 · 旗 0 · 损 0",
+          "binding": "faction_stats",
+          "visible": true,
+          "font_size": 10,
+          "horizontal_alignment": "left",
+          "vertical_alignment": "center",
+          "normalized_rect": {
+            "x": 0.32679738562091504,
+            "y": 0.5,
+            "width": 0.5065359477124183,
+            "height": 0.16666666666666666
+          }
+        }
+      ]
+    },
+    {
+      "id": "faction-right",
+      "name": "右方阵营状态",
+      "function": "显示右方阵营信息、资源和状态。",
+      "kind": "image",
+      "asset": "res://assets/art/ui/terracotta_hud_v2/faction_status_plate_v1.png",
+      "mirror_x": true,
+      "visible": true,
+      "lock_aspect": true,
+      "text_layers": [
+        {
+          "id": "portrait",
+          "name": "阵营字",
+          "text": "玄",
+          "binding": "faction_glyph",
+          "visible": true,
+          "font_size": 30,
+          "horizontal_alignment": "center",
+          "vertical_alignment": "center",
+          "normalized_rect": {
+            "x": 0.7215686274509804,
+            "y": 0.16,
+            "width": 0.18823529411764706,
+            "height": 0.64
+          }
+        },
+        {
+          "id": "name",
+          "name": "阵营名称",
+          "text": "玄方军势",
+          "binding": "faction_name",
+          "visible": true,
+          "font_size": 14,
+          "horizontal_alignment": "right",
+          "vertical_alignment": "center",
+          "normalized_rect": {
+            "x": 0.21960784313725493,
+            "y": 0.29455445544554454,
+            "width": 0.44554455445544555,
+            "height": 0.2103960396039604
+          }
+        },
+        {
+          "id": "stats",
+          "name": "阵营数据",
+          "text": "墙 完好 · 旗 0 · 损 0",
+          "binding": "faction_stats",
+          "visible": true,
+          "font_size": 10,
+          "horizontal_alignment": "right",
+          "vertical_alignment": "center",
+          "normalized_rect": {
+            "x": 0.16501650165016502,
+            "y": 0.504950495049505,
+            "width": 0.5115511551155115,
+            "height": 0.1683168316831683
+          }
+        }
+      ]
+    },
+    {
+      "id": "unit-info",
+      "name": "单位信息卡",
+      "function": "显示当前选中棋子的身份、属性与状态。",
+      "kind": "image",
+      "asset": "res://assets/art/ui/terracotta_hud_v2/unit_info_card_v1.png",
+      "mirror_x": false,
+      "visible": true,
+      "lock_aspect": true,
+      "text_layers": [
+        {
+          "id": "name",
+          "name": "单位名称",
+          "text": "未选择单位",
+          "binding": "unit_name",
+          "visible": true,
+          "font_size": 14,
+          "horizontal_alignment": "center",
+          "vertical_alignment": "center",
+          "normalized_rect": {
+            "x": 0.14,
+            "y": 0.05500000000000001,
+            "width": 0.7200000000000001,
+            "height": 0.08999999999999998
+          }
+        },
+        {
+          "id": "glyph",
+          "name": "棋子字",
+          "text": "—",
+          "binding": "unit_glyph",
+          "visible": true,
+          "font_size": 44,
+          "horizontal_alignment": "center",
+          "vertical_alignment": "center",
+          "normalized_rect": {
+            "x": 0.1348314606741573,
+            "y": 0.16806722689075632,
+            "width": 0.7,
+            "height": 0.4000000000000001
+          }
+        },
+        {
+          "id": "side",
+          "name": "阵营状态",
+          "text": "阵营：—",
+          "binding": "unit_side",
+          "visible": true,
+          "font_size": 11,
+          "horizontal_alignment": "left",
+          "vertical_alignment": "center",
+          "normalized_rect": {
+            "x": 0.24456521739130435,
+            "y": 0.6706704420898795,
+            "width": 0.6,
+            "height": 0.060000000000000005
+          }
+        },
+        {
+          "id": "position",
+          "name": "单位坐标",
+          "text": "坐标：—",
+          "binding": "unit_position",
+          "visible": true,
+          "font_size": 11,
+          "horizontal_alignment": "left",
+          "vertical_alignment": "center",
+          "normalized_rect": {
+            "x": 0.24456521739130435,
+            "y": 0.7519638290098648,
+            "width": 0.6,
+            "height": 0.060000000000000005
+          }
+        },
+        {
+          "id": "state",
+          "name": "单位状态",
+          "text": "状态：—",
+          "binding": "unit_state",
+          "visible": true,
+          "font_size": 11,
+          "horizontal_alignment": "left",
+          "vertical_alignment": "center",
+          "normalized_rect": {
+            "x": 0.24456521739130435,
+            "y": 0.8332572159298502,
+            "width": 0.6,
+            "height": 0.065
+          }
+        }
+      ]
+    },
+    {
+      "id": "objective-events",
+      "name": "目标与事件",
+      "function": "显示当前目标、战场事件和提示信息。",
+      "kind": "image",
+      "asset": "res://assets/art/ui/terracotta_hud_v2/objective_event_panel_v1.png",
+      "mirror_x": false,
+      "visible": true,
+      "lock_aspect": true,
+      "text_layers": [
+        {
+          "id": "heading",
+          "name": "面板标题",
+          "text": "战局与行动",
+          "binding": "static",
+          "visible": true,
+          "font_size": 14,
+          "horizontal_alignment": "center",
+          "vertical_alignment": "center",
+          "normalized_rect": {
+            "x": 0.19444444444444445,
+            "y": 0.16666666666666666,
+            "width": 0.6111111111111112,
+            "height": 0.065
+          }
+        },
+        {
+          "id": "selection",
+          "name": "选择状态",
+          "text": "行动方：— · 已选：无",
+          "binding": "selection_status",
+          "visible": true,
+          "font_size": 11,
+          "horizontal_alignment": "center",
+          "vertical_alignment": "center",
+          "normalized_rect": {
+            "x": 0.2951388888888889,
+            "y": 0.2777777777777778,
+            "width": 0.5,
+            "height": 0.065
+          }
+        },
+        {
+          "id": "move",
+          "name": "我方已发现旗帜数",
+          "text": "我方已发现旗帜: 0/3",
+          "binding": "static",
+          "visible": true,
+          "font_size": 12,
+          "horizontal_alignment": "center",
+          "vertical_alignment": "center",
+          "normalized_rect": {
+            "x": 0.2951388888888889,
+            "y": 0.37037037037037035,
+            "width": 0.5,
+            "height": 0.07407407407407407
+          }
+        },
+        {
+          "id": "bombard",
+          "name": "我方阵亡:",
+          "text": "我方阵亡:",
+          "binding": "static",
+          "visible": true,
+          "font_size": 12,
+          "horizontal_alignment": "center",
+          "vertical_alignment": "center",
+          "normalized_rect": {
+            "x": 0.2951388888888889,
+            "y": 0.48148148148148145,
+            "width": 0.5,
+            "height": 0.07407407407407407
+          }
+        },
+        {
+          "id": "pass",
+          "name": "敌方阵亡:",
+          "text": "敌方阵亡:",
+          "binding": "static",
+          "visible": true,
+          "font_size": 12,
+          "horizontal_alignment": "center",
+          "vertical_alignment": "center",
+          "normalized_rect": {
+            "x": 0.2951388888888889,
+            "y": 0.5787037037037037,
+            "width": 0.5,
+            "height": 0.07407407407407407
+          }
+        }
+      ]
+    },
+    {
+      "id": "minimap",
+      "name": "小地图",
+      "function": "显示完整棋盘概览、视野和战场标记。",
+      "kind": "image",
+      "asset": "res://assets/art/ui/terracotta_hud_v2/minimap_frame_v1.png",
+      "mirror_x": false,
+      "visible": true,
+      "lock_aspect": true,
+      "text_layers": [
+        {
+          "id": "title",
+          "name": "小地图标题",
+          "text": "战场态势",
+          "binding": "static",
+          "visible": true,
+          "font_size": 12,
+          "horizontal_alignment": "center",
+          "vertical_alignment": "center",
+          "normalized_rect": {
+            "x": 0.17999999999999997,
+            "y": 0.04,
+            "width": 0.6399999999999999,
+            "height": 0.1
+          }
+        }
+      ]
+    },
+    {
+      "id": "custom-ui-1787265872199-1",
+      "name": "回合香",
+      "function": "用燃香展示当前回合进度。",
+      "kind": "image",
+      "asset": "res://assets/art/ui/terracotta_hud_v2/turn_progress_incense/turn_progress_incense_preview_v1.png",
+      "mirror_x": false,
+      "visible": true,
+      "lock_aspect": false,
+      "text_layers": []
+    },
+    {
+      "id": "custom-ui-1787292062912-1",
+      "name": "棋子信息展开栏",
+      "function": "需要包含棋子的移动技能",
+      "kind": "custom",
+      "asset": null,
+      "mirror_x": false,
+      "visible": true,
+      "lock_aspect": false,
+      "text_layers": []
+    },
+    {
+      "id": "custom-ui-1787292347530-2",
+      "name": "香盘",
+      "function": "香盘",
+      "kind": "custom",
+      "asset": null,
+      "mirror_x": false,
+      "visible": true,
+      "lock_aspect": false,
+      "text_layers": []
+    },
+    {
+      "id": "custom-ui-1787292377548-3",
+      "name": "计时香",
+      "function": "倒计时",
+      "kind": "custom",
+      "asset": null,
+      "mirror_x": false,
+      "visible": true,
+      "lock_aspect": false,
+      "text_layers": []
+    },
+    {
+      "id": "custom-ui-1787293016650-4",
+      "name": "回合数显示区",
+      "function": "回合数显示区",
+      "kind": "custom",
+      "asset": null,
+      "mirror_x": false,
+      "visible": true,
+      "lock_aspect": false,
+      "text_layers": []
+    }
   ],
   "profiles": {
     "1280x720": {
-      "canvas": {"width": 1280, "height": 720, "aspect": "16:9"},
-      "default_visible_board_screen_rect": {"pixel_rect": {"x": 340, "y": 48, "width": 600, "height": 536}},
+      "canvas": {
+        "width": 1280,
+        "height": 720,
+        "aspect": "16:9"
+      },
+      "default_visible_board_screen_rect": {
+        "pixel_rect": {
+          "x": 340,
+          "y": 48,
+          "width": 600,
+          "height": 536
+        },
+        "normalized_rect": {
+          "x": 0.265625,
+          "y": 0.06666666666666667,
+          "width": 0.46875,
+          "height": 0.7444444444444445
+        }
+      },
       "ui_layout": [
-        {"id": "faction-left", "z_index": 0, "visible": true, "pixel_rect": {"x": 48, "y": 48, "width": 255, "height": 100}},
-        {"id": "faction-right", "z_index": 1, "visible": true, "pixel_rect": {"x": 976, "y": 48, "width": 255, "height": 100}},
-        {"id": "unit-info", "z_index": 2, "visible": true, "pixel_rect": {"x": 64, "y": 448, "width": 178, "height": 238}},
-        {"id": "objective-events", "z_index": 3, "visible": true, "pixel_rect": {"x": 952, "y": 80, "width": 296, "height": 512}},
-        {"id": "minimap", "z_index": 4, "visible": true, "pixel_rect": {"x": 64, "y": 152, "width": 234, "height": 256}},
-        {"id": "custom-ui-1787265872199-1", "z_index": 5, "visible": true, "pixel_rect": {"x": 256, "y": 600, "width": 952, "height": 72}}
+        {
+          "id": "faction-left",
+          "z_index": 0,
+          "visible": true,
+          "pixel_rect": {
+            "x": 48,
+            "y": 48,
+            "width": 306,
+            "height": 120
+          },
+          "normalized_rect": {
+            "x": 0.0375,
+            "y": 0.06666666666666667,
+            "width": 0.2390625,
+            "height": 0.16666666666666666
+          }
+        },
+        {
+          "id": "faction-right",
+          "z_index": 1,
+          "visible": true,
+          "pixel_rect": {
+            "x": 928,
+            "y": 48,
+            "width": 303,
+            "height": 119
+          },
+          "normalized_rect": {
+            "x": 0.725,
+            "y": 0.06666666666666667,
+            "width": 0.23671875,
+            "height": 0.1650326797385621
+          }
+        },
+        {
+          "id": "unit-info",
+          "z_index": 2,
+          "visible": true,
+          "pixel_rect": {
+            "x": 129,
+            "y": 424,
+            "width": 184,
+            "height": 246
+          },
+          "normalized_rect": {
+            "x": 0.10078125,
+            "y": 0.5888888888888889,
+            "width": 0.14375,
+            "height": 0.34169787765293386
+          }
+        },
+        {
+          "id": "objective-events",
+          "z_index": 3,
+          "visible": true,
+          "pixel_rect": {
+            "x": 916,
+            "y": 220,
+            "width": 288,
+            "height": 432
+          },
+          "normalized_rect": {
+            "x": 0.715625,
+            "y": 0.3055555555555556,
+            "width": 0.225,
+            "height": 0.6
+          }
+        },
+        {
+          "id": "minimap",
+          "z_index": 4,
+          "visible": true,
+          "pixel_rect": {
+            "x": 64,
+            "y": 152,
+            "width": 241,
+            "height": 264
+          },
+          "normalized_rect": {
+            "x": 0.05,
+            "y": 0.2111111111111111,
+            "width": 0.188525390625,
+            "height": 0.36666666666666664
+          }
+        },
+        {
+          "id": "custom-ui-1787265872199-1",
+          "z_index": 5,
+          "visible": true,
+          "pixel_rect": {
+            "x": 1168,
+            "y": 168,
+            "width": 40,
+            "height": 496
+          },
+          "normalized_rect": {
+            "x": 0.9125,
+            "y": 0.23333333333333334,
+            "width": 0.03125,
+            "height": 0.6888888888888889
+          }
+        },
+        {
+          "id": "custom-ui-1787292062912-1",
+          "z_index": 6,
+          "visible": true,
+          "pixel_rect": {
+            "x": 296,
+            "y": 592,
+            "width": 648,
+            "height": 64
+          },
+          "normalized_rect": {
+            "x": 0.23125,
+            "y": 0.8222222222222222,
+            "width": 0.50625,
+            "height": 0.08888888888888889
+          }
+        },
+        {
+          "id": "custom-ui-1787292347530-2",
+          "z_index": 7,
+          "visible": true,
+          "pixel_rect": {
+            "x": 64,
+            "y": 664,
+            "width": 1152,
+            "height": 40
+          },
+          "normalized_rect": {
+            "x": 0.05,
+            "y": 0.9222222222222223,
+            "width": 0.9,
+            "height": 0.05555555555555555
+          }
+        },
+        {
+          "id": "custom-ui-1787292377548-3",
+          "z_index": 8,
+          "visible": true,
+          "pixel_rect": {
+            "x": 72,
+            "y": 432,
+            "width": 48,
+            "height": 232
+          },
+          "normalized_rect": {
+            "x": 0.05625,
+            "y": 0.6,
+            "width": 0.0375,
+            "height": 0.32222222222222224
+          }
+        },
+        {
+          "id": "custom-ui-1787293016650-4",
+          "z_index": 9,
+          "visible": true,
+          "pixel_rect": {
+            "x": 1104,
+            "y": 160,
+            "width": 104,
+            "height": 96
+          },
+          "normalized_rect": {
+            "x": 0.8625,
+            "y": 0.2222222222222222,
+            "width": 0.08125,
+            "height": 0.13333333333333333
+          }
+        }
       ]
     },
     "1680x720": {
-      "canvas": {"width": 1680, "height": 720, "aspect": "21:9"},
-      "default_visible_board_screen_rect": {"pixel_rect": {"x": 341, "y": 104, "width": 998, "height": 450}},
+      "canvas": {
+        "width": 1680,
+        "height": 720,
+        "aspect": "21:9"
+      },
+      "default_visible_board_screen_rect": {
+        "pixel_rect": {
+          "x": 341,
+          "y": 104,
+          "width": 998,
+          "height": 450
+        },
+        "normalized_rect": {
+          "x": 0.20297619047619048,
+          "y": 0.14444444444444443,
+          "width": 0.594047619047619,
+          "height": 0.625
+        }
+      },
       "ui_layout": [
-        {"id": "faction-left", "z_index": 0, "visible": true, "pixel_rect": {"x": 24, "y": 70, "width": 335, "height": 100}},
-        {"id": "faction-right", "z_index": 1, "visible": true, "pixel_rect": {"x": 1322, "y": 70, "width": 335, "height": 100}},
-        {"id": "unit-info", "z_index": 2, "visible": true, "pixel_rect": {"x": 24, "y": 458, "width": 234, "height": 238}},
-        {"id": "objective-events", "z_index": 3, "visible": true, "pixel_rect": {"x": 1412, "y": 183, "width": 244, "height": 268}},
-        {"id": "minimap", "z_index": 4, "visible": true, "pixel_rect": {"x": 1436, "y": 516, "width": 221, "height": 184}},
-        {"id": "custom-ui-1787265872199-1", "z_index": 5, "visible": true, "pixel_rect": {"x": 420, "y": 600, "width": 1155, "height": 72}}
+        {
+          "id": "faction-left",
+          "z_index": 0,
+          "visible": true,
+          "pixel_rect": {
+            "x": 24,
+            "y": 70,
+            "width": 335,
+            "height": 100
+          },
+          "normalized_rect": {
+            "x": 0.014285714285714285,
+            "y": 0.09722222222222222,
+            "width": 0.19940476190476192,
+            "height": 0.1388888888888889
+          }
+        },
+        {
+          "id": "faction-right",
+          "z_index": 1,
+          "visible": true,
+          "pixel_rect": {
+            "x": 1322,
+            "y": 70,
+            "width": 335,
+            "height": 100
+          },
+          "normalized_rect": {
+            "x": 0.7869047619047619,
+            "y": 0.09722222222222222,
+            "width": 0.19940476190476192,
+            "height": 0.1388888888888889
+          }
+        },
+        {
+          "id": "unit-info",
+          "z_index": 2,
+          "visible": true,
+          "pixel_rect": {
+            "x": 24,
+            "y": 458,
+            "width": 234,
+            "height": 238
+          },
+          "normalized_rect": {
+            "x": 0.014285714285714285,
+            "y": 0.6361111111111111,
+            "width": 0.1392857142857143,
+            "height": 0.33055555555555555
+          }
+        },
+        {
+          "id": "objective-events",
+          "z_index": 3,
+          "visible": true,
+          "pixel_rect": {
+            "x": 1412,
+            "y": 183,
+            "width": 244,
+            "height": 268
+          },
+          "normalized_rect": {
+            "x": 0.8404761904761905,
+            "y": 0.25416666666666665,
+            "width": 0.14523809523809525,
+            "height": 0.37222222222222223
+          }
+        },
+        {
+          "id": "minimap",
+          "z_index": 4,
+          "visible": true,
+          "pixel_rect": {
+            "x": 1436,
+            "y": 516,
+            "width": 221,
+            "height": 184
+          },
+          "normalized_rect": {
+            "x": 0.8547619047619047,
+            "y": 0.7166666666666667,
+            "width": 0.13154761904761905,
+            "height": 0.25555555555555554
+          }
+        },
+        {
+          "id": "custom-ui-1787265872199-1",
+          "z_index": 5,
+          "visible": true,
+          "pixel_rect": {
+            "x": 1533,
+            "y": 168,
+            "width": 53,
+            "height": 496
+          },
+          "normalized_rect": {
+            "x": 0.9125,
+            "y": 0.23333333333333334,
+            "width": 0.03154761904761905,
+            "height": 0.6888888888888889
+          }
+        },
+        {
+          "id": "custom-ui-1787292062912-1",
+          "z_index": 6,
+          "visible": true,
+          "pixel_rect": {
+            "x": 305,
+            "y": 592,
+            "width": 903,
+            "height": 88
+          },
+          "normalized_rect": {
+            "x": 0.18125,
+            "y": 0.8222222222222222,
+            "width": 0.5375,
+            "height": 0.12222222222222222
+          }
+        },
+        {
+          "id": "custom-ui-1787292347530-2",
+          "z_index": 7,
+          "visible": true,
+          "pixel_rect": {
+            "x": 84,
+            "y": 664,
+            "width": 1512,
+            "height": 40
+          },
+          "normalized_rect": {
+            "x": 0.05,
+            "y": 0.9222222222222223,
+            "width": 0.9,
+            "height": 0.05555555555555555
+          }
+        },
+        {
+          "id": "custom-ui-1787292377548-3",
+          "z_index": 8,
+          "visible": true,
+          "pixel_rect": {
+            "x": 95,
+            "y": 432,
+            "width": 63,
+            "height": 232
+          },
+          "normalized_rect": {
+            "x": 0.05625,
+            "y": 0.6,
+            "width": 0.0375,
+            "height": 0.32222222222222224
+          }
+        },
+        {
+          "id": "custom-ui-1787293016650-4",
+          "z_index": 9,
+          "visible": true,
+          "pixel_rect": {
+            "x": 1449,
+            "y": 160,
+            "width": 137,
+            "height": 96
+          },
+          "normalized_rect": {
+            "x": 0.8625,
+            "y": 0.2222222222222222,
+            "width": 0.08125,
+            "height": 0.13333333333333333
+          }
+        }
       ]
     },
     "1280x800": {
-      "canvas": {"width": 1280, "height": 800, "aspect": "16:10"},
-      "default_visible_board_screen_rect": {"pixel_rect": {"x": 260, "y": 116, "width": 760, "height": 500}},
+      "canvas": {
+        "width": 1280,
+        "height": 800,
+        "aspect": "16:10"
+      },
+      "default_visible_board_screen_rect": {
+        "pixel_rect": {
+          "x": 260,
+          "y": 116,
+          "width": 760,
+          "height": 500
+        },
+        "normalized_rect": {
+          "x": 0.203125,
+          "y": 0.145,
+          "width": 0.59375,
+          "height": 0.625
+        }
+      },
       "ui_layout": [
-        {"id": "faction-left", "z_index": 0, "visible": true, "pixel_rect": {"x": 18, "y": 78, "width": 255, "height": 111}},
-        {"id": "faction-right", "z_index": 1, "visible": true, "pixel_rect": {"x": 1007, "y": 78, "width": 255, "height": 111}},
-        {"id": "unit-info", "z_index": 2, "visible": true, "pixel_rect": {"x": 18, "y": 509, "width": 178, "height": 264}},
-        {"id": "objective-events", "z_index": 3, "visible": true, "pixel_rect": {"x": 1076, "y": 203, "width": 186, "height": 298}},
-        {"id": "minimap", "z_index": 4, "visible": true, "pixel_rect": {"x": 1094, "y": 573, "width": 168, "height": 204}},
-        {"id": "custom-ui-1787265872199-1", "z_index": 5, "visible": true, "pixel_rect": {"x": 320, "y": 667, "width": 880, "height": 80}}
+        {
+          "id": "faction-left",
+          "z_index": 0,
+          "visible": true,
+          "pixel_rect": {
+            "x": 18,
+            "y": 78,
+            "width": 255,
+            "height": 111
+          },
+          "normalized_rect": {
+            "x": 0.0140625,
+            "y": 0.0975,
+            "width": 0.19921875,
+            "height": 0.13875
+          }
+        },
+        {
+          "id": "faction-right",
+          "z_index": 1,
+          "visible": true,
+          "pixel_rect": {
+            "x": 1007,
+            "y": 78,
+            "width": 255,
+            "height": 111
+          },
+          "normalized_rect": {
+            "x": 0.78671875,
+            "y": 0.0975,
+            "width": 0.19921875,
+            "height": 0.13875
+          }
+        },
+        {
+          "id": "unit-info",
+          "z_index": 2,
+          "visible": true,
+          "pixel_rect": {
+            "x": 18,
+            "y": 509,
+            "width": 178,
+            "height": 264
+          },
+          "normalized_rect": {
+            "x": 0.0140625,
+            "y": 0.63625,
+            "width": 0.1390625,
+            "height": 0.33
+          }
+        },
+        {
+          "id": "objective-events",
+          "z_index": 3,
+          "visible": true,
+          "pixel_rect": {
+            "x": 1076,
+            "y": 203,
+            "width": 186,
+            "height": 298
+          },
+          "normalized_rect": {
+            "x": 0.840625,
+            "y": 0.25375,
+            "width": 0.1453125,
+            "height": 0.3725
+          }
+        },
+        {
+          "id": "minimap",
+          "z_index": 4,
+          "visible": true,
+          "pixel_rect": {
+            "x": 1094,
+            "y": 573,
+            "width": 168,
+            "height": 204
+          },
+          "normalized_rect": {
+            "x": 0.8546875,
+            "y": 0.71625,
+            "width": 0.13125,
+            "height": 0.255
+          }
+        },
+        {
+          "id": "custom-ui-1787265872199-1",
+          "z_index": 5,
+          "visible": true,
+          "pixel_rect": {
+            "x": 1168,
+            "y": 187,
+            "width": 40,
+            "height": 551
+          },
+          "normalized_rect": {
+            "x": 0.9125,
+            "y": 0.23375,
+            "width": 0.03125,
+            "height": 0.68875
+          }
+        },
+        {
+          "id": "custom-ui-1787292062912-1",
+          "z_index": 6,
+          "visible": true,
+          "pixel_rect": {
+            "x": 232,
+            "y": 658,
+            "width": 688,
+            "height": 98
+          },
+          "normalized_rect": {
+            "x": 0.18125,
+            "y": 0.8222222222222222,
+            "width": 0.5375,
+            "height": 0.12222222222222222
+          }
+        },
+        {
+          "id": "custom-ui-1787292347530-2",
+          "z_index": 7,
+          "visible": true,
+          "pixel_rect": {
+            "x": 64,
+            "y": 738,
+            "width": 1152,
+            "height": 44
+          },
+          "normalized_rect": {
+            "x": 0.05,
+            "y": 0.9222222222222223,
+            "width": 0.9,
+            "height": 0.05555555555555555
+          }
+        },
+        {
+          "id": "custom-ui-1787292377548-3",
+          "z_index": 8,
+          "visible": true,
+          "pixel_rect": {
+            "x": 72,
+            "y": 480,
+            "width": 48,
+            "height": 258
+          },
+          "normalized_rect": {
+            "x": 0.05625,
+            "y": 0.6,
+            "width": 0.0375,
+            "height": 0.3222222222222222
+          }
+        },
+        {
+          "id": "custom-ui-1787293016650-4",
+          "z_index": 9,
+          "visible": true,
+          "pixel_rect": {
+            "x": 1104,
+            "y": 178,
+            "width": 104,
+            "height": 107
+          },
+          "normalized_rect": {
+            "x": 0.8625,
+            "y": 0.2222222222222222,
+            "width": 0.08125,
+            "height": 0.13333333333333333
+          }
+        }
       ]
     },
     "1280x960": {
-      "canvas": {"width": 1280, "height": 960, "aspect": "4:3"},
-      "default_visible_board_screen_rect": {"pixel_rect": {"x": 260, "y": 139, "width": 760, "height": 600}},
+      "canvas": {
+        "width": 1280,
+        "height": 960,
+        "aspect": "4:3"
+      },
+      "default_visible_board_screen_rect": {
+        "pixel_rect": {
+          "x": 260,
+          "y": 139,
+          "width": 760,
+          "height": 600
+        },
+        "normalized_rect": {
+          "x": 0.203125,
+          "y": 0.14479166666666668,
+          "width": 0.59375,
+          "height": 0.625
+        }
+      },
       "ui_layout": [
-        {"id": "faction-left", "z_index": 0, "visible": true, "pixel_rect": {"x": 18, "y": 93, "width": 255, "height": 133}},
-        {"id": "faction-right", "z_index": 1, "visible": true, "pixel_rect": {"x": 1007, "y": 93, "width": 255, "height": 133}},
-        {"id": "unit-info", "z_index": 2, "visible": true, "pixel_rect": {"x": 18, "y": 611, "width": 178, "height": 317}},
-        {"id": "objective-events", "z_index": 3, "visible": true, "pixel_rect": {"x": 1076, "y": 244, "width": 186, "height": 357}},
-        {"id": "minimap", "z_index": 4, "visible": true, "pixel_rect": {"x": 1094, "y": 688, "width": 168, "height": 245}},
-        {"id": "custom-ui-1787265872199-1", "z_index": 5, "visible": true, "pixel_rect": {"x": 320, "y": 800, "width": 880, "height": 96}}
+        {
+          "id": "faction-left",
+          "z_index": 0,
+          "visible": true,
+          "pixel_rect": {
+            "x": 18,
+            "y": 93,
+            "width": 255,
+            "height": 133
+          },
+          "normalized_rect": {
+            "x": 0.0140625,
+            "y": 0.096875,
+            "width": 0.19921875,
+            "height": 0.13854166666666667
+          }
+        },
+        {
+          "id": "faction-right",
+          "z_index": 1,
+          "visible": true,
+          "pixel_rect": {
+            "x": 1007,
+            "y": 93,
+            "width": 255,
+            "height": 133
+          },
+          "normalized_rect": {
+            "x": 0.78671875,
+            "y": 0.096875,
+            "width": 0.19921875,
+            "height": 0.13854166666666667
+          }
+        },
+        {
+          "id": "unit-info",
+          "z_index": 2,
+          "visible": true,
+          "pixel_rect": {
+            "x": 18,
+            "y": 611,
+            "width": 178,
+            "height": 317
+          },
+          "normalized_rect": {
+            "x": 0.0140625,
+            "y": 0.6364583333333333,
+            "width": 0.1390625,
+            "height": 0.3302083333333333
+          }
+        },
+        {
+          "id": "objective-events",
+          "z_index": 3,
+          "visible": true,
+          "pixel_rect": {
+            "x": 1076,
+            "y": 244,
+            "width": 186,
+            "height": 357
+          },
+          "normalized_rect": {
+            "x": 0.840625,
+            "y": 0.25416666666666665,
+            "width": 0.1453125,
+            "height": 0.371875
+          }
+        },
+        {
+          "id": "minimap",
+          "z_index": 4,
+          "visible": true,
+          "pixel_rect": {
+            "x": 1094,
+            "y": 688,
+            "width": 168,
+            "height": 245
+          },
+          "normalized_rect": {
+            "x": 0.8546875,
+            "y": 0.7166666666666667,
+            "width": 0.13125,
+            "height": 0.2552083333333333
+          }
+        },
+        {
+          "id": "custom-ui-1787265872199-1",
+          "z_index": 5,
+          "visible": true,
+          "pixel_rect": {
+            "x": 1168,
+            "y": 224,
+            "width": 40,
+            "height": 661
+          },
+          "normalized_rect": {
+            "x": 0.9125,
+            "y": 0.23333333333333334,
+            "width": 0.03125,
+            "height": 0.6885416666666667
+          }
+        },
+        {
+          "id": "custom-ui-1787292062912-1",
+          "z_index": 6,
+          "visible": true,
+          "pixel_rect": {
+            "x": 232,
+            "y": 789,
+            "width": 688,
+            "height": 117
+          },
+          "normalized_rect": {
+            "x": 0.18125,
+            "y": 0.8222222222222222,
+            "width": 0.5375,
+            "height": 0.12222222222222222
+          }
+        },
+        {
+          "id": "custom-ui-1787292347530-2",
+          "z_index": 7,
+          "visible": true,
+          "pixel_rect": {
+            "x": 64,
+            "y": 885,
+            "width": 1152,
+            "height": 53
+          },
+          "normalized_rect": {
+            "x": 0.05,
+            "y": 0.9222222222222223,
+            "width": 0.9,
+            "height": 0.05555555555555555
+          }
+        },
+        {
+          "id": "custom-ui-1787292377548-3",
+          "z_index": 8,
+          "visible": true,
+          "pixel_rect": {
+            "x": 72,
+            "y": 576,
+            "width": 48,
+            "height": 309
+          },
+          "normalized_rect": {
+            "x": 0.05625,
+            "y": 0.6,
+            "width": 0.0375,
+            "height": 0.32222222222222224
+          }
+        },
+        {
+          "id": "custom-ui-1787293016650-4",
+          "z_index": 9,
+          "visible": true,
+          "pixel_rect": {
+            "x": 1104,
+            "y": 213,
+            "width": 104,
+            "height": 128
+          },
+          "normalized_rect": {
+            "x": 0.8625,
+            "y": 0.2222222222222222,
+            "width": 0.08125,
+            "height": 0.13333333333333333
+          }
+        }
       ]
     }
   }
