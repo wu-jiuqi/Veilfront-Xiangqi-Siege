@@ -2,16 +2,28 @@
   "use strict";
 
   const BOARD_ID = "board-visible-region";
-  const STORAGE_KEY = "veilfront.board-ui-layout-editor.v3";
+  const STORAGE_KEY = "veilfront.board-ui-layout-editor.v4";
   const MIN_UI_SIZE = { w: 40, h: 32 };
   const MIN_BOARD_SIZE = { w: 160, h: 120 };
   const MIN_TEXT_SIZE = { w: 16, h: 12 };
   const OFFICIAL_ASSET_OVERRIDES = {
     "custom-ui-1787265872199-1": "res://assets/art/ui/terracotta_hud_v2/incense_assembly/round_incense_vertical_v1.png",
-    "custom-ui-1787292062912-1": "res://assets/art/ui/terracotta_hud_v2/incense_assembly/piece_info_drawer_frame_v1.png",
+    "custom-ui-1787292062912-1": "res://assets/art/ui/terracotta_hud_v2/incense_assembly/piece_info_drawer_frame_v2.png",
     "custom-ui-1787292347530-2": "res://assets/art/ui/terracotta_hud_v2/incense_assembly/dual_incense_bronze_stand_v1.png",
     "custom-ui-1787292377548-3": "res://assets/art/ui/terracotta_hud_v2/incense_assembly/timer_incense_vertical_v1.png",
     "custom-ui-1787293016650-4": "res://assets/art/ui/terracotta_hud_v2/incense_assembly/round_smoke_display_frame_v1.png"
+  };
+  const PREVIEW_OVERLAYS = {
+    "faction-left": [
+      { asset: "res://assets/art/pieces/terracotta_warriors/red_general_idle.png", rect: { x: 0.09, y: 0.18, w: 0.19, h: 0.6 }, circle: true, zoom: 1.9 }
+    ],
+    "faction-right": [
+      { asset: "res://assets/art/pieces/terracotta_warriors/black_general_idle.png", rect: { x: 0.725, y: 0.18, w: 0.19, h: 0.6 }, circle: true, zoom: 1.9 }
+    ],
+    "unit-info": [
+      { rect: { x: 0.11, y: 0.16, w: 0.78, h: 0.76 }, background: "rgba(9, 9, 8, 0.98)" },
+      { asset: "res://assets/art/pieces/terracotta_warriors/red_minister_idle.png", rect: { x: 0.13, y: 0.18, w: 0.74, h: 0.72 } }
+    ]
   };
 
   const PROFILE_DEFS = {
@@ -45,25 +57,22 @@
 
   const DEFAULT_TEXT_LAYERS = {
     "faction-left": [
-      textLayer("portrait", "阵营字", "赤", { x: 0.09411764705882353, y: 0.16, w: 0.18823529411764706, h: 0.64 }, 30, "center", "faction_glyph"),
+      textLayer("portrait", "赤方将帅头像", "", { x: 0.09, y: 0.18, w: 0.19, h: 0.6 }, 30, "center", "faction_portrait"),
       textLayer("name", "阵营名称", "赤方军势", { x: 0.3202614379084967, y: 0.2916666666666667, w: 0.44, h: 0.20833333333333334 }, 14, "left", "faction_name"),
       textLayer("stats", "阵营数据", "墙 完好 · 旗 0 · 损 0", { x: 0.32679738562091504, y: 0.5, w: 0.5065359477124183, h: 0.16666666666666666 }, 10, "left", "faction_stats")
     ],
     "faction-right": [
-      textLayer("portrait", "阵营字", "玄", { x: 0.7215686274509804, y: 0.16, w: 0.18823529411764706, h: 0.64 }, 30, "center", "faction_glyph"),
+      textLayer("portrait", "玄方将帅头像", "", { x: 0.725, y: 0.18, w: 0.19, h: 0.6 }, 30, "center", "faction_portrait"),
       textLayer("name", "阵营名称", "玄方军势", { x: 0.21960784313725493, y: 0.29455445544554454, w: 0.44554455445544555, h: 0.2103960396039604 }, 14, "right", "faction_name"),
       textLayer("stats", "阵营数据", "墙 完好 · 旗 0 · 损 0", { x: 0.16501650165016502, y: 0.504950495049505, w: 0.5115511551155115, h: 0.1683168316831683 }, 10, "right", "faction_stats")
     ],
     "unit-info": [
-      textLayer("name", "单位名称", "未选择单位", { x: 0.14, y: 0.055, w: 0.72, h: 0.09 }, 14, "center", "unit_name"),
-      textLayer("glyph", "棋子字", "—", { x: 0.1348314606741573, y: 0.16806722689075632, w: 0.7, h: 0.4 }, 44, "center", "unit_glyph"),
-      textLayer("side", "阵营状态", "阵营：—", { x: 0.24456521739130435, y: 0.6706704420898795, w: 0.6, h: 0.06 }, 11, "left", "unit_side"),
-      textLayer("position", "单位坐标", "坐标：—", { x: 0.24456521739130435, y: 0.7519638290098648, w: 0.6, h: 0.06 }, 11, "left", "unit_position"),
-      textLayer("state", "单位状态", "状态：—", { x: 0.24456521739130435, y: 0.8332572159298502, w: 0.6, h: 0.065 }, 11, "left", "unit_state")
+      textLayer("name", "单位名称", "未选择棋子", { x: 0.14, y: 0.055, w: 0.72, h: 0.09 }, 14, "center", "unit_name"),
+      textLayer("portrait", "棋子立绘", "", { x: 0.13, y: 0.18, w: 0.74, h: 0.72 }, 12, "center", "unit_portrait")
     ],
     "objective-events": [
       textLayer("heading", "面板标题", "战局与行动", { x: 0.19444444444444445, y: 0.16666666666666666, w: 0.6111111111111112, h: 0.065 }, 14, "center"),
-      textLayer("selection", "选择状态", "行动方：— · 已选：无", { x: 0.2951388888888889, y: 0.2777777777777778, w: 0.5, h: 0.065 }, 11, "center", "selection_status"),
+      textLayer("selection", "选择状态", "行动方: 赤 已选: 象", { x: 0.2951388888888889, y: 0.2777777777777778, w: 0.5, h: 0.065 }, 11, "center", "selection_status"),
       textLayer("move", "我方已发现旗帜数", "我方已发现旗帜: 0/3", { x: 0.2951388888888889, y: 0.37037037037037035, w: 0.5, h: 0.06481481481481481 }, 12, "center"),
       textLayer("bombard", "我方阵亡:", "我方阵亡:", { x: 0.2951388888888889, y: 0.48148148148148145, w: 0.5, h: 0.06481481481481481 }, 12, "center"),
       textLayer("pass", "敌方阵亡:", "敌方阵亡:", { x: 0.2951388888888889, y: 0.5833333333333334, w: 0.5, h: 0.06481481481481481 }, 12, "center"),
@@ -71,12 +80,12 @@
     ],
     "minimap": [textLayer("title", "小地图标题", "战场态势", { x: 0.18, y: 0.04, w: 0.64, h: 0.1 }, 12, "center")],
     "custom-ui-1787292062912-1": [
-      textLayer("movement-caption", "移动逻辑标题", "移动逻辑", { x: 0.0524691358, y: 0.1071428571, w: 0.2839506173, h: 0.2678571429 }, 11, "left", "static", { layoutManagedByContainer: true }),
-      textLayer("movement-summary", "移动逻辑说明", "选择棋子后显示移动逻辑。", { x: 0.0524691358, y: 0.375, w: 0.2839506173, h: 0.5178571429 }, 10, "left", "movement_summary", { layoutManagedByContainer: true }),
-      textLayer("move-button", "移动按钮", "移动", { x: 0.3549382716, y: 0.1071428571, w: 0.1388888889, h: 0.7857142857 }, 11, "center", "move_action", { layoutManagedByContainer: true }),
-      textLayer("bombard-button", "轰炸按钮", "轰炸", { x: 0.5061728395, y: 0.1071428571, w: 0.1388888889, h: 0.7857142857 }, 11, "center", "bombard_action", { layoutManagedByContainer: true }),
-      textLayer("resurrect-button", "复活按钮", "复活", { x: 0.6574074074, y: 0.1071428571, w: 0.1388888889, h: 0.7857142857 }, 11, "center", "resurrect_action", { layoutManagedByContainer: true }),
-      textLayer("no-skill-button", "无技能按钮", "无技能", { x: 0.8086419753, y: 0.1071428571, w: 0.1388888889, h: 0.7857142857 }, 11, "center", "no_skill_action", { layoutManagedByContainer: true })
+      textLayer("movement-caption", "棋子介绍标题", "棋子介绍", { x: 0.0524691358, y: 0.1071428571, w: 0.66, h: 0.2678571429 }, 11, "left", "static", { layoutManagedByContainer: true }),
+      textLayer("movement-summary", "棋子介绍说明", "选择棋子后显示移动逻辑。", { x: 0.0524691358, y: 0.375, w: 0.66, h: 0.5178571429 }, 10, "left", "movement_summary", { layoutManagedByContainer: true }),
+      textLayer("move-button", "移动按钮", "移动", { x: 0.76, y: 0.1071428571, w: 0.1, h: 0.7857142857 }, 11, "center", "move_action", { layoutManagedByContainer: true }),
+      textLayer("bombard-button", "轰炸按钮", "轰炸", { x: 0.87, y: 0.1071428571, w: 0.1, h: 0.7857142857 }, 11, "center", "bombard_action", { visible: false, layoutManagedByContainer: true }),
+      textLayer("resurrect-button", "复活按钮", "复活", { x: 0.87, y: 0.1071428571, w: 0.1, h: 0.7857142857 }, 11, "center", "resurrect_action", { visible: false, layoutManagedByContainer: true }),
+      textLayer("no-skill-button", "无技能按钮", "无技能", { x: 0.87, y: 0.1071428571, w: 0.1, h: 0.7857142857 }, 11, "center", "no_skill_action", { layoutManagedByContainer: true })
     ],
     "custom-ui-1787293016650-4": [
       textLayer("round-number", "回合数字", "一", { x: 0.14, y: 0.19, w: 0.72, h: 0.53 }, 38, "center", "round_number"),
@@ -110,7 +119,7 @@
     {
       id: "unit-info",
       name: "单位信息卡",
-      function: "显示当前选中棋子的身份、属性与状态。",
+      function: "上方显示棋子名称，下方只显示对应兵马俑立绘。",
       kind: "image",
       asset: "res://assets/art/ui/terracotta_hud_v2/unit_info_card_v1.png",
       visible: true,
@@ -150,9 +159,9 @@
     {
       id: "custom-ui-1787292062912-1",
       name: "棋子信息展开栏",
-      function: "需要包含棋子的移动技能",
+      function: "左侧显示棋子介绍，右侧固定两个操作按钮槽。",
       kind: "image",
-      asset: "res://assets/art/ui/terracotta_hud_v2/incense_assembly/piece_info_drawer_frame_v1.png",
+      asset: "res://assets/art/ui/terracotta_hud_v2/incense_assembly/piece_info_drawer_frame_v2.png",
       visible: true,
       lockAspect: false,
       baseRect: { x: 296, y: 584, w: 648, h: 56 }
@@ -466,7 +475,7 @@
       : `${layer.name} · 拖动或八向缩放`;
     const content = document.createElement("span");
     content.className = "text-layer-content";
-    content.textContent = layer.text || "文字";
+    content.textContent = layer.text || (String(layer.binding).includes("portrait") ? "" : "文字");
     node.appendChild(content);
     node.insertAdjacentHTML("beforeend", HANDLE_HTML);
     node.addEventListener("pointerdown", event => startTextInteraction(event, definition.id, layer.id));
@@ -516,6 +525,40 @@
       description.textContent = definition.function || "请在左侧填写功能说明";
       card.append(title, description);
       node.appendChild(card);
+    }
+
+    for (const overlay of PREVIEW_OVERLAYS[definition.id] || []) {
+      const overlayNode = document.createElement("div");
+      const rect = overlay.rect;
+      Object.assign(overlayNode.style, {
+        position: "absolute",
+        left: `${rect.x * 100}%`,
+        top: `${rect.y * 100}%`,
+        width: `${rect.w * 100}%`,
+        height: `${rect.h * 100}%`,
+        pointerEvents: "none",
+        zIndex: "2",
+        background: overlay.background || "transparent",
+        borderRadius: overlay.circle ? "50%" : "0",
+        overflow: "hidden"
+      });
+      if (overlay.asset) {
+        const overlayImage = document.createElement("img");
+        overlayImage.src = webAssetPath(overlay.asset);
+        overlayImage.alt = "";
+        Object.assign(overlayImage.style, {
+          width: "100%",
+          height: "100%",
+          display: "block",
+          objectFit: overlay.circle ? "cover" : "contain"
+        });
+        if (overlay.zoom) {
+          overlayImage.style.transform = `scale(${overlay.zoom})`;
+          overlayImage.style.transformOrigin = "50% 28%";
+        }
+        overlayNode.appendChild(overlayImage);
+      }
+      node.appendChild(overlayNode);
     }
 
     node.appendChild(makeTextHost(definition));
@@ -697,7 +740,7 @@
           height: `${textRect.h}px`,
           fontSize: `${clamp(safeNumber(layer.fontSize, 12), 6, 96)}px`
         });
-        textNode.querySelector(".text-layer-content").textContent = layer.text || "文字";
+        textNode.querySelector(".text-layer-content").textContent = layer.text || (String(layer.binding).includes("portrait") ? "" : "文字");
         textNode.classList.toggle("selected", selectedId === definition.id && selectedTextId === layer.id);
         textNode.classList.toggle("is-hidden", layer.visible === false);
         for (const value of ["left", "center", "right"]) textNode.classList.toggle(`align-${value}`, layer.horizontal === value);
