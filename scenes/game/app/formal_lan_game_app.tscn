@@ -1,0 +1,88 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/application/formal_lan_game_app.gd" id="1_app"]
+[ext_resource type="PackedScene" path="res://scenes/game/network/formal_lan_session.tscn" id="2_session"]
+[ext_resource type="Script" path="res://scripts/game/application/application_host.gd" id="3_host"]
+[ext_resource type="PackedScene" path="res://scenes/game/frontend/formal_lan_lobby.tscn" id="4_lobby"]
+[ext_resource type="PackedScene" path="res://scenes/game/match/match_screen.tscn" id="5_match"]
+
+[node name="FormalLanGameApp" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_app")
+
+[node name="FormalLanSession" parent="." instance=ExtResource("2_session")]
+
+[node name="ApplicationHost" type="Node" parent="."]
+script = ExtResource("3_host")
+
+[node name="ScreenHost" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="FormalLanLobby" parent="ScreenHost" instance=ExtResource("4_lobby")]
+layout_mode = 1
+
+[node name="MatchScreen" parent="ScreenHost" instance=ExtResource("5_match")]
+visible = false
+layout_mode = 1
+turn_timeout_enabled = true
+
+[node name="GlobalOverlayHost" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="LeaveSessionDialog" type="ConfirmationDialog" parent="GlobalOverlayHost"]
+title = "离开联机会话"
+dialog_text = "确定离开当前联机会话吗？"
+ok_button_text = "确定离开"
+cancel_button_text = "继续对局"
+
+[node name="ConnectionErrorDialog" type="AcceptDialog" parent="GlobalOverlayHost"]
+title = "联机已中断"
+dialog_text = "局域网连接已经中断。"
+ok_button_text = "返回房间"
+
+[node name="FatalErrorDialog" type="AcceptDialog" parent="GlobalOverlayHost"]
+title = "无法继续"
+dialog_text = "正式联机运行时初始化失败。"
+ok_button_text = "返回房间"
+
+[connection signal="public_state_changed" from="FormalLanSession" to="." method="_on_public_state_changed"]
+[connection signal="session_state_changed" from="ApplicationHost" to="ScreenHost/MatchScreen" method="render_session_state"]
+[connection signal="player_view_updated" from="ApplicationHost" to="ScreenHost/MatchScreen" method="render_player_view"]
+[connection signal="player_view_updated" from="ApplicationHost" to="." method="_on_player_view_updated"]
+[connection signal="visible_events_received" from="ApplicationHost" to="ScreenHost/MatchScreen" method="render_visible_events"]
+[connection signal="visible_error_received" from="ApplicationHost" to="ScreenHost/MatchScreen" method="render_visible_error"]
+[connection signal="action_previews_updated" from="ApplicationHost" to="ScreenHost/MatchScreen" method="render_action_previews_from_port"]
+[connection signal="prepared_action_changed" from="ApplicationHost" to="ScreenHost/MatchScreen" method="render_prepared_action"]
+[connection signal="host_requested" from="ScreenHost/FormalLanLobby" to="." method="_on_host_requested"]
+[connection signal="join_requested" from="ScreenHost/FormalLanLobby" to="." method="_on_join_requested"]
+[connection signal="ready_changed" from="ScreenHost/FormalLanLobby" to="." method="_on_ready_changed"]
+[connection signal="start_requested" from="ScreenHost/FormalLanLobby" to="." method="_on_start_requested"]
+[connection signal="disconnect_requested" from="ScreenHost/FormalLanLobby" to="." method="_on_disconnect_requested"]
+[connection signal="return_requested" from="ScreenHost/FormalLanLobby" to="." method="_on_return_to_menu_requested"]
+[connection signal="action_previews_requested" from="ScreenHost/MatchScreen" to="ApplicationHost" method="request_action_previews"]
+[connection signal="action_prepare_requested" from="ScreenHost/MatchScreen" to="ApplicationHost" method="prepare_action"]
+[connection signal="action_confirm_requested" from="ScreenHost/MatchScreen" to="ApplicationHost" method="confirm_prepared_action"]
+[connection signal="prepared_action_cancel_requested" from="ScreenHost/MatchScreen" to="ApplicationHost" method="cancel_prepared_action"]
+[connection signal="skip_requested" from="ScreenHost/MatchScreen" to="ApplicationHost" method="request_skip"]
+[connection signal="turn_timeout_requested" from="ScreenHost/MatchScreen" to="ApplicationHost" method="request_turn_timeout"]
+[connection signal="return_requested" from="ScreenHost/MatchScreen" to="." method="_on_match_return_requested"]
+[connection signal="confirmed" from="ScreenHost/MatchScreen/TerminalDialog" to="." method="_on_terminal_acknowledged"]
+[connection signal="confirmed" from="GlobalOverlayHost/LeaveSessionDialog" to="." method="_on_leave_session_confirmed"]
+[connection signal="confirmed" from="GlobalOverlayHost/ConnectionErrorDialog" to="." method="_on_connection_error_acknowledged"]
+[connection signal="confirmed" from="GlobalOverlayHost/FatalErrorDialog" to="." method="_on_connection_error_acknowledged"]

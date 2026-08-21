@@ -47,6 +47,16 @@ func reveal_menu() -> void:
 	_intro_player.play(&"menu_intro")
 
 
+func reveal_menu_immediately() -> void:
+	_active = true
+	_transitioning = false
+	visible = true
+	_intro_player.play(&"menu_intro")
+	_intro_player.seek(_intro_player.current_animation_length, true)
+	_set_menu_enabled(true)
+	_lan_button.grab_focus()
+
+
 func is_active() -> bool:
 	return _active
 

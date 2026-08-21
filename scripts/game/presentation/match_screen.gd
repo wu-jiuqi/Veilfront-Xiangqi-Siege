@@ -14,6 +14,7 @@ signal board_point_activated(cell: Vector2i)
 signal tutorial_input_rejected(message: String)
 
 const COMPACT_BREAKPOINT: float = 1100.0
+const MINIMUM_ACTION_TARGET_HEIGHT: float = 44.0
 const IDLE: String = "IDLE"
 const SELECTED: String = "SELECTED"
 const PREVIEW_SELECTED: String = "PREVIEW_SELECTED"
@@ -76,6 +77,8 @@ const PIECE_PORTRAITS := {
 @onready var _action_prompt: Label = $ActionConfirmationPanel/Content/Prompt
 @onready var _action_cancel_button: Button = $ActionConfirmationPanel/Content/Buttons/CancelButton
 @onready var _action_confirm_button: Button = $ActionConfirmationPanel/Content/Buttons/ConfirmButton
+@onready var _terminal_dialog: AcceptDialog = $TerminalDialog
+@onready var _terminal_restart_button: Button = $TerminalDialog/RestartButton
 
 var _compact: bool = false
 var _interaction_state: String = IDLE
@@ -95,9 +98,12 @@ var _action_mode: String = "move"
 var _tutorial_panel_width: float = 0.0
 var _tutorial_step: Dictionary = {}
 var _tutorial_navigation_enabled: bool = false
+var _session_navigation_enabled: bool = false
+var _submission_pending: bool = false
 
 
 func _ready() -> void:
+	_enforce_action_target_sizes()
 	get_viewport().size_changed.connect(_on_viewport_size_changed)
 	resized.connect(_on_match_screen_resized)
 	_board_viewport.point_activated.connect(handle_board_point)
@@ -123,6 +129,14 @@ func _ready() -> void:
 	call_deferred("apply_layout_for_size", size)
 
 
+func _enforce_action_target_sizes() -> void:
+	for button: Button in [_move_button, _bombard_button, _resurrect_button, _pass_button]:
+		button.custom_minimum_size.y = maxf(
+			button.custom_minimum_size.y,
+			MINIMUM_ACTION_TARGET_HEIGHT
+		)
+
+
 func _toggle_mirror_view() -> void:
 	_board_viewport.toggle_presentation_side()
 	_tactical_minimap.set_presentation_side(_board_viewport.get_presentation_side())
@@ -139,8 +153,44 @@ func _update_mirror_button() -> void:
 
 func set_tutorial_navigation_enabled(enabled: bool) -> void:
 	_tutorial_navigation_enabled = enabled
-	_return_button.visible = enabled or _hud_layout.is_text_layer_enabled("faction-left", "return")
-	_return_button.text = "退出教学"
+	_update_return_button()
+	if enabled:
+		_return_button.text = "退出教学"
+	elif _session_navigation_enabled:
+		_return_button.text = "退出对局"
+
+
+func set_session_navigation_enabled(enabled: bool) -> void:
+	_session_navigation_enabled = enabled
+	_update_return_button()
+	_mirror_button.visible = not enabled
+	_terminal_restart_button.visible = not enabled
+	if enabled:
+		_return_button.text = "退出对局"
+
+
+func show_session_terminal(message: String) -> void:
+	_terminal_restart_button.visible = false
+	_terminal_dialog.dialog_text = message if not message.is_empty() else "战局已经结束。"
+	_terminal_dialog.popup_centered()
+
+
+func reset_for_session_end() -> void:
+	_clear_local_interaction()
+	_current_view.clear()
+	_current_previews.clear()
+	_last_event_model.clear()
+	_last_error_model.clear()
+	_presentation_model.clear()
+	_cancelled_prepare_tombstones.clear()
+	_submission_pending = false
+	_marker_menu.hide()
+	_terminal_dialog.hide()
+	_board_viewport.clear_session_view()
+	_tactical_minimap.clear_session_view()
+	_incense_turn_clock.sync_player_view({}, false)
+	_message_value.text = "等待正式战局。"
+	_update_status_controls()
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -156,8 +206,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func apply_layout_for_size(requested_size: Vector2) -> void:
 	_hud_layout.apply_layout_for_size(requested_size, _tutorial_panel_width)
-	_return_button.visible = _tutorial_navigation_enabled \
-		or _hud_layout.is_text_layer_enabled("faction-left", "return")
+	_update_return_button()
 	_set_compact_layout(requested_size.x < COMPACT_BREAKPOINT)
 	_sync_board_position_from_board()
 
@@ -203,6 +252,7 @@ func reset_tutorial_step_interaction() -> void:
 
 
 func render_player_view(view: Dictionary) -> void:
+	_submission_pending = false
 	_current_view = view.duplicate(true)
 	_presentation_model = _presenter.player_view_model(view)
 	_incense_turn_clock.sync_player_view(view, turn_timeout_enabled)
@@ -226,6 +276,7 @@ func render_visible_events(events: Array) -> void:
 
 
 func render_visible_error(error: Dictionary) -> void:
+	_submission_pending = false
 	_last_error_model = _presenter.visible_error_model(error)
 	var message_key: String = str(_last_error_model.get("message_key", ""))
 	if not message_key.is_empty():
@@ -321,6 +372,8 @@ func confirm_prepared_action() -> void:
 		return
 	var preview_id: String = _prepared_preview_id
 	_clear_local_interaction()
+	_submission_pending = true
+	_update_status_controls()
 	action_confirm_requested.emit(preview_id)
 
 
@@ -335,6 +388,8 @@ func set_local_interaction_state(
 	_selected_piece_id = selected_piece_id
 	_prepared_preview_id = prepared_preview_id
 	_confirmation_panel.visible = state == CONFIRMING
+	if state == CONFIRMING:
+		_action_cancel_button.grab_focus()
 	_update_status_controls()
 
 
@@ -452,6 +507,7 @@ func get_presentation_snapshot() -> Dictionary:
 		"selected_piece_id": _selected_piece_id,
 		"action_mode": _action_mode,
 		"action_index": int(_current_view.get("action_index", 0)),
+		"submission_pending": _submission_pending,
 	}
 
 
@@ -493,6 +549,14 @@ func get_hud_snapshot() -> Dictionary:
 
 func _set_compact_layout(compact: bool) -> void:
 	_compact = compact
+
+
+func _update_return_button() -> void:
+	if not is_instance_valid(_return_button):
+		return
+	_return_button.visible = _tutorial_navigation_enabled \
+		or _session_navigation_enabled \
+		or _hud_layout.is_text_layer_enabled("faction-left", "return")
 
 
 func _clear_local_interaction() -> void:
@@ -605,6 +669,7 @@ func _preview_message_key(preview_id: String) -> String:
 
 func _can_submit_action() -> bool:
 	return not _current_view.is_empty() \
+		and not _submission_pending \
 		and not bool(_current_view.get("terminal", false)) \
 		and str(_current_view.get("viewer_side", "")) == str(_current_view.get("active_side", ""))
 

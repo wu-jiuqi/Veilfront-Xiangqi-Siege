@@ -1,5 +1,7 @@
 extends Control
 
+const FrontendRoutes = preload("res://scripts/integration/frontend_routes.gd")
+
 @onready var _menu_overlay: Control = %MenuOverlay
 @onready var _prompt_animation: AnimationPlayer = %PromptAnimation
 @onready var _sequence_player: AnimationPlayer = %SequencePlayer
@@ -10,6 +12,8 @@ var _transitioning := false
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	_sequence_player.animation_finished.connect(_on_sequence_animation_finished)
+	if FrontendRoutes.consume_start_menu_ready():
+		_enter_menu_ready_immediately()
 
 
 func _gui_input(event: InputEvent) -> void:
@@ -44,3 +48,11 @@ func _on_sequence_animation_finished(animation_name: StringName) -> void:
 	if animation_name != &"opening_sequence":
 		return
 	_menu_overlay.call(&"reveal_menu")
+
+
+func _enter_menu_ready_immediately() -> void:
+	_transitioning = true
+	_prompt_animation.stop()
+	_sequence_player.play(&"opening_sequence")
+	_sequence_player.seek(_sequence_player.current_animation_length, true)
+	_menu_overlay.call(&"reveal_menu_immediately")

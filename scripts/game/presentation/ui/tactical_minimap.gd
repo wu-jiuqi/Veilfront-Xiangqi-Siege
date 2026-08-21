@@ -44,6 +44,19 @@ func render_player_view(view: Dictionary, display_side: String = "red") -> void:
 	queue_redraw()
 
 
+func clear_session_view() -> void:
+	_view.clear()
+	_display_side = "red"
+	_overview_state = {
+		"display_side": "red",
+		"viewport_rect_normalized": Rect2(0.0, 0.0, 1.0, 1.0),
+		"camera_center_normalized": Vector2(0.5, 0.5),
+	}
+	_bird_eye_world.clear_session_view()
+	_sync_bird_eye_layout()
+	queue_redraw()
+
+
 func set_presentation_side(side: String) -> void:
 	_display_side = side if side in ["red", "black"] else "red"
 	_bird_eye_world.set_presentation_side(_display_side)

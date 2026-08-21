@@ -98,6 +98,12 @@ func clear_interaction() -> void:
 	_interaction_overlay.clear()
 
 
+func clear_session_view() -> void:
+	_current_view.clear()
+	_viewer_side = "red"
+	_configure_empty_board()
+
+
 func set_tutorial_target(cell: Vector2i) -> void:
 	_interaction_overlay.set_tutorial_target(cell)
 
@@ -162,12 +168,18 @@ func get_cell_size() -> Vector2:
 func _configure_empty_board() -> void:
 	if board_theme == null:
 		return
+	var cell_size: Vector2 = board_theme.cell_size
 	_grid_renderer.configure({"width": 9, "height": 24}, _side, board_theme)
-	_fog_overlay.render([], [], _side, board_theme.cell_size)
-	_marker_overlay.configure(_side, board_theme.cell_size)
-	_tactical_overlay.render_public_overlays({}, _side, board_theme.cell_size)
-	_interaction_overlay.render_selection(Vector2i.ZERO, [], _side, board_theme.cell_size)
-	_input_surface.configure(_side, board_theme.cell_size)
+	_piece_renderer.render([], _side, cell_size)
+	_fog_overlay.render([], [], _side, cell_size)
+	_wall_renderer.render([], _side, cell_size)
+	_flag_renderer.render([], _side, cell_size)
+	_ghost_renderer.render([], _side, cell_size)
+	_marker_overlay.configure(_side, cell_size)
+	_marker_overlay.clear_all()
+	_tactical_overlay.render_public_overlays({}, _side, cell_size)
+	_interaction_overlay.render_selection(Vector2i.ZERO, [], _side, cell_size)
+	_input_surface.configure(_side, cell_size)
 
 
 func _apply_presentation_assets() -> void:

@@ -118,6 +118,13 @@ func clear_interaction() -> void:
 	_board_world.clear_interaction()
 
 
+func clear_session_view() -> void:
+	_focused_cell = Vector2i.ZERO
+	_clear_hover()
+	_board_world.clear_session_view()
+	reset_camera()
+
+
 func focus_authority_cell(cell: Vector2i) -> void:
 	if not BoardCoordinateMapper.is_authority_cell_valid(cell):
 		return

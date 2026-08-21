@@ -1,6 +1,7 @@
 extends SceneTree
 
 const START_SCREEN_SCENE := preload("res://scenes/game/frontend/start_screen.tscn")
+const FrontendRoutes := preload("res://scripts/integration/frontend_routes.gd")
 const SEQUENCE_COMPLETION_TIME := 5.0
 
 
@@ -40,7 +41,18 @@ func _init() -> void:
 	await process_frame
 	_assert_inline_menu(start_screen, "ui_accept")
 
-	print("START_SCREEN_ROUTING_CONTRACT_PASS inputs=left_click,touch,ui_accept inline_menu=ok duplicate_guard=ok")
+	current_scene.queue_free()
+	await process_frame
+	FrontendRoutes.request_start_menu_ready()
+	start_screen = _add_start_screen()
+	await process_frame
+	_assert_inline_menu(start_screen, "lan_return")
+	var lan_button := start_screen.get_node("MenuOverlay/UiRoot/MenuPanel/LanButton") as Button
+	assert(not lan_button.disabled, "LAN return must restore an immediately operable menu")
+	assert((start_screen.get_node("SequencePlayer") as AnimationPlayer).current_animation_position >= 4.8,
+		"LAN return must apply the opened-gate end state without replaying it")
+
+	print("START_SCREEN_ROUTING_CONTRACT_PASS inputs=left_click,touch,ui_accept lan_return=menu_ready inline_menu=ok duplicate_guard=ok")
 	quit()
 
 
