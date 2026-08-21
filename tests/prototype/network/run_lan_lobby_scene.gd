@@ -19,10 +19,17 @@ func _run() -> void:
 	root.add_child(lobby)
 	await process_frame
 	_check(lobby.has_node("LanNetworkSession"), "预置 LanNetworkSession 节点存在")
-	_check(lobby.has_node("CenterPanel/PanelMargin/Content/JoinRow/AddressInput"), "预置 IP 输入框存在")
-	_check(lobby.has_node("CenterPanel/PanelMargin/Content/PortRow/PortInput"), "预置端口输入存在")
-	_check(lobby.has_node("CenterPanel/PanelMargin/Content/ActionRow/HostButton"), "预置创建按钮存在")
-	_check(lobby.has_node("CenterPanel/PanelMargin/Content/ActionRow/JoinButton"), "预置加入按钮存在")
+	_check(lobby.has_node("LobbyChrome/SafeMargin/MainColumns/CredentialPanel/Content/AddressInput"),
+			"预置 IP 输入框存在")
+	_check(lobby.has_node("LobbyChrome/SafeMargin/MainColumns/CredentialPanel/Content/PortInput"),
+			"预置端口输入存在")
+	_check(lobby.has_node("LobbyChrome/BottomBar/Row/HostButton"), "预置创建按钮存在")
+	_check(lobby.has_node("LobbyChrome/BottomBar/Row/JoinButton"), "预置加入按钮存在")
+	_check(lobby.has_node("LobbyChrome/SafeMargin/MainColumns/RoomPanel/Content/Seats/RedSeat/Column/Portrait"),
+			"赤方席位复用银白金属将领棋子")
+	_check(lobby.has_node("LobbyChrome/SafeMargin/MainColumns/RoomPanel/Content/Seats/BlackSeat/Column/Portrait"),
+			"玄方席位复用墨绿青铜将领棋子")
+	_check(lobby.has_node("LobbyChrome/SafeMargin/MainColumns/RulesPanel"), "预置战局规则面板存在")
 	_check(lobby.has_node("NetworkBoard"), "大厅预置共享棋盘 UI 实例")
 	var network_board: Control = lobby.get_node("NetworkBoard") as Control
 	_check(network_board != null and bool(network_board.get("network_mode")), "共享棋盘 UI 已启用 LAN 驱动模式")
@@ -31,8 +38,12 @@ func _run() -> void:
 	var network_session: Node = lobby.get_node("LanNetworkSession")
 	_check(int(network_session.default_port) == 27771, "预置默认端口为 27771")
 	_check(str(network_session.get_connection_snapshot().get("state", "")) == "disconnected", "大厅初始状态未连接")
-	var host_button: Button = lobby.get_node("CenterPanel/PanelMargin/Content/ActionRow/HostButton") as Button
+	var host_button: Button = lobby.get_node("LobbyChrome/BottomBar/Row/HostButton") as Button
 	_check(host_button.has_focus(), "大厅打开后创建按钮取得键盘焦点")
+	var address_preview: Label = lobby.get_node(
+		"LobbyChrome/SafeMargin/MainColumns/CredentialPanel/Content/AddressPreview"
+	) as Label
+	_check(address_preview.text == "127.0.0.1:27771", "房间入口同步默认地址与端口")
 	var lobby_source: String = FileAccess.get_file_as_string("res://scripts/prototype/network/lan_lobby.gd")
 	_check(not lobby_source.contains("FullState") and not lobby_source.contains("RuleEngine"), "Lobby 脚本没有规则核心或 FullState 旁路")
 	lobby.queue_free()
