@@ -1,9 +1,13 @@
 extends Control
 
+@export var board_theme: BoardTheme
+@export var map_option: BoardMapOption
+
 @onready var _match_screen: Control = $MatchScreen
 
 
 func _ready() -> void:
+	_match_screen.set_board_presentation_assets(board_theme, map_option)
 	_match_screen.action_previews_requested.connect(_on_action_previews_requested)
 	call_deferred("_seed_preview")
 
@@ -43,15 +47,7 @@ func _build_player_view() -> Dictionary:
 		"board": {"width": 9, "height": 24},
 		"visible_cells": visible_cells,
 		"hidden_detection_cells": [],
-		"pieces": [{
-			"alive": true,
-			"id": "ui-test-cannon",
-			"in_reserve": false,
-			"piece_type": "cannon",
-			"position": [5, 5],
-			"side": "red",
-			"status_tags": ["READY", "测试棋子"],
-		}],
+		"pieces": _build_piece_showcase(),
 		"flags": [{
 			"capture_progress": 0,
 			"capturing_side": "",
@@ -78,3 +74,31 @@ func _build_player_view() -> Dictionary:
 			"elephant_block_fields": [],
 		},
 	}
+
+
+func _build_piece_showcase() -> Array:
+	var piece_types: Array[String] = [
+		"rook", "horse", "elephant", "advisor", "cannon", "pawn", "general",
+	]
+	var pieces: Array = []
+	for index: int in piece_types.size():
+		var piece_type: String = piece_types[index]
+		pieces.append({
+			"alive": true,
+			"id": "ui-test-cannon" if piece_type == "cannon" else "ui-test-red-%s" % piece_type,
+			"in_reserve": false,
+			"piece_type": piece_type,
+			"position": [index + 1, 5],
+			"side": "red",
+			"status_tags": ["READY", "测试棋子"] if piece_type == "cannon" else ["美术预览"],
+		})
+		pieces.append({
+			"alive": true,
+			"id": "ui-test-black-%s" % piece_type,
+			"in_reserve": false,
+			"piece_type": piece_type,
+			"position": [index + 1, 8],
+			"side": "black",
+			"status_tags": ["美术预览"],
+		})
+	return pieces
