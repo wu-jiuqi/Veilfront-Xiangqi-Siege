@@ -21,6 +21,20 @@ func _run() -> void:
 	root.add_child(clock)
 	await process_frame
 	clock.refresh_layout()
+	var smoke_player: AnimationPlayer = clock.get_node("%SmokeAnimationPlayer") as AnimationPlayer
+	var smoke_loop: Animation = smoke_player.get_animation(&"smoke_loop")
+	_expect(smoke_loop != null and smoke_loop.get_track_count() == 2, "右侧烟雾缺少序列帧原点补偿轨道")
+	if smoke_loop != null and smoke_loop.get_track_count() >= 2:
+		_expect(
+			str(smoke_loop.track_get_path(1)) == "SmokeVisual/SmokeFrame:position",
+			"右侧烟雾补偿轨道没有绑定到 SmokeFrame 位置"
+		)
+		var top_row_offset: Vector2 = smoke_loop.track_get_key_value(1, 3)
+		var bottom_row_offset: Vector2 = smoke_loop.track_get_key_value(1, 4)
+		_expect(
+			absf(bottom_row_offset.y - top_row_offset.y) > 200.0,
+			"烟雾图集跨行时没有抵消帧内基线跳变"
+		)
 	clock.set_reduced_motion(true)
 
 	clock.set_round(1, 50, false)
