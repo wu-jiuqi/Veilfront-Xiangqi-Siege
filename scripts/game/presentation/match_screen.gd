@@ -36,9 +36,12 @@ const Presenter = preload("res://scripts/game/presentation/match_screen_presente
 @onready var _selection_status: Label = $MatchHudV2/ObjectiveEvents/SelectionStatus
 @onready var _board_position: Label = $MatchHudV2/ObjectiveEvents/BoardPosition
 @onready var _message_value: Label = $MatchHudV2/ObjectiveEvents/MessageValue
-@onready var _move_button: Button = $MatchHudV2/PieceInfoDrawer/SkillButtons/MoveButton
-@onready var _bombard_button: Button = $MatchHudV2/PieceInfoDrawer/SkillButtons/BombardButton
-@onready var _resurrect_button: Button = $MatchHudV2/PieceInfoDrawer/SkillButtons/ResurrectButton
+@onready var _move_button: Button = \
+	$MatchHudV2/PieceInfoDrawer/ContentMargin/ContentRow/SkillButtons/MoveButton
+@onready var _bombard_button: Button = \
+	$MatchHudV2/PieceInfoDrawer/ContentMargin/ContentRow/SkillButtons/BombardButton
+@onready var _resurrect_button: Button = \
+	$MatchHudV2/PieceInfoDrawer/ContentMargin/ContentRow/SkillButtons/ResurrectButton
 @onready var _pass_button: Button = $MatchHudV2/ObjectiveEvents/PassButton
 @onready var _own_flags: Label = $MatchHudV2/ObjectiveEvents/OwnFlags
 @onready var _own_casualties: Label = $MatchHudV2/ObjectiveEvents/OwnCasualties
@@ -750,11 +753,7 @@ func _update_unit_card() -> void:
 		return
 
 	var piece_type := str(piece.get("piece_type", "unknown"))
-	var piece_name: String = {
-		"general": "将帅", "guard": "士", "minister": "相", "elephant": "象",
-		"chariot": "车", "rook": "车", "cavalry": "骑", "horse": "马",
-		"trebuchet": "砲", "cannon": "炮", "infantry": "兵", "soldier": "兵",
-	}.get(piece_type, piece_type)
+	var piece_name := _piece_display_name(piece_type)
 	_unit_name.text = "%s · %s" % [piece_name, _selected_piece_id]
 	_unit_portrait_glyph.text = piece_name.left(1)
 	_unit_side_status.text = "阵营：%s" % ("赤方" if str(piece.get("side", "")) == "red" else "玄方")
@@ -787,13 +786,13 @@ func _update_objective_summary() -> void:
 		discovered_flags,
 		3
 	)
-	_own_casualties.text = _format_catalog_counter(
+	_own_casualties.text = _format_casualty_summary(
 		_hud_layout.get_catalog_text("objective-events", "bombard", "我方阵亡："),
-		_side_casualty_count(viewer_side)
+		viewer_side
 	)
-	_enemy_casualties.text = _format_catalog_counter(
+	_enemy_casualties.text = _format_casualty_summary(
 		_hud_layout.get_catalog_text("objective-events", "pass", "敌方阵亡："),
-		_side_casualty_count(enemy_side)
+		enemy_side
 	)
 
 
@@ -806,6 +805,37 @@ func _format_catalog_counter(template: String, count: int, total: int = -1) -> S
 	if total >= 0:
 		return "%s %d/%d" % [prefix, count, total]
 	return "%s %d" % [prefix, count]
+
+
+func _format_casualty_summary(template: String, side: String) -> String:
+	var counts: Dictionary = {}
+	var ordered_names: Array[String] = []
+	for casualty_value: Variant in _current_view.get("casualties", []):
+		if not casualty_value is Dictionary \
+		or str(casualty_value.get("side", "")) != side:
+			continue
+		var piece_name := _piece_display_name(str(casualty_value.get("piece_type", "")))
+		if not counts.has(piece_name):
+			counts[piece_name] = 0
+			ordered_names.append(piece_name)
+		counts[piece_name] = int(counts[piece_name]) + 1
+	var details := PackedStringArray()
+	for piece_name: String in ordered_names:
+		details.append("%s*%d" % [piece_name, int(counts[piece_name])])
+	var separator_index := maxi(template.rfind("："), template.rfind(":"))
+	var prefix := template.substr(0, separator_index + 1).strip_edges() \
+		if separator_index >= 0 else template.strip_edges()
+	return "%s %s" % [prefix, ", ".join(details) if not details.is_empty() else "无"]
+
+
+func _piece_display_name(piece_type: String) -> String:
+	return {
+		"general": "将帅", "guard": "士", "advisor": "士",
+		"minister": "相", "elephant": "象",
+		"chariot": "车", "rook": "车", "cavalry": "骑", "horse": "马",
+		"trebuchet": "砲", "cannon": "炮",
+		"infantry": "兵", "soldier": "兵", "pawn": "兵",
+	}.get(piece_type, piece_type if not piece_type.is_empty() else "未知")
 
 
 func _on_turn_timeout_requested(expected_action_index: int) -> void:

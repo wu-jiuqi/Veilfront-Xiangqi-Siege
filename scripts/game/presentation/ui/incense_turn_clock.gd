@@ -180,6 +180,9 @@ func get_state_snapshot() -> Dictionary:
 		"smoke_animation": _smoke_animation.current_animation,
 		"number_float_animation": _number_float_animation.current_animation,
 		"scatter": _get_scatter(),
+		"timer_behind_stand": _timer_slot.z_index < _stand_slot.z_index,
+		"timer_z_index": _timer_slot.z_index,
+		"stand_z_index": _stand_slot.z_index,
 	}
 
 

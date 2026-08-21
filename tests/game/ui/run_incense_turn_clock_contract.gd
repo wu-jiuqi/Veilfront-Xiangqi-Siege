@@ -21,6 +21,11 @@ func _run() -> void:
 	root.add_child(clock)
 	await process_frame
 	clock.refresh_layout()
+	var initial_state := clock.get_state_snapshot()
+	_expect(
+		bool(initial_state.get("timer_behind_stand", false)),
+		"左侧计时香没有被香盘前景遮挡"
+	)
 	var smoke_player: AnimationPlayer = clock.get_node("%SmokeAnimationPlayer") as AnimationPlayer
 	var smoke_loop: Animation = smoke_player.get_animation(&"smoke_loop")
 	_expect(smoke_loop != null and smoke_loop.get_track_count() == 2, "右侧烟雾缺少序列帧原点补偿轨道")
@@ -85,9 +90,17 @@ func _run() -> void:
 	_expect(bool(cannon_state.get("visible", false)), "选中棋子后展开栏没有显示")
 	_expect(bool(cannon_state.get("bombard_visible", false)), "选中炮后没有显示轰炸技能")
 	_expect(not bool(cannon_state.get("resurrect_visible", true)), "选中炮后错误显示了复活技能")
+	_expect(
+		str(cannon_state.get("layout_structure", "")) == "text_left_actions_right",
+		"棋子展开栏没有采用左文字、右操作区布局"
+	)
+	_expect(int(cannon_state.get("visible_action_button_count", 0)) == 2, "炮展开栏没有显示两个操作按钮")
+	_expect(bool(cannon_state.get("buttons_horizontal", false)), "炮展开栏的两个按钮没有横向排列")
 	drawer.show_piece({"id": "red-advisor", "piece_type": "advisor"}, true, false)
 	var advisor_state := drawer.get_state_snapshot()
 	_expect(bool(advisor_state.get("resurrect_visible", false)), "选中士后没有显示复活技能")
+	_expect(int(advisor_state.get("visible_action_button_count", 0)) == 2, "士展开栏没有显示两个操作按钮")
+	_expect(bool(advisor_state.get("buttons_horizontal", false)), "士展开栏的两个按钮没有横向排列")
 	drawer.hide_drawer(false)
 	_expect(not drawer.visible, "取消选择后展开栏没有隐藏")
 

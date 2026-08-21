@@ -6,18 +6,27 @@ const CLOSE_SECONDS: float = 0.16
 
 const MOVE_DESCRIPTIONS := {
 	"general": "将帅：仅在九宫内横直移动一格。",
+	"guard": "士：仅在九宫内斜行一格；满足条件时可献祭复活阵亡棋子。",
 	"advisor": "士：仅在九宫内斜行一格；满足条件时可献祭复活阵亡棋子。",
+	"minister": "相：沿对角移动两格；象眼受阻时不可通过，并展开侦察区域。",
 	"elephant": "象：沿对角移动两格；象眼受阻时不可通过，并展开侦察区域。",
+	"cavalry": "骑：按日字移动；未触发特殊规则时会受蹩马腿阻挡。",
 	"horse": "马：按日字移动；未触发特殊规则时会受蹩马腿阻挡。",
+	"chariot": "车：沿横线或纵线直行；路径通常不可穿越棋子。",
 	"rook": "车：沿横线或纵线直行；路径通常不可穿越棋子。",
+	"trebuchet": "砲：沿横线或纵线移动；隔一枚棋子可吃子，并可选择区域轰炸。",
 	"cannon": "炮：沿横线或纵线移动；隔一枚棋子可吃子，并可选择区域轰炸。",
+	"infantry": "兵：通常向前一格或横移一格；特殊区域内可直线突进。",
+	"soldier": "兵：通常向前一格或横移一格；特殊区域内可直线突进。",
 	"pawn": "兵：通常向前一格或横移一格；特殊区域内可直线突进。",
 }
 
 @onready var movement_summary: Label = %MovementSummary
+@onready var skill_buttons: HBoxContainer = %SkillButtons
 @onready var move_button: Button = %MoveButton
 @onready var bombard_button: Button = %BombardButton
 @onready var resurrect_button: Button = %ResurrectButton
+@onready var no_skill_button: Button = %NoSkillButton
 
 var reduced_motion: bool = false
 var _visibility_tween: Tween
@@ -41,10 +50,11 @@ func show_piece(piece: Dictionary, can_submit: bool, animate: bool = true) -> vo
 	var next_piece_id := str(piece.get("id", ""))
 	movement_summary.text = str(MOVE_DESCRIPTIONS.get(piece_type, "该棋子的移动逻辑尚未登记。"))
 	move_button.disabled = not can_submit
-	bombard_button.visible = piece_type == "cannon"
+	bombard_button.visible = piece_type in ["cannon", "trebuchet"]
 	bombard_button.disabled = not can_submit
-	resurrect_button.visible = piece_type == "advisor"
+	resurrect_button.visible = piece_type in ["advisor", "guard"]
 	resurrect_button.disabled = not can_submit
+	no_skill_button.visible = not bombard_button.visible and not resurrect_button.visible
 	if visible and next_piece_id == _piece_id:
 		return
 	_piece_id = next_piece_id
@@ -92,13 +102,21 @@ func set_layout_enabled(enabled: bool) -> void:
 
 
 func get_state_snapshot() -> Dictionary:
+	var visible_action_button_count := 0
+	for child: Node in skill_buttons.get_children():
+		if child is Button and (child as Button).visible:
+			visible_action_button_count += 1
 	return {
 		"layout_enabled": _layout_enabled,
 		"visible": visible,
+		"layout_structure": "text_left_actions_right",
+		"visible_action_button_count": visible_action_button_count,
+		"buttons_horizontal": skill_buttons is HBoxContainer,
 		"movement_summary": movement_summary.text,
 		"move_visible": move_button.visible,
 		"bombard_visible": bombard_button.visible,
 		"resurrect_visible": resurrect_button.visible,
+		"no_skill_visible": no_skill_button.visible,
 	}
 
 
