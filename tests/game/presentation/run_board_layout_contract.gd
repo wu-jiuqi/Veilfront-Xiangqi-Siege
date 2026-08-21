@@ -5,8 +5,57 @@ const MATCH_SCREEN_SCENE: PackedScene = preload("res://scenes/game/match/match_s
 const RESOLUTIONS: Array[Vector2i] = [
 	Vector2i(960, 540),
 	Vector2i(1280, 720),
+	Vector2i(1680, 720),
+	Vector2i(1280, 800),
+	Vector2i(1280, 960),
 	Vector2i(1920, 1080),
 ]
+const EXPECTED_PROFILES := {
+	"1280x720": "1280x720",
+	"1680x720": "1680x720",
+	"1280x800": "1280x800",
+	"1280x960": "1280x960",
+}
+const EXPECTED_BOARD_RECTS := {
+	"1280x720": Rect2(340, 48, 600, 536),
+	"1680x720": Rect2(341, 104, 998, 450),
+	"1280x800": Rect2(260, 116, 760, 500),
+	"1280x960": Rect2(260, 139, 760, 600),
+}
+const EXPECTED_UI_RECTS := {
+	"1280x720": {
+		"faction-left": Rect2(48, 48, 255, 100),
+		"faction-right": Rect2(976, 48, 255, 100),
+		"unit-info": Rect2(64, 448, 178, 238),
+		"objective-events": Rect2(952, 80, 296, 512),
+		"minimap": Rect2(64, 152, 234, 256),
+		"custom-ui-1787265872199-1": Rect2(256, 600, 952, 72),
+	},
+	"1680x720": {
+		"faction-left": Rect2(24, 70, 335, 100),
+		"faction-right": Rect2(1322, 70, 335, 100),
+		"unit-info": Rect2(24, 458, 234, 238),
+		"objective-events": Rect2(1412, 183, 244, 268),
+		"minimap": Rect2(1436, 516, 221, 184),
+		"custom-ui-1787265872199-1": Rect2(420, 600, 1155, 72),
+	},
+	"1280x800": {
+		"faction-left": Rect2(18, 78, 255, 111),
+		"faction-right": Rect2(1007, 78, 255, 111),
+		"unit-info": Rect2(18, 509, 178, 264),
+		"objective-events": Rect2(1076, 203, 186, 298),
+		"minimap": Rect2(1094, 573, 168, 204),
+		"custom-ui-1787265872199-1": Rect2(320, 667, 880, 80),
+	},
+	"1280x960": {
+		"faction-left": Rect2(18, 93, 255, 133),
+		"faction-right": Rect2(1007, 93, 255, 133),
+		"unit-info": Rect2(18, 611, 178, 317),
+		"objective-events": Rect2(1076, 244, 186, 357),
+		"minimap": Rect2(1094, 688, 168, 245),
+		"custom-ui-1787265872199-1": Rect2(320, 800, 880, 96),
+	},
+}
 
 var _failures: Array[String] = []
 var _capture_screenshots: bool = false
@@ -88,6 +137,13 @@ func _check_resolution(resolution: Vector2i) -> Dictionary:
 	root.add_child(viewport)
 	var match_screen: Control = MATCH_SCREEN_SCENE.instantiate() as Control
 	viewport.add_child(match_screen)
+	if not match_screen.has_method("apply_layout_for_size") \
+	or not match_screen.has_method("get_layout_snapshot"):
+		_failures.append("%s MatchScreen controller failed to load" % resolution)
+		match_screen.queue_free()
+		viewport.queue_free()
+		await process_frame
+		return {"resolution": [resolution.x, resolution.y], "controller_loaded": false}
 	match_screen.apply_layout_for_size(Vector2(resolution))
 	match_screen.render_player_view(_build_layout_view())
 	match_screen.set_local_interaction_state("CONFIRMING", "layout-advisor", "layout-resurrect")
@@ -97,6 +153,7 @@ func _check_resolution(resolution: Vector2i) -> Dictionary:
 	var snapshot: Dictionary = match_screen.get_layout_snapshot()
 	var spacing: Vector2 = snapshot.get("point_spacing", Vector2.ZERO)
 	var board_rect: Rect2 = snapshot.get("board_rect", Rect2())
+	var resolution_key := "%dx%d" % [resolution.x, resolution.y]
 	_expect(absf(spacing.x - spacing.y) <= 0.01, "%s point spacing is not square: %s" % [resolution, spacing])
 	_expect(spacing.x > 0.0, "%s point spacing must be positive" % resolution)
 	_expect(board_rect.position.x >= 0.0 and board_rect.end.x <= resolution.x + 0.5, "%s board is horizontally clipped" % resolution)
@@ -110,6 +167,31 @@ func _check_resolution(resolution: Vector2i) -> Dictionary:
 	_expect(bool(snapshot.get("confirmation_buttons_inside", false)), "%s confirmation buttons are clipped" % resolution)
 	_expect(float(snapshot.get("confirmation_button_min_height", 0.0)) >= 44.0, "%s confirmation buttons are below 44 px" % resolution)
 	_expect(not str(snapshot.get("confirmation_prompt_text", "")).is_empty(), "%s confirmation prompt is empty" % resolution)
+	_expect(
+		str(snapshot.get("board_rect_meaning", "")) == "default_visible_board_screen_rect",
+		"%s board rectangle semantics drifted from the exported JSON" % resolution
+	)
+	var ui_rects: Dictionary = snapshot.get("ui_rects", {})
+	for ui_id: String in [
+		"faction-left", "faction-right", "unit-info", "objective-events", "minimap",
+		"custom-ui-1787265872199-1",
+	]:
+		_expect(ui_rects.has(ui_id), "%s missing HUD slot %s" % [resolution, ui_id])
+		if ui_rects.has(ui_id):
+			var ui_rect: Rect2 = ui_rects.get(ui_id, Rect2())
+			_expect(ui_rect.position.x >= -0.5 and ui_rect.position.y >= -0.5, "%s %s starts outside screen" % [resolution, ui_id])
+			_expect(ui_rect.end.x <= resolution.x + 0.5 and ui_rect.end.y <= resolution.y + 0.5, "%s %s exceeds screen" % [resolution, ui_id])
+	var minimap: Dictionary = snapshot.get("minimap", {})
+	_expect(bool(minimap.get("uses_player_view_only", false)), "%s minimap is not PlayerView-only" % resolution)
+	_expect(int(minimap.get("piece_count", 0)) == 3, "%s minimap did not consume visible pieces" % resolution)
+	_expect(int(minimap.get("flag_count", 0)) == 1, "%s minimap did not consume discovered flags" % resolution)
+
+	if EXPECTED_BOARD_RECTS.has(resolution_key):
+		_expect(str(snapshot.get("active_profile", "")) == str(EXPECTED_PROFILES[resolution_key]), "%s selected the wrong JSON profile" % resolution)
+		_expect(_rect_is_equal(board_rect, EXPECTED_BOARD_RECTS[resolution_key]), "%s board rect does not match JSON: %s" % [resolution, board_rect])
+		var expected_ui: Dictionary = EXPECTED_UI_RECTS[resolution_key]
+		for ui_id: String in expected_ui.keys():
+			_expect(_rect_is_equal(ui_rects.get(ui_id, Rect2()), expected_ui[ui_id]), "%s %s rect does not match JSON" % [resolution, ui_id])
 
 	var image_path: String = "res://evidence/gate2/i1-s4-%dx%d.png" % [resolution.x, resolution.y]
 	if _capture_screenshots:
@@ -192,3 +274,8 @@ func _build_layout_view() -> Dictionary:
 func _expect(condition: bool, message: String) -> void:
 	if not condition:
 		_failures.append(message)
+
+
+func _rect_is_equal(actual: Rect2, expected: Rect2) -> bool:
+	return actual.position.distance_to(expected.position) <= 0.51 \
+		and actual.size.distance_to(expected.size) <= 0.51

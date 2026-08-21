@@ -17,6 +17,7 @@ const COMPONENT_SCENE_PATHS: Array[String] = [
 	"res://scenes/game/match/board/flag_view.tscn",
 	"res://scenes/game/match/board/capture_ghost_view.tscn",
 	"res://scenes/game/match/board/wall_view.tscn",
+	"res://scenes/game/ui/match_hud_v2.tscn",
 	"res://scenes/game/ui/match_header.tscn",
 	"res://scenes/game/ui/turn_progress_incense.tscn",
 	"res://scenes/game/ui/match_status_panel.tscn",
@@ -169,12 +170,17 @@ func _check_game_app(instance: Node) -> void:
 
 
 func _check_match_screen(instance: Node) -> void:
+	if instance.get_script() == null:
+		_failures.append("MatchScreen controller script failed to load")
 	for required_path: String in [
-		"SafeMargin/Page/MatchHeader",
-		"SafeMargin/Page/Workspace/BoardFrame/BoardViewport",
-		"SafeMargin/Page/Workspace/WideStatusHost/MatchStatusPanel",
-		"SafeMargin/Page/CompactActionBar",
-		"CompactStatusDrawer",
+		"MatchHudV2",
+		"MatchHudV2/BoardFrame/BoardViewport",
+		"MatchHudV2/FactionLeft",
+		"MatchHudV2/FactionRight",
+		"MatchHudV2/UnitInfo",
+		"MatchHudV2/ObjectiveEvents",
+		"MatchHudV2/Minimap/TacticalMinimap",
+		"MatchHudV2/TurnProgressSlot/TurnProgressIncense",
 		"MarkerMenu",
 		"ActionConfirmationPanel",
 		"TutorialOverlayHost",
@@ -183,7 +189,7 @@ func _check_match_screen(instance: Node) -> void:
 		if instance.get_node_or_null(required_path) == null:
 			_failures.append("MatchScreen missing preset node: %s" % required_path)
 	var board_world: Node = instance.get_node_or_null(
-		"SafeMargin/Page/Workspace/BoardFrame/BoardViewport/BoardSubViewport/BoardWorld"
+		"MatchHudV2/BoardFrame/BoardViewport/BoardSubViewport/BoardWorld"
 	)
 	if board_world == null:
 		_failures.append("MatchScreen missing preset BoardWorld")

@@ -3,17 +3,21 @@
 	"snapshots": [
 		{
 			"board_rect": [
-				16.0,
-				90.0,
-				928.0,
-				380.0
+				255.0,
+				36.0,
+				450.0,
+				402.0
 			],
 			"compact": true,
+			"confirmation_button_min_height": 44.0,
+			"confirmation_buttons_inside": true,
+			"confirmation_panel_inside": true,
+			"confirmation_prompt_inside": true,
 			"main_button_min_height": 44.0,
 			"main_buttons_inside": true,
 			"point_spacing": [
-				100.222221374512,
-				100.222221374512
+				47.3333320617676,
+				47.3333320617676
 			],
 			"resolution": [
 				960,
@@ -23,17 +27,21 @@
 		},
 		{
 			"board_rect": [
-				16.0,
-				90.0,
-				936.0,
-				560.0
+				340.0,
+				48.0,
+				600.0,
+				536.0
 			],
 			"compact": false,
+			"confirmation_button_min_height": 44.0,
+			"confirmation_buttons_inside": true,
+			"confirmation_panel_inside": true,
+			"confirmation_prompt_inside": true,
 			"main_button_min_height": 44.0,
 			"main_buttons_inside": true,
 			"point_spacing": [
-				101.111114501953,
-				101.111114501953
+				64.0,
+				64.0
 			],
 			"resolution": [
 				1280,
@@ -43,17 +51,93 @@
 		},
 		{
 			"board_rect": [
-				16.0,
-				90.0,
-				1576.0,
-				920.0
+				341.0,
+				104.0,
+				998.0,
+				450.0
 			],
 			"compact": false,
+			"confirmation_button_min_height": 44.0,
+			"confirmation_buttons_inside": true,
+			"confirmation_panel_inside": true,
+			"confirmation_prompt_inside": true,
 			"main_button_min_height": 44.0,
 			"main_buttons_inside": true,
 			"point_spacing": [
-				172.222229003906,
-				172.222229003906
+				108.222221374512,
+				108.222221374512
+			],
+			"resolution": [
+				1680,
+				720
+			],
+			"screenshot": "res://evidence/gate2/i1-s4-1680x720.png"
+		},
+		{
+			"board_rect": [
+				260.0,
+				116.0,
+				760.0,
+				500.0
+			],
+			"compact": false,
+			"confirmation_button_min_height": 44.0,
+			"confirmation_buttons_inside": true,
+			"confirmation_panel_inside": true,
+			"confirmation_prompt_inside": true,
+			"main_button_min_height": 44.0,
+			"main_buttons_inside": true,
+			"point_spacing": [
+				81.7777786254883,
+				81.7777786254883
+			],
+			"resolution": [
+				1280,
+				800
+			],
+			"screenshot": "res://evidence/gate2/i1-s4-1280x800.png"
+		},
+		{
+			"board_rect": [
+				260.0,
+				139.0,
+				760.0,
+				600.0
+			],
+			"compact": false,
+			"confirmation_button_min_height": 44.0,
+			"confirmation_buttons_inside": true,
+			"confirmation_panel_inside": true,
+			"confirmation_prompt_inside": true,
+			"main_button_min_height": 44.0,
+			"main_buttons_inside": true,
+			"point_spacing": [
+				81.7777786254883,
+				81.7777786254883
+			],
+			"resolution": [
+				1280,
+				960
+			],
+			"screenshot": "res://evidence/gate2/i1-s4-1280x960.png"
+		},
+		{
+			"board_rect": [
+				510.0,
+				72.0,
+				900.0,
+				804.0
+			],
+			"compact": false,
+			"confirmation_button_min_height": 44.0,
+			"confirmation_buttons_inside": true,
+			"confirmation_panel_inside": true,
+			"confirmation_prompt_inside": true,
+			"main_button_min_height": 44.0,
+			"main_buttons_inside": true,
+			"point_spacing": [
+				97.3333358764648,
+				97.3333358764648
 			],
 			"resolution": [
 				1920,
