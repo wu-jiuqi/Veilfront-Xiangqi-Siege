@@ -32,12 +32,14 @@
 - `resources/game/ui/themes/terracotta_ui_theme.tres` 已使用本目录的通用面板、四态按钮、小地图框与回合状态条。
 - `resources/game/ui/layouts/veilfront_board_ui_layout_v2.json` 固化网页工具导出的四套布局；其中棋盘矩形只表示默认屏幕可视窗口，完整棋盘世界仍为 `1152×3072`。
 - `scenes/game/ui/match_hud_v2.tscn` 以预置节点接入左右阵营牌、单位卡、目标与行动面板、玩家视角小地图和燃香条；`match_screen.tscn` 已切换为该正式 HUD。
+- 坐标悬停读数只显示在右侧“位置”行；小地图复用主棋盘的阵营镜像、PlayerView、区域、迷雾、墙、棋子与公开战术层，并显示当前镜头窗口，单击或拖动可平滑定位主棋盘。
 - 运行时优先匹配 `1280×720`、`1680×720`、`1280×800`、`1280×960` 的画布宽高比，再按当前可用画布缩放；教学侧栏会作为右侧保留宽度参与布局计算。
 - `scenes/game/ui/match_header.tscn` 通过 `TurnStatusPanel` 主题变体使用 V2 回合状态条。
 - `scenes/game/ui/match_header.tscn` 已预置 `turn_progress_incense.tscn`，旧阿拉伯数字回合 Label 仅保留为隐藏兼容节点。
 - `scenes/dev/ui/turn_progress_incense_lab.tscn` 可逐回合拖动、跳转关键回合或自动播放 1—50，专门验收燃烧、烟雾和数字动效。
 - 页面全屏背景和焦点框改用轻量 `StyleBoxFlat`，不再加载旧废案背景与焦点位图。
 - `scenes/dev/ui/ui_button_motion_lab.tscn` 启动时会打开完整组件预览；关闭预览后可继续测试按钮悬停、按压、焦点、禁用、页签与结果反馈动效。
+- `scenes/dev/ui/match_hud_v2_interaction_lab.tscn` 提供一枚默认镜头内的赤方测试炮；直接点击棋子即可验收单位卡、棋子详情抽屉和技能按钮，小地图可同时测试鸟瞰导航。
 
 ## 生成与处理
 

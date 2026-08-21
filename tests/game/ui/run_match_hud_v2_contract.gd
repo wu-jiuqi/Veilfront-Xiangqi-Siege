@@ -2,6 +2,7 @@ extends SceneTree
 
 const MATCH_SCREEN_SCENE: PackedScene = preload("res://scenes/game/match/match_screen.tscn")
 const LAYOUT_PATH := "res://resources/game/ui/layouts/veilfront_board_ui_layout_v2.json"
+const TEST_CELL := Vector2i(5, 5)
 
 var _failures: Array[String] = []
 
@@ -59,17 +60,27 @@ func _run() -> void:
 	var board_position: Label = screen.get_node("MatchHudV2/ObjectiveEvents/BoardPosition") as Label
 	_expect(board_position.text == "位置: (x, y)", "new objective position layer did not preserve JSON text")
 	_expect(board_position.visible, "new objective position layer is not visible")
+	_expect(
+		screen.get_node_or_null("MatchHudV2/BoardFrame/BoardViewport/CoordinateReadout") == null,
+		"old upper-board coordinate readout still exists"
+	)
+	_hover_board(screen, TEST_CELL)
+	await process_frame
+	_expect(board_position.text == "位置: (5, 5)", "board hover did not update the right-side position row")
+	_hover_board_away(screen)
+	await process_frame
+	_expect(board_position.text == "位置: (x, y)", "right-side position row did not restore its JSON placeholder")
 	screen.set_tutorial_navigation_enabled(true)
 	_expect(return_button.visible, "tutorial navigation could not override the formal HUD deletion")
 	screen.set_tutorial_navigation_enabled(false)
 	_expect(not return_button.visible, "formal HUD return node did not restore JSON visibility")
 
-	screen.handle_board_point(Vector2i(5, 20))
-	await process_frame
+	_click_board(screen, TEST_CELL)
+	await create_timer(0.3).timeout
 	hud = screen.get_hud_snapshot()
 	_expect("车" in str(hud.get("unit", {}).get("name", "")), "unit card did not map the selected rook")
 	_expect("赤方" in str(hud.get("unit", {}).get("side", "")), "unit card did not show the selected side")
-	_expect("5, 20" in str(hud.get("unit", {}).get("position", "")), "unit card did not show the selected coordinate")
+	_expect("5, 5" in str(hud.get("unit", {}).get("position", "")), "unit card did not show the selected coordinate")
 	_expect("已选：hud-rook" in str(hud.get("objective", {}).get("selection", "")), "objective panel did not reflect selection")
 	_expect(bool(hud.get("piece_info_drawer", {}).get("visible", false)), "piece drawer did not open for the selected piece")
 	screen.apply_layout_for_size(Vector2(1280, 720))
@@ -80,8 +91,18 @@ func _run() -> void:
 	_expect(bool(minimap.get("uses_player_view_only", false)), "minimap accepted a source broader than PlayerView")
 	_expect(int(minimap.get("piece_count", 0)) == 1, "minimap visible piece count mismatch")
 	_expect(int(minimap.get("flag_count", 0)) == 1, "minimap discovered flag count mismatch")
+	_expect(bool(minimap.get("bird_eye_mode", false)), "minimap did not enter bird-eye mode")
+	_expect(bool(minimap.get("interactive_navigation", false)), "minimap navigation is not interactive")
+	_expect(int(minimap.get("wall_segment_count", 0)) == 18, "minimap did not mirror board wall semantics")
+	var overview_rect: Rect2 = minimap.get("viewport_rect_normalized", Rect2())
+	_expect(overview_rect.size.y > 0.0 and overview_rect.size.y < 1.0, "minimap did not show the main-board viewport")
 	if "--capture-screenshot" in OS.get_cmdline_user_args():
 		_capture_screenshot(viewport)
+	var camera_before: Vector2 = screen.get_board_render_snapshot().get("camera_position", Vector2.ZERO)
+	_navigate_minimap_to_top(screen)
+	await process_frame
+	var camera_after: Vector2 = screen.get_board_render_snapshot().get("camera_position", Vector2.ZERO)
+	_expect(camera_after.y < camera_before.y, "minimap click did not navigate the main board")
 	var mirror_button: Button = screen.find_child("MirrorButton", true, false) as Button
 	_expect(mirror_button != null, "HUD mirror button is missing")
 	if mirror_button != null:
@@ -187,14 +208,14 @@ func _player_view() -> Dictionary:
 		"round_limit_public": 50,
 		"terminal": false,
 		"board": {"width": 9, "height": 24},
-		"visible_cells": [[5, 20], [6, 20], [7, 20]],
+		"visible_cells": [[5, 5], [6, 5], [7, 5], [7, 6], [7, 7]],
 		"hidden_detection_cells": [],
 		"pieces": [{
 			"alive": true,
 			"id": "hud-rook",
 			"in_reserve": false,
 			"piece_type": "rook",
-			"position": [5, 20],
+			"position": [5, 5],
 			"side": "red",
 			"status_tags": ["READY"],
 		}],
@@ -205,7 +226,7 @@ func _player_view() -> Dictionary:
 			"discovered": true,
 			"id": "hud-flag",
 			"owner": "red",
-			"position": [7, 20],
+			"position": [7, 7],
 		}],
 		"walls": [
 			{"side": "red", "status": "INTACT"},
@@ -220,6 +241,55 @@ func _player_view() -> Dictionary:
 func _expect(condition: bool, message: String) -> void:
 	if not condition:
 		_failures.append(message)
+
+
+func _hover_board(screen: Control, cell: Vector2i) -> void:
+	var board_world: Node2D = screen.get_node(
+		"MatchHudV2/BoardFrame/BoardViewport/BoardSubViewport/BoardWorld"
+	) as Node2D
+	var input_surface: Control = board_world.get_node("InputSurface") as Control
+	var event := InputEventMouseMotion.new()
+	event.position = BoardCoordinateMapper.authority_to_world(
+		cell, "red", board_world.get_cell_size()
+	)
+	input_surface._gui_input(event)
+
+
+func _hover_board_away(screen: Control) -> void:
+	var input_surface: Control = screen.get_node(
+		"MatchHudV2/BoardFrame/BoardViewport/BoardSubViewport/BoardWorld/InputSurface"
+	) as Control
+	var event := InputEventMouseMotion.new()
+	event.position = Vector2(128.0, 128.0)
+	input_surface._gui_input(event)
+
+
+func _click_board(screen: Control, cell: Vector2i) -> void:
+	var board_world: Node2D = screen.get_node(
+		"MatchHudV2/BoardFrame/BoardViewport/BoardSubViewport/BoardWorld"
+	) as Node2D
+	var input_surface: Control = board_world.get_node("InputSurface") as Control
+	var event := InputEventMouseButton.new()
+	event.button_index = MOUSE_BUTTON_LEFT
+	event.pressed = true
+	event.position = BoardCoordinateMapper.authority_to_world(
+		cell, "red", board_world.get_cell_size()
+	)
+	input_surface._gui_input(event)
+
+
+func _navigate_minimap_to_top(screen: Control) -> void:
+	var minimap: Control = screen.get_node("MatchHudV2/Minimap/TacticalMinimap") as Control
+	var press := InputEventMouseButton.new()
+	press.button_index = MOUSE_BUTTON_LEFT
+	press.pressed = true
+	press.position = Vector2(minimap.size.x * 0.5, minimap.size.y * 0.08)
+	minimap._gui_input(press)
+	var release := InputEventMouseButton.new()
+	release.button_index = MOUSE_BUTTON_LEFT
+	release.pressed = false
+	release.position = press.position
+	minimap._gui_input(release)
 
 
 func _expect_anchor_rect(control: Control, expected: Rect2, label: String) -> void:

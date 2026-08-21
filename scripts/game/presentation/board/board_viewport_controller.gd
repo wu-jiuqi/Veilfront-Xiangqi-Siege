@@ -2,6 +2,8 @@ extends SubViewportContainer
 
 signal point_activated(cell: Vector2i)
 signal cancel_or_marker_requested(cell: Vector2i)
+signal hovered_cell_changed(cell: Vector2i)
+signal overview_changed(state: Dictionary)
 
 const BOARD_WORLD_SIZE := Vector2(1152.0, 3072.0)
 const SCREEN_MARGIN: float = 24.0
@@ -12,11 +14,11 @@ const WHEEL_PAN_SPEED: float = 420.0
 @onready var _board_world: Node2D = $BoardSubViewport/BoardWorld
 @onready var _camera: Camera2D = $BoardSubViewport/BoardWorld/BoardCamera2D
 @onready var _scroll_bar: VScrollBar = $VerticalScrollBar
-@onready var _coordinate_label: Label = %CoordinateLabel
 
 var _fit_zoom: float = 1.0
 var _zoom_multiplier: float = 1.0
 var _focused_cell := Vector2i.ZERO
+var _hovered_cell := Vector2i.ZERO
 
 
 func _ready() -> void:
@@ -139,8 +141,46 @@ func get_render_snapshot() -> Dictionary:
 	snapshot["focused_cell_visible"] = _is_cell_visible(_focused_cell)
 	snapshot["camera_position"] = _camera.position
 	snapshot["camera_zoom"] = _camera.zoom
-	snapshot["coordinate_text"] = _coordinate_label.text
+	snapshot["hovered_cell"] = _hovered_cell
+	snapshot["coordinate_text"] = "坐标：（%d, %d）" % [_hovered_cell.x, _hovered_cell.y] \
+		if BoardCoordinateMapper.is_authority_cell_valid(_hovered_cell) else "坐标：—"
+	snapshot["overview_state"] = get_overview_state()
 	return snapshot
+
+
+func get_overview_state() -> Dictionary:
+	var zoom := Vector2(maxf(_camera.zoom.x, 0.01), maxf(_camera.zoom.y, 0.01))
+	var visible_world_size := Vector2(size.x / zoom.x, size.y / zoom.y)
+	var visible_world_position := _camera.position - visible_world_size * 0.5
+	var normalized_position := Vector2(
+		clampf(visible_world_position.x / BOARD_WORLD_SIZE.x, 0.0, 1.0),
+		clampf(visible_world_position.y / BOARD_WORLD_SIZE.y, 0.0, 1.0)
+	)
+	var normalized_size := Vector2(
+		clampf(visible_world_size.x / BOARD_WORLD_SIZE.x, 0.0, 1.0),
+		clampf(visible_world_size.y / BOARD_WORLD_SIZE.y, 0.0, 1.0)
+	)
+	if normalized_position.x + normalized_size.x > 1.0:
+		normalized_position.x = maxf(0.0, 1.0 - normalized_size.x)
+	if normalized_position.y + normalized_size.y > 1.0:
+		normalized_position.y = maxf(0.0, 1.0 - normalized_size.y)
+	return {
+		"display_side": _board_world.get_display_side(),
+		"viewport_rect_normalized": Rect2(normalized_position, normalized_size),
+		"camera_center_normalized": Vector2(
+			clampf(_camera.position.x / BOARD_WORLD_SIZE.x, 0.0, 1.0),
+			clampf(_camera.position.y / BOARD_WORLD_SIZE.y, 0.0, 1.0)
+		),
+	}
+
+
+func navigate_to_overview_ratio(display_ratio: Vector2) -> void:
+	_focused_cell = Vector2i.ZERO
+	_camera.position = Vector2(
+		BOARD_WORLD_SIZE.x * 0.5,
+		clampf(display_ratio.y, 0.0, 1.0) * BOARD_WORLD_SIZE.y
+	)
+	_clamp_camera()
 
 
 func _sync_layout() -> void:
@@ -182,6 +222,8 @@ func _clamp_camera() -> void:
 	var visible_world_height: float = size.y / maxf(_camera.zoom.y, 0.01)
 	if visible_world_height >= BOARD_WORLD_SIZE.y:
 		_camera.position.y = BOARD_WORLD_SIZE.y * 0.5
+		_sync_scroll_bar()
+		_emit_overview_changed()
 		return
 	_camera.position.y = clampf(
 		_camera.position.y,
@@ -189,6 +231,7 @@ func _clamp_camera() -> void:
 		BOARD_WORLD_SIZE.y - visible_world_height * 0.5
 	)
 	_sync_scroll_bar()
+	_emit_overview_changed()
 
 
 func _pan_camera(amount: float) -> void:
@@ -233,8 +276,15 @@ func _on_cancel_or_marker_requested(cell: Vector2i) -> void:
 
 
 func _on_point_hovered(cell: Vector2i) -> void:
-	_coordinate_label.text = "坐标：（%d, %d）" % [cell.x, cell.y]
+	_hovered_cell = cell
+	hovered_cell_changed.emit(cell)
 
 
 func _on_point_hover_ended() -> void:
-	_coordinate_label.text = "坐标：—"
+	_hovered_cell = Vector2i.ZERO
+	hovered_cell_changed.emit(Vector2i.ZERO)
+
+
+func _emit_overview_changed() -> void:
+	if is_node_ready():
+		overview_changed.emit(get_overview_state())

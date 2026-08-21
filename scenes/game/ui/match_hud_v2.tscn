@@ -501,7 +501,7 @@ offset_left = 64.0
 offset_top = 130.0
 offset_right = 305.0
 offset_bottom = 394.0
-mouse_filter = 2
+mouse_filter = 1
 
 [node name="TacticalMinimap" type="Control" parent="Minimap"]
 unique_name_in_owner = true
@@ -510,7 +510,8 @@ anchor_left = 0.08
 anchor_top = 0.16
 anchor_right = 0.92
 anchor_bottom = 0.93
-mouse_filter = 2
+mouse_default_cursor_shape = 2
+tooltip_text = "鸟瞰全局；单击或拖动可平滑定位主棋盘"
 script = ExtResource("7_minimap_script")
 
 [node name="Frame" type="TextureRect" parent="Minimap"]

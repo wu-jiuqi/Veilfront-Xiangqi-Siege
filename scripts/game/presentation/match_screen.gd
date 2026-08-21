@@ -34,6 +34,7 @@ const Presenter = preload("res://scripts/game/presentation/match_screen_presente
 @onready var _return_button: Button = $MatchHudV2/FactionLeft/ReturnButton
 @onready var _mirror_button: Button = $MatchHudV2/FactionRight/MirrorButton
 @onready var _selection_status: Label = $MatchHudV2/ObjectiveEvents/SelectionStatus
+@onready var _board_position: Label = $MatchHudV2/ObjectiveEvents/BoardPosition
 @onready var _message_value: Label = $MatchHudV2/ObjectiveEvents/MessageValue
 @onready var _move_button: Button = $MatchHudV2/PieceInfoDrawer/SkillButtons/MoveButton
 @onready var _bombard_button: Button = $MatchHudV2/PieceInfoDrawer/SkillButtons/BombardButton
@@ -81,6 +82,11 @@ func _ready() -> void:
 	resized.connect(_on_match_screen_resized)
 	_board_viewport.point_activated.connect(handle_board_point)
 	_board_viewport.cancel_or_marker_requested.connect(_on_cancel_or_marker_requested)
+	_board_viewport.hovered_cell_changed.connect(_on_board_hovered_cell_changed)
+	_board_viewport.overview_changed.connect(_tactical_minimap.set_overview_state)
+	_tactical_minimap.overview_navigation_requested.connect(
+		_board_viewport.navigate_to_overview_ratio
+	)
 	_marker_menu.marker_selected.connect(_on_marker_selected)
 	_marker_menu.popup_hide.connect(_on_marker_menu_hidden)
 	_return_button.pressed.connect(func() -> void: return_requested.emit())
@@ -92,6 +98,8 @@ func _ready() -> void:
 	_resurrect_button.pressed.connect(_set_action_mode.bind("resurrect"))
 	_pass_button.pressed.connect(_prepare_pass)
 	_incense_turn_clock.timed_out.connect(_on_turn_timeout_requested)
+	_tactical_minimap.set_overview_state(_board_viewport.get_overview_state())
+	_sync_board_position_from_board()
 	call_deferred("apply_layout_for_size", size)
 
 
@@ -131,6 +139,7 @@ func apply_layout_for_size(requested_size: Vector2) -> void:
 	_return_button.visible = _tutorial_navigation_enabled \
 		or _hud_layout.is_text_layer_enabled("faction-left", "return")
 	_set_compact_layout(requested_size.x < COMPACT_BREAKPOINT)
+	_sync_board_position_from_board()
 
 
 func set_tutorial_panel_width(panel_width: float) -> void:
@@ -442,6 +451,7 @@ func get_hud_snapshot() -> Dictionary:
 		},
 		"objective": {
 			"selection": _selection_status.text,
+			"position": _board_position.text,
 			"mode": _action_mode,
 			"message": _message_value.text,
 			"event": str(_last_event_model.get("message_key", "")),
@@ -520,6 +530,24 @@ func _on_viewport_size_changed() -> void:
 
 func _on_match_screen_resized() -> void:
 	apply_layout_for_size(size)
+
+
+func _on_board_hovered_cell_changed(cell: Vector2i) -> void:
+	if BoardCoordinateMapper.is_authority_cell_valid(cell):
+		_board_position.text = "位置: (%d, %d)" % [cell.x, cell.y]
+	else:
+		_board_position.text = _hud_layout.get_catalog_text(
+			"objective-events", "text-1787297730520-1", "位置: (x, y)"
+		)
+
+
+func _sync_board_position_from_board() -> void:
+	if not is_instance_valid(_board_position) or not is_instance_valid(_board_viewport):
+		return
+	var hovered_cell: Vector2i = _board_viewport.get_render_snapshot().get(
+		"hovered_cell", Vector2i.ZERO
+	)
+	_on_board_hovered_cell_changed(hovered_cell)
 
 
 func _on_cancel_or_marker_requested(cell: Vector2i) -> void:
