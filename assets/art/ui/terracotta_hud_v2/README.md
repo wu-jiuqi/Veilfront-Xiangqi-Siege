@@ -15,7 +15,7 @@
 | `action_button_states_v1.png` | 动作按钮四态图集 | 横向四等分：normal / hover / pressed / disabled |
 | `minimap_frame_v1.png` | 小地图边框 | 叠放在小地图 `SubViewportTexture` 上方，中央为真实透明 |
 | `ui_decor_atlas_v1.png` | 菱形节点、铆钉、分隔线、选择角 | 4×2 图集；缺失的左下角由右下角水平翻转复用 |
-| `turn_progress_incense/` | 燃香回合进度条分层资源 | 香身从右向左裁短，燃烧端跟随香头，烟雾连接运行时回合数字 |
+| `turn_progress_incense/` | 燃香回合进度条分层与动画资源 | 香身从右向左裁短，8 帧烟雾循环并随进度延长，中文烟字散开后重聚 |
 
 ## 技术约束
 
@@ -31,6 +31,8 @@
 
 - `resources/game/ui/themes/terracotta_ui_theme.tres` 已使用本目录的通用面板、四态按钮、小地图框与回合状态条。
 - `scenes/game/ui/match_header.tscn` 通过 `TurnStatusPanel` 主题变体使用 V2 回合状态条。
+- `scenes/game/ui/match_header.tscn` 已预置 `turn_progress_incense.tscn`，旧阿拉伯数字回合 Label 仅保留为隐藏兼容节点。
+- `scenes/dev/ui/turn_progress_incense_lab.tscn` 可逐回合拖动、跳转关键回合或自动播放 1—50，专门验收燃烧、烟雾和数字动效。
 - 页面全屏背景和焦点框改用轻量 `StyleBoxFlat`，不再加载旧废案背景与焦点位图。
 - `scenes/dev/ui/ui_button_motion_lab.tscn` 启动时会打开完整组件预览；关闭预览后可继续测试按钮悬停、按压、焦点、禁用、页签与结果反馈动效。
 

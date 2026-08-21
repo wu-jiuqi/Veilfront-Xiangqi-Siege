@@ -18,6 +18,7 @@ const COMPONENT_SCENE_PATHS: Array[String] = [
 	"res://scenes/game/match/board/capture_ghost_view.tscn",
 	"res://scenes/game/match/board/wall_view.tscn",
 	"res://scenes/game/ui/match_header.tscn",
+	"res://scenes/game/ui/turn_progress_incense.tscn",
 	"res://scenes/game/ui/match_status_panel.tscn",
 	"res://scenes/game/ui/action_confirmation_panel.tscn",
 	"res://scenes/game/ui/marker_menu.tscn",

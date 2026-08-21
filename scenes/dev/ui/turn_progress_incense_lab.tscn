@@ -1,0 +1,154 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/dev/ui/turn_progress_incense_lab.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_theme_binder.tscn" id="2_binder"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/turn_progress_incense.tscn" id="3_incense"]
+
+[node name="TurnProgressIncenseLab" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="UiThemeBinder" parent="." instance=ExtResource("2_binder")]
+
+[node name="Backdrop" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_type_variation = &"ScreenBackground"
+
+[node name="SafeMargin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 32.0
+offset_top = 28.0
+offset_right = -32.0
+offset_bottom = -28.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Page" type="VBoxContainer" parent="SafeMargin"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="Title" type="Label" parent="SafeMargin/Page"]
+layout_mode = 2
+text = "燃香回合进度条 · 动画测试"
+theme_type_variation = &"ScreenTitle"
+
+[node name="Description" type="Label" parent="SafeMargin/Page"]
+layout_mode = 2
+text = "拖动回合或使用快捷按钮，检查香体缩短、烟带延长、中文烟字散聚与持续漂浮。"
+theme_type_variation = &"MutedLabel"
+
+[node name="PreviewPanel" type="PanelContainer" parent="SafeMargin/Page"]
+custom_minimum_size = Vector2(0, 280)
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"CardPanel"
+
+[node name="PreviewCenter" type="CenterContainer" parent="SafeMargin/Page/PreviewPanel"]
+layout_mode = 2
+
+[node name="PreviewScale" type="Control" parent="SafeMargin/Page/PreviewPanel/PreviewCenter"]
+custom_minimum_size = Vector2(812, 72)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="TurnProgressIncense" parent="SafeMargin/Page/PreviewPanel/PreviewCenter/PreviewScale" instance=ExtResource("3_incense")]
+unique_name_in_owner = true
+layout_mode = 0
+scale = Vector2(1.45, 1.45)
+
+[node name="Status" type="Label" parent="SafeMargin/Page"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "第一回合"
+horizontal_alignment = 1
+theme_type_variation = &"SectionTitle"
+
+[node name="RangeRow" type="HBoxContainer" parent="SafeMargin/Page"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="PreviousButton" type="Button" parent="SafeMargin/Page/RangeRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(112, 48)
+layout_mode = 2
+text = "上一回合"
+theme_type_variation = &"SecondaryButton"
+
+[node name="TurnSlider" type="HSlider" parent="SafeMargin/Page/RangeRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 1.0
+max_value = 50.0
+step = 1.0
+value = 1.0
+
+[node name="TurnSpin" type="SpinBox" parent="SafeMargin/Page/RangeRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(92, 48)
+layout_mode = 2
+min_value = 1.0
+max_value = 50.0
+step = 1.0
+value = 1.0
+
+[node name="NextButton" type="Button" parent="SafeMargin/Page/RangeRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(112, 48)
+layout_mode = 2
+text = "下一回合"
+theme_type_variation = &"PrimaryButton"
+
+[node name="QuickRow" type="HBoxContainer" parent="SafeMargin/Page"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 10
+
+[node name="Turn1Button" type="Button" parent="SafeMargin/Page/QuickRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(112, 44)
+layout_mode = 2
+text = "第一回合"
+
+[node name="Turn25Button" type="Button" parent="SafeMargin/Page/QuickRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(132, 44)
+layout_mode = 2
+text = "第二十五回合"
+
+[node name="Turn49Button" type="Button" parent="SafeMargin/Page/QuickRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(132, 44)
+layout_mode = 2
+text = "第四十九回合"
+
+[node name="Turn50Button" type="Button" parent="SafeMargin/Page/QuickRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(132, 44)
+layout_mode = 2
+text = "第五十回合"
+
+[node name="AutoButton" type="Button" parent="SafeMargin/Page/QuickRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(168, 44)
+layout_mode = 2
+text = "自动播放 1—50"
+theme_type_variation = &"SecondaryButton"
+
+[node name="AutoTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 0.85

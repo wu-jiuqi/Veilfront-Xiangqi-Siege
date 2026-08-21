@@ -38,6 +38,8 @@ const Presenter = preload("res://scripts/game/presentation/match_screen_presente
 @onready var _confirm_button: Button = %ConfirmButton
 @onready var _turn_label: Label = $SafeMargin/Page/MatchHeader/Content/TurnLabel
 @onready var _round_label: Label = $SafeMargin/Page/MatchHeader/Content/RoundLabel
+@onready var _title_label: Label = $SafeMargin/Page/MatchHeader/Content/Title
+@onready var _turn_progress_incense: TurnProgressIncense = $SafeMargin/Page/MatchHeader/Content/TurnProgressIncense
 @onready var _return_button: Button = $SafeMargin/Page/MatchHeader/Content/ReturnButton
 @onready var _mirror_button: Button = $SafeMargin/Page/MatchHeader/Content/MirrorButton
 @onready var _wall_status: Label = $SafeMargin/Page/Workspace/WideStatusHost/MatchStatusPanel/Content/WallStatus
@@ -168,6 +170,11 @@ func render_player_view(view: Dictionary) -> void:
 	_presentation_model = _presenter.player_view_model(view)
 	_turn_label.text = str(_presentation_model.get("turn_text", "行动方：--"))
 	_round_label.text = str(_presentation_model.get("round_text", "回合：-- / 50"))
+	_turn_progress_incense.set_turn(
+		maxi(1, int(view.get("full_round_index", 1))),
+		maxi(1, int(view.get("round_limit_public", 50))),
+		true
+	)
 	_wall_status.text = str(_presentation_model.get("wall_text", "城墙：--"))
 	_flag_status.text = str(_presentation_model.get("flag_text", "旗帜：--"))
 	_casualty_status.text = str(_presentation_model.get("casualty_text", "阵亡：--"))
@@ -405,6 +412,7 @@ func get_player_view_snapshot() -> Dictionary:
 
 func _set_compact_layout(compact: bool) -> void:
 	_compact = compact
+	_title_label.visible = not compact
 	_compact_placeholder.visible = false
 	if compact:
 		if _status_panel.get_parent() != _compact_status_host:

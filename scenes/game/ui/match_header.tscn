@@ -1,4 +1,6 @@
-[gd_scene format=3]
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/game/ui/turn_progress_incense.tscn" id="1_incense"]
 
 [node name="MatchHeader" type="PanelContainer"]
 custom_minimum_size = Vector2(0, 64)
@@ -25,8 +27,13 @@ layout_mode = 2
 text = "行动方：--"
 
 [node name="RoundLabel" type="Label" parent="Content"]
+visible = false
 layout_mode = 2
 text = "回合：-- / 50"
+
+[node name="TurnProgressIncense" parent="Content" instance=ExtResource("1_incense")]
+unique_name_in_owner = true
+layout_mode = 2
 
 [node name="MirrorButton" type="Button" parent="Content"]
 unique_name_in_owner = true
