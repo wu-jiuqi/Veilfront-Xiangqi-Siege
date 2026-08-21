@@ -1,0 +1,86 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/game/match/match_screen.tscn" id="1_match"]
+[ext_resource type="Script" path="res://scripts/dev/ui/match_fog_visual_lab.gd" id="2_script"]
+[ext_resource type="Resource" path="res://resources/dev/ui/match_hud_v2_terracotta_lab_theme.tres" id="3_theme"]
+[ext_resource type="Resource" path="res://resources/game/content/boards/terracotta_battlefield_v3_map_option.tres" id="4_map"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_toolbar"]
+bg_color = Color(0.055, 0.045, 0.035, 0.94)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.62, 0.43, 0.22, 0.9)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_color = Color(0, 0, 0, 0.45)
+shadow_size = 6
+
+[node name="MatchFogVisualLab" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_script")
+board_theme = ExtResource("3_theme")
+map_option = ExtResource("4_map")
+
+[node name="MatchScreen" parent="." instance=ExtResource("1_match")]
+layout_mode = 1
+
+[node name="LabToolbar" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 346.0
+offset_top = 14.0
+offset_right = -346.0
+offset_bottom = 104.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_toolbar")
+
+[node name="Margin" type="MarginContainer" parent="LabToolbar"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 9
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 9
+
+[node name="VBox" type="VBoxContainer" parent="LabToolbar/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="Controls" type="HBoxContainer" parent="LabToolbar/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="LabToolbar/Margin/VBox/Controls"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.92, 0.78, 0.54, 1)
+theme_override_font_sizes/font_size = 17
+text = "战争迷雾视觉测试"
+vertical_alignment = 1
+
+[node name="FogToggle" type="CheckButton" parent="LabToolbar/Margin/VBox/Controls"]
+layout_mode = 2
+focus_mode = 2
+button_pressed = true
+text = "雾效：开启"
+
+[node name="FocusButton" type="Button" parent="LabToolbar/Margin/VBox/Controls"]
+layout_mode = 2
+focus_mode = 2
+text = "聚焦战区"
+
+[node name="StatusLabel" type="Label" parent="LabToolbar/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.74, 0.72, 1)
+theme_override_font_sizes/font_size = 12
+text = "正在生成观察者雾层……"
+horizontal_alignment = 1
