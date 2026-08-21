@@ -1,0 +1,219 @@
+[gd_scene load_steps=14 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/presentation/ui/turn_progress_incense.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/turn_progress_incense/turn_progress_holder_v1.png" id="2_holder"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/turn_progress_incense/turn_progress_incense_body_v1.png" id="3_body"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/turn_progress_incense/turn_progress_ember_v1.png" id="4_ember"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/turn_progress_incense/turn_progress_smoke_sequence_8f_v1.png" id="5_smoke"]
+[ext_resource type="Shader" path="res://assets/art/ui/terracotta_hud_v2/turn_progress_incense/smoke_digit_transition.gdshader" id="6_shader"]
+[ext_resource type="FontFile" path="res://assets/fonts/ramega_zhang_qingping/ramega_zhang_qingping_xingshu.ttf" id="7_font"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_holder"]
+atlas = ExtResource("2_holder")
+region = Rect2(7, 576, 1083, 100)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_body"]
+atlas = ExtResource("3_body")
+region = Rect2(155, 518, 1138, 48)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ember"]
+atlas = ExtResource("4_ember")
+region = Rect2(884, 530, 49, 37)
+filter_clip = true
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_smoke_number"]
+resource_local_to_scene = true
+shader = ExtResource("6_shader")
+shader_parameter/scatter = 0.0
+shader_parameter/drift_strength = 7.0
+shader_parameter/breakup_scale = 18.0
+
+[sub_resource type="Animation" id="Animation_smoke_reset"]
+length = 0.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Visual/SmokeVisual/SmokeFrame:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 1, "values": [0]}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Visual/SmokeVisual/SmokeFrame:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 1, "values": [Vector2(-34, -421.5)]}
+
+[sub_resource type="Animation" id="Animation_smoke_loop"]
+resource_name = "smoke_loop"
+length = 1.2
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Visual/SmokeVisual/SmokeFrame:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {"times": PackedFloat32Array(0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1.05), "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1), "update": 1, "values": [0, 1, 2, 3, 4, 5, 6, 7]}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Visual/SmokeVisual/SmokeFrame:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {"times": PackedFloat32Array(0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1.05), "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1), "update": 1, "values": [Vector2(-34, -421.5), Vector2(0, -414), Vector2(-29, -403.5), Vector2(-19, -403.5), Vector2(-25, -132), Vector2(-31, -135.5), Vector2(-9, -133.5), Vector2(-5, -151.5)]}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_smoke"]
+_data = {&"RESET": SubResource("Animation_smoke_reset"), &"smoke_loop": SubResource("Animation_smoke_loop")}
+
+[sub_resource type="Animation" id="Animation_number_reset"]
+length = 0.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Visual/NumberFloat:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [Vector2(415, 0)]}
+
+[sub_resource type="Animation" id="Animation_number_float"]
+resource_name = "number_float"
+length = 3.6
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Visual/NumberFloat:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {"times": PackedFloat32Array(0, 1.2, 2.4, 3.6), "transitions": PackedFloat32Array(0.55, 0.55, 0.55, 0.55), "update": 0, "values": [Vector2(415, 0), Vector2(418, -3), Vector2(413, -1), Vector2(415, 0)]}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_number"]
+_data = {&"RESET": SubResource("Animation_number_reset"), &"number_float": SubResource("Animation_number_float")}
+
+[node name="TurnProgressIncense" type="Control"]
+custom_minimum_size = Vector2(560, 47)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 560.0
+offset_bottom = 47.0
+mouse_filter = 2
+script = ExtResource("1_script")
+
+[node name="Visual" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Holder" type="TextureRect" parent="Visual"]
+layout_mode = 0
+offset_top = 20.0
+offset_right = 430.0
+offset_bottom = 47.0
+texture = SubResource("AtlasTexture_holder")
+expand_mode = 1
+stretch_mode = 0
+mouse_filter = 2
+
+[node name="BodyClip" type="Control" parent="Visual"]
+unique_name_in_owner = true
+clip_contents = true
+layout_mode = 0
+offset_left = 62.0
+offset_top = 16.0
+offset_right = 385.4
+offset_bottom = 31.0
+mouse_filter = 2
+
+[node name="IncenseBody" type="TextureRect" parent="Visual/BodyClip"]
+layout_mode = 0
+offset_right = 330.0
+offset_bottom = 15.0
+texture = SubResource("AtlasTexture_body")
+expand_mode = 1
+stretch_mode = 0
+mouse_filter = 2
+
+[node name="Ember" type="TextureRect" parent="Visual"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 375.4
+offset_top = 15.0
+offset_right = 395.4
+offset_bottom = 31.0
+texture = SubResource("AtlasTexture_ember")
+expand_mode = 1
+stretch_mode = 0
+mouse_filter = 2
+
+[node name="SmokeVisual" type="Node2D" parent="Visual"]
+unique_name_in_owner = true
+modulate = Color(0.94, 0.89, 0.82, 0.7752)
+position = Vector2(385.4, 13)
+scale = Vector2(0.286667, 0.24)
+
+[node name="SmokeFrame" type="Sprite2D" parent="Visual/SmokeVisual"]
+unique_name_in_owner = true
+position = Vector2(-34, -421.5)
+texture = ExtResource("5_smoke")
+centered = false
+hframes = 4
+vframes = 2
+
+[node name="NumberFloat" type="Control" parent="Visual"]
+layout_mode = 0
+offset_left = 415.0
+offset_right = 560.0
+offset_bottom = 47.0
+mouse_filter = 2
+
+[node name="SmokeNumber" type="Label" parent="Visual/NumberFloat"]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_smoke_number")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -4.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.78, 0.75, 0.7, 0.94)
+theme_override_colors/font_outline_color = Color(0.2, 0.18, 0.16, 0.48)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("7_font")
+theme_override_font_sizes/font_size = 42
+text = "一"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RoundCaption" type="Label" parent="Visual/NumberFloat"]
+layout_mode = 0
+offset_left = 44.0
+offset_top = 32.0
+offset_right = 104.0
+offset_bottom = 47.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.62, 0.56, 0.46, 0.86)
+theme_override_fonts/font = ExtResource("7_font")
+theme_override_font_sizes/font_size = 16
+text = "回合"
+horizontal_alignment = 1
+
+[node name="SmokeAnimationPlayer" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
+libraries = {&"": SubResource("AnimationLibrary_smoke")}
+autoplay = "smoke_loop"
+
+[node name="NumberFloatAnimationPlayer" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
+libraries = {&"": SubResource("AnimationLibrary_number")}
+autoplay = "number_float"

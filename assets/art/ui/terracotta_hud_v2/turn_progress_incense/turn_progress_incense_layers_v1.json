@@ -52,6 +52,19 @@
   "runtime_text": {
     "content": "current_turn_number",
     "must_not_use_baked_preview_digits": true,
-    "visual_treatment": "pale_warm_grey_smoke"
+    "number_system": "simplified_chinese_1_to_50",
+    "visual_treatment": "pale_warm_grey_smoke",
+    "idle_motion": "gentle_float",
+    "change_transition": "scatter_then_regather"
+  },
+  "runtime_animation": {
+    "component_scene": "res://scenes/game/ui/turn_progress_incense.tscn",
+    "test_scene": "res://scenes/dev/ui/turn_progress_incense_lab.tscn",
+    "smoke_sheet": "turn_progress_smoke_sequence_8f_v1.png",
+    "smoke_grid": [4, 2],
+    "smoke_frames": 8,
+    "smoke_loop_seconds": 1.2,
+    "maximum_turns": 50,
+    "final_turn_remaining_ratio": 0.0
   }
 }
