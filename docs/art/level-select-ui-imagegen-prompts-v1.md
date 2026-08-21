@@ -1,5 +1,7 @@
 # 关卡模式 UI ImageGen 提示词 v1
 
+状态：`deprecated_for_level_select_runtime`。当前母版拆件提示词见 `docs/art/level-select-ui-imagegen-prompts-v2.md`。
+
 生成模式：Codex 内置 `image_gen`。
 
 ## 1. 概念母稿

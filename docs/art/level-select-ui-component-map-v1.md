@@ -1,6 +1,8 @@
 # 关卡模式 UI 概念拆件映射 v1
 
-状态：`concept_v1_selected / godot_integration_in_progress`
+状态：`deprecated_for_level_select_runtime`
+
+废弃原因：项目所有者已指定 `level_select_approved_master_v2.png` 为唯一视觉母版，并要求关卡模式不再复用旧 UI 组装。当前正式映射见 `docs/art/level-select-ui-component-map-v2.md`。本文件只保留为历史记录。
 
 生成提示词：`docs/art/level-select-ui-imagegen-prompts-v1.md`
 
