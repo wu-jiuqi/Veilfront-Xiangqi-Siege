@@ -21,6 +21,15 @@ func _run() -> void:
 		"FactionRight/Portrait": _control_layout(authored_hud.get_node("FactionRight/Portrait") as Control),
 		"UnitInfo/UnitName": _control_layout(authored_hud.get_node("UnitInfo/UnitName") as Control),
 		"UnitInfo/UnitPortrait": _control_layout(authored_hud.get_node("UnitInfo/UnitPortrait") as Control),
+		"IncenseTurnClock/IncenseStandSlot": _control_layout(
+			authored_hud.get_node("IncenseTurnClock/IncenseStandSlot") as Control
+		),
+		"IncenseTurnClock/TimerIncenseSlot": _control_layout(
+			authored_hud.get_node("IncenseTurnClock/TimerIncenseSlot") as Control
+		),
+		"IncenseTurnClock/RoundIncenseSlot": _control_layout(
+			authored_hud.get_node("IncenseTurnClock/RoundIncenseSlot") as Control
+		),
 	}
 	authored_hud.free()
 
@@ -43,6 +52,7 @@ func _run() -> void:
 			authored_layouts.get(node_path, {}) as Dictionary,
 			node_path
 		)
+	_expect_incense_layers(hud)
 
 	lab.queue_free()
 	viewport.queue_free()
@@ -74,6 +84,18 @@ func _expect_layout(control: Control, expected: Dictionary, label: String) -> vo
 		actual_offsets.is_equal_approx(expected_offsets),
 		"%s偏移没有保留 match_hud_v2.tscn 的值：%s" % [label, actual.get("offsets")]
 	)
+
+
+func _expect_incense_layers(hud: MatchHudLayout) -> void:
+	var stand := hud.get_node("IncenseTurnClock/IncenseStandSlot") as Control
+	var timer_incense := hud.get_node("IncenseTurnClock/TimerIncenseSlot") as Control
+	var round_incense := hud.get_node("IncenseTurnClock/RoundIncenseSlot") as Control
+	_expect(stand.visible, "燃香底座在交互实验中不可见")
+	_expect(timer_incense.visible, "左侧计时香在交互实验中不可见")
+	_expect(round_incense.visible, "右侧回合香在交互实验中不可见")
+	_expect(stand.z_index == 8, "燃香底座没有应用布局目录层级：%d" % stand.z_index)
+	_expect(timer_incense.z_index == 7, "左侧计时香没有应用布局目录层级：%d" % timer_incense.z_index)
+	_expect(round_incense.z_index == 5, "右侧回合香没有应用布局目录层级：%d" % round_incense.z_index)
 
 
 func _finish() -> void:

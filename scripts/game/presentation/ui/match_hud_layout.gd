@@ -32,18 +32,20 @@ func apply_layout_for_size(requested_size: Vector2, reserved_right: float = 0.0)
 
 	_applied_screen_size = Vector2(maxf(1.0, requested_size.x), maxf(1.0, requested_size.y))
 	_reserved_right = clampf(reserved_right, 0.0, maxf(0.0, _applied_screen_size.x - 320.0))
+	var available_size := Vector2(_applied_screen_size.x - _reserved_right, _applied_screen_size.y)
+	var selected_profile_name := _select_profile_name(available_size)
+	var profiles: Dictionary = _layout_definition.get("profiles", {})
+	var profile: Dictionary = profiles.get(selected_profile_name, {})
+	if profile.is_empty():
+		return
 	if _scene_authored_layout_enabled:
 		_active_profile_name = "scene-authored"
+		_apply_profile_slots(profile, Vector2.ONE, false)
 		_apply_catalog_visuals()
 		_apply_catalog_text_layout(false)
 		_incense_turn_clock.refresh_layout()
 		return
-	var available_size := Vector2(_applied_screen_size.x - _reserved_right, _applied_screen_size.y)
-	_active_profile_name = _select_profile_name(available_size)
-	var profiles: Dictionary = _layout_definition.get("profiles", {})
-	var profile: Dictionary = profiles.get(_active_profile_name, {})
-	if profile.is_empty():
-		return
+	_active_profile_name = selected_profile_name
 
 	var canvas: Dictionary = profile.get("canvas", {})
 	var canvas_size := Vector2(
@@ -53,8 +55,15 @@ func apply_layout_for_size(requested_size: Vector2, reserved_right: float = 0.0)
 	var scale_factor := Vector2(available_size.x / canvas_size.x, available_size.y / canvas_size.y)
 	var board_definition: Dictionary = profile.get("default_visible_board_screen_rect", {})
 	_apply_rect(_board_frame, _scaled_rect(board_definition.get("pixel_rect", {}), scale_factor))
+	_apply_profile_slots(profile, scale_factor)
 
-	var slots := {
+	_apply_catalog_visuals()
+	_apply_catalog_text_layout()
+	_incense_turn_clock.refresh_layout()
+
+
+func _layout_slots() -> Dictionary:
+	return {
 		"faction-left": $FactionLeft,
 		"faction-right": $FactionRight,
 		"unit-info": $UnitInfo,
@@ -66,6 +75,14 @@ func apply_layout_for_size(requested_size: Vector2, reserved_right: float = 0.0)
 		"custom-ui-1787292377548-3": $IncenseTurnClock/TimerIncenseSlot,
 		"custom-ui-1787293016650-4": $IncenseTurnClock/RoundDisplaySlot,
 	}
+
+
+func _apply_profile_slots(
+	profile: Dictionary,
+	scale_factor: Vector2,
+	apply_geometry: bool = true
+) -> void:
+	var slots := _layout_slots()
 	var configured_slots: Dictionary = {}
 	for entry_value: Variant in profile.get("ui_layout", []):
 		if not entry_value is Dictionary:
@@ -76,7 +93,8 @@ func apply_layout_for_size(requested_size: Vector2, reserved_right: float = 0.0)
 		if slot == null:
 			continue
 		configured_slots[slot_id] = true
-		_apply_rect(slot, _scaled_rect(entry.get("pixel_rect", {}), scale_factor))
+		if apply_geometry:
+			_apply_rect(slot, _scaled_rect(entry.get("pixel_rect", {}), scale_factor))
 		var slot_visible := bool(entry.get("visible", true))
 		if slot == _piece_info_drawer:
 			_piece_info_drawer.set_layout_enabled(slot_visible)
@@ -94,10 +112,6 @@ func apply_layout_for_size(requested_size: Vector2, reserved_right: float = 0.0)
 			_piece_info_drawer.set_layout_enabled(false)
 		else:
 			disabled_slot.visible = false
-
-	_apply_catalog_visuals()
-	_apply_catalog_text_layout()
-	_incense_turn_clock.refresh_layout()
 
 
 func set_scene_authored_layout_enabled(enabled: bool) -> void:
