@@ -94,6 +94,10 @@ func render_player_view(view: Dictionary) -> void:
 		reset_camera()
 
 
+func set_presentation_assets(theme: BoardTheme, map_option: BoardMapOption) -> void:
+	_board_world.set_presentation_assets(theme, map_option)
+
+
 func set_marker(cell: Vector2i, marker_type: String) -> void:
 	_board_world.set_marker(cell, marker_type)
 

@@ -372,6 +372,10 @@ func get_board_render_snapshot() -> Dictionary:
 	return _board_viewport.get_render_snapshot()
 
 
+func set_board_presentation_assets(theme: BoardTheme, map_option: BoardMapOption) -> void:
+	_board_viewport.set_presentation_assets(theme, map_option)
+
+
 func get_layout_snapshot() -> Dictionary:
 	var hud_snapshot: Dictionary = _hud_layout.get_layout_snapshot()
 	var board_rect: Rect2 = hud_snapshot.get(

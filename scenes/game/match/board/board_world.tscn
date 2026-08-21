@@ -21,6 +21,12 @@
 script = ExtResource("6_world_script")
 board_theme = ExtResource("1_theme")
 
+[node name="MapBackground" type="Sprite2D" parent="."]
+visible = false
+z_index = -100
+position = Vector2(576, 1536)
+texture_filter = 1
+
 [node name="TerrainLayer" type="TileMapLayer" parent="."]
 
 [node name="ZoneTintLayer" type="TileMapLayer" parent="."]
@@ -51,6 +57,7 @@ script = ExtResource("11_ghost_script")
 ghost_scene = ExtResource("16_ghost_scene")
 
 [node name="PieceLayer" type="Node2D" parent="."]
+y_sort_enabled = true
 script = ExtResource("8_piece_script")
 piece_scene = ExtResource("13_piece_scene")
 

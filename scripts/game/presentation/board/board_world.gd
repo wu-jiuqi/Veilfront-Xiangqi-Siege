@@ -8,7 +8,9 @@ signal point_hovered(cell: Vector2i)
 signal point_hover_ended()
 
 @export var board_theme: BoardTheme
+@export var map_option: BoardMapOption
 
+@onready var _map_background: Sprite2D = $MapBackground
 @onready var _grid_renderer: Node2D = $GridRenderer
 @onready var _piece_renderer: Node2D = $PieceLayer
 @onready var _fog_overlay: Control = $FogOverlay
@@ -33,7 +35,20 @@ func _ready() -> void:
 	_input_surface.pan_requested.connect(_on_pan_requested)
 	_input_surface.point_hovered.connect(func(cell: Vector2i) -> void: point_hovered.emit(cell))
 	_input_surface.point_hover_ended.connect(func() -> void: point_hover_ended.emit())
+	_apply_presentation_assets()
 	_configure_empty_board()
+
+
+func set_presentation_assets(theme: BoardTheme, selected_map: BoardMapOption) -> void:
+	if theme != null:
+		board_theme = theme
+	if selected_map != null:
+		map_option = selected_map
+	_apply_presentation_assets()
+	if _current_view.is_empty():
+		_configure_empty_board()
+	else:
+		render_player_view(_current_view)
 
 
 func render_player_view(view: Dictionary) -> void:
@@ -93,6 +108,10 @@ func get_render_snapshot() -> Dictionary:
 		"piece_count": _piece_renderer.get_rendered_count(),
 		"piece_glyphs": _piece_renderer.get_rendered_glyphs(),
 		"piece_cells": _piece_renderer.get_rendered_cells(),
+		"piece_art_paths": _piece_renderer.get_rendered_art_paths(),
+		"map_id": str(map_option.map_id) if map_option != null else "",
+		"map_background_path": _map_background.texture.resource_path \
+			if _map_background.texture != null else "",
 		"flag_count": _flag_renderer.get_rendered_count(),
 		"ghost_count": _ghost_renderer.get_rendered_count(),
 		"wall_segment_count": _wall_renderer.get_rendered_count(),
@@ -149,6 +168,33 @@ func _configure_empty_board() -> void:
 	_tactical_overlay.render_public_overlays({}, _side, board_theme.cell_size)
 	_interaction_overlay.render_selection(Vector2i.ZERO, [], _side, board_theme.cell_size)
 	_input_surface.configure(_side, board_theme.cell_size)
+
+
+func _apply_presentation_assets() -> void:
+	if board_theme != null and not board_theme.piece_scene_set.is_empty():
+		_piece_renderer.set("piece_scene", board_theme.piece_scene_set[0])
+	_configure_map_background()
+
+
+func _configure_map_background() -> void:
+	if map_option == null or map_option.background_texture == null or board_theme == null:
+		_map_background.visible = false
+		_map_background.texture = null
+		return
+	var texture_size: Vector2 = map_option.background_texture.get_size()
+	if texture_size.x <= 0.0 or texture_size.y <= 0.0:
+		_map_background.visible = false
+		_map_background.texture = null
+		return
+	var board_size := Vector2(9.0 * board_theme.cell_size.x, 24.0 * board_theme.cell_size.y)
+	var cover_scale: float = maxf(
+		board_size.x / texture_size.x,
+		board_size.y / texture_size.y
+	)
+	_map_background.texture = map_option.background_texture
+	_map_background.position = board_size * 0.5
+	_map_background.scale = Vector2.ONE * cover_scale
+	_map_background.visible = true
 
 
 func _on_point_activated(cell: Vector2i) -> void:
