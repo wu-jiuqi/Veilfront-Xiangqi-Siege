@@ -1,0 +1,46 @@
+approval:
+  schema_version: game-production-approval/v1
+  approval_id: approval:veilfront-xiangqi-siege:production-scope-exception:9e65df07d193
+  subject_kind: production-scope-exception
+  subject_id: EXCEPTION-FORMAL-LAN-ASSEMBLY-001@v1
+  subject_digest: 9e65df07d19398a083e8d024336180e37d5fc1fd998829cafc7559e7c04031b1
+  decision: approved
+  decided_by: project-owner
+  decided_at: '2026-08-21T23:18:10.0670056+08:00'
+  evidence:
+    source_refs:
+    - codex-thread://current#owner-confirmed-formal-lan-assembly-9e65df07d193
+    - game-pipeline/loops/evidence/FORMAL-LAN-ASSEMBLY-OWNER-EXCEPTION-decision-package-v1.yaml
+    immutable_source:
+      git_commit: 4acb881f5ac0e826c1c36c19b3ef5f36dc49d571
+      path: game-pipeline/loops/evidence/FORMAL-LAN-ASSEMBLY-OWNER-EXCEPTION-decision-package-v1.yaml
+      subject_path: exception_subject
+      canonicalization: canonical-json-sort-keys-ensure-ascii-false-v1
+      subject_digest: 9e65df07d19398a083e8d024336180e37d5fc1fd998829cafc7559e7c04031b1
+    confirmation:
+      method: exact-64-character-digest-reply
+      received_digest: 9e65df07d19398a083e8d024336180e37d5fc1fd998829cafc7559e7c04031b1
+      matches_subject_digest: true
+    bound_contract:
+      contract_id: LOOP-CTR-FORMAL-FOUNDATION-GATE2-001
+      version: 3
+      approval_id: approval:veilfront-xiangqi-siege:loop-contract:9d9e3cfc5e92
+      registry_loop_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+      registry_revision_at_audit: 56
+  authorized_action:
+    summary: 允许把现有UX、正式二维MatchScreen、正式雾气与新版HUD接入房主权威ENet局域网会话，形成可完整双人对局的正式LAN里程碑。
+    scope_ref: game-pipeline/loops/evidence/FORMAL-LAN-ASSEMBLY-OWNER-EXCEPTION-decision-package-v1.yaml#exception_subject.exact_scope
+    allowed_ref: game-pipeline/loops/evidence/FORMAL-LAN-ASSEMBLY-OWNER-EXCEPTION-decision-package-v1.yaml#exception_subject.approval_effect.allowed
+    forbidden_ref: game-pipeline/loops/evidence/FORMAL-LAN-ASSEMBLY-OWNER-EXCEPTION-decision-package-v1.yaml#exception_subject.approval_effect.forbidden
+    acceptance_ref: game-pipeline/loops/evidence/FORMAL-LAN-ASSEMBLY-OWNER-EXCEPTION-decision-package-v1.yaml#exception_subject.acceptance
+    limits_ref: game-pipeline/loops/evidence/FORMAL-LAN-ASSEMBLY-OWNER-EXCEPTION-decision-package-v1.yaml#exception_subject.resources_and_limits
+    does_not_approve:
+    - Steam Networking、SDR、Relay、NAT穿透、互联网匹配或专用服务器
+    - 规则语义、确定性随机消费、PlayerView信息权限或回放摘要变更
+    - GATE-3、GATE-4、互联网完成、发布候选或对外发布
+    - 新增高成本美术生产或改变已确认二维视觉方向
+  application:
+    state: approved_prospective_limited_exception
+    decision_package_state_preserved: awaiting_human
+    decision_package_state_note: 决策包保留审批前历史快照；本文件记录项目所有者决定，不重写原证据。
+    approved_at: '2026-08-21T23:18:10.0670056+08:00'

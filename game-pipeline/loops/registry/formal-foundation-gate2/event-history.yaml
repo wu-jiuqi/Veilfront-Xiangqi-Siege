@@ -2536,3 +2536,234 @@ event_history:
     digest_algorithm: sha256
     previous_event_digest: 6c2109cd08b4f7bf8954411e416d17520285d14577f09f7524bda4d1dabfc863
     event_digest: 4ded887ef1f577cfa19a68f2f7b830e34a0abdf6023e1d9adeac2be79ab718ad
+- schema_version: '0.1'
+  event_id: c338b418-c121-4797-8929-bd0c3d20af78
+  mutation_id: 5900a4ea-daa6-4431-9d05-add894b78a9a
+  loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+  sequence: 57
+  event_type: core.acceptance_recorded
+  occurred_at: '2026-08-21T23:20:10.775846+08:00'
+  recorded_at: '2026-08-21T23:20:10.775846+08:00'
+  actor: &id007
+    actor_id: inst:01M02M6X3Q8YWJXHY52K3V5AR2
+    role: pos:veilfront-xiangqi-siege:root:project-manager
+    authority_id: AUTH-VEILFRONT-PROJECT-MANAGER
+  causality:
+    correlation_id: a2a8f61b-d56b-46c9-8c15-eb239e8d57b2
+    causation_event_id: 8a041d86-f13e-4df7-a300-572106ecffa3
+    request_id: record-owner-formal-lan-scope-exception
+  concurrency:
+    expected_record_revision: 56
+    resulting_record_revision: 57
+  binding_snapshot:
+    contract_digest: 9ea1fbab25b1a560b83896194099bd9b0131552d7321223622161615c1a2a205
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    acceptance_kind: owner_scope_exception
+    record_id: OWNER-SCOPE-EXCEPTION-FORMAL-LAN-001
+    subject_digest: 9e65df07d19398a083e8d024336180e37d5fc1fd998829cafc7559e7c04031b1
+    record:
+      decision: approved
+      scope: formal-lan-playable
+      release_semantics: formal-code-path-lan-milestone-not-release
+      approval_id: approval:veilfront-xiangqi-siege:production-scope-exception:9e65df07d193
+  evidence_refs: &id008
+  - game-pipeline/loops/evidence/FORMAL-LAN-ASSEMBLY-OWNER-EXCEPTION-decision-package-v1.yaml
+  - game-pipeline/approvals/production-scope-exception-formal-lan-assembly-9e65df07d193.yaml
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: 4ded887ef1f577cfa19a68f2f7b830e34a0abdf6023e1d9adeac2be79ab718ad
+    event_digest: e5c30ad75b8187249f49a8ad7c9ac3383de2017acb773a3e8afd679fa845fc4a
+- schema_version: '0.1'
+  event_id: 7cf6a5ce-da63-45d3-8fbd-08118e89dfa9
+  mutation_id: 7d8fe51c-05a4-4f99-be1c-40cbf31a785c
+  loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+  sequence: 58
+  event_type: core.input_bound
+  occurred_at: '2026-08-21T23:20:10.775846+08:00'
+  recorded_at: '2026-08-21T23:20:10.775846+08:00'
+  actor: *id007
+  causality:
+    correlation_id: a2a8f61b-d56b-46c9-8c15-eb239e8d57b2
+    causation_event_id: c338b418-c121-4797-8929-bd0c3d20af78
+    request_id: bind-formal-lan-scope-exception
+  concurrency:
+    expected_record_revision: 57
+    resulting_record_revision: 58
+  binding_snapshot:
+    contract_digest: 9ea1fbab25b1a560b83896194099bd9b0131552d7321223622161615c1a2a205
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    input_slot_id: INPUT-FORMAL-LAN-EXCEPTION-001
+    before: null
+    after:
+      input_slot_id: INPUT-FORMAL-LAN-EXCEPTION-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:formal-lan-scope-exception@v1
+        artifact_type: owner-approved-production-scope-exception
+        version: v1@subject:9e65df07d193
+        uri: game-pipeline/loops/evidence/FORMAL-LAN-ASSEMBLY-OWNER-EXCEPTION-decision-package-v1.yaml
+        digest:
+          algorithm: sha256
+          value: 9e65df07d19398a083e8d024336180e37d5fc1fd998829cafc7559e7c04031b1
+        manifest_paths: *id008
+      source_loop_id: null
+      bound_by_event_id: 7cf6a5ce-da63-45d3-8fbd-08118e89dfa9
+      bound_at: '2026-08-21T23:20:10.775846+08:00'
+  evidence_refs: *id008
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: e5c30ad75b8187249f49a8ad7c9ac3383de2017acb773a3e8afd679fa845fc4a
+    event_digest: 1b63fbb35a29bd4a8bed5664e7544662e94dadb86e1d4932bbd0d19a12862187
+- schema_version: '0.1'
+  event_id: 27c38763-da05-44ea-9e08-33023934c2f6
+  mutation_id: 87e09993-4e9a-4b03-b2b7-33b41c933245
+  loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+  sequence: 59
+  event_type: core.assignment_changed
+  occurred_at: '2026-08-21T23:20:10.775846+08:00'
+  recorded_at: '2026-08-21T23:20:10.775846+08:00'
+  actor: *id007
+  causality:
+    correlation_id: a2a8f61b-d56b-46c9-8c15-eb239e8d57b2
+    causation_event_id: 7cf6a5ce-da63-45d3-8fbd-08118e89dfa9
+    request_id: extend-executor-godot-technical-lead-formal-lan
+  concurrency:
+    expected_record_revision: 58
+    resulting_record_revision: 59
+  binding_snapshot:
+    contract_digest: 9ea1fbab25b1a560b83896194099bd9b0131552d7321223622161615c1a2a205
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    assignment_kind: executor
+    operation: update
+    before:
+      actor_id: inst:01M02NJ3JEQXKV6PT6DPX0NKQ0
+      role: pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+      assignment_id: 3dc874ca-82fc-4450-8cb6-ac0b28cacee1
+      authority_id: AUTH-VEILFRONT-GODOT-TECHNOLOGY
+      scope:
+      - TASK-PRESENTATION-2D-001
+    after:
+      actor_id: inst:01M02NJ3JEQXKV6PT6DPX0NKQ0
+      role: pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+      assignment_id: 3dc874ca-82fc-4450-8cb6-ac0b28cacee1
+      authority_id: AUTH-VEILFRONT-GODOT-TECHNOLOGY
+      scope:
+      - TASK-PRESENTATION-2D-001
+      - TASK-FORMAL-LAN-APPLICATION-001
+      - TASK-FORMAL-LAN-NETWORK-001
+      - TASK-FORMAL-LAN-INTEGRATION-001
+  evidence_refs: *id008
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: 1b63fbb35a29bd4a8bed5664e7544662e94dadb86e1d4932bbd0d19a12862187
+    event_digest: 8e4245cdc47c8095e6d517fe115e6ec79ff1bc956375eddbdfe983762c96d36b
+- schema_version: '0.1'
+  event_id: dc1b9334-67d9-4b81-9769-5315ab8b387a
+  mutation_id: 3dd5e213-48a1-484c-be46-6fd43603a159
+  loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+  sequence: 60
+  event_type: core.assignment_changed
+  occurred_at: '2026-08-21T23:20:10.775846+08:00'
+  recorded_at: '2026-08-21T23:20:10.775846+08:00'
+  actor: *id007
+  causality:
+    correlation_id: a2a8f61b-d56b-46c9-8c15-eb239e8d57b2
+    causation_event_id: 27c38763-da05-44ea-9e08-33023934c2f6
+    request_id: extend-executor-systems-experience-lead-formal-lan
+  concurrency:
+    expected_record_revision: 59
+    resulting_record_revision: 60
+  binding_snapshot:
+    contract_digest: 9ea1fbab25b1a560b83896194099bd9b0131552d7321223622161615c1a2a205
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    assignment_kind: executor
+    operation: update
+    before:
+      actor_id: inst:01M02NJ3JENHD8VV7EKC9G198Q
+      role: pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
+      assignment_id: c6257f90-551b-4f90-a492-6b2351fc7b90
+      authority_id: AUTH-VEILFRONT-SYSTEMS-EXPERIENCE
+      scope:
+      - TASK-TUTORIAL-2D-COMPAT-001
+    after:
+      actor_id: inst:01M02NJ3JENHD8VV7EKC9G198Q
+      role: pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
+      assignment_id: c6257f90-551b-4f90-a492-6b2351fc7b90
+      authority_id: AUTH-VEILFRONT-SYSTEMS-EXPERIENCE
+      scope:
+      - TASK-TUTORIAL-2D-COMPAT-001
+      - TASK-FORMAL-LAN-UX-001
+  evidence_refs: *id008
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: 8e4245cdc47c8095e6d517fe115e6ec79ff1bc956375eddbdfe983762c96d36b
+    event_digest: 09e5af244acbf7540fb10dffc7b043e8c923cfea1e4784b58047d93ee85ce6ce
+- schema_version: '0.1'
+  event_id: 7ce6e6e0-0c13-4b08-b312-3bca8b6258eb
+  mutation_id: 75d9c627-f67e-4ad3-8851-e235f1c82258
+  loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+  sequence: 61
+  event_type: core.assignment_changed
+  occurred_at: '2026-08-21T23:20:10.775846+08:00'
+  recorded_at: '2026-08-21T23:20:10.775846+08:00'
+  actor: *id007
+  causality:
+    correlation_id: a2a8f61b-d56b-46c9-8c15-eb239e8d57b2
+    causation_event_id: dc1b9334-67d9-4b81-9769-5315ab8b387a
+    request_id: extend-reviewer-qa-release-lead-formal-lan
+  concurrency:
+    expected_record_revision: 60
+    resulting_record_revision: 61
+  binding_snapshot:
+    contract_digest: 9ea1fbab25b1a560b83896194099bd9b0131552d7321223622161615c1a2a205
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    assignment_kind: reviewer
+    operation: update
+    before:
+      actor_id: inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
+      role: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+      assignment_id: 59ac676f-0933-44c2-8aaa-74e5c848e44e
+      review_scope:
+      - CHECK-CONTRACT-V3-001
+      - CHECK-DEPENDENCY-001
+      - CHECK-INFORMATION-2D-001
+      - CHECK-GODOT-2D-001
+      - CHECK-COORDINATE-001
+      - CHECK-RESPONSIVE-2D-001
+      - CHECK-PERFORMANCE-2D-001
+      - CHECK-ART-2D-001
+      - CHECK-REGRESSION-001
+      - CHECK-SCOPE-001
+    after:
+      actor_id: inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
+      role: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+      assignment_id: 59ac676f-0933-44c2-8aaa-74e5c848e44e
+      review_scope:
+      - CHECK-CONTRACT-V3-001
+      - CHECK-DEPENDENCY-001
+      - CHECK-INFORMATION-2D-001
+      - CHECK-GODOT-2D-001
+      - CHECK-COORDINATE-001
+      - CHECK-RESPONSIVE-2D-001
+      - CHECK-PERFORMANCE-2D-001
+      - CHECK-ART-2D-001
+      - CHECK-REGRESSION-001
+      - CHECK-SCOPE-001
+      - CHECK-FORMAL-LAN-UX-001
+      - CHECK-FORMAL-LAN-AUTHORITY-001
+      - CHECK-FORMAL-LAN-INFORMATION-001
+      - CHECK-FORMAL-LAN-REGRESSION-001
+  evidence_refs: *id008
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: 09e5af244acbf7540fb10dffc7b043e8c923cfea1e4784b58047d93ee85ce6ce
+    event_digest: 16f6825e405c26eb9c6c5a0b87535accf091907e2feac72b36f63685c7ba6514
