@@ -1,22 +1,20 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/game/ui/ui_theme_binder.tscn" id="1_binder"]
-[ext_resource type="PackedScene" path="res://scenes/game/ui/match_header.tscn" id="2_header"]
-[ext_resource type="PackedScene" path="res://scenes/game/match/board/board_viewport.tscn" id="3_board"]
-[ext_resource type="PackedScene" path="res://scenes/game/ui/match_status_panel.tscn" id="4_status"]
-[ext_resource type="PackedScene" path="res://scenes/game/ui/marker_menu.tscn" id="5_marker"]
-[ext_resource type="PackedScene" path="res://scenes/game/ui/action_confirmation_panel.tscn" id="6_confirm"]
-[ext_resource type="PackedScene" path="res://scenes/game/ui/terminal_dialog.tscn" id="7_terminal"]
-[ext_resource type="Script" path="res://scripts/game/presentation/match_screen.gd" id="8_screen_script"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/match_hud_v2.tscn" id="2_hud"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/marker_menu.tscn" id="3_marker"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/action_confirmation_panel.tscn" id="4_confirm"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/terminal_dialog.tscn" id="5_terminal"]
+[ext_resource type="Script" path="res://scripts/game/presentation/match_screen.gd" id="6_screen_script"]
 
 [node name="MatchScreen" type="Control"]
-script = ExtResource("8_screen_script")
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("6_screen_script")
 
 [node name="UiThemeBinder" parent="." instance=ExtResource("1_binder")]
 
@@ -30,104 +28,26 @@ grow_vertical = 2
 mouse_filter = 2
 theme_type_variation = &"ScreenBackground"
 
-[node name="SafeMargin" type="MarginContainer" parent="."]
+[node name="MatchHudV2" parent="." instance=ExtResource("2_hud")]
+unique_name_in_owner = true
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 16.0
-offset_top = 16.0
-offset_right = -16.0
-offset_bottom = -16.0
-grow_horizontal = 2
-grow_vertical = 2
 
-[node name="Page" type="VBoxContainer" parent="SafeMargin"]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="MatchHeader" parent="SafeMargin/Page" instance=ExtResource("2_header")]
-layout_mode = 2
-
-[node name="Workspace" type="HSplitContainer" parent="SafeMargin/Page"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 3
-split_offset = 900
-
-[node name="BoardFrame" type="PanelContainer" parent="SafeMargin/Page/Workspace"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="BoardViewport" parent="SafeMargin/Page/Workspace/BoardFrame" instance=ExtResource("3_board")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="WideStatusHost" type="PanelContainer" parent="SafeMargin/Page/Workspace"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(300, 0)
-layout_mode = 2
-
-[node name="MatchStatusPanel" parent="SafeMargin/Page/Workspace/WideStatusHost" instance=ExtResource("4_status")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="CompactActionBar" type="HBoxContainer" parent="SafeMargin/Page"]
-layout_mode = 2
-alignment = 2
-
-[node name="StatusButton" type="Button" parent="SafeMargin/Page/CompactActionBar"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 44)
-layout_mode = 2
-text = "战局信息"
-
-[node name="CancelButton" type="Button" parent="SafeMargin/Page/CompactActionBar"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 44)
-layout_mode = 2
-text = "取消选择"
-
-[node name="ConfirmButton" type="Button" parent="SafeMargin/Page/CompactActionBar"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 44)
-layout_mode = 2
-text = "确认行动"
-
-[node name="CompactStatusDrawer" type="PopupPanel" parent="."]
-unique_name_in_owner = true
-size = Vector2i(360, 560)
-
-[node name="CompactStatusHost" type="MarginContainer" parent="CompactStatusDrawer"]
-unique_name_in_owner = true
-offset_left = 12.0
-offset_top = 12.0
-offset_right = 348.0
-offset_bottom = 548.0
-
-[node name="CompactStatusPlaceholder" type="Label" parent="CompactStatusDrawer/CompactStatusHost"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "窄屏战局信息将在响应式切片接入"
-autowrap_mode = 2
-
-[node name="MarkerMenu" parent="." instance=ExtResource("5_marker")]
+[node name="MarkerMenu" parent="." instance=ExtResource("3_marker")]
 unique_name_in_owner = true
 
-[node name="ActionConfirmationPanel" parent="." instance=ExtResource("6_confirm")]
+[node name="ActionConfirmationPanel" parent="." instance=ExtResource("4_confirm")]
 unique_name_in_owner = true
 layout_mode = 1
 anchor_left = 0.5
-anchor_top = 1.0
+anchor_top = 0.5
 anchor_right = 0.5
-anchor_bottom = 1.0
+anchor_bottom = 0.5
 offset_left = -180.0
-offset_top = -208.0
+offset_top = -64.0
 offset_right = 180.0
-offset_bottom = -80.0
+offset_bottom = 64.0
 grow_horizontal = 2
-grow_vertical = 0
+grow_vertical = 2
 
 [node name="TutorialOverlayHost" type="Control" parent="."]
 layout_mode = 1
@@ -138,4 +58,4 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="TerminalDialog" parent="." instance=ExtResource("7_terminal")]
+[node name="TerminalDialog" parent="." instance=ExtResource("5_terminal")]

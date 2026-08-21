@@ -38,6 +38,21 @@ func open_for_cell(
 		available_rect.end.y - MENU_SIZE.y - SCREEN_MARGIN
 	)
 	popup(Rect2i(Vector2i(popup_position.round()), MENU_SIZE))
+	# PopupPanel may grow beyond the requested size when the active Theme adds
+	# content margins. Clamp once more against the actual native popup size.
+	var actual_position := Vector2(position)
+	var actual_size := Vector2(size)
+	actual_position.x = clampf(
+		actual_position.x,
+		available_rect.position.x + SCREEN_MARGIN,
+		available_rect.end.x - actual_size.x - SCREEN_MARGIN
+	)
+	actual_position.y = clampf(
+		actual_position.y,
+		available_rect.position.y + SCREEN_MARGIN,
+		available_rect.end.y - actual_size.y - SCREEN_MARGIN
+	)
+	position = Vector2i(actual_position.round())
 
 
 func get_cell() -> Vector2i:

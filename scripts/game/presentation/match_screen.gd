@@ -22,36 +22,30 @@ const Presenter = preload("res://scripts/game/presentation/match_screen_presente
 
 @export var allow_known_illegal_previews: bool = false
 
-@onready var _workspace: HSplitContainer = %Workspace
-@onready var _safe_margin: MarginContainer = $SafeMargin
-@onready var _board_frame: PanelContainer = %BoardFrame
-@onready var _board_viewport: SubViewportContainer = %BoardViewport
-@onready var _wide_status_host: PanelContainer = %WideStatusHost
-@onready var _status_panel: PanelContainer = %MatchStatusPanel
-@onready var _compact_status_drawer: PopupPanel = %CompactStatusDrawer
-@onready var _compact_status_host: MarginContainer = %CompactStatusHost
-@onready var _compact_placeholder: Label = %CompactStatusPlaceholder
+@onready var _hud_layout: MatchHudLayout = $MatchHudV2
+@onready var _board_frame: Control = $MatchHudV2/BoardFrame
+@onready var _board_viewport: SubViewportContainer = $MatchHudV2/BoardFrame/BoardViewport
 @onready var _marker_menu: PopupPanel = %MarkerMenu
 @onready var _confirmation_panel: PanelContainer = %ActionConfirmationPanel
-@onready var _status_button: Button = %StatusButton
-@onready var _cancel_button: Button = %CancelButton
-@onready var _confirm_button: Button = %ConfirmButton
-@onready var _turn_label: Label = $SafeMargin/Page/MatchHeader/Content/TurnLabel
-@onready var _round_label: Label = $SafeMargin/Page/MatchHeader/Content/RoundLabel
-@onready var _title_label: Label = $SafeMargin/Page/MatchHeader/Content/Title
-@onready var _turn_progress_incense: TurnProgressIncense = $SafeMargin/Page/MatchHeader/Content/TurnProgressIncense
-@onready var _return_button: Button = $SafeMargin/Page/MatchHeader/Content/ReturnButton
-@onready var _mirror_button: Button = $SafeMargin/Page/MatchHeader/Content/MirrorButton
-@onready var _wall_status: Label = $SafeMargin/Page/Workspace/WideStatusHost/MatchStatusPanel/Content/WallStatus
-@onready var _flag_status: Label = $SafeMargin/Page/Workspace/WideStatusHost/MatchStatusPanel/Content/FlagStatus
-@onready var _casualty_status: Label = $SafeMargin/Page/Workspace/WideStatusHost/MatchStatusPanel/Content/CasualtyStatus
-@onready var _selection_status: Label = $SafeMargin/Page/Workspace/WideStatusHost/MatchStatusPanel/Content/SelectionStatus
-@onready var _mode_status: Label = $SafeMargin/Page/Workspace/WideStatusHost/MatchStatusPanel/Content/ModeStatus
-@onready var _message_value: Label = $SafeMargin/Page/Workspace/WideStatusHost/MatchStatusPanel/Content/MessageValue
-@onready var _move_button: Button = $SafeMargin/Page/Workspace/WideStatusHost/MatchStatusPanel/Content/ActionMode/MoveButton
-@onready var _bombard_button: Button = $SafeMargin/Page/Workspace/WideStatusHost/MatchStatusPanel/Content/ActionMode/BombardButton
-@onready var _resurrect_button: Button = $SafeMargin/Page/Workspace/WideStatusHost/MatchStatusPanel/Content/ActionMode/ResurrectButton
-@onready var _pass_button: Button = $SafeMargin/Page/Workspace/WideStatusHost/MatchStatusPanel/Content/ActionMode/PassButton
+@onready var _turn_progress_incense: TurnProgressIncense = $MatchHudV2/TurnProgressSlot/TurnProgressIncense
+@onready var _return_button: Button = $MatchHudV2/FactionLeft/ReturnButton
+@onready var _mirror_button: Button = $MatchHudV2/FactionRight/MirrorButton
+@onready var _selection_status: Label = $MatchHudV2/ObjectiveEvents/SelectionStatus
+@onready var _message_value: Label = $MatchHudV2/ObjectiveEvents/MessageValue
+@onready var _move_button: Button = $MatchHudV2/ObjectiveEvents/ActionMode/MoveButton
+@onready var _bombard_button: Button = $MatchHudV2/ObjectiveEvents/ActionMode/BombardButton
+@onready var _resurrect_button: Button = $MatchHudV2/ObjectiveEvents/ActionMode/ResurrectButton
+@onready var _pass_button: Button = $MatchHudV2/ObjectiveEvents/ActionMode/PassButton
+@onready var _faction_left_turn: Label = $MatchHudV2/FactionLeft/FactionLeftTurn
+@onready var _faction_left_stats: Label = $MatchHudV2/FactionLeft/FactionLeftStats
+@onready var _faction_right_turn: Label = $MatchHudV2/FactionRight/FactionRightTurn
+@onready var _faction_right_stats: Label = $MatchHudV2/FactionRight/FactionRightStats
+@onready var _unit_name: Label = $MatchHudV2/UnitInfo/UnitName
+@onready var _unit_portrait_glyph: Label = $MatchHudV2/UnitInfo/UnitPortraitGlyph
+@onready var _unit_side_status: Label = $MatchHudV2/UnitInfo/UnitSideStatus
+@onready var _unit_position: Label = $MatchHudV2/UnitInfo/UnitPosition
+@onready var _unit_state: Label = $MatchHudV2/UnitInfo/UnitState
+@onready var _tactical_minimap: TacticalMinimap = $MatchHudV2/Minimap/TacticalMinimap
 @onready var _action_prompt: Label = $ActionConfirmationPanel/Content/Prompt
 @onready var _action_cancel_button: Button = $ActionConfirmationPanel/Content/Buttons/CancelButton
 @onready var _action_confirm_button: Button = $ActionConfirmationPanel/Content/Buttons/ConfirmButton
@@ -77,15 +71,13 @@ var _tutorial_step: Dictionary = {}
 
 func _ready() -> void:
 	get_viewport().size_changed.connect(_on_viewport_size_changed)
+	resized.connect(_on_match_screen_resized)
 	_board_viewport.point_activated.connect(handle_board_point)
 	_board_viewport.cancel_or_marker_requested.connect(_on_cancel_or_marker_requested)
 	_marker_menu.marker_selected.connect(_on_marker_selected)
 	_marker_menu.popup_hide.connect(_on_marker_menu_hidden)
-	_status_button.pressed.connect(_on_status_button_pressed)
 	_return_button.pressed.connect(func() -> void: return_requested.emit())
 	_mirror_button.pressed.connect(_toggle_mirror_view)
-	_cancel_button.pressed.connect(_cancel_only)
-	_confirm_button.pressed.connect(confirm_prepared_action)
 	_action_cancel_button.pressed.connect(_cancel_only)
 	_action_confirm_button.pressed.connect(confirm_prepared_action)
 	_move_button.pressed.connect(_set_action_mode.bind("move"))
@@ -97,13 +89,16 @@ func _ready() -> void:
 
 func _toggle_mirror_view() -> void:
 	_board_viewport.toggle_presentation_side()
+	_tactical_minimap.set_presentation_side(_board_viewport.get_presentation_side())
 	_update_mirror_button()
 
 
 func _update_mirror_button() -> void:
 	if not is_instance_valid(_mirror_button):
 		return
-	_mirror_button.text = "切回红方视角" if _board_viewport.get_presentation_side() == "black" else "切换黑方镜像"
+	var showing_black: bool = _board_viewport.get_presentation_side() == "black"
+	_mirror_button.text = "赤视角" if showing_black else "玄视角"
+	_mirror_button.tooltip_text = "切回赤方视角" if showing_black else "切换玄方镜像视角"
 
 
 func set_tutorial_navigation_enabled(enabled: bool) -> void:
@@ -114,9 +109,7 @@ func set_tutorial_navigation_enabled(enabled: bool) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if not event.is_action_pressed(&"ui_cancel"):
 		return
-	if _compact_status_drawer.visible:
-		_compact_status_drawer.hide()
-	elif _marker_menu.visible:
+	if _marker_menu.visible:
 		_marker_menu.hide()
 		_interaction_state = IDLE
 	else:
@@ -125,12 +118,12 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func apply_layout_for_size(requested_size: Vector2) -> void:
+	_hud_layout.apply_layout_for_size(requested_size, _tutorial_panel_width)
 	_set_compact_layout(requested_size.x < COMPACT_BREAKPOINT)
 
 
 func set_tutorial_panel_width(panel_width: float) -> void:
 	_tutorial_panel_width = maxf(0.0, panel_width)
-	_safe_margin.offset_right = -16.0 - _tutorial_panel_width
 	call_deferred("apply_layout_for_size", size)
 
 
@@ -168,17 +161,15 @@ func reset_tutorial_step_interaction() -> void:
 func render_player_view(view: Dictionary) -> void:
 	_current_view = view.duplicate(true)
 	_presentation_model = _presenter.player_view_model(view)
-	_turn_label.text = str(_presentation_model.get("turn_text", "行动方：--"))
-	_round_label.text = str(_presentation_model.get("round_text", "回合：-- / 50"))
 	_turn_progress_incense.set_turn(
 		maxi(1, int(view.get("full_round_index", 1))),
 		maxi(1, int(view.get("round_limit_public", 50))),
 		true
 	)
-	_wall_status.text = str(_presentation_model.get("wall_text", "城墙：--"))
-	_flag_status.text = str(_presentation_model.get("flag_text", "旗帜：--"))
-	_casualty_status.text = str(_presentation_model.get("casualty_text", "阵亡：--"))
 	_board_viewport.render_player_view(view)
+	_tactical_minimap.render_player_view(view, _board_viewport.get_presentation_side())
+	_update_faction_panels()
+	_update_unit_card()
 	_update_mirror_button()
 	_update_status_controls()
 
@@ -189,6 +180,9 @@ func render_session_state(_public_state: Dictionary) -> void:
 
 func render_visible_events(events: Array) -> void:
 	_last_event_model = _presenter.visible_event_model(events)
+	var event_message := str(_last_event_model.get("message_key", ""))
+	if _interaction_state == IDLE and not event_message.is_empty():
+		_message_value.text = "战报：%s" % event_message
 
 
 func render_visible_error(error: Dictionary) -> void:
@@ -301,6 +295,7 @@ func set_local_interaction_state(
 	_selected_piece_id = selected_piece_id
 	_prepared_preview_id = prepared_preview_id
 	_confirmation_panel.visible = state == CONFIRMING
+	_update_status_controls()
 
 
 func get_local_interaction_state() -> String:
@@ -359,10 +354,14 @@ func get_board_render_snapshot() -> Dictionary:
 
 
 func get_layout_snapshot() -> Dictionary:
-	var board_rect := Rect2(_board_frame.global_position - global_position, _board_frame.size)
+	var hud_snapshot: Dictionary = _hud_layout.get_layout_snapshot()
+	var board_rect: Rect2 = hud_snapshot.get(
+		"board_rect",
+		Rect2(_board_frame.global_position - global_position, _board_frame.size)
+	)
 	var main_buttons_inside: bool = true
 	var minimum_button_height: float = INF
-	for button: Button in [_status_button, _cancel_button, _confirm_button]:
+	for button: Button in [_move_button, _bombard_button, _resurrect_button, _pass_button]:
 		var button_rect := Rect2(button.global_position - global_position, button.size)
 		main_buttons_inside = main_buttons_inside \
 			and button_rect.position.x >= -0.5 \
@@ -378,6 +377,10 @@ func get_layout_snapshot() -> Dictionary:
 		"compact": _compact,
 		"screen_size": size,
 		"board_rect": board_rect,
+		"board_rect_meaning": str(hud_snapshot.get("board_rect_meaning", "")),
+		"active_profile": str(hud_snapshot.get("active_profile", "")),
+		"ui_rects": hud_snapshot.get("ui_rects", {}).duplicate(true),
+		"minimap": _tactical_minimap.get_state_snapshot(),
 		"point_spacing": _board_viewport.get_point_spacing(),
 		"main_buttons_inside": main_buttons_inside,
 		"main_button_min_height": minimum_button_height,
@@ -410,21 +413,36 @@ func get_player_view_snapshot() -> Dictionary:
 	return _current_view.duplicate(true)
 
 
+func get_hud_snapshot() -> Dictionary:
+	return {
+		"layout": _hud_layout.get_layout_snapshot(),
+		"faction_left": {
+			"turn": _faction_left_turn.text,
+			"stats": _faction_left_stats.text,
+		},
+		"faction_right": {
+			"turn": _faction_right_turn.text,
+			"stats": _faction_right_stats.text,
+		},
+		"unit": {
+			"name": _unit_name.text,
+			"glyph": _unit_portrait_glyph.text,
+			"side": _unit_side_status.text,
+			"position": _unit_position.text,
+			"state": _unit_state.text,
+		},
+		"objective": {
+			"selection": _selection_status.text,
+			"mode": _action_mode,
+			"message": _message_value.text,
+			"event": str(_last_event_model.get("message_key", "")),
+		},
+		"minimap": _tactical_minimap.get_state_snapshot(),
+	}
+
+
 func _set_compact_layout(compact: bool) -> void:
 	_compact = compact
-	_title_label.visible = not compact
-	_compact_placeholder.visible = false
-	if compact:
-		if _status_panel.get_parent() != _compact_status_host:
-			_status_panel.reparent(_compact_status_host)
-		_wide_status_host.visible = false
-		_status_button.visible = true
-	else:
-		if _status_panel.get_parent() != _wide_status_host:
-			_status_panel.reparent(_wide_status_host)
-		_wide_status_host.visible = true
-		_status_button.visible = false
-	_workspace.queue_sort()
 
 
 func _clear_local_interaction() -> void:
@@ -485,6 +503,10 @@ func _on_viewport_size_changed() -> void:
 	apply_layout_for_size(size)
 
 
+func _on_match_screen_resized() -> void:
+	apply_layout_for_size(size)
+
+
 func _on_cancel_or_marker_requested(cell: Vector2i) -> void:
 	handle_cancel_or_marker(cell, get_viewport().get_mouse_position())
 
@@ -496,11 +518,6 @@ func _on_marker_selected(cell: Vector2i, marker_type: String) -> void:
 func _on_marker_menu_hidden() -> void:
 	if _interaction_state == MARKER_MENU:
 		_interaction_state = IDLE
-
-
-func _on_status_button_pressed() -> void:
-	if _compact:
-		_compact_status_drawer.popup_centered_ratio(0.78)
 
 
 func _has_preview(preview_id: String) -> bool:
@@ -634,16 +651,108 @@ func _update_status_controls() -> void:
 		str(_current_view.get("active_side", "--")),
 		_selected_piece_id if not _selected_piece_id.is_empty() else "无",
 	]
-	_mode_status.text = "模式：%s" % {
-		"move": "普通移动",
-		"bombard": "区域炮击",
-		"resurrect": "献祭复活",
-	}.get(_action_mode, _action_mode)
 	var disabled := not _can_submit_action()
 	_move_button.disabled = disabled
 	_bombard_button.disabled = disabled
 	_resurrect_button.disabled = disabled
 	_pass_button.disabled = disabled
+	_move_button.button_pressed = _action_mode == "move"
+	_bombard_button.button_pressed = _action_mode == "bombard"
+	_resurrect_button.button_pressed = _action_mode == "resurrect"
+	_update_faction_panels()
+	_update_unit_card()
+
+
+func _update_faction_panels() -> void:
+	if not is_instance_valid(_faction_left_turn):
+		return
+	var active_side := str(_current_view.get("active_side", ""))
+	_faction_left_turn.text = "正在行动" if active_side == "red" else "等待行动"
+	_faction_right_turn.text = "正在行动" if active_side == "black" else "等待行动"
+	_faction_left_stats.text = "墙 %s · 旗 %d · 损 %d" % [
+		_side_wall_status("red"),
+		_side_flag_count("red"),
+		_side_casualty_count("red"),
+	]
+	_faction_right_stats.text = "墙 %s · 旗 %d · 损 %d" % [
+		_side_wall_status("black"),
+		_side_flag_count("black"),
+		_side_casualty_count("black"),
+	]
+
+
+func _update_unit_card() -> void:
+	if not is_instance_valid(_unit_name):
+		return
+	var piece := _piece_by_id(_selected_piece_id)
+	if piece.is_empty():
+		_unit_name.text = "未选择单位"
+		_unit_portrait_glyph.text = "—"
+		_unit_side_status.text = "阵营：—"
+		_unit_position.text = "坐标：—"
+		_unit_state.text = "状态：—"
+		return
+
+	var piece_type := str(piece.get("piece_type", "unknown"))
+	var piece_name: String = {
+		"general": "将帅", "guard": "士", "minister": "相", "elephant": "象",
+		"chariot": "车", "rook": "车", "cavalry": "骑", "horse": "马",
+		"trebuchet": "砲", "cannon": "炮", "infantry": "兵", "soldier": "兵",
+	}.get(piece_type, piece_type)
+	_unit_name.text = "%s · %s" % [piece_name, _selected_piece_id]
+	_unit_portrait_glyph.text = piece_name.left(1)
+	_unit_side_status.text = "阵营：%s" % ("赤方" if str(piece.get("side", "")) == "red" else "玄方")
+	var cell := BoardCoordinateMapper.coordinate_from_variant(piece.get("position", []))
+	_unit_position.text = "坐标：（%d, %d）" % [cell.x, cell.y] \
+		if BoardCoordinateMapper.is_authority_cell_valid(cell) else "坐标：—"
+	var state_text := "在场" if bool(piece.get("alive", false)) else "阵亡"
+	if bool(piece.get("in_reserve", false)):
+		state_text = "预备队"
+	var tag_parts := PackedStringArray()
+	for tag_value: Variant in piece.get("status_tags", []):
+		tag_parts.append(str(tag_value))
+	if not tag_parts.is_empty():
+		state_text += " · " + " / ".join(tag_parts)
+	_unit_state.text = "状态：%s" % state_text
+
+
+func _piece_by_id(piece_id: String) -> Dictionary:
+	if piece_id.is_empty():
+		return {}
+	for piece_value: Variant in _current_view.get("pieces", []):
+		if piece_value is Dictionary and str(piece_value.get("id", "")) == piece_id:
+			return piece_value
+	return {}
+
+
+func _side_wall_status(side: String) -> String:
+	for wall_value: Variant in _current_view.get("walls", []):
+		if not wall_value is Dictionary or str(wall_value.get("side", "")) != side:
+			continue
+		return {
+			"INTACT": "完好",
+			"REPAIRING": "修复",
+			"BREACHED": "破损",
+		}.get(str(wall_value.get("status", "")), "未知")
+	return "未知"
+
+
+func _side_flag_count(side: String) -> int:
+	var count := 0
+	for flag_value: Variant in _current_view.get("flags", []):
+		if flag_value is Dictionary \
+		and bool(flag_value.get("discovered", false)) \
+		and str(flag_value.get("owner", "")) == side:
+			count += 1
+	return count
+
+
+func _side_casualty_count(side: String) -> int:
+	var count := 0
+	for casualty_value: Variant in _current_view.get("casualties", []):
+		if casualty_value is Dictionary and str(casualty_value.get("side", "")) == side:
+			count += 1
+	return count
 
 
 func _tutorial_actor_matches(piece_id: String) -> bool:
