@@ -1,7 +1,7 @@
 extends SceneTree
 
 const LEVEL_SELECT_SCENE := preload("res://scenes/game/frontend/level_select.tscn")
-const OUTPUT_PATH := "res://evidence/ui/level-select-campaign-map-v1-1280x720.png"
+const OUTPUT_PATH := "res://evidence/ui/level-select-approved-master-v2-1280x720.png"
 
 
 func _init() -> void:
@@ -11,6 +11,7 @@ func _init() -> void:
 func _capture() -> void:
 	root.size = Vector2i(1280, 720)
 	var level_select := LEVEL_SELECT_SCENE.instantiate() as Control
+	level_select.load_saved_progress = false
 	root.add_child(level_select)
 	for _frame: int in 6:
 		await process_frame

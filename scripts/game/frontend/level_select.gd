@@ -3,12 +3,24 @@ extends Control
 const MAIN_MENU_SCENE := "res://scenes/game/frontend/main_menu.tscn"
 const LEVEL_CARD_SCENE := preload("res://scenes/game/frontend/level_card.tscn")
 const CATALOG := preload("res://resources/game/levels/level_catalog.tres")
+const DESIGN_SIZE := Vector2(1280.0, 720.0)
+const TUTORIAL_NODE_POSITIONS: Array[Vector2] = [
+	Vector2(102, 24), Vector2(309, 24), Vector2(514, 20),
+	Vector2(106, 156), Vector2(313, 156), Vector2(516, 156),
+	Vector2(105, 286), Vector2(319, 286), Vector2(513, 285),
+	Vector2(237, 397), Vector2(445, 397),
+]
+const CHALLENGE_NODE_POSITIONS: Array[Vector2] = [
+	Vector2(102, 24), Vector2(309, 24), Vector2(514, 20),
+]
 
 @export var test_all_levels_unlocked: bool = true
+@export var load_saved_progress: bool = true
 
+@onready var _design_canvas: Control = %DesignCanvas
 @onready var _back_button: Button = %BackButton
-@onready var _tutorial_grid: GridContainer = %TutorialGrid
-@onready var _challenge_grid: GridContainer = %ChallengeGrid
+@onready var _tutorial_grid: Control = %TutorialGrid
+@onready var _challenge_grid: Control = %ChallengeGrid
 @onready var _progress_label: Label = %ProgressLabel
 @onready var _progress_bar: ProgressBar = %TutorialProgress
 @onready var _progress_fraction: Label = %ProgressFraction
@@ -31,13 +43,14 @@ var _selected_level: LevelDefinition
 
 
 func _ready() -> void:
-	_load_progress()
+	if load_saved_progress:
+		_load_progress()
 	_reset_dialog.confirmed.connect(_clear_tutorial_progress)
 	_build_level_grid(_tutorial_grid, CATALOG.get_levels_for_category("tutorial"))
 	_build_level_grid(_challenge_grid, CATALOG.get_levels_for_category("challenge"))
 	_update_progress_label()
-	_update_grid_columns()
-	resized.connect(_update_grid_columns)
+	_layout_design_canvas()
+	resized.connect(_layout_design_canvas)
 	_show_tutorial_category()
 	_back_button.grab_focus()
 
@@ -48,13 +61,16 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 
-func _build_level_grid(grid: GridContainer, levels: Array[LevelDefinition]) -> void:
+func _build_level_grid(grid: Control, levels: Array[LevelDefinition]) -> void:
 	for child in grid.get_children():
 		grid.remove_child(child)
 		child.queue_free()
-	for level: LevelDefinition in levels:
+	var positions := TUTORIAL_NODE_POSITIONS if levels.size() > CHALLENGE_NODE_POSITIONS.size() else CHALLENGE_NODE_POSITIONS
+	for index: int in levels.size():
+		var level: LevelDefinition = levels[index]
 		var card := LEVEL_CARD_SCENE.instantiate() as LevelCard
 		grid.add_child(card)
+		card.position = positions[index]
 		_cards.append(card)
 		card.configure(level, _is_unlocked(level), test_all_levels_unlocked, bool(_completed.get(level.level_id, false)))
 		card.level_selected.connect(_select_level)
@@ -162,13 +178,15 @@ func _update_progress_label() -> void:
 	for level: LevelDefinition in tutorial_levels:
 		if bool(_completed.get(level.level_id, false)):
 			completed_tutorials += 1
-	_progress_label.text = "教学进度 %d / %d" % [completed_tutorials, tutorial_levels.size()]
+	_progress_label.text = "教学进度"
 	_progress_fraction.text = "%d / %d" % [completed_tutorials, tutorial_levels.size()]
 	_progress_bar.max_value = tutorial_levels.size()
 	_progress_bar.value = completed_tutorials
 
 
-func _update_grid_columns() -> void:
-	var column_count := 4 if size.x >= 1600.0 else (2 if size.x <= 1050.0 else 3)
-	_tutorial_grid.columns = column_count
-	_challenge_grid.columns = column_count
+func _layout_design_canvas() -> void:
+	if not is_instance_valid(_design_canvas):
+		return
+	var factor := minf(size.x / DESIGN_SIZE.x, size.y / DESIGN_SIZE.y)
+	_design_canvas.scale = Vector2.ONE * factor
+	_design_canvas.position = (size - DESIGN_SIZE * factor) * 0.5

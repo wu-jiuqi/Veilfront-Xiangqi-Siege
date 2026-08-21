@@ -1,32 +1,17 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scripts/game/frontend/level_card.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/level_select/level_node_states_v1.png" id="2_states"]
-
-[sub_resource type="AtlasTexture" id="AtlasNormal"]
-atlas = ExtResource("2_states")
-region = Rect2(0, 0, 434, 600)
-
-[sub_resource type="AtlasTexture" id="AtlasFocus"]
-atlas = ExtResource("2_states")
-region = Rect2(434, 0, 434, 600)
-
-[sub_resource type="AtlasTexture" id="AtlasSelected"]
-atlas = ExtResource("2_states")
-region = Rect2(868, 0, 436, 600)
-
-[sub_resource type="AtlasTexture" id="AtlasCompleted"]
-atlas = ExtResource("2_states")
-region = Rect2(1304, 0, 434, 600)
-
-[sub_resource type="AtlasTexture" id="AtlasLocked"]
-atlas = ExtResource("2_states")
-region = Rect2(1738, 0, 434, 600)
+[ext_resource type="Texture2D" path="res://assets/art/ui/level_select/components/node_available_v2.png" id="2_available"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/level_select/components/node_selected_v2.png" id="3_selected"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/level_select/components/node_completed_v2.png" id="4_completed"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/level_select/components/node_locked_v2.png" id="5_locked"]
 
 [node name="LevelCard" type="Control"]
-custom_minimum_size = Vector2(142, 164)
+custom_minimum_size = Vector2(92, 104)
 layout_mode = 3
 anchors_preset = 0
+offset_right = 92.0
+offset_bottom = 104.0
 script = ExtResource("1_script")
 
 [node name="NormalState" type="TextureRect" parent="."]
@@ -38,7 +23,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = SubResource("AtlasNormal")
+texture = ExtResource("2_available")
 expand_mode = 1
 stretch_mode = 5
 
@@ -52,7 +37,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = SubResource("AtlasFocus")
+texture = ExtResource("3_selected")
 expand_mode = 1
 stretch_mode = 5
 
@@ -66,7 +51,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = SubResource("AtlasSelected")
+texture = ExtResource("3_selected")
 expand_mode = 1
 stretch_mode = 5
 
@@ -80,7 +65,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = SubResource("AtlasCompleted")
+texture = ExtResource("4_completed")
 expand_mode = 1
 stretch_mode = 5
 
@@ -94,7 +79,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = SubResource("AtlasLocked")
+texture = ExtResource("5_locked")
 expand_mode = 1
 stretch_mode = 5
 
@@ -106,35 +91,33 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -48.0
-offset_top = -26.0
-offset_right = 48.0
-offset_bottom = 16.0
+offset_left = -36.0
+offset_top = -22.0
+offset_right = 36.0
+offset_bottom = 10.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_colors/font_color = Color(0.96, 0.82, 0.53, 1)
-theme_override_colors/font_outline_color = Color(0.06, 0.05, 0.04, 1)
+theme_override_colors/font_color = Color(0.94, 0.8, 0.52, 1)
+theme_override_colors/font_outline_color = Color(0.04, 0.035, 0.025, 1)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 25
+theme_override_font_sizes/font_size = 18
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="StatusLabel" type="Label" parent="."]
 unique_name_in_owner = true
+visible = false
 layout_mode = 1
 anchors_preset = 12
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -28.0
-offset_bottom = -4.0
+offset_top = -19.0
 grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 2
-theme_type_variation = &"MutedLabel"
-theme_override_font_sizes/font_size = 13
+theme_override_font_sizes/font_size = 10
 horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="NodeButton" type="Button" parent="."]
 unique_name_in_owner = true
