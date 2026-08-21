@@ -1,0 +1,133 @@
+{
+  "source": "assets/art/ui/lan_lobby/lan_lobby_full_plate_v2.png",
+  "source_size": [
+    1672,
+    941
+  ],
+  "slices": {
+    "header_frame": {
+      "source_rect": [
+        0,
+        0,
+        1672,
+        98
+      ],
+      "file": "assets/art/ui/lan_lobby/slices_v3/header_frame.png"
+    },
+    "return_button": {
+      "source_rect": [
+        3,
+        17,
+        111,
+        65
+      ],
+      "file": "assets/art/ui/lan_lobby/slices_v3/return_button.png"
+    },
+    "connection_bars": {
+      "source_rect": [
+        1477,
+        34,
+        44,
+        33
+      ],
+      "file": "assets/art/ui/lan_lobby/slices_v3/connection_bars.png"
+    },
+    "room_info_panel": {
+      "source_rect": [
+        36,
+        189,
+        345,
+        550
+      ],
+      "file": "assets/art/ui/lan_lobby/slices_v3/room_info_panel.png"
+    },
+    "copy_address_button": {
+      "source_rect": [
+        82,
+        491,
+        252,
+        65
+      ],
+      "file": "assets/art/ui/lan_lobby/slices_v3/copy_address_button.png"
+    },
+    "versus_panel": {
+      "source_rect": [
+        393,
+        189,
+        884,
+        550
+      ],
+      "file": "assets/art/ui/lan_lobby/slices_v3/versus_panel.png"
+    },
+    "rules_panel": {
+      "source_rect": [
+        1291,
+        189,
+        344,
+        550
+      ],
+      "file": "assets/art/ui/lan_lobby/slices_v3/rules_panel.png"
+    },
+    "status_panel": {
+      "source_rect": [
+        36,
+        828,
+        762,
+        91
+      ],
+      "file": "assets/art/ui/lan_lobby/slices_v3/status_panel.png"
+    },
+    "action_group": {
+      "source_rect": [
+        816,
+        828,
+        819,
+        91
+      ],
+      "file": "assets/art/ui/lan_lobby/slices_v3/action_group.png"
+    },
+    "disconnect_button": {
+      "source_rect": [
+        818,
+        830,
+        259,
+        87
+      ],
+      "file": "assets/art/ui/lan_lobby/slices_v3/disconnect_button.png"
+    },
+    "join_button": {
+      "source_rect": [
+        1096,
+        830,
+        240,
+        87
+      ],
+      "file": "assets/art/ui/lan_lobby/slices_v3/join_button.png"
+    },
+    "host_button": {
+      "source_rect": [
+        1353,
+        830,
+        280,
+        87
+      ],
+      "file": "assets/art/ui/lan_lobby/slices_v3/host_button.png"
+    },
+    "header_status_backing": {
+      "derived": "deterministic textured backing for dynamic text",
+      "file": "assets/art/ui/lan_lobby/slices_v3/header_status_backing.png"
+    },
+    "room_value_backing": {
+      "derived": "deterministic textured backing for dynamic text",
+      "file": "assets/art/ui/lan_lobby/slices_v3/room_value_backing.png"
+    },
+    "red_status_backing": {
+      "derived": "deterministic textured backing for dynamic text",
+      "file": "assets/art/ui/lan_lobby/slices_v3/red_status_backing.png"
+    },
+    "black_status_backing": {
+      "derived": "deterministic textured backing for dynamic text",
+      "file": "assets/art/ui/lan_lobby/slices_v3/black_status_backing.png"
+    }
+  }
+}

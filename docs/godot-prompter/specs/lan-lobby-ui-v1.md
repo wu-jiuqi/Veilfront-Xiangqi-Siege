@@ -1,4 +1,4 @@
-# 联机房间 UI V1 拆分规格
+# 联机房间 UI V3 切片拼装规格
 
 ## 视觉基线
 
@@ -8,24 +8,28 @@
 - 面板：复用兵马俑 HUD V2 的黑铁九宫格、旧金铆钉与低反射暗底。
 - 概念参考：`assets/art/ui/concepts/lan_lobby_reference_v2_board_metal.png`。
 
-## V2 高保真实现
+## V3 功能切片实现
 
-项目所有者否决了仅用通用九宫格和扁平颜色近似参考图的实现。V2 改为：
+项目所有者进一步否决了把完整参考图直接作为运行时背景。V3 改为：
 
-- `FullPlate`：全屏显示批准的 `lan_lobby_full_plate_v2.png`。
-- `InteractionLayer`：叠加返回、地址输入、复制、离开、加入、创建六类预置交互节点。
-- 地址默认露出母版文字；聚焦或修改时才显示动态输入遮罩。
-- 动态连接状态显示在底部左侧空白信息条，不破坏主要构图。
+- `lan_lobby_full_plate_v2.png` 仅作为离线切片母版，运行时不引用。
+- `slices_v3/` 保存顶部栏、房间信息、阵营展示、规则、状态栏、操作栏与按钮状态切片。
+- `slice_lan_lobby_art.py` 记录固定裁切坐标并生成按钮悬停、按下、禁用态和动态文字背板。
+- 动态字段由 `Label / LineEdit` 显示；所有交互由预置 `TextureButton` 提供。
+- 独立战场背景复用项目棋盘设计，前景人物保持兵马俑金属棋子质感。
 
-该方案优先保证 1280×720、16:9 下的视觉还原。需要本地化或非 16:9 后，再拆无字面板和九宫格。
+该方案优先保证 1280×720、16:9 下的视觉还原，同时允许单独替换任一功能模块。
 
 ## 预置节点拆分
 
 | 区域 | Godot 结构 | 职责 |
 |---|---|---|
-| 视觉母版 | `LobbyChrome/FullPlate` | 完整金属边框、棋子裁切、静态标题和规则文字 |
-| 交互层 | `LobbyChrome/InteractionLayer` | 地址编辑、复制、返回及底部操作热区 |
-| 动态状态 | `InteractionLayer/StatusValue` | 连接、失败和复制反馈 |
+| 顶部栏 | `HeaderFrame + ReturnToMainMenuButton + ConnectionStatus` | 标题、返回、动态连接质量 |
+| 房间信息 | `RoomInfoPanel + RoomCodeValue + AddressInput` | 动态房间代号和真实局域网地址 |
+| 阵营展示 | `VersusPanel + RedReadyState + BlackPlayerName` | 双方武将与动态席位状态 |
+| 战局规则 | `RulesPanel` | 当前静态规则说明；可独立替换 |
+| 状态栏 | `StatusPanel + StatusValue` | 连接、失败和复制反馈 |
+| 操作栏 | `ActionGroup + 三个 TextureButton` | 离开、加入、创建及完整按钮状态 |
 | 对局切换 | `NetworkBoard` | 收到玩家视图后隐藏房间外壳并显示共享棋盘 |
 
 ## 交互状态
@@ -34,12 +38,13 @@
 - 创建中：赤方状态变为“房主 · 已开房”，地址和端口锁定。
 - 加入中：玄方状态变为“连接中”。
 - 席位分配：显示“赤方（房主）”或“玄方（加入者）”。
-- 收到玩家视图：切换到现有 LAN 棋盘；可通过“断开并返回房间”回到本界面。
+- 房主创建后：继续留在房间等待玄方，不因收到自己的初始玩家视图而提前进入棋盘。
+- 双方就绪：切换到现有 LAN 棋盘；可通过“断开并返回房间”回到本界面。
 - 复制地址：复制 `IP:端口`，按钮即时反馈“已复制房间地址”。
 
 ## 实现约束
 
-- UI 由场景内预置 `Control / TextureRect / Button / LineEdit / Label` 组成。
-- 不从概念图裁切文字、按钮或棋子；概念图仅用于信息层级评审。
+- UI 由场景内预置 `Control / TextureRect / TextureButton / LineEdit / Label` 组成。
+- 批准母版允许作为离线裁切源，但不得作为运行时整屏底板。
 - 联机房间脚本不访问 `FullState` 或规则核心，保持玩家可见信息边界。
-- 基准分辨率为 1280×720，主区采用锚点、边距容器与横向容器布局。
+- 基准分辨率为 1280×720；非 16:9 适配作为后续独立任务处理。

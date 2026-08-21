@@ -1,7 +1,7 @@
 extends SceneTree
 
 const LOBBY_SCENE: PackedScene = preload("res://scenes/prototype/network/lan_lobby.tscn")
-const OUTPUT_PATH: String = "res://evidence/ui/lan-lobby-board-metal-v1-1280x720.png"
+const OUTPUT_PATH: String = "res://evidence/ui/lan-lobby-sliced-v3-1280x720.png"
 
 
 func _init() -> void:

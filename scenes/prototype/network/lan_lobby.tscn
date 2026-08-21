@@ -1,38 +1,43 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=38 format=3]
 
 [ext_resource type="Script" path="res://scripts/prototype/network/lan_lobby.gd" id="1_lobby"]
 [ext_resource type="PackedScene" path="res://scenes/prototype/network/lan_network_session.tscn" id="2_network"]
 [ext_resource type="PackedScene" path="res://scenes/game/ui/ui_theme_binder.tscn" id="3_binder"]
 [ext_resource type="PackedScene" path="res://scenes/prototype/gate1_logic_lab.tscn" id="4_board"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/lan_lobby_full_plate_v2.png" id="5_plate"]
-[ext_resource type="FontFile" path="res://assets/fonts/ramega_zhang_qingping/ramega_zhang_qingping_xingshu.ttf" id="6_display_font"]
-[ext_resource type="FontFile" path="res://assets/fonts/noto_sans_sc/NotoSansSC-VariableFont_wght.ttf" id="7_input_font"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/lan_lobby_board_backdrop_v1.png" id="5_backdrop"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/header_frame.png" id="6_header"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/return_button.png" id="7_return"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/return_button_hover.png" id="8_return_hover"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/return_button_pressed.png" id="9_return_pressed"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/connection_bars.png" id="10_bars"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/room_info_panel.png" id="11_room"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/copy_address_button.png" id="12_copy"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/copy_address_button_hover.png" id="13_copy_hover"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/copy_address_button_pressed.png" id="14_copy_pressed"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/versus_panel.png" id="15_versus"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/rules_panel.png" id="16_rules"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/status_panel.png" id="17_status"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/action_group.png" id="18_actions"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/disconnect_button.png" id="19_disconnect"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/disconnect_button_hover.png" id="20_disconnect_hover"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/disconnect_button_pressed.png" id="21_disconnect_pressed"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/disconnect_button_disabled.png" id="22_disconnect_disabled"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/join_button.png" id="23_join"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/join_button_hover.png" id="24_join_hover"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/join_button_pressed.png" id="25_join_pressed"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/join_button_disabled.png" id="26_join_disabled"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/host_button.png" id="27_host"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/host_button_hover.png" id="28_host_hover"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/host_button_pressed.png" id="29_host_pressed"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/host_button_disabled.png" id="30_host_disabled"]
+[ext_resource type="FontFile" path="res://assets/fonts/ramega_zhang_qingping/ramega_zhang_qingping_xingshu.ttf" id="31_display_font"]
+[ext_resource type="FontFile" path="res://assets/fonts/noto_sans_sc/NotoSansSC-VariableFont_wght.ttf" id="32_ui_font"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/header_status_backing.png" id="33_header_backing"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/room_value_backing.png" id="34_room_backing"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/red_status_backing.png" id="35_red_backing"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/black_status_backing.png" id="36_black_backing"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleEmpty"]
-
-[sub_resource type="StyleBoxFlat" id="StyleFocus"]
-bg_color = Color(0.53, 0.38, 0.12, 0.12)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.9, 0.7, 0.28, 0.95)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-expand_margin_left = 2.0
-expand_margin_top = 2.0
-expand_margin_right = 2.0
-expand_margin_bottom = 2.0
-
-[sub_resource type="StyleBoxFlat" id="StylePressed"]
-bg_color = Color(0.6, 0.43, 0.12, 0.2)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.84, 0.62, 0.23, 0.9)
 
 [node name="LanLobby" type="Control"]
 layout_mode = 3
@@ -56,8 +61,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="FullPlate" type="TextureRect" parent="LobbyChrome"]
-unique_name_in_owner = true
+[node name="BattlefieldBackdrop" type="TextureRect" parent="LobbyChrome"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -65,197 +69,363 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource("5_plate")
+texture = ExtResource("5_backdrop")
+expand_mode = 1
+stretch_mode = 6
+modulate = Color(0.56, 0.53, 0.48, 1)
+
+[node name="BackdropShade" type="ColorRect" parent="LobbyChrome"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.015, 0.018, 0.017, 0.34)
+
+[node name="HeaderFrame" type="TextureRect" parent="LobbyChrome"]
+layout_mode = 0
+offset_right = 1280.0
+offset_bottom = 75.0
+mouse_filter = 2
+texture = ExtResource("6_header")
 expand_mode = 1
 stretch_mode = 0
 
-[node name="InteractionLayer" type="Control" parent="LobbyChrome"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="ReturnToMainMenuButton" type="Button" parent="LobbyChrome/InteractionLayer"]
-unique_name_in_owner = true
+[node name="HeaderStatusBacking" type="TextureRect" parent="LobbyChrome"]
 layout_mode = 0
-offset_left = 18.0
+offset_left = 1124.0
 offset_top = 16.0
-offset_right = 91.0
-offset_bottom = 67.0
-mouse_default_cursor_shape = 2
-theme_override_styles/normal = SubResource("StyleEmpty")
-theme_override_styles/hover = SubResource("StyleFocus")
-theme_override_styles/pressed = SubResource("StylePressed")
-theme_override_styles/disabled = SubResource("StyleEmpty")
-theme_override_styles/focus = SubResource("StyleFocus")
-
-[node name="AddressMask" type="ColorRect" parent="LobbyChrome/InteractionLayer"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 0
-offset_left = 70.0
-offset_top = 337.0
-offset_right = 274.0
-offset_bottom = 376.0
+offset_right = 1269.0
+offset_bottom = 61.0
 mouse_filter = 2
-color = Color(0.035, 0.039, 0.037, 0.98)
+texture = ExtResource("33_header_backing")
+expand_mode = 1
+stretch_mode = 0
 
-[node name="AddressInput" type="LineEdit" parent="LobbyChrome/InteractionLayer"]
+[node name="ConnectionBars" type="TextureRect" parent="LobbyChrome"]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 70.0
-offset_top = 337.0
-offset_right = 274.0
-offset_bottom = 376.0
+offset_left = 1131.0
+offset_top = 27.0
+offset_right = 1165.0
+offset_bottom = 52.0
+mouse_filter = 2
+texture = ExtResource("10_bars")
+expand_mode = 1
+stretch_mode = 0
+
+[node name="ConnectionStatus" type="Label" parent="LobbyChrome"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 1167.0
+offset_top = 20.0
+offset_right = 1262.0
+offset_bottom = 59.0
+mouse_filter = 2
+text = "等待联机"
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_colors/font_color = Color(0.46, 0.62, 0.42, 1)
+theme_override_fonts/font = ExtResource("31_display_font")
+theme_override_font_sizes/font_size = 19
+
+[node name="ReturnToMainMenuButton" type="TextureButton" parent="LobbyChrome"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 2.0
+offset_top = 13.0
+offset_right = 87.0
+offset_bottom = 63.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("7_return")
+texture_pressed = ExtResource("9_return_pressed")
+texture_hover = ExtResource("8_return_hover")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="RoomInfoPanel" type="TextureRect" parent="LobbyChrome"]
+layout_mode = 0
+offset_left = 28.0
+offset_top = 145.0
+offset_right = 292.0
+offset_bottom = 566.0
+mouse_filter = 2
+texture = ExtResource("11_room")
+expand_mode = 1
+stretch_mode = 0
+
+[node name="RoomCodeBacking" type="TextureRect" parent="LobbyChrome"]
+layout_mode = 0
+offset_left = 54.0
+offset_top = 218.0
+offset_right = 268.0
+offset_bottom = 270.0
+mouse_filter = 2
+texture = ExtResource("34_room_backing")
+expand_mode = 1
+stretch_mode = 0
+
+[node name="RoomCodeValue" type="Label" parent="LobbyChrome"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 52.0
+offset_top = 216.0
+offset_right = 270.0
+offset_bottom = 270.0
+mouse_filter = 2
+text = "雾疆-0771"
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_colors/font_color = Color(0.82, 0.76, 0.63, 1)
+theme_override_fonts/font = ExtResource("31_display_font")
+theme_override_font_sizes/font_size = 28
+
+[node name="AddressBacking" type="TextureRect" parent="LobbyChrome"]
+layout_mode = 0
+offset_left = 53.0
+offset_top = 329.0
+offset_right = 268.0
+offset_bottom = 371.0
+mouse_filter = 2
+texture = ExtResource("34_room_backing")
+expand_mode = 1
+stretch_mode = 0
+
+[node name="AddressInput" type="LineEdit" parent="LobbyChrome"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 55.0
+offset_top = 330.0
+offset_right = 266.0
+offset_bottom = 369.0
 mouse_default_cursor_shape = 1
 text = "192.168.1.20:27771"
 alignment = 1
-placeholder_text = "192.168.1.20:27771"
-theme_override_colors/font_color = Color(0.79, 0.72, 0.56, 0)
-theme_override_colors/font_selected_color = Color(0.12, 0.1, 0.06, 1)
-theme_override_colors/selection_color = Color(0.76, 0.59, 0.28, 0.8)
-theme_override_fonts/font = ExtResource("7_input_font")
+placeholder_text = "IP 地址:端口"
+theme_override_colors/font_color = Color(0.82, 0.76, 0.63, 1)
+theme_override_colors/font_selected_color = Color(0.11, 0.09, 0.05, 1)
+theme_override_colors/selection_color = Color(0.72, 0.52, 0.2, 0.85)
+theme_override_fonts/font = ExtResource("32_ui_font")
 theme_override_font_sizes/font_size = 18
 theme_override_styles/normal = SubResource("StyleEmpty")
 theme_override_styles/focus = SubResource("StyleEmpty")
 theme_override_styles/read_only = SubResource("StyleEmpty")
 
-[node name="PortInput" type="SpinBox" parent="LobbyChrome/InteractionLayer"]
+[node name="PortInput" type="SpinBox" parent="LobbyChrome"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
-offset_left = 70.0
-offset_top = 380.0
-offset_right = 250.0
-offset_bottom = 420.0
+offset_left = 52.0
+offset_top = 371.0
+offset_right = 265.0
+offset_bottom = 405.0
 min_value = 1024.0
 max_value = 65535.0
 value = 27771.0
 allow_greater = false
 allow_lesser = false
 
-[node name="AddressPreview" type="Label" parent="LobbyChrome/InteractionLayer"]
+[node name="AddressPreview" type="Label" parent="LobbyChrome"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
-offset_left = 70.0
-offset_top = 380.0
-offset_right = 274.0
-offset_bottom = 414.0
+offset_left = 52.0
+offset_top = 371.0
+offset_right = 265.0
+offset_bottom = 405.0
 text = "192.168.1.20:27771"
 
-[node name="CopyAddressButton" type="Button" parent="LobbyChrome/InteractionLayer"]
+[node name="CopyAddressButton" type="TextureButton" parent="LobbyChrome"]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 61.0
-offset_top = 377.0
+offset_left = 63.0
+offset_top = 376.0
 offset_right = 256.0
-offset_bottom = 425.0
+offset_bottom = 426.0
 mouse_default_cursor_shape = 2
-theme_override_styles/normal = SubResource("StyleEmpty")
-theme_override_styles/hover = SubResource("StyleFocus")
-theme_override_styles/pressed = SubResource("StylePressed")
-theme_override_styles/disabled = SubResource("StyleEmpty")
-theme_override_styles/focus = SubResource("StyleFocus")
+texture_normal = ExtResource("12_copy")
+texture_pressed = ExtResource("14_copy_pressed")
+texture_hover = ExtResource("13_copy_hover")
+ignore_texture_size = true
+stretch_mode = 0
 
-[node name="StatusValue" type="Label" parent="LobbyChrome/InteractionLayer"]
-unique_name_in_owner = true
-visible = false
+[node name="VersusPanel" type="TextureRect" parent="LobbyChrome"]
 layout_mode = 0
-offset_left = 72.0
-offset_top = 644.0
-offset_right = 595.0
-offset_bottom = 700.0
-text = "等待创建或加入房间"
+offset_left = 301.0
+offset_top = 145.0
+offset_right = 978.0
+offset_bottom = 566.0
+mouse_filter = 2
+texture = ExtResource("15_versus")
+expand_mode = 1
+stretch_mode = 0
+
+[node name="RedStateBacking" type="TextureRect" parent="LobbyChrome"]
+layout_mode = 0
+offset_left = 318.0
+offset_top = 504.0
+offset_right = 635.0
+offset_bottom = 548.0
+mouse_filter = 2
+texture = ExtResource("35_red_backing")
+expand_mode = 1
+stretch_mode = 0
+
+[node name="RedReadyState" type="Label" parent="LobbyChrome"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 320.0
+offset_top = 500.0
+offset_right = 633.0
+offset_bottom = 549.0
+mouse_filter = 2
+text = "房主 · 等待创建"
+horizontal_alignment = 1
 vertical_alignment = 1
-theme_override_colors/font_color = Color(0.78, 0.68, 0.45, 1)
-theme_override_fonts/font = ExtResource("6_display_font")
-theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.92, 0.68, 0.28, 1)
+theme_override_fonts/font = ExtResource("31_display_font")
+theme_override_font_sizes/font_size = 21
 
-[node name="SeatValue" type="Label" parent="LobbyChrome/InteractionLayer"]
-unique_name_in_owner = true
-visible = false
+[node name="BlackStateBacking" type="TextureRect" parent="LobbyChrome"]
 layout_mode = 0
-offset_left = 72.0
-offset_top = 675.0
-offset_right = 300.0
-offset_bottom = 710.0
-text = "未分配"
+offset_left = 641.0
+offset_top = 504.0
+offset_right = 958.0
+offset_bottom = 548.0
+mouse_filter = 2
+texture = ExtResource("36_black_backing")
+expand_mode = 1
+stretch_mode = 0
 
-[node name="RedReadyState" type="Label" parent="LobbyChrome/InteractionLayer"]
+[node name="BlackPlayerName" type="Label" parent="LobbyChrome"]
 unique_name_in_owner = true
-visible = false
 layout_mode = 0
-offset_left = 390.0
-offset_top = 508.0
-offset_right = 620.0
-offset_bottom = 550.0
-text = "房主 · 已就绪"
-
-[node name="BlackPlayerName" type="Label" parent="LobbyChrome/InteractionLayer"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 0
-offset_left = 760.0
-offset_top = 460.0
-offset_right = 990.0
-offset_bottom = 500.0
+offset_left = 643.0
+offset_top = 500.0
+offset_right = 956.0
+offset_bottom = 549.0
+mouse_filter = 2
 text = "等待同袍加入…"
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_colors/font_color = Color(0.92, 0.68, 0.28, 1)
+theme_override_fonts/font = ExtResource("31_display_font")
+theme_override_font_sizes/font_size = 21
 
-[node name="BlackReadyState" type="Label" parent="LobbyChrome/InteractionLayer"]
+[node name="BlackReadyState" type="Label" parent="LobbyChrome"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
-offset_left = 760.0
-offset_top = 508.0
-offset_right = 990.0
-offset_bottom = 550.0
+offset_left = 643.0
+offset_top = 500.0
+offset_right = 956.0
+offset_bottom = 549.0
 text = "玄方席位 · 空缺"
 
-[node name="DisconnectButton" type="Button" parent="LobbyChrome/InteractionLayer"]
+[node name="RulesPanel" type="TextureRect" parent="LobbyChrome"]
+layout_mode = 0
+offset_left = 989.0
+offset_top = 145.0
+offset_right = 1252.0
+offset_bottom = 566.0
+mouse_filter = 2
+texture = ExtResource("16_rules")
+expand_mode = 1
+stretch_mode = 0
+
+[node name="StatusPanel" type="TextureRect" parent="LobbyChrome"]
+layout_mode = 0
+offset_left = 28.0
+offset_top = 634.0
+offset_right = 611.0
+offset_bottom = 704.0
+mouse_filter = 2
+texture = ExtResource("17_status")
+expand_mode = 1
+stretch_mode = 0
+
+[node name="StatusValue" type="Label" parent="LobbyChrome"]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 628.0
+offset_left = 96.0
+offset_top = 641.0
+offset_right = 600.0
+offset_bottom = 698.0
+mouse_filter = 2
+text = "等待创建或加入房间"
+vertical_alignment = 1
+theme_override_colors/font_color = Color(0.77, 0.7, 0.55, 1)
+theme_override_fonts/font = ExtResource("32_ui_font")
+theme_override_font_sizes/font_size = 17
+
+[node name="SeatValue" type="Label" parent="LobbyChrome"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 69.0
+offset_top = 641.0
+offset_right = 300.0
+offset_bottom = 698.0
+text = "未分配"
+
+[node name="ActionGroup" type="TextureRect" parent="LobbyChrome"]
+layout_mode = 0
+offset_left = 625.0
 offset_top = 634.0
-offset_right = 821.0
+offset_right = 1252.0
+offset_bottom = 704.0
+mouse_filter = 2
+texture = ExtResource("18_actions")
+expand_mode = 1
+stretch_mode = 0
+
+[node name="DisconnectButton" type="TextureButton" parent="LobbyChrome"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 626.0
+offset_top = 635.0
+offset_right = 824.0
 offset_bottom = 702.0
 mouse_default_cursor_shape = 2
 disabled = true
-theme_override_styles/normal = SubResource("StyleEmpty")
-theme_override_styles/hover = SubResource("StyleFocus")
-theme_override_styles/pressed = SubResource("StylePressed")
-theme_override_styles/disabled = SubResource("StyleEmpty")
-theme_override_styles/focus = SubResource("StyleFocus")
+texture_normal = ExtResource("19_disconnect")
+texture_pressed = ExtResource("21_disconnect_pressed")
+texture_hover = ExtResource("20_disconnect_hover")
+texture_disabled = ExtResource("22_disconnect_disabled")
+ignore_texture_size = true
+stretch_mode = 0
 
-[node name="JoinButton" type="Button" parent="LobbyChrome/InteractionLayer"]
+[node name="JoinButton" type="TextureButton" parent="LobbyChrome"]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 838.0
-offset_top = 634.0
-offset_right = 1022.0
+offset_left = 839.0
+offset_top = 635.0
+offset_right = 1023.0
 offset_bottom = 702.0
 mouse_default_cursor_shape = 2
-theme_override_styles/normal = SubResource("StyleEmpty")
-theme_override_styles/hover = SubResource("StyleFocus")
-theme_override_styles/pressed = SubResource("StylePressed")
-theme_override_styles/disabled = SubResource("StyleEmpty")
-theme_override_styles/focus = SubResource("StyleFocus")
+texture_normal = ExtResource("23_join")
+texture_pressed = ExtResource("25_join_pressed")
+texture_hover = ExtResource("24_join_hover")
+texture_disabled = ExtResource("26_join_disabled")
+ignore_texture_size = true
+stretch_mode = 0
 
-[node name="HostButton" type="Button" parent="LobbyChrome/InteractionLayer"]
+[node name="HostButton" type="TextureButton" parent="LobbyChrome"]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 1038.0
-offset_top = 632.0
-offset_right = 1246.0
-offset_bottom = 704.0
+offset_left = 1036.0
+offset_top = 635.0
+offset_right = 1250.0
+offset_bottom = 702.0
 mouse_default_cursor_shape = 2
-theme_override_styles/normal = SubResource("StyleEmpty")
-theme_override_styles/hover = SubResource("StyleFocus")
-theme_override_styles/pressed = SubResource("StylePressed")
-theme_override_styles/disabled = SubResource("StyleEmpty")
-theme_override_styles/focus = SubResource("StyleFocus")
+texture_normal = ExtResource("27_host")
+texture_pressed = ExtResource("29_host_pressed")
+texture_hover = ExtResource("28_host_hover")
+texture_disabled = ExtResource("30_host_disabled")
+ignore_texture_size = true
+stretch_mode = 0
 
 [node name="NetworkBoard" parent="." instance=ExtResource("4_board")]
 visible = false
