@@ -58,6 +58,10 @@ func _run() -> void:
 		"formal board border blocks pointer input before it reaches the board surface"
 	)
 	_expect(
+		input_surface.size.is_equal_approx(board_viewport.size),
+		"formal board screen input surface does not cover the exported viewport"
+	)
+	_expect(
 		str(snapshot.get("map_background_path", "")) == EXPECTED_MAP_PATH,
 		"formal match did not bind the approved board artwork"
 	)

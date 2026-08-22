@@ -236,6 +236,7 @@ func get_container_position_for_authority_cell(cell: Vector2i) -> Vector2:
 
 
 func _sync_layout() -> void:
+	_screen_input_surface.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var viewport_size := Vector2i(maxi(1, roundi(size.x)), maxi(1, roundi(size.y)))
 	_fit_zoom = maxf((float(viewport_size.x) - SCREEN_MARGIN) / BOARD_WORLD_SIZE.x, 0.05)
 	if BoardCoordinateMapper.is_authority_cell_valid(_focused_cell):
