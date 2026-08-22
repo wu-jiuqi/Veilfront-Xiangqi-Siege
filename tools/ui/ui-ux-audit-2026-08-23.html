@@ -1,0 +1,978 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>雾疆：九路烽棋 · UI 体验审查</title>
+  <style>
+    @font-face {
+      font-family: "Veilfront UI";
+      src: url("../../assets/fonts/noto_sans_sc/NotoSansSC-VariableFont_wght.ttf") format("truetype");
+      font-weight: 100 900;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "Veilfront Display";
+      src: url("../../assets/fonts/ramega_zhang_qingping/ramega_zhang_qingping_xingshu.ttf") format("truetype");
+      font-weight: 400;
+      font-display: swap;
+    }
+
+    :root {
+      color-scheme: dark;
+      --ink: #080b0b;
+      --ink-soft: #0f1413;
+      --panel: rgba(17, 20, 19, .96);
+      --panel-2: rgba(24, 27, 25, .94);
+      --line: #4d4434;
+      --line-bright: #9b7a3e;
+      --gold: #e8bc62;
+      --gold-soft: #ba914a;
+      --text: #e8dec5;
+      --muted: #afa58f;
+      --disabled: #6e6a61;
+      --red: #b34c36;
+      --red-bright: #e07154;
+      --green: #5f8c70;
+      --green-bright: #83b58e;
+      --focus: #f6ce75;
+      --shadow: 0 18px 48px rgba(0, 0, 0, .42);
+      --radius: 4px;
+      --ease: cubic-bezier(.2, .8, .2, 1);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { background: var(--ink); }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100vh;
+      font-family: "Veilfront UI", system-ui, sans-serif;
+      color: var(--text);
+      background:
+        linear-gradient(rgba(5, 8, 8, .93), rgba(5, 8, 8, .96)),
+        url("../../assets/art/backgrounds/battle_command_tent_background_v1.png") center / cover fixed;
+    }
+
+    button, select, input { font: inherit; }
+
+    button { color: inherit; }
+
+    .app-shell {
+      width: min(1580px, 100%);
+      margin: 0 auto;
+      min-height: 100vh;
+      border-inline: 1px solid rgba(155, 122, 62, .18);
+      background: rgba(6, 9, 9, .76);
+      box-shadow: 0 0 90px rgba(0, 0, 0, .5);
+    }
+
+    .topbar {
+      min-height: 84px;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(10, 13, 12, .96);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(18px);
+    }
+
+    .brand { display: flex; align-items: center; gap: 16px; min-width: 0; }
+
+    .brand-seal {
+      width: 44px;
+      height: 52px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--gold-soft);
+      color: var(--gold);
+      background: #161310;
+      box-shadow: inset 0 0 0 4px #0b0d0c, inset 0 0 0 5px #574526;
+      font-family: "Veilfront Display", serif;
+      font-size: 23px;
+      flex: 0 0 auto;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      margin-bottom: 2px;
+      font-family: "Veilfront Display", serif;
+      font-size: clamp(27px, 2.5vw, 38px);
+      font-weight: 400;
+      color: var(--gold);
+      letter-spacing: .08em;
+    }
+
+    .brand p { margin: 0; color: var(--muted); font-size: 14px; }
+
+    .top-actions { display: flex; align-items: center; gap: 10px; }
+
+    .motion-toggle {
+      min-height: 44px;
+      padding: 8px 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid var(--line);
+      background: #111514;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .motion-toggle input { width: 18px; height: 18px; accent-color: var(--gold); }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 230px minmax(0, 1fr);
+      min-height: calc(100vh - 84px);
+    }
+
+    .sidebar {
+      padding: 22px 14px;
+      border-right: 1px solid var(--line);
+      background: rgba(12, 15, 14, .9);
+    }
+
+    .sidebar-title {
+      margin: 4px 10px 12px;
+      color: #8c826e;
+      font-size: 12px;
+      letter-spacing: .16em;
+    }
+
+    .nav-list { display: grid; gap: 6px; }
+
+    .nav-button {
+      width: 100%;
+      min-height: 46px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 1px solid transparent;
+      border-left: 3px solid transparent;
+      background: transparent;
+      color: var(--muted);
+      text-align: left;
+      cursor: pointer;
+      transition: color 140ms var(--ease), background 140ms var(--ease), border-color 140ms var(--ease), transform 140ms var(--ease);
+    }
+
+    .nav-button:hover { color: var(--text); background: #171b19; transform: translateX(2px); }
+    .nav-button[aria-selected="true"] { color: var(--gold); background: #191812; border-color: #3a3428; border-left-color: var(--gold); }
+    .nav-button span:last-child { font-size: 12px; color: #756b58; }
+
+    main { min-width: 0; padding: 30px clamp(18px, 3vw, 42px) 72px; }
+
+    .screen { display: none; animation: panel-in 180ms var(--ease); }
+    .screen.active { display: block; }
+
+    @keyframes panel-in {
+      from { opacity: 0; transform: translateY(7px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .section-head h2 {
+      margin-bottom: 6px;
+      font-size: clamp(24px, 2.3vw, 34px);
+      font-weight: 650;
+      letter-spacing: .03em;
+    }
+
+    .section-head p { margin: 0; color: var(--muted); max-width: 760px; line-height: 1.7; }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 4px 9px;
+      border: 1px solid #4d4434;
+      background: #171713;
+      color: #c6ae75;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      border: 1px solid var(--line);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .summary-item { min-height: 138px; padding: 22px; border-right: 1px solid var(--line); }
+    .summary-item:last-child { border-right: 0; }
+    .summary-item strong { display: block; font-size: 34px; color: var(--gold); margin-bottom: 4px; }
+    .summary-item b { display: block; font-size: 16px; margin-bottom: 8px; }
+    .summary-item span { color: var(--muted); font-size: 13px; line-height: 1.55; }
+
+    .verdict {
+      margin-top: 22px;
+      padding: 28px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 290px;
+      gap: 28px;
+      border: 1px solid var(--line-bright);
+      background: linear-gradient(120deg, rgba(63, 44, 19, .44), rgba(16, 19, 18, .98) 58%);
+      box-shadow: var(--shadow);
+    }
+
+    .verdict h3 { color: var(--gold); font-size: 22px; margin-bottom: 12px; }
+    .verdict p { color: var(--text); line-height: 1.8; margin: 0; }
+    .verdict-actions { display: grid; gap: 10px; align-content: center; }
+
+    .priority-list { margin-top: 24px; border-top: 1px solid var(--line); }
+
+    .priority-row {
+      display: grid;
+      grid-template-columns: 70px 160px minmax(0, 1fr) 220px;
+      gap: 18px;
+      align-items: start;
+      padding: 18px 8px;
+      border-bottom: 1px solid #302c24;
+    }
+
+    .priority { font-weight: 750; color: var(--red-bright); }
+    .priority.p1 { color: var(--gold); }
+    .priority.p2 { color: var(--green-bright); }
+    .priority-row b { font-size: 15px; }
+    .priority-row p, .priority-row span { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.65; }
+
+    .compare-switch { display: flex; gap: 8px; }
+
+    .ghost-button, .strong-button, .secondary-button, .danger-button {
+      min-height: 48px;
+      padding: 10px 18px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: transform 140ms var(--ease), color 140ms var(--ease), border-color 140ms var(--ease), filter 140ms var(--ease), background 140ms var(--ease);
+    }
+
+    .ghost-button {
+      border: 1px solid var(--line);
+      background: #111514;
+      color: var(--muted);
+    }
+    .ghost-button:hover { color: var(--text); border-color: #766647; }
+
+    .strong-button {
+      border: 1px solid #b68c43;
+      background: linear-gradient(#352719, #17130e);
+      color: #f0d28f;
+      box-shadow: inset 0 0 0 3px #0e0f0e, inset 0 0 0 4px #63502e, 0 7px 20px rgba(0,0,0,.28);
+      font-weight: 650;
+      letter-spacing: .06em;
+    }
+    .strong-button::after {
+      content: "";
+      position: absolute;
+      inset: -30% auto -30% -30%;
+      width: 28%;
+      background: linear-gradient(90deg, transparent, rgba(255, 221, 144, .3), transparent);
+      transform: skewX(-20deg) translateX(-160%);
+      transition: transform 360ms var(--ease);
+      pointer-events: none;
+    }
+    .strong-button:hover { transform: translateY(-2px) scale(1.02); filter: brightness(1.14); }
+    .strong-button:hover::after { transform: skewX(-20deg) translateX(560%); }
+    .strong-button:active { transform: translateY(1px) scale(.965); filter: brightness(.88); transition-duration: 80ms; }
+
+    .secondary-button { border: 1px solid #5d5547; background: #171a18; color: var(--text); }
+    .secondary-button:hover { transform: translateY(-1px); border-color: #9c8459; background: #1d211e; }
+    .secondary-button:active { transform: translateY(1px) scale(.975); }
+
+    .danger-button { border: 1px solid #8a493d; background: #251412; color: #f0afa0; }
+    .danger-button:hover { transform: translateY(-1px); border-color: var(--red-bright); background: #321714; }
+    .danger-button:active { transform: translateY(1px) scale(.965); }
+
+    button:focus-visible, input:focus-visible, select:focus-visible {
+      outline: 2px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    .evidence-frame, .prototype-frame {
+      border: 1px solid var(--line-bright);
+      background: #050707;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .frame-label {
+      min-height: 42px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+      background: #131615;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .evidence-frame img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+
+    .audit-notes {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      border: 1px solid var(--line);
+      background: var(--line);
+    }
+
+    .note { padding: 16px; background: #111514; }
+    .note b { color: var(--gold); display: block; margin-bottom: 6px; }
+    .note span { color: var(--muted); font-size: 14px; line-height: 1.6; }
+
+    .game-stage {
+      height: min(600px, calc(100vh - 340px));
+      min-height: 500px;
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(rgba(4, 7, 7, .32), rgba(4, 6, 6, .55)),
+        url("../../assets/art/backgrounds/battle_command_tent_background_v1.png") center / cover;
+    }
+
+    .faction-bar {
+      position: absolute;
+      top: 18px;
+      width: 250px;
+      height: 54px;
+      padding: 8px 14px;
+      border: 1px solid #6a5a3d;
+      background: rgba(14, 16, 15, .96);
+      box-shadow: inset 0 0 0 3px rgba(135, 104, 54, .18);
+    }
+    .faction-bar.red { left: 22px; border-left: 5px solid var(--red); }
+    .faction-bar.black { right: 22px; border-right: 5px solid var(--green); text-align: right; }
+    .faction-bar strong { display: block; font-size: 16px; color: var(--gold); }
+    .faction-bar span { color: var(--muted); font-size: 14px; }
+
+    .hud-grid {
+      position: absolute;
+      inset: 86px 22px 72px;
+      display: grid;
+      grid-template-columns: 210px minmax(440px, 1fr) 270px;
+      gap: 18px;
+    }
+
+    .hud-column { display: grid; gap: 14px; min-height: 0; align-content: start; }
+
+    .hud-panel {
+      border: 1px solid #66583e;
+      background: rgba(13, 16, 15, .95);
+      box-shadow: inset 0 0 0 3px rgba(109, 88, 49, .13), 0 9px 24px rgba(0,0,0,.28);
+    }
+
+    .hud-title {
+      min-height: 42px;
+      display: grid;
+      place-items: center;
+      border-bottom: 1px solid #55482f;
+      color: var(--gold);
+      font-size: 17px;
+      letter-spacing: .08em;
+      background: #191b18;
+    }
+
+    .mini-map { height: 220px; padding: 16px; }
+    .mini-map-grid {
+      height: 100%;
+      border: 1px solid #7d6740;
+      background:
+        linear-gradient(90deg, transparent 49%, rgba(219, 185, 104, .18) 50%, transparent 51%),
+        repeating-linear-gradient(0deg, #161814 0 17px, #302a20 18px),
+        repeating-linear-gradient(90deg, transparent 0 17px, #302a20 18px);
+      position: relative;
+    }
+    .mini-map-grid::after { content: ""; position: absolute; left: 24%; right: 24%; bottom: 12%; height: 32%; border: 2px solid #c6c2b6; background: rgba(210,210,210,.12); }
+
+    .unit-collapsed { min-height: 58px; padding: 16px; display: flex; align-items: center; justify-content: space-between; color: var(--muted); }
+    .unit-collapsed b { color: var(--text); }
+
+    .board {
+      min-width: 0;
+      min-height: 0;
+      padding: 10px;
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      grid-template-rows: repeat(8, 1fr);
+      border: 3px solid #a98243;
+      background:
+        linear-gradient(rgba(83, 52, 22, .24), rgba(57, 32, 16, .16)),
+        url("../../assets/art/boards/terracotta_warriors/terracotta_battlefield_board_bg_gridless_v6_sharp.png") center / cover;
+      box-shadow: 0 0 0 1px #1b1710, 0 18px 36px rgba(0,0,0,.32);
+    }
+
+    .board-cell {
+      min-width: 0;
+      border-right: 1px solid rgba(40, 28, 19, .68);
+      border-bottom: 1px solid rgba(40, 28, 19, .68);
+      background: rgba(228, 179, 107, .03);
+      cursor: crosshair;
+      transition: background 120ms var(--ease), box-shadow 120ms var(--ease), transform 120ms var(--ease);
+    }
+    .board-cell:hover { background: rgba(244, 196, 104, .17); box-shadow: inset 0 0 0 2px rgba(237, 187, 90, .58); }
+    .board-cell.selected { background: rgba(207, 68, 38, .28); box-shadow: inset 0 0 0 3px #efb35b, 0 0 18px rgba(239,179,91,.35); transform: scale(.94); }
+
+    .objective-list { padding: 10px; display: grid; gap: 8px; }
+    .objective-row {
+      min-height: 48px;
+      padding: 9px 10px;
+      display: grid;
+      grid-template-columns: 26px 1fr;
+      gap: 10px;
+      align-items: center;
+      border: 1px solid #39382f;
+      background: #171a18;
+      color: #d8cfb8;
+      font-size: 15px;
+      line-height: 1.4;
+    }
+    .objective-mark { width: 20px; height: 20px; transform: rotate(45deg); border: 1px solid var(--gold-soft); box-shadow: inset 0 0 0 3px #101311; }
+
+    .turn-card { padding: 14px; text-align: center; }
+    .turn-card strong { display: block; font-family: "Veilfront Display"; font-size: 32px; color: var(--gold); }
+    .turn-card span { color: var(--muted); font-size: 14px; }
+
+    .action-dock {
+      position: absolute;
+      left: 50%;
+      bottom: 14px;
+      transform: translateX(-50%);
+      width: min(560px, 50%);
+      min-width: 460px;
+      min-height: 48px;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border: 1px solid #6f5b37;
+      background: rgba(12, 15, 14, .97);
+      box-shadow: 0 10px 30px rgba(0,0,0,.4);
+    }
+    .action-dock .status { flex: 1; padding-inline: 8px; color: var(--muted); font-size: 14px; }
+
+    .tutorial-stage {
+      min-height: 610px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 390px;
+      gap: 18px;
+      padding: 20px;
+      background:
+        linear-gradient(rgba(5,7,7,.25), rgba(5,7,7,.58)),
+        url("../../assets/art/backgrounds/battle_command_tent_background_v1.png") center / cover;
+    }
+
+    .tutorial-board {
+      min-height: 540px;
+      border: 3px solid #a98243;
+      background:
+        linear-gradient(rgba(0,0,0,.24), rgba(0,0,0,.1)),
+        url("../../assets/art/boards/terracotta_warriors/terracotta_battlefield_board_bg_gridless_v6_sharp.png") center / cover;
+      display: grid;
+      place-items: center;
+      position: relative;
+    }
+
+    .tutorial-focus {
+      width: 90px;
+      height: 90px;
+      border: 3px solid var(--gold);
+      border-radius: 50%;
+      box-shadow: 0 0 0 10px rgba(232,188,98,.12), 0 0 30px rgba(232,188,98,.35);
+      display: grid;
+      place-items: center;
+      color: #fff0c5;
+      font-size: 25px;
+      background: rgba(124, 42, 28, .86);
+    }
+
+    .tutorial-drawer { min-height: 0; display: flex; flex-direction: column; border: 1px solid #7a6339; background: rgba(12,15,14,.97); }
+    .drawer-head { padding: 18px; border-bottom: 1px solid var(--line); }
+    .drawer-head span { color: var(--gold); font-size: 14px; }
+    .drawer-head h3 { margin: 5px 0 0; font-size: 24px; }
+    .drawer-progress { height: 5px; margin-top: 14px; background: #302c23; }
+    .drawer-progress i { display: block; width: 36%; height: 100%; background: var(--gold); }
+    .drawer-copy { flex: 1; min-height: 0; overflow: auto; padding: 18px; font-size: 16px; line-height: 1.75; color: #ddd4bf; }
+    .drawer-copy h4 { margin: 0 0 8px; font-size: 18px; color: var(--gold); }
+    .drawer-copy p { color: #d4cbb5; }
+    .drawer-copy ol { margin: 0; padding-left: 1.4em; }
+    .drawer-actions { padding: 14px; display: grid; grid-template-columns: 1fr 1.5fr; gap: 10px; border-top: 1px solid var(--line); }
+
+    .settings-prototype {
+      min-height: 650px;
+      padding: 28px;
+      background:
+        linear-gradient(rgba(5,7,7,.62), rgba(5,7,7,.72)),
+        url("../../assets/art/backgrounds/battle_command_tent_background_v1.png") center / cover;
+    }
+    .settings-window { width: min(1040px, 100%); margin: 0 auto; border: 1px solid #856d43; background: rgba(14,17,16,.97); box-shadow: var(--shadow), inset 0 0 0 5px rgba(90,70,37,.15); }
+    .settings-head { min-height: 70px; padding: 12px 18px; display: flex; align-items: center; gap: 18px; border-bottom: 1px solid var(--line); }
+    .settings-head h3 { margin: 0; font-size: 26px; color: var(--gold); }
+    .settings-tabs { min-height: 54px; padding: 8px 18px 0; display: flex; gap: 8px; border-bottom: 1px solid var(--line); }
+    .settings-tab { min-width: 110px; min-height: 44px; border: 1px solid transparent; border-bottom: 3px solid transparent; background: transparent; color: var(--muted); cursor: pointer; }
+    .settings-tab.active { color: var(--gold); border-color: #453c2d; border-bottom-color: var(--gold); background: #191a16; }
+    .setting-list { width: min(700px, calc(100% - 36px)); margin: 10px auto; }
+    .setting-row { min-height: 64px; display: grid; grid-template-columns: minmax(190px, 1fr) minmax(260px, 1fr); align-items: center; gap: 22px; border-bottom: 1px solid #343029; }
+    .setting-label b { display: block; font-size: 16px; }
+    .setting-label span { color: var(--muted); font-size: 14px; }
+    .setting-control select { width: 100%; min-height: 44px; padding: 8px 12px; border: 1px solid #625338; background: #0f1211; color: var(--text); }
+    .setting-control input[type="range"] { width: 100%; accent-color: var(--gold); }
+    .settings-foot { min-height: 76px; padding: 12px 18px; display: flex; align-items: center; gap: 10px; border-top: 1px solid var(--line); }
+    .settings-status { flex: 1; color: var(--muted); font-size: 14px; transition: color 180ms var(--ease), transform 180ms var(--ease); }
+    .settings-status.saved { color: var(--green-bright); transform: translateY(-2px); }
+
+    .level-prototype {
+      height: min(650px, calc(100vh - 340px));
+      min-height: 520px;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 220px minmax(520px, 1fr) 310px;
+      gap: 14px;
+      background: linear-gradient(rgba(6,8,8,.42), rgba(6,8,8,.66)), url("../../assets/art/ui/level_select/level_campaign_map_background_v1.png") center / cover;
+    }
+    .level-rail, .level-detail { border: 1px solid #67583e; background: rgba(12,15,14,.95); }
+    .level-rail { padding: 12px; display: grid; align-content: start; gap: 10px; }
+    .category { min-height: 70px; border: 1px solid #4e4638; background: #171916; color: var(--muted); cursor: pointer; font-size: 18px; }
+    .category.active { border-color: var(--gold); color: var(--gold); background: #241d12; box-shadow: inset 0 0 0 4px #101210; }
+    .progress-ring { margin: 26px auto 0; width: 100px; height: 100px; display: grid; place-items: center; border-radius: 50%; border: 7px solid #4a3e2a; border-top-color: var(--gold); color: var(--gold); font-size: 22px; }
+    .route-map { position: relative; border: 1px solid #67583e; background: rgba(12,15,14,.54); overflow: hidden; }
+    .route-line { position: absolute; left: 11%; right: 11%; top: 50%; height: 3px; background: linear-gradient(90deg, var(--gold), #8c7446 38%, #514933); box-shadow: 0 0 10px rgba(232,188,98,.25); }
+    .route-nodes { height: 100%; padding: 55px; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); align-items: center; justify-items: center; position: relative; }
+    .route-node { width: 76px; height: 76px; border-radius: 50%; border: 2px solid #7f693f; background: radial-gradient(circle, #282215, #0d100f 70%); color: #cab482; cursor: pointer; box-shadow: inset 0 0 0 6px #131513; transition: transform 180ms var(--ease), box-shadow 180ms var(--ease), border-color 180ms var(--ease), color 180ms var(--ease); }
+    .route-node:hover { transform: scale(1.055); color: var(--gold); border-color: var(--gold); }
+    .route-node.selected { transform: scale(1.08); color: #fff0c5; border-color: #ffd77a; box-shadow: inset 0 0 0 6px #241c10, 0 0 0 7px rgba(232,188,98,.12), 0 0 28px rgba(232,188,98,.45); }
+    .level-detail { padding: 22px; display: flex; flex-direction: column; }
+    .level-detail h3 { color: var(--gold); font-size: 28px; margin-bottom: 6px; }
+    .level-detail > span { color: var(--gold-soft); font-size: 15px; }
+    .level-detail p { margin-top: 22px; color: #d5cbb4; font-size: 16px; line-height: 1.75; }
+    .reward-slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-block: 18px; }
+    .reward-slot { min-height: 58px; display: grid; place-items: center; border: 1px solid #4f4635; background: #101311; color: #8c826e; font-size: 13px; }
+    .level-detail .strong-button { width: 100%; min-height: 60px; margin-top: auto; font-size: 19px; }
+
+    .motion-lab { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    .lab-panel { min-height: 240px; padding: 22px; border: 1px solid var(--line); background: var(--panel); }
+    .lab-panel h3 { color: var(--gold); margin-bottom: 8px; }
+    .lab-panel p { color: var(--muted); line-height: 1.6; }
+    .button-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+    .type-sample { display: grid; gap: 14px; margin-top: 18px; }
+    .type-line { padding: 14px; border-left: 3px solid #423b2f; background: #111514; }
+    .type-line.current { color: #817a6d; font-size: 11px; }
+    .type-line.proposed { color: var(--text); font-size: 16px; line-height: 1.5; border-left-color: var(--gold); }
+    .display-sample { font-family: "Veilfront Display"; font-size: 32px; color: var(--gold); }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 28px;
+      transform: translate(-50%, 18px);
+      min-width: min(440px, calc(100% - 32px));
+      padding: 14px 18px;
+      border: 1px solid var(--gold-soft);
+      background: rgba(12,15,14,.98);
+      color: var(--text);
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 40;
+      transition: opacity 180ms var(--ease), transform 180ms var(--ease);
+      box-shadow: var(--shadow);
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    .shake { animation: shake 180ms linear; }
+    @keyframes shake { 25% { transform: translateX(-4px); } 50% { transform: translateX(4px); } 75% { transform: translateX(-3px); } }
+
+    body.reduced-motion *, body.reduced-motion *::before, body.reduced-motion *::after {
+      scroll-behavior: auto !important;
+      animation-duration: .01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 80ms !important;
+    }
+    body.reduced-motion .strong-button:hover,
+    body.reduced-motion .secondary-button:hover,
+    body.reduced-motion .danger-button:hover,
+    body.reduced-motion .route-node:hover,
+    body.reduced-motion .route-node.selected,
+    body.reduced-motion .board-cell.selected { transform: none; }
+
+    @media (max-width: 1120px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { border-right: 0; border-bottom: 1px solid var(--line); padding: 10px; overflow-x: auto; position: sticky; top: 84px; z-index: 10; }
+      .sidebar-title { display: none; }
+      .nav-list { display: flex; min-width: max-content; }
+      .nav-button { width: auto; min-width: 126px; border-left-width: 1px; border-bottom: 3px solid transparent; }
+      .nav-button[aria-selected="true"] { border-left-color: #3a3428; border-bottom-color: var(--gold); }
+      .summary-grid { grid-template-columns: repeat(2, 1fr); }
+      .summary-item:nth-child(2) { border-right: 0; }
+      .summary-item:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+      .priority-row { grid-template-columns: 64px 140px 1fr; }
+      .priority-row > span:last-child { grid-column: 2 / -1; }
+      .level-prototype { grid-template-columns: 180px minmax(460px, 1fr); overflow-x: auto; }
+      .level-detail { min-width: 310px; }
+    }
+
+    @media (max-width: 760px) {
+      .topbar { align-items: flex-start; padding: 12px; }
+      .brand p { display: none; }
+      .motion-toggle span { display: none; }
+      main { padding-inline: 14px; }
+      .section-head { align-items: start; flex-direction: column; }
+      .summary-grid, .motion-lab { grid-template-columns: 1fr; }
+      .summary-item { border-right: 0; border-bottom: 1px solid var(--line); }
+      .summary-item:last-child { border-bottom: 0; }
+      .verdict { grid-template-columns: 1fr; }
+      .priority-row { grid-template-columns: 58px 1fr; gap: 10px; }
+      .priority-row p, .priority-row > span:last-child { grid-column: 1 / -1; }
+      .audit-notes { grid-template-columns: 1fr; }
+      .game-stage { min-height: 760px; aspect-ratio: auto; overflow-x: auto; }
+      .hud-grid { min-width: 900px; }
+      .tutorial-stage { grid-template-columns: 1fr; }
+      .tutorial-drawer { min-height: 520px; }
+      .setting-row { grid-template-columns: 1fr; gap: 8px; padding-block: 12px; }
+      .settings-foot { align-items: stretch; flex-direction: column; }
+      .settings-status { min-height: 24px; }
+      .level-prototype { height: auto; min-height: 650px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-seal" aria-hidden="true">雾疆</div>
+        <div>
+          <h1>九路烽棋 · UI 体验审查</h1>
+          <p>当前工作区审查 · 1280×720 基线 · 2026-08-23</p>
+        </div>
+      </div>
+      <div class="top-actions">
+        <label class="motion-toggle">
+          <input id="reducedMotion" type="checkbox">
+          <span>减少动态效果</span>
+        </label>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" aria-label="审查页面">
+        <div class="sidebar-title">审查导航</div>
+        <nav class="nav-list">
+          <button class="nav-button" data-target="overview" aria-selected="true"><span>总览与优先级</span><span>01</span></button>
+          <button class="nav-button" data-target="battle" aria-selected="false"><span>战局 HUD</span><span>P0</span></button>
+          <button class="nav-button" data-target="tutorial" aria-selected="false"><span>教学信息栏</span><span>P0</span></button>
+          <button class="nav-button" data-target="settings" aria-selected="false"><span>设置页布局</span><span>P1</span></button>
+          <button class="nav-button" data-target="levels" aria-selected="false"><span>关卡选择</span><span>P1</span></button>
+          <button class="nav-button" data-target="motion" aria-selected="false"><span>动效与字体</span><span>LAB</span></button>
+        </nav>
+      </aside>
+
+      <main>
+        <section class="screen active" id="overview" aria-labelledby="overviewTitle">
+          <div class="section-head">
+            <div>
+              <h2 id="overviewTitle">结论：美术完成度高，可读性与交互反馈滞后</h2>
+              <p>玄铁、青铜、军帐的视觉方向已经成立。当前最值得投入的不是继续加边框，而是让玩家更快看懂、更确定地按下、更清楚地收到结果。</p>
+            </div>
+            <span class="tag">审查范围：7 类页面</span>
+          </div>
+
+          <div class="summary-grid" aria-label="审查摘要">
+            <div class="summary-item"><strong>2</strong><b>P0 核心阻塞</b><span>战局信息可读性、教学栏拥挤与遮挡</span></div>
+            <div class="summary-item"><strong>7</strong><b>P1 体验问题</b><span>按钮反馈、字体角色、焦点导航与页面密度</span></div>
+            <div class="summary-item"><strong>9px</strong><b>当前最小正文</b><span>教学提示低于舒适阅读下限</span></div>
+            <div class="summary-item"><strong>6</strong><b>强反馈动作</b><span>进入、准备、开局、确认、应用、重试</span></div>
+          </div>
+
+          <div class="verdict">
+            <div>
+              <h3>建议先做一轮“去噪增读”</h3>
+              <p>保留现有正式图片资源与预置节点，降低边框/纹理的视觉竞争，把核心正文提高到 15–16 px，并将高价值按钮统一迁移到可复用的动效预置。教学信息应从正式目标栏拆成独立抽屉。</p>
+            </div>
+            <div class="verdict-actions">
+              <button class="strong-button" data-jump="battle">查看战局优化样机</button>
+              <button class="secondary-button" data-jump="motion">体验按钮补间</button>
+            </div>
+          </div>
+
+          <div class="priority-list">
+            <div class="priority-row"><span class="priority">P0</span><b>战局 HUD</b><p>阵营、目标与单位信息主要落在 10–14 px，暗金/灰绿文字压在高纹理背景上。</p><span>核心正文 16 px，次级 14 px，列表增加深色衬底。</span></div>
+            <div class="priority-row"><span class="priority">P0</span><b>教学信息栏</b><p>9–12 px 正文、滚动条与燃香组件共用右栏，新玩家阅读负担最高。</p><span>拆为 360–400 px 独立抽屉，燃香移出正文区。</span></div>
+            <div class="priority-row"><span class="priority p1">P1</span><b>主菜单与关卡</b><p>装饰轮廓比文字更亮，默认状态难判断是否可点；节点状态为瞬时贴图替换。</p><span>提高默认文字对比；增加短位移、压印和路线点亮。</span></div>
+            <div class="priority-row"><span class="priority p1">P1</span><b>设置与联机</b><p>设置页中心空白过大；联机准备与开局缺少状态落定感。</p><span>收窄设置内容列；准备/开局使用状态板锁定反馈。</span></div>
+            <div class="priority-row"><span class="priority p1">P1</span><b>动效预置</b><p>普通 Button、TextureButton 和 UiMotionButton 混用；部分实例覆盖 `motion_profile = null`。</p><span>建立 Primary / Secondary / Danger / Confirm 四类预置。</span></div>
+            <div class="priority-row"><span class="priority p2">P2</span><b>响应式</b><p>960×540 下整体缩小进入阅读疲劳区；超宽屏关卡页保留大面积黑边。</p><span>增加紧凑布局或明确最小窗口；仅延展背景层。</span></div>
+          </div>
+        </section>
+
+        <section class="screen" id="battle" aria-labelledby="battleTitle">
+          <div class="section-head">
+            <div>
+              <h2 id="battleTitle">战局 HUD：把“看得见”提升为“扫一眼就懂”</h2>
+              <p>保留左信息—中棋盘—右目标结构，核心调整是文字、衬底、空状态和确认动作。点击棋盘格，再点击“确认行动”体验建议反馈。</p>
+            </div>
+            <span class="tag">正文 16 · 次级 14 · 按钮 48+</span>
+          </div>
+
+          <div class="prototype-frame">
+            <div class="frame-label"><span>优化交互样机</span><span>点击棋盘 → 确认行动</span></div>
+            <div class="game-stage">
+              <div class="faction-bar red"><strong>赤方军势 · 正在行动</strong><span>城墙完好 · 旗 1 · 损 2</span></div>
+              <div class="faction-bar black"><strong>玄方军势</strong><span>城墙破损 · 旗 0 · 损 1</span></div>
+              <div class="hud-grid">
+                <div class="hud-column">
+                  <div class="hud-panel"><div class="hud-title">战场态势</div><div class="mini-map"><div class="mini-map-grid"></div></div></div>
+                  <div class="hud-panel unit-collapsed"><b>尚未选择棋子</b><span>选择后展开</span></div>
+                </div>
+                <div class="board" id="boardGrid" aria-label="战局棋盘"></div>
+                <div class="hud-column">
+                  <div class="hud-panel turn-card"><strong>八</strong><span>回合 · 赤方行动</span></div>
+                  <div class="hud-panel">
+                    <div class="hud-title">战局与行动</div>
+                    <div class="objective-list">
+                      <div class="objective-row"><i class="objective-mark"></i><span>行动方：赤 · 尚未选择</span></div>
+                      <div class="objective-row"><i class="objective-mark"></i><span>我方已发现旗帜：1 / 3</span></div>
+                      <div class="objective-row"><i class="objective-mark"></i><span>我方阵亡：兵 × 1、士 × 1</span></div>
+                      <div class="objective-row"><i class="objective-mark"></i><span>敌方阵亡：炮 × 1</span></div>
+                      <div class="objective-row"><i class="objective-mark"></i><span id="boardPosition">位置：(x, y)</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="action-dock">
+                <span class="status" id="battleStatus">请选择棋盘落点</span>
+                <button class="secondary-button">取消</button>
+                <button class="strong-button" id="confirmMove" disabled>确认行动</button>
+              </div>
+            </div>
+          </div>
+          <div class="audit-notes">
+            <div class="note"><b>信息层</b><span>核心规则与目标使用纯色衬底，不再直接压在复杂贴图上。</span></div>
+            <div class="note"><b>空状态</b><span>单位面板未选择时折叠为提示条，释放左栏视觉重量。</span></div>
+            <div class="note"><b>确认层</b><span>只有选定有效落点后主按钮才亮起，落点与按钮同步回应。</span></div>
+          </div>
+        </section>
+
+        <section class="screen" id="tutorial" aria-labelledby="tutorialTitle">
+          <div class="section-head">
+            <div>
+              <h2 id="tutorialTitle">教学 HUD：独立抽屉，不再挤进目标面板</h2>
+              <p>教学栏使用正式 UI 的材质和按钮，但拥有自己的阅读宽度。步骤、目标、解释和操作分层，燃香计时不再压住滚动区。</p>
+            </div>
+            <span class="tag">抽屉 390px · 正文 16px</span>
+          </div>
+          <div class="prototype-frame">
+            <div class="frame-label"><span>优化教学样机</span><span>目标 → 解释 → 步骤 → 行动</span></div>
+            <div class="tutorial-stage">
+              <div class="tutorial-board"><div class="tutorial-focus">兵</div></div>
+              <aside class="tutorial-drawer">
+                <div class="drawer-head"><span>T0 · 操作校准</span><h3>棋落交点</h3><div class="drawer-progress"><i></i></div></div>
+                <div class="drawer-copy">
+                  <h4>本步目标</h4>
+                  <p>选择赤方兵，再选择一个相邻交点并确认移动。</p>
+                  <h4>为什么这样做</h4>
+                  <p>九路棋盘的棋子落在交点上。左键选择，右键取消；确认前可以随时更换落点。</p>
+                  <h4>操作步骤</h4>
+                  <ol><li>点击高亮的赤方兵。</li><li>点击相邻的金色交点。</li><li>检查行动预览，点击“确认”。</li></ol>
+                </div>
+                <div class="drawer-actions"><button class="secondary-button">显示提示</button><button class="strong-button" data-toast="教学步骤已确认">继续教学</button></div>
+              </aside>
+            </div>
+          </div>
+        </section>
+
+        <section class="screen" id="settings" aria-labelledby="settingsTitle">
+          <div class="section-head">
+            <div>
+              <h2 id="settingsTitle">设置页：缩短“修改—应用—结果”的距离</h2>
+              <p>保留页签与底部操作，但把设置行收成稳定单列，状态提示贴近操作区。点击“应用”查看确认反馈。</p>
+            </div>
+            <span class="tag">设置行 64px · 操作区固定</span>
+          </div>
+          <div class="prototype-frame">
+            <div class="frame-label"><span>优化设置样机</span><span>预置节点建议：PanelContainer + VBox/HBoxContainer</span></div>
+            <div class="settings-prototype">
+              <div class="settings-window">
+                <div class="settings-head"><button class="secondary-button">返回</button><h3>军帐设置</h3></div>
+                <div class="settings-tabs">
+                  <button class="settings-tab active">画面</button><button class="settings-tab">音频</button><button class="settings-tab">体验</button>
+                </div>
+                <div class="setting-list">
+                  <div class="setting-row"><div class="setting-label"><b>显示模式</b><span>推荐无边框全屏</span></div><div class="setting-control"><select><option>无边框全屏</option><option>窗口模式</option></select></div></div>
+                  <div class="setting-row"><div class="setting-label"><b>窗口分辨率</b><span>仅窗口模式可用</span></div><div class="setting-control"><select><option>1280 × 720</option><option>1920 × 1080</option></select></div></div>
+                  <div class="setting-row"><div class="setting-label"><b>界面缩放</b><span>低分辨率下优先保证文字</span></div><div class="setting-control"><input type="range" min="90" max="125" value="100" aria-label="界面缩放"></div></div>
+                  <div class="setting-row"><div class="setting-label"><b>垂直同步</b><span>减少画面撕裂</span></div><div class="setting-control"><label class="motion-toggle"><input type="checkbox" checked><span>已开启</span></label></div></div>
+                </div>
+                <div class="settings-foot"><span class="settings-status" id="settingsStatus">有 1 项更改尚未应用</span><button class="secondary-button">恢复默认值</button><button class="secondary-button">取消</button><button class="strong-button" id="applySettings">应用</button></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="screen" id="levels" aria-labelledby="levelsTitle">
+          <div class="section-head">
+            <div>
+              <h2 id="levelsTitle">关卡选择：让路线与选择状态产生因果</h2>
+              <p>点击关卡节点更新右侧详情。路线、节点与“进入关卡”按钮会形成同一条反馈链，正文也提升到可稳定阅读的字号。</p>
+            </div>
+            <span class="tag">节点反馈 180ms</span>
+          </div>
+          <div class="prototype-frame">
+            <div class="frame-label"><span>优化关卡样机</span><span>选择节点 → 阅读目标 → 进入</span></div>
+            <div class="level-prototype">
+              <aside class="level-rail"><button class="category active">新手教学</button><button class="category">挑战关卡</button><div class="progress-ring">2 / 11</div></aside>
+              <div class="route-map"><div class="route-line"></div><div class="route-nodes" id="routeNodes"></div></div>
+              <aside class="level-detail"><h3 id="levelCode">T0</h3><span id="levelName">操作校准 · 棋落交点</span><p id="levelDescription">认识九路棋盘，完成一次合法移动。选择状态、取消与确认都会得到明确反馈。</p><div class="reward-slots"><div class="reward-slot">基础规则</div><div class="reward-slot">操作校准</div><div class="reward-slot">已开放</div></div><button class="strong-button" id="enterLevel">进入关卡</button></aside>
+            </div>
+          </div>
+        </section>
+
+        <section class="screen" id="motion" aria-labelledby="motionTitle">
+          <div class="section-head">
+            <div>
+              <h2 id="motionTitle">动效与字体实验</h2>
+              <p>高价值动作获得强反馈，普通控件保持克制。顶部“减少动态效果”会关闭缩放、位移与抖动，只保留颜色变化。</p>
+            </div>
+            <span class="tag">Cubic Out · 80–220ms</span>
+          </div>
+          <div class="motion-lab">
+            <div class="lab-panel"><h3>按钮反馈分级</h3><p>悬停、按下与焦点使用同一运动语法，语义通过颜色和结束反馈区分。</p><div class="button-row"><button class="strong-button" data-toast="主要操作已确认">确认行动</button><button class="secondary-button" data-toast="次要操作已执行">取消</button><button class="danger-button" id="dangerDemo">重置进度</button></div></div>
+            <div class="lab-panel"><h3>需要强反馈的动作</h3><p>进入关卡、确认准备、开始游戏、确认行动、应用设置、加载重试。返回、页签、滑块不需要强反馈。</p><div class="button-row"><button class="strong-button" data-toast="开局状态已锁定">开始游戏</button><button class="strong-button" data-toast="重试加载">重试</button></div></div>
+            <div class="lab-panel"><h3>字号对比</h3><div class="type-sample"><div class="type-line current">当前 11px：我方已发现旗帜 1 / 3 · 敌方阵亡 炮 × 1</div><div class="type-line proposed">建议 16px：我方已发现旗帜 1 / 3 · 敌方阵亡 炮 × 1</div></div></div>
+            <div class="lab-panel"><h3>字体角色</h3><div class="display-sample">战局与行动</div><p>行书只用于 26px 以上标题；Noto Sans SC 负责按钮、正文、数字与状态，避免小字号笔画粘连。</p></div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const body = document.body;
+    const toast = document.querySelector('#toast');
+    let toastTimer;
+
+    function showToast(message) {
+      window.clearTimeout(toastTimer);
+      toast.textContent = message;
+      toast.classList.add('show');
+      toastTimer = window.setTimeout(() => toast.classList.remove('show'), 1700);
+    }
+
+    function openScreen(target) {
+      document.querySelectorAll('.screen').forEach(section => section.classList.toggle('active', section.id === target));
+      document.querySelectorAll('.nav-button').forEach(button => button.setAttribute('aria-selected', String(button.dataset.target === target)));
+      history.replaceState(null, '', `#${target}`);
+      document.querySelector(`#${target} h2`)?.focus?.({ preventScroll: true });
+      window.scrollTo({ top: 0, behavior: body.classList.contains('reduced-motion') ? 'auto' : 'smooth' });
+    }
+
+    document.querySelectorAll('.nav-button').forEach(button => button.addEventListener('click', () => openScreen(button.dataset.target)));
+    document.querySelectorAll('[data-jump]').forEach(button => button.addEventListener('click', () => openScreen(button.dataset.jump)));
+    document.querySelectorAll('[data-toast]').forEach(button => button.addEventListener('click', () => showToast(button.dataset.toast)));
+
+    document.querySelector('#reducedMotion').addEventListener('change', event => {
+      body.classList.toggle('reduced-motion', event.target.checked);
+      showToast(event.target.checked ? '已减少动态效果：仅保留颜色反馈' : '已恢复完整补间反馈');
+    });
+
+    const boardGrid = document.querySelector('#boardGrid');
+    const confirmMove = document.querySelector('#confirmMove');
+    const battleStatus = document.querySelector('#battleStatus');
+    const boardPosition = document.querySelector('#boardPosition');
+    let selectedCell = null;
+    for (let index = 0; index < 72; index += 1) {
+      const cell = document.createElement('button');
+      const x = index % 9 + 1;
+      const y = Math.floor(index / 9) + 9;
+      cell.className = 'board-cell';
+      cell.setAttribute('aria-label', `棋盘位置 ${x}, ${y}`);
+      cell.addEventListener('click', () => {
+        selectedCell?.classList.remove('selected');
+        selectedCell = cell;
+        cell.classList.add('selected');
+        confirmMove.disabled = false;
+        battleStatus.textContent = `已选择落点 (${x}, ${y})，可确认行动`;
+        boardPosition.textContent = `位置：(${x}, ${y})`;
+      });
+      boardGrid.appendChild(cell);
+    }
+    confirmMove.addEventListener('click', () => {
+      if (!selectedCell) return;
+      selectedCell.animate([{ transform: 'scale(.92)' }, { transform: 'scale(1.06)' }, { transform: 'scale(.94)' }], { duration: 260, easing: 'cubic-bezier(.2,.8,.2,1)' });
+      showToast('行动已确认 · 落点反馈与按钮同步');
+      battleStatus.textContent = '行动已提交，等待局面更新';
+      confirmMove.disabled = true;
+    });
+
+    document.querySelector('#applySettings').addEventListener('click', () => {
+      const status = document.querySelector('#settingsStatus');
+      status.textContent = '设置已保存并生效';
+      status.classList.add('saved');
+      showToast('设置已应用');
+    });
+
+    const levels = [
+      ['T0', '操作校准 · 棋落交点', '认识九路棋盘，完成一次合法移动。选择状态、取消与确认都会得到明确反馈。'],
+      ['T1', '视野初探 · 雾中行军', '学习迷雾、可见交点与敌情提示。只展示玩家等价可见信息。'],
+      ['T2', '军旗争夺 · 占领进度', '理解军旗的占领、争夺与公开进度。'],
+      ['T3', '城墙攻守 · 缺口', '识别完整、破损与修复中的城墙状态。'],
+      ['T4', '炮击校准 · 区域', '预览区域炮击范围并确认目标。'],
+      ['T5', '回合节奏 · 计时', '理解行动时间、跳过与回合推进。'],
+      ['T6', '侦察标记 · 协同', '使用圆、叉、方形标记传达意图。'],
+      ['T7', '战场态势 · 小地图', '通过小地图快速导航纵深棋盘。'],
+      ['T8', '综合演练 · 九路', '在完整规则下完成一次短局演练。']
+    ];
+    const routeNodes = document.querySelector('#routeNodes');
+    levels.forEach((level, index) => {
+      const button = document.createElement('button');
+      button.className = `route-node${index === 0 ? ' selected' : ''}`;
+      button.textContent = level[0];
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.route-node').forEach(node => node.classList.remove('selected'));
+        button.classList.add('selected');
+        document.querySelector('#levelCode').textContent = level[0];
+        document.querySelector('#levelName').textContent = level[1];
+        document.querySelector('#levelDescription').textContent = level[2];
+      });
+      routeNodes.appendChild(button);
+    });
+    document.querySelector('#enterLevel').addEventListener('click', () => showToast(`${document.querySelector('#levelCode').textContent} 已确认 · 正在进入关卡`));
+
+    document.querySelector('#dangerDemo').addEventListener('click', event => {
+      if (!body.classList.contains('reduced-motion')) {
+        event.currentTarget.classList.remove('shake');
+        void event.currentTarget.offsetWidth;
+        event.currentTarget.classList.add('shake');
+      }
+      showToast('危险操作：先给警示反馈，再打开确认框');
+    });
+
+    const initialTarget = location.hash.slice(1);
+    if (document.querySelector(`#${initialTarget}.screen`)) openScreen(initialTarget);
+  </script>
+</body>
+</html>
