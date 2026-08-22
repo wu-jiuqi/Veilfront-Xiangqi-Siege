@@ -1,0 +1,52 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/dev/ui/loading_transition_motion_lab.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/loading_transition_overlay.tscn" id="2_overlay"]
+
+[node name="LoadingTransitionMotionLab" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="LoadingOverlay" parent="." instance=ExtResource("2_overlay")]
+unique_name_in_owner = true
+layout_mode = 1
+
+[node name="LabHintPanel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -500.0
+offset_top = -58.0
+offset_right = -22.0
+offset_bottom = -18.0
+grow_horizontal = 0
+grow_vertical = 0
+mouse_filter = 2
+theme_type_variation = &"TooltipPanel"
+
+[node name="Margin" type="MarginContainer" parent="LabHintPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 8
+
+[node name="LabHint" type="Label" parent="LabHintPanel/Margin"]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0.7)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "R 重播加载  ·  F 触发失败  ·  M 减少动态效果：关"
+horizontal_alignment = 1
+
+[connection signal="retry_requested" from="LoadingOverlay" to="." method="_on_retry_requested"]
+[connection signal="back_requested" from="LoadingOverlay" to="." method="_on_back_requested"]
