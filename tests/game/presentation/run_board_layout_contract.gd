@@ -162,7 +162,7 @@ func _check_resolution(resolution: Vector2i) -> Dictionary:
 		return {"resolution": [resolution.x, resolution.y], "controller_loaded": false}
 	match_screen.apply_layout_for_size(Vector2(resolution))
 	match_screen.render_player_view(_build_layout_view())
-	match_screen.set_local_interaction_state("CONFIRMING", "layout-advisor", "layout-resurrect")
+	match_screen.set_local_interaction_state("CONFIRMING", "layout-soldier", "layout-move")
 	await process_frame
 	await process_frame
 
@@ -198,11 +198,10 @@ func _check_resolution(resolution: Vector2i) -> Dictionary:
 	_expect(bool(snapshot.get("main_buttons_inside", false)), "%s main action buttons are clipped" % resolution)
 	_expect(float(snapshot.get("main_button_min_height", 0.0)) >= 44.0, "%s main buttons are below 44 px" % resolution)
 	_expect(bool(snapshot.get("compact", false)) == (resolution.x < 1100), "%s responsive breakpoint mismatch" % resolution)
-	_expect(bool(snapshot.get("confirmation_panel_inside", false)), "%s confirmation panel is clipped" % resolution)
-	_expect(bool(snapshot.get("confirmation_prompt_inside", false)), "%s confirmation prompt is clipped" % resolution)
-	_expect(bool(snapshot.get("confirmation_buttons_inside", false)), "%s confirmation buttons are clipped" % resolution)
-	_expect(float(snapshot.get("confirmation_button_min_height", 0.0)) >= 44.0, "%s confirmation buttons are below 44 px" % resolution)
-	_expect(not str(snapshot.get("confirmation_prompt_text", "")).is_empty(), "%s confirmation prompt is empty" % resolution)
+	_expect(bool(snapshot.get("central_confirmation_ui_removed", false)), "%s central confirmation UI still exists" % resolution)
+	_expect(bool(snapshot.get("confirming_action_button_inside", false)), "%s confirming move button is clipped" % resolution)
+	_expect(float(snapshot.get("confirming_action_button_min_height", 0.0)) >= 44.0, "%s confirming move button is below 44 px" % resolution)
+	_expect(str(snapshot.get("confirming_action_button_text", "")) == "确认移动", "%s move button did not expose its confirm state" % resolution)
 	_expect(
 		str(snapshot.get("board_rect_meaning", "")) == "default_visible_board_screen_rect",
 		"%s board rectangle semantics drifted from the exported JSON" % resolution
@@ -262,10 +261,9 @@ func _check_resolution(resolution: Vector2i) -> Dictionary:
 		"board_rect": [board_rect.position.x, board_rect.position.y, board_rect.size.x, board_rect.size.y],
 		"main_buttons_inside": snapshot.get("main_buttons_inside", false),
 		"main_button_min_height": snapshot.get("main_button_min_height", 0.0),
-		"confirmation_panel_inside": snapshot.get("confirmation_panel_inside", false),
-		"confirmation_prompt_inside": snapshot.get("confirmation_prompt_inside", false),
-		"confirmation_buttons_inside": snapshot.get("confirmation_buttons_inside", false),
-		"confirmation_button_min_height": snapshot.get("confirmation_button_min_height", 0.0),
+		"central_confirmation_ui_removed": snapshot.get("central_confirmation_ui_removed", false),
+		"confirming_action_button_inside": snapshot.get("confirming_action_button_inside", false),
+		"confirming_action_button_min_height": snapshot.get("confirming_action_button_min_height", 0.0),
 		"screenshot": image_path if _capture_screenshots else "pending_capture",
 	}
 

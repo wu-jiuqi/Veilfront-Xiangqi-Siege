@@ -152,12 +152,17 @@ func _run() -> void:
 		await process_frame
 		_expect(
 			match_screen.get_local_interaction_state() == "CONFIRMING",
-			"pointer click on a legal target did not open confirmation"
+			"pointer click on a legal target did not enter confirmation"
 		)
-		var confirm_button: Button = match_screen.get_node(
-			"ActionConfirmationPanel/Content/Buttons/ConfirmButton"
-		) as Button
-		confirm_button.pressed.emit()
+		_expect(
+			match_screen.get_node_or_null("ActionConfirmationPanel") == null,
+			"removed central confirmation UI still exists"
+		)
+		var move_button: Button = match_screen.find_child("MoveButton", true, false) as Button
+		_expect(move_button != null, "bottom move button is missing")
+		if move_button != null:
+			_expect(move_button.text == "确认移动", "move button did not expose its confirm state")
+			move_button.pressed.emit()
 		await process_frame
 		await process_frame
 		_expect(

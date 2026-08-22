@@ -1,10 +1,9 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/game/presentation/battle_command_tent_background.tscn" id="1_background"]
 [ext_resource type="Theme" path="res://resources/game/ui/themes/terracotta_ui_theme.tres" id="1_theme"]
 [ext_resource type="PackedScene" path="res://scenes/game/ui/match_hud_v2.tscn" id="2_hud"]
 [ext_resource type="PackedScene" path="res://scenes/game/ui/marker_menu.tscn" id="3_marker"]
-[ext_resource type="PackedScene" path="res://scenes/game/ui/action_confirmation_panel.tscn" id="4_confirm"]
 [ext_resource type="PackedScene" path="res://scenes/game/ui/terminal_dialog.tscn" id="5_terminal"]
 [ext_resource type="Script" path="res://scripts/game/presentation/match_screen.gd" id="6_screen_script"]
 
@@ -27,20 +26,6 @@ layout_mode = 1
 
 [node name="MarkerMenu" parent="." instance=ExtResource("3_marker")]
 unique_name_in_owner = true
-
-[node name="ActionConfirmationPanel" parent="." instance=ExtResource("4_confirm")]
-unique_name_in_owner = true
-layout_mode = 1
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -180.0
-offset_top = -64.0
-offset_right = 180.0
-offset_bottom = 64.0
-grow_horizontal = 2
-grow_vertical = 2
 
 [node name="TutorialOverlayHost" type="Control" parent="."]
 layout_mode = 1

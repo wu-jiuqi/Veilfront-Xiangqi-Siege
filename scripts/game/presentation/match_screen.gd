@@ -51,7 +51,6 @@ const PIECE_PORTRAITS := {
 @onready var _board_frame: Control = $MatchHudV2/BoardFrame
 @onready var _board_viewport: SubViewportContainer = $MatchHudV2/BoardFrame/BoardViewport
 @onready var _marker_menu: PopupPanel = %MarkerMenu
-@onready var _confirmation_panel: PanelContainer = %ActionConfirmationPanel
 @onready var _incense_turn_clock: IncenseTurnClock = $MatchHudV2/IncenseTurnClock
 @onready var _piece_info_drawer: PieceInfoDrawer = $MatchHudV2/PieceInfoDrawer
 @onready var _objective_events: Control = $MatchHudV2/ObjectiveEvents
@@ -78,9 +77,6 @@ const PIECE_PORTRAITS := {
 @onready var _unit_name: Label = $MatchHudV2/UnitInfo/UnitName
 @onready var _unit_portrait: TextureRect = $MatchHudV2/UnitInfo/UnitPortrait
 @onready var _tactical_minimap: TacticalMinimap = $MatchHudV2/Minimap/TacticalMinimap
-@onready var _action_prompt: Label = $ActionConfirmationPanel/Content/Prompt
-@onready var _action_cancel_button: Button = $ActionConfirmationPanel/Content/Buttons/CancelButton
-@onready var _action_confirm_button: Button = $ActionConfirmationPanel/Content/Buttons/ConfirmButton
 @onready var _terminal_dialog: MatchTerminalDialog = $TerminalDialog
 
 var _compact: bool = false
@@ -105,6 +101,7 @@ var _tutorial_objective_layout_source: Control
 var _tutorial_round_incense_layout_source: Control
 var _session_navigation_enabled: bool = false
 var _submission_pending: bool = false
+var _action_button_default_texts: Dictionary[String, String] = {}
 
 
 func _ready() -> void:
@@ -122,11 +119,14 @@ func _ready() -> void:
 	_marker_menu.popup_hide.connect(_on_marker_menu_hidden)
 	_return_button.pressed.connect(func() -> void: return_requested.emit())
 	_mirror_button.pressed.connect(_toggle_mirror_view)
-	_action_cancel_button.pressed.connect(_cancel_only)
-	_action_confirm_button.pressed.connect(confirm_prepared_action)
-	_move_button.pressed.connect(_set_action_mode.bind("move"))
-	_bombard_button.pressed.connect(_set_action_mode.bind("bombard"))
-	_resurrect_button.pressed.connect(_set_action_mode.bind("resurrect"))
+	_action_button_default_texts = {
+		"move": _move_button.text,
+		"bombard": _bombard_button.text,
+		"resurrect": _resurrect_button.text,
+	}
+	_move_button.pressed.connect(_on_action_button_pressed.bind("move"))
+	_bombard_button.pressed.connect(_on_action_button_pressed.bind("bombard"))
+	_resurrect_button.pressed.connect(_on_action_button_pressed.bind("resurrect"))
 	_pass_button.pressed.connect(_prepare_pass)
 	_incense_turn_clock.timed_out.connect(_on_turn_timeout_requested)
 	_terminal_dialog.restart_requested.connect(
@@ -364,7 +364,7 @@ func render_visible_error(error: Dictionary) -> void:
 	_last_error_model = _presenter.visible_error_model(error)
 	var message_key: String = str(_last_error_model.get("message_key", ""))
 	if not message_key.is_empty():
-		_action_prompt.text = message_key
+		_message_value.text = message_key
 
 
 func render_action_previews_from_port(previews: Array) -> void:
@@ -387,7 +387,7 @@ func render_prepared_action(preview_id: String) -> void:
 	_inflight_prepare_generation = 0
 	_inflight_prepare_preview_id = ""
 	set_local_interaction_state(CONFIRMING, _selected_piece_id, preview_id)
-	_action_prompt.text = _preview_message_key(preview_id)
+	_message_value.text = _preview_message_key(preview_id)
 
 
 func render_action_previews(selected_cell: Vector2i, previews: Array) -> void:
@@ -471,10 +471,9 @@ func set_local_interaction_state(
 	_interaction_state = state
 	_selected_piece_id = selected_piece_id
 	_prepared_preview_id = prepared_preview_id
-	_confirmation_panel.visible = state == CONFIRMING
-	if state == CONFIRMING:
-		_action_cancel_button.grab_focus()
 	_update_status_controls()
+	if state == CONFIRMING:
+		_action_button_for_mode(_action_mode).grab_focus()
 
 
 func get_local_interaction_state() -> String:
@@ -552,10 +551,7 @@ func get_layout_snapshot() -> Dictionary:
 			and button_rect.end.x <= size.x + 0.5 \
 			and button_rect.end.y <= size.y + 0.5
 		minimum_button_height = minf(minimum_button_height, button.custom_minimum_size.y)
-	var confirmation_button_min_height: float = minf(
-		_action_cancel_button.custom_minimum_size.y,
-		_action_confirm_button.custom_minimum_size.y
-	)
+	var confirming_action_button: Button = _action_button_for_mode(_action_mode)
 	return {
 		"compact": _compact,
 		"screen_size": size,
@@ -567,12 +563,10 @@ func get_layout_snapshot() -> Dictionary:
 		"point_spacing": _board_viewport.get_point_spacing(),
 		"main_buttons_inside": main_buttons_inside,
 		"main_button_min_height": minimum_button_height,
-		"confirmation_panel_inside": _control_inside_screen(_confirmation_panel),
-		"confirmation_prompt_inside": _control_inside_screen(_action_prompt),
-		"confirmation_buttons_inside": _control_inside_screen(_action_cancel_button) \
-			and _control_inside_screen(_action_confirm_button),
-		"confirmation_button_min_height": confirmation_button_min_height,
-		"confirmation_prompt_text": _action_prompt.text,
+		"central_confirmation_ui_removed": get_node_or_null("ActionConfirmationPanel") == null,
+		"confirming_action_button_inside": _control_inside_screen(confirming_action_button),
+		"confirming_action_button_min_height": confirming_action_button.custom_minimum_size.y,
+		"confirming_action_button_text": confirming_action_button.text,
 		"incense_clock": _incense_turn_clock.get_state_snapshot(),
 		"piece_info_drawer": _piece_info_drawer.get_state_snapshot(),
 	}
@@ -649,7 +643,6 @@ func _clear_local_interaction() -> void:
 	_prepared_preview_id = ""
 	_inflight_prepare_generation = 0
 	_inflight_prepare_preview_id = ""
-	_confirmation_panel.visible = false
 	_board_viewport.clear_interaction()
 	_piece_info_drawer.hide_drawer()
 	_update_status_controls()
@@ -816,7 +809,6 @@ func _set_action_mode(mode: String) -> void:
 		return
 	_action_mode = mode
 	_prepared_preview_id = ""
-	_confirmation_panel.visible = false
 	_board_viewport.clear_interaction()
 	_message_value.text = {
 		"move": "普通移动：选择己方棋子和目标交点。",
@@ -829,6 +821,13 @@ func _set_action_mode(mode: String) -> void:
 		if _action_mode == "resurrect":
 			_prepare_empty_target_preview()
 	_update_status_controls()
+
+
+func _on_action_button_pressed(mode: String) -> void:
+	if _interaction_state == CONFIRMING and mode == _action_mode:
+		confirm_prepared_action()
+		return
+	_set_action_mode(mode)
 
 
 func _prepare_pass() -> void:
@@ -885,17 +884,42 @@ func _update_status_controls() -> void:
 		_side_display_name(str(_current_view.get("active_side", ""))),
 		selected_name,
 	]
-	var disabled := not _can_submit_action()
-	_move_button.disabled = disabled
-	_bombard_button.disabled = disabled
-	_resurrect_button.disabled = disabled
-	_pass_button.disabled = disabled
-	_move_button.button_pressed = _action_mode == "move"
-	_bombard_button.button_pressed = _action_mode == "bombard"
-	_resurrect_button.button_pressed = _action_mode == "resurrect"
 	_update_faction_panels()
 	_update_objective_summary()
 	_update_unit_card()
+	_update_action_buttons()
+
+
+func _update_action_buttons() -> void:
+	var unavailable: bool = not _can_submit_action()
+	var confirming: bool = _interaction_state == CONFIRMING
+	_move_button.disabled = unavailable or (confirming and _action_mode != "move")
+	_bombard_button.disabled = unavailable or (confirming and _action_mode != "bombard")
+	_resurrect_button.disabled = unavailable or (confirming and _action_mode != "resurrect")
+	_pass_button.disabled = unavailable or confirming
+	_move_button.button_pressed = _action_mode == "move"
+	_bombard_button.button_pressed = _action_mode == "bombard"
+	_resurrect_button.button_pressed = _action_mode == "resurrect"
+	_move_button.text = "确认移动" if confirming and _action_mode == "move" \
+		else _action_button_default_text("move", "移动")
+	_bombard_button.text = "确认轰炸" if confirming and _action_mode == "bombard" \
+		else _action_button_default_text("bombard", "轰炸")
+	_resurrect_button.text = "确认复活" if confirming and _action_mode == "resurrect" \
+		else _action_button_default_text("resurrect", "复活")
+
+
+func _action_button_default_text(mode: String, fallback: String) -> String:
+	return str(_action_button_default_texts.get(mode, fallback))
+
+
+func _action_button_for_mode(mode: String) -> Button:
+	match mode:
+		"bombard":
+			return _bombard_button
+		"resurrect":
+			return _resurrect_button
+		_:
+			return _move_button
 
 
 func _update_faction_panels() -> void:

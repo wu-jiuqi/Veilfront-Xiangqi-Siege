@@ -49,13 +49,16 @@ func _perform(screen: Control, overlay: Control, step: Dictionary) -> void:
 			var target: Array = step.get("target", [])
 			screen.apply_marker(Vector2i(int(target[0]), int(target[1])), str(step.get("marker", "")))
 		"move", "bombard", "reject":
-			(screen.find_child("BombardButton", true, false) if kind == "bombard" \
-				else screen.find_child("MoveButton", true, false)).pressed.emit()
+			var action_button: Button = (
+				screen.find_child("BombardButton", true, false) if kind == "bombard" \
+				else screen.find_child("MoveButton", true, false)
+			) as Button
+			action_button.pressed.emit()
 			var origin := _piece_cell(screen, str(step.get("actor", "")))
 			var target: Array = step.get("target", [])
 			screen.handle_board_point(origin)
 			screen.handle_board_point(Vector2i(int(target[0]), int(target[1])))
-			screen.confirm_prepared_action()
+			action_button.pressed.emit()
 		"predict":
 			var target: Array = step.get("target", [])
 			screen.handle_board_point(Vector2i(int(target[0]), int(target[1])))
@@ -68,7 +71,7 @@ func _perform(screen: Control, overlay: Control, step: Dictionary) -> void:
 			if kind == "sacrifice_cancel":
 				screen.handle_cancel_or_marker(origin)
 			else:
-				screen.confirm_prepared_action()
+				screen.find_child("ResurrectButton", true, false).pressed.emit()
 		"quiz":
 			overlay.find_child("Option%d" % int(step.get("correct", 0)), true, false).pressed.emit()
 	await process_frame

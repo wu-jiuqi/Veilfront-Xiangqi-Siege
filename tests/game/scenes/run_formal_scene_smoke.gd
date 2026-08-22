@@ -22,7 +22,6 @@ const COMPONENT_SCENE_PATHS: Array[String] = [
 	"res://scenes/game/ui/match_header.tscn",
 	"res://scenes/game/ui/turn_progress_incense.tscn",
 	"res://scenes/game/ui/match_status_panel.tscn",
-	"res://scenes/game/ui/action_confirmation_panel.tscn",
 	"res://scenes/game/ui/marker_menu.tscn",
 	"res://scenes/game/ui/terminal_dialog.tscn",
 	"res://scenes/game/ui/tutorial_overlay.tscn",
@@ -191,12 +190,13 @@ func _check_match_screen(instance: Node) -> void:
 		"MatchHudV2/IncenseTurnClock/RoundIncenseSlot",
 		"MatchHudV2/IncenseTurnClock/RoundDisplaySlot",
 		"MarkerMenu",
-		"ActionConfirmationPanel",
 		"TutorialOverlayHost",
 		"TerminalDialog",
 	]:
 		if instance.get_node_or_null(required_path) == null:
 			_failures.append("MatchScreen missing preset node: %s" % required_path)
+	if instance.get_node_or_null("ActionConfirmationPanel") != null:
+		_failures.append("MatchScreen still contains the removed central confirmation UI")
 	var board_world: Node = instance.get_node_or_null(
 		"MatchHudV2/BoardFrame/BoardViewport/BoardSubViewport/BoardWorld"
 	)

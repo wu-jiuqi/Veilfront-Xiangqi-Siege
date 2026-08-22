@@ -47,13 +47,16 @@ func _run_chapter(level_id: String) -> void:
 				screen.apply_marker(Vector2i(int(marker_target[0]), int(marker_target[1])), str(step.get("marker", "")))
 			"move", "bombard", "reject":
 				var action_mode := "move" if step_type == "reject" else step_type
-				(screen.find_child("BombardButton", true, false) if action_mode == "bombard" \
-					else screen.find_child("MoveButton", true, false)).pressed.emit()
+				var action_button: Button = (
+					screen.find_child("BombardButton", true, false) if action_mode == "bombard" \
+					else screen.find_child("MoveButton", true, false)
+				) as Button
+				action_button.pressed.emit()
 				var origin := _piece_position(screen, str(step.get("actor", "")))
 				var target_value: Array = step.get("target", [])
 				screen.handle_board_point(origin)
 				screen.handle_board_point(Vector2i(int(target_value[0]), int(target_value[1])))
-				screen.confirm_prepared_action()
+				action_button.pressed.emit()
 			"sacrifice_cancel", "sacrifice_confirm":
 				screen.find_child("ResurrectButton", true, false).pressed.emit()
 				var advisor_origin := _piece_position(screen, str(step.get("actor", "")))
@@ -61,7 +64,7 @@ func _run_chapter(level_id: String) -> void:
 				if step_type == "sacrifice_cancel":
 					screen.handle_cancel_or_marker(advisor_origin)
 				else:
-					screen.confirm_prepared_action()
+					screen.find_child("ResurrectButton", true, false).pressed.emit()
 			"predict":
 				var predict_target: Array = step.get("target", [])
 				screen.handle_board_point(Vector2i(int(predict_target[0]), int(predict_target[1])))
