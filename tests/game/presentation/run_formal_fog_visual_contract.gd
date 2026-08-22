@@ -47,8 +47,11 @@ func _run() -> void:
 	var fog_layer := board_world.get_node("FogOverlay")
 	var structure_layer := board_world.get_node("StructureLayer")
 	var intel_layer := board_world.get_node("IntelLayer")
-	_expect(piece_layer.get_index() < fog_layer.get_index(), "fog must render after pieces")
-	_expect(fog_layer.get_index() < structure_layer.get_index(), "public structures must render above fog")
+	_expect(
+		fog_layer.get_index() < piece_layer.get_index(),
+		"authorized PlayerView pieces must remain readable above fog"
+	)
+	_expect(piece_layer.get_index() < structure_layer.get_index(), "public structures must render above pieces")
 	_expect(fog_layer.get_index() < intel_layer.get_index(), "authorized intel must render above fog")
 	board_world.queue_free()
 	await process_frame

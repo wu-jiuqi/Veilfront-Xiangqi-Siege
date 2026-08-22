@@ -26,12 +26,12 @@ func _run() -> void:
 
 	_expect(screen.has_method("handle_board_point"), "MatchScreen has no board-point interaction entry")
 	if screen.has_method("handle_board_point"):
-		screen.handle_board_point(Vector2i(5, 4))
+		_click_board_cell(screen, Vector2i(5, 4))
 		await process_frame
 		var selected: Dictionary = screen.get_presentation_snapshot()
 		_expect(str(selected.get("selected_piece_id", "")) == "rp0", "clicking T0 pawn did not select it")
 		_expect(int(selected.get("preview_count", 0)) > 0, "selecting T0 pawn produced no formal previews")
-		screen.handle_board_point(Vector2i(5, 5))
+		_click_board_cell(screen, Vector2i(5, 5))
 		await process_frame
 		_expect(screen.get_local_interaction_state() == "CONFIRMING", "clicking the T0 target did not open confirmation")
 
@@ -48,3 +48,17 @@ func _run() -> void:
 func _expect(condition: bool, message: String) -> void:
 	if not condition:
 		_failures.append(message)
+
+
+func _click_board_cell(screen: Control, cell: Vector2i) -> void:
+	var board_viewport: SubViewportContainer = screen.find_child(
+		"BoardViewport", true, false
+	) as SubViewportContainer
+	var input_surface: Control = board_viewport.get_node("ScreenInputSurface") as Control
+	var event := InputEventMouseButton.new()
+	event.button_index = MOUSE_BUTTON_LEFT
+	event.pressed = true
+	event.position = input_surface.global_position \
+		+ board_viewport.get_container_position_for_authority_cell(cell)
+	event.global_position = event.position
+	root.push_input(event, true)

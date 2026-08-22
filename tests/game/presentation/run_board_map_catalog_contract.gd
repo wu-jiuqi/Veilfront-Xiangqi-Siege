@@ -2,12 +2,15 @@ extends SceneTree
 
 const CATALOG_PATH := "res://resources/game/content/boards/board_map_catalog.tres"
 const EXPECTED_MAPS := {
-	&"terracotta_battlefield_v3": \
-		"res://assets/art/boards/terracotta_warriors/terracotta_battlefield_board_bg_gridless_v3_decorated.png",
-	&"terracotta_grassland_pond_stream_v5": \
-		"res://assets/art/boards/terracotta_warriors/terracotta_grassland_board_bg_gridless_v5_pond_stream.png",
+	&"terracotta_battlefield_v3": {
+		"path": "res://assets/art/boards/terracotta_warriors/terracotta_battlefield_board_bg_gridless_v7_low_noise.png",
+		"size": Vector2i(823, 1911),
+	},
+	&"terracotta_grassland_pond_stream_v5": {
+		"path": "res://assets/art/boards/terracotta_warriors/terracotta_grassland_board_bg_gridless_v5_pond_stream.png",
+		"size": Vector2i(820, 1918),
+	},
 }
-const EXPECTED_TEXTURE_SIZE := Vector2i(820, 1918)
 
 var _failures: Array[String] = []
 
@@ -44,13 +47,16 @@ func _run() -> void:
 		_expect(texture != null, "%s background texture is missing" % map_id)
 		if texture == null:
 			continue
+		var expected: Dictionary = EXPECTED_MAPS.get(map_id, {})
 		_expect(
-			texture.resource_path == str(EXPECTED_MAPS.get(map_id, "")),
+			texture.resource_path == str(expected.get("path", "")),
 			"%s points to an unexpected texture" % map_id
 		)
 		_expect(
-			Vector2i(texture.get_width(), texture.get_height()) == EXPECTED_TEXTURE_SIZE,
-			"%s texture must be 820x1918" % map_id
+			Vector2i(texture.get_width(), texture.get_height()) == expected.get(
+				"size", Vector2i.ZERO
+			),
+			"%s texture size drifted from the approved asset" % map_id
 		)
 
 	for expected_id: StringName in EXPECTED_MAPS:

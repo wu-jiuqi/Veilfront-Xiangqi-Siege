@@ -33,11 +33,17 @@ func _run() -> void:
 		level.queue_free()
 		await process_frame
 
-	var piece_scene: PackedScene = load("res://scenes/game/match/board/piece_view.tscn") as PackedScene
+	var piece_scene: PackedScene = load(
+		"res://scenes/game/match/board/terracotta_piece_view.tscn"
+	) as PackedScene
 	var piece_view: Node2D = piece_scene.instantiate() as Node2D
-	var body: Polygon2D = piece_view.get_node("Body") as Polygon2D
-	_expect(body.polygon.size() >= 24, "formal piece body is not the LAN circular silhouette")
-	_expect(piece_view.get_node_or_null("Border") is Line2D, "formal piece has no LAN-style border")
+	var shadow: Polygon2D = piece_view.get_node("Shadow") as Polygon2D
+	_expect(shadow.polygon.size() >= 16, "formal piece has no authored contact shadow")
+	_expect(piece_view.get_node_or_null("Artwork") is Sprite2D, "formal piece has no artwork node")
+	_expect(
+		(piece_view.get("piece_textures") as Dictionary).size() == 14,
+		"formal piece scene does not bind all 14 faction/type textures"
+	)
 	piece_view.free()
 
 	if _failures.is_empty():
