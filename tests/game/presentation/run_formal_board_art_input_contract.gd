@@ -40,6 +40,9 @@ func _run() -> void:
 	var board_border: NinePatchRect = match_screen.get_node(
 		"MatchHudV2/BoardFrame/BoardBorder"
 	) as NinePatchRect
+	var board_separator: Panel = match_screen.get_node(
+		"MatchHudV2/BoardFrame/BoardSeparator"
+	) as Panel
 	var input_surface: Control = board_viewport.get_node("ScreenInputSurface") as Control
 	var board_world: Node2D = board_viewport.get_node("BoardSubViewport/BoardWorld") as Node2D
 	var piece_layer: Node2D = board_world.get_node("PieceLayer") as Node2D
@@ -58,8 +61,12 @@ func _run() -> void:
 		"formal board border blocks pointer input before it reaches the board surface"
 	)
 	_expect(
-		board_border.patch_margin_bottom == 0,
-		"formal board border still draws the bottom line above board content"
+		board_border.patch_margin_bottom == 30,
+		"formal board border does not draw a complete four-sided frame"
+	)
+	_expect(
+		board_separator.mouse_filter == Control.MOUSE_FILTER_IGNORE,
+		"formal board separator blocks pointer input before it reaches the board surface"
 	)
 	_expect(
 		input_surface.size.is_equal_approx(board_viewport.size),
