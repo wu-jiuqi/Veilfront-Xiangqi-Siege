@@ -1,13 +1,11 @@
-[gd_resource type="Theme" load_steps=15 format=3]
+[gd_resource type="Theme" format=3 uid="uid://cnody7ltbktl0"]
 
-[ext_resource type="FontFile" path="res://assets/fonts/noto_sans_sc/NotoSansSC-VariableFont_wght.ttf" id="1_font"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/level_select/components/back_button_v2.png" id="2_back"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/level_select/components/enter_button_v2.png" id="3_enter"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/level_select/components/category_normal_v2.png" id="4_category_normal"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/level_select/components/category_selected_v2.png" id="5_category_selected"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/level_select/components/secondary_button_v2.png" id="6_secondary"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleEmpty"]
+[ext_resource type="FontFile" uid="uid://b0cc3b0elf1x6" path="res://assets/fonts/noto_sans_sc/NotoSansSC-VariableFont_wght.ttf" id="1_font"]
+[ext_resource type="Texture2D" uid="uid://cv3ykutnco1ck" path="res://assets/art/ui/level_select/components/back_button_v2.png" id="2_back"]
+[ext_resource type="Texture2D" uid="uid://bjxbbleanin1e" path="res://assets/art/ui/level_select/components/enter_button_v2.png" id="3_enter"]
+[ext_resource type="Texture2D" uid="uid://gdqdbr38dfo3" path="res://assets/art/ui/level_select/components/category_normal_v2.png" id="4_category_normal"]
+[ext_resource type="Texture2D" uid="uid://bpmps0tgj75gn" path="res://assets/art/ui/level_select/components/category_selected_v2.png" id="5_category_selected"]
+[ext_resource type="Texture2D" uid="uid://clcpgdx5q11nm" path="res://assets/art/ui/level_select/components/secondary_button_v2.png" id="6_secondary"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBack"]
 texture = ExtResource("2_back")
@@ -16,6 +14,18 @@ texture_margin_top = 32.0
 texture_margin_right = 42.0
 texture_margin_bottom = 32.0
 
+[sub_resource type="StyleBoxFlat" id="StyleFocus"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.95, 0.72, 0.3, 0.8)
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
 [sub_resource type="StyleBoxTexture" id="StyleBackHover"]
 texture = ExtResource("2_back")
 texture_margin_left = 42.0
@@ -23,6 +33,20 @@ texture_margin_top = 32.0
 texture_margin_right = 42.0
 texture_margin_bottom = 32.0
 modulate_color = Color(1.18, 1.08, 0.82, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleCategoryNormal"]
+texture = ExtResource("4_category_normal")
+texture_margin_left = 74.0
+texture_margin_top = 66.0
+texture_margin_right = 74.0
+texture_margin_bottom = 66.0
+
+[sub_resource type="StyleBoxTexture" id="StyleCategorySelected"]
+texture = ExtResource("5_category_selected")
+texture_margin_left = 74.0
+texture_margin_top = 66.0
+texture_margin_right = 74.0
+texture_margin_bottom = 66.0
 
 [sub_resource type="StyleBoxTexture" id="StyleEnter"]
 texture = ExtResource("3_enter")
@@ -39,20 +63,6 @@ texture_margin_right = 96.0
 texture_margin_bottom = 40.0
 modulate_color = Color(1.16, 1.08, 0.86, 1)
 
-[sub_resource type="StyleBoxTexture" id="StyleCategoryNormal"]
-texture = ExtResource("4_category_normal")
-texture_margin_left = 74.0
-texture_margin_top = 66.0
-texture_margin_right = 74.0
-texture_margin_bottom = 66.0
-
-[sub_resource type="StyleBoxTexture" id="StyleCategorySelected"]
-texture = ExtResource("5_category_selected")
-texture_margin_left = 74.0
-texture_margin_top = 66.0
-texture_margin_right = 74.0
-texture_margin_bottom = 66.0
-
 [sub_resource type="StyleBoxTexture" id="StyleSecondary"]
 texture = ExtResource("6_secondary")
 texture_margin_left = 66.0
@@ -60,17 +70,7 @@ texture_margin_top = 42.0
 texture_margin_right = 66.0
 texture_margin_bottom = 42.0
 
-[sub_resource type="StyleBoxFlat" id="StyleFocus"]
-bg_color = Color(0, 0, 0, 0)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.95, 0.72, 0.3, 0.8)
-expand_margin_left = 2.0
-expand_margin_top = 2.0
-expand_margin_right = 2.0
-expand_margin_bottom = 2.0
+[sub_resource type="StyleBoxEmpty" id="StyleEmpty"]
 
 [resource]
 default_font = ExtResource("1_font")

@@ -1,7 +1,37 @@
-[gd_resource type="Theme" load_steps=6 format=3]
+[gd_resource type="Theme" format=3 uid="uid://ccmn28q64bekp"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxBackground"]
-bg_color = Color(0.025, 0.031, 0.04, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxButtonHover"]
+content_margin_left = 12.0
+content_margin_top = 8.0
+content_margin_right = 12.0
+content_margin_bottom = 8.0
+bg_color = Color(0.22, 0.29, 0.38, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxButton"]
+content_margin_left = 12.0
+content_margin_top = 8.0
+content_margin_right = 12.0
+content_margin_bottom = 8.0
+bg_color = Color(0.15, 0.19, 0.25, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxButtonPressed"]
+content_margin_left = 12.0
+content_margin_top = 8.0
+content_margin_right = 12.0
+content_margin_bottom = 8.0
+bg_color = Color(0.41, 0.28, 0.12, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxPanel"]
 bg_color = Color(0.075, 0.09, 0.12, 0.96)
@@ -15,38 +45,8 @@ corner_radius_top_right = 6
 corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxButton"]
-bg_color = Color(0.15, 0.19, 0.25, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-content_margin_left = 12.0
-content_margin_top = 8.0
-content_margin_right = 12.0
-content_margin_bottom = 8.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxButtonHover"]
-bg_color = Color(0.22, 0.29, 0.38, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-content_margin_left = 12.0
-content_margin_top = 8.0
-content_margin_right = 12.0
-content_margin_bottom = 8.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxButtonPressed"]
-bg_color = Color(0.41, 0.28, 0.12, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-content_margin_left = 12.0
-content_margin_top = 8.0
-content_margin_right = 12.0
-content_margin_bottom = 8.0
+[sub_resource type="StyleBoxFlat" id="StyleBoxBackground"]
+bg_color = Color(0.025, 0.031, 0.04, 1)
 
 [resource]
 default_font_size = 18
@@ -66,10 +66,10 @@ MutedLabel/base_type = &"Label"
 MutedLabel/colors/font_color = Color(0.58, 0.63, 0.7, 1)
 Panel/styles/panel = SubResource("StyleBoxPanel")
 PanelContainer/styles/panel = SubResource("StyleBoxPanel")
+ScreenBackground/base_type = &"Panel"
+ScreenBackground/styles/panel = SubResource("StyleBoxBackground")
 ScreenTitle/base_type = &"Label"
 ScreenTitle/colors/font_color = Color(1, 0.88, 0.61, 1)
 ScreenTitle/font_sizes/font_size = 38
 SectionTitle/base_type = &"ScreenTitle"
 SectionTitle/font_sizes/font_size = 30
-ScreenBackground/base_type = &"Panel"
-ScreenBackground/styles/panel = SubResource("StyleBoxBackground")

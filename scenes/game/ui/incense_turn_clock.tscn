@@ -1,19 +1,14 @@
-[gd_scene load_steps=24 format=3]
+[gd_scene format=3 uid="uid://cgoxijkno5wvc"]
 
-[ext_resource type="Script" path="res://scripts/game/presentation/ui/incense_turn_clock.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/incense_assembly/dual_incense_bronze_stand_v1.png" id="2_stand"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/incense_assembly/timer_incense_vertical_v1.png" id="3_timer"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/incense_assembly/round_incense_vertical_v1.png" id="4_round"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/incense_assembly/round_smoke_display_frame_v1.png" id="5_display"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/turn_progress_incense/turn_progress_ember_v1.png" id="6_ember"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/turn_progress_incense/turn_progress_smoke_sequence_8f_v1.png" id="7_smoke"]
-[ext_resource type="Shader" path="res://assets/art/ui/terracotta_hud_v2/turn_progress_incense/smoke_digit_transition.gdshader" id="8_shader"]
-[ext_resource type="FontFile" path="res://assets/fonts/ramega_zhang_qingping/ramega_zhang_qingping_xingshu.ttf" id="9_font"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ember"]
-atlas = ExtResource("6_ember")
-region = Rect2(884, 530, 49, 37)
-filter_clip = true
+[ext_resource type="Script" uid="uid://cgq1c1tckgpsf" path="res://scripts/game/presentation/ui/incense_turn_clock.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://cypm6ownlya24" path="res://assets/art/ui/terracotta_hud_v2/incense_assembly/dual_incense_bronze_stand_v1.png" id="2_stand"]
+[ext_resource type="Texture2D" uid="uid://bo3q2i7v4m3v0" path="res://assets/art/ui/terracotta_hud_v2/incense_assembly/timer_incense_vertical_v1.png" id="3_timer"]
+[ext_resource type="Texture2D" uid="uid://dbjvburpxkhjt" path="res://assets/art/ui/terracotta_hud_v2/incense_assembly/round_incense_vertical_v1.png" id="4_round"]
+[ext_resource type="Texture2D" uid="uid://cybtmaprfrbp" path="res://assets/art/ui/terracotta_hud_v2/incense_assembly/round_smoke_display_frame_v1.png" id="5_display"]
+[ext_resource type="Texture2D" uid="uid://t2j2xd6poapw" path="res://assets/art/ui/terracotta_hud_v2/turn_progress_incense/turn_progress_ember_v1.png" id="6_ember"]
+[ext_resource type="Texture2D" uid="uid://b7eg8hik4mrr" path="res://assets/art/ui/terracotta_hud_v2/turn_progress_incense/turn_progress_smoke_sequence_8f_v1.png" id="7_smoke"]
+[ext_resource type="Shader" uid="uid://35c0f5vquh5m" path="res://assets/art/ui/terracotta_hud_v2/turn_progress_incense/smoke_digit_transition.gdshader" id="8_shader"]
+[ext_resource type="FontFile" uid="uid://cb5frowqdactf" path="res://assets/fonts/ramega_zhang_qingping/ramega_zhang_qingping_xingshu.ttf" id="9_font"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_stand_base"]
 atlas = ExtResource("2_stand")
@@ -30,6 +25,11 @@ atlas = ExtResource("2_stand")
 region = Rect2(1474, 0, 300, 274)
 filter_clip = true
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_ember"]
+atlas = ExtResource("6_ember")
+region = Rect2(884, 530, 49, 37)
+filter_clip = true
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_smoke_number"]
 resource_local_to_scene = true
 shader = ExtResource("8_shader")
@@ -38,21 +38,31 @@ shader_parameter/drift_strength = 7.0
 shader_parameter/breakup_scale = 18.0
 
 [sub_resource type="Animation" id="Animation_smoke_reset"]
-length = 0.0
+length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/path = NodePath("SmokeVisual/SmokeFrame:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 1, "values": [0]}
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/path = NodePath("SmokeVisual/SmokeFrame:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
-tracks/1/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 1, "values": [Vector2(-34, -421.5)]}
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Vector2(-34, -421.5)]
+}
 
 [sub_resource type="Animation" id="Animation_smoke_loop"]
 resource_name = "smoke_loop"
@@ -64,34 +74,57 @@ tracks/0/enabled = true
 tracks/0/path = NodePath("SmokeVisual/SmokeFrame:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/keys = {"times": PackedFloat32Array(0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1.05), "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1), "update": 1, "values": [0, 1, 2, 3, 4, 5, 6, 7]}
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1.05),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6, 7]
+}
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/path = NodePath("SmokeVisual/SmokeFrame:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
-tracks/1/keys = {"times": PackedFloat32Array(0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1.05), "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1), "update": 1, "values": [Vector2(-34, -421.5), Vector2(0, -414), Vector2(-29, -403.5), Vector2(-19, -403.5), Vector2(-25, -132), Vector2(-31, -135.5), Vector2(-9, -133.5), Vector2(-5, -151.5)]}
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1.05),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2(-34, -421.5), Vector2(0, -414), Vector2(-29, -403.5), Vector2(-19, -403.5), Vector2(-25, -132), Vector2(-31, -135.5), Vector2(-9, -133.5), Vector2(-5, -151.5)]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_smoke"]
-_data = {&"RESET": SubResource("Animation_smoke_reset"), &"smoke_loop": SubResource("Animation_smoke_loop")}
+_data = {
+&"RESET": SubResource("Animation_smoke_reset"),
+&"smoke_loop": SubResource("Animation_smoke_loop")
+}
 
 [sub_resource type="Animation" id="Animation_timer_smoke_reset"]
-length = 0.0
+length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/path = NodePath("TimerSmokeVisual/TimerSmokeFrame:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 1, "values": [0]}
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/path = NodePath("TimerSmokeVisual/TimerSmokeFrame:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
-tracks/1/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 1, "values": [Vector2(-34, -421.5)]}
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Vector2(-34, -421.5)]
+}
 
 [sub_resource type="Animation" id="Animation_timer_smoke_loop"]
 resource_name = "smoke_loop"
@@ -103,27 +136,45 @@ tracks/0/enabled = true
 tracks/0/path = NodePath("TimerSmokeVisual/TimerSmokeFrame:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/keys = {"times": PackedFloat32Array(0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1.05), "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1), "update": 1, "values": [0, 1, 2, 3, 4, 5, 6, 7]}
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1.05),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6, 7]
+}
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/path = NodePath("TimerSmokeVisual/TimerSmokeFrame:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
-tracks/1/keys = {"times": PackedFloat32Array(0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1.05), "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1), "update": 1, "values": [Vector2(-34, -421.5), Vector2(0, -414), Vector2(-29, -403.5), Vector2(-19, -403.5), Vector2(-25, -132), Vector2(-31, -135.5), Vector2(-9, -133.5), Vector2(-5, -151.5)]}
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1.05),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2(-34, -421.5), Vector2(0, -414), Vector2(-29, -403.5), Vector2(-19, -403.5), Vector2(-25, -132), Vector2(-31, -135.5), Vector2(-9, -133.5), Vector2(-5, -151.5)]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_timer_smoke"]
-_data = {&"RESET": SubResource("Animation_timer_smoke_reset"), &"smoke_loop": SubResource("Animation_timer_smoke_loop")}
+_data = {
+&"RESET": SubResource("Animation_timer_smoke_reset"),
+&"smoke_loop": SubResource("Animation_timer_smoke_loop")
+}
 
 [sub_resource type="Animation" id="Animation_number_reset"]
-length = 0.0
+length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/path = NodePath("RoundDisplaySlot/NumberFloat:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [Vector2(0, 0)]}
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
 
 [sub_resource type="Animation" id="Animation_number_float"]
 resource_name = "number_float"
@@ -135,12 +186,20 @@ tracks/0/enabled = true
 tracks/0/path = NodePath("RoundDisplaySlot/NumberFloat:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/keys = {"times": PackedFloat32Array(0, 1.2, 2.4, 3.6), "transitions": PackedFloat32Array(0.55, 0.55, 0.55, 0.55), "update": 0, "values": [Vector2(0, 0), Vector2(2, -3), Vector2(-2, -1), Vector2(0, 0)]}
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1.2, 2.4, 3.6),
+"transitions": PackedFloat32Array(0.55, 0.55, 0.55, 0.55),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(2, -3), Vector2(-2, -1), Vector2(0, 0)]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_number"]
-_data = {&"RESET": SubResource("Animation_number_reset"), &"number_float": SubResource("Animation_number_float")}
+_data = {
+&"RESET": SubResource("Animation_number_reset"),
+&"number_float": SubResource("Animation_number_float")
+}
 
-[node name="IncenseTurnClock" type="Control"]
+[node name="IncenseTurnClock" type="Control" unique_id=89784222]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -150,102 +209,100 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_script")
 
-[node name="IncenseStandSlot" type="Control" parent="."]
+[node name="IncenseStandSlot" type="Control" parent="." unique_id=1013709220]
 unique_name_in_owner = true
 z_index = -1
-layout_mode = 0
+anchors_preset = 0
 offset_left = 64.0
 offset_top = 676.0
 offset_right = 1216.0
 offset_bottom = 716.0
 mouse_filter = 2
 
-[node name="IncenseStandBaseArt" type="TextureRect" parent="IncenseStandSlot"]
+[node name="IncenseStandBaseArt" type="TextureRect" parent="IncenseStandSlot" unique_id=605605775]
 unique_name_in_owner = true
 layout_mode = 0
-offset_top = -40.0
+offset_top = -11.0
 offset_right = 1152.0
 offset_bottom = 40.0
 mouse_filter = 2
 texture = SubResource("AtlasTexture_stand_base")
 expand_mode = 1
-stretch_mode = 0
 
-[node name="IncenseStandLeftHead" type="TextureRect" parent="IncenseStandSlot"]
+[node name="IncenseStandLeftHead" type="TextureRect" parent="IncenseStandSlot" unique_id=2063678255]
 unique_name_in_owner = true
 z_index = 1
 layout_mode = 0
 offset_left = -51.0
 offset_top = -124.4
-offset_right = 129.0
-offset_bottom = 40.0
+offset_right = 103.0
+offset_bottom = 39.999992
 mouse_filter = 2
 texture = SubResource("AtlasTexture_stand_left")
 expand_mode = 1
-stretch_mode = 0
 
-[node name="IncenseStandRightHead" type="TextureRect" parent="IncenseStandSlot"]
+[node name="IncenseStandRightHead" type="TextureRect" parent="IncenseStandSlot" unique_id=1962684728]
 unique_name_in_owner = true
 z_index = 1
 layout_mode = 0
-offset_left = 1027.0
-offset_top = -124.4
+offset_left = 1052.0
+offset_top = -102.99998
 offset_right = 1207.0
-offset_bottom = 40.0
+offset_bottom = 39.999992
 mouse_filter = 2
 texture = SubResource("AtlasTexture_stand_right")
 expand_mode = 1
-stretch_mode = 0
 
-[node name="TimerIncenseSlot" type="Control" parent="."]
+[node name="TimerIncenseSlot" type="Control" parent="." unique_id=79661732]
 unique_name_in_owner = true
 z_index = -2
-layout_mode = 0
+anchors_preset = 0
 offset_left = 72.0
 offset_top = 443.0
 offset_right = 120.0
 offset_bottom = 675.0
 mouse_filter = 2
 
-[node name="TimerBodyClip" type="Control" parent="TimerIncenseSlot"]
+[node name="TimerBodyClip" type="Control" parent="TimerIncenseSlot" unique_id=369522458]
 unique_name_in_owner = true
 clip_contents = true
-layout_mode = 0
+anchors_preset = 0
 offset_right = 48.0
 offset_bottom = 232.0
 mouse_filter = 2
 
-[node name="TimerBody" type="TextureRect" parent="TimerIncenseSlot/TimerBodyClip"]
+[node name="TimerBody" type="TextureRect" parent="TimerIncenseSlot/TimerBodyClip" unique_id=317868519]
 unique_name_in_owner = true
 layout_mode = 0
-offset_right = 48.0
+offset_left = -10.0
+offset_right = 38.0
 offset_bottom = 232.0
 mouse_filter = 2
 texture = ExtResource("3_timer")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="TimerEmber" type="TextureRect" parent="TimerIncenseSlot"]
+[node name="TimerEmber" type="TextureRect" parent="TimerIncenseSlot" unique_id=1553687330]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 15.0
-offset_top = -7.0
-offset_right = 33.0
-offset_bottom = 7.0
+offset_left = 6.0
+offset_top = -5.0
+offset_right = 24.0
+offset_bottom = 9.0
 mouse_filter = 2
 texture = SubResource("AtlasTexture_ember")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="TimerSmokeVisual" type="Node2D" parent="."]
+[node name="TimerSmokeVisual" type="Node2D" parent="." unique_id=935194899]
 unique_name_in_owner = true
-z_index = 1
 modulate = Color(0.94, 0.89, 0.82, 0.82)
-position = Vector2(96, 443)
+z_index = 1
+position = Vector2(88.00003, 443)
 rotation = -0.804264
 scale = Vector2(0.9, -0.18)
 
-[node name="TimerSmokeFrame" type="Sprite2D" parent="TimerSmokeVisual"]
+[node name="TimerSmokeFrame" type="Sprite2D" parent="TimerSmokeVisual" unique_id=869361676]
 unique_name_in_owner = true
 position = Vector2(-34, -421.5)
 texture = ExtResource("7_smoke")
@@ -253,55 +310,56 @@ centered = false
 hframes = 4
 vframes = 2
 
-[node name="RoundIncenseSlot" type="Control" parent="."]
+[node name="RoundIncenseSlot" type="Control" parent="." unique_id=1123848073]
 unique_name_in_owner = true
 z_index = -1
-layout_mode = 0
+anchors_preset = 0
 offset_left = 1168.0
 offset_top = 272.0
 offset_right = 1208.0
 offset_bottom = 680.0
 mouse_filter = 2
 
-[node name="RoundBodyClip" type="Control" parent="RoundIncenseSlot"]
+[node name="RoundBodyClip" type="Control" parent="RoundIncenseSlot" unique_id=375779167]
 unique_name_in_owner = true
 clip_contents = true
-layout_mode = 0
+anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 408.0
 mouse_filter = 2
 
-[node name="RoundBody" type="TextureRect" parent="RoundIncenseSlot/RoundBodyClip"]
+[node name="RoundBody" type="TextureRect" parent="RoundIncenseSlot/RoundBodyClip" unique_id=1085366383]
 unique_name_in_owner = true
 layout_mode = 0
-offset_right = 40.0
+offset_left = 12.0
+offset_right = 52.0
 offset_bottom = 408.0
 mouse_filter = 2
 texture = ExtResource("4_round")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="RoundEmber" type="TextureRect" parent="RoundIncenseSlot"]
+[node name="RoundEmber" type="TextureRect" parent="RoundIncenseSlot" unique_id=725759114]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 11.0
-offset_top = -7.0
-offset_right = 29.0
-offset_bottom = 7.0
+offset_left = 23.0
+offset_top = -2.0
+offset_right = 41.0
+offset_bottom = 12.0
 mouse_filter = 2
 texture = SubResource("AtlasTexture_ember")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="SmokeVisual" type="Node2D" parent="."]
+[node name="SmokeVisual" type="Node2D" parent="." unique_id=1392387172]
 unique_name_in_owner = true
-z_index = 1
 modulate = Color(0.94, 0.89, 0.82, 0.82)
+z_index = 1
 position = Vector2(1188, 272)
 rotation = -1.5708
 scale = Vector2(0.9, 0.18)
 
-[node name="SmokeFrame" type="Sprite2D" parent="SmokeVisual"]
+[node name="SmokeFrame" type="Sprite2D" parent="SmokeVisual" unique_id=1972975782]
 unique_name_in_owner = true
 position = Vector2(-34, -421.5)
 texture = ExtResource("7_smoke")
@@ -309,17 +367,17 @@ centered = false
 hframes = 4
 vframes = 2
 
-[node name="RoundDisplaySlot" type="Control" parent="."]
+[node name="RoundDisplaySlot" type="Control" parent="." unique_id=1845872703]
 unique_name_in_owner = true
 z_index = 2
-layout_mode = 0
+anchors_preset = 0
 offset_left = 1104.0
 offset_top = 160.0
 offset_right = 1208.0
 offset_bottom = 256.0
 mouse_filter = 2
 
-[node name="Frame" type="TextureRect" parent="RoundDisplaySlot"]
+[node name="Frame" type="TextureRect" parent="RoundDisplaySlot" unique_id=1996806710]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -331,7 +389,7 @@ texture = ExtResource("5_display")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="NumberFloat" type="Control" parent="RoundDisplaySlot"]
+[node name="NumberFloat" type="Control" parent="RoundDisplaySlot" unique_id=1298371024]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -340,15 +398,15 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="SmokeNumber" type="Label" parent="RoundDisplaySlot/NumberFloat"]
+[node name="SmokeNumber" type="Label" parent="RoundDisplaySlot/NumberFloat" unique_id=567267974]
 unique_name_in_owner = true
 material = SubResource("ShaderMaterial_smoke_number")
 layout_mode = 1
+anchors_preset = -1
 anchor_left = 0.14
 anchor_top = 0.19
 anchor_right = 0.86
 anchor_bottom = 0.72
-mouse_filter = 2
 theme_override_colors/font_color = Color(0.78, 0.75, 0.7, 0.94)
 theme_override_colors/font_outline_color = Color(0.2, 0.18, 0.16, 0.48)
 theme_override_constants/outline_size = 2
@@ -358,13 +416,13 @@ text = "一"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="RoundCaption" type="Label" parent="RoundDisplaySlot/NumberFloat"]
+[node name="RoundCaption" type="Label" parent="RoundDisplaySlot/NumberFloat" unique_id=955088503]
 layout_mode = 1
+anchors_preset = -1
 anchor_left = 0.24
 anchor_top = 0.7
 anchor_right = 0.76
 anchor_bottom = 0.91
-mouse_filter = 2
 theme_override_colors/font_color = Color(0.66, 0.59, 0.46, 0.9)
 theme_override_fonts/font = ExtResource("9_font")
 theme_override_font_sizes/font_size = 14
@@ -372,17 +430,17 @@ text = "回合"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="SmokeAnimationPlayer" type="AnimationPlayer" parent="."]
+[node name="SmokeAnimationPlayer" type="AnimationPlayer" parent="." unique_id=209832098]
 unique_name_in_owner = true
-libraries = {&"": SubResource("AnimationLibrary_smoke")}
-autoplay = "smoke_loop"
+libraries/ = SubResource("AnimationLibrary_smoke")
+autoplay = &"smoke_loop"
 
-[node name="TimerSmokeAnimationPlayer" type="AnimationPlayer" parent="."]
+[node name="TimerSmokeAnimationPlayer" type="AnimationPlayer" parent="." unique_id=515048047]
 unique_name_in_owner = true
-libraries = {&"": SubResource("AnimationLibrary_timer_smoke")}
-autoplay = "smoke_loop"
+libraries/ = SubResource("AnimationLibrary_timer_smoke")
+autoplay = &"smoke_loop"
 
-[node name="NumberFloatAnimationPlayer" type="AnimationPlayer" parent="."]
+[node name="NumberFloatAnimationPlayer" type="AnimationPlayer" parent="." unique_id=862721206]
 unique_name_in_owner = true
-libraries = {&"": SubResource("AnimationLibrary_number")}
-autoplay = "number_float"
+libraries/ = SubResource("AnimationLibrary_number")
+autoplay = &"number_float"

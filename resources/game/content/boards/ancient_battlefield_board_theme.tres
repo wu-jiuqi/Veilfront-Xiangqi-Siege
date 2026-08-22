@@ -1,6 +1,6 @@
-[gd_resource type="Resource" script_class="BoardTheme" load_steps=6 format=3]
+[gd_resource type="Resource" script_class="BoardTheme" format=3 uid="uid://dq4f45462r2e4"]
 
-[ext_resource type="Script" path="res://scripts/game/presentation/board/board_theme.gd" id="1_board_theme"]
+[ext_resource type="Script" uid="uid://cu8wlq6dod46s" path="res://scripts/game/presentation/board/board_theme.gd" id="1_board_theme"]
 [ext_resource type="PackedScene" path="res://scenes/game/match/board/wall_view.tscn" id="2_wall"]
 [ext_resource type="PackedScene" path="res://scenes/game/match/board/piece_view.tscn" id="3_piece"]
 [ext_resource type="PackedScene" path="res://scenes/game/match/board/flag_view.tscn" id="4_flag"]
@@ -9,11 +9,10 @@
 [resource]
 script = ExtResource("1_board_theme")
 theme_id = &"ancient_battlefield_graybox"
-cell_size = Vector2(128, 128)
 grid_palette = {
 "base": Color(0.68, 0.48, 0.31, 1),
-"headquarters": Color(0.72, 0.58, 0.36, 1),
 "buffer": Color(0.61, 0.46, 0.32, 1),
+"headquarters": Color(0.72, 0.58, 0.36, 1),
 "warzone": Color(0.45, 0.36, 0.28, 1)
 }
 grid_line_style = {

@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="BoardMapOption" format=3 uid="uid://bll2lq35ow8yj"]
 
 [ext_resource type="Script" uid="uid://btlhlgthwlxtx" path="res://scripts/game/presentation/board/board_map_option.gd" id="1_option"]
-[ext_resource type="Texture2D" path="res://assets/art/boards/terracotta_warriors/terracotta_battlefield_board_bg_gridless_v7_low_noise.png" id="2_background"]
+[ext_resource type="Texture2D" uid="uid://2wgk2mkigjb0" path="res://assets/art/boards/terracotta_warriors/terracotta_battlefield_board_bg_gridless_v7_low_noise.png" id="2_background"]
 
 [resource]
 script = ExtResource("1_option")

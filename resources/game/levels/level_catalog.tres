@@ -1,23 +1,20 @@
-[gd_resource type="Resource" script_class="LevelCatalog" load_steps=16 format=3]
+[gd_resource type="Resource" script_class="LevelCatalog" format=3 uid="uid://c78rg2ci6skpj"]
 
-[ext_resource type="Script" path="res://scripts/game/frontend/level_definition.gd" id="1_definition"]
-[ext_resource type="Script" path="res://scripts/game/frontend/level_catalog.gd" id="2_catalog"]
+[ext_resource type="Script" uid="uid://dmcpaf4fdoo15" path="res://scripts/game/frontend/level_definition.gd" id="1_definition"]
+[ext_resource type="Script" uid="uid://bpytsmnal2j86" path="res://scripts/game/frontend/level_catalog.gd" id="2_catalog"]
 
 [sub_resource type="Resource" id="LevelT0"]
 script = ExtResource("1_definition")
 level_id = "T0"
-category = "tutorial"
 title = "操作校准：棋落交点"
 summary = "认识九路棋盘、选择、取消与确认。"
 objective_text = "完成一次合法移动。"
 scene_path = "res://scenes/game/tutorial/tutorial_level.tscn"
-recommended_order = 0
 available = true
 
 [sub_resource type="Resource" id="LevelT1"]
 script = ExtResource("1_definition")
 level_id = "T1"
-category = "tutorial"
 title = "兵卒训练：穿阵不伤"
 summary = "理解兵卒的穿敌长距离机动。"
 objective_text = "完成兵卒训练。"
@@ -29,7 +26,6 @@ available = true
 [sub_resource type="Resource" id="LevelT2"]
 script = ExtResource("1_definition")
 level_id = "T2"
-category = "tutorial"
 title = "马训练：越腿入雾"
 summary = "认识马的特殊移动和迷雾边界。"
 objective_text = "完成马训练。"
@@ -41,7 +37,6 @@ available = true
 [sub_resource type="Resource" id="LevelT3"]
 script = ExtResource("1_definition")
 level_id = "T3"
-category = "tutorial"
 title = "相象训练：田字封路"
 summary = "理解相象田字范围与封路关系。"
 objective_text = "完成相象训练。"
@@ -53,7 +48,6 @@ available = true
 [sub_resource type="Resource" id="LevelT4"]
 script = ExtResource("1_definition")
 level_id = "T4"
-category = "tutorial"
 title = "车训练：蓝线开路"
 summary = "用蓝色路径反馈理解车的行动范围。"
 objective_text = "完成车训练。"
@@ -65,7 +59,6 @@ available = true
 [sub_resource type="Resource" id="LevelT5"]
 script = ExtResource("1_definition")
 level_id = "T5"
-category = "tutorial"
 title = "炮训练：一架一轰"
 summary = "掌握炮架与炮击的公开反馈。"
 objective_text = "完成炮训练。"
@@ -77,7 +70,6 @@ available = true
 [sub_resource type="Resource" id="LevelT6"]
 script = ExtResource("1_definition")
 level_id = "T6"
-category = "tutorial"
 title = "士训练：以身换援"
 summary = "理解士献祭的准备、确认与取消。"
 objective_text = "完成士献祭训练。"
@@ -89,7 +81,6 @@ available = true
 [sub_resource type="Resource" id="LevelT7"]
 script = ExtResource("1_definition")
 level_id = "T7"
-category = "tutorial"
 title = "将帅训练：实际阵亡"
 summary = "明确将帅阵亡的即时终局。"
 objective_text = "完成将帅训练。"
@@ -101,7 +92,6 @@ available = true
 [sub_resource type="Resource" id="LevelT8"]
 script = ExtResource("1_definition")
 level_id = "T8"
-category = "tutorial"
 title = "特色机制：雾墙攻防"
 summary = "在迷雾和城墙交界处完成一次攻防。"
 objective_text = "完成雾墙训练。"
@@ -113,7 +103,6 @@ available = true
 [sub_resource type="Resource" id="LevelT9"]
 script = ExtResource("1_definition")
 level_id = "T9"
-category = "tutorial"
 title = "特色机制：雾中旗帜"
 summary = "学习发现、争夺与守住公开旗帜。"
 objective_text = "完成旗帜训练。"
@@ -125,7 +114,6 @@ available = true
 [sub_resource type="Resource" id="LevelT10"]
 script = ExtResource("1_definition")
 level_id = "T10"
-category = "tutorial"
 title = "综合考核：第一面战旗"
 summary = "把前九章的观察与行动串成完整闭环。"
 objective_text = "完成综合考核。"

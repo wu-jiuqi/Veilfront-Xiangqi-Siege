@@ -1,90 +1,21 @@
-[gd_resource type="Theme" format=3]
+[gd_resource type="Theme" format=3 uid="uid://blq4lo6avwchq"]
 
-[ext_resource type="FontFile" path="res://assets/fonts/noto_sans_sc/NotoSansSC-VariableFont_wght.ttf" id="1_font"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/action_button_states_v1.png" id="2_buttons"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/hud_panel_9slice_v1.png" id="3_panel"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/minimap_frame_v1.png" id="4_minimap"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/turn_status_bar_v1.png" id="5_turn_status"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxBackground"]
-bg_color = Color(0.015, 0.02, 0.019, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.18, 0.23, 0.2, 1)
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxPanel"]
-texture = ExtResource("3_panel")
-texture_margin_left = 72.0
-texture_margin_top = 72.0
-texture_margin_right = 72.0
-texture_margin_bottom = 72.0
-content_margin_left = 28.0
-content_margin_top = 28.0
-content_margin_right = 28.0
-content_margin_bottom = 28.0
-draw_center = true
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxPanelDark"]
-texture = ExtResource("3_panel")
-texture_margin_left = 72.0
-texture_margin_top = 72.0
-texture_margin_right = 72.0
-texture_margin_bottom = 72.0
-content_margin_left = 28.0
-content_margin_top = 28.0
-content_margin_right = 28.0
-content_margin_bottom = 28.0
-draw_center = true
-modulate_color = Color(0.7, 0.75, 0.71, 1)
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxButtonNormal"]
-texture = ExtResource("2_buttons")
-texture_margin_left = 42.0
-texture_margin_top = 24.0
-texture_margin_right = 42.0
-texture_margin_bottom = 24.0
-content_margin_left = 18.0
-content_margin_top = 10.0
-content_margin_right = 18.0
-content_margin_bottom = 10.0
-region_rect = Rect2(0, 94, 543, 497)
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxButtonHover"]
-texture = ExtResource("2_buttons")
-texture_margin_left = 42.0
-texture_margin_top = 24.0
-texture_margin_right = 42.0
-texture_margin_bottom = 24.0
-content_margin_left = 18.0
-content_margin_top = 10.0
-content_margin_right = 18.0
-content_margin_bottom = 10.0
-region_rect = Rect2(543, 94, 543, 497)
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxButtonPressed"]
-texture = ExtResource("2_buttons")
-texture_margin_left = 42.0
-texture_margin_top = 24.0
-texture_margin_right = 42.0
-texture_margin_bottom = 24.0
-content_margin_left = 18.0
-content_margin_top = 11.0
-content_margin_right = 18.0
-content_margin_bottom = 9.0
-region_rect = Rect2(1086, 94, 543, 497)
+[ext_resource type="FontFile" uid="uid://b0cc3b0elf1x6" path="res://assets/fonts/noto_sans_sc/NotoSansSC-VariableFont_wght.ttf" id="1_font"]
+[ext_resource type="Texture2D" uid="uid://db1sj00pvrxjt" path="res://assets/art/ui/terracotta_hud_v2/action_button_states_v1.png" id="2_buttons"]
+[ext_resource type="Texture2D" uid="uid://dbeue1v0pvbfe" path="res://assets/art/ui/terracotta_hud_v2/hud_panel_9slice_v1.png" id="3_panel"]
+[ext_resource type="Texture2D" uid="uid://cunqwrmantjo2" path="res://assets/art/ui/terracotta_hud_v2/minimap_frame_v1.png" id="4_minimap"]
+[ext_resource type="Texture2D" uid="uid://ddv83egjreh35" path="res://assets/art/ui/terracotta_hud_v2/turn_status_bar_v1.png" id="5_turn_status"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxButtonDisabled"]
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
 texture = ExtResource("2_buttons")
 texture_margin_left = 42.0
 texture_margin_top = 24.0
 texture_margin_right = 42.0
 texture_margin_bottom = 24.0
-content_margin_left = 18.0
-content_margin_top = 10.0
-content_margin_right = 18.0
-content_margin_bottom = 10.0
 region_rect = Rect2(1629, 94, 543, 497)
 modulate_color = Color(0.58, 0.58, 0.56, 0.82)
 
@@ -104,46 +35,108 @@ expand_margin_top = 4.0
 expand_margin_right = 4.0
 expand_margin_bottom = 4.0
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxSecondary"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxButtonHover"]
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
 texture = ExtResource("2_buttons")
 texture_margin_left = 42.0
 texture_margin_top = 24.0
 texture_margin_right = 42.0
 texture_margin_bottom = 24.0
-content_margin_left = 18.0
-content_margin_top = 10.0
-content_margin_right = 18.0
-content_margin_bottom = 10.0
-region_rect = Rect2(0, 94, 543, 497)
-modulate_color = Color(0.7, 0.76, 0.72, 1)
+region_rect = Rect2(543, 94, 543, 497)
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxDanger"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxButtonNormal"]
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
 texture = ExtResource("2_buttons")
 texture_margin_left = 42.0
 texture_margin_top = 24.0
 texture_margin_right = 42.0
 texture_margin_bottom = 24.0
-content_margin_left = 18.0
-content_margin_top = 10.0
-content_margin_right = 18.0
-content_margin_bottom = 10.0
 region_rect = Rect2(0, 94, 543, 497)
-modulate_color = Color(0.7, 0.25, 0.2, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxButtonPressed"]
+content_margin_left = 18.0
+content_margin_top = 11.0
+content_margin_right = 18.0
+content_margin_bottom = 9.0
+texture = ExtResource("2_buttons")
+texture_margin_left = 42.0
+texture_margin_top = 24.0
+texture_margin_right = 42.0
+texture_margin_bottom = 24.0
+region_rect = Rect2(1086, 94, 543, 497)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxPanelDark"]
+content_margin_left = 28.0
+content_margin_top = 28.0
+content_margin_right = 28.0
+content_margin_bottom = 28.0
+texture = ExtResource("3_panel")
+texture_margin_left = 72.0
+texture_margin_top = 72.0
+texture_margin_right = 72.0
+texture_margin_bottom = 72.0
+modulate_color = Color(0.7, 0.75, 0.71, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxDangerHover"]
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
 texture = ExtResource("2_buttons")
 texture_margin_left = 42.0
 texture_margin_top = 24.0
 texture_margin_right = 42.0
 texture_margin_bottom = 24.0
-content_margin_left = 18.0
-content_margin_top = 10.0
-content_margin_right = 18.0
-content_margin_bottom = 10.0
 region_rect = Rect2(543, 94, 543, 497)
 modulate_color = Color(0.9, 0.33, 0.22, 1)
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxDanger"]
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
+texture = ExtResource("2_buttons")
+texture_margin_left = 42.0
+texture_margin_top = 24.0
+texture_margin_right = 42.0
+texture_margin_bottom = 24.0
+region_rect = Rect2(0, 94, 543, 497)
+modulate_color = Color(0.7, 0.25, 0.2, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxMinimap"]
+content_margin_left = 28.0
+content_margin_top = 128.0
+content_margin_right = 28.0
+content_margin_bottom = 28.0
+texture = ExtResource("4_minimap")
+texture_margin_left = 48.0
+texture_margin_top = 150.0
+texture_margin_right = 48.0
+texture_margin_bottom = 48.0
+draw_center = false
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxPanel"]
+content_margin_left = 28.0
+content_margin_top = 28.0
+content_margin_right = 28.0
+content_margin_bottom = 28.0
+texture = ExtResource("3_panel")
+texture_margin_left = 72.0
+texture_margin_top = 72.0
+texture_margin_right = 72.0
+texture_margin_bottom = 72.0
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxQuiet"]
+content_margin_left = 14.0
+content_margin_top = 8.0
+content_margin_right = 14.0
+content_margin_bottom = 8.0
 bg_color = Color(0.02, 0.025, 0.023, 0.28)
 border_width_left = 1
 border_width_top = 1
@@ -154,33 +147,38 @@ corner_radius_top_left = 2
 corner_radius_top_right = 2
 corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
-content_margin_left = 14.0
-content_margin_top = 8.0
-content_margin_right = 14.0
-content_margin_bottom = 8.0
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxMinimap"]
-texture = ExtResource("4_minimap")
-texture_margin_left = 48.0
-texture_margin_top = 150.0
-texture_margin_right = 48.0
-texture_margin_bottom = 48.0
-content_margin_left = 28.0
-content_margin_top = 128.0
-content_margin_right = 28.0
-content_margin_bottom = 28.0
-draw_center = false
+[sub_resource type="StyleBoxFlat" id="StyleBoxBackground"]
+bg_color = Color(0.015, 0.02, 0.019, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.18, 0.23, 0.2, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxSecondary"]
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
+texture = ExtResource("2_buttons")
+texture_margin_left = 42.0
+texture_margin_top = 24.0
+texture_margin_right = 42.0
+texture_margin_bottom = 24.0
+region_rect = Rect2(0, 94, 543, 497)
+modulate_color = Color(0.7, 0.76, 0.72, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTurnStatus"]
+content_margin_left = 24.0
+content_margin_top = 12.0
+content_margin_right = 24.0
+content_margin_bottom = 12.0
 texture = ExtResource("5_turn_status")
 texture_margin_left = 72.0
 texture_margin_top = 24.0
 texture_margin_right = 72.0
 texture_margin_bottom = 24.0
-content_margin_left = 24.0
-content_margin_top = 12.0
-content_margin_right = 24.0
-content_margin_bottom = 12.0
 region_rect = Rect2(0, 250, 2142, 240)
 
 [resource]
@@ -197,68 +195,68 @@ Button/styles/focus = SubResource("StyleBoxFocus")
 Button/styles/hover = SubResource("StyleBoxButtonHover")
 Button/styles/normal = SubResource("StyleBoxButtonNormal")
 Button/styles/pressed = SubResource("StyleBoxButtonPressed")
-PrimaryButton/base_type = &"Button"
-SecondaryButton/base_type = &"Button"
-SecondaryButton/colors/font_color = Color(0.78, 0.83, 0.8, 1)
-SecondaryButton/styles/normal = SubResource("StyleBoxSecondary")
+CardPanel/base_type = &"PanelContainer"
+CardPanel/styles/panel = SubResource("StyleBoxPanelDark")
 DangerButton/base_type = &"Button"
 DangerButton/colors/font_color = Color(1, 0.8, 0.7, 1)
 DangerButton/colors/font_hover_color = Color(1, 0.92, 0.75, 1)
 DangerButton/styles/hover = SubResource("StyleBoxDangerHover")
 DangerButton/styles/normal = SubResource("StyleBoxDanger")
 DangerButton/styles/pressed = SubResource("StyleBoxButtonPressed")
+FocusFrame/base_type = &"Panel"
+FocusFrame/styles/panel = SubResource("StyleBoxFocus")
+HUDPanel/base_type = &"PanelContainer"
 IconButton/base_type = &"Button"
 IconButton/constants/icon_max_width = 28
 IconButton/font_sizes/font_size = 16
-TabButton/base_type = &"Button"
-TabButton/font_sizes/font_size = 16
-QuietButton/base_type = &"Button"
-QuietButton/styles/normal = SubResource("StyleBoxQuiet")
-QuietButton/styles/pressed = SubResource("StyleBoxQuiet")
+InfoFrame/base_type = &"Panel"
+InfoFrame/styles/panel = SubResource("StyleBoxFocus")
 Label/colors/font_color = Color(0.84, 0.85, 0.81, 1)
 Label/constants/shadow_offset_x = 1
 Label/constants/shadow_offset_y = 1
+MinimapFrame/base_type = &"Panel"
+MinimapFrame/styles/panel = SubResource("StyleBoxMinimap")
+MinimapPanel/base_type = &"PanelContainer"
+MinimapPanel/styles/panel = SubResource("StyleBoxMinimap")
+ModalPanel/base_type = &"PanelContainer"
 MutedLabel/base_type = &"Label"
 MutedLabel/colors/font_color = Color(0.58, 0.6, 0.56, 1)
+ObjectiveFrame/base_type = &"Panel"
+ObjectiveFrame/styles/panel = SubResource("StyleBoxFocus")
+Panel/styles/panel = SubResource("StyleBoxPanel")
+PanelContainer/styles/panel = SubResource("StyleBoxPanel")
+PieceFrame/base_type = &"Panel"
+PieceFrame/styles/panel = SubResource("StyleBoxFocus")
+PopupPanel/styles/panel = SubResource("StyleBoxPanel")
+PortraitFrame/base_type = &"Panel"
+PortraitFrame/styles/panel = SubResource("StyleBoxFocus")
+PrimaryButton/base_type = &"Button"
+QuietButton/base_type = &"Button"
+QuietButton/styles/normal = SubResource("StyleBoxQuiet")
+QuietButton/styles/pressed = SubResource("StyleBoxQuiet")
+ResultPanel/base_type = &"PanelContainer"
+ScreenBackground/base_type = &"Panel"
+ScreenBackground/styles/panel = SubResource("StyleBoxBackground")
 ScreenTitle/base_type = &"Label"
 ScreenTitle/colors/font_color = Color(0.86, 0.72, 0.43, 1)
 ScreenTitle/colors/font_outline_color = Color(0.08, 0.07, 0.055, 1)
 ScreenTitle/constants/outline_size = 2
 ScreenTitle/font_sizes/font_size = 38
+SecondaryButton/base_type = &"Button"
+SecondaryButton/colors/font_color = Color(0.78, 0.83, 0.8, 1)
+SecondaryButton/styles/normal = SubResource("StyleBoxSecondary")
 SectionTitle/base_type = &"ScreenTitle"
 SectionTitle/font_sizes/font_size = 28
-Panel/styles/panel = SubResource("StyleBoxPanel")
-PanelContainer/styles/panel = SubResource("StyleBoxPanel")
-PopupPanel/styles/panel = SubResource("StyleBoxPanel")
-TabContainer/styles/panel = SubResource("StyleBoxPanel")
-ScreenBackground/base_type = &"Panel"
-ScreenBackground/styles/panel = SubResource("StyleBoxBackground")
-HUDPanel/base_type = &"PanelContainer"
-ModalPanel/base_type = &"PanelContainer"
-TooltipPanel/base_type = &"PanelContainer"
-TooltipPanel/styles/panel = SubResource("StyleBoxPanelDark")
-SidebarPanel/base_type = &"PanelContainer"
-CardPanel/base_type = &"PanelContainer"
-CardPanel/styles/panel = SubResource("StyleBoxPanelDark")
-MinimapPanel/base_type = &"PanelContainer"
-MinimapPanel/styles/panel = SubResource("StyleBoxMinimap")
-ResultPanel/base_type = &"PanelContainer"
-SettingsPanel/base_type = &"PanelContainer"
-TurnStatusPanel/base_type = &"PanelContainer"
-TurnStatusPanel/styles/panel = SubResource("StyleBoxTurnStatus")
-PortraitFrame/base_type = &"Panel"
-PortraitFrame/styles/panel = SubResource("StyleBoxFocus")
-PieceFrame/base_type = &"Panel"
-PieceFrame/styles/panel = SubResource("StyleBoxFocus")
-ObjectiveFrame/base_type = &"Panel"
-ObjectiveFrame/styles/panel = SubResource("StyleBoxFocus")
-InfoFrame/base_type = &"Panel"
-InfoFrame/styles/panel = SubResource("StyleBoxFocus")
-FocusFrame/base_type = &"Panel"
-FocusFrame/styles/panel = SubResource("StyleBoxFocus")
 SelectedFrame/base_type = &"Panel"
 SelectedFrame/styles/panel = SubResource("StyleBoxFocus")
+SettingsPanel/base_type = &"PanelContainer"
+SidebarPanel/base_type = &"PanelContainer"
+TabButton/base_type = &"Button"
+TabButton/font_sizes/font_size = 16
+TabContainer/styles/panel = SubResource("StyleBoxPanel")
+TooltipPanel/base_type = &"PanelContainer"
+TooltipPanel/styles/panel = SubResource("StyleBoxPanelDark")
+TurnStatusPanel/base_type = &"PanelContainer"
+TurnStatusPanel/styles/panel = SubResource("StyleBoxTurnStatus")
 WarningFrame/base_type = &"Panel"
 WarningFrame/styles/panel = SubResource("StyleBoxFocus")
-MinimapFrame/base_type = &"Panel"
-MinimapFrame/styles/panel = SubResource("StyleBoxMinimap")

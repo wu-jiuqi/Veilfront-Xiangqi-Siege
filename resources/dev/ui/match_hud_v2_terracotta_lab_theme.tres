@@ -1,6 +1,6 @@
-[gd_resource type="Resource" script_class="BoardTheme" load_steps=7 format=3]
+[gd_resource type="Resource" script_class="BoardTheme" format=3 uid="uid://cwo5anh27amah"]
 
-[ext_resource type="Script" path="res://scripts/game/presentation/board/board_theme.gd" id="1_theme"]
+[ext_resource type="Script" uid="uid://cu8wlq6dod46s" path="res://scripts/game/presentation/board/board_theme.gd" id="1_theme"]
 [ext_resource type="PackedScene" path="res://scenes/game/match/board/wall_view.tscn" id="2_wall"]
 [ext_resource type="PackedScene" path="res://scenes/dev/ui/terracotta_match_piece_view.tscn" id="3_piece"]
 [ext_resource type="PackedScene" path="res://scenes/game/match/board/flag_view.tscn" id="4_flag"]
@@ -9,11 +9,10 @@
 [resource]
 script = ExtResource("1_theme")
 theme_id = &"match_hud_v2_terracotta_lab"
-cell_size = Vector2(128, 128)
 grid_palette = {
 "base": Color(0.22, 0.18, 0.14, 0.08),
-"headquarters": Color(0.5, 0.24, 0.14, 0.16),
 "buffer": Color(0.4, 0.3, 0.2, 0.1),
+"headquarters": Color(0.5, 0.24, 0.14, 0.16),
 "warzone": Color(0.16, 0.14, 0.12, 0.06)
 }
 grid_line_style = {
