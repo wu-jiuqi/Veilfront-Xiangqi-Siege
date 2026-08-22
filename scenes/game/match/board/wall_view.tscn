@@ -1,7 +1,11 @@
-[gd_scene format=3]
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/presentation/board/wall_view.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/art/structures/terracotta_warriors/walls/generated_v1/city_wall_v1.png" id="2_wall"]
 
 [node name="WallView" type="Node2D"]
+script = ExtResource("1_script")
 
-[node name="WallBody" type="Polygon2D" parent="."]
-polygon = PackedVector2Array(-64, -12, 64, -12, 64, 12, -64, 12)
-color = Color(0.38, 0.3, 0.24, 1)
+[node name="Artwork" type="Sprite2D" parent="."]
+texture_filter = 4
+texture = ExtResource("2_wall")
