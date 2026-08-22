@@ -7,9 +7,9 @@ const BOARD_WORLD_SCENE: PackedScene = preload(
 	"res://scenes/game/match/board/board_world.tscn"
 )
 const EXPECTED_PATHS: Dictionary = {
-	"neutral": "res://assets/art/flags/terracotta_warriors/neutral_flag.png",
-	"red": "res://assets/art/flags/terracotta_warriors/red_flag_captured.png",
-	"black": "res://assets/art/flags/terracotta_warriors/black_flag_captured.png",
+	"neutral": "res://assets/art/flags/terracotta_warriors/round_v1/neutral_flag_round_v1.png",
+	"red": "res://assets/art/flags/terracotta_warriors/round_v1/red_flag_round_v1.png",
+	"black": "res://assets/art/flags/terracotta_warriors/round_v1/black_flag_round_v1.png",
 }
 
 var _failures: Array[String] = []
@@ -36,9 +36,18 @@ func _run() -> void:
 					artwork.texture.resource_path == str(EXPECTED_PATHS[texture_key]),
 					"%s flag mapped to the wrong artwork" % texture_key
 				)
-				var bottom_y := artwork.position.y \
-					+ artwork.texture.get_height() * artwork.scale.y * 0.5
-				_expect(absf(bottom_y) <= 0.01, "%s flag base is not anchored to its cell" % texture_key)
+				_expect(
+					artwork.texture.get_size() == Vector2(768.0, 768.0),
+					"%s round flag is not normalized to a square 768px source" % texture_key
+				)
+			_expect(
+				artwork.position.is_zero_approx(),
+				"%s round flag is not centered on its authority cell" % texture_key
+			)
+			_expect(
+				float(view.get_meta("display_diameter", 0.0)) > 128.0 * 0.84,
+				"%s round flag is not slightly larger than the piece safe diameter" % texture_key
+			)
 		_expect(bool(view.visible), "%s flag view is hidden after configuration" % texture_key)
 		_expect(str(view.get_meta("flag_owner", "")) == texture_key, "%s flag state metadata mismatch" % texture_key)
 		view.queue_free()
