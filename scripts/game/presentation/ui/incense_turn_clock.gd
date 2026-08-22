@@ -5,7 +5,6 @@ signal timed_out(expected_action_index: int)
 signal round_changed(current_round: int, chinese_round: String)
 
 const MAX_INCENSE_HEIGHT_RATIO: float = 1.0
-const EMBER_SIZE := Vector2(18.0, 14.0)
 const SMOKE_SOURCE_VISIBLE_LENGTH: float = 330.0
 const SMOKE_CROSS_SCALE: float = 0.18
 const MIN_SMOKE_LENGTH: float = 56.0
@@ -51,9 +50,23 @@ var _round_progress: float = 0.0
 var _round_tween: Tween
 var _digit_tween: Tween
 var _smoke_material: ShaderMaterial
+var _timer_authored_layout: Dictionary = {}
+var _round_authored_layout: Dictionary = {}
 
 
 func _ready() -> void:
+	_timer_authored_layout = _capture_vertical_incense_layout(
+		_timer_slot,
+		_timer_clip,
+		_timer_body,
+		_timer_ember
+	)
+	_round_authored_layout = _capture_vertical_incense_layout(
+		_round_slot,
+		_round_clip,
+		_round_body,
+		_round_ember
+	)
 	_smoke_material = _smoke_number.material as ShaderMaterial
 	_remaining_seconds = turn_duration_seconds
 	_set_scatter(0.0)
@@ -218,7 +231,8 @@ func _set_timer_ratio(value: float) -> void:
 		_timer_clip,
 		_timer_body,
 		_timer_ember,
-		remaining_ratio
+		remaining_ratio,
+		_timer_authored_layout
 	)
 	_update_timer_smoke(remaining_ratio)
 
@@ -230,7 +244,8 @@ func _set_round_progress(value: float) -> void:
 		_round_clip,
 		_round_body,
 		_round_ember,
-		1.0 - _round_progress
+		1.0 - _round_progress,
+		_round_authored_layout
 	)
 	_update_smoke_bridge()
 
@@ -240,23 +255,52 @@ func _apply_vertical_incense(
 	clip: Control,
 	body: TextureRect,
 	ember: TextureRect,
-	remaining_ratio: float
+	remaining_ratio: float,
+	authored_layout: Dictionary
 ) -> void:
 	var full_size := slot.size
 	if full_size.x <= 0.0 or full_size.y <= 0.0:
 		return
-	var visible_height := full_size.y * clampf(remaining_ratio, 0.0, 1.0)
-	var clipped_top := full_size.y - visible_height
-	clip.position = Vector2(0.0, clipped_top)
-	clip.size = Vector2(full_size.x, visible_height)
+	var authored_slot_size: Vector2 = authored_layout.get("slot_size", full_size)
+	var layout_scale := Vector2(
+		full_size.x / maxf(authored_slot_size.x, 0.001),
+		full_size.y / maxf(authored_slot_size.y, 0.001)
+	)
+	var clip_origin: Vector2 = authored_layout.get("clip_position", clip.position) * layout_scale
+	var clip_full_size: Vector2 = authored_layout.get("clip_size", clip.size) * layout_scale
+	var body_origin: Vector2 = authored_layout.get("body_position", body.position) * layout_scale
+	var body_full_size: Vector2 = authored_layout.get("body_size", body.size) * layout_scale
+	var ember_origin: Vector2 = authored_layout.get("ember_position", ember.position) * layout_scale
+	var ember_size: Vector2 = authored_layout.get("ember_size", ember.size) * layout_scale
+	var visible_height := clip_full_size.y * clampf(remaining_ratio, 0.0, 1.0)
+	var clipped_top := clip_full_size.y - visible_height
+	clip.position = clip_origin + Vector2(0.0, clipped_top)
+	clip.size = Vector2(clip_full_size.x, visible_height)
 	clip.visible = visible_height > 0.05
-	body.position = Vector2(0.0, -clipped_top)
-	body.size = full_size
-	ember.position = Vector2((full_size.x - EMBER_SIZE.x) * 0.5, clipped_top - EMBER_SIZE.y * 0.55)
-	ember.size = EMBER_SIZE
+	body.position = body_origin - Vector2(0.0, clipped_top)
+	body.size = body_full_size
+	ember.position = ember_origin + Vector2(0.0, clipped_top)
+	ember.size = ember_size
 	var ember_color := ember.modulate
 	ember_color.a = smoothstep(0.0, 0.04, remaining_ratio)
 	ember.modulate = ember_color
+
+
+func _capture_vertical_incense_layout(
+	slot: Control,
+	clip: Control,
+	body: TextureRect,
+	ember: TextureRect
+) -> Dictionary:
+	return {
+		"slot_size": slot.size,
+		"clip_position": clip.position,
+		"clip_size": clip.size,
+		"body_position": body.position,
+		"body_size": body.size,
+		"ember_position": ember.position,
+		"ember_size": ember.size,
+	}
 
 
 func _update_smoke_bridge() -> void:

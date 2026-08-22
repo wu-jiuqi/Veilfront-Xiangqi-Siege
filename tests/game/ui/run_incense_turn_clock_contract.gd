@@ -18,9 +18,17 @@ func _run() -> void:
 	if clock == null:
 		_finish()
 		return
+	var authored_timer_body_rect := _control_rect(clock.get_node("%TimerBody") as Control)
+	var authored_timer_ember_rect := _control_rect(clock.get_node("%TimerEmber") as Control)
+	var authored_round_body_rect := _control_rect(clock.get_node("%RoundBody") as Control)
+	var authored_round_ember_rect := _control_rect(clock.get_node("%RoundEmber") as Control)
 	root.add_child(clock)
 	await process_frame
 	clock.refresh_layout()
+	_expect_control_rect(clock.get_node("%TimerBody") as Control, authored_timer_body_rect, "计时香主体")
+	_expect_control_rect(clock.get_node("%TimerEmber") as Control, authored_timer_ember_rect, "计时香火星")
+	_expect_control_rect(clock.get_node("%RoundBody") as Control, authored_round_body_rect, "回合香主体")
+	_expect_control_rect(clock.get_node("%RoundEmber") as Control, authored_round_ember_rect, "回合香火星")
 	var stand_texture := clock.get_node("%IncenseStandBaseArt").texture as AtlasTexture
 	_expect(
 		stand_texture != null
@@ -152,6 +160,17 @@ func _check_chinese_numbers() -> void:
 	var expected := {1: "一", 10: "十", 11: "十一", 20: "二十", 25: "二十五", 50: "五十"}
 	for round_number: int in expected:
 		_expect(ClockScript.chinese_number(round_number) == expected[round_number], "中文回合数字错误：%d" % round_number)
+
+
+func _control_rect(control: Control) -> Rect2:
+	return Rect2(control.position, control.size)
+
+
+func _expect_control_rect(control: Control, expected: Rect2, label: String) -> void:
+	_expect(
+		_control_rect(control).is_equal_approx(expected),
+		"%s加载后没有保留预置场景位置：%s" % [label, _control_rect(control)]
+	)
 
 
 func _finish() -> void:
