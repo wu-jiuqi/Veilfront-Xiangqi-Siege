@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3]
+[gd_scene load_steps=31 format=3]
 
 [ext_resource type="Theme" path="res://resources/game/ui/themes/terracotta_ui_theme.tres" id="1_theme"]
 [ext_resource type="Script" path="res://scripts/game/presentation/ui/loading_transition_overlay.gd" id="2_script"]
@@ -12,28 +12,49 @@
 [ext_resource type="Texture2D" path="res://assets/art/ui/loading_transition/failure_back_button_v1.png" id="10_back_plate"]
 [ext_resource type="Resource" path="res://resources/game/ui/motion/terracotta_ui_motion_profile.tres" id="11_motion"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/hud_panel_9slice_v1.png" id="12_failure_panel"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_metal/frames/loading_progress_track_v1.svg" id="13_progress_track"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_metal/frames/loading_progress_cursor_v1.svg" id="14_progress_cursor"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxProgressBackground"]
-bg_color = Color(0.025, 0.031, 0.029, 0.96)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.34, 0.29, 0.19, 0.9)
+bg_color = Color(0.012, 0.017, 0.016, 0.98)
 corner_radius_top_left = 2
 corner_radius_top_right = 2
 corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxProgressFill"]
-bg_color = Color(0.72, 0.5, 0.2, 1)
-border_width_top = 1
-border_width_bottom = 1
-border_color = Color(1, 0.82, 0.48, 0.88)
+[sub_resource type="StyleBoxEmpty" id="StyleBoxProgressEmpty"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxProgressGlow"]
+bg_color = Color(0.96, 0.58, 0.16, 0.22)
 corner_radius_top_left = 2
 corner_radius_top_right = 2
 corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
+
+[sub_resource type="Gradient" id="GradientProgressFill"]
+offsets = PackedFloat32Array(0, 0.34, 0.72, 1)
+colors = PackedColorArray(0.34, 0.14, 0.035, 1, 0.72, 0.37, 0.075, 1, 0.96, 0.68, 0.2, 1, 1, 0.9, 0.56, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTextureProgressFill"]
+gradient = SubResource("GradientProgressFill")
+width = 512
+height = 16
+fill_from = Vector2(0, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxProgressFill"]
+texture = SubResource("GradientTextureProgressFill")
+
+[sub_resource type="Gradient" id="GradientProgressSheen"]
+offsets = PackedFloat32Array(0, 0.5, 1)
+colors = PackedColorArray(1, 0.78, 0.32, 0, 1, 0.96, 0.76, 0.88, 1, 0.78, 0.32, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTextureProgressSheen"]
+gradient = SubResource("GradientProgressSheen")
+width = 96
+height = 16
+fill_from = Vector2(0, 0.5)
+fill_to = Vector2(1, 0.5)
 
 [sub_resource type="StyleBoxTexture" id="StyleFailurePanel"]
 content_margin_left = 12.0
@@ -350,18 +371,60 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="ProgressStack" type="Control" parent="LoadingContent/StatusAnchor/StatusStack"]
-custom_minimum_size = Vector2(0, 28)
+custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
 mouse_filter = 2
 
-[node name="ProgressBar" type="ProgressBar" parent="LoadingContent/StatusAnchor/StatusStack/ProgressStack"]
+[node name="ProgressTrackFrame" type="TextureRect" parent="LoadingContent/StatusAnchor/StatusStack/ProgressStack"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 18.0
+offset_right = -18.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("13_progress_track")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ProgressInset" type="Control" parent="LoadingContent/StatusAnchor/StatusStack/ProgressStack"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 44.0
+offset_top = 18.0
+offset_right = -44.0
+offset_bottom = -18.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="ProgressGlow" type="ProgressBar" parent="LoadingContent/StatusAnchor/StatusStack/ProgressStack/ProgressInset"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 7.0
-offset_bottom = -7.0
+offset_left = -3.0
+offset_top = -3.0
+offset_right = 3.0
+offset_bottom = 3.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/background = SubResource("StyleBoxProgressEmpty")
+theme_override_styles/fill = SubResource("StyleBoxProgressGlow")
+show_percentage = false
+
+[node name="ProgressBar" type="ProgressBar" parent="LoadingContent/StatusAnchor/StatusStack/ProgressStack/ProgressInset"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -369,14 +432,160 @@ theme_override_styles/background = SubResource("StyleBoxProgressBackground")
 theme_override_styles/fill = SubResource("StyleBoxProgressFill")
 show_percentage = false
 
-[node name="ProgressSpark" type="ColorRect" parent="LoadingContent/StatusAnchor/StatusStack/ProgressStack"]
+[node name="ProgressFillClip" type="Control" parent="LoadingContent/StatusAnchor/StatusStack/ProgressStack/ProgressInset"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(18, 22)
 layout_mode = 0
-offset_right = 18.0
-offset_bottom = 22.0
+offset_right = 1.0
+offset_bottom = 16.0
 mouse_filter = 2
-color = Color(1, 0.82, 0.46, 0.9)
+clip_contents = true
+
+[node name="ProgressSheen" type="TextureRect" parent="LoadingContent/StatusAnchor/StatusStack/ProgressStack/ProgressInset/ProgressFillClip"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = -96.0
+offset_right = 0.0
+offset_bottom = 16.0
+mouse_filter = 2
+texture = SubResource("GradientTextureProgressSheen")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ProgressTicks" type="Control" parent="LoadingContent/StatusAnchor/StatusStack/ProgressStack/ProgressInset"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Tick01" type="ColorRect" parent="LoadingContent/StatusAnchor/StatusStack/ProgressStack/ProgressInset/ProgressTicks"]
+layout_mode = 1
+anchor_left = 0.111111
+anchor_top = 0.2
+anchor_right = 0.111111
+anchor_bottom = 0.8
+offset_left = -1.0
+offset_right = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.08, 0.075, 0.055, 0.62)
+
+[node name="Tick02" type="ColorRect" parent="LoadingContent/StatusAnchor/StatusStack/ProgressStack/ProgressInset/ProgressTicks"]
+layout_mode = 1
+anchor_left = 0.222222
+anchor_top = 0.2
+anchor_right = 0.222222
+anchor_bottom = 0.8
+offset_left = -1.0
+offset_right = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.08, 0.075, 0.055, 0.62)
+
+[node name="Tick03" type="ColorRect" parent="LoadingContent/StatusAnchor/StatusStack/ProgressStack/ProgressInset/ProgressTicks"]
+layout_mode = 1
+anchor_left = 0.333333
+anchor_top = 0.2
+anchor_right = 0.333333
+anchor_bottom = 0.8
+offset_left = -1.0
+offset_right = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.08, 0.075, 0.055, 0.62)
+
+[node name="Tick04" type="ColorRect" parent="LoadingContent/StatusAnchor/StatusStack/ProgressStack/ProgressInset/ProgressTicks"]
+layout_mode = 1
+anchor_left = 0.444444
+anchor_top = 0.2
+anchor_right = 0.444444
+anchor_bottom = 0.8
+offset_left = -1.0
+offset_right = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.08, 0.075, 0.055, 0.62)
+
+[node name="Tick05" type="ColorRect" parent="LoadingContent/StatusAnchor/StatusStack/ProgressStack/ProgressInset/ProgressTicks"]
+layout_mode = 1
+anchor_left = 0.555556
+anchor_top = 0.2
+anchor_right = 0.555556
+anchor_bottom = 0.8
+offset_left = -1.0
+offset_right = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.08, 0.075, 0.055, 0.62)
+
+[node name="Tick06" type="ColorRect" parent="LoadingContent/StatusAnchor/StatusStack/ProgressStack/ProgressInset/ProgressTicks"]
+layout_mode = 1
+anchor_left = 0.666667
+anchor_top = 0.2
+anchor_right = 0.666667
+anchor_bottom = 0.8
+offset_left = -1.0
+offset_right = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.08, 0.075, 0.055, 0.62)
+
+[node name="Tick07" type="ColorRect" parent="LoadingContent/StatusAnchor/StatusStack/ProgressStack/ProgressInset/ProgressTicks"]
+layout_mode = 1
+anchor_left = 0.777778
+anchor_top = 0.2
+anchor_right = 0.777778
+anchor_bottom = 0.8
+offset_left = -1.0
+offset_right = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.08, 0.075, 0.055, 0.62)
+
+[node name="Tick08" type="ColorRect" parent="LoadingContent/StatusAnchor/StatusStack/ProgressStack/ProgressInset/ProgressTicks"]
+layout_mode = 1
+anchor_left = 0.888889
+anchor_top = 0.2
+anchor_right = 0.888889
+anchor_bottom = 0.8
+offset_left = -1.0
+offset_right = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.08, 0.075, 0.055, 0.62)
+
+[node name="ProgressSparkGlow" type="TextureRect" parent="LoadingContent/StatusAnchor/StatusStack/ProgressStack/ProgressInset"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(42, 42)
+layout_mode = 0
+offset_right = 42.0
+offset_bottom = 42.0
+mouse_filter = 2
+modulate = Color(1, 0.71, 0.25, 0.18)
+texture = ExtResource("14_progress_cursor")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ProgressSpark" type="TextureRect" parent="LoadingContent/StatusAnchor/StatusStack/ProgressStack/ProgressInset"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 0
+offset_right = 28.0
+offset_bottom = 28.0
+mouse_filter = 2
+texture = ExtResource("14_progress_cursor")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="PercentLabel" type="Label" parent="LoadingContent/StatusAnchor/StatusStack"]
 unique_name_in_owner = true

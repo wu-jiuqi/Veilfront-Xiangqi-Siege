@@ -15,8 +15,12 @@ signal transition_hidden
 @onready var seal_glow: TextureRect = %SealGlow
 @onready var progress_ring: TextureRect = %ProgressRing
 @onready var status_label: Label = %StatusLabel
+@onready var progress_glow: ProgressBar = %ProgressGlow
 @onready var progress_bar: ProgressBar = %ProgressBar
-@onready var progress_spark: ColorRect = %ProgressSpark
+@onready var progress_fill_clip: Control = %ProgressFillClip
+@onready var progress_sheen: TextureRect = %ProgressSheen
+@onready var progress_spark_glow: TextureRect = %ProgressSparkGlow
+@onready var progress_spark: TextureRect = %ProgressSpark
 @onready var percent_label: Label = %PercentLabel
 @onready var failure_veil: ColorRect = %FailureVeil
 @onready var failure_layer: Control = %FailureLayer
@@ -37,6 +41,8 @@ var _ring_tween: Tween
 var _glow_tween: Tween
 var _fog_back_tween: Tween
 var _fog_front_tween: Tween
+var _progress_sheen_tween: Tween
+var _progress_cursor_tween: Tween
 var _fog_back_origin := Vector2.ZERO
 var _fog_front_origin := Vector2.ZERO
 var _origins_ready := false
@@ -87,8 +93,9 @@ func set_status(text: String, immediate: bool = false) -> void:
 func set_progress(value: float) -> void:
 	var clamped_value := clampf(value, progress_bar.min_value, progress_bar.max_value)
 	progress_bar.value = clamped_value
+	progress_glow.value = clamped_value
 	percent_label.text = "%d%%" % int(round(clamped_value))
-	_update_progress_spark()
+	_update_progress_visuals()
 
 
 func show_failure(
@@ -100,6 +107,7 @@ func show_failure(
 		return
 	_transition_state = &"failure"
 	_kill_tween(_ring_tween)
+	_stop_progress_motion()
 	_kill_tween(_failure_tween)
 	_kill_tween(_failure_impact_tween)
 	failure_title.text = title
@@ -140,6 +148,8 @@ func set_reduced_motion(enabled: bool) -> void:
 	progress_ring.rotation = 0.0
 	seal_motion_root.scale = Vector2.ONE
 	seal_glow.modulate.a = 0.18
+	progress_sheen.position.x = -progress_sheen.size.x
+	progress_spark_glow.modulate.a = 0.18
 	fog_back.position = _fog_back_origin
 	fog_front.position = _fog_front_origin
 	if _transition_state == &"loading":
@@ -172,11 +182,15 @@ func _prepare_static_state() -> void:
 
 
 func _cache_origins() -> void:
-	_fog_back_origin = fog_back.position
-	_fog_front_origin = fog_front.position
-	_origins_ready = true
+	if not _origins_ready:
+		_fog_back_origin = fog_back.position
+		_fog_front_origin = fog_front.position
+		_origins_ready = true
+	else:
+		fog_back.position = _fog_back_origin
+		fog_front.position = _fog_front_origin
 	_update_layout_pivots()
-	_update_progress_spark()
+	_update_progress_visuals()
 
 
 func _update_layout_pivots() -> void:
@@ -184,18 +198,29 @@ func _update_layout_pivots() -> void:
 	seal_motion_root.pivot_offset = seal_motion_root.size * 0.5
 	progress_ring.pivot_offset = progress_ring.size * 0.5
 	failure_card.pivot_offset = failure_card.size * 0.5
-	_update_progress_spark()
+	_update_progress_visuals()
 
 
-func _update_progress_spark() -> void:
+func _update_progress_visuals() -> void:
 	if not is_instance_valid(progress_bar) or not is_instance_valid(progress_spark):
 		return
 	var ratio := 0.0
 	if progress_bar.max_value > progress_bar.min_value:
 		ratio = (progress_bar.value - progress_bar.min_value) / (progress_bar.max_value - progress_bar.min_value)
-	var usable_width := maxf(0.0, progress_bar.size.x - progress_spark.size.x)
-	progress_spark.position.x = progress_bar.position.x + usable_width * ratio
-	progress_spark.position.y = progress_bar.position.y - 4.0
+	var fill_width := maxf(0.0, progress_bar.size.x * ratio)
+	progress_fill_clip.position = progress_bar.position
+	progress_fill_clip.size = Vector2(fill_width, progress_bar.size.y)
+	var endpoint_x := progress_bar.position.x + fill_width
+	progress_spark.position = Vector2(
+		endpoint_x - progress_spark.size.x * 0.5,
+		progress_bar.position.y + (progress_bar.size.y - progress_spark.size.y) * 0.5
+	)
+	progress_spark_glow.position = Vector2(
+		endpoint_x - progress_spark_glow.size.x * 0.5,
+		progress_bar.position.y + (progress_bar.size.y - progress_spark_glow.size.y) * 0.5
+	)
+	progress_spark.pivot_offset = progress_spark.size * 0.5
+	progress_spark_glow.pivot_offset = progress_spark_glow.size * 0.5
 
 
 func _start_ambient_motion() -> void:
@@ -218,14 +243,41 @@ func _start_ambient_motion() -> void:
 	_fog_front_tween.tween_property(fog_front, "position:x", _fog_front_origin.x - 58.0, 7.4)
 	_fog_front_tween.tween_property(fog_front, "position:x", _fog_front_origin.x + 24.0, 7.4)
 
+	_progress_sheen_tween = _new_tween(Tween.TRANS_LINEAR, Tween.EASE_IN_OUT).set_loops()
+	progress_sheen.position.x = -progress_sheen.size.x
+	_progress_sheen_tween.tween_property(progress_sheen, "position:x", progress_bar.size.x + 24.0, 2.1)
+	_progress_sheen_tween.tween_interval(0.55)
+
+	_progress_cursor_tween = _new_tween(Tween.TRANS_SINE, Tween.EASE_IN_OUT).set_loops()
+	progress_spark_glow.modulate.a = 0.16
+	_progress_cursor_tween.tween_property(progress_spark_glow, "modulate:a", 0.46, 0.9)
+	_progress_cursor_tween.tween_property(progress_spark_glow, "modulate:a", 0.16, 0.9)
+
 
 func _stop_ambient_motion() -> void:
-	for tween: Tween in [_ring_tween, _glow_tween, _fog_back_tween, _fog_front_tween]:
+	for tween: Tween in [
+		_ring_tween,
+		_glow_tween,
+		_fog_back_tween,
+		_fog_front_tween,
+		_progress_sheen_tween,
+		_progress_cursor_tween,
+	]:
 		_kill_tween(tween)
 	_ring_tween = null
 	_glow_tween = null
 	_fog_back_tween = null
 	_fog_front_tween = null
+	_progress_sheen_tween = null
+	_progress_cursor_tween = null
+
+
+func _stop_progress_motion() -> void:
+	_kill_tween(_progress_sheen_tween)
+	_kill_tween(_progress_cursor_tween)
+	_progress_sheen_tween = null
+	_progress_cursor_tween = null
+	progress_spark_glow.modulate.a = 0.18
 
 
 func _play_failure_impact() -> void:

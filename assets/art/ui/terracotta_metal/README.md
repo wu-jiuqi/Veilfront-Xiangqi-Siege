@@ -7,7 +7,7 @@
 - `icons/`：36 个 `64×64` 金属线性语义图标，分为兵种、行动、状态、标记、系统五组。
 - `cursors/`：6 个 `64×64` 交互光标。
 - `patterns/`：4 个 `128×128` 秦式几何与金属底纹。
-- `frames/`：1 个 `512×512` 环形进度框体，供加载／场景过渡页分层使用；高精度九路战印位于 `assets/art/ui/loading_transition/`。
+- `frames/`：加载环、九路进度轨道和菱形游标共 3 个矢量框体，供加载／场景过渡页分层使用；高精度九路战印位于 `assets/art/ui/loading_transition/`。
 
 V2 位图、透明通道契约、九宫格建议与 RGB 母版说明见 `assets/art/ui/terracotta_hud_v2/README.md`。
 

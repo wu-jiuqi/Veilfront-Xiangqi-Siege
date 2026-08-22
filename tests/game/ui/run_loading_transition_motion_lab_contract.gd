@@ -28,15 +28,30 @@ func _run() -> void:
 	_assert(overlay.has_method("set_progress"), "加载过渡组件缺少 set_progress 接口")
 	_assert(overlay.has_method("show_failure"), "加载过渡组件缺少 show_failure 接口")
 	_assert(overlay.has_method("set_reduced_motion"), "加载过渡组件缺少减少动态效果接口")
+	var fog_back := overlay.get_node("FogLayer/FogBack") as TextureRect
+	var fog_front := overlay.get_node("FogLayer/FogFront") as TextureRect
+	var fog_back_origin := fog_back.position
+	var fog_front_origin := fog_front.position
 	overlay.call("start_loading", "正在布设九路战场…")
 	overlay.call("set_progress", 67.0)
 	await process_frame
 	var status_label := overlay.get_node("LoadingContent/StatusAnchor/StatusStack/StatusLabel") as Label
-	var progress_bar := overlay.get_node("LoadingContent/StatusAnchor/StatusStack/ProgressStack/ProgressBar") as ProgressBar
+	var progress_track := overlay.get_node("LoadingContent/StatusAnchor/StatusStack/ProgressStack/ProgressTrackFrame") as TextureRect
+	var progress_bar := overlay.get_node("LoadingContent/StatusAnchor/StatusStack/ProgressStack/ProgressInset/ProgressBar") as ProgressBar
+	var progress_glow := overlay.get_node("LoadingContent/StatusAnchor/StatusStack/ProgressStack/ProgressInset/ProgressGlow") as ProgressBar
+	var progress_fill_clip := overlay.get_node("LoadingContent/StatusAnchor/StatusStack/ProgressStack/ProgressInset/ProgressFillClip") as Control
+	var progress_cursor := overlay.get_node("LoadingContent/StatusAnchor/StatusStack/ProgressStack/ProgressInset/ProgressSpark") as TextureRect
 	var percent_label := overlay.get_node("LoadingContent/StatusAnchor/StatusStack/PercentLabel") as Label
 	var seal_anchor := overlay.get_node("LoadingContent/SealAnchor") as Control
 	_assert(status_label.size.x > 300.0 and status_label.size.y > 20.0, "加载状态标签布局无效")
 	_assert(progress_bar.size.x > 300.0 and progress_bar.size.y >= 10.0, "加载进度条布局无效")
+	_assert(progress_track.texture != null, "加载进度条缺少九路金属轨道")
+	_assert(is_equal_approx(progress_glow.value, 67.0), "加载进度外发光没有同步")
+	_assert(absf(progress_fill_clip.size.x - progress_bar.size.x * 0.67) <= 1.0, "加载进度扫光裁切没有同步")
+	_assert(
+		absf(progress_cursor.get_global_rect().get_center().x - (progress_bar.global_position.x + progress_bar.size.x * 0.67)) <= 1.0,
+		"加载进度菱形游标没有贴合填充端点"
+	)
 	_assert(percent_label.text == "67%", "加载百分比没有同步")
 	_assert(absf(seal_anchor.get_global_rect().get_center().x - overlay.get_global_rect().get_center().x) <= 1.0, "加载核心图形没有水平居中")
 	_assert(absf(status_label.get_global_rect().get_center().x - overlay.get_global_rect().get_center().x) <= 1.0, "加载状态没有水平居中")
@@ -58,6 +73,8 @@ func _run() -> void:
 	_assert(overlay.call("get_transition_state") == &"failure", "失败状态没有落地")
 	overlay.call("set_reduced_motion", true)
 	_assert(overlay.call("is_reduced_motion_enabled"), "减少动态效果没有启用")
+	_assert(fog_back.position.is_equal_approx(fog_back_origin), "减少动态效果没有复位后层雾气，重播可能产生位置漂移")
+	_assert(fog_front.position.is_equal_approx(fog_front_origin), "减少动态效果没有复位前层雾气，重播可能产生位置漂移")
 	overlay.queue_free()
 
 	var lab_scene := load(LAB_SCENE_PATH) as PackedScene

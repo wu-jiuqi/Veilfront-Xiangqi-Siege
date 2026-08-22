@@ -1,7 +1,7 @@
 @tool
 extends SceneTree
 
-## 可复现地生成兵马俑 UI 的 36 个图标、6 个光标、4 个纹样与 1 个加载环框。
+## 可复现地生成兵马俑 UI 的 36 个图标、6 个光标、4 个纹样与 3 个加载框体。
 ## 小地图元素通过资源清单复用这些语义图形，不额外占用矢量源文件额度。
 
 const ROOT := "res://assets/art/ui/terracotta_metal"
@@ -21,7 +21,7 @@ func _init() -> void:
 	_write_patterns()
 	_write_loading_frames()
 	print("TERRACOTTA_UI_VECTOR_GENERATION_PASS files=%d" % _written)
-	quit(0 if _written == 47 else 1)
+	quit(0 if _written == 49 else 1)
 
 
 func _write_icons() -> void:
@@ -106,6 +106,19 @@ func _write_loading_frames() -> void:
 	var arc_body := "<g fill='none' stroke-linecap='round'><circle cx='256' cy='256' r='222' stroke='%s' stroke-opacity='.18' stroke-width='4' stroke-dasharray='54 24'/><path d='M256 34 A222 222 0 0 1 430 118' stroke='url(#metal)' stroke-width='13'/><path d='M430 118 A222 222 0 0 1 469 194' stroke='%s' stroke-width='7'/><path d='M82 394 A222 222 0 0 1 43 318' stroke='%s' stroke-opacity='.62' stroke-width='6'/></g><circle cx='430' cy='118' r='9' fill='%s'/><path d='M256 18 L268 34 L256 50 L244 34 Z' fill='%s'/>" % [BRONZE, LIGHT, GOLD, LIGHT, GOLD]
 	_write_svg("%s/frames/loading_progress_arc_v1.svg" % ROOT, _frame_svg(arc_body))
 
+	var track_body := "<path d='M10 32 L26 13 H742 L758 32 L742 51 H26 Z' fill='%s' fill-opacity='.96' stroke='url(#metal)' stroke-width='2'/><path d='M31 20 H737 M31 44 H737' fill='none' stroke='%s' stroke-opacity='.5' stroke-width='1'/><path d='M24 32 L34 22 H734 L744 32 L734 42 H34 Z' fill='none' stroke='%s' stroke-opacity='.42' stroke-width='1'/><g stroke='%s' stroke-opacity='.34' stroke-width='1'>%s</g><path d='M12 32 L22 22 L32 32 L22 42 Z M756 32 L746 22 L736 32 L746 42 Z' fill='%s' stroke='%s' stroke-width='1.5'/>" % [DARK, LIGHT, GOLD, GOLD, _progress_ticks(), BRONZE, GOLD]
+	_write_svg("%s/frames/loading_progress_track_v1.svg" % ROOT, _wide_frame_svg(track_body, 768, 64))
+
+	var cursor_body := "<path d='M32 4 L56 32 L32 60 L8 32 Z' fill='%s' stroke='%s' stroke-width='2'/><path d='M32 12 L49 32 L32 52 L15 32 Z' fill='%s' fill-opacity='.5' stroke='%s' stroke-width='2'/><path d='M32 20 L42 32 L32 44 L22 32 Z' fill='%s'/><circle cx='32' cy='32' r='4' fill='%s'/>" % [DARK, GOLD, BRONZE, LIGHT, GOLD, LIGHT]
+	_write_svg("%s/frames/loading_progress_cursor_v1.svg" % ROOT, _icon_svg(cursor_body))
+
+
+func _progress_ticks() -> String:
+	var ticks := ""
+	for x: int in [113, 190, 267, 344, 421, 498, 575, 652]:
+		ticks += "<path d='M%d 24 V40'/>" % x
+	return ticks
+
 
 func _shield(fill_path: String, detail_path: String) -> String:
 	return "<path d='%s' fill='url(#metal)' stroke='%s' stroke-width='2.5' stroke-linejoin='round'/><path d='%s' fill='none' stroke='%s' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/>" % [fill_path, LIGHT, detail_path, DARK]
@@ -129,6 +142,10 @@ func _pattern_svg(body: String) -> String:
 
 func _frame_svg(body: String) -> String:
 	return "<svg xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512'>%s%s</svg>" % [_defs(), body]
+
+
+func _wide_frame_svg(body: String, width: int, height: int) -> String:
+	return "<svg xmlns='http://www.w3.org/2000/svg' width='%d' height='%d' viewBox='0 0 %d %d'>%s%s</svg>" % [width, height, width, height, _defs(), body]
 
 
 func _write_svg(path: String, svg: String) -> void:
