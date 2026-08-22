@@ -1,5 +1,5 @@
 class_name TutorialOverlay
-extends PanelContainer
+extends Control
 
 signal retry_requested()
 signal skip_requested()
@@ -198,20 +198,12 @@ func _on_tutorial_folded(folded: bool) -> void:
 	_apply_folded_bounds(folded)
 
 
-func _apply_folded_bounds(folded: bool) -> void:
-	if folded:
-		anchor_top = 1.0
-		anchor_bottom = 1.0
-		offset_top = -76.0
-		offset_bottom = -16.0
-		grow_vertical = 0
-	else:
-		anchor_top = 0.0
-		anchor_bottom = 1.0
-		offset_top = 72.0
-		offset_bottom = -72.0
-		grow_vertical = 2
-	queue_sort()
+func _apply_folded_bounds(_folded: bool) -> void:
+	# The root rect is the authored layout source for the reused objective panel.
+	# Folding only changes the prebuilt FoldableContainer content; it must not move
+	# or resize the original HUD frame underneath it.
+	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	queue_redraw()
 
 
 func request_retry() -> void:

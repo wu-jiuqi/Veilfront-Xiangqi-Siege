@@ -52,6 +52,8 @@ const PIECE_PORTRAITS := {
 @onready var _confirmation_panel: PanelContainer = %ActionConfirmationPanel
 @onready var _incense_turn_clock: IncenseTurnClock = $MatchHudV2/IncenseTurnClock
 @onready var _piece_info_drawer: PieceInfoDrawer = $MatchHudV2/PieceInfoDrawer
+@onready var _objective_events: Control = $MatchHudV2/ObjectiveEvents
+@onready var _round_incense_slot: Control = $MatchHudV2/IncenseTurnClock/RoundIncenseSlot
 @onready var _return_button: Button = $MatchHudV2/FactionLeft/ReturnButton
 @onready var _mirror_button: Button = $MatchHudV2/FactionRight/MirrorButton
 @onready var _selection_status: Label = $MatchHudV2/ObjectiveEvents/SelectionStatus
@@ -98,6 +100,8 @@ var _action_mode: String = "move"
 var _tutorial_panel_width: float = 0.0
 var _tutorial_step: Dictionary = {}
 var _tutorial_navigation_enabled: bool = false
+var _tutorial_objective_layout_source: Control
+var _tutorial_round_incense_layout_source: Control
 var _session_navigation_enabled: bool = false
 var _submission_pending: bool = false
 
@@ -206,6 +210,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func apply_layout_for_size(requested_size: Vector2) -> void:
 	_hud_layout.apply_layout_for_size(requested_size, _tutorial_panel_width)
+	_sync_tutorial_hud_layout()
 	_update_return_button()
 	_set_compact_layout(requested_size.x < COMPACT_BREAKPOINT)
 	_sync_board_position_from_board()
@@ -218,6 +223,61 @@ func set_hud_scene_authored_layout_enabled(enabled: bool) -> void:
 func set_tutorial_panel_width(panel_width: float) -> void:
 	_tutorial_panel_width = maxf(0.0, panel_width)
 	call_deferred("apply_layout_for_size", size)
+
+
+func set_tutorial_hud_layout_sources(
+	objective_layout_source: Control,
+	round_incense_layout_source: Control
+) -> void:
+	_tutorial_panel_width = 0.0
+	_tutorial_objective_layout_source = objective_layout_source
+	_tutorial_round_incense_layout_source = round_incense_layout_source
+	_connect_tutorial_layout_source(objective_layout_source)
+	_connect_tutorial_layout_source(round_incense_layout_source)
+	_set_default_objective_content_visible(false)
+	call_deferred("apply_layout_for_size", size)
+
+
+func _connect_tutorial_layout_source(source: Control) -> void:
+	if not is_instance_valid(source):
+		return
+	var resize_callback := Callable(self, "_on_tutorial_layout_source_resized")
+	if not source.resized.is_connected(resize_callback):
+		source.resized.connect(resize_callback)
+
+
+func _on_tutorial_layout_source_resized() -> void:
+	call_deferred("_sync_tutorial_hud_layout")
+
+
+func _sync_tutorial_hud_layout() -> void:
+	if not is_instance_valid(_tutorial_objective_layout_source):
+		return
+	_objective_events.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	_objective_events.position = _hud_layout.get_global_transform().affine_inverse() \
+		* _tutorial_objective_layout_source.global_position
+	_objective_events.size = _tutorial_objective_layout_source.size
+	_set_default_objective_content_visible(false)
+	if not is_instance_valid(_tutorial_round_incense_layout_source):
+		return
+	_round_incense_slot.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	_round_incense_slot.position = _incense_turn_clock.get_global_transform().affine_inverse() \
+		* _tutorial_round_incense_layout_source.global_position
+	_round_incense_slot.size = _tutorial_round_incense_layout_source.size
+	_incense_turn_clock.refresh_layout()
+
+
+func _set_default_objective_content_visible(visible: bool) -> void:
+	for control: Control in [
+		_selection_status,
+		_own_flags,
+		_own_casualties,
+		_enemy_casualties,
+		_board_position,
+		_pass_button,
+		_message_value,
+	]:
+		control.visible = visible
 
 
 func set_action_mode(mode: String) -> void:

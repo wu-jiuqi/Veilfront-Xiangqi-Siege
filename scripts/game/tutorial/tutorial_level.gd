@@ -13,6 +13,11 @@ var _level_id: String = "T0"
 
 
 func _ready() -> void:
+	$MatchScreen.set_tutorial_hud_layout_sources(
+		$TutorialOverlay,
+		$TutorialRoundIncenseSlot
+	)
+	$MatchScreen.set_tutorial_navigation_enabled(true)
 	if not bootstrap_local_session:
 		return
 	_level_id = str(get_tree().root.get_meta("veilfront_selected_level_id", "T0"))
@@ -27,8 +32,6 @@ func _ready() -> void:
 	$ApplicationHost.trusted_tutorial_scenario = scenario
 	$TutorialDirector.configure(_level_id, presentation)
 	$TutorialOverlay.configure_chapter(presentation, _load_completed_ids())
-	$MatchScreen.set_tutorial_panel_width(422.0)
-	$MatchScreen.set_tutorial_navigation_enabled(true)
 	_bootstrap_local_session(scenario)
 
 
@@ -47,8 +50,6 @@ func _bootstrap_challenge_test_entry() -> void:
 	$ApplicationHost.trusted_tutorial_scenario = null
 	$TutorialDirector.presentation_track = null
 	$TutorialOverlay.configure_graybox_entry(_level_id)
-	$MatchScreen.set_tutorial_panel_width(422.0)
-	$MatchScreen.set_tutorial_navigation_enabled(true)
 	_local_session = FormalLocalSession.create(
 		session_seed + int(_level_id.trim_prefix("C")),
 		{
@@ -147,8 +148,24 @@ func _load_completed_ids() -> Array[String]:
 
 func get_layout_snapshot() -> Dictionary:
 	var screen_snapshot: Dictionary = $MatchScreen.get_layout_snapshot()
+	var ui_rects: Dictionary = screen_snapshot.get("ui_rects", {})
 	var tutorial: Control = $TutorialOverlay
 	var tutorial_rect := Rect2(tutorial.global_position - global_position, tutorial.size)
+	var round_incense_source: Control = $TutorialRoundIncenseSlot
+	var round_incense_source_rect := Rect2(
+		round_incense_source.global_position - global_position,
+		round_incense_source.size
+	)
+	var round_incense: Control = $MatchScreen/MatchHudV2/IncenseTurnClock/RoundIncenseSlot
+	var round_incense_rect := Rect2(
+		round_incense.global_position - global_position,
+		round_incense.size
+	)
+	var tutorial_content: Control = tutorial.get_node("TutorialFoldable")
+	var tutorial_content_rect := Rect2(
+		tutorial_content.global_position - global_position,
+		tutorial_content.size
+	)
 	var buttons_inside := true
 	for button_name: String in ["RetryButton", "SkipButton", "BackToLevelsButton", "HintButton", "TutorialFoldable"]:
 		var button: Control = tutorial.find_child(button_name, true, false) as Control
@@ -164,6 +181,10 @@ func get_layout_snapshot() -> Dictionary:
 	return {
 		"board_rect": screen_snapshot.get("board_rect", Rect2()),
 		"tutorial_rect": tutorial_rect,
+		"tutorial_content_rect": tutorial_content_rect,
+		"objective_rect": ui_rects.get("objective-events", Rect2()),
+		"round_incense_rect": round_incense_rect,
+		"round_incense_source_rect": round_incense_source_rect,
 		"buttons_inside": buttons_inside,
 		"actions_scrollable": tutorial.get_node_or_null("TutorialFoldable/Margin") is ScrollContainer,
 	}
