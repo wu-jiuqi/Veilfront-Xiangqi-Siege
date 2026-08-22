@@ -26,6 +26,15 @@ func _run() -> void:
 	_expect(signal_info.get("args", []).size() == 1, "lobby must not expose a private match seed")
 
 	lobby.render_connection_snapshot({"state": "disconnected"})
+	var rules_turn_clock_value := _rules_turn_clock_value(lobby)
+	_expect(rules_turn_clock_value != null, "lobby must keep the preset turn-clock label required by its renderer")
+	if rules_turn_clock_value == null:
+		_finish()
+		return
+	_expect(
+		rules_turn_clock_value.text == "回合计时：以战局配置为准",
+		"idle lobby must show the configured turn-clock fallback",
+	)
 	_expect(_host_button(lobby).visible and not _host_button(lobby).disabled, "host action must be available while idle")
 	_expect(_join_button(lobby).visible and not _join_button(lobby).disabled, "join action must be available while idle")
 	_expect(_disconnect_button(lobby).disabled, "disconnect must be disabled while idle")
@@ -49,9 +58,11 @@ func _run() -> void:
 		"red_ready": false,
 		"black_ready": false,
 		"can_start": false,
+		"turn_timeout_seconds": 45,
 	})
 	_expect(_ready_button(lobby).visible and not _ready_button(lobby).disabled, "seated player must be able to ready")
 	_expect(_start_button(lobby).visible and _start_button(lobby).disabled, "host start must wait for both players")
+	_expect(rules_turn_clock_value.text == "每回合 45 秒", "lobby must render the synchronized turn clock")
 
 	lobby.render_connection_snapshot({
 		"state": "ready",
@@ -126,3 +137,7 @@ func _start_button(lobby: Node) -> Button:
 
 func _copy_address_button(lobby: Node) -> BaseButton:
 	return lobby.get_node("%CopyAddressButton") as BaseButton
+
+
+func _rules_turn_clock_value(lobby: Node) -> Label:
+	return lobby.get_node_or_null("%RulesTurnClockValue") as Label
