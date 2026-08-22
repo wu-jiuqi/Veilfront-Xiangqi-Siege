@@ -21,6 +21,8 @@ const FRAME_VARIATIONS := [
 	&"FocusFrame", &"SelectedFrame", &"WarningFrame", &"MinimapFrame",
 ]
 
+var _failures: Array[String] = []
+
 
 func _init() -> void:
 	var theme := load(THEME_PATH) as Theme
@@ -42,9 +44,13 @@ func _init() -> void:
 	for variation: StringName in FRAME_VARIATIONS:
 		_assert(theme.get_type_variation_base(variation) == &"Panel", "框体语义变体缺失：%s" % variation)
 	_assert(theme.get_type_variation_base(&"TurnStatusPanel") == &"PanelContainer", "回合状态条语义变体缺失")
-	_assert(_count_svg_files(VECTOR_ROOT) == 46, "矢量源文件数量必须为 46")
+	_assert(_count_svg_files(VECTOR_ROOT) == 49, "矢量源文件数量必须为 49")
 	_assert(_count_top_level_png_files(HUD_V2_ROOT) == 9, "HUD V2 生产 PNG 数量必须为 9")
-	print("TERRACOTTA_UI_THEME_CONTRACT_PASS buttons=6 panels=8 frames=8 vectors=46 hud_v2=9")
+	if not _failures.is_empty():
+		print("TERRACOTTA_UI_THEME_CONTRACT_FAIL failures=%d" % _failures.size())
+		quit(1)
+		return
+	print("TERRACOTTA_UI_THEME_CONTRACT_PASS buttons=6 panels=8 frames=8 vectors=49 hud_v2=9")
 	quit(0)
 
 
@@ -88,5 +94,5 @@ func _count_svg_files(path: String) -> int:
 func _assert(condition: bool, message: String) -> void:
 	if condition:
 		return
+	_failures.append(message)
 	push_error(message)
-	quit(1)
