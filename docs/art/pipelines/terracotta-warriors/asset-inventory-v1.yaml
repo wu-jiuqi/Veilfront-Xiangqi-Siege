@@ -180,7 +180,7 @@ art_pipeline_inventory:
     - {id: TW-UI-MINIMAP, name: 小地图底框与标记, quantity: 12, phase: owner_exception_full_ui, status: completed_by_semantic_reuse}
     - {id: TW-UI-CURSORS, name: 鼠标与落点光标, quantity: 6, phase: owner_exception_full_ui, status: completed_svg}
     - {id: TW-UI-PATTERNS, name: 秦式几何纹与军令底纹, quantity: 4, phase: owner_exception_full_ui, status: completed_svg}
-    - {id: TW-UI-SCREENS, name: 页面换肤目标, quantity: 9, phase: owner_exception_full_ui, status: six_scene_bound_three_theme_ready}
+    - {id: TW-UI-SCREENS, name: 静态Theme页面覆盖目标, quantity: 9, phase: owner_exception_full_ui, status: six_scene_bound_three_theme_ready}
     - {id: TW-UI-TYPOGRAPHY, name: 字体与字形授权包, quantity: 1, phase: owner_exception_full_ui, status: completed_noto_sans_sc_ofl}
   - id: fx_animation_audio
     name: 特效、动画与音频

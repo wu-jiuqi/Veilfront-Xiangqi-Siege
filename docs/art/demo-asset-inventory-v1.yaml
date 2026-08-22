@@ -253,8 +253,8 @@ asset_inventory:
     - id: ART-UI-SHELL
       name: 所选美术管线的对局HUD与侧栏皮肤
       quantity: 1
-      source_spec: 每套命名美术管线独立提供Theme与皮肤；1280×720主布局，兼容960×540与1920×1080
-      runtime_spec: Godot Theme+StyleBox+九宫格纹理
+      source_spec: 项目固定使用单一兵马俑Theme；1280×720主布局，兼容960×540与1920×1080
+      runtime_spec: 根场景静态绑定Godot Theme+StyleBox+九宫格纹理
       dependencies: [ART-UI-ICONS]
       phase: post_gate2_batch
       status: inventoried
@@ -263,7 +263,7 @@ asset_inventory:
       name: 战局侧栏局部样片
       quantity: 1
       source_spec: 回合、棋子信息、主要行动三块
-      runtime_spec: 现有Control场景换肤样片
+      runtime_spec: 现有Control场景静态Theme样片
       dependencies: []
       phase: preproduction_sample
       status: planned

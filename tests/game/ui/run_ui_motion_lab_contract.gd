@@ -59,7 +59,9 @@ func _run() -> void:
 	_assert(lab != null, "实验场根节点必须是 Control")
 	root.add_child(lab)
 	await process_frame
-	_assert(lab.get_node_or_null("UiThemeBinder") != null, "实验场未预置 Theme Binder")
+	_assert(lab.get_node_or_null("UiThemeBinder") == null, "实验场不应包含已删除的 Theme Binder")
+	_assert(lab.theme != null, "实验场未预置静态 Theme")
+	_assert(lab.theme.resource_path == "res://resources/game/ui/themes/terracotta_ui_theme.tres", "实验场静态 Theme 路径错误")
 	_assert(lab.get_node_or_null("SafeMargin/Page/Body/DemoPanel") != null, "实验场缺少演示面板")
 	_assert(lab.get_node_or_null("SafeMargin/Page/Body/DemoPanel/Margin/Content/FeedbackTarget") != null, "实验场缺少反馈目标")
 	var hud_gallery := lab.get_node_or_null("HudV2Gallery") as PanelContainer

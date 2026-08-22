@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" path="res://assets/art/ui/start_sequence/gate_environment_open_v1.png" id="1_environment"]
 [ext_resource type="Script" path="res://scripts/game/frontend/start_screen.gd" id="2_script"]
 [ext_resource type="PackedScene" path="res://scenes/game/frontend/start_menu_overlay.tscn" id="3_menu_overlay"]
-[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_theme_binder.tscn" id="4_theme_binder"]
+[ext_resource type="Theme" path="res://resources/game/ui/themes/terracotta_ui_theme.tres" id="4_theme"]
 [ext_resource type="Font" path="res://resources/game/ui/start_prompt_font.tres" id="5_prompt_font"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/start_sequence/gate_left_door_v2.png" id="6_left_door"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/start_sequence/gate_right_door_v2.png" id="7_right_door"]
@@ -238,9 +238,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 0
+theme = ExtResource("4_theme")
 script = ExtResource("2_script")
-
-[node name="UiThemeBinder" parent="." instance=ExtResource("4_theme_binder")]
 
 [node name="Stage" type="Control" parent="."]
 layout_mode = 1

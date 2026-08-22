@@ -84,7 +84,7 @@
 
 ```text
 FormalLanLobby (Control, Full Rect)
-├─ UiThemeBinder (instance)
+├─ theme = terracotta_ui_theme.tres（根节点静态预置）
 ├─ LobbyChrome (Control, Full Rect)
 │  ├─ BattlefieldBackdrop (TextureRect)
 │  ├─ BackdropShade (ColorRect)

@@ -5,7 +5,6 @@
 [ext_resource type="Theme" path="res://resources/game/ui/themes/level_select_master_v2_theme.tres" id="3_theme"]
 [ext_resource type="Texture2D" uid="uid://ckr08sw3potmf" path="res://assets/art/ui/level_select/components/progress_ring_v2.png" id="4_progress"]
 [ext_resource type="Texture2D" uid="uid://kb0iu0wydfuq" path="res://assets/art/ui/level_select/components/reward_slot_v2.png" id="5_reward"]
-[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_theme_binder.tscn" id="6_binder"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroupCategory"]
 
@@ -20,8 +19,6 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("3_theme")
 script = ExtResource("1_script")
-
-[node name="UiThemeBinder" parent="." instance=ExtResource("6_binder")]
 
 [node name="Backdrop" type="ColorRect" parent="." unique_id=1584000001]
 layout_mode = 1

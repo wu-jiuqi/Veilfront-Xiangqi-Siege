@@ -15,7 +15,7 @@ terracotta_ui_asset_manifest:
     material: 中立暗锻铁、深墨绿氧化青铜、银白磨边与克制旧金
     faction_rule: 基础控件不写死阵营色；阵营与危险语义通过调色和图标双重表达
     prohibited:
-    - 第二套 UI 风格
+    - 运行时主题切换与当前兵马俑 Theme 之外的第二套 Theme
     - 未经字源校对的正式秦小篆字形
     - 仅依赖颜色表达交互状态
 
@@ -120,6 +120,6 @@ terracotta_ui_asset_manifest:
   validation:
     - tests/game/ui/run_terracotta_ui_theme_contract.gd
     - tests/game/ui/run_ui_motion_lab_contract.gd
-    - tests/game/ui/run_ui_style_switch_contract.gd
+    - tests/game/ui/run_ui_static_theme_contract.gd
     - tests/game/frontend/run_frontend_scene_smoke.gd
     - tests/game/scenes/run_formal_scene_smoke.gd

@@ -76,7 +76,7 @@ MainMenu
 ```text
 scenes/game/frontend/start_screen.tscn
 StartScreen (Control)
-├─ UiThemeBinder (Node)
+├─ theme = terracotta_ui_theme.tres（根节点静态预置）
 ├─ Background (TextureRect)
 ├─ PromptArea (CenterContainer)
 │  └─ EnterPrompt (Label)
