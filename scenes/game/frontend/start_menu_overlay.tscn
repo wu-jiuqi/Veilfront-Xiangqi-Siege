@@ -1,9 +1,10 @@
-[gd_scene load_steps=21 format=3]
+[gd_scene load_steps=18 format=3]
 
 [ext_resource type="Script" path="res://scripts/game/frontend/start_menu_overlay.gd" id="1_script"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/start_sequence/veilfront_logo_gold_pair_v2.png" id="2_logo_pair"]
 [ext_resource type="FontFile" path="res://assets/fonts/noto_sans_sc/NotoSansSC-VariableFont_wght.ttf" id="3_ui_font"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/start_sequence/veilfront_subtitle_square_seal_v2.png" id="4_subtitle"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/start_sequence/settings_infantry_shield_gear_v1.png" id="5_settings_shield"]
 [ext_resource type="Shader" path="res://assets/shaders/ui/title_impact_mist.gdshader" id="6_impact_mist"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/start_sequence/menu_bronze_sword_button_v1.png" id="7_sword_button"]
 
@@ -14,46 +15,6 @@ region = Rect2(0, 0, 887, 887)
 [sub_resource type="AtlasTexture" id="AtlasTextureFrontier"]
 atlas = ExtResource("2_logo_pair")
 region = Rect2(887, 0, 887, 887)
-
-[sub_resource type="StyleBoxFlat" id="StyleButtonNormal"]
-bg_color = Color(0.025, 0.045, 0.052, 0.52)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.42, 0.42, 0.36, 0.66)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-
-[sub_resource type="StyleBoxFlat" id="StyleButtonHover"]
-bg_color = Color(0.16, 0.15, 0.11, 0.62)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.72, 0.61, 0.37, 0.92)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-
-[sub_resource type="StyleBoxFlat" id="StyleButtonPressed"]
-bg_color = Color(0.2, 0.18, 0.12, 0.72)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.82, 0.69, 0.42, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleButtonDisabled"]
-bg_color = Color(0.025, 0.045, 0.055, 0.2)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.3, 0.31, 0.29, 0.35)
 
 [sub_resource type="StyleBoxTexture" id="StyleSwordNormal"]
 content_margin_right = 45.5
@@ -413,22 +374,19 @@ layout_mode = 1
 anchor_left = 0.0125
 anchor_top = 0.022222
 anchor_right = 0.0625
-anchor_bottom = 0.077778
+anchor_bottom = 0.111111
 focus_mode = 2
 mouse_default_cursor_shape = 2
-theme_override_colors/font_color = Color(0.76, 0.76, 0.7, 1)
-theme_override_colors/font_hover_color = Color(0.92, 0.8, 0.52, 1)
-theme_override_colors/font_pressed_color = Color(0.98, 0.86, 0.58, 1)
-theme_override_colors/font_focus_color = Color(0.9, 0.78, 0.5, 1)
-theme_override_colors/font_disabled_color = Color(0.46, 0.48, 0.46, 0.55)
-theme_override_fonts/font = ExtResource("3_ui_font")
-theme_override_font_sizes/font_size = 24
-theme_override_styles/normal = SubResource("StyleButtonNormal")
-theme_override_styles/hover = SubResource("StyleButtonHover")
-theme_override_styles/pressed = SubResource("StyleButtonPressed")
-theme_override_styles/focus = SubResource("StyleButtonHover")
-theme_override_styles/disabled = SubResource("StyleButtonDisabled")
-text = "设置"
+tooltip_text = "设置"
+theme_override_colors/icon_normal_color = Color(0.92, 0.92, 0.86, 1)
+theme_override_colors/icon_hover_color = Color(1.12, 1.05, 0.82, 1)
+theme_override_colors/icon_pressed_color = Color(0.74, 0.68, 0.52, 1)
+theme_override_colors/icon_focus_color = Color(1.08, 0.98, 0.74, 1)
+theme_override_colors/icon_disabled_color = Color(0.42, 0.45, 0.42, 0.62)
+icon = ExtResource("5_settings_shield")
+flat = true
+expand_icon = true
+icon_max_width = 48
 
 [node name="MistCharacter" type="TextureRect" parent="UiRoot"]
 layout_mode = 1
