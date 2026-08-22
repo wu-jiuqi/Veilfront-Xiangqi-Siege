@@ -62,6 +62,22 @@ func _run() -> void:
 	})
 	_expect(_ready_button(lobby).visible and not _ready_button(lobby).disabled, "seated player must be able to ready")
 	_expect(_start_button(lobby).visible and _start_button(lobby).disabled, "host start must wait for both players")
+	_expect(
+		_style_texture_path(_ready_button(lobby), &"normal").ends_with("ready_confirm_button_v2.png"),
+		"ready action must use the generated confirm-ready PNG",
+	)
+	_expect(
+		_style_texture_path(_ready_button(lobby), &"pressed").ends_with("ready_cancel_button_v2.png"),
+		"pressed ready action must use the generated cancel-ready PNG",
+	)
+	_expect(
+		_style_texture_path(_start_button(lobby), &"normal").ends_with("start_game_button_v2.png"),
+		"host start action must use the generated start-game PNG",
+	)
+	_expect(
+		_ready_button(lobby).get_theme_stylebox(&"focus") is StyleBoxFlat,
+		"ready action must keep a local focus frame instead of inheriting the global button texture",
+	)
 	_expect(rules_turn_clock_value.text == "每回合 45 秒", "lobby must render the synchronized turn clock")
 
 	lobby.render_connection_snapshot({
@@ -141,3 +157,10 @@ func _copy_address_button(lobby: Node) -> BaseButton:
 
 func _rules_turn_clock_value(lobby: Node) -> Label:
 	return lobby.get_node_or_null("%RulesTurnClockValue") as Label
+
+
+func _style_texture_path(button: Button, style_name: StringName) -> String:
+	var style := button.get_theme_stylebox(style_name) as StyleBoxTexture
+	if style == null or style.texture == null:
+		return ""
+	return style.texture.resource_path

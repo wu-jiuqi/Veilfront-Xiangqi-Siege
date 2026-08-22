@@ -192,7 +192,6 @@ func _render_connection_snapshot(snapshot: Dictionary) -> void:
 	_ready_button.visible = peer_connected and state not in ["starting", "match", "in_match", "ended"]
 	_ready_button.disabled = not _ready_button.visible
 	_ready_button.button_pressed = red_ready if seat == "red" else black_ready
-	_ready_button.text = "取消准备" if _ready_button.button_pressed else "确认准备"
 	_start_button.visible = role == "host" and peer_connected and state not in ["match", "in_match", "ended"]
 	_start_button.disabled = not bool(snapshot.get("can_start", red_ready and black_ready))
 

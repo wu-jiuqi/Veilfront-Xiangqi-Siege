@@ -34,8 +34,52 @@
 [ext_resource type="Texture2D" uid="uid://btl11l3qb6bpu" path="res://assets/art/ui/lan_lobby/slices_v3/room_value_backing.png" id="34_room_backing"]
 [ext_resource type="Texture2D" uid="uid://dwrjj0k1jwee5" path="res://assets/art/ui/lan_lobby/slices_v3/red_status_backing.png" id="35_red_backing"]
 [ext_resource type="Texture2D" uid="uid://clko7q5kgg3h1" path="res://assets/art/ui/lan_lobby/slices_v3/black_status_backing.png" id="36_black_backing"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/ready_confirm_button_v2.png" id="37_ready_confirm"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/ready_cancel_button_v2.png" id="38_ready_cancel"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/start_game_button_v2.png" id="39_start_game"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleEmpty"]
+
+[sub_resource type="StyleBoxFlat" id="StyleActionFocus"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.96, 0.73, 0.3, 0.9)
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxTexture" id="StyleReadyConfirm"]
+texture = ExtResource("37_ready_confirm")
+
+[sub_resource type="StyleBoxTexture" id="StyleReadyConfirmHover"]
+texture = ExtResource("37_ready_confirm")
+modulate_color = Color(1.16, 1.1, 0.88, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleReadyCancel"]
+texture = ExtResource("38_ready_cancel")
+
+[sub_resource type="StyleBoxTexture" id="StyleReadyDisabled"]
+texture = ExtResource("38_ready_cancel")
+modulate_color = Color(0.52, 0.52, 0.5, 0.86)
+
+[sub_resource type="StyleBoxTexture" id="StyleStartGame"]
+texture = ExtResource("39_start_game")
+
+[sub_resource type="StyleBoxTexture" id="StyleStartGameHover"]
+texture = ExtResource("39_start_game")
+modulate_color = Color(1.14, 1.08, 0.84, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleStartGamePressed"]
+texture = ExtResource("39_start_game")
+modulate_color = Color(0.84, 0.78, 0.68, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleStartGameDisabled"]
+texture = ExtResource("39_start_game")
+modulate_color = Color(0.46, 0.45, 0.42, 0.82)
 
 [node name="FormalLanLobby" type="Control" unique_id=2021386468]
 layout_mode = 3
@@ -420,22 +464,28 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 0
 offset_left = 839.0
-offset_top = 640.0
+offset_top = 635.0
 offset_right = 1023.0
-offset_bottom = 697.0
+offset_bottom = 702.0
 mouse_default_cursor_shape = 2
-theme_type_variation = &"SecondaryButton"
+theme_override_styles/normal = SubResource("StyleReadyConfirm")
+theme_override_styles/hover = SubResource("StyleReadyConfirmHover")
+theme_override_styles/pressed = SubResource("StyleReadyCancel")
+theme_override_styles/disabled = SubResource("StyleReadyDisabled")
+theme_override_styles/focus = SubResource("StyleActionFocus")
 toggle_mode = true
-text = "确认准备"
 
 [node name="StartButton" type="Button" parent="LobbyChrome" unique_id=1578484669]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
 offset_left = 1036.0
-offset_top = 640.0
+offset_top = 635.0
 offset_right = 1250.0
-offset_bottom = 697.0
+offset_bottom = 702.0
 mouse_default_cursor_shape = 2
-theme_type_variation = &"PrimaryButton"
-text = "房主开局"
+theme_override_styles/normal = SubResource("StyleStartGame")
+theme_override_styles/hover = SubResource("StyleStartGameHover")
+theme_override_styles/pressed = SubResource("StyleStartGamePressed")
+theme_override_styles/disabled = SubResource("StyleStartGameDisabled")
+theme_override_styles/focus = SubResource("StyleActionFocus")
