@@ -18,6 +18,8 @@ __pycache__/
 *.py[cod]
 
 # Local and exported build artifacts
+.codex-temp/
+builds/
 .tmp/
 .mono/
 .import/
