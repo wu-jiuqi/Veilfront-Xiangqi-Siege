@@ -554,6 +554,26 @@ text = "战场态势"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="MinimapExpandButton" parent="Minimap" instance=ExtResource("9_motion_button")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(52, 44)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -60.0
+offset_top = -22.0
+offset_right = -8.0
+offset_bottom = 22.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_type_variation = &"QuietButton"
+theme_override_font_sizes/font_size = 11
+text = "放大"
+motion_profile = null
+
 [node name="PieceInfoDrawer" parent="." unique_id=1395914044 instance=ExtResource("11_piece_drawer")]
 unique_name_in_owner = true
 z_index = 6

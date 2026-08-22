@@ -8,6 +8,8 @@ const DEFAULT_LAYOUT_PATH := "res://resources/game/ui/layouts/veilfront_board_ui
 @onready var _board_frame: Control = $BoardFrame
 @onready var _piece_info_drawer: PieceInfoDrawer = $PieceInfoDrawer
 @onready var _incense_turn_clock: IncenseTurnClock = $IncenseTurnClock
+@onready var _minimap: Control = $Minimap
+@onready var _minimap_expand_button: Button = $Minimap/MinimapExpandButton
 
 var _layout_definition: Dictionary = {}
 var _active_profile_name: String = ""
@@ -18,10 +20,16 @@ var _catalog_visuals_initialized: bool = false
 var _text_layer_visibility: Dictionary = {}
 var _catalog_text_values: Dictionary = {}
 var _scene_authored_layout_enabled: bool = false
+var _content_rect := Rect2()
+var _base_minimap_rect := Rect2()
+var _base_minimap_z_index: int = 0
+var _minimap_expanded: bool = false
 
 
 func _ready() -> void:
 	_load_layout_definition()
+	_minimap_expand_button.pressed.connect(toggle_minimap_expanded)
+	_update_minimap_expand_button()
 
 
 func apply_layout_for_size(requested_size: Vector2, reserved_right: float = 0.0) -> void:
@@ -40,7 +48,10 @@ func apply_layout_for_size(requested_size: Vector2, reserved_right: float = 0.0)
 		return
 	if _scene_authored_layout_enabled:
 		_active_profile_name = "scene-authored"
+		_content_rect = Rect2(Vector2.ZERO, available_size)
 		_apply_profile_slots(profile, Vector2.ONE, false)
+		_remember_minimap_layout()
+		_apply_minimap_expansion()
 		_apply_catalog_visuals()
 		_apply_catalog_text_layout(false)
 		_incense_turn_clock.refresh_layout()
@@ -52,10 +63,18 @@ func apply_layout_for_size(requested_size: Vector2, reserved_right: float = 0.0)
 		maxf(1.0, float(canvas.get("width", 1280.0))),
 		maxf(1.0, float(canvas.get("height", 720.0)))
 	)
-	var scale_factor := Vector2(available_size.x / canvas_size.x, available_size.y / canvas_size.y)
+	var uniform_scale := minf(
+		available_size.x / canvas_size.x,
+		available_size.y / canvas_size.y
+	)
+	var scale_factor := Vector2.ONE * uniform_scale
+	var scaled_canvas_size := canvas_size * uniform_scale
+	_content_rect = Rect2((available_size - scaled_canvas_size) * 0.5, scaled_canvas_size)
 	var board_definition: Dictionary = profile.get("default_visible_board_screen_rect", {})
 	_apply_rect(_board_frame, _scaled_rect(board_definition.get("pixel_rect", {}), scale_factor))
 	_apply_profile_slots(profile, scale_factor)
+	_remember_minimap_layout()
+	_apply_minimap_expansion()
 
 	_apply_catalog_visuals()
 	_apply_catalog_text_layout()
@@ -120,6 +139,18 @@ func set_scene_authored_layout_enabled(enabled: bool) -> void:
 		apply_layout_for_size(size, 0.0)
 
 
+func toggle_minimap_expanded() -> void:
+	set_minimap_expanded(not _minimap_expanded)
+
+
+func set_minimap_expanded(expanded: bool) -> void:
+	if _minimap_expanded == expanded:
+		return
+	_minimap_expanded = expanded
+	_apply_minimap_expansion()
+	_update_minimap_expand_button()
+
+
 func get_layout_snapshot() -> Dictionary:
 	return {
 		"schema_version": str(_layout_definition.get("schema_version", "")),
@@ -127,6 +158,8 @@ func get_layout_snapshot() -> Dictionary:
 		"active_profile": _active_profile_name,
 		"screen_size": _applied_screen_size,
 		"reserved_right": _reserved_right,
+		"content_rect": _content_rect,
+		"minimap_expanded": _minimap_expanded,
 		"board_rect": Rect2(_board_frame.position, _board_frame.size),
 		"ui_rects": {
 			"faction-left": Rect2($FactionLeft.position, $FactionLeft.size),
@@ -219,11 +252,50 @@ func _select_profile_name(available_size: Vector2) -> String:
 
 func _scaled_rect(rect_definition: Dictionary, scale_factor: Vector2) -> Rect2:
 	return Rect2(
-		float(rect_definition.get("x", 0.0)) * scale_factor.x,
-		float(rect_definition.get("y", 0.0)) * scale_factor.y,
+		_content_rect.position.x + float(rect_definition.get("x", 0.0)) * scale_factor.x,
+		_content_rect.position.y + float(rect_definition.get("y", 0.0)) * scale_factor.y,
 		float(rect_definition.get("width", 0.0)) * scale_factor.x,
 		float(rect_definition.get("height", 0.0)) * scale_factor.y
 	)
+
+
+func _remember_minimap_layout() -> void:
+	_base_minimap_rect = Rect2(_minimap.position, _minimap.size)
+	_base_minimap_z_index = _minimap.z_index
+
+
+func _apply_minimap_expansion() -> void:
+	if not is_instance_valid(_minimap) or _base_minimap_rect.size.x <= 0.0 \
+	or _base_minimap_rect.size.y <= 0.0:
+		return
+	if not _minimap_expanded:
+		_apply_rect(_minimap, _base_minimap_rect)
+		_minimap.z_index = _base_minimap_z_index
+		_update_minimap_expand_button()
+		return
+	var desired_size := _base_minimap_rect.size * 1.8
+	var maximum_size := _content_rect.size * Vector2(0.72, 0.82)
+	var fit_scale := minf(
+		1.0,
+		minf(
+			maximum_size.x / maxf(desired_size.x, 1.0),
+			maximum_size.y / maxf(desired_size.y, 1.0)
+		)
+	)
+	var expanded_size := desired_size * fit_scale
+	var expanded_position := _content_rect.position + \
+		(_content_rect.size - expanded_size) * 0.5
+	_apply_rect(_minimap, Rect2(expanded_position, expanded_size))
+	_minimap.z_index = maxi(_base_minimap_z_index, 30)
+	_update_minimap_expand_button()
+
+
+func _update_minimap_expand_button() -> void:
+	if not is_instance_valid(_minimap_expand_button):
+		return
+	_minimap_expand_button.text = "还原" if _minimap_expanded else "放大"
+	_minimap_expand_button.tooltip_text = \
+		"还原战场态势图" if _minimap_expanded else "放大战场态势图"
 
 
 func _apply_rect(control: Control, target_rect: Rect2) -> void:
