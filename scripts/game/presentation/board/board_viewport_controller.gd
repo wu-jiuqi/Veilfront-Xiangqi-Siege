@@ -33,6 +33,7 @@ var _keyboard_pan_velocity: Vector2 = Vector2.ZERO
 var _piece_visual_hit_enabled: bool = true
 var _has_session_view: bool = false
 var _is_middle_dragging: bool = false
+var _previous_player_view: Dictionary = {}
 
 
 func _ready() -> void:
@@ -93,16 +94,21 @@ func get_presentation_side() -> String:
 
 
 func render_player_view(view: Dictionary) -> void:
-	var viewer_side := str(view.get("viewer_side", "red"))
-	if not _has_session_view and viewer_side in ["red", "black"]:
+	var is_initial_view: bool = not _has_session_view
+	var visible_enemy_move_cell: Vector2i = Vector2i.ZERO
+	if not is_initial_view:
+		visible_enemy_move_cell = _find_visible_enemy_move_cell(_previous_player_view, view)
+	var viewer_side: String = str(view.get("viewer_side", "red"))
+	if is_initial_view and viewer_side in ["red", "black"]:
 		_board_world.set_presentation_side(viewer_side)
 	_has_session_view = true
 	_default_anchor_cell = _find_general_cell(view, viewer_side)
 	_board_world.render_player_view(view)
-	if BoardCoordinateMapper.is_authority_cell_valid(_focused_cell):
-		focus_authority_cell(_focused_cell)
-	else:
+	_previous_player_view = view.duplicate(true)
+	if is_initial_view:
 		reset_camera()
+	elif BoardCoordinateMapper.is_authority_cell_valid(visible_enemy_move_cell):
+		_pan_to_authority_cell(visible_enemy_move_cell)
 
 
 func set_presentation_assets(theme: BoardTheme, map_option: BoardMapOption) -> void:
@@ -138,6 +144,7 @@ func clear_session_view() -> void:
 	_default_anchor_cell = Vector2i.ZERO
 	_has_session_view = false
 	_is_middle_dragging = false
+	_previous_player_view.clear()
 	_clear_hover()
 	_board_world.clear_session_view()
 	reset_camera()
@@ -497,6 +504,70 @@ func _apply_camera_position(value: Vector2) -> void:
 func _emit_overview_changed() -> void:
 	if is_node_ready():
 		overview_changed.emit(get_overview_state())
+
+
+func _pan_to_authority_cell(cell: Vector2i) -> void:
+	if not BoardCoordinateMapper.is_authority_cell_valid(cell):
+		return
+	_focused_cell = Vector2i.ZERO
+	var world_position: Vector2 = BoardCoordinateMapper.authority_to_world(
+		cell,
+		str(_board_world.get_display_side()),
+		_board_world.get_cell_size()
+	)
+	_animate_camera_to(world_position)
+
+
+func _find_visible_enemy_move_cell(
+	previous_view: Dictionary,
+	current_view: Dictionary
+) -> Vector2i:
+	var viewer_side: String = str(current_view.get("viewer_side", ""))
+	if viewer_side not in ["red", "black"] \
+	or str(previous_view.get("viewer_side", "")) != viewer_side:
+		return Vector2i.ZERO
+	var previous_action_index: int = int(previous_view.get("action_index", -1))
+	var current_action_index: int = int(current_view.get("action_index", -1))
+	if current_action_index != previous_action_index + 1:
+		return Vector2i.ZERO
+	var acting_side: String = str(previous_view.get("active_side", ""))
+	if acting_side not in ["red", "black"] or acting_side == viewer_side:
+		return Vector2i.ZERO
+	var previous_enemies: Dictionary = _visible_pieces_by_id(previous_view, acting_side)
+	var current_enemies: Dictionary = _visible_pieces_by_id(current_view, acting_side)
+	var ordered_piece_ids: Array = current_enemies.keys()
+	ordered_piece_ids.sort()
+	for piece_id_value: Variant in ordered_piece_ids:
+		var piece_id: String = str(piece_id_value)
+		if not previous_enemies.has(piece_id):
+			continue
+		var previous_piece: Dictionary = previous_enemies[piece_id]
+		var current_piece: Dictionary = current_enemies[piece_id]
+		var previous_cell: Vector2i = BoardCoordinateMapper.coordinate_from_variant(
+			previous_piece.get("position", [])
+		)
+		var current_cell: Vector2i = BoardCoordinateMapper.coordinate_from_variant(
+			current_piece.get("position", [])
+		)
+		if BoardCoordinateMapper.is_authority_cell_valid(previous_cell) \
+		and BoardCoordinateMapper.is_authority_cell_valid(current_cell) \
+		and previous_cell != current_cell:
+			return current_cell
+	return Vector2i.ZERO
+
+
+func _visible_pieces_by_id(view: Dictionary, side: String) -> Dictionary:
+	var result: Dictionary = {}
+	for piece_value: Variant in view.get("pieces", []):
+		if not piece_value is Dictionary:
+			continue
+		var piece: Dictionary = piece_value
+		var piece_id: String = str(piece.get("id", ""))
+		if piece_id.is_empty() or str(piece.get("side", "")) != side \
+		or not bool(piece.get("alive", true)) or bool(piece.get("in_reserve", false)):
+			continue
+		result[piece_id] = piece
+	return result
 
 
 func _find_general_cell(view: Dictionary, side: String) -> Vector2i:
