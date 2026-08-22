@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Theme" path="res://resources/game/ui/themes/terracotta_ui_theme.tres" id="1_theme"]
 [ext_resource type="PackedScene" path="res://scenes/game/match/match_screen.tscn" id="2_match"]
@@ -8,6 +8,7 @@
 [ext_resource type="Resource" path="res://resources/game/tutorials/authority/tutorial_smoke_authority.tres" id="6_authority"]
 [ext_resource type="Resource" path="res://resources/game/tutorials/presentation/tutorial_smoke_track.tres" id="7_track"]
 [ext_resource type="Script" path="res://scripts/game/tutorial/tutorial_level.gd" id="8_level"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/tutorial_pause_menu.tscn" id="9_pause"]
 
 [node name="TutorialLevel" type="Control"]
 layout_mode = 3
@@ -43,6 +44,9 @@ mouse_filter = 2
 [node name="TutorialDirector" type="Node" parent="."]
 script = ExtResource("5_director")
 presentation_track = ExtResource("7_track")
+
+[node name="TutorialPauseMenu" parent="." instance=ExtResource("9_pause")]
+layout_mode = 1
 
 [connection signal="session_state_changed" from="ApplicationHost" to="MatchScreen" method="render_session_state"]
 [connection signal="player_view_updated" from="ApplicationHost" to="MatchScreen" method="render_player_view"]
@@ -86,3 +90,6 @@ presentation_track = ExtResource("7_track")
 [connection signal="restart_requested" from="TutorialDirector" to="ApplicationHost" method="request_restart"]
 [connection signal="skip_requested" from="TutorialDirector" to="ApplicationHost" method="request_skip"]
 [connection signal="tutorial_request_resolved" from="ApplicationHost" to="TutorialDirector" method="consume_authority_resolution"]
+[connection signal="restart_requested" from="TutorialPauseMenu" to="TutorialDirector" method="request_retry"]
+[connection signal="exit_requested" from="TutorialPauseMenu" to="TutorialDirector" method="request_exit"]
+[connection signal="exit_requested" from="TutorialPauseMenu" to="." method="return_to_level_select"]

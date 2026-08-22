@@ -92,6 +92,7 @@ func _apply_tutorial_step_effect(step_id: String) -> void:
 
 
 func return_to_level_select() -> void:
+	get_tree().paused = false
 	get_tree().change_scene_to_file("res://scenes/game/frontend/level_select.tscn")
 
 

@@ -1,0 +1,187 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/tutorial/tutorial_pause_menu.gd" id="1_script"]
+[ext_resource type="Theme" path="res://resources/game/ui/themes/terracotta_ui_theme.tres" id="2_theme"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_pause_menu/tutorial_pause_button_v1.png" id="3_button"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxPauseNormal"]
+content_margin_left = 30.0
+content_margin_top = 14.0
+content_margin_right = 30.0
+content_margin_bottom = 14.0
+texture = ExtResource("3_button")
+texture_margin_left = 110.0
+texture_margin_top = 42.0
+texture_margin_right = 110.0
+texture_margin_bottom = 42.0
+region_rect = Rect2(76, 205, 1648, 470)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxPauseHover"]
+content_margin_left = 30.0
+content_margin_top = 14.0
+content_margin_right = 30.0
+content_margin_bottom = 14.0
+texture = ExtResource("3_button")
+texture_margin_left = 110.0
+texture_margin_top = 42.0
+texture_margin_right = 110.0
+texture_margin_bottom = 42.0
+region_rect = Rect2(76, 205, 1648, 470)
+modulate_color = Color(1, 0.94, 0.72, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxPausePressed"]
+content_margin_left = 30.0
+content_margin_top = 15.0
+content_margin_right = 30.0
+content_margin_bottom = 13.0
+texture = ExtResource("3_button")
+texture_margin_left = 110.0
+texture_margin_top = 42.0
+texture_margin_right = 110.0
+texture_margin_bottom = 42.0
+region_rect = Rect2(76, 205, 1648, 470)
+modulate_color = Color(0.72, 0.7, 0.66, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxPauseDanger"]
+content_margin_left = 30.0
+content_margin_top = 14.0
+content_margin_right = 30.0
+content_margin_bottom = 14.0
+texture = ExtResource("3_button")
+texture_margin_left = 110.0
+texture_margin_top = 42.0
+texture_margin_right = 110.0
+texture_margin_bottom = 42.0
+region_rect = Rect2(76, 205, 1648, 470)
+modulate_color = Color(0.78, 0.46, 0.4, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxPauseDangerHover"]
+content_margin_left = 30.0
+content_margin_top = 14.0
+content_margin_right = 30.0
+content_margin_bottom = 14.0
+texture = ExtResource("3_button")
+texture_margin_left = 110.0
+texture_margin_top = 42.0
+texture_margin_right = 110.0
+texture_margin_bottom = 42.0
+region_rect = Rect2(76, 205, 1648, 470)
+modulate_color = Color(1, 0.62, 0.46, 1)
+
+[node name="TutorialPauseMenu" type="Control"]
+process_mode = 3
+visible = false
+z_index = 100
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+theme = ExtResource("2_theme")
+script = ExtResource("1_script")
+
+[node name="Dimmer" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+color = Color(0.006, 0.007, 0.008, 0.88)
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Panel" type="PanelContainer" parent="Center"]
+custom_minimum_size = Vector2(540, 430)
+layout_mode = 2
+mouse_filter = 0
+theme_type_variation = &"ModalPanel"
+
+[node name="Margin" type="MarginContainer" parent="Center/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 56
+theme_override_constants/margin_top = 42
+theme_override_constants/margin_right = 56
+theme_override_constants/margin_bottom = 42
+
+[node name="Content" type="VBoxContainer" parent="Center/Panel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Title" type="Label" parent="Center/Panel/Margin/Content"]
+layout_mode = 2
+theme_type_variation = &"ScreenTitle"
+theme_override_font_sizes/font_size = 32
+text = "教学暂停"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="Center/Panel/Margin/Content"]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+theme_override_font_sizes/font_size = 14
+text = "当前章节进度已保留 · ESC 继续"
+horizontal_alignment = 1
+
+[node name="Separator" type="HSeparator" parent="Center/Panel/Margin/Content"]
+layout_mode = 2
+
+[node name="Spacer" type="Control" parent="Center/Panel/Margin/Content"]
+custom_minimum_size = Vector2(0, 4)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="ContinueButton" type="Button" parent="Center/Panel/Margin/Content"]
+custom_minimum_size = Vector2(400, 70)
+layout_mode = 2
+focus_neighbor_top = NodePath("../ExitTutorialButton")
+focus_neighbor_bottom = NodePath("../RestartChapterButton")
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.94, 0.86, 0.68, 1)
+theme_override_colors/font_hover_color = Color(1, 0.94, 0.72, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxPauseNormal")
+theme_override_styles/hover = SubResource("StyleBoxPauseHover")
+theme_override_styles/pressed = SubResource("StyleBoxPausePressed")
+text = "继续教学"
+
+[node name="RestartChapterButton" type="Button" parent="Center/Panel/Margin/Content"]
+custom_minimum_size = Vector2(400, 70)
+layout_mode = 2
+focus_neighbor_top = NodePath("../ContinueButton")
+focus_neighbor_bottom = NodePath("../ExitTutorialButton")
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.94, 0.86, 0.68, 1)
+theme_override_colors/font_hover_color = Color(1, 0.94, 0.72, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxPauseNormal")
+theme_override_styles/hover = SubResource("StyleBoxPauseHover")
+theme_override_styles/pressed = SubResource("StyleBoxPausePressed")
+text = "重新开始本章"
+
+[node name="ExitTutorialButton" type="Button" parent="Center/Panel/Margin/Content"]
+custom_minimum_size = Vector2(400, 70)
+layout_mode = 2
+focus_neighbor_top = NodePath("../RestartChapterButton")
+focus_neighbor_bottom = NodePath("../ContinueButton")
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(1, 0.84, 0.76, 1)
+theme_override_colors/font_hover_color = Color(1, 0.94, 0.72, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxPauseDanger")
+theme_override_styles/hover = SubResource("StyleBoxPauseDangerHover")
+theme_override_styles/pressed = SubResource("StyleBoxPausePressed")
+text = "退出教学"
+
+[connection signal="pressed" from="Center/Panel/Margin/Content/ContinueButton" to="." method="_on_continue_pressed"]
+[connection signal="pressed" from="Center/Panel/Margin/Content/RestartChapterButton" to="." method="_on_restart_pressed"]
+[connection signal="pressed" from="Center/Panel/Margin/Content/ExitTutorialButton" to="." method="_on_exit_pressed"]

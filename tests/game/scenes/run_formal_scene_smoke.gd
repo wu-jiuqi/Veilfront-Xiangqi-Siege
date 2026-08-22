@@ -26,6 +26,7 @@ const COMPONENT_SCENE_PATHS: Array[String] = [
 	"res://scenes/game/ui/marker_menu.tscn",
 	"res://scenes/game/ui/terminal_dialog.tscn",
 	"res://scenes/game/ui/tutorial_overlay.tscn",
+	"res://scenes/game/ui/tutorial_pause_menu.tscn",
 ]
 
 const REQUIRED_INPUT_ACTIONS: Array[StringName] = [
@@ -230,9 +231,24 @@ func _check_match_screen(instance: Node) -> void:
 
 
 func _check_tutorial_level(instance: Node) -> void:
-	for required_path: String in ["ApplicationHost", "MatchScreen", "TutorialOverlay", "TutorialDirector"]:
+	for required_path: String in [
+		"ApplicationHost",
+		"MatchScreen",
+		"TutorialOverlay",
+		"TutorialDirector",
+		"TutorialPauseMenu",
+	]:
 		if instance.get_node_or_null(required_path) == null:
 			_failures.append("TutorialLevel missing preset node: %s" % required_path)
+	var match_screen: Node = instance.get_node_or_null("MatchScreen")
+	var pause_menu: Control = instance.get_node_or_null("TutorialPauseMenu") as Control
+	if pause_menu != null:
+		if pause_menu.process_mode != Node.PROCESS_MODE_ALWAYS:
+			_failures.append("TutorialPauseMenu must process while the scene tree is paused")
+		if pause_menu.visible:
+			_failures.append("TutorialPauseMenu must start hidden")
+		if match_screen != null and pause_menu.get_index() <= match_screen.get_index():
+			_failures.append("TutorialPauseMenu must receive Escape before MatchScreen cancellation")
 
 
 func _check_board_theme() -> void:
