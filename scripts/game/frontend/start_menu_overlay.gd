@@ -1,7 +1,6 @@
 extends Control
 
 const FrontendRoutes = preload("res://scripts/integration/frontend_routes.gd")
-const LEVEL_SELECT_SCENE := "res://scenes/game/frontend/level_select.tscn"
 
 @onready var _settings_button: Button = %SettingsButton
 @onready var _lan_button: Button = %LanButton
@@ -21,13 +20,16 @@ var _transitioning := false
 func _ready() -> void:
 	visible = false
 	_settings_button.pressed.connect(
-		func() -> void: _open_scene(FrontendRoutes.settings_scene())
+		func() -> void:
+			_open_scene(FrontendRoutes.settings_scene(), "正在展开军帐设置…")
 	)
 	_lan_button.pressed.connect(
-		func() -> void: _open_scene(FrontendRoutes.lan_lobby_scene())
+		func() -> void:
+			_open_scene(FrontendRoutes.lan_lobby_scene(), "正在联络同袍营帐…")
 	)
 	_level_mode_button.pressed.connect(
-		func() -> void: _open_scene(LEVEL_SELECT_SCENE)
+		func() -> void:
+			_open_scene(FrontendRoutes.level_select_scene(), "正在铺开九路战图…")
 	)
 	_community_button.pressed.connect(
 		func() -> void: _show_notice("社群入口尚未配置。")
@@ -89,12 +91,28 @@ func _show_notice(message: String) -> void:
 	_notice_dialog.popup_centered()
 
 
-func _open_scene(path: String) -> void:
+func _open_scene(path: String, status: String) -> void:
 	if _transitioning:
 		return
 	_transitioning = true
-	var error := get_tree().change_scene_to_file(path)
+	var transition := FrontendRoutes.transition_service(get_tree())
+	if transition != null:
+		transition.connect(
+			&"transition_cancelled",
+			_on_transition_cancelled,
+			CONNECT_ONE_SHOT
+		)
+	var error := FrontendRoutes.navigate(get_tree(), path, status)
 	if error != OK:
+		if (
+			transition != null
+			and transition.is_connected(&"transition_cancelled", _on_transition_cancelled)
+		):
+			transition.disconnect(&"transition_cancelled", _on_transition_cancelled)
 		_transitioning = false
 		_fatal_error_dialog.dialog_text = "无法打开界面：%s" % path
 		_fatal_error_dialog.popup_centered()
+
+
+func _on_transition_cancelled(_scene_path: String) -> void:
+	_transitioning = false

@@ -303,9 +303,32 @@ func _return_to_menu() -> void:
 	_transitioning = true
 	_set_interactions_enabled(false)
 	await _play_exit_transition()
-	var error := get_tree().change_scene_to_file(FrontendRoutes.request_start_menu_ready())
+	var transition := FrontendRoutes.transition_service(get_tree())
+	if transition != null:
+		transition.connect(
+			&"transition_cancelled",
+			_on_return_transition_cancelled,
+			CONNECT_ONE_SHOT
+		)
+	var error := FrontendRoutes.navigate(
+		get_tree(),
+		FrontendRoutes.request_start_menu_ready(),
+		"正在返回烽火关城…"
+	)
 	if error != OK:
+		if (
+			transition != null
+			and transition.is_connected(&"transition_cancelled", _on_return_transition_cancelled)
+		):
+			transition.disconnect(&"transition_cancelled", _on_return_transition_cancelled)
 		_transitioning = false
 		_set_interactions_enabled(true)
 		_reset_control_motion(_settings_frame)
 		_show_error("无法返回主菜单：%s" % error_string(error))
+
+
+func _on_return_transition_cancelled(_scene_path: String) -> void:
+	_transitioning = false
+	_set_interactions_enabled(true)
+	_reset_control_motion(_settings_frame)
+	_play_entrance()

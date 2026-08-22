@@ -43,7 +43,7 @@
 |---|---|---|
 | 启动 | `project.godot` 入口为 `start_screen.tscn`；点击、触摸或 `ui_accept` 播放 `opening_sequence` | 原样复用；转换期间屏蔽重复输入 |
 | 主菜单 | 启动页内实例化 `start_menu_overlay.tscn`，动画结束后聚焦 `%LanButton` | 作为正式首选菜单；LAN 返回必须直接进入菜单可操作态 |
-| 独立菜单 | `main_menu.tscn` 是当前原型大厅返回目标，视觉与启动页内嵌菜单并非同一流程 | 不得无条件作为正式返回目标；只有证明与正式菜单状态/视觉等价时才可替代 |
+| 独立菜单 | 旧版 `main_menu.tscn` 与脚本已删除，原型大厅也已改走正式标题页路由 | 所有主菜单返回统一进入 `start_screen.tscn` 的 `MAIN_MENU_READY` 状态 |
 | LAN 路由 | `FrontendRoutes.LAN_LOBBY_SCENE` 仍指向 `scenes/prototype/network/lan_lobby.tscn` | 切换到正式 LAN 组合根；prototype 保留为回归基线 |
 | V3 大厅 | 已有切片、地址、席位、状态和创建/加入/离开按钮 | 复用大厅视觉与预置节点；增加显式准备和房主开局门槛 |
 | 原型大厅行为 | 房主和加入者被自动标为已准备；收到 PlayerView 后自动显示 `NetworkBoard` | 正式版禁止这两项自动行为 |
@@ -76,7 +76,7 @@
 
 返回菜单的玩家可见结果必须是 `MAIN_MENU_READY`：菜单已显示、按钮可操作、焦点落在 `%LanButton`。不得重新显示“点击任意位置继续”或重播 4.85 秒开门动画。
 
-实现方式属于技术 `hypothesis`，可选择持久化 Frontend 根、返回时传入公开路由状态，或使用与内嵌菜单完全等价的预置菜单场景；不可为了接线方便造成两套不一致主菜单体验。
+当前技术实现通过 `FrontendRoutes.request_start_menu_ready()` 返回 `start_screen.tscn`，并由预置的全局 `SceneTransition` 加载覆盖层完成异步换场；不得再恢复第二套独立主菜单。
 
 ### 3.2 正式 LAN 大厅
 

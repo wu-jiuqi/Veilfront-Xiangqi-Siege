@@ -1,6 +1,6 @@
 extends Control
 
-const MAIN_MENU_SCENE := "res://scenes/game/frontend/main_menu.tscn"
+const FrontendRoutes = preload("res://scripts/integration/frontend_routes.gd")
 const LEVEL_CARD_SCENE := preload("res://scenes/game/frontend/level_card.tscn")
 const CATALOG := preload("res://resources/game/levels/level_catalog.tres")
 const DESIGN_SIZE := Vector2(1280.0, 720.0)
@@ -57,7 +57,7 @@ func _ready() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed(&"ui_cancel"):
-		_return_to_main_menu()
+		_return_to_title_screen()
 		get_viewport().set_input_as_handled()
 
 
@@ -130,17 +130,56 @@ func _enter_selected_level() -> void:
 		return
 	_transitioning = true
 	get_tree().root.set_meta("veilfront_selected_level_id", _selected_level.level_id)
-	var error := get_tree().change_scene_to_file(_selected_level.scene_path)
+	_watch_transition_cancellation()
+	var error := FrontendRoutes.navigate(
+		get_tree(),
+		_selected_level.scene_path,
+		"正在布设%s…" % _selected_level.title
+	)
 	if error != OK:
+		_unwatch_transition_cancellation()
 		_transitioning = false
 		_status_label.text = "无法打开关卡：%s" % _selected_level.level_id
 
 
-func _return_to_main_menu() -> void:
+func _return_to_title_screen() -> void:
 	if _transitioning:
 		return
 	_transitioning = true
-	get_tree().change_scene_to_file(MAIN_MENU_SCENE)
+	_watch_transition_cancellation()
+	var error := FrontendRoutes.navigate(
+		get_tree(),
+		FrontendRoutes.request_start_menu_ready(),
+		"正在返回烽火关城…"
+	)
+	if error != OK:
+		_unwatch_transition_cancellation()
+		_transitioning = false
+		_status_label.text = "无法返回标题页：%s" % error_string(error)
+
+
+func _watch_transition_cancellation() -> void:
+	var transition := FrontendRoutes.transition_service(get_tree())
+	if transition == null:
+		return
+	transition.connect(
+		&"transition_cancelled",
+		_on_transition_cancelled,
+		CONNECT_ONE_SHOT
+	)
+
+
+func _on_transition_cancelled(_scene_path: String) -> void:
+	_transitioning = false
+
+
+func _unwatch_transition_cancellation() -> void:
+	var transition := FrontendRoutes.transition_service(get_tree())
+	if (
+		transition != null
+		and transition.is_connected(&"transition_cancelled", _on_transition_cancelled)
+	):
+		transition.disconnect(&"transition_cancelled", _on_transition_cancelled)
 
 
 func _load_progress() -> void:

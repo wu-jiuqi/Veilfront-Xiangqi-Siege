@@ -6,7 +6,6 @@ const SCENE_THEME_PATHS := {
 	"res://scenes/game/app/game_app.tscn": "res://resources/game/ui/themes/terracotta_ui_theme.tres",
 	"res://scenes/game/frontend/formal_lan_lobby.tscn": "res://resources/game/ui/themes/terracotta_ui_theme.tres",
 	"res://scenes/game/frontend/level_select.tscn": "res://resources/game/ui/themes/level_select_master_v2_theme.tres",
-	"res://scenes/game/frontend/main_menu.tscn": "res://resources/game/ui/themes/terracotta_ui_theme.tres",
 	"res://scenes/game/frontend/start_screen.tscn": "res://resources/game/ui/themes/terracotta_ui_theme.tres",
 	"res://scenes/game/match/match_screen.tscn": "res://resources/game/ui/themes/terracotta_ui_theme.tres",
 	"res://scenes/game/tutorial/tutorial_level.tscn": "res://resources/game/ui/themes/terracotta_ui_theme.tres",
@@ -19,6 +18,9 @@ const REMOVED_PATHS: Array[String] = [
 	"res://scripts/game/presentation/ui/ui_style_definition.gd",
 	"res://scripts/game/presentation/ui/ui_style_service.gd",
 	"res://scripts/game/presentation/ui/ui_theme_binder.gd",
+	"res://scenes/game/frontend/main_menu.tscn",
+	"res://scripts/game/frontend/main_menu.gd",
+	"res://scripts/game/frontend/main_menu.gd.uid",
 ]
 
 

@@ -204,7 +204,11 @@ func _show_lobby() -> void:
 
 func _return_to_start_menu() -> void:
 	var scene_path := FrontendRoutes.request_start_menu_ready()
-	var change_error := get_tree().change_scene_to_file(scene_path)
+	var change_error := FrontendRoutes.navigate(
+		get_tree(),
+		scene_path,
+		"正在返回烽火关城…"
+	)
 	if change_error != OK:
 		_fatal_error_dialog.dialog_text = "无法返回正式主菜单：%s" % scene_path
 		_fatal_error_dialog.popup_centered()

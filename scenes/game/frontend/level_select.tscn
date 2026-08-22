@@ -300,7 +300,7 @@ unique_name_in_owner = true
 title = "清空教学进度"
 dialog_text = "只清除 T0–T10 的本地完成记录，不影响局域网设置。"
 
-[connection signal="pressed" from="DesignCanvas/BackButton" to="." method="_return_to_main_menu"]
+[connection signal="pressed" from="DesignCanvas/BackButton" to="." method="_return_to_title_screen"]
 [connection signal="pressed" from="DesignCanvas/TutorialCategoryButton" to="." method="_show_tutorial_category"]
 [connection signal="pressed" from="DesignCanvas/ChallengeCategoryButton" to="." method="_show_challenge_category"]
 [connection signal="pressed" from="DesignCanvas/ResetButton" to="." method="_on_reset_progress"]

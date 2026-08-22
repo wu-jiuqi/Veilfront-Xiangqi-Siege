@@ -1,6 +1,7 @@
 extends Control
 
 const FormalLocalSession = preload("res://scripts/game/application/formal_local_session.gd")
+const FrontendRoutes = preload("res://scripts/integration/frontend_routes.gd")
 const TutorialChapterCatalog = preload("res://scripts/game/tutorial/tutorial_chapter_catalog.gd")
 const TERMINAL_LEVEL_DESTINATION: String = "level_select"
 
@@ -111,7 +112,13 @@ func _apply_tutorial_step_effect(step_id: String) -> void:
 
 func return_to_level_select() -> void:
 	get_tree().paused = false
-	get_tree().change_scene_to_file("res://scenes/game/frontend/level_select.tscn")
+	var error := FrontendRoutes.navigate(
+		get_tree(),
+		FrontendRoutes.level_select_scene(),
+		"正在返回关卡战图…"
+	)
+	if error != OK:
+		push_error("TutorialLevel could not return to level select: %s" % error_string(error))
 
 
 func advance_to_next_level() -> void:
@@ -121,7 +128,13 @@ func advance_to_next_level() -> void:
 		return
 	var next_level_id := TutorialChapterCatalog.TUTORIAL_IDS[current_index + 1]
 	get_tree().root.set_meta("veilfront_selected_level_id", next_level_id)
-	get_tree().change_scene_to_file("res://scenes/game/tutorial/tutorial_level.tscn")
+	var error := FrontendRoutes.navigate(
+		get_tree(),
+		"res://scenes/game/tutorial/tutorial_level.tscn",
+		"正在布设下一处战场…"
+	)
+	if error != OK:
+		push_error("TutorialLevel could not advance to %s: %s" % [next_level_id, error_string(error)])
 
 
 func handle_level_skipped(_level_id_value: String) -> void:

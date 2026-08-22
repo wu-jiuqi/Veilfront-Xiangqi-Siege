@@ -5,11 +5,12 @@ const CATALOG := preload("res://resources/game/levels/level_catalog.tres")
 
 func _init() -> void:
 	var start_scene := load("res://scenes/game/frontend/start_screen.tscn") as PackedScene
-	var main_scene := load("res://scenes/game/frontend/main_menu.tscn") as PackedScene
 	var level_scene := load("res://scenes/game/frontend/level_select.tscn") as PackedScene
 	assert(start_scene != null, "start screen scene must load")
-	assert(main_scene != null, "main menu scene must load")
 	assert(level_scene != null, "level select scene must load")
+	assert(not FileAccess.file_exists("res://scenes/game/frontend/main_menu.tscn"), "legacy main menu scene must be removed")
+	assert(not FileAccess.file_exists("res://scripts/game/frontend/main_menu.gd"), "legacy main menu script must be removed")
+	assert(not FileAccess.file_exists("res://scripts/game/frontend/main_menu.gd.uid"), "legacy main menu script UID must be removed")
 	assert(CATALOG.levels.size() == 14, "catalog must contain T0-T10 and C1-C3")
 	assert(CATALOG.find_level("T0").available, "T0 must be available")
 	assert(CATALOG.find_level("T1").unlock_after == "T0", "tutorial unlock chain must start at T0")
@@ -41,7 +42,11 @@ func _init() -> void:
 	var mist_character := menu_overlay.get_node("UiRoot/MistCharacter") as TextureRect
 	var frontier_character := menu_overlay.get_node("UiRoot/FrontierCharacter") as TextureRect
 	var game_subtitle := menu_overlay.get_node("UiRoot/GameSubtitle") as TextureRect
-	assert(_anchors_match(settings_button, Rect2(0.0125, 0.022222, 0.05, 0.055556)))
+	assert(_anchors_match(settings_button, Rect2(0.0125, 0.022222, 0.05, 0.088889)))
+	assert(settings_button.text.is_empty(), "settings shield button must not render a text label")
+	assert(settings_button.icon.resource_path == "res://assets/art/ui/start_sequence/settings_infantry_shield_gear_v1.png")
+	assert(settings_button.tooltip_text == "设置")
+	_assert_true_alpha("res://assets/art/ui/start_sequence/settings_infantry_shield_gear_v1.png")
 	assert(_anchors_match(mist_character, Rect2(0.3875, 0.166667, 0.19, 0.32)))
 	assert(_is_vector_near(mist_character.pivot_offset, Vector2(121.6, 115.2)))
 	assert(_anchors_match(frontier_character, Rect2(0.4125, 0.477778, 0.18125, 0.311111)))
@@ -112,13 +117,6 @@ func _init() -> void:
 	start_root.queue_free()
 	await process_frame
 
-	var main_root := main_scene.instantiate()
-	root.add_child(main_root)
-	await process_frame
-	assert(main_root.get_node("%LanButton").text == "局域网联机对战")
-	main_root.queue_free()
-	await process_frame
-
 	var level_root := level_scene.instantiate()
 	root.add_child(level_root)
 	await process_frame
@@ -149,3 +147,13 @@ func _anchors_match(control: Control, expected: Rect2, tolerance: float = 0.0000
 		and absf(control.anchor_right - expected.end.x) <= tolerance
 		and absf(control.anchor_bottom - expected.end.y) <= tolerance
 	)
+
+
+func _assert_true_alpha(texture_path: String) -> void:
+	var texture := load(texture_path) as Texture2D
+	assert(texture != null, "settings shield texture must load")
+	var image := texture.get_image()
+	assert(image != null and not image.is_empty(), "settings shield must expose imported pixels")
+	assert(image.detect_alpha() != Image.ALPHA_NONE, "settings shield must keep chroma-key alpha")
+	assert(image.get_pixel(0, 0).a <= 0.05, "settings shield corner must be transparent")
+	assert(image.get_pixel(image.get_width() / 2, image.get_height() / 2).a >= 0.95, "settings shield center must remain opaque")

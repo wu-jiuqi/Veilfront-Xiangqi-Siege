@@ -30,6 +30,9 @@ terracotta_ui_asset_manifest:
     focus_style: resources/game/ui/themes/terracotta_ui_theme.tres#StyleBoxFocus
     turn_status_texture: assets/art/ui/terracotta_hud_v2/turn_status_bar_v1.png
     minimap_frame: assets/art/ui/terracotta_hud_v2/minimap_frame_v1.png
+    title_settings_button: assets/art/ui/start_sequence/settings_infantry_shield_gear_v1.png
+    title_settings_button_source_chroma: assets/art/ui/start_sequence/source_chroma/settings_infantry_shield_gear_purple_v1.png
+    title_settings_button_shape_reference: assets/art/pieces/terracotta_warriors/black_infantry_idle.png
 
   inventory:
     theme:
@@ -88,12 +91,13 @@ terracotta_ui_asset_manifest:
 
   screen_coverage:
     scene_bound:
-    - {screen: main_menu, scene: scenes/game/frontend/main_menu.tscn}
+    - {screen: title_menu, scene: scenes/game/frontend/start_screen.tscn}
     - {screen: level_select, scene: scenes/game/frontend/level_select.tscn}
     - {screen: lan_lobby, scene: scenes/prototype/network/lan_lobby.tscn}
     - {screen: game_app, scene: scenes/game/app/game_app.tscn}
     - {screen: match, scene: scenes/game/match/match_screen.tscn}
     - {screen: tutorial, scene: scenes/game/tutorial/tutorial_level.tscn}
+    - {screen: loading_transition, scene: scenes/game/ui/loading_transition_overlay.tscn}
     resource_ready_without_screen_scene:
     - {screen: pause, panel_variation: ModalPanel}
     - {screen: settings, panel_variation: SettingsPanel}
@@ -121,5 +125,6 @@ terracotta_ui_asset_manifest:
     - tests/game/ui/run_terracotta_ui_theme_contract.gd
     - tests/game/ui/run_ui_motion_lab_contract.gd
     - tests/game/ui/run_ui_static_theme_contract.gd
+    - tests/game/ui/run_scene_transition_controller_contract.gd
     - tests/game/frontend/run_frontend_scene_smoke.gd
     - tests/game/scenes/run_formal_scene_smoke.gd

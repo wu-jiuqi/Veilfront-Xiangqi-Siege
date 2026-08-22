@@ -1,6 +1,6 @@
 extends Control
 
-const MAIN_MENU_SCENE: String = "res://scenes/game/frontend/main_menu.tscn"
+const FrontendRoutes = preload("res://scripts/integration/frontend_routes.gd")
 const FALLBACK_ADDRESS: String = "192.168.1.20"
 
 const STATUS_TEXT: Dictionary[String, String] = {
@@ -116,7 +116,13 @@ func _on_copy_address_pressed() -> void:
 
 func _on_return_to_main_menu_pressed() -> void:
 	network_session.disconnect_from_game()
-	get_tree().change_scene_to_file(MAIN_MENU_SCENE)
+	var error := FrontendRoutes.navigate(
+		get_tree(),
+		FrontendRoutes.request_start_menu_ready(),
+		"正在返回烽火关城…"
+	)
+	if error != OK:
+		status_value.text = "无法返回标题页：%s" % error_string(error)
 
 
 func _on_address_changed(_next_text: String) -> void:
