@@ -8,6 +8,17 @@
 [ext_resource type="Texture2D" path="res://assets/art/ui/settings/settings_panel_9slice_v1.png" id="6_settings_panel"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/settings/settings_button_secondary_v1.png" id="7_settings_secondary"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/settings/settings_button_primary_v1.png" id="8_settings_primary"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/settings/png_v2/settings_frame_v2.png" id="9_settings_png_frame"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/settings/png_v2/settings_button_secondary_v2.png" id="10_settings_png_secondary"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/settings/png_v2/settings_button_primary_v2.png" id="11_settings_png_primary"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/settings/png_v2/settings_tab_inactive_v2.png" id="12_settings_png_tab_inactive"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/settings/png_v2/settings_tab_active_v2.png" id="13_settings_png_tab_active"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/settings/png_v2/settings_option_field_v2.png" id="14_settings_png_option"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/settings/png_v2/settings_slider_track_v2.png" id="15_settings_png_slider_track"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/settings/png_v2/settings_slider_knob_v2.png" id="16_settings_png_slider_knob"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/settings/png_v2/settings_checkbox_empty_v2.png" id="17_settings_png_checkbox_empty"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/settings/png_v2/settings_checkbox_checked_v2.png" id="18_settings_png_checkbox_checked"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/settings/png_v2/settings_dropdown_arrow_v2.png" id="19_settings_png_arrow"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxButtonDisabled"]
 content_margin_left = 18.0
@@ -346,6 +357,197 @@ texture_margin_right = 72.0
 texture_margin_bottom = 24.0
 region_rect = Rect2(0, 250, 2142, 240)
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxSettingsPngPanel"]
+content_margin_left = 46.0
+content_margin_top = 36.0
+content_margin_right = 46.0
+content_margin_bottom = 36.0
+texture = ExtResource("9_settings_png_frame")
+texture_margin_left = 118.0
+texture_margin_top = 104.0
+texture_margin_right = 118.0
+texture_margin_bottom = 104.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxSettingsPngSecondaryNormal"]
+content_margin_left = 20.0
+content_margin_top = 10.0
+content_margin_right = 20.0
+content_margin_bottom = 10.0
+texture = ExtResource("10_settings_png_secondary")
+texture_margin_left = 78.0
+texture_margin_top = 48.0
+texture_margin_right = 78.0
+texture_margin_bottom = 48.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxSettingsPngSecondaryHover"]
+content_margin_left = 20.0
+content_margin_top = 10.0
+content_margin_right = 20.0
+content_margin_bottom = 10.0
+texture = ExtResource("10_settings_png_secondary")
+texture_margin_left = 78.0
+texture_margin_top = 48.0
+texture_margin_right = 78.0
+texture_margin_bottom = 48.0
+modulate_color = Color(1.18, 1.08, 0.82, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxSettingsPngSecondaryPressed"]
+content_margin_left = 20.0
+content_margin_top = 11.0
+content_margin_right = 20.0
+content_margin_bottom = 9.0
+texture = ExtResource("10_settings_png_secondary")
+texture_margin_left = 78.0
+texture_margin_top = 48.0
+texture_margin_right = 78.0
+texture_margin_bottom = 48.0
+modulate_color = Color(0.7, 0.66, 0.58, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxSettingsPngSecondaryDisabled"]
+content_margin_left = 20.0
+content_margin_top = 10.0
+content_margin_right = 20.0
+content_margin_bottom = 10.0
+texture = ExtResource("10_settings_png_secondary")
+texture_margin_left = 78.0
+texture_margin_top = 48.0
+texture_margin_right = 78.0
+texture_margin_bottom = 48.0
+modulate_color = Color(0.42, 0.42, 0.4, 0.78)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxSettingsPngPrimaryNormal"]
+content_margin_left = 22.0
+content_margin_top = 10.0
+content_margin_right = 22.0
+content_margin_bottom = 10.0
+texture = ExtResource("10_settings_png_secondary")
+texture_margin_left = 78.0
+texture_margin_top = 48.0
+texture_margin_right = 78.0
+texture_margin_bottom = 48.0
+modulate_color = Color(1, 0.9, 0.67, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxSettingsPngPrimaryHover"]
+content_margin_left = 22.0
+content_margin_top = 10.0
+content_margin_right = 22.0
+content_margin_bottom = 10.0
+texture = ExtResource("10_settings_png_secondary")
+texture_margin_left = 78.0
+texture_margin_top = 48.0
+texture_margin_right = 78.0
+texture_margin_bottom = 48.0
+modulate_color = Color(1.14, 1.04, 0.82, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxSettingsPngPrimaryPressed"]
+content_margin_left = 22.0
+content_margin_top = 11.0
+content_margin_right = 22.0
+content_margin_bottom = 9.0
+texture = ExtResource("10_settings_png_secondary")
+texture_margin_left = 78.0
+texture_margin_top = 48.0
+texture_margin_right = 78.0
+texture_margin_bottom = 48.0
+modulate_color = Color(0.74, 0.64, 0.48, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxSettingsPngPrimaryDisabled"]
+content_margin_left = 22.0
+content_margin_top = 10.0
+content_margin_right = 22.0
+content_margin_bottom = 10.0
+texture = ExtResource("10_settings_png_secondary")
+texture_margin_left = 78.0
+texture_margin_top = 48.0
+texture_margin_right = 78.0
+texture_margin_bottom = 48.0
+modulate_color = Color(0.43, 0.4, 0.34, 0.78)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxSettingsPngOptionNormal"]
+content_margin_left = 22.0
+content_margin_top = 10.0
+content_margin_right = 42.0
+content_margin_bottom = 10.0
+texture = ExtResource("14_settings_png_option")
+texture_margin_left = 72.0
+texture_margin_top = 28.0
+texture_margin_right = 72.0
+texture_margin_bottom = 28.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxSettingsPngOptionHover"]
+content_margin_left = 22.0
+content_margin_top = 10.0
+content_margin_right = 42.0
+content_margin_bottom = 10.0
+texture = ExtResource("14_settings_png_option")
+texture_margin_left = 72.0
+texture_margin_top = 28.0
+texture_margin_right = 72.0
+texture_margin_bottom = 28.0
+modulate_color = Color(1.16, 1.08, 0.86, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxSettingsPngOptionPressed"]
+content_margin_left = 22.0
+content_margin_top = 11.0
+content_margin_right = 42.0
+content_margin_bottom = 9.0
+texture = ExtResource("14_settings_png_option")
+texture_margin_left = 72.0
+texture_margin_top = 28.0
+texture_margin_right = 72.0
+texture_margin_bottom = 28.0
+modulate_color = Color(0.72, 0.68, 0.6, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxSettingsPngOptionDisabled"]
+content_margin_left = 22.0
+content_margin_top = 10.0
+content_margin_right = 42.0
+content_margin_bottom = 10.0
+texture = ExtResource("14_settings_png_option")
+texture_margin_left = 72.0
+texture_margin_top = 28.0
+texture_margin_right = 72.0
+texture_margin_bottom = 28.0
+modulate_color = Color(0.4, 0.4, 0.38, 0.76)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxSettingsPngTabInactive"]
+content_margin_left = 24.0
+content_margin_top = 12.0
+content_margin_right = 24.0
+content_margin_bottom = 8.0
+texture = ExtResource("12_settings_png_tab_inactive")
+texture_margin_left = 28.0
+texture_margin_top = 18.0
+texture_margin_right = 28.0
+texture_margin_bottom = 16.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxSettingsPngTabActive"]
+content_margin_left = 26.0
+content_margin_top = 13.0
+content_margin_right = 26.0
+content_margin_bottom = 8.0
+texture = ExtResource("13_settings_png_tab_active")
+texture_margin_left = 32.0
+texture_margin_top = 20.0
+texture_margin_right = 32.0
+texture_margin_bottom = 16.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxSettingsPngSlider"]
+content_margin_left = 34.0
+content_margin_top = 7.0
+content_margin_right = 34.0
+content_margin_bottom = 7.0
+texture = ExtResource("15_settings_png_slider_track")
+texture_margin_left = 66.0
+texture_margin_top = 34.0
+texture_margin_right = 66.0
+texture_margin_bottom = 34.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxSettingsPngEmpty"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxSettingsPngTabPanel"]
+bg_color = Color(0.01, 0.012, 0.012, 0.16)
+
 [resource]
 default_font = ExtResource("1_font")
 default_font_size = 18
@@ -450,6 +652,75 @@ SettingsSecondaryButton/styles/focus = SubResource("StyleBoxFocus")
 SettingsSecondaryButton/styles/hover = SubResource("StyleBoxSettingsSecondaryHover")
 SettingsSecondaryButton/styles/normal = SubResource("StyleBoxSettingsSecondaryNormal")
 SettingsSecondaryButton/styles/pressed = SubResource("StyleBoxSettingsSecondaryPressed")
+SettingsPngPanel/base_type = &"PanelContainer"
+SettingsPngPanel/styles/panel = SubResource("StyleBoxSettingsPngPanel")
+SettingsPngSecondaryButton/base_type = &"Button"
+SettingsPngSecondaryButton/colors/font_color = Color(0.9, 0.84, 0.7, 1)
+SettingsPngSecondaryButton/colors/font_disabled_color = Color(0.46, 0.45, 0.41, 1)
+SettingsPngSecondaryButton/colors/font_focus_color = Color(1, 0.92, 0.7, 1)
+SettingsPngSecondaryButton/colors/font_hover_color = Color(1, 0.9, 0.62, 1)
+SettingsPngSecondaryButton/colors/font_pressed_color = Color(1, 0.94, 0.74, 1)
+SettingsPngSecondaryButton/styles/disabled = SubResource("StyleBoxSettingsPngSecondaryDisabled")
+SettingsPngSecondaryButton/styles/focus = SubResource("StyleBoxFocus")
+SettingsPngSecondaryButton/styles/hover = SubResource("StyleBoxSettingsPngSecondaryHover")
+SettingsPngSecondaryButton/styles/normal = SubResource("StyleBoxSettingsPngSecondaryNormal")
+SettingsPngSecondaryButton/styles/pressed = SubResource("StyleBoxSettingsPngSecondaryPressed")
+SettingsPngPrimaryButton/base_type = &"Button"
+SettingsPngPrimaryButton/colors/font_color = Color(0.95, 0.86, 0.67, 1)
+SettingsPngPrimaryButton/colors/font_disabled_color = Color(0.46, 0.43, 0.36, 1)
+SettingsPngPrimaryButton/colors/font_focus_color = Color(1, 0.94, 0.74, 1)
+SettingsPngPrimaryButton/colors/font_hover_color = Color(1, 0.95, 0.76, 1)
+SettingsPngPrimaryButton/colors/font_pressed_color = Color(1, 0.9, 0.68, 1)
+SettingsPngPrimaryButton/font_sizes/font_size = 20
+SettingsPngPrimaryButton/styles/disabled = SubResource("StyleBoxSettingsPngPrimaryDisabled")
+SettingsPngPrimaryButton/styles/focus = SubResource("StyleBoxFocus")
+SettingsPngPrimaryButton/styles/hover = SubResource("StyleBoxSettingsPngPrimaryHover")
+SettingsPngPrimaryButton/styles/normal = SubResource("StyleBoxSettingsPngPrimaryNormal")
+SettingsPngPrimaryButton/styles/pressed = SubResource("StyleBoxSettingsPngPrimaryPressed")
+SettingsPngDangerButton/base_type = &"Button"
+SettingsPngDangerButton/colors/font_color = Color(1, 0.72, 0.62, 1)
+SettingsPngDangerButton/colors/font_hover_color = Color(1, 0.86, 0.68, 1)
+SettingsPngDangerButton/styles/disabled = SubResource("StyleBoxSettingsPngSecondaryDisabled")
+SettingsPngDangerButton/styles/focus = SubResource("StyleBoxFocus")
+SettingsPngDangerButton/styles/hover = SubResource("StyleBoxSettingsPngPrimaryHover")
+SettingsPngDangerButton/styles/normal = SubResource("StyleBoxSettingsPngSecondaryNormal")
+SettingsPngDangerButton/styles/pressed = SubResource("StyleBoxSettingsPngPrimaryPressed")
+SettingsPngOptionButton/base_type = &"OptionButton"
+SettingsPngOptionButton/colors/font_color = Color(0.9, 0.84, 0.7, 1)
+SettingsPngOptionButton/colors/font_disabled_color = Color(0.46, 0.45, 0.41, 1)
+SettingsPngOptionButton/colors/font_focus_color = Color(1, 0.92, 0.7, 1)
+SettingsPngOptionButton/colors/font_hover_color = Color(1, 0.9, 0.62, 1)
+SettingsPngOptionButton/colors/font_pressed_color = Color(1, 0.94, 0.74, 1)
+SettingsPngOptionButton/icons/arrow = ExtResource("19_settings_png_arrow")
+SettingsPngOptionButton/styles/disabled = SubResource("StyleBoxSettingsPngOptionDisabled")
+SettingsPngOptionButton/styles/focus = SubResource("StyleBoxFocus")
+SettingsPngOptionButton/styles/hover = SubResource("StyleBoxSettingsPngOptionHover")
+SettingsPngOptionButton/styles/normal = SubResource("StyleBoxSettingsPngOptionNormal")
+SettingsPngOptionButton/styles/pressed = SubResource("StyleBoxSettingsPngOptionPressed")
+SettingsPngTabs/base_type = &"TabContainer"
+SettingsPngTabs/colors/font_selected_color = Color(1, 0.9, 0.62, 1)
+SettingsPngTabs/colors/font_unselected_color = Color(0.65, 0.64, 0.58, 1)
+SettingsPngTabs/colors/font_hovered_color = Color(0.96, 0.84, 0.58, 1)
+SettingsPngTabs/constants/side_margin = 16
+SettingsPngTabs/styles/panel = SubResource("StyleBoxSettingsPngTabPanel")
+SettingsPngTabs/styles/tab_focus = SubResource("StyleBoxFocus")
+SettingsPngTabs/styles/tab_hovered = SubResource("StyleBoxSettingsPngTabInactive")
+SettingsPngTabs/styles/tab_selected = SubResource("StyleBoxSettingsPngTabActive")
+SettingsPngTabs/styles/tab_unselected = SubResource("StyleBoxSettingsPngTabInactive")
+SettingsPngSlider/base_type = &"HSlider"
+SettingsPngSlider/icons/grabber = ExtResource("16_settings_png_slider_knob")
+SettingsPngSlider/icons/grabber_disabled = ExtResource("16_settings_png_slider_knob")
+SettingsPngSlider/icons/grabber_highlight = ExtResource("16_settings_png_slider_knob")
+SettingsPngSlider/styles/grabber_area = SubResource("StyleBoxSettingsPngEmpty")
+SettingsPngSlider/styles/grabber_area_highlight = SubResource("StyleBoxSettingsPngEmpty")
+SettingsPngSlider/styles/slider = SubResource("StyleBoxSettingsPngSlider")
+SettingsPngCheckButton/base_type = &"CheckButton"
+SettingsPngCheckButton/colors/font_color = Color(0.86, 0.82, 0.7, 1)
+SettingsPngCheckButton/colors/font_hover_color = Color(1, 0.9, 0.62, 1)
+SettingsPngCheckButton/icons/checked = ExtResource("18_settings_png_checkbox_checked")
+SettingsPngCheckButton/icons/checked_disabled = ExtResource("18_settings_png_checkbox_checked")
+SettingsPngCheckButton/icons/unchecked = ExtResource("17_settings_png_checkbox_empty")
+SettingsPngCheckButton/icons/unchecked_disabled = ExtResource("17_settings_png_checkbox_empty")
 SidebarPanel/base_type = &"PanelContainer"
 TabButton/base_type = &"Button"
 TabButton/font_sizes/font_size = 16

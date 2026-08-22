@@ -39,7 +39,7 @@ func _init() -> void:
 	assert(settings_screen.get_node("%SfxVolumeSlider").max_value == 100.0)
 	assert(settings_screen.get_node("%SkipOpeningToggle") is CheckButton)
 	assert(settings_screen.get_node("%ReduceMotionToggle") is CheckButton)
-	assert(settings_screen.get_node("%ResetProgressButton").theme_type_variation == &"DangerButton")
+	assert(settings_screen.get_node("%ResetProgressButton").theme_type_variation == &"SettingsPngDangerButton")
 	assert(settings_screen.get_node("%DisplayConfirmTimer").wait_time == 1.0)
 	assert(settings_screen.get_node("%DisplayConfirmDialog").dialog_text.contains("10"))
 	for button_name: String in ["BackButton", "RestoreDefaultsButton", "CancelButton", "ApplyButton", "ResetProgressButton"]:
@@ -47,14 +47,42 @@ func _init() -> void:
 		assert(button.custom_minimum_size.y >= 44.0, "%s must remain keyboard/touch accessible" % button_name)
 		assert(button.has_method("set_reduced_motion"), "%s must use the reusable motion-button preset" % button_name)
 		assert(button.offset_transform_enabled, "%s must use visual-only offset transforms" % button_name)
-	assert(settings_screen.get_node("%BackButton").theme_type_variation == &"SettingsSecondaryButton")
-	assert(settings_screen.get_node("%ApplyButton").theme_type_variation == &"SettingsPrimaryButton")
+	assert(settings_screen.get_node("%BackButton").theme_type_variation == &"SettingsPngSecondaryButton")
+	assert(settings_screen.get_node("%ApplyButton").theme_type_variation == &"SettingsPngPrimaryButton")
 	var settings_panel_style := (settings_screen.get_node("%SettingsFrame") as PanelContainer).get_theme_stylebox(&"panel") as StyleBoxTexture
-	assert(settings_panel_style.texture.resource_path == "res://assets/art/ui/settings/settings_panel_9slice_v1.png")
+	assert(settings_panel_style.texture.resource_path == "res://assets/art/ui/settings/png_v2/settings_frame_v2.png")
 	var secondary_style := (settings_screen.get_node("%BackButton") as Button).get_theme_stylebox(&"normal") as StyleBoxTexture
-	assert(secondary_style.texture.resource_path == "res://assets/art/ui/settings/settings_button_secondary_v1.png")
+	assert(secondary_style.texture.resource_path == "res://assets/art/ui/settings/png_v2/settings_button_secondary_v2.png")
 	var primary_style := (settings_screen.get_node("%ApplyButton") as Button).get_theme_stylebox(&"normal") as StyleBoxTexture
-	assert(primary_style.texture.resource_path == "res://assets/art/ui/settings/settings_button_primary_v1.png")
+	assert(primary_style.texture.resource_path == "res://assets/art/ui/settings/png_v2/settings_button_secondary_v2.png")
+	var tabs := settings_screen.get_node("%SettingsTabs") as TabContainer
+	var active_tab_style := tabs.get_theme_stylebox(&"tab_selected") as StyleBoxTexture
+	var inactive_tab_style := tabs.get_theme_stylebox(&"tab_unselected") as StyleBoxTexture
+	assert(active_tab_style.texture.resource_path == "res://assets/art/ui/settings/png_v2/settings_tab_active_v2.png")
+	assert(inactive_tab_style.texture.resource_path == "res://assets/art/ui/settings/png_v2/settings_tab_inactive_v2.png")
+	var option_style := (settings_screen.get_node("%WindowModeOption") as OptionButton).get_theme_stylebox(&"normal") as StyleBoxTexture
+	assert(option_style.texture.resource_path == "res://assets/art/ui/settings/png_v2/settings_option_field_v2.png")
+	var slider := settings_screen.get_node("%MasterVolumeSlider") as HSlider
+	var slider_style := slider.get_theme_stylebox(&"slider") as StyleBoxTexture
+	assert(slider_style.texture.resource_path == "res://assets/art/ui/settings/png_v2/settings_slider_track_v2.png")
+	assert(slider.get_theme_icon(&"grabber").resource_path == "res://assets/art/ui/settings/png_v2/settings_slider_knob_v2.png")
+	var toggle := settings_screen.get_node("%VsyncToggle") as CheckButton
+	assert(toggle.get_theme_icon(&"checked").resource_path == "res://assets/art/ui/settings/png_v2/settings_checkbox_checked_v2.png")
+	assert(toggle.get_theme_icon(&"unchecked").resource_path == "res://assets/art/ui/settings/png_v2/settings_checkbox_empty_v2.png")
+	for texture_path: String in [
+		"res://assets/art/ui/settings/png_v2/settings_frame_v2.png",
+		"res://assets/art/ui/settings/png_v2/settings_button_secondary_v2.png",
+		"res://assets/art/ui/settings/png_v2/settings_tab_active_v2.png",
+		"res://assets/art/ui/settings/png_v2/settings_tab_inactive_v2.png",
+		"res://assets/art/ui/settings/png_v2/settings_option_field_v2.png",
+		"res://assets/art/ui/settings/png_v2/settings_slider_track_v2.png",
+		"res://assets/art/ui/settings/png_v2/settings_slider_knob_v2.png",
+		"res://assets/art/ui/settings/png_v2/settings_checkbox_checked_v2.png",
+		"res://assets/art/ui/settings/png_v2/settings_checkbox_empty_v2.png",
+		"res://assets/art/ui/settings/png_v2/settings_dropdown_arrow_v2.png",
+		"res://assets/art/ui/settings/png_v2/settings_title_crest_v2.png",
+	]:
+		_assert_true_alpha(texture_path)
 	(settings_screen.get_node("%MasterVolumeSlider") as HSlider).value = 17.0
 	(settings_screen.get_node("%RestoreDefaultsButton") as Button).pressed.emit()
 	assert(is_equal_approx((settings_screen.get_node("%MasterVolumeSlider") as HSlider).value, 100.0))
@@ -103,5 +131,24 @@ func _init() -> void:
 	var menu_script := FileAccess.get_file_as_string("res://scripts/game/frontend/start_menu_overlay.gd")
 	assert(menu_script.contains("FrontendRoutes.settings_scene()"))
 	assert(not menu_script.contains("设置功能尚未开放"))
-	print("SETTINGS_SCREEN_CONTRACT_PASS tabs=3 controls=12 buttons=motion-preset background=shared resolutions=3 route=connected")
+	print("SETTINGS_SCREEN_CONTRACT_PASS tabs=3 controls=12 buttons=motion-preset png=chroma-keyed background=shared resolutions=3 route=connected")
 	quit()
+
+
+func _assert_true_alpha(texture_path: String) -> void:
+	var texture := load(texture_path) as Texture2D
+	assert(texture != null, "%s must import as Texture2D" % texture_path)
+	var image := texture.get_image()
+	assert(image != null and not image.is_empty(), "%s must expose imported pixels" % texture_path)
+	assert(image.detect_alpha() != Image.ALPHA_NONE, "%s must retain a real alpha channel" % texture_path)
+	var has_transparent_border_pixel := false
+	for x: int in image.get_width():
+		if image.get_pixel(x, 0).a < 0.05 or image.get_pixel(x, image.get_height() - 1).a < 0.05:
+			has_transparent_border_pixel = true
+			break
+	if not has_transparent_border_pixel:
+		for y: int in image.get_height():
+			if image.get_pixel(0, y).a < 0.05 or image.get_pixel(image.get_width() - 1, y).a < 0.05:
+				has_transparent_border_pixel = true
+				break
+	assert(has_transparent_border_pixel, "%s must retain chroma-key transparency around its silhouette" % texture_path)
