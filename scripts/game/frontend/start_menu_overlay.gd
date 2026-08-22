@@ -21,7 +21,7 @@ var _transitioning := false
 func _ready() -> void:
 	visible = false
 	_settings_button.pressed.connect(
-		func() -> void: _show_notice("设置功能尚未开放。")
+		func() -> void: _open_scene(FrontendRoutes.settings_scene())
 	)
 	_lan_button.pressed.connect(
 		func() -> void: _open_scene(FrontendRoutes.lan_lobby_scene())

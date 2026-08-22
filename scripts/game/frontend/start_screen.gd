@@ -1,6 +1,7 @@
 extends Control
 
 const FrontendRoutes = preload("res://scripts/integration/frontend_routes.gd")
+const SettingsManagerScript = preload("res://scripts/game/settings/settings_manager.gd")
 
 @onready var _menu_overlay: Control = %MenuOverlay
 @onready var _prompt_animation: AnimationPlayer = %PromptAnimation
@@ -12,7 +13,17 @@ var _transitioning := false
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	_sequence_player.animation_finished.connect(_on_sequence_animation_finished)
-	if FrontendRoutes.consume_start_menu_ready():
+	var settings_manager := get_node_or_null("/root/SettingsManager") as SettingsManagerScript
+	var skip_opening := false
+	if settings_manager != null:
+		skip_opening = (
+			settings_manager.should_skip_opening()
+			or settings_manager.is_reduced_motion_enabled()
+		)
+	if (
+		FrontendRoutes.consume_start_menu_ready()
+		or skip_opening
+	):
 		_enter_menu_ready_immediately()
 
 

@@ -14,6 +14,10 @@ config/name="Veilfront: Xiangqi Siege"
 run/main_scene="res://scenes/game/frontend/start_screen.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 
+[autoload]
+
+SettingsManager="*res://scripts/game/settings/settings_manager.gd"
+
 [display]
 
 window/size/viewport_width=1280
