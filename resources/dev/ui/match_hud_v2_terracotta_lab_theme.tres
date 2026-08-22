@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cu8wlq6dod46s" path="res://scripts/game/presentation/board/board_theme.gd" id="1_theme"]
 [ext_resource type="PackedScene" path="res://scenes/game/match/board/wall_view.tscn" id="2_wall"]
-[ext_resource type="PackedScene" path="res://scenes/dev/ui/terracotta_match_piece_view.tscn" id="3_piece"]
+[ext_resource type="PackedScene" path="res://scenes/game/match/board/terracotta_piece_view.tscn" id="3_piece"]
 [ext_resource type="PackedScene" path="res://scenes/game/match/board/flag_view.tscn" id="4_flag"]
 [ext_resource type="PackedScene" path="res://scenes/game/match/board/capture_ghost_view.tscn" id="5_ghost"]
 

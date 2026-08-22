@@ -1,0 +1,49 @@
+[gd_scene load_steps=16 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/presentation/board/terracotta_piece_view.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/art/pieces/terracotta_warriors/red_chariot_idle.png" id="2_red_chariot"]
+[ext_resource type="Texture2D" path="res://assets/art/pieces/terracotta_warriors/red_cavalry_idle.png" id="3_red_cavalry"]
+[ext_resource type="Texture2D" path="res://assets/art/pieces/terracotta_warriors/red_minister_idle.png" id="4_red_minister"]
+[ext_resource type="Texture2D" path="res://assets/art/pieces/terracotta_warriors/red_guard_idle.png" id="5_red_guard"]
+[ext_resource type="Texture2D" path="res://assets/art/pieces/terracotta_warriors/red_general_idle.png" id="6_red_general"]
+[ext_resource type="Texture2D" path="res://assets/art/pieces/terracotta_warriors/red_trebuchet_idle.png" id="7_red_trebuchet"]
+[ext_resource type="Texture2D" path="res://assets/art/pieces/terracotta_warriors/red_infantry_idle.png" id="8_red_infantry"]
+[ext_resource type="Texture2D" path="res://assets/art/pieces/terracotta_warriors/black_chariot_idle.png" id="9_black_chariot"]
+[ext_resource type="Texture2D" path="res://assets/art/pieces/terracotta_warriors/black_cavalry_idle.png" id="10_black_cavalry"]
+[ext_resource type="Texture2D" path="res://assets/art/pieces/terracotta_warriors/black_minister_idle.png" id="11_black_minister"]
+[ext_resource type="Texture2D" path="res://assets/art/pieces/terracotta_warriors/black_guard_idle.png" id="12_black_guard"]
+[ext_resource type="Texture2D" path="res://assets/art/pieces/terracotta_warriors/black_general_idle.png" id="13_black_general"]
+[ext_resource type="Texture2D" path="res://assets/art/pieces/terracotta_warriors/black_trebuchet_idle.png" id="14_black_trebuchet"]
+[ext_resource type="Texture2D" path="res://assets/art/pieces/terracotta_warriors/black_infantry_idle.png" id="15_black_infantry"]
+
+[node name="TerracottaPieceView" type="Node2D"]
+script = ExtResource("1_script")
+piece_textures = {
+"black:cavalry": ExtResource("10_black_cavalry"),
+"black:chariot": ExtResource("9_black_chariot"),
+"black:general": ExtResource("13_black_general"),
+"black:guard": ExtResource("12_black_guard"),
+"black:infantry": ExtResource("15_black_infantry"),
+"black:minister": ExtResource("11_black_minister"),
+"black:trebuchet": ExtResource("14_black_trebuchet"),
+"red:cavalry": ExtResource("3_red_cavalry"),
+"red:chariot": ExtResource("2_red_chariot"),
+"red:general": ExtResource("6_red_general"),
+"red:guard": ExtResource("5_red_guard"),
+"red:infantry": ExtResource("8_red_infantry"),
+"red:minister": ExtResource("4_red_minister"),
+"red:trebuchet": ExtResource("7_red_trebuchet")
+}
+piece_scale_multipliers = {
+"cannon": 1.18,
+"horse": 1.18,
+"rook": 1.18
+}
+
+[node name="Shadow" type="Polygon2D" parent="."]
+z_index = -1
+polygon = PackedVector2Array(-30, 0, -27.72, -3.83, -21.21, -7.07, -11.48, -9.24, 0, -10, 11.48, -9.24, 21.21, -7.07, 27.72, -3.83, 30, 0, 27.72, 3.83, 21.21, 7.07, 11.48, 9.24, 0, 10, -11.48, 9.24, -21.21, 7.07, -27.72, 3.83)
+color = Color(0.025, 0.02, 0.015, 0.42)
+
+[node name="Artwork" type="Sprite2D" parent="."]
+texture_filter = 4

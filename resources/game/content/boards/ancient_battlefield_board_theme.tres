@@ -2,25 +2,25 @@
 
 [ext_resource type="Script" uid="uid://cu8wlq6dod46s" path="res://scripts/game/presentation/board/board_theme.gd" id="1_board_theme"]
 [ext_resource type="PackedScene" path="res://scenes/game/match/board/wall_view.tscn" id="2_wall"]
-[ext_resource type="PackedScene" path="res://scenes/game/match/board/piece_view.tscn" id="3_piece"]
+[ext_resource type="PackedScene" path="res://scenes/game/match/board/terracotta_piece_view.tscn" id="3_piece"]
 [ext_resource type="PackedScene" path="res://scenes/game/match/board/flag_view.tscn" id="4_flag"]
 [ext_resource type="PackedScene" path="res://scenes/game/match/board/capture_ghost_view.tscn" id="5_ghost"]
 
 [resource]
 script = ExtResource("1_board_theme")
-theme_id = &"ancient_battlefield_graybox"
+theme_id = &"terracotta_battlefield_formal"
 grid_palette = {
-"base": Color(0.68, 0.48, 0.31, 1),
-"buffer": Color(0.61, 0.46, 0.32, 1),
-"headquarters": Color(0.72, 0.58, 0.36, 1),
-"warzone": Color(0.45, 0.36, 0.28, 1)
+"base": Color(0.22, 0.18, 0.14, 0.08),
+"buffer": Color(0.4, 0.3, 0.2, 0.1),
+"headquarters": Color(0.5, 0.24, 0.14, 0.16),
+"warzone": Color(0.16, 0.14, 0.12, 0.06)
 }
 grid_line_style = {
-"color": Color(0.13, 0.1, 0.08, 0.84),
-"width": 4.0
+"color": Color(0.075, 0.055, 0.04, 0.92),
+"width": 5.0
 }
 region_label_style = {
-"font_color": Color(0.94, 0.88, 0.74, 0.24),
+"font_color": Color(0.94, 0.84, 0.68, 0.34),
 "font_size": 72
 }
 wall_scene_set = Array[PackedScene]([ExtResource("2_wall")])

@@ -104,6 +104,7 @@ patch_margin_left = 30
 patch_margin_top = 30
 patch_margin_right = 30
 patch_margin_bottom = 30
+mouse_filter = 2
 
 [node name="FactionLeft" type="Control" parent="." unique_id=1213968496]
 unique_name_in_owner = true

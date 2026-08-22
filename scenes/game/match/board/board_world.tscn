@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3]
+[gd_scene load_steps=18 format=3]
 
 [ext_resource type="Resource" path="res://resources/game/content/boards/ancient_battlefield_board_theme.tres" id="1_theme"]
 [ext_resource type="PackedScene" path="res://scenes/game/match/board/fog_overlay.tscn" id="2_fog"]
@@ -16,9 +16,11 @@
 [ext_resource type="PackedScene" path="res://scenes/game/match/board/wall_view.tscn" id="14_wall_scene"]
 [ext_resource type="PackedScene" path="res://scenes/game/match/board/flag_view.tscn" id="15_flag_scene"]
 [ext_resource type="PackedScene" path="res://scenes/game/match/board/capture_ghost_view.tscn" id="16_ghost_scene"]
+[ext_resource type="Resource" path="res://resources/game/content/boards/terracotta_battlefield_v3_map_option.tres" id="17_map"]
 [node name="BoardWorld" type="Node2D"]
 script = ExtResource("6_world_script")
 board_theme = ExtResource("1_theme")
+map_option = ExtResource("17_map")
 
 [node name="MapBackground" type="Sprite2D" parent="."]
 visible = false
@@ -35,12 +37,12 @@ texture_filter = 4
 [node name="GridRenderer" type="Node2D" parent="."]
 script = ExtResource("7_grid_script")
 
+[node name="FogOverlay" parent="." instance=ExtResource("2_fog")]
+
 [node name="PieceLayer" type="Node2D" parent="."]
 y_sort_enabled = true
 script = ExtResource("8_piece_script")
 piece_scene = ExtResource("13_piece_scene")
-
-[node name="FogOverlay" parent="." instance=ExtResource("2_fog")]
 
 [node name="StructureLayer" type="Node2D" parent="."]
 
