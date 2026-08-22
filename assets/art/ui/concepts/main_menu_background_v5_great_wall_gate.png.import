@@ -2,21 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cxaqsdplgfqre"
-path.s3tc="res://.godot/imported/red_wall_repairing.svg-06581805a33c27215d2e8136864f71a1.s3tc.ctex"
+uid="uid://btxx2vf5h8hlj"
+path="res://.godot/imported/main_menu_background_v5_great_wall_gate.png-fbf9966d3ff66e87ac9e3f52b833e6ee.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/art/structures/terracotta_warriors/walls/red_wall_repairing.svg"
-dest_files=["res://.godot/imported/red_wall_repairing.svg-06581805a33c27215d2e8136864f71a1.s3tc.ctex"]
+source_file="res://assets/art/ui/concepts/main_menu_background_v5_great_wall_gate.png"
+dest_files=["res://.godot/imported/main_menu_background_v5_great_wall_gate.png-fbf9966d3ff66e87ac9e3f52b833e6ee.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -24,7 +23,7 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=true
+mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
@@ -37,8 +36,5 @@ process/premult_alpha=false
 process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
-process/size_limit=2048
-detect_3d/compress_to=0
-svg/scale=1.0
-editor/scale_with_editor_scale=false
-editor/convert_colors_with_editor_theme=false
+process/size_limit=0
+detect_3d/compress_to=1
