@@ -272,6 +272,9 @@ func _check_board_theme() -> void:
 		_failures.append("BoardTheme must map a flag PackedScene")
 	if board_theme.get("ghost_scene") == null:
 		_failures.append("BoardTheme must map a capture ghost PackedScene")
+	var marker_assets: Dictionary = board_theme.get("marker_assets") as Dictionary
+	if marker_assets.size() != 3:
+		_failures.append("BoardTheme must map the three formal marker AtlasTextures")
 
 
 func _count_named_nodes(node: Node, target_name: String) -> int:

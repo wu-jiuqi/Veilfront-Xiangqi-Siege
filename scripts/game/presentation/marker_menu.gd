@@ -2,18 +2,24 @@ extends PopupPanel
 
 signal marker_selected(cell: Vector2i, marker_type: String)
 
-var _cell := Vector2i.ZERO
-
-const MENU_SIZE := Vector2i(304, 64)
+const MENU_SIZE := Vector2i(512, 144)
 const POINT_GAP := 14.0
 const SCREEN_MARGIN := 8.0
 
+var _cell := Vector2i.ZERO
+
+@onready var _coordinate: Label = $Content/Coordinate
+@onready var _circle_button: Button = $Content/Choices/CircleButton
+@onready var _cross_button: Button = $Content/Choices/CrossButton
+@onready var _square_button: Button = $Content/Choices/SquareButton
+@onready var _clear_button: Button = $Content/Choices/ClearButton
+
 
 func _ready() -> void:
-	$Choices/CircleButton.pressed.connect(_on_marker_pressed.bind("circle"))
-	$Choices/CrossButton.pressed.connect(_on_marker_pressed.bind("cross"))
-	$Choices/SquareButton.pressed.connect(_on_marker_pressed.bind("square"))
-	$Choices/ClearButton.pressed.connect(_on_marker_pressed.bind(""))
+	_circle_button.pressed.connect(_on_marker_pressed.bind("circle"))
+	_cross_button.pressed.connect(_on_marker_pressed.bind("cross"))
+	_square_button.pressed.connect(_on_marker_pressed.bind("square"))
+	_clear_button.pressed.connect(_on_marker_pressed.bind(""))
 
 
 func open_for_cell(
@@ -23,7 +29,8 @@ func open_for_cell(
 	has_marker: bool
 ) -> void:
 	_cell = cell
-	$Choices/ClearButton.disabled = not has_marker
+	_coordinate.text = "交点（%d,%d） · 仅本地可见" % [cell.x, cell.y]
+	_clear_button.disabled = not has_marker
 	var popup_position := point_position + Vector2(POINT_GAP, -MENU_SIZE.y * 0.5)
 	if popup_position.x + MENU_SIZE.x > available_rect.end.x - SCREEN_MARGIN:
 		popup_position.x = point_position.x - MENU_SIZE.x - POINT_GAP
@@ -53,6 +60,7 @@ func open_for_cell(
 		available_rect.end.y - actual_size.y - SCREEN_MARGIN
 	)
 	position = Vector2i(actual_position.round())
+	_circle_button.call_deferred("grab_focus")
 
 
 func get_cell() -> Vector2i:
@@ -64,7 +72,8 @@ func get_context_snapshot() -> Dictionary:
 		"cell": _cell,
 		"position": position,
 		"size": size,
-		"clear_enabled": not $Choices/ClearButton.disabled,
+		"coordinate_text": _coordinate.text,
+		"clear_enabled": not _clear_button.disabled,
 	}
 
 

@@ -68,7 +68,7 @@ func render_player_view(view: Dictionary) -> void:
 	_wall_renderer.render(_current_view.get("walls", []), _side, cell_size)
 	_flag_renderer.render(_current_view.get("flags", []), _side, cell_size)
 	_ghost_renderer.render(_current_view.get("capture_ghosts", []), _side, cell_size)
-	_marker_overlay.configure(_side, cell_size)
+	_marker_overlay.configure(_side, cell_size, board_theme.marker_assets)
 	_tactical_overlay.render_public_overlays(
 		_current_view.get("vision_overlays", {}), _side, cell_size
 	)
@@ -122,6 +122,7 @@ func get_render_snapshot() -> Dictionary:
 		"ghost_count": _ghost_renderer.get_rendered_count(),
 		"wall_segment_count": _wall_renderer.get_rendered_count(),
 		"marker_count": _marker_overlay.get_marker_count(),
+		"marker_asset_count": _marker_overlay.get_marker_asset_count(),
 		"tactical_group_count": _tactical_overlay.get_group_count(),
 		"interaction_preview_count": _interaction_overlay.get_preview_count(),
 		"tutorial_target": _interaction_overlay.get_tutorial_target(),
@@ -183,7 +184,7 @@ func _configure_empty_board() -> void:
 	_wall_renderer.render([], _side, cell_size)
 	_flag_renderer.render([], _side, cell_size)
 	_ghost_renderer.render([], _side, cell_size)
-	_marker_overlay.configure(_side, cell_size)
+	_marker_overlay.configure(_side, cell_size, board_theme.marker_assets)
 	_marker_overlay.clear_all()
 	_tactical_overlay.render_public_overlays({}, _side, cell_size)
 	_interaction_overlay.render_selection(Vector2i.ZERO, [], _side, cell_size)

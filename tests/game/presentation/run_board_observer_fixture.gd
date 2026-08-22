@@ -27,6 +27,7 @@ func _run() -> void:
 	_expect(bool(board_snapshot.get("flag_cell_fogged", false)), "fixture flag must be back under fog")
 	_expect(bool(board_snapshot.get("flag_memory_visible", false)), "discovered flag must remain visible over fog")
 	_expect(int(board_snapshot.get("tactical_group_count", -1)) == 2, "only rook path and elephant block field should render")
+	_expect(int(board_snapshot.get("marker_asset_count", -1)) == 3, "formal marker image atlas was not bound to the board theme")
 	var tactical_overlay: Node = match_screen.find_child("TacticalOverlay", true, false)
 	_expect(tactical_overlay != null, "tactical overlay is missing")
 	if tactical_overlay != null:
@@ -57,9 +58,25 @@ func _run() -> void:
 	_expect(second_right_click == "open_marker_menu", "idle right click must open marker menu")
 	var marker_menu: PopupPanel = match_screen.find_child("MarkerMenu", true, false)
 	var initial_menu_snapshot: Dictionary = marker_menu.get_context_snapshot()
+	var marker_frame: TextureRect = marker_menu.find_child("Frame", true, false) as TextureRect
+	var circle_button: Button = marker_menu.find_child("CircleButton", true, false) as Button
+	_expect(
+		marker_frame != null \
+		and marker_frame.texture != null \
+		and marker_frame.texture.resource_path.ends_with("marker_menu_frame_v1.png"),
+		"marker menu did not use the generated frame artwork"
+	)
+	_expect(
+		circle_button != null and circle_button.icon is AtlasTexture,
+		"marker menu did not use the generated icon atlas"
+	)
 	_expect(
 		initial_menu_snapshot.get("cell", Vector2i.ZERO) == Vector2i(3, 10),
 		"marker menu did not retain the right-clicked cell"
+	)
+	_expect(
+		str(initial_menu_snapshot.get("coordinate_text", "")) == "交点（3,10） · 仅本地可见",
+		"marker menu did not present the selected local coordinate"
 	)
 	_expect(
 		Vector2(initial_menu_snapshot.get("position", Vector2i.ZERO)).distance_to(menu_anchor) < 340.0,

@@ -1,10 +1,23 @@
-[gd_resource type="Resource" script_class="BoardTheme" format=3 uid="uid://dq4f45462r2e4"]
+[gd_resource type="Resource" script_class="BoardTheme" load_steps=10 format=3 uid="uid://dq4f45462r2e4"]
 
 [ext_resource type="Script" uid="uid://cu8wlq6dod46s" path="res://scripts/game/presentation/board/board_theme.gd" id="1_board_theme"]
 [ext_resource type="PackedScene" path="res://scenes/game/match/board/wall_view.tscn" id="2_wall"]
 [ext_resource type="PackedScene" path="res://scenes/game/match/board/terracotta_piece_view.tscn" id="3_piece"]
 [ext_resource type="PackedScene" path="res://scenes/game/match/board/flag_view.tscn" id="4_flag"]
 [ext_resource type="PackedScene" path="res://scenes/game/match/board/capture_ghost_view.tscn" id="5_ghost"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/markers/marker_icon_atlas_v1.png" id="6_marker_icons"]
+
+[sub_resource type="AtlasTexture" id="AtlasTextureMarkerCircle"]
+atlas = ExtResource("6_marker_icons")
+region = Rect2(0, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTextureMarkerCross"]
+atlas = ExtResource("6_marker_icons")
+region = Rect2(512, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTextureMarkerSquare"]
+atlas = ExtResource("6_marker_icons")
+region = Rect2(0, 512, 512, 512)
 
 [resource]
 script = ExtResource("1_board_theme")
@@ -27,3 +40,8 @@ wall_scene_set = Array[PackedScene]([ExtResource("2_wall")])
 piece_scene_set = Array[PackedScene]([ExtResource("3_piece")])
 flag_scene = ExtResource("4_flag")
 ghost_scene = ExtResource("5_ghost")
+marker_assets = {
+"circle": SubResource("AtlasTextureMarkerCircle"),
+"cross": SubResource("AtlasTextureMarkerCross"),
+"square": SubResource("AtlasTextureMarkerSquare")
+}

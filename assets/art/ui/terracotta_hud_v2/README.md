@@ -15,6 +15,7 @@
 | `action_button_states_v1.png` | 动作按钮四态图集 | 横向四等分：normal / hover / pressed / disabled |
 | `minimap_frame_v1.png` | 小地图边框 | 叠放在小地图 `SubViewportTexture` 上方，中央为真实透明 |
 | `ui_decor_atlas_v1.png` | 菱形节点、铆钉、分隔线、选择角 | 4×2 图集；缺失的左下角由右下角水平翻转复用 |
+| `markers/` | 标注弹窗框体与圆、叉、方、清除图标 | 预置 `PopupPanel` + `TextureRect`，图标以 `AtlasTexture` 同时供菜单和棋盘标注层复用 |
 | `turn_progress_incense/` | 燃香回合进度条分层与动画资源 | 香身从右向左裁短，8 帧烟雾循环并随进度延长，中文烟字散开后重聚 |
 | `incense_assembly/` | 龙虎青铜香盘、计时香、竖版回合香与棋子信息展开栏 | Godot 预置场景与网页布局工具共用同一套正式资源 |
 
