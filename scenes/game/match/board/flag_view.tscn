@@ -1,12 +1,18 @@
-[gd_scene format=3]
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/presentation/board/flag_view.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/art/flags/terracotta_warriors/neutral_flag.png" id="2_neutral"]
+[ext_resource type="Texture2D" path="res://assets/art/flags/terracotta_warriors/red_flag_captured.png" id="3_red"]
+[ext_resource type="Texture2D" path="res://assets/art/flags/terracotta_warriors/black_flag_captured.png" id="4_black"]
 
 [node name="FlagView" type="Node2D"]
+script = ExtResource("1_script")
+flag_textures = {
+"black": ExtResource("4_black"),
+"neutral": ExtResource("2_neutral"),
+"red": ExtResource("3_red")
+}
 
-[node name="Mast" type="Line2D" parent="."]
-points = PackedVector2Array(-24, 44, -24, -44)
-width = 6.0
-default_color = Color(0.88, 0.78, 0.55, 1)
-
-[node name="Cloth" type="Polygon2D" parent="."]
-polygon = PackedVector2Array(-20, -42, 42, -24, -20, -4)
-color = Color(0.86, 0.54, 0.13, 1)
+[node name="Artwork" type="Sprite2D" parent="."]
+texture_filter = 4
+texture = ExtResource("2_neutral")
