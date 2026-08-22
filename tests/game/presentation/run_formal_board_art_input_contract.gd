@@ -42,6 +42,7 @@ func _run() -> void:
 	) as NinePatchRect
 	var input_surface: Control = board_viewport.get_node("ScreenInputSurface") as Control
 	var board_world: Node2D = board_viewport.get_node("BoardSubViewport/BoardWorld") as Node2D
+	var piece_layer: Node2D = board_world.get_node("PieceLayer") as Node2D
 	var board_theme: BoardTheme = board_world.get("board_theme") as BoardTheme
 	var snapshot: Dictionary = match_screen.get_board_render_snapshot()
 	_check_fullscreen_layout(match_screen, viewport)
@@ -57,12 +58,20 @@ func _run() -> void:
 		"formal board border blocks pointer input before it reaches the board surface"
 	)
 	_expect(
+		board_border.patch_margin_bottom == 0,
+		"formal board border still draws the bottom line above board content"
+	)
+	_expect(
 		input_surface.size.is_equal_approx(board_viewport.size),
 		"formal board screen input surface does not cover the exported viewport"
 	)
 	_expect(
 		str(snapshot.get("map_background_path", "")) == EXPECTED_MAP_PATH,
 		"formal match did not bind the approved board artwork"
+	)
+	_expect(
+		int(snapshot.get("horizontal_grid_line_count", -1)) == 23,
+		"formal board still draws the unwanted bottom grid line"
 	)
 	_expect(
 		board_theme != null \
@@ -82,6 +91,19 @@ func _run() -> void:
 		int(layer_order.get("piece", -1)) > int(layer_order.get("fog", -1)),
 		"formal pieces are drawn below the fog overlay"
 	)
+	for layer_path: String in [
+		"MapBackground", "GridRenderer", "FogOverlay", "StructureLayer", "IntelLayer",
+		"CaptureGhostLayer", "MarkerOverlay", "TacticalOverlay", "InteractionOverlay",
+		"EffectLayer",
+	]:
+		var layer := board_world.get_node(layer_path) as CanvasItem
+		_expect(
+			piece_layer.z_index > layer.z_index,
+			"formal piece layer is not above %s" % layer_path
+		)
+	_check_default_camera(board_viewport, match_screen.get_player_view_snapshot())
+	_check_middle_drag(board_viewport, input_surface)
+	board_viewport.reset_camera()
 	if "--capture-screenshot" in OS.get_cmdline_user_args():
 		_capture_screenshot(viewport)
 
@@ -236,6 +258,90 @@ func _piece_cell(view: Dictionary, piece_id: String) -> Vector2i:
 				piece_value.get("position", [])
 			)
 	return Vector2i.ZERO
+
+
+func _general_cell(view: Dictionary, side: String) -> Vector2i:
+	for piece_value: Variant in view.get("pieces", []):
+		if piece_value is Dictionary \
+		and str(piece_value.get("side", "")) == side \
+		and str(piece_value.get("piece_type", "")) == "general":
+			return BoardCoordinateMapper.coordinate_from_variant(
+				piece_value.get("position", [])
+			)
+	return Vector2i.ZERO
+
+
+func _check_default_camera(board_viewport: SubViewportContainer, view: Dictionary) -> void:
+	var snapshot: Dictionary = board_viewport.get_render_snapshot()
+	_expect(
+		is_equal_approx(
+			float(snapshot.get("zoom_multiplier", 0.0)),
+			float(snapshot.get("max_zoom_multiplier", -1.0))
+		),
+		"formal board did not open at maximum zoom"
+	)
+	var general_cell := _general_cell(view, str(view.get("viewer_side", "red")))
+	_expect(
+		BoardCoordinateMapper.is_authority_cell_valid(general_cell),
+		"formal PlayerView did not expose its own general for default camera anchoring"
+	)
+	if not BoardCoordinateMapper.is_authority_cell_valid(general_cell):
+		return
+	var general_screen_position: Vector2 = \
+		board_viewport.get_container_position_for_authority_cell(general_cell)
+	var expected_position := Vector2(
+		board_viewport.size.x * 0.5,
+		board_viewport.size.y - board_viewport.get_point_spacing().y * 0.5
+	)
+	_expect(
+		general_screen_position.distance_to(expected_position) <= 1.0,
+		"own general is not bottom-centered by the default camera: %s" \
+		% general_screen_position
+	)
+
+
+func _check_middle_drag(
+	board_viewport: SubViewportContainer,
+	input_surface: Control
+) -> void:
+	_expect(InputMap.has_action(&"board_drag"), "board drag action is missing")
+	var has_middle_binding := false
+	for event: InputEvent in InputMap.action_get_events(&"board_drag"):
+		if event is InputEventMouseButton \
+		and (event as InputEventMouseButton).button_index == MOUSE_BUTTON_MIDDLE:
+			has_middle_binding = true
+	_expect(has_middle_binding, "board drag action is not bound to the middle mouse button")
+	var camera_before: Vector2 = board_viewport.get_render_snapshot().get(
+		"camera_position", Vector2.ZERO
+	)
+	var press := InputEventMouseButton.new()
+	press.device = InputEvent.DEVICE_ID_MOUSE
+	press.button_index = MOUSE_BUTTON_MIDDLE
+	press.pressed = true
+	press.position = input_surface.size * 0.5
+	input_surface.gui_input.emit(press)
+	var motion := InputEventMouseMotion.new()
+	motion.device = InputEvent.DEVICE_ID_MOUSE
+	motion.position = press.position + Vector2(72.0, 0.0)
+	motion.relative = Vector2(72.0, 0.0)
+	input_surface.gui_input.emit(motion)
+	var release := InputEventMouseButton.new()
+	release.device = InputEvent.DEVICE_ID_MOUSE
+	release.button_index = MOUSE_BUTTON_MIDDLE
+	release.pressed = false
+	release.position = motion.position
+	input_surface.gui_input.emit(release)
+	var camera_after: Vector2 = board_viewport.get_render_snapshot().get(
+		"camera_position", Vector2.ZERO
+	)
+	_expect(
+		camera_after.x < camera_before.x,
+		"middle-button drag did not pan the board with grab-style motion"
+	)
+	_expect(
+		not bool(board_viewport.get_render_snapshot().get("middle_drag_active", true)),
+		"middle-button drag remained active after release"
+	)
 
 
 func _capture_screenshot(

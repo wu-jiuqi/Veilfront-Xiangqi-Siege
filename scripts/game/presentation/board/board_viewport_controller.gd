@@ -13,6 +13,8 @@ const WHEEL_PAN_SPEED: float = 420.0
 const CAMERA_SCROLL_DURATION: float = 0.32
 const MINIMAP_NAVIGATION_DURATION: float = 0.16
 const HOVER_RADIUS_RATIO: float = 0.46
+const MIN_ZOOM_MULTIPLIER: float = 1.0
+const MAX_ZOOM_MULTIPLIER: float = 1.72
 
 @onready var _sub_viewport: SubViewport = $BoardSubViewport
 @onready var _board_world: Node2D = $BoardSubViewport/BoardWorld
@@ -20,14 +22,17 @@ const HOVER_RADIUS_RATIO: float = 0.46
 @onready var _screen_input_surface: Control = $ScreenInputSurface
 
 var _fit_zoom: float = 1.0
-var _zoom_multiplier: float = 1.0
+var _zoom_multiplier: float = MAX_ZOOM_MULTIPLIER
 var _focused_cell := Vector2i.ZERO
+var _default_anchor_cell := Vector2i.ZERO
 var _hovered_cell := Vector2i.ZERO
 var _hover_pointer_local := Vector2(INF, INF)
 var _camera_motion_tween: Tween
 var _camera_target_position: Vector2 = BOARD_WORLD_SIZE * 0.5
 var _keyboard_pan_velocity: Vector2 = Vector2.ZERO
 var _piece_visual_hit_enabled: bool = true
+var _has_session_view: bool = false
+var _is_middle_dragging: bool = false
 
 
 func _ready() -> void:
@@ -88,6 +93,11 @@ func get_presentation_side() -> String:
 
 
 func render_player_view(view: Dictionary) -> void:
+	var viewer_side := str(view.get("viewer_side", "red"))
+	if not _has_session_view and viewer_side in ["red", "black"]:
+		_board_world.set_presentation_side(viewer_side)
+	_has_session_view = true
+	_default_anchor_cell = _find_general_cell(view, viewer_side)
 	_board_world.render_player_view(view)
 	if BoardCoordinateMapper.is_authority_cell_valid(_focused_cell):
 		focus_authority_cell(_focused_cell)
@@ -125,6 +135,9 @@ func set_piece_visual_hit_enabled(enabled: bool) -> void:
 
 func clear_session_view() -> void:
 	_focused_cell = Vector2i.ZERO
+	_default_anchor_cell = Vector2i.ZERO
+	_has_session_view = false
+	_is_middle_dragging = false
 	_clear_hover()
 	_board_world.clear_session_view()
 	reset_camera()
@@ -134,7 +147,7 @@ func focus_authority_cell(cell: Vector2i) -> void:
 	if not BoardCoordinateMapper.is_authority_cell_valid(cell):
 		return
 	_focused_cell = cell
-	_zoom_multiplier = 1.0
+	_zoom_multiplier = MIN_ZOOM_MULTIPLIER
 	_update_camera_zoom()
 	var world_position: Vector2 = BoardCoordinateMapper.authority_to_world(
 		cell,
@@ -149,13 +162,25 @@ func set_tutorial_target(cell: Vector2i) -> void:
 
 
 func reset_camera() -> void:
-	_zoom_multiplier = 1.0
+	_zoom_multiplier = MAX_ZOOM_MULTIPLIER
 	_update_camera_zoom()
 	var visible_world_height: float = size.y / maxf(_camera.zoom.y, 0.01)
-	_set_camera_position_immediate(Vector2(
+	var anchor_position := Vector2(
 		BOARD_WORLD_SIZE.x * 0.5,
 		BOARD_WORLD_SIZE.y - visible_world_height * 0.5
-	))
+	)
+	if BoardCoordinateMapper.is_authority_cell_valid(_default_anchor_cell):
+		var cell_size: Vector2 = _board_world.get_cell_size()
+		var general_world_position: Vector2 = BoardCoordinateMapper.authority_to_world(
+			_default_anchor_cell,
+			str(_board_world.get_display_side()),
+			cell_size
+		)
+		anchor_position = Vector2(
+			general_world_position.x,
+			general_world_position.y - visible_world_height * 0.5 + cell_size.y * 0.5
+		)
+	_set_camera_position_immediate(anchor_position)
 
 
 func get_point_spacing() -> Vector2:
@@ -173,6 +198,9 @@ func get_render_snapshot() -> Dictionary:
 	snapshot["focused_cell_visible"] = _is_cell_visible(_focused_cell)
 	snapshot["camera_position"] = _camera.position
 	snapshot["camera_zoom"] = _camera.zoom
+	snapshot["zoom_multiplier"] = _zoom_multiplier
+	snapshot["max_zoom_multiplier"] = MAX_ZOOM_MULTIPLIER
+	snapshot["default_anchor_cell"] = _default_anchor_cell
 	snapshot["camera_target_position"] = _camera_target_position
 	snapshot["camera_target_y"] = _camera_target_position.y
 	snapshot["camera_pan_axes"] = "xy"
@@ -182,6 +210,7 @@ func get_render_snapshot() -> Dictionary:
 	snapshot["minimap_navigation_duration"] = MINIMAP_NAVIGATION_DURATION
 	snapshot["hovered_cell"] = _hovered_cell
 	snapshot["piece_visual_hit_enabled"] = _piece_visual_hit_enabled
+	snapshot["middle_drag_active"] = _is_middle_dragging
 	snapshot["coordinate_text"] = "坐标：（%d, %d）" % [_hovered_cell.x, _hovered_cell.y] \
 		if BoardCoordinateMapper.is_authority_cell_valid(_hovered_cell) else "坐标：—"
 	snapshot["overview_state"] = get_overview_state()
@@ -261,7 +290,11 @@ func _is_cell_visible(cell: Vector2i) -> bool:
 
 
 func _apply_zoom_step(step: float) -> void:
-	_zoom_multiplier = clampf(_zoom_multiplier + step * 0.12, 1.0, 1.72)
+	_zoom_multiplier = clampf(
+		_zoom_multiplier + step * 0.12,
+		MIN_ZOOM_MULTIPLIER,
+		MAX_ZOOM_MULTIPLIER
+	)
 	_update_camera_zoom()
 	_clamp_camera()
 
@@ -299,12 +332,31 @@ func _on_cancel_or_marker_requested(cell: Vector2i) -> void:
 
 func _on_screen_input_surface_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
-		_hover_pointer_local = (event as InputEventMouseMotion).position
+		var motion_event := event as InputEventMouseMotion
+		_hover_pointer_local = motion_event.position
+		if _is_middle_dragging:
+			_focused_cell = Vector2i.ZERO
+			_keyboard_pan_velocity = Vector2.ZERO
+			_set_camera_position_immediate(
+				_camera.position - motion_event.relative / maxf(_camera.zoom.x, 0.01)
+			)
+			_screen_input_surface.accept_event()
+			return
 		_update_hover_from_container_position(_hover_pointer_local)
 		return
-	if not event is InputEventMouseButton or not event.pressed:
+	if not event is InputEventMouseButton:
 		return
 	var mouse_event := event as InputEventMouseButton
+	if mouse_event.is_action(&"board_drag"):
+		_is_middle_dragging = mouse_event.pressed
+		_keyboard_pan_velocity = Vector2.ZERO
+		if _is_middle_dragging:
+			_focused_cell = Vector2i.ZERO
+			_cancel_camera_motion()
+		_screen_input_surface.accept_event()
+		return
+	if not mouse_event.pressed:
+		return
 	if mouse_event.button_index == MOUSE_BUTTON_WHEEL_UP:
 		if mouse_event.ctrl_pressed:
 			_apply_zoom_step(1.0)
@@ -445,3 +497,19 @@ func _apply_camera_position(value: Vector2) -> void:
 func _emit_overview_changed() -> void:
 	if is_node_ready():
 		overview_changed.emit(get_overview_state())
+
+
+func _find_general_cell(view: Dictionary, side: String) -> Vector2i:
+	for piece_value: Variant in view.get("pieces", []):
+		if not piece_value is Dictionary:
+			continue
+		var piece: Dictionary = piece_value
+		if str(piece.get("side", "")) != side \
+		or str(piece.get("piece_type", "")) != "general" \
+		or not bool(piece.get("alive", true)) \
+		or bool(piece.get("in_reserve", false)):
+			continue
+		var cell := BoardCoordinateMapper.coordinate_from_variant(piece.get("position", []))
+		if BoardCoordinateMapper.is_authority_cell_valid(cell):
+			return cell
+	return Vector2i.ZERO

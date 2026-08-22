@@ -191,7 +191,10 @@ func _check_resolution(resolution: Vector2i) -> Dictionary:
 	_expect(spacing.x > 0.0, "%s point spacing must be positive" % resolution)
 	_expect(board_rect.position.x >= 0.0 and board_rect.end.x <= resolution.x + 0.5, "%s board is horizontally clipped" % resolution)
 	_expect(board_rect.position.y >= 0.0 and board_rect.end.y <= resolution.y + 0.5, "%s board is vertically clipped" % resolution)
-	_expect(spacing.x * 9.0 <= board_rect.size.x + 0.5, "%s nine files do not fit the board frame" % resolution)
+	_expect(
+		spacing.x * 9.0 > board_rect.size.x + 0.5,
+		"%s board did not start at the requested maximum zoom" % resolution
+	)
 	_expect(bool(snapshot.get("main_buttons_inside", false)), "%s main action buttons are clipped" % resolution)
 	_expect(float(snapshot.get("main_button_min_height", 0.0)) >= 44.0, "%s main buttons are below 44 px" % resolution)
 	_expect(bool(snapshot.get("compact", false)) == (resolution.x < 1100), "%s responsive breakpoint mismatch" % resolution)
