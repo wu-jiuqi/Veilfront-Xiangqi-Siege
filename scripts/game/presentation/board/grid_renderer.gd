@@ -71,12 +71,16 @@ func _draw_grid() -> void:
 			Vector2(x, first_center.y), Vector2(x, last_center.y),
 			line_color, line_width, true
 		)
-	for display_y: int in _board_size.y:
+	for display_y: int in maxi(_board_size.y - 1, 0):
 		var y: float = (float(display_y) + 0.5) * _cell_size.y
 		draw_line(
 			Vector2(first_center.x, y), Vector2(last_center.x, y),
 			line_color, line_width, true
 		)
+
+
+func get_horizontal_line_count() -> int:
+	return maxi(_board_size.y - 1, 0)
 
 
 func _draw_region_label(rect: Rect2, text: String) -> void:

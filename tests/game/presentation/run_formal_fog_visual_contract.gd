@@ -51,7 +51,14 @@ func _run() -> void:
 		fog_layer.get_index() < piece_layer.get_index(),
 		"authorized PlayerView pieces must remain readable above fog"
 	)
-	_expect(piece_layer.get_index() < structure_layer.get_index(), "public structures must render above pieces")
+	_expect(
+		structure_layer.get_index() < piece_layer.get_index(),
+		"public structures must remain below pieces"
+	)
+	_expect(
+		intel_layer.get_index() < piece_layer.get_index(),
+		"authorized intel must remain below pieces"
+	)
 	_expect(fog_layer.get_index() < intel_layer.get_index(), "authorized intel must render above fog")
 	board_world.queue_free()
 	await process_frame

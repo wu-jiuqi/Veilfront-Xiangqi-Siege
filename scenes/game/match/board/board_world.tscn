@@ -39,11 +39,6 @@ script = ExtResource("7_grid_script")
 
 [node name="FogOverlay" parent="." instance=ExtResource("2_fog")]
 
-[node name="PieceLayer" type="Node2D" parent="."]
-y_sort_enabled = true
-script = ExtResource("8_piece_script")
-piece_scene = ExtResource("13_piece_scene")
-
 [node name="StructureLayer" type="Node2D" parent="."]
 
 [node name="WallViews" type="Node2D" parent="StructureLayer"]
@@ -69,6 +64,12 @@ ghost_scene = ExtResource("16_ghost_scene")
 [node name="InteractionOverlay" parent="." instance=ExtResource("5_interaction")]
 
 [node name="EffectLayer" type="Node2D" parent="."]
+
+[node name="PieceLayer" type="Node2D" parent="."]
+z_index = 100
+y_sort_enabled = true
+script = ExtResource("8_piece_script")
+piece_scene = ExtResource("13_piece_scene")
 
 [node name="InputSurface" type="Control" parent="."]
 script = ExtResource("12_input_script")

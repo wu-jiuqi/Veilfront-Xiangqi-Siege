@@ -125,6 +125,7 @@ func get_render_snapshot() -> Dictionary:
 		"tactical_group_count": _tactical_overlay.get_group_count(),
 		"interaction_preview_count": _interaction_overlay.get_preview_count(),
 		"tutorial_target": _interaction_overlay.get_tutorial_target(),
+		"horizontal_grid_line_count": _grid_renderer.get_horizontal_line_count(),
 		"flag_cell_fogged": _fog_overlay.is_cell_fogged(flag_cell) \
 			if flag_cell != Vector2i.ZERO else false,
 		"flag_memory_visible": _flag_renderer.get_rendered_count() > 0,
