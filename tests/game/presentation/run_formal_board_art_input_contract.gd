@@ -181,7 +181,9 @@ func _click_visible_piece_body(
 ) -> void:
 	var visual_body_position: Vector2 = \
 		board_viewport.get_container_position_for_authority_cell(cell)
-	visual_body_position.y -= board_viewport.get_point_spacing().y * 0.55
+	# 棋盘棋子已收进以交点为中心的单格安全框；保持偏离交点点击，验证视觉主体
+	# 命中优先级，同时避免沿用旧站立立绘位于交点上方半格以上的过期坐标。
+	visual_body_position.y -= board_viewport.get_point_spacing().y * 0.25
 	var event := InputEventMouseButton.new()
 	event.button_index = MOUSE_BUTTON_LEFT
 	event.pressed = true

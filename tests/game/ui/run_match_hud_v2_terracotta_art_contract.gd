@@ -4,6 +4,7 @@ const LAB_SCENE: PackedScene = preload(
 	"res://scenes/dev/ui/match_hud_v2_interaction_lab.tscn"
 )
 const FORMAL_MATCH_STATE = preload("res://scripts/game/domain/match_state.gd")
+const BOARD_WORLD_SIZE := Vector2(1152.0, 3072.0)
 const EXPECTED_MAP_PATH := \
 	"res://assets/art/boards/terracotta_warriors/terracotta_battlefield_board_bg_gridless_v7_low_noise.png"
 const EXPECTED_PIECE_PATHS: Array[String] = [
@@ -135,11 +136,20 @@ func _run() -> void:
 			artwork.texture_filter == CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS,
 			"piece artwork did not use stable mipmapped linear sampling"
 		)
-		var artwork_bottom: float = artwork.position.y \
-			+ artwork.texture.get_height() * artwork.scale.y * 0.5
+		var artwork_half_size := artwork.texture.get_size() * artwork.scale.abs() * 0.5
+		var artwork_bounds := Rect2(
+			piece_view.position + artwork.position - artwork_half_size,
+			artwork_half_size * 2.0
+		)
 		_expect(
-			absf(artwork_bottom) <= 0.1,
-			"piece artwork bottom was not anchored to its board intersection"
+			artwork.position.is_zero_approx(),
+			"board piece artwork was not centered on its board intersection"
+		)
+		_expect(
+			artwork_bounds.position.x >= -0.1 and artwork_bounds.position.y >= -0.1 \
+			and artwork_bounds.end.x <= BOARD_WORLD_SIZE.x + 0.1 \
+			and artwork_bounds.end.y <= BOARD_WORLD_SIZE.y + 0.1,
+			"board piece artwork exceeded the board world boundary: %s" % artwork_bounds
 		)
 		var authority_cell: Vector2i = piece_view.get_meta(
 			"authority_cell", Vector2i.ZERO

@@ -5,6 +5,7 @@ extends Node2D
 @export_group("Piece Sizing")
 @export_range(0.5, 1.5, 0.01) var base_width_cell_ratio: float = 0.88
 @export_range(0.5, 2.0, 0.01) var base_height_cell_ratio: float = 1.32
+@export_range(0.5, 1.0, 0.01) var board_safe_cell_ratio: float = 0.84
 @export var piece_scale_multipliers: Dictionary = {}
 
 
@@ -30,11 +31,18 @@ func configure_piece(piece: Dictionary, cell_size: Vector2) -> void:
 		float(piece_scale_multipliers.get(game_piece_type, 1.0)), 0.1
 	)
 	fit_scale *= piece_scale
+	# 棋盘棋子必须完整落在所属格的安全框内。当前仍复用详情立绘作为过渡资源，
+	# 因此在兵种倍率之后再做一次硬上限；后续圆形俯视棋子也沿用同一边界合同。
+	var safe_scale: float = minf(
+		cell_size.x * board_safe_cell_ratio / maxf(texture_size.x, 1.0),
+		cell_size.y * board_safe_cell_ratio / maxf(texture_size.y, 1.0)
+	)
+	fit_scale = minf(fit_scale, safe_scale)
 	artwork.scale = Vector2.ONE * fit_scale
-	# 棋子根节点固定在权威交点，立绘底边对齐该点，避免不同素材高度造成漂移。
-	artwork.position = Vector2(0.0, -texture_size.y * fit_scale * 0.5)
+	# 根节点继续固定在权威交点；视觉居中后，顶部第一排不会进入棋盘负坐标。
+	artwork.position = Vector2.ZERO
 	var base_scale: float = cell_size.x / 128.0
-	shadow.position = Vector2(0.0, cell_size.y * 0.08)
+	shadow.position = Vector2(0.0, texture_size.y * fit_scale * 0.4)
 	shadow.scale = Vector2.ONE * base_scale * lerpf(1.0, piece_scale, 0.5)
 
 
