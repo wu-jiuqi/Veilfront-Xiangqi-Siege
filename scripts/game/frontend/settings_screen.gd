@@ -2,8 +2,11 @@ extends Control
 
 const FrontendRoutes = preload("res://scripts/integration/frontend_routes.gd")
 const SettingsManagerScript = preload("res://scripts/game/settings/settings_manager.gd")
+const MOTION_PROFILE = preload("res://resources/game/ui/motion/terracotta_ui_motion_profile.tres")
 const DISPLAY_CONFIRM_SECONDS := 10
 
+@onready var _settings_frame: PanelContainer = %SettingsFrame
+@onready var _settings_tabs: TabContainer = %SettingsTabs
 @onready var _back_button: Button = %BackButton
 @onready var _window_mode_option: OptionButton = %WindowModeOption
 @onready var _resolution_option: OptionButton = %ResolutionOption
@@ -29,6 +32,9 @@ const DISPLAY_CONFIRM_SECONDS := 10
 var _display_seconds_remaining := 0
 var _transitioning := false
 var _settings_manager: SettingsManagerScript
+var _entry_tween: Tween
+var _tab_tween: Tween
+var _exit_tween: Tween
 
 
 func _ready() -> void:
@@ -49,6 +55,8 @@ func _ready() -> void:
 	_sfx_volume_slider.value_changed.connect(
 		func(value: float) -> void: _update_volume_label(_sfx_volume_value, value)
 	)
+	_settings_tabs.tab_changed.connect(_on_settings_tab_changed)
+	_reduce_motion_toggle.toggled.connect(_on_reduce_motion_toggled)
 	_display_confirm_dialog.confirmed.connect(_confirm_display_preview)
 	_display_confirm_dialog.canceled.connect(_revert_display_preview)
 	_display_confirm_dialog.close_requested.connect(_revert_display_preview)
@@ -56,7 +64,9 @@ func _ready() -> void:
 	_display_confirm_dialog.get_ok_button().text = "保留设置"
 	_display_confirm_dialog.get_cancel_button().text = "恢复原设置"
 	_populate_controls(_settings_manager.get_settings())
+	_set_reduced_motion(_reduce_motion_toggle.button_pressed)
 	_back_button.grab_focus()
+	_play_entrance.call_deferred()
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -165,6 +175,121 @@ func _update_volume_label(label: Label, value: float) -> void:
 	label.text = "%d%%" % int(round(value))
 
 
+func _on_settings_tab_changed(tab_index: int) -> void:
+	var tab_control := _settings_tabs.get_tab_control(tab_index)
+	if tab_control == null:
+		return
+	_reset_control_motion(tab_control)
+	if _reduce_motion_toggle.button_pressed:
+		return
+	_kill_tween(_tab_tween)
+	tab_control.offset_transform_enabled = true
+	tab_control.offset_transform_visual_only = true
+	tab_control.offset_transform_position = Vector2(12.0, 0.0)
+	tab_control.modulate = Color(1, 1, 1, 0.42)
+	_tab_tween = _new_motion_tween()
+	_tab_tween.set_parallel(true)
+	_tab_tween.tween_property(
+		tab_control, "offset_transform_position", Vector2.ZERO, _motion_duration(&"tab")
+	)
+	_tab_tween.tween_property(tab_control, "modulate", Color.WHITE, _motion_duration(&"tab"))
+
+
+func _on_reduce_motion_toggled(enabled: bool) -> void:
+	_set_reduced_motion(enabled)
+
+
+func _set_reduced_motion(enabled: bool) -> void:
+	for candidate: Node in get_tree().get_nodes_in_group(&"ui_motion_buttons"):
+		if is_ancestor_of(candidate) and candidate.has_method("set_reduced_motion"):
+			candidate.call("set_reduced_motion", enabled)
+	if not enabled:
+		return
+	_kill_tween(_entry_tween)
+	_kill_tween(_tab_tween)
+	_kill_tween(_exit_tween)
+	_reset_control_motion(_settings_frame)
+	for tab_index: int in _settings_tabs.get_tab_count():
+		_reset_control_motion(_settings_tabs.get_tab_control(tab_index))
+
+
+func _play_entrance() -> void:
+	_reset_control_motion(_settings_frame)
+	if _reduce_motion_toggle.button_pressed:
+		return
+	_kill_tween(_entry_tween)
+	_settings_frame.offset_transform_enabled = true
+	_settings_frame.offset_transform_visual_only = true
+	_settings_frame.offset_transform_position = Vector2(0.0, 18.0)
+	_settings_frame.offset_transform_scale = Vector2(0.992, 0.992)
+	_settings_frame.modulate = Color(1, 1, 1, 0)
+	_entry_tween = _new_motion_tween()
+	_entry_tween.set_parallel(true)
+	_entry_tween.tween_property(
+		_settings_frame, "offset_transform_position", Vector2.ZERO, _motion_duration(&"entrance")
+	)
+	_entry_tween.tween_property(
+		_settings_frame, "offset_transform_scale", Vector2.ONE, _motion_duration(&"entrance")
+	)
+	_entry_tween.tween_property(
+		_settings_frame, "modulate", Color.WHITE, _motion_duration(&"entrance")
+	)
+
+
+func _play_exit_transition() -> void:
+	if _reduce_motion_toggle.button_pressed:
+		return
+	_kill_tween(_exit_tween)
+	_exit_tween = _new_motion_tween()
+	_exit_tween.set_parallel(true)
+	_exit_tween.tween_property(
+		_settings_frame, "offset_transform_position", Vector2(0.0, 12.0), 0.16
+	)
+	_exit_tween.tween_property(_settings_frame, "modulate", Color(1, 1, 1, 0), 0.16)
+	await _exit_tween.finished
+
+
+func _new_motion_tween() -> Tween:
+	var tween := create_tween()
+	tween.set_trans(Tween.TRANS_CUBIC)
+	tween.set_ease(Tween.EASE_OUT)
+	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	tween.set_ignore_time_scale(true)
+	return tween
+
+
+func _motion_duration(group: StringName) -> float:
+	return MOTION_PROFILE.duration_for(group, _reduce_motion_toggle.button_pressed)
+
+
+func _kill_tween(tween: Tween) -> void:
+	if tween != null and tween.is_valid():
+		tween.kill()
+
+
+func _reset_control_motion(control: Control) -> void:
+	if not is_instance_valid(control):
+		return
+	control.offset_transform_enabled = true
+	control.offset_transform_visual_only = true
+	control.offset_transform_position = Vector2.ZERO
+	control.offset_transform_scale = Vector2.ONE
+	control.modulate = Color.WHITE
+
+
+func _set_interactions_enabled(enabled: bool) -> void:
+	for candidate: Node in find_children("*", "BaseButton", true, false):
+		(candidate as BaseButton).disabled = not enabled
+	for slider: HSlider in [
+		_master_volume_slider, _music_volume_slider, _sfx_volume_slider,
+	]:
+		slider.editable = enabled
+	_settings_tabs.tab_focus_mode = Control.FOCUS_ALL if enabled else Control.FOCUS_NONE
+	_settings_tabs.mouse_filter = Control.MOUSE_FILTER_STOP if enabled else Control.MOUSE_FILTER_IGNORE
+	if enabled:
+		_update_resolution_availability()
+
+
 func _show_error(message: String) -> void:
 	_error_dialog.dialog_text = message
 	_error_dialog.popup_centered()
@@ -176,7 +301,11 @@ func _return_to_menu() -> void:
 	if _settings_manager.is_preview_active():
 		_settings_manager.revert_preview()
 	_transitioning = true
+	_set_interactions_enabled(false)
+	await _play_exit_transition()
 	var error := get_tree().change_scene_to_file(FrontendRoutes.request_start_menu_ready())
 	if error != OK:
 		_transitioning = false
+		_set_interactions_enabled(true)
+		_reset_control_motion(_settings_frame)
 		_show_error("无法返回主菜单：%s" % error_string(error))

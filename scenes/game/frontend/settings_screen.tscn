@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Theme" path="res://resources/game/ui/themes/terracotta_ui_theme.tres" id="1_theme"]
 [ext_resource type="Script" path="res://scripts/game/frontend/settings_screen.gd" id="2_script"]
+[ext_resource type="PackedScene" path="res://scenes/game/presentation/battle_command_tent_background.tscn" id="3_background"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button.tscn" id="4_motion_button"]
 
 [node name="SettingsScreen" type="Control"]
 layout_mode = 3
@@ -13,15 +15,8 @@ grow_vertical = 2
 theme = ExtResource("1_theme")
 script = ExtResource("2_script")
 
-[node name="Background" type="Panel" parent="."]
+[node name="Background" parent="." instance=ExtResource("3_background")]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_type_variation = &"ScreenBackground"
 
 [node name="SafeMargin" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -55,11 +50,12 @@ theme_override_constants/separation = 10
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="BackButton" type="Button" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/HeaderRow"]
+[node name="BackButton" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/HeaderRow" instance=ExtResource("4_motion_button")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(112, 46)
+custom_minimum_size = Vector2(132, 46)
 layout_mode = 2
-theme_type_variation = &"SecondaryButton"
+size_flags_vertical = 4
+theme_type_variation = &"SettingsSecondaryButton"
 text = "返回"
 
 [node name="TitleGroup" type="VBoxContainer" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/HeaderRow"]
@@ -118,6 +114,7 @@ vertical_alignment = 1
 unique_name_in_owner = true
 custom_minimum_size = Vector2(280, 46)
 layout_mode = 2
+theme_type_variation = &"SettingsOptionButton"
 selected = 1
 item_count = 2
 popup/item_0/text = "窗口"
@@ -142,6 +139,7 @@ vertical_alignment = 1
 unique_name_in_owner = true
 custom_minimum_size = Vector2(280, 46)
 layout_mode = 2
+theme_type_variation = &"SettingsOptionButton"
 selected = 2
 item_count = 3
 popup/item_0/text = "1280 × 720"
@@ -366,7 +364,7 @@ layout_mode = 2
 theme_type_variation = &"MutedLabel"
 text = "清空教学与挑战关卡完成记录"
 
-[node name="ResetProgressButton" type="Button" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabs/体验/TabMargin/Rows/ProgressRow"]
+[node name="ResetProgressButton" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabs/体验/TabMargin/Rows/ProgressRow" instance=ExtResource("4_motion_button")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(180, 46)
 layout_mode = 2
@@ -387,29 +385,29 @@ layout_mode = 2
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="RestoreDefaultsButton" type="Button" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/FooterRow"]
+[node name="RestoreDefaultsButton" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/FooterRow" instance=ExtResource("4_motion_button")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(170, 46)
 layout_mode = 2
-theme_type_variation = &"SecondaryButton"
+theme_type_variation = &"SettingsSecondaryButton"
 text = "恢复默认值"
 
 [node name="Spacer" type="Control" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/FooterRow"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="CancelButton" type="Button" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/FooterRow"]
+[node name="CancelButton" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/FooterRow" instance=ExtResource("4_motion_button")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(140, 46)
 layout_mode = 2
-theme_type_variation = &"SecondaryButton"
+theme_type_variation = &"SettingsSecondaryButton"
 text = "取消"
 
-[node name="ApplyButton" type="Button" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/FooterRow"]
+[node name="ApplyButton" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/FooterRow" instance=ExtResource("4_motion_button")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(160, 46)
 layout_mode = 2
-theme_type_variation = &"PrimaryButton"
+theme_type_variation = &"SettingsPrimaryButton"
 text = "应用"
 
 [node name="DisplayConfirmTimer" type="Timer" parent="."]

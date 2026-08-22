@@ -10,8 +10,10 @@ var _pressed_visual := false
 
 
 func _ready() -> void:
-	_update_pivot()
-	resized.connect(_update_pivot)
+	offset_transform_enabled = true
+	offset_transform_visual_only = true
+	offset_transform_pivot = Vector2.ZERO
+	offset_transform_pivot_ratio = Vector2(0.5, 0.5)
 
 
 func set_reduced_motion(enabled: bool) -> void:
@@ -25,15 +27,22 @@ func is_reduced_motion_enabled() -> bool:
 
 func preview_state(state: StringName) -> void:
 	match state:
-		&"hover": _animate_to(_hover_scale(), Color(1.08, 1.04, 0.92, 1), _duration(&"hover"))
-		&"press": _animate_to(_pressed_scale(), Color(0.86, 0.82, 0.72, 1), _duration(&"press"))
-		&"focus": _animate_to(_focus_scale(), Color(1.12, 1.06, 0.9, 1), _duration(&"focus"))
+		&"hover": _animate_to(
+			_hover_scale(), Vector2(0, -1.5), Color(1.08, 1.04, 0.92, 1), _duration(&"hover")
+		)
+		&"press": _animate_to(
+			_pressed_scale(), Vector2(0, 1.0), Color(0.86, 0.82, 0.72, 1), _duration(&"press")
+		)
+		&"focus": _animate_to(
+			_focus_scale(), Vector2.ZERO, Color(1.12, 1.06, 0.9, 1), _duration(&"focus")
+		)
 		_: reset_motion()
 
 
 func reset_motion() -> void:
 	_kill_active_tween()
-	scale = Vector2.ONE
+	offset_transform_scale = Vector2.ONE
+	offset_transform_position = Vector2.ZERO
 	self_modulate = Color.WHITE
 
 
@@ -81,7 +90,12 @@ func _on_focus_exited() -> void:
 		reset_motion()
 
 
-func _animate_to(target_scale: float, target_modulate: Color, duration: float) -> void:
+func _animate_to(
+	target_scale: float,
+	target_position: Vector2,
+	target_modulate: Color,
+	duration: float
+) -> void:
 	_kill_active_tween()
 	_active_tween = create_tween()
 	_active_tween.set_parallel(true)
@@ -90,7 +104,13 @@ func _animate_to(target_scale: float, target_modulate: Color, duration: float) -
 	_active_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 	_active_tween.set_ignore_time_scale(true)
 	var visual_scale := 1.0 if reduced_motion else target_scale
-	_active_tween.tween_property(self, "scale", Vector2.ONE * visual_scale, duration)
+	var visual_position := Vector2.ZERO if reduced_motion else target_position
+	_active_tween.tween_property(
+		self, "offset_transform_scale", Vector2.ONE * visual_scale, duration
+	)
+	_active_tween.tween_property(
+		self, "offset_transform_position", visual_position, duration
+	)
 	_active_tween.tween_property(self, "self_modulate", target_modulate, duration)
 
 
@@ -98,10 +118,6 @@ func _kill_active_tween() -> void:
 	if _active_tween != null and _active_tween.is_valid():
 		_active_tween.kill()
 	_active_tween = null
-
-
-func _update_pivot() -> void:
-	pivot_offset = size * 0.5
 
 
 func _duration(group: StringName) -> float:
