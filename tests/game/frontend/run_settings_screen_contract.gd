@@ -45,8 +45,14 @@ func _init() -> void:
 	for button_name: String in ["BackButton", "RestoreDefaultsButton", "CancelButton", "ApplyButton", "ResetProgressButton"]:
 		var button := settings_screen.get_node("%%%s" % button_name) as Button
 		assert(button.custom_minimum_size.y >= 44.0, "%s must remain keyboard/touch accessible" % button_name)
+		assert(button.alignment == HORIZONTAL_ALIGNMENT_CENTER, "%s text must stay centered in its PNG surface" % button_name)
 		assert(button.has_method("set_reduced_motion"), "%s must use the reusable motion-button preset" % button_name)
 		assert(button.offset_transform_enabled, "%s must use visual-only offset transforms" % button_name)
+		var normal_style := button.get_theme_stylebox(&"normal") as StyleBoxTexture
+		assert(is_equal_approx(normal_style.content_margin_left, normal_style.content_margin_right))
+		assert(is_equal_approx(normal_style.content_margin_top, normal_style.content_margin_bottom))
+		for style_name: StringName in [&"normal", &"hover", &"pressed", &"disabled"]:
+			_assert_texture_style_fits_control(button, button.get_theme_stylebox(style_name) as StyleBoxTexture)
 	assert(settings_screen.get_node("%BackButton").theme_type_variation == &"SettingsPngSecondaryButton")
 	assert(settings_screen.get_node("%ApplyButton").theme_type_variation == &"SettingsPngPrimaryButton")
 	var settings_panel_style := (settings_screen.get_node("%SettingsFrame") as PanelContainer).get_theme_stylebox(&"panel") as StyleBoxTexture
@@ -62,6 +68,10 @@ func _init() -> void:
 	assert(inactive_tab_style.texture.resource_path == "res://assets/art/ui/settings/png_v2/settings_tab_inactive_v2.png")
 	var option_style := (settings_screen.get_node("%WindowModeOption") as OptionButton).get_theme_stylebox(&"normal") as StyleBoxTexture
 	assert(option_style.texture.resource_path == "res://assets/art/ui/settings/png_v2/settings_option_field_v2.png")
+	for option_name: String in ["WindowModeOption", "ResolutionOption"]:
+		var option := settings_screen.get_node("%%%s" % option_name) as OptionButton
+		for style_name: StringName in [&"normal", &"hover", &"pressed", &"disabled"]:
+			_assert_texture_style_fits_control(option, option.get_theme_stylebox(style_name) as StyleBoxTexture)
 	var slider := settings_screen.get_node("%MasterVolumeSlider") as HSlider
 	var slider_style := slider.get_theme_stylebox(&"slider") as StyleBoxTexture
 	assert(slider_style.texture.resource_path == "res://assets/art/ui/settings/png_v2/settings_slider_track_v2.png")
@@ -152,3 +162,17 @@ func _assert_true_alpha(texture_path: String) -> void:
 				has_transparent_border_pixel = true
 				break
 	assert(has_transparent_border_pixel, "%s must retain chroma-key transparency around its silhouette" % texture_path)
+
+
+func _assert_texture_style_fits_control(control: Control, style: StyleBoxTexture) -> void:
+	assert(style != null, "%s must use a StyleBoxTexture" % control.name)
+	var horizontal_margins := style.texture_margin_left + style.texture_margin_right
+	var vertical_margins := style.texture_margin_top + style.texture_margin_bottom
+	assert(
+		horizontal_margins <= control.size.x,
+		"%s PNG margins %.1f exceed control width %.1f" % [control.name, horizontal_margins, control.size.x]
+	)
+	assert(
+		vertical_margins <= control.size.y,
+		"%s PNG margins %.1f exceed control height %.1f" % [control.name, vertical_margins, control.size.y]
+	)

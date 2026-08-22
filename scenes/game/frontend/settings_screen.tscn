@@ -53,11 +53,12 @@ theme_override_constants/separation = 16
 
 [node name="BackButton" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/HeaderRow" instance=ExtResource("4_motion_button")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 48)
+custom_minimum_size = Vector2(176, 54)
 layout_mode = 2
 size_flags_vertical = 4
 theme_type_variation = &"SettingsPngSecondaryButton"
 text = "返回"
+alignment = 1
 
 [node name="TitleGroup" type="VBoxContainer" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/HeaderRow"]
 layout_mode = 2
@@ -124,7 +125,7 @@ vertical_alignment = 1
 
 [node name="WindowModeOption" type="OptionButton" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabs/画面/TabMargin/Rows/WindowModeRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(280, 46)
+custom_minimum_size = Vector2(300, 52)
 layout_mode = 2
 theme_type_variation = &"SettingsPngOptionButton"
 selected = 1
@@ -149,7 +150,7 @@ vertical_alignment = 1
 
 [node name="ResolutionOption" type="OptionButton" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabs/画面/TabMargin/Rows/ResolutionRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(280, 46)
+custom_minimum_size = Vector2(300, 52)
 layout_mode = 2
 theme_type_variation = &"SettingsPngOptionButton"
 selected = 2
@@ -176,7 +177,7 @@ vertical_alignment = 1
 
 [node name="VsyncToggle" type="CheckButton" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabs/画面/TabMargin/Rows/VsyncRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 46)
+custom_minimum_size = Vector2(128, 52)
 layout_mode = 2
 button_pressed = true
 text = "开启"
@@ -384,10 +385,11 @@ text = "清空教学与挑战关卡完成记录"
 
 [node name="ResetProgressButton" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabs/体验/TabMargin/Rows/ProgressRow" instance=ExtResource("4_motion_button")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(180, 46)
+custom_minimum_size = Vector2(220, 54)
 layout_mode = 2
 theme_type_variation = &"SettingsPngDangerButton"
 text = "重置关卡进度"
+alignment = 1
 
 [node name="StatusLabel" type="Label" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn"]
 unique_name_in_owner = true
@@ -407,10 +409,11 @@ theme_override_constants/separation = 12
 
 [node name="RestoreDefaultsButton" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/FooterRow" instance=ExtResource("4_motion_button")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(170, 46)
+custom_minimum_size = Vector2(200, 54)
 layout_mode = 2
 theme_type_variation = &"SettingsPngSecondaryButton"
 text = "恢复默认值"
+alignment = 1
 
 [node name="Spacer" type="Control" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/FooterRow"]
 layout_mode = 2
@@ -418,17 +421,19 @@ size_flags_horizontal = 3
 
 [node name="CancelButton" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/FooterRow" instance=ExtResource("4_motion_button")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(140, 46)
+custom_minimum_size = Vector2(160, 54)
 layout_mode = 2
 theme_type_variation = &"SettingsPngSecondaryButton"
 text = "取消"
+alignment = 1
 
 [node name="ApplyButton" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/FooterRow" instance=ExtResource("4_motion_button")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(160, 46)
+custom_minimum_size = Vector2(180, 54)
 layout_mode = 2
 theme_type_variation = &"SettingsPngPrimaryButton"
 text = "应用"
+alignment = 1
 
 [node name="DisplayConfirmTimer" type="Timer" parent="."]
 unique_name_in_owner = true

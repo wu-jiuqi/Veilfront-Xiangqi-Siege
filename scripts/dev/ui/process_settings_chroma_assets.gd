@@ -22,11 +22,13 @@ const JOBS: Array[Dictionary] = [
 		"source": SOURCE_DIR + "/settings_components_chroma_v2.png",
 		"output": OUTPUT_DIR + "/settings_button_secondary_v2.png",
 		"cell": Rect2i(0, 0, 810, 243),
+		"resize": Vector2i(320, 80),
 	},
 	{
 		"source": SOURCE_DIR + "/settings_components_chroma_v2.png",
 		"output": OUTPUT_DIR + "/settings_button_primary_v2.png",
 		"cell": Rect2i(810, 0, 810, 243),
+		"resize": Vector2i(320, 82),
 	},
 	{
 		"source": SOURCE_DIR + "/settings_components_chroma_v2.png",
@@ -44,6 +46,7 @@ const JOBS: Array[Dictionary] = [
 		"source": SOURCE_DIR + "/settings_components_chroma_v2.png",
 		"output": OUTPUT_DIR + "/settings_option_field_v2.png",
 		"cell": Rect2i(0, 486, 810, 243),
+		"resize": Vector2i(360, 60),
 	},
 	{
 		"source": SOURCE_DIR + "/settings_components_chroma_v2.png",
@@ -66,6 +69,7 @@ const JOBS: Array[Dictionary] = [
 		"source": SOURCE_DIR + "/settings_micro_components_chroma_v2.png",
 		"output": OUTPUT_DIR + "/settings_slider_track_v2.png",
 		"cell": Rect2i(0, 180, 800, 340),
+		"resize": Vector2i(360, 58),
 	},
 	{
 		"source": SOURCE_DIR + "/settings_micro_components_chroma_v2.png",
