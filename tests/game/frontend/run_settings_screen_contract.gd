@@ -80,9 +80,17 @@ func _init() -> void:
 	var slider_style := slider.get_theme_stylebox(&"slider") as StyleBoxTexture
 	assert(slider_style.texture.resource_path == "res://assets/art/ui/settings/png_v2/settings_slider_track_v2.png")
 	assert(slider.get_theme_icon(&"grabber").resource_path == "res://assets/art/ui/settings/png_v2/settings_slider_knob_v2.png")
-	var toggle := settings_screen.get_node("%VsyncToggle") as CheckButton
-	assert(toggle.get_theme_icon(&"checked").resource_path == "res://assets/art/ui/settings/png_v2/settings_checkbox_checked_v2.png")
-	assert(toggle.get_theme_icon(&"unchecked").resource_path == "res://assets/art/ui/settings/png_v2/settings_checkbox_empty_v2.png")
+	for toggle_name: String in ["VsyncToggle", "SkipOpeningToggle", "ReduceMotionToggle"]:
+		var toggle := settings_screen.get_node("%%%s" % toggle_name) as CheckButton
+		assert(toggle.text.is_empty(), "%s must render as a checkbox without button text" % toggle_name)
+		assert(toggle.custom_minimum_size == Vector2(64.0, 64.0))
+		assert(toggle.get_theme_icon(&"checked").resource_path == "res://assets/art/ui/settings/png_v2/settings_checkbox_checked_v2.png")
+		assert(toggle.get_theme_icon(&"unchecked").resource_path == "res://assets/art/ui/settings/png_v2/settings_checkbox_empty_v2.png")
+		for style_name: StringName in [&"normal", &"hover", &"pressed", &"hover_pressed", &"disabled", &"focus"]:
+			assert(
+				toggle.get_theme_stylebox(style_name) is StyleBoxEmpty,
+				"%s %s must not render a button backing" % [toggle_name, style_name]
+			)
 	for texture_path: String in [
 		"res://assets/art/ui/settings/png_v2/settings_frame_v2.png",
 		"res://assets/art/ui/settings/png_v2/settings_button_secondary_v2.png",

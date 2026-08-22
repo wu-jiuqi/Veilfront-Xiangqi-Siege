@@ -1,10 +1,12 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Theme" path="res://resources/game/ui/themes/terracotta_ui_theme.tres" id="1_theme"]
 [ext_resource type="Script" path="res://scripts/game/frontend/settings_screen.gd" id="2_script"]
 [ext_resource type="PackedScene" path="res://scenes/game/presentation/battle_command_tent_background.tscn" id="3_background"]
 [ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button.tscn" id="4_motion_button"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/settings/png_v2/settings_title_crest_v2.png" id="5_title_crest"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxSettingsToggleEmpty"]
 
 [node name="SettingsScreen" type="Control"]
 layout_mode = 3
@@ -189,11 +191,16 @@ vertical_alignment = 1
 
 [node name="VsyncToggle" type="CheckButton" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/画面/TabMargin/Rows/VsyncRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(128, 52)
+custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 button_pressed = true
-text = "开启"
 theme_type_variation = &"SettingsPngCheckButton"
+theme_override_styles/normal = SubResource("StyleBoxSettingsToggleEmpty")
+theme_override_styles/hover = SubResource("StyleBoxSettingsToggleEmpty")
+theme_override_styles/pressed = SubResource("StyleBoxSettingsToggleEmpty")
+theme_override_styles/hover_pressed = SubResource("StyleBoxSettingsToggleEmpty")
+theme_override_styles/disabled = SubResource("StyleBoxSettingsToggleEmpty")
+theme_override_styles/focus = SubResource("StyleBoxSettingsToggleEmpty")
 
 [node name="音频" type="ScrollContainer" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs"]
 visible = false
@@ -343,10 +350,15 @@ text = "启动后直接进入主菜单"
 
 [node name="SkipOpeningToggle" type="CheckButton" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/体验/TabMargin/Rows/SkipOpeningRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 46)
+custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
-text = "跳过"
 theme_type_variation = &"SettingsPngCheckButton"
+theme_override_styles/normal = SubResource("StyleBoxSettingsToggleEmpty")
+theme_override_styles/hover = SubResource("StyleBoxSettingsToggleEmpty")
+theme_override_styles/pressed = SubResource("StyleBoxSettingsToggleEmpty")
+theme_override_styles/hover_pressed = SubResource("StyleBoxSettingsToggleEmpty")
+theme_override_styles/disabled = SubResource("StyleBoxSettingsToggleEmpty")
+theme_override_styles/focus = SubResource("StyleBoxSettingsToggleEmpty")
 
 [node name="SkipSeparator" type="HSeparator" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/体验/TabMargin/Rows"]
 layout_mode = 2
@@ -370,10 +382,15 @@ text = "跳过强烈的界面位移与冲击演出"
 
 [node name="ReduceMotionToggle" type="CheckButton" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/体验/TabMargin/Rows/ReducedMotionRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 46)
+custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
-text = "减少"
 theme_type_variation = &"SettingsPngCheckButton"
+theme_override_styles/normal = SubResource("StyleBoxSettingsToggleEmpty")
+theme_override_styles/hover = SubResource("StyleBoxSettingsToggleEmpty")
+theme_override_styles/pressed = SubResource("StyleBoxSettingsToggleEmpty")
+theme_override_styles/hover_pressed = SubResource("StyleBoxSettingsToggleEmpty")
+theme_override_styles/disabled = SubResource("StyleBoxSettingsToggleEmpty")
+theme_override_styles/focus = SubResource("StyleBoxSettingsToggleEmpty")
 
 [node name="MotionSeparator" type="HSeparator" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/体验/TabMargin/Rows"]
 layout_mode = 2
