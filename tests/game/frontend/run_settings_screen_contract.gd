@@ -28,6 +28,10 @@ func _init() -> void:
 		== "res://assets/art/backgrounds/battle_command_tent_background_v1.png"
 	)
 	assert(settings_screen.get_node("%SettingsTabs") is TabContainer)
+	assert(
+		settings_screen.get_node("SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter")
+		is HBoxContainer
+	)
 	assert(settings_screen.get_node("%SettingsTabs").get_tab_count() == 3)
 	assert(settings_screen.get_node("%SettingsTabs").get_tab_title(0) == "画面")
 	assert(settings_screen.get_node("%SettingsTabs").get_tab_title(1) == "音频")
@@ -135,6 +139,23 @@ func _init() -> void:
 		assert(frame_rect.position.y >= 0.0, "%s frame top=%s min=%s" % [viewport_size, frame_rect, frame.get_combined_minimum_size()])
 		assert(frame_rect.end.x <= viewport_size.x, "%s frame right=%s" % [viewport_size, frame_rect])
 		assert(frame_rect.end.y <= viewport_size.y, "%s frame bottom=%s" % [viewport_size, frame_rect])
+		var responsive_tabs := responsive_screen.get_node("%SettingsTabs") as Control
+		var tabs_host := responsive_screen.get_node(
+			"SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter"
+		) as Control
+		var tabs_rect := responsive_tabs.get_global_rect()
+		var tabs_host_rect := tabs_host.get_global_rect()
+		assert(
+			absf(tabs_rect.get_center().x - tabs_host_rect.get_center().x) <= 1.0,
+			"%s settings tabs must stay horizontally centered: tabs=%s host=%s"
+			% [viewport_size, tabs_rect, tabs_host_rect]
+		)
+		assert(tabs_rect.size.x <= 900.0, "%s settings tabs width must respect the desktop cap" % viewport_size)
+		assert(
+			tabs_rect.size.x >= minf(900.0, tabs_host_rect.size.x * 0.95),
+			"%s settings tabs must remain usable on narrow viewports: tabs=%s host=%s"
+			% [viewport_size, tabs_rect, tabs_host_rect]
+		)
 		viewport.queue_free()
 		await process_frame
 
