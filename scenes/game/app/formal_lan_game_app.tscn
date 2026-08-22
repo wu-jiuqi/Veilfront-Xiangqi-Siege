@@ -82,7 +82,7 @@ ok_button_text = "返回房间"
 [connection signal="skip_requested" from="ScreenHost/MatchScreen" to="ApplicationHost" method="request_skip"]
 [connection signal="turn_timeout_requested" from="ScreenHost/MatchScreen" to="ApplicationHost" method="request_turn_timeout"]
 [connection signal="return_requested" from="ScreenHost/MatchScreen" to="." method="_on_match_return_requested"]
-[connection signal="confirmed" from="ScreenHost/MatchScreen/TerminalDialog" to="." method="_on_terminal_acknowledged"]
+[connection signal="terminal_exit_requested" from="ScreenHost/MatchScreen" to="." method="_on_terminal_exit_requested"]
 [connection signal="confirmed" from="GlobalOverlayHost/LeaveSessionDialog" to="." method="_on_leave_session_confirmed"]
 [connection signal="confirmed" from="GlobalOverlayHost/ConnectionErrorDialog" to="." method="_on_connection_error_acknowledged"]
 [connection signal="confirmed" from="GlobalOverlayHost/FatalErrorDialog" to="." method="_on_connection_error_acknowledged"]

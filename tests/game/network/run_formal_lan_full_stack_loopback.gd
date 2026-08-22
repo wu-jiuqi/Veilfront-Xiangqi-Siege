@@ -72,7 +72,10 @@ func _run() -> void:
 	_check(str(client_match.get_player_view_snapshot().get("viewer_side", "")) == "black", "客户端 MatchScreen 只绑定玄方 PlayerView")
 	_check(not (server_match.get_node("MatchHudV2/FactionRight/MirrorButton") as Button).visible, "LAN 隐藏镜像视角按钮")
 	_check((server_match.get_node("MatchHudV2/FactionLeft/ReturnButton") as Button).visible, "LAN 显示退出对局按钮")
-	_check(not (server_match.get_node("TerminalDialog/RestartButton") as Button).visible, "LAN 隐藏直接重赛按钮")
+	_check(
+		not (server_match.get_node("TerminalDialog").get_node("%RestartButton") as Button).visible,
+		"LAN 隐藏直接重赛按钮",
+	)
 	var fog: Node = server_match.find_child("FogOverlay", true, false)
 	_check(fog != null and bool(fog.get_visual_snapshot().get("uses_player_view_only", false)), "正式 MatchScreen 使用 PlayerView-only 动态迷雾")
 	server_match.apply_marker(Vector2i(1, 1), "circle")
@@ -117,10 +120,35 @@ func _run() -> void:
 		"viewer_side": "red",
 		"winner": "red",
 		"win_reason": "three_flags",
+		"full_round_index": 18,
+		"flags": [
+			{"discovered": true, "owner": "red"},
+			{"discovered": true, "owner": "red"},
+			{"discovered": true, "owner": "red"},
+		],
+		"casualties": [],
 	})
-	var terminal_dialog := server_match.get_node("TerminalDialog") as AcceptDialog
-	_check(terminal_dialog.visible and terminal_dialog.dialog_text == "胜利 · 夺得三面军旗", "终局只按本地 PlayerView 显示胜负与公开原因")
-	terminal_dialog.hide()
+	var terminal_dialog := server_match.get_node("TerminalDialog") as MatchTerminalDialog
+	await process_frame
+	var terminal_snapshot: Dictionary = terminal_dialog.get_presentation_snapshot()
+	_check(
+		terminal_dialog.visible \
+		and terminal_snapshot.get("result_text") == "胜利" \
+		and terminal_snapshot.get("reason_text") == "夺得三面军旗" \
+		and terminal_snapshot.get("flag_value") == "3 : 0",
+		"终局只按本地 PlayerView 显示胜负、公开原因与回顾",
+	)
+	_check(
+		not bool(terminal_snapshot.get("restart_visible")) \
+		and bool(terminal_snapshot.get("lobby_visible")) \
+		and not bool(terminal_snapshot.get("level_select_visible")),
+		"LAN 终局只提供返回大厅",
+	)
+	_check(
+		(server_match.get_node("TerminalDialog").get_node("%LobbyButton") as Button).has_focus(),
+		"LAN 终局默认聚焦返回大厅",
+	)
+	terminal_dialog.hide_result()
 
 	server_match.emit_signal("return_requested")
 	var leave_dialog := _server_app.get_node("GlobalOverlayHost/LeaveSessionDialog") as ConfirmationDialog

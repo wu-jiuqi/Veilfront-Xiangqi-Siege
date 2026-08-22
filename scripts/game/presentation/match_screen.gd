@@ -12,6 +12,8 @@ signal selection_cancelled()
 signal marker_applied(cell: Vector2i, marker_type: String)
 signal board_point_activated(cell: Vector2i)
 signal tutorial_input_rejected(message: String)
+signal terminal_restart_requested()
+signal terminal_exit_requested(destination: String)
 
 const COMPACT_BREAKPOINT: float = 1100.0
 const MINIMUM_ACTION_TARGET_HEIGHT: float = 44.0
@@ -79,8 +81,7 @@ const PIECE_PORTRAITS := {
 @onready var _action_prompt: Label = $ActionConfirmationPanel/Content/Prompt
 @onready var _action_cancel_button: Button = $ActionConfirmationPanel/Content/Buttons/CancelButton
 @onready var _action_confirm_button: Button = $ActionConfirmationPanel/Content/Buttons/ConfirmButton
-@onready var _terminal_dialog: AcceptDialog = $TerminalDialog
-@onready var _terminal_restart_button: Button = $TerminalDialog/RestartButton
+@onready var _terminal_dialog: MatchTerminalDialog = $TerminalDialog
 
 var _compact: bool = false
 var _interaction_state: String = IDLE
@@ -128,6 +129,12 @@ func _ready() -> void:
 	_resurrect_button.pressed.connect(_set_action_mode.bind("resurrect"))
 	_pass_button.pressed.connect(_prepare_pass)
 	_incense_turn_clock.timed_out.connect(_on_turn_timeout_requested)
+	_terminal_dialog.restart_requested.connect(
+		func() -> void: terminal_restart_requested.emit()
+	)
+	_terminal_dialog.exit_requested.connect(
+		func(destination: String) -> void: terminal_exit_requested.emit(destination)
+	)
 	_tactical_minimap.set_overview_state(_board_viewport.get_overview_state())
 	_sync_board_position_from_board()
 	call_deferred("apply_layout_for_size", size)
@@ -168,15 +175,27 @@ func set_session_navigation_enabled(enabled: bool) -> void:
 	_session_navigation_enabled = enabled
 	_update_return_button()
 	_mirror_button.visible = not enabled
-	_terminal_restart_button.visible = not enabled
+	_terminal_dialog.configure_context(
+		MatchTerminalDialog.CONTEXT_LAN if enabled else MatchTerminalDialog.CONTEXT_LOCAL
+	)
 	if enabled:
 		_return_button.text = "退出对局"
 
 
-func show_session_terminal(message: String) -> void:
-	_terminal_restart_button.visible = false
-	_terminal_dialog.dialog_text = message if not message.is_empty() else "战局已经结束。"
-	_terminal_dialog.popup_centered()
+func show_session_terminal(player_view: Dictionary) -> void:
+	_terminal_dialog.show_result(player_view, MatchTerminalDialog.CONTEXT_LAN)
+
+
+func show_level_terminal(player_view: Dictionary) -> void:
+	_terminal_dialog.show_result(player_view, MatchTerminalDialog.CONTEXT_LEVEL)
+
+
+func hide_terminal_result() -> void:
+	_terminal_dialog.hide_result()
+
+
+func get_terminal_snapshot() -> Dictionary:
+	return _terminal_dialog.get_presentation_snapshot()
 
 
 func reset_for_session_end() -> void:
@@ -189,7 +208,7 @@ func reset_for_session_end() -> void:
 	_cancelled_prepare_tombstones.clear()
 	_submission_pending = false
 	_marker_menu.hide()
-	_terminal_dialog.hide()
+	_terminal_dialog.hide_result()
 	_board_viewport.clear_session_view()
 	_tactical_minimap.clear_session_view()
 	_incense_turn_clock.sync_player_view({}, false)
@@ -199,6 +218,9 @@ func reset_for_session_end() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not event.is_action_pressed(&"ui_cancel"):
+		return
+	if _terminal_dialog.visible:
+		get_viewport().set_input_as_handled()
 		return
 	if _marker_menu.visible:
 		_marker_menu.hide()
@@ -314,6 +336,8 @@ func reset_tutorial_step_interaction() -> void:
 func render_player_view(view: Dictionary) -> void:
 	_submission_pending = false
 	_current_view = view.duplicate(true)
+	if not bool(view.get("terminal", false)) and _terminal_dialog.visible:
+		_terminal_dialog.hide_result()
 	_presentation_model = _presenter.player_view_model(view)
 	_incense_turn_clock.sync_player_view(view, turn_timeout_enabled)
 	_board_viewport.render_player_view(view)

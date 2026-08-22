@@ -2,6 +2,7 @@ extends Control
 
 const FormalLocalSession = preload("res://scripts/game/application/formal_local_session.gd")
 const TutorialChapterCatalog = preload("res://scripts/game/tutorial/tutorial_chapter_catalog.gd")
+const TERMINAL_LEVEL_DESTINATION: String = "level_select"
 
 @export var session_seed: int = 471001
 @export var bootstrap_local_session: bool = true
@@ -76,6 +77,23 @@ func _bind_and_publish_local_session() -> void:
 
 func get_level_id() -> String:
 	return _level_id
+
+
+func _on_player_view_updated(player_view: Dictionary) -> void:
+	if not _level_id.begins_with("C") or not bool(player_view.get("terminal", false)):
+		return
+	$MatchScreen.show_level_terminal(player_view)
+
+
+func _on_terminal_restart_requested() -> void:
+	if not _level_id.begins_with("C"):
+		return
+	$ApplicationHost.request_restart()
+
+
+func _on_terminal_exit_requested(destination: String) -> void:
+	if destination == TERMINAL_LEVEL_DESTINATION:
+		return_to_level_select()
 
 
 func focus_tutorial_step(step: Dictionary) -> void:

@@ -2,6 +2,7 @@ class_name FormalLanGameApp
 extends Control
 
 const FrontendRoutes = preload("res://scripts/integration/frontend_routes.gd")
+const TERMINAL_LOBBY_DESTINATION: String = "lobby"
 
 const TRANSPORT_FAILURE_STATES: Array[String] = [
 	"connection_error",
@@ -124,25 +125,12 @@ func _on_public_state_changed(public_state: Dictionary) -> void:
 func _on_player_view_updated(player_view: Dictionary) -> void:
 	if not bool(player_view.get("terminal", false)):
 		return
-	var viewer_side: String = str(player_view.get("viewer_side", ""))
-	var winner: String = str(player_view.get("winner", ""))
-	var win_reason: String = str(player_view.get("win_reason", ""))
-	var message: String = "和局" if winner == "draw" else (
-		"胜利" if winner == viewer_side else "败北"
-	)
-	var reason_text: String = str({
-		"general_destroyed": "主将被斩",
-		"simultaneous_generals_destroyed": "双方主将同时被毁",
-		"three_flags": "夺得三面军旗",
-		"round_limit_flags": "轮次上限按军旗数裁定",
-		"round_limit_draw": "轮次上限时军旗数相同",
-	}.get(win_reason, ""))
-	if not reason_text.is_empty():
-		message = "%s · %s" % [message, reason_text]
-	_match_screen.call(&"show_session_terminal", message)
+	_match_screen.call(&"show_session_terminal", player_view)
 
 
-func _on_terminal_acknowledged() -> void:
+func _on_terminal_exit_requested(destination: String) -> void:
+	if destination != TERMINAL_LOBBY_DESTINATION:
+		return
 	_cleanup_session()
 	_show_lobby()
 
