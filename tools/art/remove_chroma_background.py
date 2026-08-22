@@ -28,6 +28,7 @@ def remove_chroma(
     screen: str,
     border: int,
     opaque_floor: float,
+    background_cutoff_override: float | None,
     canvas_size: tuple[int, int] | None,
 ) -> dict[str, object]:
     image = Image.open(source).convert("RGB")
@@ -54,7 +55,15 @@ def remove_chroma(
             f"Border is not a strong {screen} screen: dominance={key_dominance:.3f}"
         )
 
-    background_cutoff = max(0.50, float(border_dominance.min()) - 0.02)
+    background_cutoff = (
+        float(background_cutoff_override)
+        if background_cutoff_override is not None
+        else max(0.50, float(border_dominance.min()) - 0.02)
+    )
+    if not opaque_floor < background_cutoff <= 1.0:
+        raise ValueError(
+            "Background cutoff must be greater than opaque floor and at most 1.0"
+        )
     alpha = np.clip(
         (background_cutoff - dominance)
         / max(background_cutoff - opaque_floor, 1e-6),
@@ -121,6 +130,14 @@ def main() -> None:
         default=0.10,
         help="screen dominance treated as fully opaque subject, in normalized RGB",
     )
+    parser.add_argument(
+        "--background-cutoff",
+        type=float,
+        help=(
+            "optional screen-dominance cutoff for generated backdrops with a "
+            "non-uniform purple/green gradient"
+        ),
+    )
     parser.add_argument("--canvas-size", metavar="WIDTHxHEIGHT")
     args = parser.parse_args()
     canvas_size = None
@@ -134,6 +151,7 @@ def main() -> None:
             args.screen,
             args.border,
             args.opaque_floor,
+            args.background_cutoff,
             canvas_size,
         )
     )
