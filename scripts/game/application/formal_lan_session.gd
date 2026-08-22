@@ -44,6 +44,7 @@ var _frame_sequence_by_peer: Dictionary = {}
 var _last_event_cursor_by_peer: Dictionary = {}
 var _observer_batch_by_peer: Dictionary = {}
 var _current_public_state: Dictionary = {}
+var _aborting_protocol_error: bool = false
 
 
 func _ready() -> void:
@@ -245,12 +246,19 @@ func report_local_error(error_code: String) -> void:
 
 
 func abort_protocol_error(error_code: String = "protocol_error") -> void:
+	if _aborting_protocol_error:
+		return
+	_aborting_protocol_error = true
 	_close_peer_only()
 	_application = null
 	_match_started = false
 	_connection_state = "protocol_error"
 	_error_code = error_code if not error_code.is_empty() else "protocol_error"
-	_publish_local_state()
+	# The codec may be the source of this failure. Publish the terminal local
+	# snapshot directly so error handling cannot re-enter the same codec path.
+	_current_public_state = _make_local_public_state()
+	public_state_changed.emit(_current_public_state.duplicate(true))
+	_aborting_protocol_error = false
 
 
 @rpc("any_peer", "call_remote", "reliable", 0)
