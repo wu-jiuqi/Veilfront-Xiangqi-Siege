@@ -89,18 +89,21 @@ func has_marker(cell: Vector2i) -> bool:
 
 
 func set_interaction(selected_cell: Vector2i, action_previews: Array) -> void:
+	_piece_renderer.set_selected_cell(selected_cell)
 	_interaction_overlay.render_selection(
 		selected_cell, action_previews, _side, board_theme.cell_size
 	)
 
 
 func clear_interaction() -> void:
+	_piece_renderer.set_selected_cell(Vector2i.ZERO)
 	_interaction_overlay.clear()
 
 
 func clear_session_view() -> void:
 	_current_view.clear()
 	_viewer_side = "red"
+	_piece_renderer.clear_immediately()
 	_configure_empty_board()
 
 
@@ -115,6 +118,8 @@ func get_render_snapshot() -> Dictionary:
 		"piece_glyphs": _piece_renderer.get_rendered_glyphs(),
 		"piece_cells": _piece_renderer.get_rendered_cells(),
 		"piece_art_paths": _piece_renderer.get_rendered_art_paths(),
+		"piece_animation_events": _piece_renderer.get_last_animation_events(),
+		"selected_piece_count": _piece_renderer.get_selected_piece_count(),
 		"map_id": str(map_option.map_id) if map_option != null else "",
 		"map_background_path": _map_background.texture.resource_path \
 			if _map_background.texture != null else "",
@@ -180,6 +185,7 @@ func _configure_empty_board() -> void:
 	var cell_size: Vector2 = board_theme.cell_size
 	_grid_renderer.configure({"width": 9, "height": 24}, _side, board_theme)
 	_piece_renderer.render([], _side, cell_size)
+	_piece_renderer.set_selected_cell(Vector2i.ZERO)
 	_fog_overlay.render([], [], _side, cell_size)
 	_wall_renderer.render([], _side, cell_size)
 	_flag_renderer.render([], _side, cell_size)
@@ -193,7 +199,10 @@ func _configure_empty_board() -> void:
 
 func _apply_presentation_assets() -> void:
 	if board_theme != null and not board_theme.piece_scene_set.is_empty():
-		_piece_renderer.set("piece_scene", board_theme.piece_scene_set[0])
+		var selected_piece_scene: PackedScene = board_theme.piece_scene_set[0]
+		if _piece_renderer.get("piece_scene") != selected_piece_scene:
+			_piece_renderer.clear_immediately()
+		_piece_renderer.set("piece_scene", selected_piece_scene)
 	_configure_map_background()
 
 
