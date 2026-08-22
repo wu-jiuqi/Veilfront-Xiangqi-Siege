@@ -377,7 +377,6 @@ func request_action_previews(piece_id: String, action_type: String) -> void:
 
 
 func handle_board_point(cell: Vector2i) -> void:
-	_hud_layout.set_minimap_expanded(false)
 	board_point_activated.emit(cell)
 	var tutorial_type := str(_tutorial_step.get("type", ""))
 	if tutorial_type in ["observe", "quiz", "annotate"]:

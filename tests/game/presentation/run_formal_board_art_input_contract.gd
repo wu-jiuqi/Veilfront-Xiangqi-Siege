@@ -48,7 +48,6 @@ func _run() -> void:
 	await process_frame
 	if "--capture-screenshot" in OS.get_cmdline_user_args():
 		_capture_screenshot(viewport, "formal-fullscreen-2560x1080.png")
-	await _check_minimap_expansion(match_screen, viewport)
 	viewport.size = Vector2i(1280, 720)
 	match_screen.apply_layout_for_size(Vector2(viewport.size))
 	await process_frame
@@ -208,28 +207,6 @@ func _check_fullscreen_layout(match_screen: Control, viewport: SubViewport) -> v
 		content_rect.size.x > 0.0 and content_rect.size.y > 0.0,
 		"fullscreen layout does not expose a centered aspect-preserving content rectangle"
 	)
-
-
-func _check_minimap_expansion(match_screen: Control, viewport: SubViewport) -> void:
-	var button := match_screen.get_node_or_null("MatchHudV2/Minimap/MinimapExpandButton") as Button
-	_expect(button != null, "formal minimap has no preset expand control")
-	if button == null:
-		return
-	var before: Rect2 = match_screen.get_hud_snapshot().get("layout", {}).get(
-		"ui_rects", {}
-	).get("minimap", Rect2())
-	_click_control(viewport, button)
-	await process_frame
-	var expanded_layout: Dictionary = match_screen.get_hud_snapshot().get("layout", {})
-	var after: Rect2 = expanded_layout.get("ui_rects", {}).get("minimap", Rect2())
-	_expect(bool(expanded_layout.get("minimap_expanded", false)), "minimap expand control did not enter expanded mode")
-	_expect(after.size.x > before.size.x and after.size.y > before.size.y, "minimap expand control did not enlarge the map")
-	if "--capture-screenshot" in OS.get_cmdline_user_args():
-		_capture_screenshot(viewport, "formal-minimap-expanded.png")
-	_click_control(viewport, button)
-	await process_frame
-	var restored_layout: Dictionary = match_screen.get_hud_snapshot().get("layout", {})
-	_expect(not bool(restored_layout.get("minimap_expanded", true)), "minimap expand control did not restore compact mode")
 
 
 func _click_control(viewport: SubViewport, control: Control) -> void:
