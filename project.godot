@@ -17,6 +17,7 @@ config/features=PackedStringArray("4.7", "GL Compatibility")
 [autoload]
 
 SettingsManager="*res://scripts/game/settings/settings_manager.gd"
+SceneTransition="*res://scenes/game/ui/scene_transition_controller.tscn"
 
 [display]
 
