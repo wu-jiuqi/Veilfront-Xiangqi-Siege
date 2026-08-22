@@ -38,6 +38,14 @@ func configure_piece(piece: Dictionary, cell_size: Vector2) -> void:
 	shadow.scale = Vector2.ONE * base_scale * lerpf(1.0, piece_scale, 0.5)
 
 
+func contains_local_point(local_point: Vector2) -> bool:
+	var artwork: Sprite2D = $Artwork
+	if not visible or artwork.texture == null:
+		return false
+	var artwork_point := artwork.transform.affine_inverse() * local_point
+	return artwork.get_rect().has_point(artwork_point)
+
+
 func _canonical_piece_type(piece_type: String) -> String:
 	return {
 		"rook": "chariot",

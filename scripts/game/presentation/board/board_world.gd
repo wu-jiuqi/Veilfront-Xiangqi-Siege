@@ -165,6 +165,13 @@ func get_cell_size() -> Vector2:
 	return board_theme.cell_size
 
 
+func find_piece_cell_at_world_position(world_position: Vector2) -> Vector2i:
+	if _piece_renderer.has_method("find_piece_cell_at_world_position"):
+		return _piece_renderer.call("find_piece_cell_at_world_position", world_position) \
+			as Vector2i
+	return Vector2i.ZERO
+
+
 func _configure_empty_board() -> void:
 	if board_theme == null:
 		return

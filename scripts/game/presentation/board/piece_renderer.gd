@@ -59,6 +59,25 @@ func get_rendered_art_paths() -> Array[String]:
 	return _rendered_art_paths.duplicate()
 
 
+func find_piece_cell_at_world_position(world_position: Vector2) -> Vector2i:
+	var local_position := transform.affine_inverse() * world_position
+	var candidates: Array[Node2D] = []
+	for child: Node in get_children():
+		var view := child as Node2D
+		if view == null or not view.visible or not view.has_meta("authority_cell"):
+			continue
+		candidates.append(view)
+	candidates.sort_custom(func(left: Node2D, right: Node2D) -> bool:
+		return left.position.y > right.position.y
+	)
+	for view: Node2D in candidates:
+		var view_point := view.transform.affine_inverse() * local_position
+		if view.has_method("contains_local_point") \
+		and bool(view.call("contains_local_point", view_point)):
+			return view.get_meta("authority_cell", Vector2i.ZERO) as Vector2i
+	return Vector2i.ZERO
+
+
 func _clear_views() -> void:
 	for child: Node in get_children():
 		remove_child(child)

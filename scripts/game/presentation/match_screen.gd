@@ -792,6 +792,7 @@ func _refresh_selected_previews() -> void:
 func _update_status_controls() -> void:
 	if not is_instance_valid(_selection_status):
 		return
+	_board_viewport.set_piece_visual_hit_enabled(_selected_piece_id.is_empty())
 	var selected_piece := _piece_by_id(_selected_piece_id)
 	var selected_name := "无"
 	if not selected_piece.is_empty():

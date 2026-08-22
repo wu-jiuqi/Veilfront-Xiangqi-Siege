@@ -27,6 +27,7 @@ var _hover_pointer_local := Vector2(INF, INF)
 var _camera_motion_tween: Tween
 var _camera_target_position: Vector2 = BOARD_WORLD_SIZE * 0.5
 var _keyboard_pan_velocity: Vector2 = Vector2.ZERO
+var _piece_visual_hit_enabled: bool = true
 
 
 func _ready() -> void:
@@ -118,6 +119,10 @@ func clear_interaction() -> void:
 	_board_world.clear_interaction()
 
 
+func set_piece_visual_hit_enabled(enabled: bool) -> void:
+	_piece_visual_hit_enabled = enabled
+
+
 func clear_session_view() -> void:
 	_focused_cell = Vector2i.ZERO
 	_clear_hover()
@@ -176,6 +181,7 @@ func get_render_snapshot() -> Dictionary:
 	snapshot["camera_scroll_duration"] = CAMERA_SCROLL_DURATION
 	snapshot["minimap_navigation_duration"] = MINIMAP_NAVIGATION_DURATION
 	snapshot["hovered_cell"] = _hovered_cell
+	snapshot["piece_visual_hit_enabled"] = _piece_visual_hit_enabled
 	snapshot["coordinate_text"] = "坐标：（%d, %d）" % [_hovered_cell.x, _hovered_cell.y] \
 		if BoardCoordinateMapper.is_authority_cell_valid(_hovered_cell) else "坐标：—"
 	snapshot["overview_state"] = get_overview_state()
@@ -350,6 +356,12 @@ func _authority_cell_at_container_position(local_position: Vector2) -> Vector2i:
 	var world_position := _container_to_world(local_position)
 	if not is_finite(world_position.x) or not is_finite(world_position.y):
 		return Vector2i.ZERO
+	if _piece_visual_hit_enabled:
+		var piece_cell: Vector2i = _board_world.find_piece_cell_at_world_position(
+			world_position
+		)
+		if BoardCoordinateMapper.is_authority_cell_valid(piece_cell):
+			return piece_cell
 	return BoardCoordinateMapper.world_to_authority(
 		world_position, str(_board_world.get_display_side()), _board_world.get_cell_size()
 	)
