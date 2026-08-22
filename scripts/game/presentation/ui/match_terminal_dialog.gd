@@ -10,6 +10,7 @@ const CONTEXT_LOCAL: String = "local"
 const CONTEXT_PREVIEW: String = "preview"
 const DESTINATION_LOBBY: String = "lobby"
 const DESTINATION_LEVEL_SELECT: String = "level_select"
+const PANEL_ASPECT: float = 1379.0 / 881.0
 
 const REASON_TEXT: Dictionary[String, String] = {
 	"general_destroyed": "主将被斩",
@@ -24,7 +25,7 @@ const RESULT_COLORS: Dictionary[String, Color] = {
 	"draw": Color(0.72, 0.76, 0.7, 1.0),
 }
 
-@onready var _result_panel: PanelContainer = $SafeMargin/Center/ResultPanel
+@onready var _result_panel: Control = $SafeMargin/Center/ResultPanel
 @onready var _result_title: Label = %ResultTitle
 @onready var _reason_label: Label = %ReasonLabel
 @onready var _red_result: Label = %RedResult
@@ -32,9 +33,9 @@ const RESULT_COLORS: Dictionary[String, Color] = {
 @onready var _round_value: Label = %RoundValue
 @onready var _flag_value: Label = %FlagValue
 @onready var _casualty_value: Label = %CasualtyValue
-@onready var _restart_button: Button = %RestartButton
-@onready var _lobby_button: Button = %LobbyButton
-@onready var _level_select_button: Button = %LevelSelectButton
+@onready var _restart_button: BaseButton = %RestartButton
+@onready var _lobby_button: BaseButton = %LobbyButton
+@onready var _level_select_button: BaseButton = %LevelSelectButton
 
 var _context: String = CONTEXT_LOCAL
 var _presentation_model: Dictionary = {}
@@ -89,7 +90,7 @@ func show_result(player_view: Dictionary, context: String = "") -> void:
 
 
 func hide_result() -> void:
-	for button: Button in [_restart_button, _lobby_button, _level_select_button]:
+	for button: BaseButton in [_restart_button, _lobby_button, _level_select_button]:
 		if button.has_focus():
 			button.release_focus()
 	visible = false
@@ -164,19 +165,18 @@ func _update_panel_size() -> void:
 	if not is_instance_valid(_result_panel):
 		return
 	var available := size - Vector2(36.0, 36.0)
-	var target := Vector2(
-		clampf(size.x * 0.68, 720.0, 1060.0),
-		clampf(size.y * 0.72, 460.0, 700.0)
+	var desired_width := clampf(size.x * 0.72, 760.0, 940.0)
+	var target_width := minf(
+		minf(desired_width, available.x),
+		available.y * PANEL_ASPECT,
 	)
-	_result_panel.custom_minimum_size = Vector2(
-		minf(target.x, maxf(640.0, available.x)),
-		minf(target.y, maxf(440.0, available.y))
-	)
+	var target_height := target_width / PANEL_ASPECT
+	_result_panel.custom_minimum_size = Vector2(target_width, target_height)
 
 
 func _wire_focus_navigation() -> void:
-	var actions: Array[Button] = []
-	for button: Button in [_restart_button, _lobby_button, _level_select_button]:
+	var actions: Array[BaseButton] = []
+	for button: BaseButton in [_restart_button, _lobby_button, _level_select_button]:
 		button.focus_neighbor_left = NodePath()
 		button.focus_neighbor_right = NodePath()
 		if button.visible and not button.disabled:
@@ -184,7 +184,7 @@ func _wire_focus_navigation() -> void:
 	if actions.is_empty():
 		return
 	for index: int in actions.size():
-		var button: Button = actions[index]
+		var button: BaseButton = actions[index]
 		button.focus_neighbor_left = button.get_path_to(
 			actions[(index - 1 + actions.size()) % actions.size()]
 		)

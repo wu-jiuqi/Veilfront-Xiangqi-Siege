@@ -73,7 +73,7 @@ func _run() -> void:
 	_check(not (server_match.get_node("MatchHudV2/FactionRight/MirrorButton") as Button).visible, "LAN 隐藏镜像视角按钮")
 	_check((server_match.get_node("MatchHudV2/FactionLeft/ReturnButton") as Button).visible, "LAN 显示退出对局按钮")
 	_check(
-		not (server_match.get_node("TerminalDialog").get_node("%RestartButton") as Button).visible,
+		not (server_match.get_node("TerminalDialog").get_node("%RestartButton") as BaseButton).visible,
 		"LAN 隐藏直接重赛按钮",
 	)
 	var fog: Node = server_match.find_child("FogOverlay", true, false)
@@ -145,7 +145,7 @@ func _run() -> void:
 		"LAN 终局只提供返回大厅",
 	)
 	_check(
-		(server_match.get_node("TerminalDialog").get_node("%LobbyButton") as Button).has_focus(),
+		(server_match.get_node("TerminalDialog").get_node("%LobbyButton") as BaseButton).has_focus(),
 		"LAN 终局默认聚焦返回大厅",
 	)
 	terminal_dialog.hide_result()

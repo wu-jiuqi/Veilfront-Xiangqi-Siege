@@ -20,13 +20,27 @@ func _run() -> void:
 		return
 
 	_expect(dialog.get_node_or_null("Dimmer") == null, "terminal dialog must not own a generated background")
-	var panel := dialog.get_node("SafeMargin/Center/ResultPanel") as PanelContainer
-	var panel_style := panel.get_theme_stylebox(&"panel") as StyleBoxTexture
+	var panel := dialog.get_node("SafeMargin/Center/ResultPanel") as Control
+	var panel_art := panel.get_node("PanelArt") as TextureRect
 	_expect(
-		panel_style != null \
-		and panel_style.texture != null \
-		and panel_style.texture.resource_path.ends_with("hud_panel_9slice_v1.png"),
-		"terminal frame must reuse the approved HUD V2 nine-patch",
+		panel_art.texture != null \
+		and panel_art.texture.resource_path.ends_with("terminal_result_panel_v2.png"),
+		"terminal frame must use the approved chroma-keyed result-panel PNG",
+	)
+	var restart_button := dialog.get_node("%RestartButton") as TextureButton
+	var lobby_button := dialog.get_node("%LobbyButton") as TextureButton
+	_expect(
+		restart_button.texture_normal.resource_path.ends_with("terminal_result_button_primary_v2.png") \
+		and lobby_button.texture_normal.resource_path.ends_with("terminal_result_button_secondary_v2.png") \
+		and lobby_button.texture_hover.resource_path.ends_with("terminal_result_button_primary_v2.png"),
+		"terminal actions must use PNG plates for normal and hover states",
+	)
+	var panel_image := Image.load_from_file(
+		ProjectSettings.globalize_path("res://assets/art/ui/terminal_result/terminal_result_panel_v2.png")
+	)
+	_expect(
+		panel_image != null and panel_image.get_format() in [Image.FORMAT_RGBA8, Image.FORMAT_RGBAF],
+		"terminal result panel must preserve a real alpha channel after chroma keying",
 	)
 
 	var victory_view := {
@@ -62,14 +76,14 @@ func _run() -> void:
 		and bool(snapshot.get("level_select_visible")),
 		"preview context must expose all approved action variants",
 	)
-	_expect((dialog.get_node("%RestartButton") as Button).has_focus(), "preview result must focus replay")
+	_expect((dialog.get_node("%RestartButton") as BaseButton).has_focus(), "preview result must focus replay")
 
 	var emissions := {"restart": 0, "destination": ""}
 	dialog.restart_requested.connect(func() -> void: emissions.restart += 1)
 	dialog.exit_requested.connect(
 		func(destination: String) -> void: emissions.destination = destination
 	)
-	(dialog.get_node("%RestartButton") as Button).emit_signal("pressed")
+	(dialog.get_node("%RestartButton") as BaseButton).emit_signal("pressed")
 	_expect(
 		emissions.restart == 1 and dialog.visible,
 		"replay must emit once and remain visible until a fresh PlayerView arrives",
@@ -88,8 +102,8 @@ func _run() -> void:
 		and not bool(snapshot.get("level_select_visible")),
 		"LAN context must only expose return to lobby",
 	)
-	_expect((dialog.get_node("%LobbyButton") as Button).has_focus(), "LAN result must focus return to lobby")
-	(dialog.get_node("%LobbyButton") as Button).emit_signal("pressed")
+	_expect((dialog.get_node("%LobbyButton") as BaseButton).has_focus(), "LAN result must focus return to lobby")
+	(dialog.get_node("%LobbyButton") as BaseButton).emit_signal("pressed")
 	_expect(
 		emissions.destination == MatchTerminalDialog.DESTINATION_LOBBY,
 		"lobby action must emit the explicit lobby destination",
@@ -109,7 +123,7 @@ func _run() -> void:
 		and bool(snapshot.get("level_select_visible")),
 		"level context must expose replay and level selection",
 	)
-	(dialog.get_node("%LevelSelectButton") as Button).emit_signal("pressed")
+	(dialog.get_node("%LevelSelectButton") as BaseButton).emit_signal("pressed")
 	_expect(
 		emissions.destination == MatchTerminalDialog.DESTINATION_LEVEL_SELECT,
 		"level action must emit the explicit level-select destination",
@@ -123,7 +137,7 @@ func _run() -> void:
 		panel_size.x <= 924.5 and panel_size.y <= 504.5,
 		"960x540 result frame must stay inside safe margins: %s" % panel_size,
 	)
-	_expect((dialog.get_node("%RestartButton") as Button).custom_minimum_size.y >= 44.0, "result actions must keep desktop/controller target height")
+	_expect((dialog.get_node("%RestartButton") as BaseButton).custom_minimum_size.y >= 44.0, "result actions must keep desktop/controller target height")
 	var previous_panel_size := panel_size
 	for target_size: Vector2 in [Vector2(1280.0, 720.0), Vector2(1920.0, 1080.0)]:
 		dialog.size = target_size

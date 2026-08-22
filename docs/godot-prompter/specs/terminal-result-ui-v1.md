@@ -1,6 +1,6 @@
 # 正式结算页 UI v1
 
-状态：`implemented / owner visual direction confirmed 2026-08-22`
+状态：`superseded 2026-08-22`。项目所有者否决了 V1 视觉，正式基线改见 `terminal-result-ui-v2.md`。
 
 ## 目标
 
