@@ -8,20 +8,20 @@ const BOARD_WORLD_SIZE := Vector2(1152.0, 3072.0)
 const EXPECTED_MAP_PATH := \
 	"res://assets/art/boards/terracotta_warriors/terracotta_battlefield_board_bg_gridless_v7_low_noise.png"
 const EXPECTED_PIECE_PATHS: Array[String] = [
-	"res://assets/art/pieces/terracotta_warriors/red_chariot_idle.png",
-	"res://assets/art/pieces/terracotta_warriors/red_cavalry_idle.png",
-	"res://assets/art/pieces/terracotta_warriors/red_minister_idle.png",
-	"res://assets/art/pieces/terracotta_warriors/red_guard_idle.png",
-	"res://assets/art/pieces/terracotta_warriors/red_general_idle.png",
-	"res://assets/art/pieces/terracotta_warriors/red_trebuchet_idle.png",
-	"res://assets/art/pieces/terracotta_warriors/red_infantry_idle.png",
-	"res://assets/art/pieces/terracotta_warriors/black_chariot_idle.png",
-	"res://assets/art/pieces/terracotta_warriors/black_cavalry_idle.png",
-	"res://assets/art/pieces/terracotta_warriors/black_minister_idle.png",
-	"res://assets/art/pieces/terracotta_warriors/black_guard_idle.png",
-	"res://assets/art/pieces/terracotta_warriors/black_general_idle.png",
-	"res://assets/art/pieces/terracotta_warriors/black_trebuchet_idle.png",
-	"res://assets/art/pieces/terracotta_warriors/black_infantry_idle.png",
+	"res://assets/art/pieces/round_tokens_v1/red_chariot_token_v1.png",
+	"res://assets/art/pieces/round_tokens_v1/red_cavalry_token_v1.png",
+	"res://assets/art/pieces/round_tokens_v1/red_minister_token_v1.png",
+	"res://assets/art/pieces/round_tokens_v1/red_guard_token_v1.png",
+	"res://assets/art/pieces/round_tokens_v1/red_general_token_v1.png",
+	"res://assets/art/pieces/round_tokens_v1/red_trebuchet_token_v1.png",
+	"res://assets/art/pieces/round_tokens_v1/red_infantry_token_v1.png",
+	"res://assets/art/pieces/round_tokens_v1/black_chariot_token_v1.png",
+	"res://assets/art/pieces/round_tokens_v1/black_cavalry_token_v1.png",
+	"res://assets/art/pieces/round_tokens_v1/black_minister_token_v1.png",
+	"res://assets/art/pieces/round_tokens_v1/black_guard_token_v1.png",
+	"res://assets/art/pieces/round_tokens_v1/black_general_token_v1.png",
+	"res://assets/art/pieces/round_tokens_v1/black_trebuchet_token_v1.png",
+	"res://assets/art/pieces/round_tokens_v1/black_infantry_token_v1.png",
 ]
 
 var _failures: Array[String] = []
@@ -125,13 +125,18 @@ func _run() -> void:
 		if artwork == null or artwork.texture == null:
 			continue
 		if not piece_sizing_checked:
-			var scale_multipliers: Dictionary = piece_view.get("piece_scale_multipliers")
-			for piece_type: String in ["horse", "rook", "cannon"]:
-				_expect(
-					float(scale_multipliers.get(piece_type, 1.0)) > 1.0,
-					"%s did not receive an authored size increase" % piece_type
-				)
+			_expect(
+				is_equal_approx(
+					float(piece_view.get("base_width_cell_ratio")),
+					float(piece_view.get("base_height_cell_ratio"))
+				),
+				"round board token sizing is not square"
+			)
 			piece_sizing_checked = true
+		_expect(
+			artwork.texture.get_width() == artwork.texture.get_height(),
+			"board token source is not square: %s" % artwork.texture.resource_path
+		)
 		_expect(
 			artwork.texture_filter == CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS,
 			"piece artwork did not use stable mipmapped linear sampling"
