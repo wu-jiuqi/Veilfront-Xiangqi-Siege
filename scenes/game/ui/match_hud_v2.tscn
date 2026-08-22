@@ -9,7 +9,6 @@
 [ext_resource type="PackedScene" path="res://scenes/game/ui/tactical_minimap.tscn" id="7_minimap_scene"]
 [ext_resource type="PackedScene" uid="uid://cgoxijkno5wvc" path="res://scenes/game/ui/incense_turn_clock.tscn" id="8_incense"]
 [ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button.tscn" id="9_motion_button"]
-[ext_resource type="Texture2D" uid="uid://dbeue1v0pvbfe" path="res://assets/art/ui/terracotta_hud_v2/hud_panel_9slice_v1.png" id="10_border"]
 [ext_resource type="PackedScene" uid="uid://7kh2s735m2wf" path="res://scenes/game/ui/piece_info_drawer.tscn" id="11_piece_drawer"]
 [ext_resource type="Texture2D" uid="uid://bpnrdgk2o801w" path="res://assets/art/pieces/terracotta_warriors/red_general_idle.png" id="12_red_general"]
 [ext_resource type="Texture2D" uid="uid://d0luhdifhkm2f" path="res://assets/art/pieces/terracotta_warriors/black_general_idle.png" id="13_black_general"]
@@ -62,15 +61,13 @@ corner_radius_top_right = 2
 corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxBoardSeparator"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxBoardBorder"]
 bg_color = Color(0, 0, 0, 0)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.69, 0.53, 0.29, 0.94)
-shadow_color = Color(0, 0, 0, 0.82)
-shadow_size = 9
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.74, 0.56, 0.3, 1)
 
 [node name="MatchHudV2" type="Control" unique_id=1094499364]
 layout_mode = 3
@@ -84,7 +81,6 @@ script = ExtResource("1_layout")
 
 [node name="BoardFrame" type="Control" parent="." unique_id=1287230343]
 unique_name_in_owner = true
-clip_contents = true
 anchors_preset = 0
 offset_left = 340.0
 offset_top = 32.0
@@ -100,32 +96,20 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="BoardSeparator" type="Panel" parent="BoardFrame"]
+[node name="BoardBorder" type="Panel" parent="BoardFrame" unique_id=664489841]
 z_index = 1
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = -8.0
+offset_top = -8.0
+offset_right = 8.0
+offset_bottom = 8.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxBoardSeparator")
-
-[node name="BoardBorder" type="NinePatchRect" parent="BoardFrame" unique_id=664489841]
-z_index = 2
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("10_border")
-draw_center = false
-patch_margin_left = 30
-patch_margin_top = 30
-patch_margin_right = 30
-patch_margin_bottom = 30
-mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxBoardBorder")
 
 [node name="FactionLeft" type="Control" parent="." unique_id=1213968496]
 unique_name_in_owner = true

@@ -37,11 +37,9 @@ func _run() -> void:
 	var board_viewport: SubViewportContainer = match_screen.get_node(
 		"MatchHudV2/BoardFrame/BoardViewport"
 	) as SubViewportContainer
-	var board_border: NinePatchRect = match_screen.get_node(
+	var board_frame: Control = match_screen.get_node("MatchHudV2/BoardFrame") as Control
+	var board_border: Panel = match_screen.get_node(
 		"MatchHudV2/BoardFrame/BoardBorder"
-	) as NinePatchRect
-	var board_separator: Panel = match_screen.get_node(
-		"MatchHudV2/BoardFrame/BoardSeparator"
 	) as Panel
 	var input_surface: Control = board_viewport.get_node("ScreenInputSurface") as Control
 	var board_world: Node2D = board_viewport.get_node("BoardSubViewport/BoardWorld") as Node2D
@@ -61,12 +59,28 @@ func _run() -> void:
 		"formal board border blocks pointer input before it reaches the board surface"
 	)
 	_expect(
-		board_border.patch_margin_bottom == 30,
-		"formal board border does not draw a complete four-sided frame"
+		not board_frame.clip_contents,
+		"formal board frame clips the border that must sit outside the board"
+	)
+	var board_border_style := board_border.get_theme_stylebox("panel") as StyleBoxFlat
+	_expect(
+		board_border_style != null and is_zero_approx(board_border_style.bg_color.a),
+		"formal board border paints a mask over the board instead of a transparent center"
+	)
+	var border_stays_outside := false
+	if board_border_style != null:
+		border_stays_outside = \
+			board_border.offset_left + board_border_style.border_width_left <= 0.0 \
+			and board_border.offset_top + board_border_style.border_width_top <= 0.0 \
+			and board_border.offset_right - board_border_style.border_width_right >= 0.0 \
+			and board_border.offset_bottom - board_border_style.border_width_bottom >= 0.0
+	_expect(
+		border_stays_outside,
+		"formal board border overlaps the board instead of staying outside its rect"
 	)
 	_expect(
-		board_separator.mouse_filter == Control.MOUSE_FILTER_IGNORE,
-		"formal board separator blocks pointer input before it reaches the board surface"
+		not match_screen.has_node("MatchHudV2/BoardFrame/BoardSeparator"),
+		"formal board still contains the in-board separator overlay"
 	)
 	_expect(
 		input_surface.size.is_equal_approx(board_viewport.size),
