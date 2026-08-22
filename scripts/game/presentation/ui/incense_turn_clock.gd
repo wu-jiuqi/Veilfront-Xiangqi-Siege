@@ -34,6 +34,7 @@ const CHINESE_DIGITS: PackedStringArray = ["零", "一", "二", "三", "四", "�
 @onready var _round_body: TextureRect = %RoundBody
 @onready var _round_ember: TextureRect = %RoundEmber
 @onready var _round_display_slot: Control = %RoundDisplaySlot
+@onready var _round_display_frame: TextureRect = $RoundDisplaySlot/Frame
 @onready var _smoke_visual: Node2D = %SmokeVisual
 @onready var _smoke_frame: Sprite2D = %SmokeFrame
 @onready var _smoke_number: Label = %SmokeNumber
@@ -52,6 +53,9 @@ var _digit_tween: Tween
 var _smoke_material: ShaderMaterial
 var _timer_authored_layout: Dictionary = {}
 var _round_authored_layout: Dictionary = {}
+var _timer_smoke_source_offset := Vector2.ZERO
+var _timer_smoke_target_slot_offset := Vector2.ZERO
+var _round_smoke_source_offset := Vector2.ZERO
 
 
 func _ready() -> void:
@@ -65,6 +69,17 @@ func _ready() -> void:
 		_round_slot,
 		_round_clip,
 		_round_body,
+		_round_ember
+	)
+	_timer_smoke_source_offset = _timer_smoke_visual.position - _ember_center(
+		_timer_slot,
+		_timer_ember
+	)
+	_timer_smoke_target_slot_offset = (
+		_timer_smoke_visual.position + TIMER_SMOKE_TARGET_OFFSET - _timer_slot.position
+	)
+	_round_smoke_source_offset = _smoke_visual.position - _ember_center(
+		_round_slot,
 		_round_ember
 	)
 	_smoke_material = _smoke_number.material as ShaderMaterial
@@ -261,11 +276,7 @@ func _apply_vertical_incense(
 	var full_size := slot.size
 	if full_size.x <= 0.0 or full_size.y <= 0.0:
 		return
-	var authored_slot_size: Vector2 = authored_layout.get("slot_size", full_size)
-	var layout_scale := Vector2(
-		full_size.x / maxf(authored_slot_size.x, 0.001),
-		full_size.y / maxf(authored_slot_size.y, 0.001)
-	)
+	var layout_scale := _authored_layout_scale(slot, authored_layout)
 	var clip_origin: Vector2 = authored_layout.get("clip_position", clip.position) * layout_scale
 	var clip_full_size: Vector2 = authored_layout.get("clip_size", clip.size) * layout_scale
 	var body_origin: Vector2 = authored_layout.get("body_position", body.position) * layout_scale
@@ -303,17 +314,40 @@ func _capture_vertical_incense_layout(
 	}
 
 
+func _authored_layout_scale(slot: Control, authored_layout: Dictionary) -> Vector2:
+	var authored_slot_size: Vector2 = authored_layout.get("slot_size", slot.size)
+	return Vector2(
+		slot.size.x / maxf(authored_slot_size.x, 0.001),
+		slot.size.y / maxf(authored_slot_size.y, 0.001)
+	)
+
+
+func _ember_center(slot: Control, ember: TextureRect) -> Vector2:
+	return slot.position + ember.position + ember.size * 0.5
+
+
+func _smoke_source(
+	slot: Control,
+	ember: TextureRect,
+	authored_source_offset: Vector2,
+	authored_layout: Dictionary
+) -> Vector2:
+	return _ember_center(slot, ember) \
+		+ authored_source_offset * _authored_layout_scale(slot, authored_layout)
+
+
 func _update_smoke_bridge() -> void:
 	if not is_instance_valid(_smoke_visual) or _round_slot.size.y <= 0.0:
 		return
-	var remaining_ratio := 1.0 - _round_progress
-	var source := _round_slot.position + Vector2(
-		_round_slot.size.x * 0.5,
-		_round_slot.size.y * (1.0 - remaining_ratio)
+	var source := _smoke_source(
+		_round_slot,
+		_round_ember,
+		_round_smoke_source_offset,
+		_round_authored_layout
 	)
-	var target := _round_display_slot.position + Vector2(
-		_round_display_slot.size.x * 0.5,
-		_round_display_slot.size.y * 0.82
+	var target := _round_display_slot.position + _round_display_frame.position + Vector2(
+		_round_display_frame.size.x * 0.5,
+		_round_display_frame.size.y * 0.82
 	)
 	var bridge := target - source
 	var bridge_length := maxf(MIN_SMOKE_LENGTH, bridge.length())
@@ -328,14 +362,14 @@ func _update_smoke_bridge() -> void:
 func _update_timer_smoke(remaining_ratio: float) -> void:
 	if not is_instance_valid(_timer_smoke_visual) or _timer_slot.size.y <= 0.0:
 		return
-	var source := _timer_slot.position + Vector2(
-		_timer_slot.size.x * 0.5,
-		_timer_slot.size.y * (1.0 - clampf(remaining_ratio, 0.0, 1.0))
+	var source := _smoke_source(
+		_timer_slot,
+		_timer_ember,
+		_timer_smoke_source_offset,
+		_timer_authored_layout
 	)
-	var target := _timer_slot.position + Vector2(
-		_timer_slot.size.x * 0.5,
-		0.0
-	) + TIMER_SMOKE_TARGET_OFFSET
+	var target := _timer_slot.position + _timer_smoke_target_slot_offset \
+		* _authored_layout_scale(_timer_slot, _timer_authored_layout)
 	var bridge := target - source
 	var bridge_length := maxf(MIN_SMOKE_LENGTH, bridge.length())
 	_timer_smoke_visual.position = source
@@ -352,28 +386,29 @@ func _update_timer_smoke(remaining_ratio: float) -> void:
 func _current_timer_smoke_length() -> float:
 	if not is_instance_valid(_timer_slot):
 		return 0.0
-	var remaining_ratio := _remaining_seconds / maxf(turn_duration_seconds, 0.001)
-	var source := _timer_slot.position + Vector2(
-		_timer_slot.size.x * 0.5,
-		_timer_slot.size.y * (1.0 - clampf(remaining_ratio, 0.0, 1.0))
+	var source := _smoke_source(
+		_timer_slot,
+		_timer_ember,
+		_timer_smoke_source_offset,
+		_timer_authored_layout
 	)
-	var target := _timer_slot.position + Vector2(
-		_timer_slot.size.x * 0.5,
-		0.0
-	) + TIMER_SMOKE_TARGET_OFFSET
+	var target := _timer_slot.position + _timer_smoke_target_slot_offset \
+		* _authored_layout_scale(_timer_slot, _timer_authored_layout)
 	return maxf(MIN_SMOKE_LENGTH, source.distance_to(target))
 
 
 func _current_smoke_length() -> float:
 	if not is_instance_valid(_round_slot) or not is_instance_valid(_round_display_slot):
 		return 0.0
-	var source := _round_slot.position + Vector2(
-		_round_slot.size.x * 0.5,
-		_round_slot.size.y * _round_progress
+	var source := _smoke_source(
+		_round_slot,
+		_round_ember,
+		_round_smoke_source_offset,
+		_round_authored_layout
 	)
-	var target := _round_display_slot.position + Vector2(
-		_round_display_slot.size.x * 0.5,
-		_round_display_slot.size.y * 0.82
+	var target := _round_display_slot.position + _round_display_frame.position + Vector2(
+		_round_display_frame.size.x * 0.5,
+		_round_display_frame.size.y * 0.82
 	)
 	return maxf(MIN_SMOKE_LENGTH, source.distance_to(target))
 

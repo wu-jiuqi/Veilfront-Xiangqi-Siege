@@ -22,6 +22,11 @@ func _run() -> void:
 	var authored_timer_ember_rect := _control_rect(clock.get_node("%TimerEmber") as Control)
 	var authored_round_body_rect := _control_rect(clock.get_node("%RoundBody") as Control)
 	var authored_round_ember_rect := _control_rect(clock.get_node("%RoundEmber") as Control)
+	var authored_number_float_layout := _control_layout(
+		clock.get_node("RoundDisplaySlot/NumberFloat") as Control
+	)
+	var authored_timer_smoke_position := (clock.get_node("%TimerSmokeVisual") as Node2D).position
+	var authored_round_smoke_position := (clock.get_node("%SmokeVisual") as Node2D).position
 	root.add_child(clock)
 	await process_frame
 	clock.refresh_layout()
@@ -29,6 +34,23 @@ func _run() -> void:
 	_expect_control_rect(clock.get_node("%TimerEmber") as Control, authored_timer_ember_rect, "计时香火星")
 	_expect_control_rect(clock.get_node("%RoundBody") as Control, authored_round_body_rect, "回合香主体")
 	_expect_control_rect(clock.get_node("%RoundEmber") as Control, authored_round_ember_rect, "回合香火星")
+	_expect_control_layout(
+		clock.get_node("RoundDisplaySlot/NumberFloat") as Control,
+		authored_number_float_layout,
+		"回合数字容器"
+	)
+	_expect(
+		(clock.get_node("%TimerSmokeVisual") as Node2D).position.is_equal_approx(
+			authored_timer_smoke_position
+		),
+		"计时香烟雾加载后没有保留预置场景位置"
+	)
+	_expect(
+		(clock.get_node("%SmokeVisual") as Node2D).position.is_equal_approx(
+			authored_round_smoke_position
+		),
+		"回合香烟雾加载后没有保留预置场景位置"
+	)
 	var stand_texture := clock.get_node("%IncenseStandBaseArt").texture as AtlasTexture
 	_expect(
 		stand_texture != null
@@ -72,6 +94,14 @@ func _run() -> void:
 			absf(bottom_row_offset.y - top_row_offset.y) > 200.0,
 			"烟雾图集跨行时没有抵消帧内基线跳变"
 		)
+	var number_float_player := clock.get_node("%NumberFloatAnimationPlayer") as AnimationPlayer
+	var number_float_loop := number_float_player.get_animation(&"number_float")
+	_expect(
+		number_float_loop != null
+		and str(number_float_loop.track_get_path(0))
+			== "RoundDisplaySlot/NumberFloat:offset_transform_position",
+		"回合数字漂浮动画仍在覆盖预置布局位置"
+	)
 	clock.set_reduced_motion(true)
 	var timer_smoke_initial := clock.get_state_snapshot()
 	_expect(int(timer_smoke_initial.get("timer_smoke_frame_count", 0)) == 8, "左侧计时香烟雾没有使用 8 帧序列")
@@ -166,10 +196,40 @@ func _control_rect(control: Control) -> Rect2:
 	return Rect2(control.position, control.size)
 
 
+func _control_layout(control: Control) -> Dictionary:
+	return {
+		"anchors": Vector4(
+			control.anchor_left,
+			control.anchor_top,
+			control.anchor_right,
+			control.anchor_bottom
+		),
+		"offsets": Vector4(
+			control.offset_left,
+			control.offset_top,
+			control.offset_right,
+			control.offset_bottom
+		),
+	}
+
+
 func _expect_control_rect(control: Control, expected: Rect2, label: String) -> void:
 	_expect(
 		_control_rect(control).is_equal_approx(expected),
 		"%s加载后没有保留预置场景位置：%s" % [label, _control_rect(control)]
+	)
+
+
+func _expect_control_layout(control: Control, expected: Dictionary, label: String) -> void:
+	var actual := _control_layout(control)
+	var actual_anchors: Vector4 = actual.get("anchors", Vector4.ZERO)
+	var expected_anchors: Vector4 = expected.get("anchors", Vector4.ZERO)
+	var actual_offsets: Vector4 = actual.get("offsets", Vector4.ZERO)
+	var expected_offsets: Vector4 = expected.get("offsets", Vector4.ZERO)
+	_expect(
+		actual_anchors.is_equal_approx(expected_anchors)
+		and actual_offsets.is_equal_approx(expected_offsets),
+		"%s加载后没有保留预置场景锚点与偏移：%s" % [label, actual]
 	)
 
 
