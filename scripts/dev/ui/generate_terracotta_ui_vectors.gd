@@ -1,7 +1,7 @@
 @tool
 extends SceneTree
 
-## 可复现地生成兵马俑 UI 的 36 个图标、6 个光标与 4 个纹样。
+## 可复现地生成兵马俑 UI 的 36 个图标、6 个光标、4 个纹样与 1 个加载环框。
 ## 小地图元素通过资源清单复用这些语义图形，不额外占用矢量源文件额度。
 
 const ROOT := "res://assets/art/ui/terracotta_metal"
@@ -19,8 +19,9 @@ func _init() -> void:
 	_write_icons()
 	_write_cursors()
 	_write_patterns()
+	_write_loading_frames()
 	print("TERRACOTTA_UI_VECTOR_GENERATION_PASS files=%d" % _written)
-	quit(0 if _written == 46 else 1)
+	quit(0 if _written == 47 else 1)
 
 
 func _write_icons() -> void:
@@ -101,6 +102,11 @@ func _write_patterns() -> void:
 		_write_svg("%s/patterns/%s.svg" % [ROOT, pattern_name], _pattern_svg(patterns[pattern_name]))
 
 
+func _write_loading_frames() -> void:
+	var arc_body := "<g fill='none' stroke-linecap='round'><circle cx='256' cy='256' r='222' stroke='%s' stroke-opacity='.18' stroke-width='4' stroke-dasharray='54 24'/><path d='M256 34 A222 222 0 0 1 430 118' stroke='url(#metal)' stroke-width='13'/><path d='M430 118 A222 222 0 0 1 469 194' stroke='%s' stroke-width='7'/><path d='M82 394 A222 222 0 0 1 43 318' stroke='%s' stroke-opacity='.62' stroke-width='6'/></g><circle cx='430' cy='118' r='9' fill='%s'/><path d='M256 18 L268 34 L256 50 L244 34 Z' fill='%s'/>" % [BRONZE, LIGHT, GOLD, LIGHT, GOLD]
+	_write_svg("%s/frames/loading_progress_arc_v1.svg" % ROOT, _frame_svg(arc_body))
+
+
 func _shield(fill_path: String, detail_path: String) -> String:
 	return "<path d='%s' fill='url(#metal)' stroke='%s' stroke-width='2.5' stroke-linejoin='round'/><path d='%s' fill='none' stroke='%s' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/>" % [fill_path, LIGHT, detail_path, DARK]
 
@@ -119,6 +125,10 @@ func _icon_svg(body: String) -> String:
 
 func _pattern_svg(body: String) -> String:
 	return "<svg xmlns='http://www.w3.org/2000/svg' width='128' height='128' viewBox='0 0 128 128'>%s<rect width='128' height='128' fill='%s' fill-opacity='.03'/>%s</svg>" % [_defs(), DARK, body]
+
+
+func _frame_svg(body: String) -> String:
+	return "<svg xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512'>%s%s</svg>" % [_defs(), body]
 
 
 func _write_svg(path: String, svg: String) -> void:
