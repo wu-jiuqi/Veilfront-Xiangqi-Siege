@@ -44,6 +44,14 @@ func _run() -> void:
 	var board_world: Node2D = board_viewport.get_node("BoardSubViewport/BoardWorld") as Node2D
 	var board_theme: BoardTheme = board_world.get("board_theme") as BoardTheme
 	var snapshot: Dictionary = match_screen.get_board_render_snapshot()
+	_check_fullscreen_layout(match_screen, viewport)
+	await process_frame
+	if "--capture-screenshot" in OS.get_cmdline_user_args():
+		_capture_screenshot(viewport, "formal-fullscreen-2560x1080.png")
+	await _check_minimap_expansion(match_screen, viewport)
+	viewport.size = Vector2i(1280, 720)
+	match_screen.apply_layout_for_size(Vector2(viewport.size))
+	await process_frame
 
 	_expect(
 		board_border.mouse_filter == Control.MOUSE_FILTER_IGNORE,
@@ -82,11 +90,17 @@ func _run() -> void:
 		var target_cell := BoardCoordinateMapper.coordinate_from_variant(
 			preview.get("target_cell", [])
 		)
-		_click_board_cell(viewport, input_surface, board_viewport, source_cell)
+		_click_visible_piece_body(viewport, input_surface, board_viewport, source_cell)
 		await process_frame
 		_expect(
 			str(match_screen.get_presentation_snapshot().get("selected_piece_id", "")) == piece_id,
 			"pointer click on a formal piece did not select it"
+		)
+		_expect(
+			not bool(match_screen.get_board_render_snapshot().get(
+				"piece_visual_hit_enabled", true
+			)),
+			"selected state did not restore grid-point priority for target clicks"
 		)
 		_click_board_cell(viewport, input_surface, board_viewport, target_cell)
 		await process_frame
@@ -107,6 +121,12 @@ func _run() -> void:
 		_expect(
 			_piece_cell(match_screen.get_player_view_snapshot(), piece_id) == target_cell,
 			"confirmed pointer move did not update the piece position"
+		)
+		_expect(
+			bool(match_screen.get_board_render_snapshot().get(
+				"piece_visual_hit_enabled", false
+			)),
+			"completed move did not restore visual-piece hit testing"
 		)
 
 	match_screen.queue_free()
@@ -149,6 +169,74 @@ func _click_board_cell(
 	viewport.push_input(event, true)
 
 
+func _click_visible_piece_body(
+	viewport: SubViewport,
+	input_surface: Control,
+	board_viewport: SubViewportContainer,
+	cell: Vector2i
+) -> void:
+	var visual_body_position: Vector2 = \
+		board_viewport.get_container_position_for_authority_cell(cell)
+	visual_body_position.y -= board_viewport.get_point_spacing().y * 0.55
+	var event := InputEventMouseButton.new()
+	event.button_index = MOUSE_BUTTON_LEFT
+	event.pressed = true
+	event.position = input_surface.global_position + visual_body_position
+	event.global_position = event.position
+	viewport.push_input(event, true)
+
+
+func _check_fullscreen_layout(match_screen: Control, viewport: SubViewport) -> void:
+	viewport.size = Vector2i(2560, 1080)
+	match_screen.apply_layout_for_size(Vector2(viewport.size))
+	var layout: Dictionary = match_screen.get_hud_snapshot().get("layout", {})
+	var board_rect: Rect2 = layout.get("board_rect", Rect2())
+	var expected_board_aspect := 998.0 / 450.0
+	var actual_board_aspect := board_rect.size.x / maxf(board_rect.size.y, 1.0)
+	_expect(
+		absf(actual_board_aspect - expected_board_aspect) <= 0.001,
+		"fullscreen layout stretched the formal board away from its authored aspect"
+	)
+	var content_rect: Rect2 = layout.get("content_rect", Rect2())
+	_expect(
+		content_rect.size.x > 0.0 and content_rect.size.y > 0.0,
+		"fullscreen layout does not expose a centered aspect-preserving content rectangle"
+	)
+
+
+func _check_minimap_expansion(match_screen: Control, viewport: SubViewport) -> void:
+	var button := match_screen.get_node_or_null("MatchHudV2/Minimap/MinimapExpandButton") as Button
+	_expect(button != null, "formal minimap has no preset expand control")
+	if button == null:
+		return
+	var before: Rect2 = match_screen.get_hud_snapshot().get("layout", {}).get(
+		"ui_rects", {}
+	).get("minimap", Rect2())
+	_click_control(viewport, button)
+	await process_frame
+	var expanded_layout: Dictionary = match_screen.get_hud_snapshot().get("layout", {})
+	var after: Rect2 = expanded_layout.get("ui_rects", {}).get("minimap", Rect2())
+	_expect(bool(expanded_layout.get("minimap_expanded", false)), "minimap expand control did not enter expanded mode")
+	_expect(after.size.x > before.size.x and after.size.y > before.size.y, "minimap expand control did not enlarge the map")
+	if "--capture-screenshot" in OS.get_cmdline_user_args():
+		_capture_screenshot(viewport, "formal-minimap-expanded.png")
+	_click_control(viewport, button)
+	await process_frame
+	var restored_layout: Dictionary = match_screen.get_hud_snapshot().get("layout", {})
+	_expect(not bool(restored_layout.get("minimap_expanded", true)), "minimap expand control did not restore compact mode")
+
+
+func _click_control(viewport: SubViewport, control: Control) -> void:
+	var pointer_position := control.get_global_rect().get_center()
+	for pressed: bool in [true, false]:
+		var event := InputEventMouseButton.new()
+		event.button_index = MOUSE_BUTTON_LEFT
+		event.pressed = pressed
+		event.position = pointer_position
+		event.global_position = pointer_position
+		viewport.push_input(event, true)
+
+
 func _first_legal_move(previews: Array) -> Dictionary:
 	for preview_value: Variant in previews:
 		if preview_value is Dictionary \
@@ -167,15 +255,16 @@ func _piece_cell(view: Dictionary, piece_id: String) -> Vector2i:
 	return Vector2i.ZERO
 
 
-func _capture_screenshot(viewport: SubViewport) -> void:
+func _capture_screenshot(
+	viewport: SubViewport,
+	file_name: String = "formal-board-art-input.png"
+) -> void:
 	var image := viewport.get_texture().get_image()
 	if image == null:
 		_failures.append("formal board screenshot was unavailable")
 		return
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://.codex-temp"))
-	var output_path := ProjectSettings.globalize_path(
-		"res://.codex-temp/formal-board-art-input.png"
-	)
+	var output_path := ProjectSettings.globalize_path("res://.codex-temp/%s" % file_name)
 	_expect(image.save_png(output_path) == OK, "failed to save the formal board screenshot")
 
 
