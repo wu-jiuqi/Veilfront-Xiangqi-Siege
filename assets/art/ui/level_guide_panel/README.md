@@ -1,8 +1,8 @@
 # 关卡指引面板 V1
 
-状态：`approval_candidate / purple_keyed / not_integrated`
+状态：`implementation_lab / purple_keyed / not_formal_integrated`
 
-本目录只保存关卡模式右侧`关卡指引`面板的审批候选资产，尚未接入任何 Godot 场景。
+本目录保存关卡模式右侧`关卡指引`面板资产。项目所有者已授权接入独立测试场景进行布局审批，尚未接入正式关卡入口。
 
 ## 文件
 
@@ -33,4 +33,4 @@ python tools/art/purple_chroma_key.py `
   --max-size 1536
 ```
 
-本资产仅供视觉审批。审批通过前不得创建场景、Theme、九宫格参数或正式入口引用。
+当前测试接入：`res://scenes/game/ui/level_guide_panel.tscn` 与 `res://scenes/dev/ui/level_gameplay_hud_lab.tscn`。正式入口、正式关卡状态和九宫格定稿仍需项目所有者后续审批。

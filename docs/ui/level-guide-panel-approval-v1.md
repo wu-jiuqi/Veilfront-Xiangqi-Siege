@@ -1,12 +1,12 @@
 # 关卡指引面板 V1 审批说明
 
 日期：2026-08-23
-状态：`approval_candidate / purple_keyed / not_integrated`
+状态：`implementation_lab / purple_keyed / not_formal_integrated`
 生成模式：Codex 内置 `image_gen`
 
 ## 目标
 
-关卡模式继续复用正式战局 HUD，只新增一个可替换右侧信息栏内容的独立`关卡指引`面板。本轮只生产紫幕母图与透明 PNG，禁止接入 Godot 场景。
+关卡模式继续复用正式战局 HUD，只新增一个可替换右侧信息栏内容的独立`关卡指引`面板。2026-08-23 项目所有者已授权创建独立测试场景用于布局审批；正式入口仍不接入。
 
 ## 交付物
 
@@ -51,4 +51,10 @@ Constraints: only the isolated panel; exact front view; clean generous purple bo
 
 - 审批内容：外框比例、暗铁／旧金材质、六段信息结构、留白和按钮槽关系。
 - 不审批：具体关卡文字、图标、步骤状态、Hover／Pressed／Disabled、九宫格边距、实际右栏尺寸。
-- 未经项目所有者确认，不接入任何 `.tscn`、`.tres`、Theme 或运行时脚本。
+- 正式入口、正式关卡状态与最终九宫格参数仍需项目所有者另行确认。
+
+## 测试场景授权
+
+- 授权范围：创建关卡 HUD 测试场景，复用正式联机 HUD，并以本资产覆盖整条右栏。
+- 已实现：`res://scenes/game/ui/level_guide_panel.tscn`、`res://scenes/dev/ui/level_gameplay_hud_lab.tscn`。
+- 保持未接入：主菜单、正式关卡入口、正式关卡规则状态与生产管线 Registry。
