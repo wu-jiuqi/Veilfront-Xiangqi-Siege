@@ -21,6 +21,9 @@ __pycache__/
 .codex-temp/
 builds/
 .tmp/
+tmp/
+output/
+.playwright-cli/
 .mono/
 .import/
 bin/
