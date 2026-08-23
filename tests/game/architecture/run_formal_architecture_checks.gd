@@ -38,10 +38,10 @@ func _run_checks() -> void:
 		quit(1)
 		return
 
-	print(
-		"FORMAL_ARCHITECTURE_CHECKS_PASSED self_tests=%d scanned_files=%d" % [
-			test_result.get("checks", 0),
-			scan_result.get("scanned_files", 0),
-		]
-	)
+	var pass_summary := "self_tests=%d scanned_files=%d" % [
+		test_result.get("checks", 0),
+		scan_result.get("scanned_files", 0),
+	]
+	print("DEPENDENCY_BOUNDARY_CHECK_PASSED %s" % pass_summary)
+	print("FORMAL_ARCHITECTURE_CHECKS_PASSED %s" % pass_summary)
 	quit(0)

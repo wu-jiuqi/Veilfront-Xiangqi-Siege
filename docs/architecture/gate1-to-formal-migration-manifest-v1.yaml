@@ -288,7 +288,7 @@ comparison_commands:
     availability: must_be_implemented_by_TASK-ARCH-001
     command: >-
       D:\Godot\godot.cmd --headless --path . --script
-      res://tests/game/architecture/check_dependency_boundaries.gd
+      res://tests/game/architecture/run_formal_architecture_checks.gd
     expected_exit_code: 0
 
 comparison_acceptance:
