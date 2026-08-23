@@ -15,6 +15,10 @@ const MINIMAP_NAVIGATION_DURATION: float = 0.16
 const HOVER_RADIUS_RATIO: float = 0.46
 const MIN_ZOOM_MULTIPLIER: float = 1.0
 const MAX_ZOOM_MULTIPLIER: float = 1.72
+const CAMERA_AUTHORITY_DEFAULT: StringName = &"default_anchor"
+const CAMERA_AUTHORITY_PLAYER: StringName = &"player"
+const CAMERA_AUTHORITY_FOCUS: StringName = &"focused_cell"
+const CAMERA_AUTHORITY_VISIBLE_ENEMY: StringName = &"visible_enemy"
 
 @onready var _sub_viewport: SubViewport = $BoardSubViewport
 @onready var _board_world: Node2D = $BoardSubViewport/BoardWorld
@@ -29,6 +33,8 @@ var _hovered_cell := Vector2i.ZERO
 var _hover_pointer_local := Vector2(INF, INF)
 var _camera_motion_tween: Tween
 var _camera_target_position: Vector2 = BOARD_WORLD_SIZE * 0.5
+var _camera_authority: StringName = CAMERA_AUTHORITY_DEFAULT
+var _camera_authority_position: Vector2 = BOARD_WORLD_SIZE * 0.5
 var _keyboard_pan_velocity: Vector2 = Vector2.ZERO
 var _piece_visual_hit_enabled: bool = true
 var _has_session_view: bool = false
@@ -63,8 +69,13 @@ func _process(delta: float) -> void:
 	)
 	if _keyboard_pan_velocity.is_zero_approx():
 		return
+	_focused_cell = Vector2i.ZERO
 	_cancel_camera_motion()
-	_apply_camera_position(_camera.position + _keyboard_pan_velocity * delta)
+	_set_camera_authority(
+		CAMERA_AUTHORITY_PLAYER,
+		_camera.position + _keyboard_pan_velocity * delta
+	)
+	_set_camera_position_immediate(_camera_authority_position)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -161,6 +172,7 @@ func focus_authority_cell(cell: Vector2i) -> void:
 		str(_board_world.get_display_side()),
 		_board_world.get_cell_size()
 	)
+	_set_camera_authority(CAMERA_AUTHORITY_FOCUS, world_position)
 	_set_camera_position_immediate(world_position)
 
 
@@ -187,7 +199,8 @@ func reset_camera() -> void:
 			general_world_position.x,
 			general_world_position.y - visible_world_height * 0.5 + cell_size.y * 0.5
 		)
-	_set_camera_position_immediate(anchor_position)
+	_set_camera_authority(CAMERA_AUTHORITY_DEFAULT, anchor_position)
+	_set_camera_position_immediate(_camera_authority_position)
 
 
 func get_point_spacing() -> Vector2:
@@ -210,6 +223,8 @@ func get_render_snapshot() -> Dictionary:
 	snapshot["default_anchor_cell"] = _default_anchor_cell
 	snapshot["camera_target_position"] = _camera_target_position
 	snapshot["camera_target_y"] = _camera_target_position.y
+	snapshot["camera_authority"] = str(_camera_authority)
+	snapshot["camera_authority_position"] = _camera_authority_position
 	snapshot["camera_pan_axes"] = "xy"
 	snapshot["camera_motion_active"] = _camera_motion_tween != null \
 		and _camera_motion_tween.is_valid() and _camera_motion_tween.is_running()
@@ -252,10 +267,11 @@ func get_overview_state() -> Dictionary:
 
 func navigate_to_overview_ratio(display_ratio: Vector2) -> void:
 	_focused_cell = Vector2i.ZERO
-	_animate_camera_to(
-		display_ratio.clamp(Vector2.ZERO, Vector2.ONE) * BOARD_WORLD_SIZE,
-		MINIMAP_NAVIGATION_DURATION
+	_set_camera_authority(
+		CAMERA_AUTHORITY_PLAYER,
+		display_ratio.clamp(Vector2.ZERO, Vector2.ONE) * BOARD_WORLD_SIZE
 	)
+	_animate_camera_to(_camera_authority_position, MINIMAP_NAVIGATION_DURATION)
 
 
 func get_container_position_for_authority_cell(cell: Vector2i) -> Vector2:
@@ -278,10 +294,13 @@ func _sync_layout() -> void:
 	if BoardCoordinateMapper.is_authority_cell_valid(_focused_cell):
 		focus_authority_cell(_focused_cell)
 	elif _has_session_view:
-		# A same-side resize/layout notification must preserve player camera authority.
-		# Explicit side changes still reset through set_presentation_side().
 		_update_camera_zoom()
-		_apply_camera_position(_camera.position)
+		if _camera_authority in [CAMERA_AUTHORITY_PLAYER, CAMERA_AUTHORITY_VISIBLE_ENEMY]:
+			# Layout notifications can arrive several frames after a view update. Resolve
+			# them from the logical camera owner instead of the tween's scheduling state.
+			_set_camera_position_immediate(_camera_authority_position)
+		else:
+			reset_camera()
 	else:
 		reset_camera()
 
@@ -302,6 +321,7 @@ func _is_cell_visible(cell: Vector2i) -> bool:
 
 
 func _apply_zoom_step(step: float) -> void:
+	_focused_cell = Vector2i.ZERO
 	_zoom_multiplier = clampf(
 		_zoom_multiplier + step * 0.12,
 		MIN_ZOOM_MULTIPLIER,
@@ -309,6 +329,7 @@ func _apply_zoom_step(step: float) -> void:
 	)
 	_update_camera_zoom()
 	_clamp_camera()
+	_set_camera_authority(CAMERA_AUTHORITY_PLAYER, _camera.position)
 
 
 func _update_camera_zoom() -> void:
@@ -323,11 +344,14 @@ func _clamp_camera() -> void:
 func _pan_camera(amount: float) -> void:
 	if is_zero_approx(amount):
 		return
+	_focused_cell = Vector2i.ZERO
 	var start_position := _camera_target_position if _camera_motion_tween != null \
 		and _camera_motion_tween.is_valid() else _camera.position
-	_animate_camera_to(
+	_set_camera_authority(
+		CAMERA_AUTHORITY_PLAYER,
 		start_position + Vector2(0.0, amount / maxf(_camera.zoom.y, 0.01))
 	)
+	_animate_camera_to(_camera_authority_position)
 
 
 func _on_pan_requested(amount: float) -> void:
@@ -349,9 +373,11 @@ func _on_screen_input_surface_gui_input(event: InputEvent) -> void:
 		if _is_middle_dragging:
 			_focused_cell = Vector2i.ZERO
 			_keyboard_pan_velocity = Vector2.ZERO
-			_set_camera_position_immediate(
+			_set_camera_authority(
+				CAMERA_AUTHORITY_PLAYER,
 				_camera.position - motion_event.relative / maxf(_camera.zoom.x, 0.01)
 			)
+			_set_camera_position_immediate(_camera_authority_position)
 			_screen_input_surface.accept_event()
 			return
 		_update_hover_from_container_position(_hover_pointer_local)
@@ -458,6 +484,11 @@ func _set_camera_position_immediate(value: Vector2) -> void:
 	_apply_camera_position(_camera_target_position)
 
 
+func _set_camera_authority(authority: StringName, position: Vector2) -> void:
+	_camera_authority = authority
+	_camera_authority_position = position
+
+
 func _animate_camera_to(value: Vector2, duration: float = CAMERA_SCROLL_DURATION) -> void:
 	_keyboard_pan_velocity = Vector2.ZERO
 	var target_position := _clamp_camera_position(value)
@@ -520,7 +551,8 @@ func _pan_to_authority_cell(cell: Vector2i) -> void:
 		str(_board_world.get_display_side()),
 		_board_world.get_cell_size()
 	)
-	_animate_camera_to(world_position)
+	_set_camera_authority(CAMERA_AUTHORITY_VISIBLE_ENEMY, world_position)
+	_animate_camera_to(_camera_authority_position)
 
 
 func _find_visible_enemy_move_cell(

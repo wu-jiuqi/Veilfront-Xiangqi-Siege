@@ -26,6 +26,7 @@ func _run() -> void:
 	await _check_own_move_keeps_camera(board_viewport)
 	await _check_hidden_enemy_move_keeps_camera(board_viewport)
 	await _check_visible_enemy_move_follows_piece(board_viewport)
+	await _check_explicit_side_change_resets_camera(board_viewport)
 
 	board_viewport.queue_free()
 	viewport.queue_free()
@@ -50,18 +51,31 @@ func _check_own_move_keeps_camera(board_viewport: SubViewportContainer) -> void:
 	board_viewport.render_player_view(_turn_view(
 		"red", "black", 1, Vector2i(5, 2), Vector2i(5, 16), true
 	))
-	await process_frame
+	await _settle_delayed_layout(board_viewport)
 	var snapshot: Dictionary = board_viewport.get_render_snapshot()
 	_expect(
 		(snapshot.get("camera_position", Vector2.ZERO) as Vector2).is_equal_approx(
 			camera_before_move
 		),
-		"own move reset or moved the player's camera"
+		"own move reset or moved the player's camera: before=%s after=%s authority=%s" % [
+			camera_before_move,
+			snapshot.get("camera_position", Vector2.ZERO),
+			snapshot.get("camera_authority", "missing"),
+		]
 	)
 	_expect(
 		not bool(snapshot.get("camera_motion_active", true)),
 		"own move started automatic camera motion"
 	)
+	_expect(
+		str(snapshot.get("camera_authority", "")) == "player",
+		"own move took camera authority away from the player"
+	)
+	board_viewport.render_player_view(_turn_view(
+		"red", "red", 2, Vector2i(5, 2), Vector2i.ZERO, false
+	))
+	await _settle_delayed_layout(board_viewport)
+	_expect_camera_preserved(board_viewport, camera_before_move, "consecutive hidden enemy move")
 
 
 func _check_hidden_enemy_move_keeps_camera(
@@ -71,7 +85,7 @@ func _check_hidden_enemy_move_keeps_camera(
 	board_viewport.render_player_view(_turn_view(
 		"red", "black", 0, Vector2i(5, 1), Vector2i.ZERO, false
 	))
-	await process_frame
+	await _settle_delayed_layout(board_viewport)
 	var camera_before_move: Vector2 = await _move_camera_away(board_viewport)
 	board_viewport.render_player_view(_turn_view(
 		"red", "red", 1, Vector2i(5, 1), Vector2i.ZERO, false
@@ -82,12 +96,25 @@ func _check_hidden_enemy_move_keeps_camera(
 		(snapshot.get("camera_position", Vector2.ZERO) as Vector2).is_equal_approx(
 			camera_before_move
 		),
-		"hidden enemy move reset or moved the player's camera"
+		"hidden enemy move reset or moved the player's camera: before=%s after=%s authority=%s" % [
+			camera_before_move,
+			snapshot.get("camera_position", Vector2.ZERO),
+			snapshot.get("camera_authority", "missing"),
+		]
 	)
 	_expect(
 		not bool(snapshot.get("camera_motion_active", true)),
 		"hidden enemy move started automatic camera motion"
 	)
+	_expect(
+		str(snapshot.get("camera_authority", "")) == "player",
+		"hidden enemy move took camera authority away from the player"
+	)
+	board_viewport.render_player_view(_turn_view(
+		"red", "black", 2, Vector2i(5, 2), Vector2i.ZERO, false
+	))
+	await _settle_delayed_layout(board_viewport)
+	_expect_camera_preserved(board_viewport, camera_before_move, "consecutive own move")
 
 
 func _check_visible_enemy_move_follows_piece(
@@ -108,7 +135,11 @@ func _check_visible_enemy_move_follows_piece(
 		bool(motion_snapshot.get("camera_motion_active", false)),
 		"visible enemy move did not start automatic camera motion"
 	)
-	await create_timer(0.4).timeout
+	_expect(
+		str(motion_snapshot.get("camera_authority", "")) == "visible_enemy",
+		"visible enemy move did not take bounded automatic camera authority"
+	)
+	await _wait_for_camera_idle(board_viewport)
 	var camera_after_move: Vector2 = board_viewport.get_render_snapshot().get(
 		"camera_position", Vector2.ZERO
 	) as Vector2
@@ -118,10 +149,85 @@ func _check_visible_enemy_move_follows_piece(
 	)
 
 
+func _check_explicit_side_change_resets_camera(
+	board_viewport: SubViewportContainer
+) -> void:
+	board_viewport.clear_session_view()
+	board_viewport.render_player_view(_turn_view(
+		"red", "red", 0, Vector2i(5, 1), Vector2i.ZERO, false
+	))
+	await process_frame
+	var camera_before_change: Vector2 = await _move_camera_away(board_viewport)
+	board_viewport.set_presentation_side("black")
+	await _settle_delayed_layout(board_viewport)
+	var snapshot: Dictionary = board_viewport.get_render_snapshot()
+	_expect(
+		board_viewport.get_presentation_side() == "black",
+		"explicit side change did not switch presentation side"
+	)
+	_expect(
+		str(snapshot.get("camera_authority", "")) == "default_anchor",
+		"explicit side change incorrectly retained player camera authority"
+	)
+	_expect(
+		(snapshot.get("camera_position", Vector2.ZERO) as Vector2).distance_to(
+			camera_before_change
+		) > 1.0,
+		"explicit side change incorrectly retained the old world camera position"
+	)
+
+
 func _move_camera_away(board_viewport: SubViewportContainer) -> Vector2:
 	board_viewport.navigate_to_overview_ratio(Vector2(0.18, 0.18))
-	await create_timer(0.2).timeout
+	await _wait_for_camera_idle(board_viewport)
 	return board_viewport.get_render_snapshot().get("camera_position", Vector2.ZERO) as Vector2
+
+
+func _wait_for_camera_idle(board_viewport: SubViewportContainer) -> void:
+	for _frame: int in 120:
+		if not bool(board_viewport.get_render_snapshot().get("camera_motion_active", true)):
+			return
+		await process_frame
+	_failures.append("camera motion did not settle within 120 frames")
+
+
+func _settle_delayed_layout(board_viewport: SubViewportContainer) -> void:
+	var original_size: Vector2 = board_viewport.size
+	for _frame: int in 3:
+		await process_frame
+	board_viewport.size = original_size + Vector2(8.0, 8.0)
+	for _frame: int in 3:
+		await process_frame
+	board_viewport.size = original_size
+	for _frame: int in 3:
+		await process_frame
+
+
+func _expect_camera_preserved(
+	board_viewport: SubViewportContainer,
+	expected_position: Vector2,
+	context: String
+) -> void:
+	var snapshot: Dictionary = board_viewport.get_render_snapshot()
+	_expect(
+		(snapshot.get("camera_position", Vector2.ZERO) as Vector2).is_equal_approx(
+			expected_position
+		),
+		"%s changed the player's camera: expected=%s actual=%s authority=%s" % [
+			context,
+			expected_position,
+			snapshot.get("camera_position", Vector2.ZERO),
+			snapshot.get("camera_authority", "missing"),
+		]
+	)
+	_expect(
+		not bool(snapshot.get("camera_motion_active", true)),
+		"%s started automatic camera motion" % context
+	)
+	_expect(
+		str(snapshot.get("camera_authority", "")) == "player",
+		"%s took camera authority away from the player" % context
+	)
 
 
 func _turn_view(
