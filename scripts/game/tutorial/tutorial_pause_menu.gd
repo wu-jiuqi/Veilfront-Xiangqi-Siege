@@ -4,7 +4,7 @@ extends Control
 signal restart_requested()
 signal exit_requested()
 
-@onready var _continue_button: Button = $Center/Panel/Margin/Content/ContinueButton
+@onready var _continue_button: Button = %ContinueButton
 
 var _opened: bool = false
 var _tree_was_paused: bool = false

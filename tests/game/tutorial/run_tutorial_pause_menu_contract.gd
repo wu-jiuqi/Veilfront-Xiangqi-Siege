@@ -4,8 +4,12 @@ const PAUSE_MENU_SCENE: PackedScene = preload(
 	"res://scenes/game/ui/tutorial_pause_menu.tscn"
 )
 const MATCH_HUD_SCENE: PackedScene = preload("res://scenes/game/ui/match_hud_v2.tscn")
-const BUTTON_TEXTURE_PATH: String = \
-	"res://assets/art/ui/terracotta_pause_menu/tutorial_pause_button_v1.png"
+const PANEL_TEXTURE_PATH: String = \
+	"res://assets/art/ui/system_dialog/system_dialog_panel_v1.png"
+const PRIMARY_TEXTURE_PATH: String = \
+	"res://assets/art/ui/system_dialog/system_dialog_button_primary_v1.png"
+const SECONDARY_TEXTURE_PATH: String = \
+	"res://assets/art/ui/system_dialog/system_dialog_button_secondary_v1.png"
 
 var _failures: Array[String] = []
 
@@ -19,22 +23,36 @@ func _run() -> void:
 	root.add_child(menu)
 	await process_frame
 
-	var content: Control = menu.get_node("Center/Panel/Margin/Content") as Control
-	var continue_button: Button = content.get_node("ContinueButton") as Button
-	var restart_button: Button = content.get_node("RestartChapterButton") as Button
-	var exit_button: Button = content.get_node("ExitTutorialButton") as Button
+	var continue_button: Button = menu.get_node("%ContinueButton") as Button
+	var restart_button: Button = menu.get_node("%RestartChapterButton") as Button
+	var exit_button: Button = menu.get_node("%ExitTutorialButton") as Button
 	_expect(menu.process_mode == Node.PROCESS_MODE_ALWAYS, "pause menu must process while paused")
 	_expect(not menu.visible and not menu.is_open(), "pause menu must start closed")
 	for button: Button in [continue_button, restart_button, exit_button]:
 		_expect(button.focus_mode == Control.FOCUS_ALL, "%s must accept keyboard focus" % button.name)
-		var normal_style: StyleBoxTexture = button.get_theme_stylebox("normal") as StyleBoxTexture
-		_expect(normal_style != null, "%s must use a generated texture style" % button.name)
-		if normal_style != null:
-			_expect(
-				normal_style.texture != null \
-				and normal_style.texture.resource_path == BUTTON_TEXTURE_PATH,
-				"%s does not reference the generated pause button" % button.name
-			)
+		_expect(button.flat, "%s must leave rendering to the preset texture frame" % button.name)
+	_expect(
+		(menu.get_node("%PanelArt") as TextureRect).texture.resource_path == PANEL_TEXTURE_PATH,
+		"pause menu does not reuse the online system dialog panel"
+	)
+	_expect(
+		(menu.get_node("DialogCenter/DialogCanvas/ActionColumn/ContinueSlot/ContinueFrame") as TextureRect).texture.resource_path == PRIMARY_TEXTURE_PATH,
+		"continue action does not reuse the system dialog primary button"
+	)
+	for frame_path: String in [
+		"DialogCenter/DialogCanvas/ActionColumn/RestartSlot/RestartFrame",
+		"DialogCenter/DialogCanvas/ActionColumn/ExitSlot/ExitFrame",
+	]:
+		_expect(
+			(menu.get_node(frame_path) as TextureRect).texture.resource_path == SECONDARY_TEXTURE_PATH,
+			"%s does not reuse the system dialog secondary button" % frame_path
+		)
+	_expect(
+		not FileAccess.get_file_as_string("res://scenes/game/ui/tutorial_pause_menu.tscn").contains(
+			"terracotta_pause_menu/tutorial_pause_button_v1.png"
+		),
+		"pause menu still references the retired standalone theme button asset"
+	)
 
 	var escape_event := InputEventAction.new()
 	escape_event.action = &"ui_cancel"

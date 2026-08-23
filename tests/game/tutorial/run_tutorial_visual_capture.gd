@@ -21,7 +21,11 @@ func _capture() -> void:
 	root.add_child(level)
 	for _frame: int in 12:
 		await process_frame
-	if capture_state == "completion":
+	if capture_state == "pause":
+		var pause_menu := level.get_node("TutorialPauseMenu") as Control
+		pause_menu.call("open_menu")
+		await process_frame
+	elif capture_state == "completion":
 		var overlay := level.get_node("TutorialOverlay") as Control
 		overlay.render_public_step({
 			"id": "completed",
@@ -48,6 +52,8 @@ func _capture() -> void:
 	var output_path := "res://evidence/ui/formal-level-%s-hud-1280x720.png" % level_id.to_lower()
 	if capture_state == "completion":
 		output_path = "res://evidence/ui/formal-level-%s-completion-buttons-1280x720.png" % level_id.to_lower()
+	elif capture_state == "pause":
+		output_path = "res://evidence/ui/formal-level-%s-pause-menu-1280x720.png" % level_id.to_lower()
 	var error: Error = root.get_texture().get_image().save_png(
 		ProjectSettings.globalize_path(output_path)
 	)
