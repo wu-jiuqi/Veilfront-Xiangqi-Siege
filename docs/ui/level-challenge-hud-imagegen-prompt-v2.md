@@ -1,7 +1,7 @@
 # 关卡闯关 HUD ImageGen 提示词 V2
 
 日期：2026-08-23
-状态：`concept_reference / pending_owner_review`
+状态：`superseded_full_screen_reference / composition_only`
 生成模式：Codex 内置 `image_gen`
 
 ## 输出
@@ -48,6 +48,8 @@ Constraints: one screen only; exact 16:9 landscape; same overall composition and
 
 ## 评审边界
 
+- 项目所有者已明确不制作独立完整关卡 HUD；本图只保留为右侧`关卡指引`面板与既有战局骨架的组合关系参考。
+- 当前独立面板审批资产见`docs/ui/level-guide-panel-approval-v1.md`与`assets/art/ui/level_guide_panel/`。
 - 本图只冻结候选的信息层级和布局关系，不冻结生成式文字、棋盘线号、棋子位置或像素尺寸。
 - 正式实现继续复用对局 HUD 的预置 `Control / Container / Theme` 骨架；不得把整张概念图直接作为交互背景。
 - 棋盘必须继续使用项目精确 `9×24` 交点与安全可见数据。
