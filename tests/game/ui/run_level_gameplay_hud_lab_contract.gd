@@ -27,8 +27,10 @@ func _run() -> void:
 	_expect(bool(snapshot.get("initialized", false)), "关卡 HUD 测试场景未完成初始化")
 	_expect(bool(snapshot.get("uses_online_match_screen_scene", false)), "测试场景没有复用正式联机对局场景")
 	_expect(bool(snapshot.get("uses_match_hud_v3", false)), "测试场景没有复用正式 MatchHudV3")
-	_expect(not bool(snapshot.get("original_right_rail_visible", true)), "原联机右栏仍与关卡指引叠加显示")
+	_expect(bool(snapshot.get("original_right_rail_visible", false)), "原联机右栏布局占位被移除，棋盘会扩张到右边界")
+	_expect(bool(snapshot.get("original_right_content_hidden", false)), "原联机右栏内容仍与关卡指引叠加显示")
 	_expect(_rects_match(snapshot), "关卡指引没有覆盖原联机 HUD 右栏")
+	_expect(_center_column_clear_of_guide(lab), "棋盘与行动区扩张到了关卡指引下方")
 	_expect(str(board.get("map_id", "")) == "terracotta_battlefield_v3", "测试场景没有复用正式秦俑战场地图")
 	_expect(int(board.get("piece_count", 0)) == 32, "测试场景没有复用正式 32 枚开局棋子")
 	_expect(str(guide.get("title", "")) == "关卡指引", "关卡指引标题未动态填充")
@@ -92,6 +94,16 @@ func _rects_match(snapshot: Dictionary) -> bool:
 	var guide: Rect2 = snapshot.get("guide_rect", Rect2())
 	return original.position.distance_to(guide.position) <= 1.0 \
 		and original.size.distance_to(guide.size) <= 1.0
+
+
+func _center_column_clear_of_guide(lab: Control) -> bool:
+	var center_column := lab.get_node(
+		"OnlineMatchScreen/MatchHudV3/SafeMargin/MainRows/BodyBand/CenterColumn"
+	) as Control
+	var guide := lab.get_node(
+		"LevelGuideOverlay/SafeMargin/MainRows/BodyBand/LevelGuidePanel"
+	) as Control
+	return not center_column.get_global_rect().intersects(guide.get_global_rect())
 
 
 func _rect_inside_viewport(rect: Rect2, viewport_size: Vector2i) -> bool:

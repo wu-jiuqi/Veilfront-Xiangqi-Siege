@@ -32,6 +32,8 @@ func _ready() -> void:
 func get_lab_snapshot() -> Dictionary:
 	var hud := _online_match_screen.get_node("MatchHudV3") as Control
 	var original_right := hud.get_node("SafeMargin/MainRows/BodyBand/RightRail") as Control
+	var objective_events := original_right.get_node("ObjectiveEvents") as Control
+	var confirmation := original_right.get_node("Confirmation") as Control
 	var board_viewport := hud.get_node(
 		"SafeMargin/MainRows/BodyBand/CenterColumn/BoardFrame/BoardViewport"
 	) as Control
@@ -41,6 +43,8 @@ func get_lab_snapshot() -> Dictionary:
 			== "res://scenes/game/match/online_match_screen.tscn",
 		"uses_match_hud_v3": hud.scene_file_path == "res://scenes/game/ui/match_hud_v3.tscn",
 		"original_right_rail_visible": original_right.visible,
+		"original_right_content_hidden": not objective_events.visible \
+			and not confirmation.visible,
 		"original_right_rect": original_right.get_global_rect(),
 		"guide_rect": _level_guide_panel.get_global_rect(),
 		"guide": _level_guide_panel.get_state_snapshot(),
@@ -67,7 +71,10 @@ func _initialize_preview() -> void:
 	_online_match_screen.call("handle_board_point", SAMPLE_CELL)
 	var hud := _online_match_screen.get_node("MatchHudV3") as Control
 	var original_right := hud.get_node("SafeMargin/MainRows/BodyBand/RightRail") as Control
-	original_right.visible = false
+	original_right.visible = true
+	original_right.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	(original_right.get_node("ObjectiveEvents") as Control).visible = false
+	(original_right.get_node("Confirmation") as Control).visible = false
 	var board_sub_viewport := hud.get_node(
 		"SafeMargin/MainRows/BodyBand/CenterColumn/BoardFrame/BoardViewport/BoardSubViewport"
 	) as SubViewport
