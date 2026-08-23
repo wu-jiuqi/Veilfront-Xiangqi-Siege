@@ -1,0 +1,30 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+PASS: 正式组合根完成大厅创建、加入和红黑入席
+PASS: 双方入席后显式准备按钮可见
+PASS: 双方显式准备经权威会话同步
+PASS: 仅房主在双方准备后获得开局按钮
+PASS: 客户端不显示开局按钮
+PASS: 正式大厅经房主开局进入双方 MatchScreen
+PASS: 房主 MatchScreen 只绑定赤方 PlayerView
+PASS: 客户端 MatchScreen 只绑定玄方 PlayerView
+PASS: LAN 隐藏镜像视角按钮
+PASS: LAN 显示退出对局按钮
+PASS: LAN 隐藏直接重赛按钮
+PASS: 正式 MatchScreen 使用 PlayerView-only 动态迷雾
+PASS: LAN 私有标记只保存在本地 MatchScreen
+PASS: 赤方通过正式 MatchScreen 选择、确认并提交移动
+PASS: 赤方移动同步到双方正式 HUD
+PASS: 玄方通过正式 MatchScreen 提交远端移动
+PASS: 远端提交期间启用防重复锁
+PASS: 玄方移动同步后解除提交锁并切回赤方
+PASS: 终局只按本地 PlayerView 显示胜负、公开原因与回顾
+PASS: LAN 终局只提供返回大厅
+PASS: LAN 终局默认聚焦返回大厅
+PASS: 对局返回先显示离开确认
+PASS: 离开确认默认聚焦取消
+PASS: 房主离开后客户端进入阻断式断线恢复
+PASS: 清理端口和预览后双方返回正式大厅
+PASS: 断线清除旧棋子、旗帜与私有标记
+PASS: 断线清除小地图旧 PlayerView
+FORMAL_LAN_FULL_STACK_LOOPBACK_PASS ux=ready-start-match-submit-disconnect

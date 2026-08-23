@@ -1,0 +1,123 @@
+[
+  {
+    "id": "dependency_boundaries",
+    "path": "tests/game/architecture/check_dependency_boundaries.gd",
+    "marker": "DEPENDENCY_BOUNDARY_CHECK_PASSED",
+    "exit_code": -999,
+    "timed_out": true,
+    "marker_found": false,
+    "forbidden_count": 0,
+    "duration_seconds": 360.252,
+    "verdict": "fail"
+  },
+  {
+    "id": "formal_scene_smoke",
+    "path": "tests/game/scenes/run_formal_scene_smoke.gd",
+    "marker": "FORMAL_SCENE_SMOKE_PASS",
+    "exit_code": 0,
+    "timed_out": false,
+    "marker_found": true,
+    "forbidden_count": 0,
+    "duration_seconds": 21.816,
+    "verdict": "pass"
+  },
+  {
+    "id": "static_theme",
+    "path": "tests/game/ui/run_ui_static_theme_contract.gd",
+    "marker": "UI_STATIC_THEME_CONTRACT_PASS",
+    "exit_code": -999,
+    "timed_out": true,
+    "marker_found": false,
+    "forbidden_count": 2,
+    "duration_seconds": 360.111,
+    "verdict": "fail"
+  },
+  {
+    "id": "board_camera_layer",
+    "path": "tests/game/presentation/run_board_camera_layer_contract.gd",
+    "marker": "BOARD_CAMERA_LAYER_CONTRACT_PASS",
+    "exit_code": 0,
+    "timed_out": false,
+    "marker_found": true,
+    "forbidden_count": 0,
+    "duration_seconds": 65.813,
+    "verdict": "pass"
+  },
+  {
+    "id": "board_layout",
+    "path": "tests/game/presentation/run_board_layout_contract.gd",
+    "marker": "BOARD_LAYOUT_CONTRACT_PASS",
+    "exit_code": 0,
+    "timed_out": false,
+    "marker_found": true,
+    "forbidden_count": 0,
+    "duration_seconds": 32.963,
+    "verdict": "pass"
+  },
+  {
+    "id": "formal_board_art_input",
+    "path": "tests/game/presentation/run_formal_board_art_input_contract.gd",
+    "marker": "FORMAL_BOARD_ART_INPUT_CONTRACT_PASS",
+    "exit_code": 0,
+    "timed_out": false,
+    "marker_found": true,
+    "forbidden_count": 0,
+    "duration_seconds": 17.758,
+    "verdict": "pass"
+  },
+  {
+    "id": "turn_camera_visibility",
+    "path": "tests/game/presentation/run_turn_camera_visibility_contract.gd",
+    "marker": "TURN_CAMERA_VISIBILITY_CONTRACT_PASS",
+    "exit_code": 0,
+    "timed_out": false,
+    "marker_found": true,
+    "forbidden_count": 0,
+    "duration_seconds": 8.985,
+    "verdict": "pass"
+  },
+  {
+    "id": "lan_network",
+    "path": "tests/game/network/run_formal_lan_network_integration.gd",
+    "marker": "FORMAL_LAN_NETWORK_INTEGRATION_PASSED",
+    "exit_code": 1,
+    "timed_out": false,
+    "marker_found": false,
+    "forbidden_count": 6,
+    "duration_seconds": 83.083,
+    "verdict": "fail"
+  },
+  {
+    "id": "lan_full_stack",
+    "path": "tests/game/network/run_formal_lan_full_stack_loopback.gd",
+    "marker": "FORMAL_LAN_FULL_STACK_LOOPBACK_PASS",
+    "exit_code": 0,
+    "timed_out": false,
+    "marker_found": true,
+    "forbidden_count": 0,
+    "duration_seconds": 108.507,
+    "verdict": "pass"
+  },
+  {
+    "id": "tutorial_progress",
+    "path": "tests/game/tutorial/run_tutorial_progress_contract.gd",
+    "marker": "TUTORIAL_PROGRESS_CONTRACT_PASS",
+    "exit_code": 0,
+    "timed_out": false,
+    "marker_found": true,
+    "forbidden_count": 0,
+    "duration_seconds": 22.75,
+    "verdict": "pass"
+  },
+  {
+    "id": "formal_equivalence_replay",
+    "path": "tests/game/migration/run_gate1_formal_equivalence.gd",
+    "marker": "FORMAL_EQUIVALENCE_PASS",
+    "exit_code": -999,
+    "timed_out": true,
+    "marker_found": false,
+    "forbidden_count": 0,
+    "duration_seconds": 361.807,
+    "verdict": "fail"
+  }
+]

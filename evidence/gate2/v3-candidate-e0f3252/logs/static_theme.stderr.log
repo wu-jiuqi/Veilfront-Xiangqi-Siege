@@ -1,0 +1,4 @@
+SCRIPT ERROR: Assertion failed: scene Theme mismatch: res://scenes/game/frontend/level_select.tscn
+   at: _run (res://tests/game/ui/run_ui_static_theme_contract.gd:49)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tests/game/ui/run_ui_static_theme_contract.gd:49)

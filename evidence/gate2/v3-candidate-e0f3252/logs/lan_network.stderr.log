@@ -1,0 +1,18 @@
+ERROR: FAIL: 黑方正式移动经可靠 RPC 结算并切回红方回合
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://tests/game/network/run_formal_lan_network_integration.gd:556)
+       [1] _run (res://tests/game/network/run_formal_lan_network_integration.gd:186)
+       [2] _wait_until (res://tests/game/network/run_formal_lan_network_integration.gd:548)
+ERROR: FAIL: 房主跳过行动经正式 LAN 结算并切换玄方
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://tests/game/network/run_formal_lan_network_integration.gd:556)
+       [1] _run (res://tests/game/network/run_formal_lan_network_integration.gd:196)
+       [2] _wait_until (res://tests/game/network/run_formal_lan_network_integration.gd:548)
+ERROR: FAIL: 客户端回合超时经房主权威结算并切回赤方
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://tests/game/network/run_formal_lan_network_integration.gd:556)
+       [1] _run (res://tests/game/network/run_formal_lan_network_integration.gd:204)
+       [2] _wait_until (res://tests/game/network/run_formal_lan_network_integration.gd:548)
