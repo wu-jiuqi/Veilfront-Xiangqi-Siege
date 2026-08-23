@@ -32,7 +32,6 @@ const CHALLENGE_NODE_POSITIONS: Array[Vector2] = [
 @onready var _detail_title: Label = %DetailTitle
 @onready var _detail_summary: Label = %DetailSummary
 @onready var _detail_objective: Label = %DetailObjective
-@onready var _detail_status: Label = %DetailStatus
 @onready var _status_label: Label = %StatusLabel
 @onready var _reset_dialog: ConfirmationDialog = %ResetDialog
 
@@ -40,6 +39,7 @@ var _transitioning := false
 var _completed: Dictionary = {}
 var _cards: Array[LevelCard] = []
 var _selected_level: LevelDefinition
+var _selected_card: LevelCard
 
 
 func _ready() -> void:
@@ -103,9 +103,19 @@ func _select_first_level(category: String) -> void:
 
 
 func _select_level(level: LevelDefinition) -> void:
-	_selected_level = level
+	if _selected_level == level:
+		return
+	var next_card: LevelCard
 	for card: LevelCard in _cards:
-		card.set_selected(card.get_level() == level)
+		if card.get_level() == level:
+			next_card = card
+			break
+	if _selected_card != null:
+		_selected_card.set_selected(false)
+	_selected_card = next_card
+	if _selected_card != null:
+		_selected_card.set_selected(true)
+	_selected_level = level
 	_detail_code.text = level.level_id
 	_detail_title.text = level.title
 	_detail_summary.text = level.summary
@@ -113,16 +123,6 @@ func _select_level(level: LevelDefinition) -> void:
 	var enterable := _is_unlocked(level) and level.available
 	_enter_button.disabled = not enterable
 	_enter_button.text = "进入关卡" if enterable else "尚未解锁"
-	if bool(_completed.get(level.level_id, false)):
-		_detail_status.text = "军令状态：已完成，可再次演练"
-	elif test_all_levels_unlocked and level.available:
-		_detail_status.text = "军令状态：测试开放"
-	elif enterable:
-		_detail_status.text = "军令状态：可进入"
-	elif not level.available:
-		_detail_status.text = "军令状态：内容不可用"
-	else:
-		_detail_status.text = "军令状态：完成前置章节后解锁"
 
 
 func _enter_selected_level() -> void:
@@ -204,6 +204,7 @@ func _clear_tutorial_progress() -> void:
 	config.set_value("progress", "completed_ids", [])
 	config.save("user://level_progress.cfg")
 	_selected_level = null
+	_selected_card = null
 	_cards.clear()
 	_update_progress_label()
 	_build_level_grid(_tutorial_grid, CATALOG.get_levels_for_category("tutorial"))

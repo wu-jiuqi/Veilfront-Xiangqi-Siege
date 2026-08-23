@@ -45,7 +45,7 @@ func _init() -> void:
 	assert(_anchors_match(settings_button, Rect2(0.0125, 0.022222, 0.05, 0.088889)))
 	assert(settings_button.text.is_empty(), "settings shield button must not render a text label")
 	assert(settings_button.icon.resource_path == "res://assets/art/ui/start_sequence/settings_infantry_shield_gear_v1.png")
-	assert(settings_button.tooltip_text == "设置")
+	assert(settings_button.tooltip_text.is_empty(), "settings shield must not show a hover tooltip")
 	_assert_true_alpha("res://assets/art/ui/start_sequence/settings_infantry_shield_gear_v1.png")
 	assert(_anchors_match(mist_character, Rect2(0.3875, 0.166667, 0.19, 0.32)))
 	assert(_is_vector_near(mist_character.pivot_offset, Vector2(121.6, 115.2)))
@@ -126,13 +126,13 @@ func _init() -> void:
 		assert(not card.get_node("%NodeButton").disabled, "tutorial test node must be open")
 	for card: Control in level_root.get_node("%ChallengeGrid").get_children():
 		assert(not card.get_node("%NodeButton").disabled, "challenge test node must be open")
-	assert(level_root.get_node("DesignCanvas/CampaignBackground").texture.resource_path == "res://assets/art/ui/level_select/level_select_empty_background_v2.png")
+	assert(level_root.get_node("%DesignCanvas").get_node("CampaignBackground").texture.resource_path == "res://assets/art/ui/level_select/level_select_empty_background_v3.png")
 	assert(level_root.get_node("%DetailCode").text == "T0")
 	assert(level_root.get_node("%EnterButton").size.y >= 44.0)
-	var first_node_texture := level_root.get_node("%TutorialGrid").get_child(0).get_node("%SelectedState").texture as Texture2D
+	var first_node_texture := level_root.get_node("%TutorialGrid").get_child(0).get_node("%StateTexture").texture as Texture2D
 	assert(first_node_texture.resource_path == "res://assets/art/ui/level_select/components/node_selected_v2.png")
 	assert(level_root.get_node("%BackButton").focus_mode != Control.FOCUS_NONE)
-	print("FRONTEND_SCENE_SMOKE_PASS catalog=14 tutorial=11 challenge=3 level_ui=approved_master_v2")
+	print("FRONTEND_SCENE_SMOKE_PASS catalog=14 tutorial=11 challenge=3 level_ui=approved_master_v3")
 	quit()
 
 

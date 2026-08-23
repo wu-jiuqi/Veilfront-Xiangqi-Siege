@@ -13,8 +13,13 @@ anchors_preset = 0
 offset_right = 92.0
 offset_bottom = 104.0
 script = ExtResource("1_script")
+normal_texture = ExtResource("2_available")
+focus_texture = ExtResource("3_selected")
+selected_texture = ExtResource("3_selected")
+completed_texture = ExtResource("4_completed")
+locked_texture = ExtResource("5_locked")
 
-[node name="NormalState" type="TextureRect" parent="."]
+[node name="StateTexture" type="TextureRect" parent="."]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -24,62 +29,6 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 texture = ExtResource("2_available")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="FocusState" type="TextureRect" parent="."]
-unique_name_in_owner = true
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("3_selected")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="SelectedState" type="TextureRect" parent="."]
-unique_name_in_owner = true
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("3_selected")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="CompletedState" type="TextureRect" parent="."]
-unique_name_in_owner = true
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("4_completed")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="LockedState" type="TextureRect" parent="."]
-unique_name_in_owner = true
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("5_locked")
 expand_mode = 1
 stretch_mode = 5
 

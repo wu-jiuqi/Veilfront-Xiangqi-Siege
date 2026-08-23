@@ -3,11 +3,13 @@ extends Control
 
 signal level_selected(level: LevelDefinition)
 
-@onready var _normal_state: TextureRect = %NormalState
-@onready var _focus_state: TextureRect = %FocusState
-@onready var _selected_state: TextureRect = %SelectedState
-@onready var _completed_state: TextureRect = %CompletedState
-@onready var _locked_state: TextureRect = %LockedState
+@export var normal_texture: Texture2D
+@export var focus_texture: Texture2D
+@export var selected_texture: Texture2D
+@export var completed_texture: Texture2D
+@export var locked_texture: Texture2D
+
+@onready var _state_texture: TextureRect = %StateTexture
 @onready var _code_label: Label = %CodeLabel
 @onready var _status_label: Label = %StatusLabel
 @onready var _node_button: Button = %NodeButton
@@ -38,6 +40,8 @@ func configure(level: LevelDefinition, unlocked: bool, test_mode: bool = false, 
 
 
 func set_selected(value: bool) -> void:
+	if _selected == value:
+		return
 	_selected = value
 	_update_visual_state()
 
@@ -84,18 +88,14 @@ func _on_mouse_exited() -> void:
 func _update_visual_state() -> void:
 	if not is_node_ready():
 		return
-	_normal_state.visible = false
-	_focus_state.visible = false
-	_selected_state.visible = false
-	_completed_state.visible = false
-	_locked_state.visible = false
+	var next_texture := normal_texture
 	if _node_button.disabled:
-		_locked_state.visible = true
+		next_texture = locked_texture
 	elif _selected:
-		_selected_state.visible = true
+		next_texture = selected_texture
 	elif _focused or _pointer_inside:
-		_focus_state.visible = true
+		next_texture = focus_texture
 	elif _completed:
-		_completed_state.visible = true
-	else:
-		_normal_state.visible = true
+		next_texture = completed_texture
+	if _state_texture.texture != next_texture:
+		_state_texture.texture = next_texture

@@ -15,10 +15,12 @@ func _init() -> void:
 	assert(level_select.theme.resource_path == "res://resources/game/ui/themes/level_select_master_v2_theme.tres")
 	assert(not scene_text.contains("level_campaign_map_background_v1"))
 	assert(not card_text.contains("level_node_states_v1"))
-	assert(level_select.get_node("DesignCanvas/CampaignBackground") is TextureRect)
-	assert(level_select.get_node("DesignCanvas/CampaignBackground").texture.resource_path == "res://assets/art/ui/level_select/level_select_empty_background_v2.png")
+	assert(level_select.get_node("%DesignCanvas").get_node("CampaignBackground") is TextureRect)
+	assert(level_select.get_node("%DesignCanvas").get_node("CampaignBackground").texture.resource_path == "res://assets/art/ui/level_select/level_select_empty_background_v3.png")
 	assert(level_select.get_node("%TutorialGrid").get_child_count() == 11)
 	assert(level_select.get_node("%ChallengeGrid").get_child_count() == 3)
+	assert(not level_select.has_node("%RewardSlot"), "level details must not show a military-order reward slot")
+	assert(not level_select.has_node("%DetailStatus"), "level details must not show military-order status text")
 	assert(level_select.get_node("%CategoryTabs").tabs_visible == false)
 	assert(level_select.get_node("%TutorialCategoryButton").button_pressed)
 	assert(level_select.get_node("%DetailCode").text == "T0")
@@ -26,7 +28,10 @@ func _init() -> void:
 	assert(level_select.get_node("%EnterButton").size.y >= 44.0)
 	assert(level_select.get_node("%TutorialGrid").get_child(0).position == Vector2(102, 24))
 	assert(level_select.get_node("%TutorialGrid").get_child(10).position == Vector2(445, 397))
-	assert(level_select.get_node("%TutorialGrid").get_child(0).get_node("%SelectedState").texture.resource_path == "res://assets/art/ui/level_select/components/node_selected_v2.png")
+	var first_card := level_select.get_node("%TutorialGrid").get_child(0) as LevelCard
+	assert(first_card.get_node("%StateTexture").texture.resource_path == "res://assets/art/ui/level_select/components/node_selected_v2.png")
+	assert(_count_texture_rects(first_card) == 1, "each level card must use one state texture canvas item")
+	assert(_count_texture_rects(level_select) == 16, "level select must keep its texture canvas-item budget")
 
 	var challenge_button := level_select.get_node("%ChallengeCategoryButton") as Button
 	challenge_button.pressed.emit()
@@ -53,5 +58,12 @@ func _init() -> void:
 		viewport.queue_free()
 		await process_frame
 
-	print("LEVEL_SELECT_UI_CONTRACT_PASS source=approved_master_v2 nodes=14 resolutions=3 purple_keyed=true old_ui=false")
+	print("LEVEL_SELECT_UI_CONTRACT_PASS source=approved_master_v3 nodes=14 resolutions=3 military_order_ui=false old_ui=false")
 	quit()
+
+
+func _count_texture_rects(node: Node) -> int:
+	var count := 1 if node is TextureRect else 0
+	for child: Node in node.get_children():
+		count += _count_texture_rects(child)
+	return count
