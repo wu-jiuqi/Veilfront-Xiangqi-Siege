@@ -5,7 +5,7 @@
 
 参考图：`assets/art/ui/concepts/multiplayer_match_hud_region_map_v1.png`
 
-当前装配效果图：`assets/art/ui/concepts/multiplayer_match_hud_ux_reference_v2_no_incense.png`。V2 禁用全部香类计时组件，区域 02 是唯一回合／计时入口；区域 01 与 03 各承载三项公开旗帜／损失信息。
+当前装配效果图：`assets/art/ui/concepts/multiplayer_match_hud_ux_reference_v2_no_incense.png`。V2 禁用全部香类计时组件，区域 02 是唯一回合／计时入口；区域 01 与 03 各承载三项公开旗帜／损失信息；区域 05 只显示棋子身份与定位简介；区域 09 改为左侧规则／技能说明、右侧上下两个模式按钮。
 
 ## 目的
 
@@ -19,11 +19,11 @@
 | 02 | `TurnStatusBar` | 回合、行动方、剩余时间、网络提交状态 | `CenterContainer → PanelContainer` |
 | 03 | `BlackForceSummary` | 玄方头像、军势、公开旗／损失摘要 | `PanelContainer → HBoxContainer` |
 | 04 | `TacticalMinimap` | 观察者安全小地图与当前镜头框 | `PanelContainer → AspectRatioContainer` |
-| 05 | `SelectedUnitCard` | 当前选中单位、公开能力与状态；空状态可折叠 | `PanelContainer → VBoxContainer` |
+| 05 | `SelectedUnitCard` | 当前选中单位名称、立绘与简短定位；无兵力／士气／放大操作；空状态可折叠 | `PanelContainer → VBoxContainer` |
 | 06 | `BoardViewport` | 主棋盘、雾、棋子、合法点、路径与输入层 | `AspectRatioContainer → BoardHost` |
 | 07 | `ObjectiveEventsDrawer` | 当前玩家可见的战局目标、公开事件与当前选中坐标，最多五行 | `PanelContainer → VBoxContainer` |
 | 08 | `MarkerTool` | 私有标记入口与局部工具状态 | `PanelContainer → CenterContainer` |
-| 09 | `ActionModeBar` | 行动模式、当前选择和上下文说明 | `PanelContainer → VBoxContainer` |
+| 09 | `ActionModeBar` | 左侧行动规则／技能说明，右侧上下排列的`移动 / 技能`模式按钮 | `PanelContainer → HBoxContainer` |
 | 10 | `ConfirmationActions` | 确认、取消、提交锁和错误恢复入口 | `PanelContainer → HBoxContainer` |
 
 ## 推荐容器骨架

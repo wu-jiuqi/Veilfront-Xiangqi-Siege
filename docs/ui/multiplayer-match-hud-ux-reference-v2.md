@@ -15,7 +15,9 @@
 - 删除香盘、计时香、回合香、香炉、竖香、灰盘及其所有计时语义。
 - 区域 02 `TurnStatusBar` 是唯一回合／行动方／剩余时间入口。
 - 区域 01 与 03 的头像区下方各显示三项公开信息：`已占旗帜`、`损失棋子`、`正在占旗 0/3`。
+- 区域 05 只显示棋子名称、全身立绘和两行身份／定位简介；不显示兵力、士气、属性条、数值或放大按钮。
 - 区域 07 的第四行显示当前选中棋子的公开坐标，V2 示例为`当前坐标：(5,7)`；第五行保留为空槽。
+- 区域 09 左侧只显示当前棋子的行动规则与技能简述，右侧只保留上下排列的`移动 / 技能`两个模式按钮。
 - 旧版`兵 / 炮 / 旗 / 损`紧凑统计行不再使用。
 - 面板轮廓必须闭合、互不重叠，装饰与阴影不得跨出区域边界，为紫幕拆分保留干净轮廓。
 
@@ -27,21 +29,21 @@
 | 02 回合状态 | `第 18 回合`、`赤方行动`、`剩余 72 秒` |
 | 03 玄方军势 | `已占旗帜 0/3`、`损失棋子 1`、`正在占旗 0/3` |
 | 04 战场态势 | 观察者安全标记、镜头框、纵向小地图 |
-| 05 单位信息 | `兵`、`兵力 10/10`、`士气 80/100` |
+| 05 单位信息 | `兵`、全身立绘、`步卒·基础近战单位 / 擅长推进与占领旗点`；无数值属性与放大按钮 |
 | 06 主棋盘 | 精确感 `9×24` 棋盘、红兵选中、一步路径与合法点 |
 | 07 战局与行动 | 已发现旗帜、双方阵亡三条公开事件、`当前坐标：(5,7)`，另留一个空槽 |
 | 08 标记工具 | 本地私有`标记`入口 |
-| 09 行动模式 | `移动 / 炮击 / 士献祭 / 标记 / 跳过`与单位说明 |
+| 09 行动模式 | 左侧为`行动规则 / 当前技能：土献祭`简述；右侧为上下排列的`移动 / 技能`按钮 |
 | 10 确认区 | 主操作`确认行动`与次操作`取消` |
 
 ## 确认后的紫幕生产计划
 
 本轮未执行以下工作：
 
-1. 分别为军势框、回合栏、小地图框、单位卡、战局抽屉、行动栏、确认区和按钮状态生成纯紫背景源图。
+1. 分别为军势框、回合栏、小地图框、单位卡、战局抽屉、规则／技能说明栏、确认区和按钮状态生成纯紫背景源图。
 2. 将紫幕源图抠成透明 PNG，并检查边缘残紫、孔洞、半透明阴影和连通域碎片。
 3. 面板框制作九宫格；按钮至少产出 Normal / Hover / Pressed / Disabled / Focus 状态。
-4. 头像、图标、面板框、按钮底板分开生产；区域 06 的棋盘继续由正式运行时场景渲染，不作为 HUD 紫幕贴图生成。
+4. 头像、棋子立绘、图标、面板框、按钮底板分开生产；区域 05 不制作属性条或放大按钮，区域 09 只制作`移动 / 技能`两类模式按钮；区域 06 的棋盘继续由正式运行时场景渲染，不作为 HUD 紫幕贴图生成。
 5. 所有动态文字、数值、进度和事件内容继续使用 Godot 预置 `Label / ProgressBar / TextureRect` 组合，不烘焙进面板 PNG。
 
 建议紫幕源统一使用项目既有高饱和纯紫背景规范，并为每个资产留足安全边距；实际色值、抠图阈值和输出目录在效果图获批后再绑定到现有美术脚本与 manifest。
@@ -55,6 +57,7 @@ Input images: Image 1 is the strict ten-region geometry; Image 2 is the visual a
 Primary request: rebuild the full-screen match HUD with Image 1 geometry and Image 2 dark iron / oxidized bronze / terracotta-warrior style.
 Critical removal invariant: remove every incense tray, plate, stick, turn incense, timing incense, burner, vertical incense and ash ornament. Turn and timing information exists only in the top TurnStatusBar.
 Force summaries: under each faction portrait show exactly three public cells: captured flags, lost pieces, and current capture progress 0/3. Remove the old soldier/cannon/flag/loss summary.
-Preserve: round 18, red turn, 72 seconds, observer-safe minimap, selected infantry 10/10 and morale 80/100, three public event rows, current-coordinate row “当前坐标：(5,7)”, five action modes, infantry movement description, confirm and cancel.
+Preserve: round 18, red turn, 72 seconds, observer-safe minimap, selected infantry name/full-body art with a short role introduction and no numeric stats or magnify control, three public event rows, current-coordinate row “当前坐标：(5,7)”, and separate confirm/cancel controls.
+Bottom action panel: left side contains only brief current-piece action rules and skill description; right side contains exactly two vertically stacked mode buttons, “移动” above “技能”.
 Production readiness: all panel silhouettes closed, opaque and confined to their regions; no cross-region shadow or ornament; no purple background in this approval mockup.
 ```
