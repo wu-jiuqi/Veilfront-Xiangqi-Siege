@@ -5,6 +5,8 @@
 
 参考图：`assets/art/ui/concepts/multiplayer_match_hud_region_map_v1.png`
 
+当前装配效果图：`assets/art/ui/concepts/multiplayer_match_hud_ux_reference_v2_no_incense.png`。V2 禁用全部香类计时组件，区域 02 是唯一回合／计时入口；区域 01 与 03 各承载三项公开旗帜／损失信息。
+
 ## 目的
 
 将高细节对局效果图压缩为可实现的 UI 区域，只描述区域职责、层级和相对比例，不绑定最终皮肤、像素坐标或运行时数据。
@@ -19,7 +21,7 @@
 | 04 | `TacticalMinimap` | 观察者安全小地图与当前镜头框 | `PanelContainer → AspectRatioContainer` |
 | 05 | `SelectedUnitCard` | 当前选中单位、公开能力与状态；空状态可折叠 | `PanelContainer → VBoxContainer` |
 | 06 | `BoardViewport` | 主棋盘、雾、棋子、合法点、路径与输入层 | `AspectRatioContainer → BoardHost` |
-| 07 | `ObjectiveEventsDrawer` | 当前玩家可见的战局目标与公开事件，最多五行 | `PanelContainer → VBoxContainer` |
+| 07 | `ObjectiveEventsDrawer` | 当前玩家可见的战局目标、公开事件与当前选中坐标，最多五行 | `PanelContainer → VBoxContainer` |
 | 08 | `MarkerTool` | 私有标记入口与局部工具状态 | `PanelContainer → CenterContainer` |
 | 09 | `ActionModeBar` | 行动模式、当前选择和上下文说明 | `PanelContainer → VBoxContainer` |
 | 10 | `ConfirmationActions` | 确认、取消、提交锁和错误恢复入口 | `PanelContainer → HBoxContainer` |

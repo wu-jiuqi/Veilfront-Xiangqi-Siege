@@ -29,7 +29,9 @@
 - “确认行动”必须经过准备／确认／提交链；主动跳过仍需防误触确认。
 - 当前模式、不可用模式、键盘焦点和提交锁必须具有不同且稳定的视觉状态。
 
-参考图：`assets/art/ui/concepts/multiplayer_match_hud_ux_reference_v1.png`
+当前参考图：`assets/art/ui/concepts/multiplayer_match_hud_ux_reference_v2_no_incense.png`
+
+V2 已取代联机对局 V1：删除全部香类计时 UI，顶部栏成为唯一回合／计时来源；双方军势区改为`已占旗帜 / 损失棋子 / 正在占旗`三项公开信息。
 
 ## 关卡闯关差异
 
