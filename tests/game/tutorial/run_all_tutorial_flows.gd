@@ -11,10 +11,15 @@ func _init() -> void:
 
 
 func _run() -> void:
-	for level_id: String in TutorialChapterCatalog.TUTORIAL_IDS:
+	var level_ids := TutorialChapterCatalog.TUTORIAL_IDS.duplicate()
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--level="):
+			level_ids = [argument.trim_prefix("--level=").to_upper()]
+	for level_id: String in level_ids:
+		print("TUTORIAL_FLOW_STAGE chapter=%s" % level_id)
 		await _run_chapter(level_id)
 	if _failures.is_empty():
-		print("ALL_TUTORIAL_FLOWS_PASS chapters=11")
+		print("ALL_TUTORIAL_FLOWS_PASS chapters=%d" % level_ids.size())
 		quit(0)
 		return
 	for failure: String in _failures:
@@ -37,6 +42,7 @@ func _run_chapter(level_id: String) -> void:
 	for step: Dictionary in presentation.steps:
 		var checkpoint_before := str(director.get_public_checkpoint_id())
 		var step_type := str(step.get("type", ""))
+		print("TUTORIAL_FLOW_STAGE chapter=%s step=%s type=%s" % [level_id, checkpoint_before, step_type])
 		match step_type:
 			"cancel_selection":
 				var cancel_origin := _piece_position(screen, str(step.get("actor", "")))
@@ -47,31 +53,75 @@ func _run_chapter(level_id: String) -> void:
 				screen.apply_marker(Vector2i(int(marker_target[0]), int(marker_target[1])), str(step.get("marker", "")))
 			"move", "bombard", "reject":
 				var action_mode := "move" if step_type == "reject" else step_type
-				var action_button: Button = (
-					screen.find_child("BombardButton", true, false) if action_mode == "bombard" \
-					else screen.find_child("MoveButton", true, false)
-				) as Button
-				action_button.pressed.emit()
 				var origin := _piece_position(screen, str(step.get("actor", "")))
 				var target_value: Array = step.get("target", [])
+				if action_mode == "move":
+					(screen.find_child("MoveButton", true, false) as Button).pressed.emit()
 				screen.handle_board_point(origin)
+				if action_mode == "bombard":
+					(screen.find_child("SkillButton", true, false) as Button).pressed.emit()
 				screen.handle_board_point(Vector2i(int(target_value[0]), int(target_value[1])))
-				action_button.pressed.emit()
+				var confirm_button_name := "SkillButton" if action_mode == "bombard" else "MoveButton"
+				var confirm_button := screen.find_child(confirm_button_name, true, false) as Button
+				var expected_text := "确认轰炸" if action_mode == "bombard" else "确认移动"
+				_expect(
+					confirm_button != null and confirm_button.text == expected_text and not confirm_button.disabled,
+					"%s step %s did not expose enabled inline %s confirmation" % [
+						level_id,
+						checkpoint_before,
+						action_mode,
+					]
+				)
+				if confirm_button != null:
+					confirm_button.pressed.emit()
 			"sacrifice_cancel", "sacrifice_confirm":
-				screen.find_child("ResurrectButton", true, false).pressed.emit()
+				overlay.find_child("ContinueButton", true, false).pressed.emit()
 				var advisor_origin := _piece_position(screen, str(step.get("actor", "")))
 				screen.handle_board_point(advisor_origin)
 				if step_type == "sacrifice_cancel":
 					screen.handle_cancel_or_marker(advisor_origin)
 				else:
-					screen.find_child("ResurrectButton", true, false).pressed.emit()
+					var sacrifice_confirm := screen.find_child("SkillButton", true, false) as Button
+					_expect(
+						sacrifice_confirm != null
+						and sacrifice_confirm.text == "确认复活"
+						and not sacrifice_confirm.disabled,
+						"%s step %s did not expose enabled inline sacrifice confirmation" % [
+							level_id,
+							checkpoint_before,
+						]
+					)
+					if sacrifice_confirm != null:
+						sacrifice_confirm.pressed.emit()
 			"predict":
 				var predict_target: Array = step.get("target", [])
 				screen.handle_board_point(Vector2i(int(predict_target[0]), int(predict_target[1])))
 			"observe":
 				overlay.find_child("ContinueButton", true, false).pressed.emit()
 			"quiz":
-				overlay.find_child("Option%d" % int(step.get("correct", 0)), true, false).pressed.emit()
+				var options_value: Variant = step.get("options", [])
+				var options: Array = options_value if options_value is Array else []
+				for option_index: int in mini(options.size(), 3):
+					var option_button := overlay.find_child(
+						"Option%d" % option_index,
+						true,
+						false
+					) as Button
+					_expect(
+						option_button != null and option_button.visible and not option_button.disabled,
+						"%s step %s did not expose quiz option %d" % [
+							level_id,
+							checkpoint_before,
+							option_index,
+						]
+					)
+				var correct_button := overlay.find_child(
+					"Option%d" % int(step.get("correct", 0)),
+					true,
+					false
+				) as Button
+				if correct_button != null:
+					correct_button.pressed.emit()
 		await process_frame
 		await process_frame
 		var checkpoint_after := str(director.get_public_checkpoint_id())

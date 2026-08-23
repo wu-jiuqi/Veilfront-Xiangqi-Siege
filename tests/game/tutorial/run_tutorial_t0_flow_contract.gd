@@ -41,10 +41,13 @@ func _run() -> void:
 	await process_frame
 	screen.handle_board_point(Vector2i(5, 5))
 	await process_frame
-	var move_button: Button = screen.find_child("MoveButton", true, false) as Button
-	_expect(move_button != null and move_button.text == "确认移动", "T0 move button did not enter confirmation state")
-	if move_button != null:
-		move_button.pressed.emit()
+	var confirm_button: Button = screen.find_child("MoveButton", true, false) as Button
+	_expect(
+		confirm_button != null and confirm_button.text == "确认移动" and not confirm_button.disabled,
+		"T0 level HUD did not expose inline move confirmation"
+	)
+	if confirm_button != null:
+		confirm_button.pressed.emit()
 	await process_frame
 	await process_frame
 	_expect(str(director.get_public_checkpoint_id()) == "completed", "T0 confirmed move did not complete the chapter")

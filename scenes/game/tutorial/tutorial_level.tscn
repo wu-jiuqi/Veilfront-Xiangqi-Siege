@@ -1,8 +1,8 @@
 [gd_scene load_steps=10 format=3]
 
 [ext_resource type="Theme" path="res://resources/game/ui/themes/terracotta_ui_theme.tres" id="1_theme"]
-[ext_resource type="PackedScene" path="res://scenes/game/match/match_screen.tscn" id="2_match"]
-[ext_resource type="PackedScene" path="res://scenes/game/ui/tutorial_overlay.tscn" id="3_tutorial"]
+[ext_resource type="PackedScene" path="res://scenes/game/match/online_match_screen.tscn" id="2_match"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/level_guide_overlay.tscn" id="3_tutorial"]
 [ext_resource type="Script" path="res://scripts/game/application/application_host.gd" id="4_host"]
 [ext_resource type="Script" path="res://scripts/game/tutorial/tutorial_director.gd" id="5_director"]
 [ext_resource type="Resource" path="res://resources/game/tutorials/authority/tutorial_smoke_authority.tres" id="6_authority"]
@@ -27,19 +27,9 @@ trusted_tutorial_scenario = ExtResource("6_authority")
 [node name="MatchScreen" parent="." instance=ExtResource("2_match")]
 layout_mode = 1
 allow_known_illegal_previews = true
+turn_timeout_enabled = false
 
 [node name="TutorialOverlay" parent="." instance=ExtResource("3_tutorial")]
-
-[node name="TutorialRoundIncenseSlot" type="Control" parent="."]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.953125
-anchor_top = 0.37777779
-anchor_right = 0.984375
-anchor_bottom = 0.9444444
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
 
 [node name="TutorialDirector" type="Node" parent="."]
 script = ExtResource("5_director")

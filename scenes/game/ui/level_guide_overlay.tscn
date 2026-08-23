@@ -1,0 +1,246 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/tutorial/level_guide_overlay.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/level_guide_panel.tscn" id="2_guide"]
+[ext_resource type="Theme" path="res://resources/game/ui/themes/match_hud_v3_theme.tres" id="3_theme"]
+
+[sub_resource type="StyleBoxFlat" id="StyleDecisionPanel"]
+bg_color = Color(0.025, 0.025, 0.022, 0.97)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.66, 0.49, 0.27, 0.94)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+shadow_color = Color(0, 0, 0, 0.72)
+shadow_size = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleDecisionButton"]
+bg_color = Color(0.1, 0.085, 0.06, 0.98)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.7, 0.52, 0.28, 0.9)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[node name="LevelGuideOverlay" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("3_theme")
+script = ExtResource("1_script")
+
+[node name="LevelGuideLayer" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="SafeMargin" type="MarginContainer" parent="LevelGuideLayer"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
+
+[node name="MainRows" type="VBoxContainer" parent="LevelGuideLayer/SafeMargin"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 6
+
+[node name="TopSpacer" type="Control" parent="LevelGuideLayer/SafeMargin/MainRows"]
+custom_minimum_size = Vector2(0, 92)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="BodyBand" type="HBoxContainer" parent="LevelGuideLayer/SafeMargin/MainRows"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+theme_override_constants/separation = 6
+
+[node name="LeftRailSpacer" type="Control" parent="LevelGuideLayer/SafeMargin/MainRows/BodyBand"]
+custom_minimum_size = Vector2(252, 0)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="CenterColumnSpacer" type="Control" parent="LevelGuideLayer/SafeMargin/MainRows/BodyBand"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="LevelGuidePanel" parent="LevelGuideLayer/SafeMargin/MainRows/BodyBand" instance=ExtResource("2_guide")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="DecisionLayer" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="DecisionPanel" type="PanelContainer" parent="DecisionLayer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.31
+anchor_top = 0.27
+anchor_right = 0.69
+anchor_bottom = 0.73
+mouse_filter = 0
+theme_override_styles/panel = SubResource("StyleDecisionPanel")
+
+[node name="Margin" type="MarginContainer" parent="DecisionLayer/DecisionPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 22
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 22
+theme_override_constants/margin_bottom = 18
+
+[node name="Content" type="VBoxContainer" parent="DecisionLayer/DecisionPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="DecisionTitle" type="Label" parent="DecisionLayer/DecisionPanel/Margin/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.94, 0.76, 0.42, 1)
+theme_override_font_sizes/font_size = 20
+text = "规则确认"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DecisionBody" type="Label" parent="DecisionLayer/DecisionPanel/Margin/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.86, 0.83, 0.74, 1)
+theme_override_font_sizes/font_size = 16
+text = "请选择正确答案。"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="Options" type="VBoxContainer" parent="DecisionLayer/DecisionPanel/Margin/Content"]
+layout_mode = 2
+theme_override_constants/separation = 7
+
+[node name="Option0" type="Button" parent="DecisionLayer/DecisionPanel/Margin/Content/Options"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+focus_mode = 2
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleDecisionButton")
+text = "选项一"
+
+[node name="Option1" type="Button" parent="DecisionLayer/DecisionPanel/Margin/Content/Options"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+focus_mode = 2
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleDecisionButton")
+text = "选项二"
+
+[node name="Option2" type="Button" parent="DecisionLayer/DecisionPanel/Margin/Content/Options"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+focus_mode = 2
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleDecisionButton")
+text = "选项三"
+
+[node name="ContinueButton" type="Button" parent="DecisionLayer/DecisionPanel/Margin/Content"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+focus_mode = 2
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleDecisionButton")
+text = "继续"
+
+[node name="CompletionActions" type="HBoxContainer" parent="DecisionLayer/DecisionPanel/Margin/Content"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="NextChapterButton" type="Button" parent="DecisionLayer/DecisionPanel/Margin/Content/CompletionActions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 2
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleDecisionButton")
+text = "进入下一章"
+
+[node name="StayButton" type="Button" parent="DecisionLayer/DecisionPanel/Margin/Content/CompletionActions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 2
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleDecisionButton")
+text = "留在本章"
+
+[node name="FailureActions" type="HBoxContainer" parent="DecisionLayer/DecisionPanel/Margin/Content"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="RetryButton" type="Button" parent="DecisionLayer/DecisionPanel/Margin/Content/FailureActions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 2
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleDecisionButton")
+text = "重置章节"
+
+[node name="BackToLevelsButton" type="Button" parent="DecisionLayer/DecisionPanel/Margin/Content/FailureActions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 2
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleDecisionButton")
+text = "返回目录"

@@ -16,7 +16,7 @@ func _run() -> void:
 	await process_frame
 	await process_frame
 	var director: TutorialDirector = level.get_node("TutorialDirector")
-	var overlay: TutorialOverlay = level.get_node("TutorialOverlay")
+	var overlay: Control = level.get_node("TutorialOverlay") as Control
 
 	director.set("_assessment_actions_used", 8)
 	director.consume_visible_events([{

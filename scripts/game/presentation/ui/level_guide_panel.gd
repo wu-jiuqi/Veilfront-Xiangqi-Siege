@@ -32,6 +32,8 @@ var _step_text_labels: Array[Label] = []
 var _step_statuses: Array[String] = ["complete", "active", "pending"]
 var _hint_text := ""
 var _hint_revealed := false
+var _hint_available := true
+var _reset_available := true
 var _collapsed := false
 var _pending_view: Dictionary = {}
 
@@ -62,6 +64,8 @@ func configure(view: Dictionary) -> void:
 	_current_operation_label.text = str(view.get("current_operation", "等待玩家操作"))
 	_hint_text = str(view.get("hint", "观察高亮交点，规划下一步行动。"))
 	_hint_revealed = bool(view.get("hint_revealed", false))
+	_hint_available = bool(view.get("hint_available", true))
+	_reset_available = bool(view.get("reset_available", true))
 
 	var steps_value: Variant = view.get("steps", [])
 	var steps: Array = steps_value if steps_value is Array else []
@@ -111,6 +115,8 @@ func get_state_snapshot() -> Dictionary:
 		"current_operation": _current_operation_label.text,
 		"hint_text": _hint_label.text,
 		"hint_revealed": _hint_revealed,
+		"hint_available": _hint_available,
+		"reset_available": _reset_available,
 		"collapsed": _collapsed,
 		"action_button_count": 2,
 		"background_texture_path": str((%Background as TextureRect).texture.resource_path),
@@ -133,19 +139,26 @@ func _default_view() -> Dictionary:
 
 
 func _on_hint_pressed() -> void:
+	if not _hint_available:
+		return
 	reveal_hint()
 	hint_requested.emit()
 
 
 func _on_reset_pressed() -> void:
+	if not _reset_available:
+		return
 	reset_progress()
 	reset_requested.emit()
 
 
 func _sync_hint() -> void:
 	_hint_label.text = _hint_text if _hint_revealed else "点击「显示提示」查看本步提示"
-	_hint_button.disabled = _hint_revealed
-	_hint_button.text = "提示已显示" if _hint_revealed else "显示提示"
+	_hint_button.disabled = not _hint_available or _hint_revealed
+	_hint_button.text = "提示已显示" if _hint_revealed else (
+		"显示提示" if _hint_available else "提示未解锁"
+	)
+	_reset_button.disabled = not _reset_available
 
 
 func _sync_step_status(index: int) -> void:

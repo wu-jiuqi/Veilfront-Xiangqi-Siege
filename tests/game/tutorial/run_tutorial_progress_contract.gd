@@ -15,9 +15,7 @@ func _run() -> void:
 	root.set_meta("veilfront_selected_level_id", "T0")
 	var level: Control = TUTORIAL_LEVEL_SCENE.instantiate() as Control
 	level.progress_path = TEST_PROGRESS_PATH
-	var board_render_target := level.get_node(
-		"MatchScreen/MatchHudV2/BoardFrame/BoardViewport/BoardSubViewport"
-	) as SubViewport
+	var board_render_target := level.find_child("BoardSubViewport", true, false) as SubViewport
 	board_render_target.render_target_update_mode = SubViewport.UPDATE_DISABLED
 	root.add_child(level)
 	await process_frame

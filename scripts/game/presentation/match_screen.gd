@@ -96,6 +96,7 @@ var _marker_menu: PopupPanel
 var _turn_status_controller: Node
 var _piece_info_drawer: PieceInfoDrawer
 var _objective_events: Control
+var _confirmation_panel: Control
 var _round_incense_slot: Control
 var _return_button: Button
 var _mirror_button: Button
@@ -152,6 +153,7 @@ var _tutorial_navigation_enabled: bool = false
 var _tutorial_objective_layout_source: Control
 var _tutorial_round_incense_layout_source: Control
 var _session_navigation_enabled: bool = false
+var _level_guide_layout_enabled: bool = false
 var _submission_pending: bool = false
 var _action_button_default_texts: Dictionary[String, String] = {}
 
@@ -214,6 +216,7 @@ func _bind_hud_nodes() -> void:
 	_marker_menu = get_node_or_null("%MarkerMenu") as PopupPanel
 	_piece_info_drawer = _hud_node(&"PieceInfoDrawer") as PieceInfoDrawer
 	_objective_events = _hud_node(&"ObjectiveEvents") as Control
+	_confirmation_panel = _hud_node(&"Confirmation") as Control
 	_round_incense_slot = _hud_node(&"RoundIncenseSlot") as Control
 	_return_button = _hud_node(&"ReturnButton") as Button
 	_mirror_button = _hud_node(&"MirrorButton") as Button
@@ -305,6 +308,22 @@ func set_tutorial_navigation_enabled(enabled: bool) -> void:
 		_return_button.text = "退出教学"
 	elif _session_navigation_enabled:
 		_return_button.text = "退出对局"
+
+
+func set_level_guide_layout_enabled(enabled: bool) -> void:
+	_level_guide_layout_enabled = enabled
+	var right_rail := _hud_node(&"RightRail") as Control
+	if is_instance_valid(right_rail):
+		# Keep the authored rail in its HBoxContainer so the center board keeps
+		# exactly the same width as the approved online-match layout.
+		right_rail.visible = true
+		right_rail.mouse_filter = Control.MOUSE_FILTER_IGNORE if enabled \
+			else Control.MOUSE_FILTER_PASS
+	if is_instance_valid(_objective_events):
+		_objective_events.visible = not enabled
+	if is_instance_valid(_confirmation_panel):
+		_confirmation_panel.visible = not enabled
+	_update_status_controls()
 
 
 func set_session_navigation_enabled(enabled: bool) -> void:
@@ -1059,16 +1078,36 @@ func _update_action_buttons() -> void:
 	var confirming: bool = _interaction_state == CONFIRMING
 	if is_instance_valid(_skill_button):
 		var skill_mode := _selected_skill_mode()
-		if _action_mode in ["bombard", "resurrect"] and _action_mode != skill_mode:
+		var should_reset_skill_mode := _action_mode in ["bombard", "resurrect"] \
+			and _action_mode != skill_mode
+		var level_guide_is_waiting_for_piece := _level_guide_layout_enabled \
+			and _selected_piece_id.is_empty()
+		if should_reset_skill_mode and not level_guide_is_waiting_for_piece:
 			_action_mode = "move"
-		_move_button.disabled = unavailable or confirming
+		var inline_move_confirmation := _level_guide_layout_enabled \
+			and confirming and _action_mode == "move"
+		_move_button.disabled = unavailable or (confirming and not inline_move_confirmation)
 		_move_button.button_pressed = _action_mode == "move"
-		_move_button.text = _action_button_default_text("move", "移动")
-		_skill_button.text = {
+		_move_button.text = "确认移动" \
+			if _level_guide_layout_enabled and confirming and _action_mode == "move" \
+			else _action_button_default_text("move", "移动")
+		var skill_default_text: String = {
 			"bombard": "轰炸",
 			"resurrect": "复活",
 		}.get(skill_mode, "无技能")
-		_skill_button.disabled = unavailable or confirming or skill_mode.is_empty()
+		_skill_button.text = "确认%s" % skill_default_text \
+			if _level_guide_layout_enabled \
+			and confirming \
+			and not skill_mode.is_empty() \
+			and _action_mode == skill_mode \
+			else skill_default_text
+		var inline_skill_confirmation := _level_guide_layout_enabled \
+			and confirming \
+			and not skill_mode.is_empty() \
+			and _action_mode == skill_mode
+		_skill_button.disabled = unavailable \
+			or skill_mode.is_empty() \
+			or (confirming and not inline_skill_confirmation)
 		_skill_button.button_pressed = not skill_mode.is_empty() and _action_mode == skill_mode
 		_confirm_button.text = "确认行动" if confirming else "跳过回合"
 		_confirm_button.disabled = unavailable or _interaction_state not in [IDLE, CONFIRMING]
@@ -1117,6 +1156,12 @@ func _selected_skill_mode() -> String:
 
 func _on_skill_button_pressed() -> void:
 	var skill_mode := _selected_skill_mode()
+	if _level_guide_layout_enabled \
+	and _interaction_state == CONFIRMING \
+	and not skill_mode.is_empty() \
+	and _action_mode == skill_mode:
+		confirm_prepared_action()
+		return
 	if not skill_mode.is_empty():
 		_set_action_mode(skill_mode)
 

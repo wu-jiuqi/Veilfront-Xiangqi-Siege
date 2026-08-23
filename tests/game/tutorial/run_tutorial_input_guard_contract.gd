@@ -25,7 +25,7 @@ func _run() -> void:
 	screen.handle_board_point(Vector2i(4, 13))
 	screen.handle_board_point(Vector2i(5, 10))
 	screen.handle_board_point(Vector2i(5, 12))
-	screen.find_child("BombardButton", true, false).pressed.emit()
+	screen.set_action_mode("bombard")
 	await process_frame
 
 	_expect(_rejections.size() == 3, "wrong actor, target, and mode were not all rejected")

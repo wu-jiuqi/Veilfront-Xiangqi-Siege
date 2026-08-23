@@ -89,6 +89,12 @@ func get_layout_snapshot() -> Dictionary:
 			"action-panel": _local_rect(
 				$SafeMargin/MainRows/BodyBand/CenterColumn/ActionPanel
 			),
+			"center-column": _local_rect(
+				$SafeMargin/MainRows/BodyBand/CenterColumn
+			),
+			"right-rail": _local_rect(
+				$SafeMargin/MainRows/BodyBand/RightRail
+			),
 			"objective-events": _local_rect(
 				$SafeMargin/MainRows/BodyBand/RightRail/ObjectiveEvents
 			),

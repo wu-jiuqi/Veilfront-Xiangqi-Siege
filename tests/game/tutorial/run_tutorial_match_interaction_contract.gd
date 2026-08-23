@@ -18,11 +18,11 @@ func _run() -> void:
 	var screen: Control = tutorial_level.get_node("MatchScreen") as Control
 	var overlay: Control = tutorial_level.get_node("TutorialOverlay") as Control
 
-	for node_name: String in ["MoveButton", "BombardButton", "ResurrectButton", "PassButton"]:
-		_expect(screen.find_child(node_name, true, false) != null, "%s is missing from the LAN-style action panel" % node_name)
+	for node_name: String in ["MoveButton", "SkillButton", "ConfirmButton", "CancelButton"]:
+		_expect(screen.find_child(node_name, true, false) != null, "%s is missing from the V3 action panel" % node_name)
 	_expect(screen.get_node_or_null("ActionConfirmationPanel") == null, "central confirmation UI was not removed")
-	_expect(overlay.find_child("Goal", true, false) != null, "tutorial goal panel is missing")
-	_expect(overlay.find_child("StepTitle", true, false) != null, "tutorial step title is missing")
+	_expect(overlay.find_child("ObjectiveText", true, false) != null, "level objective panel is missing")
+	_expect(overlay.find_child("CurrentOperationText", true, false) != null, "level current-operation panel is missing")
 	_expect(overlay.find_child("BackToLevelsButton", true, false) != null, "back-to-levels action is missing")
 
 	_expect(screen.has_method("handle_board_point"), "MatchScreen has no board-point interaction entry")
@@ -35,8 +35,11 @@ func _run() -> void:
 		_click_board_cell(screen, Vector2i(5, 5))
 		await process_frame
 		_expect(screen.get_local_interaction_state() == "CONFIRMING", "clicking the T0 target did not enter confirmation")
-		var move_button: Button = screen.find_child("MoveButton", true, false) as Button
-		_expect(move_button != null and move_button.text == "确认移动", "bottom move button did not receive the confirmation state")
+		var confirm_button: Button = screen.find_child("MoveButton", true, false) as Button
+		_expect(
+			confirm_button != null and confirm_button.text == "确认移动" and not confirm_button.disabled,
+			"level move button did not receive the inline confirmation state"
+		)
 
 	if _failures.is_empty():
 		print("TUTORIAL_MATCH_INTERACTION_CONTRACT_PASS level=T0")

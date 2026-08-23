@@ -15,10 +15,7 @@ var _level_id: String = "T0"
 
 
 func _ready() -> void:
-	$MatchScreen.set_tutorial_hud_layout_sources(
-		$TutorialOverlay,
-		$TutorialRoundIncenseSlot
-	)
+	$MatchScreen.set_level_guide_layout_enabled(true)
 	$MatchScreen.set_tutorial_navigation_enabled(true)
 	if not bootstrap_local_session:
 		return
@@ -144,7 +141,7 @@ func handle_level_skipped(_level_id_value: String) -> void:
 
 
 func stay_on_completed_chapter() -> void:
-	$TutorialOverlay.find_child("CompletionActions", true, false).visible = false
+	$TutorialOverlay.hide_completion_actions()
 
 
 func record_level_completion(level_id: String) -> void:
@@ -181,42 +178,16 @@ func _load_completed_ids() -> Array[String]:
 func get_layout_snapshot() -> Dictionary:
 	var screen_snapshot: Dictionary = $MatchScreen.get_layout_snapshot()
 	var ui_rects: Dictionary = screen_snapshot.get("ui_rects", {})
-	var tutorial: Control = $TutorialOverlay
-	var tutorial_rect := Rect2(tutorial.global_position - global_position, tutorial.size)
-	var round_incense_source: Control = $TutorialRoundIncenseSlot
-	var round_incense_source_rect := Rect2(
-		round_incense_source.global_position - global_position,
-		round_incense_source.size
-	)
-	var round_incense: Control = $MatchScreen/MatchHudV2/IncenseTurnClock/RoundIncenseSlot
-	var round_incense_rect := Rect2(
-		round_incense.global_position - global_position,
-		round_incense.size
-	)
-	var tutorial_content: Control = tutorial.get_node("TutorialFoldable")
-	var tutorial_content_rect := Rect2(
-		tutorial_content.global_position - global_position,
-		tutorial_content.size
-	)
-	var buttons_inside := true
-	for button_name: String in ["RetryButton", "SkipButton", "BackToLevelsButton", "HintButton", "TutorialFoldable"]:
-		var button: Control = tutorial.find_child(button_name, true, false) as Control
-		if button == null:
-			buttons_inside = false
-			continue
-		var button_rect := Rect2(button.global_position - global_position, button.size)
-		buttons_inside = buttons_inside \
-			and button_rect.position.x >= -0.5 \
-			and button_rect.position.y >= -0.5 \
-			and button_rect.end.x <= size.x + 0.5 \
-			and button_rect.end.y <= size.y + 0.5
+	var guide_layout: Dictionary = $TutorialOverlay.get_layout_snapshot()
+	var tutorial_rect: Rect2 = guide_layout.get("guide_rect", Rect2())
+	var tutorial_content_rect: Rect2 = guide_layout.get("guide_content_rect", Rect2())
 	return {
 		"board_rect": screen_snapshot.get("board_rect", Rect2()),
 		"tutorial_rect": tutorial_rect,
 		"tutorial_content_rect": tutorial_content_rect,
-		"objective_rect": ui_rects.get("objective-events", Rect2()),
-		"round_incense_rect": round_incense_rect,
-		"round_incense_source_rect": round_incense_source_rect,
-		"buttons_inside": buttons_inside,
-		"actions_scrollable": tutorial.get_node_or_null("TutorialFoldable/Margin") is ScrollContainer,
+		"objective_rect": ui_rects.get("right-rail", Rect2()),
+		"center_column_rect": ui_rects.get("center-column", Rect2()),
+		"decision_rect": guide_layout.get("decision_rect", Rect2()),
+		"buttons_inside": bool(guide_layout.get("buttons_inside", false)),
+		"actions_scrollable": bool(guide_layout.get("actions_scrollable", false)),
 	}

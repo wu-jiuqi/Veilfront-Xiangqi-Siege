@@ -16,7 +16,7 @@ func _run() -> void:
 	await process_frame
 	await process_frame
 	var screen: Control = level.get_node("MatchScreen")
-	var overlay: TutorialOverlay = level.get_node("TutorialOverlay")
+	var overlay: Control = level.get_node("TutorialOverlay") as Control
 	_expect(not bool(overlay.get_public_snapshot().get("hint_visible", true)), "hint starts visible")
 	_expect(_tutorial_target(screen) == Vector2i.ZERO, "assessment target starts revealed")
 
@@ -31,7 +31,7 @@ func _run() -> void:
 	_reject_wrong_actor(screen)
 	_expect(bool(overlay.get_public_snapshot().get("step_reset_visible", false)), "fourth mistake did not open step reset")
 
-	var reset_button: Button = overlay.find_child("ResetStepButton", true, false)
+	var reset_button: Button = overlay.find_child("ResetButton", true, false)
 	reset_button.pressed.emit()
 	await process_frame
 	_expect(_tutorial_target(screen) == Vector2i.ZERO, "step reset did not hide assessment target")
