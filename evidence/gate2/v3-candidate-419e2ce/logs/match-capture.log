@@ -1,0 +1,10 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+OpenGL API 3.3.0 - Build 31.0.101.4146 - Compatibility - Using Device: Intel - Intel(R) Iris(R) Xe Graphics
+
+GATE2_RC4_CAPTURE_PASS size=960x540 side=red path=res://evidence/gate2/v3-candidate-419e2ce/screenshots/match-960x540-red.png
+GATE2_RC4_CAPTURE_PASS size=960x540 side=black path=res://evidence/gate2/v3-candidate-419e2ce/screenshots/match-960x540-black.png
+GATE2_RC4_CAPTURE_PASS size=1280x720 side=red path=res://evidence/gate2/v3-candidate-419e2ce/screenshots/match-1280x720-red.png
+GATE2_RC4_CAPTURE_PASS size=1280x720 side=black path=res://evidence/gate2/v3-candidate-419e2ce/screenshots/match-1280x720-black.png
+GATE2_RC4_CAPTURE_PASS size=1920x1080 side=red path=res://evidence/gate2/v3-candidate-419e2ce/screenshots/match-1920x1080-red.png
+GATE2_RC4_CAPTURE_PASS size=1920x1080 side=black path=res://evidence/gate2/v3-candidate-419e2ce/screenshots/match-1920x1080-black.png
+GATE2_RC4_MATCH_CAPTURE_PASS images=6

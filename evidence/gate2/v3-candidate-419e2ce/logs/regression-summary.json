@@ -1,0 +1,35 @@
+[
+  {
+    "id": "board_camera_layer",
+    "path": "tests/game/presentation/run_board_camera_layer_contract.gd",
+    "marker": "BOARD_CAMERA_LAYER_CONTRACT_PASS",
+    "exit_code": 0,
+    "timed_out": false,
+    "marker_found": true,
+    "forbidden_count": 0,
+    "duration_seconds": 18.121,
+    "verdict": "pass"
+  },
+  {
+    "id": "board_layout",
+    "path": "tests/game/presentation/run_board_layout_contract.gd",
+    "marker": "BOARD_LAYOUT_CONTRACT_PASS",
+    "exit_code": 0,
+    "timed_out": false,
+    "marker_found": true,
+    "forbidden_count": 0,
+    "duration_seconds": 33.21,
+    "verdict": "pass"
+  },
+  {
+    "id": "hidden_equivalence",
+    "path": "tests/game/contracts/run_hidden_equivalence.gd",
+    "marker": "HIDDEN_EQUIVALENCE_PASS",
+    "exit_code": 0,
+    "timed_out": false,
+    "marker_found": true,
+    "forbidden_count": 0,
+    "duration_seconds": 13.508,
+    "verdict": "pass"
+  }
+]

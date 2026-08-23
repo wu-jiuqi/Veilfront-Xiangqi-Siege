@@ -1,0 +1,57 @@
+[
+  {
+    "run": 1,
+    "verdict": "pass",
+    "exit_code": 0,
+    "timeout": false,
+    "pass_marker": true,
+    "forbidden_count": 0,
+    "duration_seconds": 22.35,
+    "stdout": "evidence/gate2/v3-candidate-419e2ce/logs/turn-camera-visibility-run-1.stdout.log",
+    "stderr": "evidence/gate2/v3-candidate-419e2ce/logs/turn-camera-visibility-run-1.stderr.log"
+  },
+  {
+    "run": 2,
+    "verdict": "pass",
+    "exit_code": 0,
+    "timeout": false,
+    "pass_marker": true,
+    "forbidden_count": 0,
+    "duration_seconds": 15.25,
+    "stdout": "evidence/gate2/v3-candidate-419e2ce/logs/turn-camera-visibility-run-2.stdout.log",
+    "stderr": "evidence/gate2/v3-candidate-419e2ce/logs/turn-camera-visibility-run-2.stderr.log"
+  },
+  {
+    "run": 3,
+    "verdict": "pass",
+    "exit_code": 0,
+    "timeout": false,
+    "pass_marker": true,
+    "forbidden_count": 0,
+    "duration_seconds": 13.459,
+    "stdout": "evidence/gate2/v3-candidate-419e2ce/logs/turn-camera-visibility-run-3.stdout.log",
+    "stderr": "evidence/gate2/v3-candidate-419e2ce/logs/turn-camera-visibility-run-3.stderr.log"
+  },
+  {
+    "run": 4,
+    "verdict": "pass",
+    "exit_code": 0,
+    "timeout": false,
+    "pass_marker": true,
+    "forbidden_count": 0,
+    "duration_seconds": 16.918,
+    "stdout": "evidence/gate2/v3-candidate-419e2ce/logs/turn-camera-visibility-run-4.stdout.log",
+    "stderr": "evidence/gate2/v3-candidate-419e2ce/logs/turn-camera-visibility-run-4.stderr.log"
+  },
+  {
+    "run": 5,
+    "verdict": "pass",
+    "exit_code": 0,
+    "timeout": false,
+    "pass_marker": true,
+    "forbidden_count": 0,
+    "duration_seconds": 14.87,
+    "stdout": "evidence/gate2/v3-candidate-419e2ce/logs/turn-camera-visibility-run-5.stdout.log",
+    "stderr": "evidence/gate2/v3-candidate-419e2ce/logs/turn-camera-visibility-run-5.stderr.log"
+  }
+]
