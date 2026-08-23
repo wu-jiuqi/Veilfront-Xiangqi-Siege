@@ -1,13 +1,13 @@
 # 联机对局 HUD 效果图 V2：去香盘与三项军势信息
 
 日期：2026-08-23
-状态：`effect_mockup / pending_owner_review / purple_screen_not_started`
+状态：`effect_mockup_approved / purple_screen_complete / lab_ready / formal_integration_pending`
 
 效果图：`assets/art/ui/concepts/multiplayer_match_hud_ux_reference_v2_no_incense.png`
 
 ## 本轮目标
 
-先使用已确认的十区抽象图和上一版联机对局 UI 重新制作整屏效果图。项目所有者确认效果图后，才进入逐区 ImageGen 紫幕源图、抠图、九宫格和 Godot 预置节点接入。
+项目所有者已确认本版效果方向。逐区 ImageGen 紫幕源图、透明 PNG 抠图和 Godot 预置节点测试场景已经完成；正式联机对局入口保持不变，待实验场景评审后再接入。
 
 ## V2 硬约束
 
@@ -36,17 +36,17 @@
 | 09 行动模式 | 左侧为`行动规则 / 当前技能：土献祭`简述；右侧为上下排列的`移动 / 技能`按钮 |
 | 10 确认区 | 主操作`确认行动`与次操作`取消` |
 
-## 确认后的紫幕生产计划
+## 紫幕生产结果
 
-本轮未执行以下工作：
+本轮已完成以下工作：
 
-1. 分别为军势框、回合栏、小地图框、单位卡、战局抽屉、规则／技能说明栏、确认区和按钮状态生成纯紫背景源图。
+1. 分别为军势框、回合栏、小地图框、单位卡、战局抽屉、规则／技能说明栏、通用确认区和按钮底板生成纯紫背景源图。
 2. 将紫幕源图抠成透明 PNG，并检查边缘残紫、孔洞、半透明阴影和连通域碎片。
-3. 面板框制作九宫格；按钮至少产出 Normal / Hover / Pressed / Disabled / Focus 状态。
+3. 通用面板按九宫格接入；按钮实验态由同一空底板配合 Godot `StyleBoxTexture` 的 Normal / Hover / Pressed / Disabled / Focus 样式实现。
 4. 头像、棋子立绘、图标、面板框、按钮底板分开生产；区域 05 不制作属性条或放大按钮，区域 09 只制作`移动 / 技能`两类模式按钮；区域 06 的棋盘继续由正式运行时场景渲染，不作为 HUD 紫幕贴图生成。
 5. 所有动态文字、数值、进度和事件内容继续使用 Godot 预置 `Label / ProgressBar / TextureRect` 组合，不烘焙进面板 PNG。
 
-建议紫幕源统一使用项目既有高饱和纯紫背景规范，并为每个资产留足安全边距；实际色值、抠图阈值和输出目录在效果图获批后再绑定到现有美术脚本与 manifest。
+紫幕母版和透明运行时 PNG 位于 `assets/art/ui/match_hud_v3/`；接入与参数合同见 `docs/ui/match-hud-v3-layout-lab.md`。
 
 ## ImageGen 最终提示词摘要
 

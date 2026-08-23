@@ -1,0 +1,821 @@
+[gd_scene load_steps=29 format=3]
+
+[ext_resource type="Script" path="res://scripts/dev/ui/match_hud_v3_layout_lab.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://scenes/game/match/board/board_viewport.tscn" id="2_board"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/tactical_minimap.tscn" id="3_minimap_scene"]
+[ext_resource type="Theme" path="res://resources/game/ui/themes/terracotta_ui_theme.tres" id="4_theme"]
+[ext_resource type="Resource" path="res://resources/dev/ui/match_hud_v2_terracotta_lab_theme.tres" id="5_board_theme"]
+[ext_resource type="Resource" path="res://resources/game/content/boards/terracotta_battlefield_v3_map_option.tres" id="6_map"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/match_hud_v3/turn_status_bar_v1.png" id="7_turn"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/match_hud_v3/faction_summary_plate_v1.png" id="8_faction"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/match_hud_v3/panel_9slice_v1.png" id="9_panel"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/match_hud_v3/minimap_frame_v1.png" id="10_minimap_frame"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/match_hud_v3/unit_info_card_v1.png" id="11_unit"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/match_hud_v3/objective_events_panel_v1.png" id="12_events"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/match_hud_v3/action_rules_panel_v1.png" id="13_action"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/match_hud_v3/button_plate_v1.png" id="14_button"]
+[ext_resource type="Texture2D" path="res://assets/art/pieces/terracotta_warriors/red_general_idle.png" id="15_red_general"]
+[ext_resource type="Texture2D" path="res://assets/art/pieces/terracotta_warriors/black_general_idle.png" id="16_black_general"]
+[ext_resource type="Texture2D" path="res://assets/art/pieces/terracotta_warriors/red_infantry_idle.png" id="17_red_infantry"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_metal/icons/markers/flag.svg" id="18_flag_icon"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_metal/icons/roles/infantry.svg" id="19_infantry_icon"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_metal/icons/roles/trebuchet.svg" id="20_trebuchet_icon"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_metal/icons/status/selected.svg" id="21_coordinate_icon"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_metal/icons/actions/marker.svg" id="22_marker_icon"]
+
+[sub_resource type="Shader" id="ShaderCircularPortrait"]
+code = "shader_type canvas_item;\n\nvoid fragment() {\n\tvec4 source = texture(TEXTURE, UV);\n\tfloat distance_from_center = length(UV - vec2(0.5));\n\tfloat circle_alpha = 1.0 - smoothstep(0.46, 0.5, distance_from_center);\n\tCOLOR = vec4(source.rgb, source.a * circle_alpha);\n}\n"
+
+[sub_resource type="ShaderMaterial" id="MaterialCircularPortrait"]
+shader = SubResource("ShaderCircularPortrait")
+
+[sub_resource type="StyleBoxTexture" id="StyleButtonNormal"]
+texture = ExtResource("14_button")
+texture_margin_left = 18.0
+texture_margin_top = 12.0
+texture_margin_right = 18.0
+texture_margin_bottom = 12.0
+
+[sub_resource type="StyleBoxTexture" id="StyleButtonHover"]
+texture = ExtResource("14_button")
+texture_margin_left = 18.0
+texture_margin_top = 12.0
+texture_margin_right = 18.0
+texture_margin_bottom = 12.0
+modulate_color = Color(1.15, 1.06, 0.78, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleButtonPressed"]
+texture = ExtResource("14_button")
+texture_margin_left = 18.0
+texture_margin_top = 12.0
+texture_margin_right = 18.0
+texture_margin_bottom = 12.0
+modulate_color = Color(0.72, 0.66, 0.52, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleButtonDisabled"]
+texture = ExtResource("14_button")
+texture_margin_left = 18.0
+texture_margin_top = 12.0
+texture_margin_right = 18.0
+texture_margin_bottom = 12.0
+modulate_color = Color(0.4, 0.42, 0.4, 0.72)
+
+[sub_resource type="StyleBoxFlat" id="StyleButtonFocus"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.95, 0.76, 0.35, 0.94)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoardBorder"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.7, 0.52, 0.27, 0.94)
+
+[node name="MatchHudV3LayoutLab" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("4_theme")
+script = ExtResource("1_script")
+board_theme = ExtResource("5_board_theme")
+map_option = ExtResource("6_map")
+
+[node name="Backdrop" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.012, 0.014, 0.013, 1)
+
+[node name="SafeMargin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
+
+[node name="MainRows" type="VBoxContainer" parent="SafeMargin"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="TopBand" type="HBoxContainer" parent="SafeMargin/MainRows"]
+custom_minimum_size = Vector2(0, 92)
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="FactionLeft" type="Control" parent="SafeMargin/MainRows/TopBand"]
+custom_minimum_size = Vector2(300, 92)
+layout_mode = 2
+
+[node name="Background" type="TextureRect" parent="SafeMargin/MainRows/TopBand/FactionLeft"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("8_faction")
+expand_mode = 1
+
+[node name="Portrait" type="TextureRect" parent="SafeMargin/MainRows/TopBand/FactionLeft"]
+material = SubResource("MaterialCircularPortrait")
+layout_mode = 1
+anchor_left = 0.015
+anchor_top = 0.05
+anchor_right = 0.285
+anchor_bottom = 0.94
+mouse_filter = 2
+texture = ExtResource("15_red_general")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Name" type="Label" parent="SafeMargin/MainRows/TopBand/FactionLeft"]
+layout_mode = 1
+anchor_left = 0.31
+anchor_top = 0.09
+anchor_right = 0.96
+anchor_bottom = 0.48
+theme_override_colors/font_color = Color(0.93, 0.32, 0.23, 1)
+theme_override_font_sizes/font_size = 17
+text = "赤方军势"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Stats" type="HBoxContainer" parent="SafeMargin/MainRows/TopBand/FactionLeft"]
+layout_mode = 1
+anchor_left = 0.315
+anchor_top = 0.55
+anchor_right = 0.96
+anchor_bottom = 0.91
+theme_override_constants/separation = 2
+
+[node name="RedCaptured" type="Label" parent="SafeMargin/MainRows/TopBand/FactionLeft/Stats"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.84, 0.76, 0.58, 1)
+theme_override_font_sizes/font_size = 10
+text = "旗帜 1/3"
+tooltip_text = "已占旗帜数量"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RedLost" type="Label" parent="SafeMargin/MainRows/TopBand/FactionLeft/Stats"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.84, 0.76, 0.58, 1)
+theme_override_font_sizes/font_size = 10
+text = "损失 1"
+tooltip_text = "损失棋子数量"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RedCapturing" type="Label" parent="SafeMargin/MainRows/TopBand/FactionLeft/Stats"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.84, 0.76, 0.58, 1)
+theme_override_font_sizes/font_size = 10
+text = "占领 0/3"
+tooltip_text = "正在占旗进度"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TurnStatus" type="Control" parent="SafeMargin/MainRows/TopBand"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Background" type="TextureRect" parent="SafeMargin/MainRows/TopBand/TurnStatus"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("7_turn")
+expand_mode = 1
+
+[node name="Content" type="HBoxContainer" parent="SafeMargin/MainRows/TopBand/TurnStatus"]
+layout_mode = 1
+anchor_left = 0.045
+anchor_top = 0.1
+anchor_right = 0.955
+anchor_bottom = 0.88
+
+[node name="Round" type="Label" parent="SafeMargin/MainRows/TopBand/TurnStatus/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.9, 0.82, 0.65, 1)
+theme_override_font_sizes/font_size = 18
+text = "第 18 回合"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Side" type="Label" parent="SafeMargin/MainRows/TopBand/TurnStatus/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.98, 0.55, 0.34, 1)
+theme_override_font_sizes/font_size = 20
+text = "赤方行动"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Timer" type="Label" parent="SafeMargin/MainRows/TopBand/TurnStatus/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.9, 0.82, 0.65, 1)
+theme_override_font_sizes/font_size = 18
+text = "剩余 72 秒"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="FactionRight" type="Control" parent="SafeMargin/MainRows/TopBand"]
+custom_minimum_size = Vector2(300, 92)
+layout_mode = 2
+
+[node name="Background" type="TextureRect" parent="SafeMargin/MainRows/TopBand/FactionRight"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("8_faction")
+expand_mode = 1
+flip_h = true
+
+[node name="Portrait" type="TextureRect" parent="SafeMargin/MainRows/TopBand/FactionRight"]
+material = SubResource("MaterialCircularPortrait")
+layout_mode = 1
+anchor_left = 0.715
+anchor_top = 0.05
+anchor_right = 0.985
+anchor_bottom = 0.94
+mouse_filter = 2
+texture = ExtResource("16_black_general")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Name" type="Label" parent="SafeMargin/MainRows/TopBand/FactionRight"]
+layout_mode = 1
+anchor_left = 0.04
+anchor_top = 0.09
+anchor_right = 0.69
+anchor_bottom = 0.48
+theme_override_colors/font_color = Color(0.58, 0.72, 0.4, 1)
+theme_override_font_sizes/font_size = 17
+text = "玄方军势"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Stats" type="HBoxContainer" parent="SafeMargin/MainRows/TopBand/FactionRight"]
+layout_mode = 1
+anchor_left = 0.04
+anchor_top = 0.55
+anchor_right = 0.685
+anchor_bottom = 0.91
+theme_override_constants/separation = 2
+
+[node name="BlackCaptured" type="Label" parent="SafeMargin/MainRows/TopBand/FactionRight/Stats"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.76, 0.79, 0.6, 1)
+theme_override_font_sizes/font_size = 10
+text = "旗帜 0/3"
+tooltip_text = "已占旗帜数量"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BlackLost" type="Label" parent="SafeMargin/MainRows/TopBand/FactionRight/Stats"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.76, 0.79, 0.6, 1)
+theme_override_font_sizes/font_size = 10
+text = "损失 1"
+tooltip_text = "损失棋子数量"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BlackCapturing" type="Label" parent="SafeMargin/MainRows/TopBand/FactionRight/Stats"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.76, 0.79, 0.6, 1)
+theme_override_font_sizes/font_size = 10
+text = "占领 0/3"
+tooltip_text = "正在占旗进度"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BodyBand" type="HBoxContainer" parent="SafeMargin/MainRows"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+
+[node name="LeftRail" type="VBoxContainer" parent="SafeMargin/MainRows/BodyBand"]
+custom_minimum_size = Vector2(252, 0)
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="MinimapPanel" type="Control" parent="SafeMargin/MainRows/BodyBand/LeftRail"]
+custom_minimum_size = Vector2(0, 258)
+layout_mode = 2
+
+[node name="TacticalMinimap" parent="SafeMargin/MainRows/BodyBand/LeftRail/MinimapPanel" instance=ExtResource("3_minimap_scene")]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_left = 0.075
+anchor_top = 0.19
+anchor_right = 0.925
+anchor_bottom = 0.92
+
+[node name="Frame" type="TextureRect" parent="SafeMargin/MainRows/BodyBand/LeftRail/MinimapPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("10_minimap_frame")
+expand_mode = 1
+
+[node name="Title" type="Label" parent="SafeMargin/MainRows/BodyBand/LeftRail/MinimapPanel"]
+layout_mode = 1
+anchor_left = 0.12
+anchor_top = 0.03
+anchor_right = 0.88
+anchor_bottom = 0.17
+theme_override_colors/font_color = Color(0.9, 0.78, 0.52, 1)
+theme_override_font_sizes/font_size = 15
+text = "战场态势"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="UnitInfo" type="Control" parent="SafeMargin/MainRows/BodyBand/LeftRail"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Background" type="TextureRect" parent="SafeMargin/MainRows/BodyBand/LeftRail/UnitInfo"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("11_unit")
+expand_mode = 1
+
+[node name="UnitName" type="Label" parent="SafeMargin/MainRows/BodyBand/LeftRail/UnitInfo"]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_left = 0.1
+anchor_top = 0.035
+anchor_right = 0.9
+anchor_bottom = 0.14
+theme_override_colors/font_color = Color(0.94, 0.78, 0.46, 1)
+theme_override_font_sizes/font_size = 17
+text = "兵"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="UnitPortrait" type="TextureRect" parent="SafeMargin/MainRows/BodyBand/LeftRail/UnitInfo"]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_left = 0.12
+anchor_top = 0.15
+anchor_right = 0.88
+anchor_bottom = 0.75
+mouse_filter = 2
+texture = ExtResource("17_red_infantry")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="UnitRole" type="Label" parent="SafeMargin/MainRows/BodyBand/LeftRail/UnitInfo"]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_left = 0.12
+anchor_top = 0.76
+anchor_right = 0.88
+anchor_bottom = 0.85
+theme_override_colors/font_color = Color(0.84, 0.78, 0.65, 1)
+theme_override_font_sizes/font_size = 12
+text = "步卒 · 基础近战单位"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="UnitIntro" type="Label" parent="SafeMargin/MainRows/BodyBand/LeftRail/UnitInfo"]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_left = 0.1
+anchor_top = 0.85
+anchor_right = 0.9
+anchor_bottom = 0.96
+theme_override_colors/font_color = Color(0.7, 0.72, 0.66, 1)
+theme_override_font_sizes/font_size = 11
+text = "擅长推进与占领旗点"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="CenterColumn" type="VBoxContainer" parent="SafeMargin/MainRows/BodyBand"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="BoardFrame" type="Control" parent="SafeMargin/MainRows/BodyBand/CenterColumn"]
+layout_mode = 2
+size_flags_vertical = 3
+clip_contents = true
+
+[node name="BoardViewport" parent="SafeMargin/MainRows/BodyBand/CenterColumn/BoardFrame" instance=ExtResource("2_board")]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Border" type="Panel" parent="SafeMargin/MainRows/BodyBand/CenterColumn/BoardFrame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoardBorder")
+
+[node name="ActionPanel" type="Control" parent="SafeMargin/MainRows/BodyBand/CenterColumn"]
+custom_minimum_size = Vector2(0, 128)
+layout_mode = 2
+
+[node name="Background" type="TextureRect" parent="SafeMargin/MainRows/BodyBand/CenterColumn/ActionPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("13_action")
+expand_mode = 1
+
+[node name="ContentMargin" type="MarginContainer" parent="SafeMargin/MainRows/BodyBand/CenterColumn/ActionPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 10.0
+offset_right = -16.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Content" type="HBoxContainer" parent="SafeMargin/MainRows/BodyBand/CenterColumn/ActionPanel/ContentMargin"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="TextArea" type="VBoxContainer" parent="SafeMargin/MainRows/BodyBand/CenterColumn/ActionPanel/ContentMargin/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 1
+
+[node name="RuleCaption" type="Label" parent="SafeMargin/MainRows/BodyBand/CenterColumn/ActionPanel/ContentMargin/Content/TextArea"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.94, 0.76, 0.42, 1)
+theme_override_colors/font_outline_color = Color(0.03, 0.025, 0.02, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 13
+text = "行动规则"
+
+[node name="ActionRule" type="Label" parent="SafeMargin/MainRows/BodyBand/CenterColumn/ActionPanel/ContentMargin/Content/TextArea"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.96, 0.91, 0.78, 1)
+theme_override_colors/font_outline_color = Color(0.03, 0.025, 0.02, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 11
+text = "沿直线前进一格；不能越过其他棋子。"
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="SkillCaption" type="Label" parent="SafeMargin/MainRows/BodyBand/CenterColumn/ActionPanel/ContentMargin/Content/TextArea"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.94, 0.76, 0.42, 1)
+theme_override_colors/font_outline_color = Color(0.03, 0.025, 0.02, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 13
+text = "当前技能"
+
+[node name="SkillDescription" type="Label" parent="SafeMargin/MainRows/BodyBand/CenterColumn/ActionPanel/ContentMargin/Content/TextArea"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.96, 0.91, 0.78, 1)
+theme_override_colors/font_outline_color = Color(0.03, 0.025, 0.02, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 11
+text = "土献祭：消耗本回合行动，强化目标旗点。"
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="ModeButtons" type="VBoxContainer" parent="SafeMargin/MainRows/BodyBand/CenterColumn/ActionPanel/ContentMargin/Content"]
+custom_minimum_size = Vector2(156, 0)
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="MoveButton" type="Button" parent="SafeMargin/MainRows/BodyBand/CenterColumn/ActionPanel/ContentMargin/Content/ModeButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.82, 0.55, 1)
+theme_override_colors/font_hover_color = Color(1, 0.9, 0.62, 1)
+theme_override_font_sizes/font_size = 17
+theme_override_styles/normal = SubResource("StyleButtonNormal")
+theme_override_styles/hover = SubResource("StyleButtonHover")
+theme_override_styles/pressed = SubResource("StyleButtonPressed")
+theme_override_styles/disabled = SubResource("StyleButtonDisabled")
+theme_override_styles/focus = SubResource("StyleButtonFocus")
+toggle_mode = true
+button_pressed = true
+text = "移动"
+
+[node name="SkillButton" type="Button" parent="SafeMargin/MainRows/BodyBand/CenterColumn/ActionPanel/ContentMargin/Content/ModeButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.84, 0.7, 1)
+theme_override_colors/font_hover_color = Color(1, 0.9, 0.62, 1)
+theme_override_font_sizes/font_size = 17
+theme_override_styles/normal = SubResource("StyleButtonNormal")
+theme_override_styles/hover = SubResource("StyleButtonHover")
+theme_override_styles/pressed = SubResource("StyleButtonPressed")
+theme_override_styles/disabled = SubResource("StyleButtonDisabled")
+theme_override_styles/focus = SubResource("StyleButtonFocus")
+toggle_mode = true
+text = "技能"
+
+[node name="RightRail" type="VBoxContainer" parent="SafeMargin/MainRows/BodyBand"]
+custom_minimum_size = Vector2(284, 0)
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="ObjectiveEvents" type="Control" parent="SafeMargin/MainRows/BodyBand/RightRail"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Background" type="TextureRect" parent="SafeMargin/MainRows/BodyBand/RightRail/ObjectiveEvents"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("12_events")
+expand_mode = 1
+
+[node name="Heading" type="Label" parent="SafeMargin/MainRows/BodyBand/RightRail/ObjectiveEvents"]
+layout_mode = 1
+anchor_left = 0.1
+anchor_top = 0.02
+anchor_right = 0.9
+anchor_bottom = 0.16
+theme_override_colors/font_color = Color(0.9, 0.78, 0.52, 1)
+theme_override_font_sizes/font_size = 16
+text = "战局与行动"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Rows" type="VBoxContainer" parent="SafeMargin/MainRows/BodyBand/RightRail/ObjectiveEvents"]
+layout_mode = 1
+anchor_left = 0.08
+anchor_top = 0.18
+anchor_right = 0.92
+anchor_bottom = 0.93
+theme_override_constants/separation = 2
+
+[node name="FlagRow" type="HBoxContainer" parent="SafeMargin/MainRows/BodyBand/RightRail/ObjectiveEvents/Rows"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Icon" type="TextureRect" parent="SafeMargin/MainRows/BodyBand/RightRail/ObjectiveEvents/Rows/FlagRow"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("18_flag_icon")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="FlagEvent" type="Label" parent="SafeMargin/MainRows/BodyBand/RightRail/ObjectiveEvents/Rows/FlagRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.9, 0.86, 0.74, 1)
+theme_override_font_sizes/font_size = 12
+text = "我方已发现旗帜 1/3"
+vertical_alignment = 1
+text_overrun_behavior = 3
+
+[node name="OwnLossRow" type="HBoxContainer" parent="SafeMargin/MainRows/BodyBand/RightRail/ObjectiveEvents/Rows"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Icon" type="TextureRect" parent="SafeMargin/MainRows/BodyBand/RightRail/ObjectiveEvents/Rows/OwnLossRow"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("19_infantry_icon")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="OwnLossEvent" type="Label" parent="SafeMargin/MainRows/BodyBand/RightRail/ObjectiveEvents/Rows/OwnLossRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.9, 0.86, 0.74, 1)
+theme_override_font_sizes/font_size = 12
+text = "我方阵亡：兵 ×1"
+vertical_alignment = 1
+text_overrun_behavior = 3
+
+[node name="EnemyLossRow" type="HBoxContainer" parent="SafeMargin/MainRows/BodyBand/RightRail/ObjectiveEvents/Rows"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Icon" type="TextureRect" parent="SafeMargin/MainRows/BodyBand/RightRail/ObjectiveEvents/Rows/EnemyLossRow"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("20_trebuchet_icon")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="EnemyLossEvent" type="Label" parent="SafeMargin/MainRows/BodyBand/RightRail/ObjectiveEvents/Rows/EnemyLossRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.9, 0.86, 0.74, 1)
+theme_override_font_sizes/font_size = 12
+text = "敌方阵亡：炮 ×1"
+vertical_alignment = 1
+text_overrun_behavior = 3
+
+[node name="CoordinateRow" type="HBoxContainer" parent="SafeMargin/MainRows/BodyBand/RightRail/ObjectiveEvents/Rows"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Icon" type="TextureRect" parent="SafeMargin/MainRows/BodyBand/RightRail/ObjectiveEvents/Rows/CoordinateRow"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("21_coordinate_icon")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="CoordinateEvent" type="Label" parent="SafeMargin/MainRows/BodyBand/RightRail/ObjectiveEvents/Rows/CoordinateRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.9, 0.78, 0.52, 1)
+theme_override_font_sizes/font_size = 12
+text = "当前坐标：(5,7)"
+vertical_alignment = 1
+text_overrun_behavior = 3
+
+[node name="StatusRow" type="HBoxContainer" parent="SafeMargin/MainRows/BodyBand/RightRail/ObjectiveEvents/Rows"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Spacer" type="Control" parent="SafeMargin/MainRows/BodyBand/RightRail/ObjectiveEvents/Rows/StatusRow"]
+custom_minimum_size = Vector2(28, 1)
+layout_mode = 2
+
+[node name="StatusEvent" type="Label" parent="SafeMargin/MainRows/BodyBand/RightRail/ObjectiveEvents/Rows/StatusRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.78, 0.8, 0.72, 1)
+theme_override_font_sizes/font_size = 11
+text = "选择棋子查看规则"
+vertical_alignment = 1
+text_overrun_behavior = 3
+
+[node name="MarkerButton" type="Button" parent="SafeMargin/MainRows/BodyBand/RightRail"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+focus_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.82, 0.62, 1)
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleButtonNormal")
+theme_override_styles/hover = SubResource("StyleButtonHover")
+theme_override_styles/pressed = SubResource("StyleButtonPressed")
+theme_override_styles/disabled = SubResource("StyleButtonDisabled")
+theme_override_styles/focus = SubResource("StyleButtonFocus")
+text = "标记"
+icon = ExtResource("22_marker_icon")
+icon_max_width = 26
+
+[node name="Confirmation" type="Control" parent="SafeMargin/MainRows/BodyBand/RightRail"]
+custom_minimum_size = Vector2(0, 128)
+layout_mode = 2
+
+[node name="Background" type="NinePatchRect" parent="SafeMargin/MainRows/BodyBand/RightRail/Confirmation"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("9_panel")
+patch_margin_left = 96
+patch_margin_top = 96
+patch_margin_right = 96
+patch_margin_bottom = 96
+
+[node name="Buttons" type="HBoxContainer" parent="SafeMargin/MainRows/BodyBand/RightRail/Confirmation"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = 22.0
+offset_right = -12.0
+offset_bottom = -22.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 6
+
+[node name="ConfirmButton" type="Button" parent="SafeMargin/MainRows/BodyBand/RightRail/Confirmation/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 2
+theme_override_colors/font_color = Color(1, 0.84, 0.48, 1)
+theme_override_font_sizes/font_size = 17
+theme_override_styles/normal = SubResource("StyleButtonNormal")
+theme_override_styles/hover = SubResource("StyleButtonHover")
+theme_override_styles/pressed = SubResource("StyleButtonPressed")
+theme_override_styles/disabled = SubResource("StyleButtonDisabled")
+theme_override_styles/focus = SubResource("StyleButtonFocus")
+text = "确认行动"
+
+[node name="CancelButton" type="Button" parent="SafeMargin/MainRows/BodyBand/RightRail/Confirmation/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 2
+theme_override_colors/font_color = Color(0.84, 0.82, 0.76, 1)
+theme_override_font_sizes/font_size = 17
+theme_override_styles/normal = SubResource("StyleButtonNormal")
+theme_override_styles/hover = SubResource("StyleButtonHover")
+theme_override_styles/pressed = SubResource("StyleButtonPressed")
+theme_override_styles/disabled = SubResource("StyleButtonDisabled")
+theme_override_styles/focus = SubResource("StyleButtonFocus")
+text = "取消"
+
+[node name="CountdownTimer" type="Timer" parent="."]
+wait_time = 1.0
+autostart = true
