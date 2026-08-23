@@ -41,7 +41,7 @@
           "text": "赤方军势",
           "binding": "faction_name",
           "visible": true,
-          "font_size": 14,
+          "font_size": 16,
           "horizontal_alignment": "left",
           "vertical_alignment": "center",
           "normalized_rect": {
@@ -57,7 +57,7 @@
           "text": "墙 完好 · 旗 0 · 损 0",
           "binding": "faction_stats",
           "visible": true,
-          "font_size": 10,
+          "font_size": 15,
           "horizontal_alignment": "left",
           "vertical_alignment": "center",
           "normalized_rect": {
@@ -101,7 +101,7 @@
           "text": "玄方军势",
           "binding": "faction_name",
           "visible": true,
-          "font_size": 14,
+          "font_size": 16,
           "horizontal_alignment": "right",
           "vertical_alignment": "center",
           "normalized_rect": {
@@ -117,7 +117,7 @@
           "text": "墙 完好 · 旗 0 · 损 0",
           "binding": "faction_stats",
           "visible": true,
-          "font_size": 10,
+          "font_size": 15,
           "horizontal_alignment": "right",
           "vertical_alignment": "center",
           "normalized_rect": {
@@ -145,7 +145,7 @@
           "text": "未选择棋子",
           "binding": "unit_name",
           "visible": true,
-          "font_size": 14,
+          "font_size": 16,
           "horizontal_alignment": "center",
           "vertical_alignment": "center",
           "normalized_rect": {
@@ -161,7 +161,7 @@
           "text": "",
           "binding": "unit_portrait",
           "visible": true,
-          "font_size": 12,
+          "font_size": 14,
           "horizontal_alignment": "center",
           "vertical_alignment": "center",
           "normalized_rect": {
@@ -189,7 +189,7 @@
           "text": "战局与行动",
           "binding": "static",
           "visible": true,
-          "font_size": 14,
+          "font_size": 16,
           "horizontal_alignment": "center",
           "vertical_alignment": "center",
           "normalized_rect": {
@@ -205,7 +205,7 @@
           "text": "行动方: — 已选: 无",
           "binding": "selection_status",
           "visible": true,
-          "font_size": 11,
+          "font_size": 15,
           "horizontal_alignment": "center",
           "vertical_alignment": "center",
           "normalized_rect": {
@@ -221,7 +221,7 @@
           "text": "我方已发现旗帜: 0/3",
           "binding": "static",
           "visible": true,
-          "font_size": 12,
+          "font_size": 15,
           "horizontal_alignment": "center",
           "vertical_alignment": "center",
           "normalized_rect": {
@@ -237,7 +237,7 @@
           "text": "我方阵亡:",
           "binding": "static",
           "visible": true,
-          "font_size": 12,
+          "font_size": 15,
           "horizontal_alignment": "center",
           "vertical_alignment": "center",
           "normalized_rect": {
@@ -253,7 +253,7 @@
           "text": "敌方阵亡:",
           "binding": "static",
           "visible": true,
-          "font_size": 12,
+          "font_size": 15,
           "horizontal_alignment": "center",
           "vertical_alignment": "center",
           "normalized_rect": {
@@ -269,7 +269,7 @@
           "text": "位置: (x, y)",
           "binding": "static",
           "visible": true,
-          "font_size": 14,
+          "font_size": 15,
           "horizontal_alignment": "center",
           "vertical_alignment": "center",
           "normalized_rect": {
@@ -297,7 +297,7 @@
           "text": "战场态势",
           "binding": "static",
           "visible": true,
-          "font_size": 12,
+          "font_size": 14,
           "horizontal_alignment": "center",
           "vertical_alignment": "center",
           "normalized_rect": {
@@ -337,7 +337,7 @@
           "binding": "static",
           "visible": true,
           "layout_managed_by_container": true,
-          "font_size": 11,
+          "font_size": 15,
           "horizontal_alignment": "left",
           "vertical_alignment": "center",
           "normalized_rect": {
@@ -354,7 +354,7 @@
           "binding": "movement_summary",
           "visible": true,
           "layout_managed_by_container": true,
-          "font_size": 10,
+          "font_size": 15,
           "horizontal_alignment": "left",
           "vertical_alignment": "center",
           "normalized_rect": {
@@ -371,7 +371,7 @@
           "binding": "move_action",
           "visible": true,
           "layout_managed_by_container": true,
-          "font_size": 11,
+          "font_size": 16,
           "horizontal_alignment": "center",
           "vertical_alignment": "center",
           "normalized_rect": {
@@ -388,7 +388,7 @@
           "binding": "bombard_action",
           "visible": false,
           "layout_managed_by_container": true,
-          "font_size": 11,
+          "font_size": 16,
           "horizontal_alignment": "center",
           "vertical_alignment": "center",
           "normalized_rect": {
@@ -405,7 +405,7 @@
           "binding": "resurrect_action",
           "visible": false,
           "layout_managed_by_container": true,
-          "font_size": 11,
+          "font_size": 16,
           "horizontal_alignment": "center",
           "vertical_alignment": "center",
           "normalized_rect": {
@@ -422,7 +422,7 @@
           "binding": "no_skill_action",
           "visible": true,
           "layout_managed_by_container": true,
-          "font_size": 11,
+          "font_size": 16,
           "horizontal_alignment": "center",
           "vertical_alignment": "center",
           "normalized_rect": {
@@ -512,13 +512,13 @@
         "pixel_rect": {
           "x": 340,
           "y": 32,
-          "width": 600,
+          "width": 552,
           "height": 544
         },
         "normalized_rect": {
           "x": 0.265625,
           "y": 0.044444444444444446,
-          "width": 0.46875,
+          "width": 0.43125,
           "height": 0.7555555555555555
         }
       },

@@ -67,7 +67,7 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 93.0
-offset_top = 10.0
+offset_top = 6.0
 offset_right = -14.0
 offset_bottom = -6.0
 grow_horizontal = 2
@@ -102,7 +102,7 @@ text_overrun_behavior = 3
 
 [node name="SkillButtons" type="HBoxContainer" parent="ContentMargin/ContentRow" unique_id=527259309]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(154, 40)
+custom_minimum_size = Vector2(154, 44)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_constants/separation = 6
@@ -110,7 +110,7 @@ alignment = 1
 
 [node name="MoveButton" parent="ContentMargin/ContentRow/SkillButtons" unique_id=1422259175 instance=ExtResource("3_button")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(74, 40)
+custom_minimum_size = Vector2(74, 44)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"QuietButton"
@@ -125,7 +125,7 @@ motion_profile = null
 
 [node name="BombardButton" parent="ContentMargin/ContentRow/SkillButtons" unique_id=91402327 instance=ExtResource("3_button")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(74, 40)
+custom_minimum_size = Vector2(74, 44)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"QuietButton"
@@ -140,7 +140,7 @@ motion_profile = null
 
 [node name="ResurrectButton" parent="ContentMargin/ContentRow/SkillButtons" unique_id=1354400505 instance=ExtResource("3_button")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(74, 40)
+custom_minimum_size = Vector2(74, 44)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"QuietButton"
@@ -155,7 +155,7 @@ motion_profile = null
 
 [node name="NoSkillButton" parent="ContentMargin/ContentRow/SkillButtons" unique_id=374461301 instance=ExtResource("3_button")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(74, 40)
+custom_minimum_size = Vector2(74, 44)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"QuietButton"

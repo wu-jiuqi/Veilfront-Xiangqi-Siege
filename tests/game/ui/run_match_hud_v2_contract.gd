@@ -8,16 +8,22 @@ var _failures: Array[String] = []
 
 
 func _init() -> void:
+	print("MATCH_HUD_V2_CONTRACT_STAGE init")
 	call_deferred("_run")
 
 
 func _run() -> void:
+	print("MATCH_HUD_V2_CONTRACT_STAGE setup")
 	_check_layout_source()
 	var viewport := SubViewport.new()
 	viewport.size = Vector2i(1280, 720)
 	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	root.add_child(viewport)
 	var screen: Control = MATCH_SCREEN_SCENE.instantiate() as Control
+	var board_sub_viewport := screen.get_node(
+		"MatchHudV2/BoardFrame/BoardViewport/BoardSubViewport"
+	) as SubViewport
+	board_sub_viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
 	viewport.add_child(screen)
 	await process_frame
 	screen.apply_layout_for_size(Vector2(1280, 720))
@@ -26,6 +32,7 @@ func _run() -> void:
 
 	var hud: Dictionary = screen.get_hud_snapshot()
 	_check_catalog_text_layout(screen)
+	_check_touch_targets(screen)
 	_expect(str(hud.get("layout", {}).get("active_profile", "")) == "1280x720", "HUD did not select the exported 1280x720 profile")
 	_expect(not bool(hud.get("layout", {}).get("text_layer_visibility", {}).get("faction-left/turn", false)), "deleted left turn layer remained enabled")
 	_expect(not bool(hud.get("layout", {}).get("text_layer_visibility", {}).get("faction-left/return", false)), "deleted return layer remained enabled")
@@ -261,6 +268,9 @@ func _check_layout_source() -> void:
 
 func _check_catalog_text_layout(screen: Control) -> void:
 	var layout: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(LAYOUT_PATH)) as Dictionary
+	var auxiliary_bindings: Array[String] = [
+		"unit-info/portrait", "minimap/title", "custom-ui-1787293016650-4/round-caption",
+	]
 	var paths := {
 		"faction-left/portrait": "MatchHudV2/FactionLeft/Portrait",
 		"faction-left/name": "MatchHudV2/FactionLeft/FactionLeftName",
@@ -296,6 +306,12 @@ func _check_catalog_text_layout(screen: Control) -> void:
 				continue
 			var layer: Dictionary = layer_value
 			var binding_key := "%s/%s" % [panel_id, str(layer.get("id", ""))]
+			var font_size := int(layer.get("font_size", 0))
+			var minimum_font_size := 14 if binding_key in auxiliary_bindings else 15
+			_expect(
+				font_size >= minimum_font_size,
+				"%s font size is below readability floor %dpx" % [binding_key, minimum_font_size]
+			)
 			_expect(paths.has(binding_key), "JSON text layer has no formal HUD binding: %s" % binding_key)
 			if not paths.has(binding_key):
 				continue
@@ -310,6 +326,25 @@ func _check_catalog_text_layout(screen: Control) -> void:
 				), binding_key)
 			_expect(control.visible == bool(layer.get("visible", true)), "%s visibility does not match JSON" % binding_key)
 			_expect(control.get_theme_font_size("font_size") == int(layer.get("font_size", 12)), "%s font size does not match JSON" % binding_key)
+
+
+func _check_touch_targets(screen: Control) -> void:
+	for button_path: String in [
+		"MatchHudV2/FactionLeft/ReturnButton",
+		"MatchHudV2/FactionRight/MirrorButton",
+		"MatchHudV2/ObjectiveEvents/PassButton",
+		"MatchHudV2/PieceInfoDrawer/ContentMargin/ContentRow/SkillButtons/MoveButton",
+		"MatchHudV2/PieceInfoDrawer/ContentMargin/ContentRow/SkillButtons/BombardButton",
+		"MatchHudV2/PieceInfoDrawer/ContentMargin/ContentRow/SkillButtons/ResurrectButton",
+		"MatchHudV2/PieceInfoDrawer/ContentMargin/ContentRow/SkillButtons/NoSkillButton",
+	]:
+		var button := screen.get_node_or_null(button_path) as Button
+		_expect(button != null, "HUD button is missing: %s" % button_path)
+		if button != null:
+			_expect(
+				button.custom_minimum_size.y >= 44.0,
+				"HUD button touch height is below 44px: %s" % button_path
+			)
 
 
 func _player_view() -> Dictionary:
