@@ -70,6 +70,24 @@ func _run() -> void:
 	if not seated:
 		_finish()
 		return
+	var server_timeout: Dictionary = _server_session.get_transport_timeout_snapshot()
+	var client_timeout: Dictionary = _client_session.get_transport_timeout_snapshot()
+	var remote_peer_id := int(_client_state.get("local_peer_id", 0))
+	_check(
+		server_timeout.get("timeout_factor") == 32 \
+			and server_timeout.get("timeout_min_msec") == 120_000 \
+			and server_timeout.get("timeout_max_msec") == 120_000 \
+			and client_timeout.get("timeout_factor") == server_timeout.get("timeout_factor") \
+			and client_timeout.get("timeout_min_msec") == server_timeout.get("timeout_min_msec") \
+			and client_timeout.get("timeout_max_msec") == server_timeout.get("timeout_max_msec"),
+		"回合制 LAN 双端使用一致且有限的可靠包确认超时",
+	)
+	_check(
+		remote_peer_id > 1 \
+			and remote_peer_id in server_timeout.get("configured_peer_ids", []) \
+			and 1 in client_timeout.get("configured_peer_ids", []),
+		"host/client 已对实际 ENetPacketPeer 应用超时策略",
+	)
 
 	_server_session.set_ready(true)
 	_client_session.set_ready(true)

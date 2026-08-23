@@ -19,6 +19,12 @@ const RED: String = "red"
 const BLACK: String = "black"
 const MAX_OBSERVER_BATCH_BYTES: int = 4 * 1024 * 1024
 const OBSERVER_COMPRESSION_MODE: int = FileAccess.COMPRESSION_DEFLATE
+# ENet defaults to a 30-second fixed acknowledgement ceiling. A turn-based LAN
+# match can legitimately miss that window when a low-end host stalls on asset or
+# renderer work, so both ends use the same finite two-minute ceiling.
+const LAN_TIMEOUT_FACTOR: int = 32
+const LAN_TIMEOUT_MIN_MSEC: int = 120_000
+const LAN_TIMEOUT_MAX_MSEC: int = 120_000
 
 @export_range(1024, 65535, 1) var default_port: int = 27772
 @export_range(1, 1, 1) var maximum_remote_clients: int = 1
@@ -45,6 +51,7 @@ var _last_event_cursor_by_peer: Dictionary = {}
 var _observer_batch_by_peer: Dictionary = {}
 var _current_public_state: Dictionary = {}
 var _aborting_protocol_error: bool = false
+var _timeout_configured_peer_ids: Dictionary = {}
 
 
 func _ready() -> void:
@@ -184,6 +191,19 @@ func is_match_started() -> bool:
 
 func has_authoritative_application() -> bool:
 	return _role == "host" and _application != null
+
+
+func get_transport_timeout_snapshot() -> Dictionary:
+	var configured_peer_ids: Array[int] = []
+	for peer_id_value: Variant in _timeout_configured_peer_ids.keys():
+		configured_peer_ids.append(int(peer_id_value))
+	configured_peer_ids.sort()
+	return {
+		"timeout_factor": LAN_TIMEOUT_FACTOR,
+		"timeout_min_msec": LAN_TIMEOUT_MIN_MSEC,
+		"timeout_max_msec": LAN_TIMEOUT_MAX_MSEC,
+		"configured_peer_ids": configured_peer_ids,
+	}
 
 
 func set_ready(ready: bool = true) -> Dictionary:
@@ -770,12 +790,14 @@ func _connect_multiplayer_signals() -> void:
 		multiplayer.server_disconnected.connect(_on_server_disconnected)
 
 
-func _on_peer_connected(_peer_id: int) -> void:
+func _on_peer_connected(peer_id: int) -> void:
+	_configure_peer_timeout(peer_id)
 	if multiplayer.is_server():
 		_publish_local_state()
 
 
 func _on_peer_disconnected(peer_id: int) -> void:
+	_timeout_configured_peer_ids.erase(peer_id)
 	if not multiplayer.is_server() or not _peer_to_side.has(peer_id):
 		return
 	var side: String = str(_peer_to_side[peer_id])
@@ -796,6 +818,7 @@ func _on_peer_disconnected(peer_id: int) -> void:
 
 
 func _on_connected_to_server() -> void:
+	_configure_peer_timeout(HOST_PEER_ID)
 	_connection_state = "connected_transport"
 	_error_code = ""
 	_publish_local_state()
@@ -848,7 +871,23 @@ func _reset_runtime() -> void:
 	_frame_sequence_by_peer.clear()
 	_last_event_cursor_by_peer.clear()
 	_observer_batch_by_peer.clear()
+	_timeout_configured_peer_ids.clear()
 	_current_public_state = _make_local_public_state()
+
+
+func _configure_peer_timeout(peer_id: int) -> bool:
+	if _enet_peer == null or peer_id <= 0:
+		return false
+	var packet_peer: ENetPacketPeer = _enet_peer.get_peer(peer_id)
+	if packet_peer == null or not packet_peer.is_active():
+		return false
+	packet_peer.set_timeout(
+		LAN_TIMEOUT_FACTOR,
+		LAN_TIMEOUT_MIN_MSEC,
+		LAN_TIMEOUT_MAX_MSEC
+	)
+	_timeout_configured_peer_ids[peer_id] = true
+	return true
 
 
 func _close_peer_only() -> void:
@@ -857,3 +896,4 @@ func _close_peer_only() -> void:
 	if multiplayer.multiplayer_peer != null:
 		multiplayer.multiplayer_peer = null
 	_enet_peer = null
+	_timeout_configured_peer_ids.clear()
