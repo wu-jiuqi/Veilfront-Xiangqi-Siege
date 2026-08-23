@@ -1,0 +1,34 @@
+{
+	"active_layout_profile": "1280x720",
+	"average_fps": 167.999031205587,
+	"average_frame_ms": 5.9524128968254,
+	"board_rect": [
+		255.0,
+		24.0,
+		414.0,
+		408.0
+	],
+	"candidate": "54ba29947bb886ffd1fc4abf751d2c3c5751d9b5",
+	"confirming_action_button_min_height": 44.0,
+	"core_layout_readable": true,
+	"display_driver": "Windows",
+	"frame_count": 5040,
+	"godot": "4.7.1-stable (official)",
+	"independent_quality_tier_switch_exists": false,
+	"main_button_min_height": 44.0,
+	"max_frame_ms": 10.427,
+	"one_percent_low_fps_equivalent": 109.685203466052,
+	"p99_frame_ms": 9.117,
+	"reduce_motion_active": true,
+	"reduce_motion_requested": true,
+	"rendering_method": "gl_compatibility",
+	"resolution": [
+		960,
+		540
+	],
+	"sample_seconds": 30.000173,
+	"schema_version": "veilfront-gate2-performance-sample-v1",
+	"video_adapter": "Intel(R) Iris(R) Xe Graphics",
+	"vsync_disabled_for_sampling": true,
+	"warmup_seconds": 5.0
+}

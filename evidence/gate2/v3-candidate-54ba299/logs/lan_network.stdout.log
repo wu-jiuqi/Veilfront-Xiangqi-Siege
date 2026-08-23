@@ -1,0 +1,51 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+PASS: 正式 LAN 预置场景可加载
+PASS: 房主重复获取同一 ClientPort
+PASS: 客户端重复获取同一 ClientPort
+PASS: 房主 ClientPort 可绑定 ApplicationHost
+PASS: 客户端 ClientPort 可绑定 ApplicationHost
+PASS: 房主创建正式 ENet 会话
+PASS: 客户端发起正式 ENet 连接
+PASS: loopback 完成 host/join 与红黑席位分配
+PASS: 回合制 LAN 双端使用一致且有限的可靠包确认超时
+PASS: host/client 已对实际 ENetPacketPeer 应用超时策略
+PASS: 双方 ready 同步且仅房主满足开局条件
+PASS: 房主启动正式权威对局
+PASS: 开局向红黑分别下发首个正式观察者批次
+PASS: 正式规则核心只存在于 host
+PASS: 客户端不持有正式规则核心
+PASS: 房主端只收到红方 PlayerView
+PASS: 客户端只收到黑方 PlayerView
+PASS: 房主下行无 seed/RNG/FullState
+PASS: 客户端下行无 seed/RNG/FullState
+PASS: 相同观察者输入生成字节等价下行批次
+PASS: 正式 LAN 协议拒绝额外与隐藏字段
+PASS: 正式动作合同覆盖移动/炮击/献祭/跳过/超时
+PASS: 红方获得正式移动预览
+PASS: 红方正式移动经可靠 RPC 结算并切换黑方回合
+PASS: 重复 request_id 被房主拒绝且不重复结算
+PASS: 重复请求不推进 action_index
+PASS: 过期 expected_action_index 被房主拒绝
+PASS: 过期请求不推进 action_index
+PASS: 黑方获得正式移动预览
+PASS: 黑方正式移动经可靠 RPC 结算并切回红方回合
+PASS: 多批次后红方端仍未串入黑方视图
+PASS: 多批次后黑方端仍未串入红方视图
+PASS: 房主跳过行动经正式 LAN 结算并切换玄方
+PASS: 客户端回合超时经房主权威结算并切回赤方
+PASS: 权威伤亡池经观察者协议生成赤方复活预览
+PASS: 赤方士献祭复活经正式 LAN 结算并同步玄方
+PASS: 玄方获得正式炮击预览
+PASS: 玄方炮击经可靠 RPC 与房主随机权威结算
+PASS: 赤方仅凭 PlayerView 获得吃将预览
+PASS: 吃将终局由房主权威结算并向双方下发同一胜方
+PASS: 特殊行动后赤方仍无权威状态泄露
+PASS: 特殊行动后玄方仍无权威状态泄露
+PASS: 远端断线后 host 清理席位与权威对局
+PASS: 断线清理销毁 host 规则核心引用
+PASS: 断线后可用 authority 内部 seed 再次建房
+PASS: 再次建房完成新的红黑席位闭环
+PASS: 内部随机 seed 不进入 public_state
+PASS: 服务器断开后客户端清理 peer 并发布明确状态
+FORMAL_LAN_NETWORK_INTEGRATION_PASSED

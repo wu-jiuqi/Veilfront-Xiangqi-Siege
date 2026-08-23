@@ -1,0 +1,89 @@
+[
+  {
+    "id": "formal_architecture",
+    "path": "tests/game/architecture/run_formal_architecture_checks.gd",
+    "extra_args": "",
+    "required_markers": [
+      "FORMAL_ARCHITECTURE_CHECKS_PASSED",
+      "DEPENDENCY_BOUNDARY_CHECK_PASSED"
+    ],
+    "missing_markers": [],
+    "exit_code": 0,
+    "timed_out": false,
+    "forbidden_count": 0,
+    "duration_seconds": 77.028,
+    "verdict": "pass"
+  },
+  {
+    "id": "static_theme",
+    "path": "tests/game/ui/run_ui_static_theme_contract.gd",
+    "extra_args": "",
+    "required_markers": [
+      "UI_STATIC_THEME_CONTRACT_PASS"
+    ],
+    "missing_markers": [],
+    "exit_code": 0,
+    "timed_out": false,
+    "forbidden_count": 0,
+    "duration_seconds": 32.837,
+    "verdict": "pass"
+  },
+  {
+    "id": "lan_network",
+    "path": "tests/game/network/run_formal_lan_network_integration.gd",
+    "extra_args": "",
+    "required_markers": [
+      "FORMAL_LAN_NETWORK_INTEGRATION_PASSED"
+    ],
+    "missing_markers": [],
+    "exit_code": 0,
+    "timed_out": false,
+    "forbidden_count": 0,
+    "duration_seconds": 162.301,
+    "verdict": "pass"
+  },
+  {
+    "id": "lan_security_recovery",
+    "path": "tests/game/network/run_formal_lan_security_recovery_contract.gd",
+    "extra_args": "",
+    "required_markers": [
+      "FORMAL_LAN_SECURITY_RECOVERY_PASS"
+    ],
+    "missing_markers": [],
+    "exit_code": 0,
+    "timed_out": false,
+    "forbidden_count": 0,
+    "duration_seconds": 50.95,
+    "verdict": "pass"
+  },
+  {
+    "id": "lan_full_stack",
+    "path": "tests/game/network/run_formal_lan_full_stack_loopback.gd",
+    "extra_args": "",
+    "required_markers": [
+      "FORMAL_LAN_FULL_STACK_LOOPBACK_PASS"
+    ],
+    "missing_markers": [],
+    "exit_code": 0,
+    "timed_out": false,
+    "forbidden_count": 0,
+    "duration_seconds": 237.991,
+    "verdict": "pass"
+  },
+  {
+    "id": "formal_equivalence_3",
+    "path": "tests/game/migration/run_gate1_formal_equivalence.gd",
+    "extra_args": "-- --seeds 3 --replay-samples 3",
+    "required_markers": [
+      "FORMAL_EQUIVALENCE_PASS completed=3"
+    ],
+    "missing_markers": [
+      "FORMAL_EQUIVALENCE_PASS completed=3"
+    ],
+    "exit_code": -999,
+    "timed_out": true,
+    "forbidden_count": 0,
+    "duration_seconds": 361.344,
+    "verdict": "fail"
+  }
+]

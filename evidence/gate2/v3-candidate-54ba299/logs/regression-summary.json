@@ -1,0 +1,101 @@
+[
+  {
+    "id": "formal_scene_smoke",
+    "path": "tests/game/scenes/run_formal_scene_smoke.gd",
+    "marker": "FORMAL_SCENE_SMOKE_PASS",
+    "exit_code": 0,
+    "timed_out": false,
+    "marker_found": true,
+    "forbidden_count": 0,
+    "duration_seconds": 118.555,
+    "verdict": "pass"
+  },
+  {
+    "id": "board_layout",
+    "path": "tests/game/presentation/run_board_layout_contract.gd",
+    "marker": "BOARD_LAYOUT_CONTRACT_PASS",
+    "exit_code": 0,
+    "timed_out": false,
+    "marker_found": true,
+    "forbidden_count": 0,
+    "duration_seconds": 187.09,
+    "verdict": "pass"
+  },
+  {
+    "id": "formal_board_art_input",
+    "path": "tests/game/presentation/run_formal_board_art_input_contract.gd",
+    "marker": "FORMAL_BOARD_ART_INPUT_CONTRACT_PASS",
+    "exit_code": 0,
+    "timed_out": false,
+    "marker_found": true,
+    "forbidden_count": 0,
+    "duration_seconds": 159.235,
+    "verdict": "pass"
+  },
+  {
+    "id": "formal_fog_visual",
+    "path": "tests/game/presentation/run_formal_fog_visual_contract.gd",
+    "marker": "FORMAL_FOG_VISUAL_CONTRACT_PASS",
+    "exit_code": 0,
+    "timed_out": false,
+    "marker_found": true,
+    "forbidden_count": 0,
+    "duration_seconds": 46.942,
+    "verdict": "pass"
+  },
+  {
+    "id": "turn_camera_visibility",
+    "path": "tests/game/presentation/run_turn_camera_visibility_contract.gd",
+    "marker": "TURN_CAMERA_VISIBILITY_CONTRACT_PASS",
+    "exit_code": 1,
+    "timed_out": false,
+    "marker_found": false,
+    "forbidden_count": 2,
+    "duration_seconds": 78.593,
+    "verdict": "fail"
+  },
+  {
+    "id": "hidden_equivalence",
+    "path": "tests/game/contracts/run_hidden_equivalence.gd",
+    "marker": "HIDDEN_EQUIVALENCE_PASS",
+    "exit_code": 0,
+    "timed_out": false,
+    "marker_found": true,
+    "forbidden_count": 0,
+    "duration_seconds": 92.414,
+    "verdict": "pass"
+  },
+  {
+    "id": "observer_contract",
+    "path": "tests/game/contracts/run_observer_contract_checks.gd",
+    "marker": "OBSERVER_CONTRACT_CHECKS_PASSED",
+    "exit_code": 0,
+    "timed_out": false,
+    "marker_found": true,
+    "forbidden_count": 0,
+    "duration_seconds": 7.049,
+    "verdict": "pass"
+  },
+  {
+    "id": "tutorial_rule_boundary",
+    "path": "tests/game/tutorial/run_tutorial_rule_boundary_contract.gd",
+    "marker": "TUTORIAL_RULE_BOUNDARY_CONTRACT_PASS",
+    "exit_code": 0,
+    "timed_out": false,
+    "marker_found": true,
+    "forbidden_count": 0,
+    "duration_seconds": 8.764,
+    "verdict": "pass"
+  },
+  {
+    "id": "tutorial_progress",
+    "path": "tests/game/tutorial/run_tutorial_progress_contract.gd",
+    "marker": "TUTORIAL_PROGRESS_CONTRACT_PASS",
+    "exit_code": 0,
+    "timed_out": false,
+    "marker_found": true,
+    "forbidden_count": 0,
+    "duration_seconds": 21.528,
+    "verdict": "pass"
+  }
+]
