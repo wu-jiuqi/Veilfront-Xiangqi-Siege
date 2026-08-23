@@ -1,11 +1,9 @@
-[gd_scene format=3 uid="uid://y0v2mflh41qh"]
+[gd_scene format=3]
 
-[ext_resource type="Script" uid="uid://dk5e5mxmaym0o" path="res://scripts/dev/ui/match_hud_v3_layout_lab.gd" id="1_script"]
+[ext_resource type="Script" path="res://scripts/game/presentation/ui/match_hud_v3_layout.gd" id="1_script"]
 [ext_resource type="PackedScene" path="res://scenes/game/match/board/board_viewport.tscn" id="2_board"]
 [ext_resource type="PackedScene" path="res://scenes/game/ui/tactical_minimap.tscn" id="3_minimap_scene"]
-[ext_resource type="Theme" uid="uid://blq4lo6avwchq" path="res://resources/game/ui/themes/terracotta_ui_theme.tres" id="4_theme"]
-[ext_resource type="Resource" uid="uid://cwo5anh27amah" path="res://resources/dev/ui/match_hud_v2_terracotta_lab_theme.tres" id="5_board_theme"]
-[ext_resource type="Resource" uid="uid://bll2lq35ow8yj" path="res://resources/game/content/boards/terracotta_battlefield_v3_map_option.tres" id="6_map"]
+[ext_resource type="Theme" path="res://resources/game/ui/themes/match_hud_v3_theme.tres" id="4_theme"]
 [ext_resource type="Texture2D" uid="uid://bh2cwuv3t3cuq" path="res://assets/art/ui/match_hud_v3/turn_status_bar_v1.png" id="7_turn"]
 [ext_resource type="Texture2D" uid="uid://div5gx13hy0ei" path="res://assets/art/ui/match_hud_v3/faction_summary_plate_v1.png" id="8_faction"]
 [ext_resource type="Texture2D" uid="uid://yfl3812iumyy" path="res://assets/art/ui/match_hud_v3/minimap_frame_v1.png" id="10_minimap_frame"]
@@ -15,7 +13,6 @@
 [ext_resource type="Texture2D" uid="uid://bpjqj637ey8dh" path="res://assets/art/ui/match_hud_v3/button_plate_v1.png" id="14_button"]
 [ext_resource type="Texture2D" uid="uid://bpnrdgk2o801w" path="res://assets/art/pieces/terracotta_warriors/red_general_idle.png" id="15_red_general"]
 [ext_resource type="Texture2D" uid="uid://d0luhdifhkm2f" path="res://assets/art/pieces/terracotta_warriors/black_general_idle.png" id="16_black_general"]
-[ext_resource type="Texture2D" uid="uid://bkbv637d73dkj" path="res://assets/art/pieces/terracotta_warriors/red_infantry_idle.png" id="17_red_infantry"]
 
 [sub_resource type="Shader" id="ShaderCircularPortrait"]
 code = "shader_type canvas_item;
@@ -82,7 +79,7 @@ corner_radius_top_right = 3
 corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 
-[node name="MatchHudV3LayoutLab" type="Control" unique_id=629143249]
+[node name="MatchHudV3" type="Control" unique_id=629143249]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -91,8 +88,6 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("4_theme")
 script = ExtResource("1_script")
-board_theme = ExtResource("5_board_theme")
-map_option = ExtResource("6_map")
 
 [node name="Backdrop" type="ColorRect" parent="." unique_id=15073434]
 layout_mode = 1
@@ -175,6 +170,22 @@ text = "赤方军势"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="ReturnButton" type="Button" parent="SafeMargin/MainRows/TopBand/FactionLeft"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -74.0
+offset_top = 8.0
+offset_right = -20.0
+offset_bottom = 36.0
+grow_horizontal = 0
+theme_type_variation = &"QuietButton"
+theme_override_font_sizes/font_size = 13
+text = "退出"
+
 [node name="Stats" type="HBoxContainer" parent="SafeMargin/MainRows/TopBand/FactionLeft" unique_id=1032882341]
 layout_mode = 1
 anchors_preset = -1
@@ -207,7 +218,7 @@ size_flags_horizontal = 3
 tooltip_text = "损失棋子数量"
 theme_override_colors/font_color = Color(0.84, 0.76, 0.58, 1)
 theme_override_font_sizes/font_size = 13
-text = "损失 1"
+text = "损失 0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -322,6 +333,18 @@ text = "玄方军势"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="MirrorButton" type="Button" parent="SafeMargin/MainRows/TopBand/FactionRight"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+offset_left = 20.0
+offset_top = 8.0
+offset_right = 74.0
+offset_bottom = 36.0
+theme_type_variation = &"QuietButton"
+theme_override_font_sizes/font_size = 13
+text = "玄视角"
+
 [node name="Stats" type="HBoxContainer" parent="SafeMargin/MainRows/TopBand/FactionRight" unique_id=17938865]
 layout_mode = 1
 anchors_preset = -1
@@ -339,7 +362,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 tooltip_text = "已占旗帜数量"
 theme_override_colors/font_color = Color(0.76, 0.79, 0.6, 1)
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 13
 text = "旗帜 0/3"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -350,8 +373,8 @@ layout_mode = 2
 size_flags_horizontal = 3
 tooltip_text = "损失棋子数量"
 theme_override_colors/font_color = Color(0.76, 0.79, 0.6, 1)
-theme_override_font_sizes/font_size = 12
-text = "损失 1"
+theme_override_font_sizes/font_size = 13
+text = "损失 0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -361,7 +384,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 tooltip_text = "正在占旗进度"
 theme_override_colors/font_color = Color(0.76, 0.79, 0.6, 1)
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 13
 text = "占领 0/3"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -440,8 +463,8 @@ anchor_top = 0.035
 anchor_right = 0.9
 anchor_bottom = 0.14
 theme_override_colors/font_color = Color(0.94, 0.78, 0.46, 1)
-theme_override_font_sizes/font_size = 17
-text = "兵"
+theme_override_font_sizes/font_size = 18
+text = "未选择棋子"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -454,7 +477,6 @@ anchor_top = 0.15
 anchor_right = 0.88
 anchor_bottom = 0.75
 mouse_filter = 2
-texture = ExtResource("17_red_infantry")
 expand_mode = 1
 stretch_mode = 5
 
@@ -467,8 +489,8 @@ anchor_top = 0.76
 anchor_right = 0.88
 anchor_bottom = 0.85
 theme_override_colors/font_color = Color(0.84, 0.78, 0.65, 1)
-theme_override_font_sizes/font_size = 12
-text = "步卒 · 基础近战单位"
+theme_override_font_sizes/font_size = 13
+text = "选择棋盘上的己方棋子"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -481,8 +503,8 @@ anchor_top = 0.85
 anchor_right = 0.9
 anchor_bottom = 0.96
 theme_override_colors/font_color = Color(0.7, 0.72, 0.66, 1)
-theme_override_font_sizes/font_size = 11
-text = "擅长推进与占领旗点"
+theme_override_font_sizes/font_size = 12
+text = "此处显示棋子身份、定位和简要介绍。"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
@@ -493,6 +515,7 @@ size_flags_horizontal = 3
 theme_override_constants/separation = 6
 
 [node name="BoardFrame" type="Control" parent="SafeMargin/MainRows/BodyBand/CenterColumn" unique_id=888585364]
+unique_name_in_owner = true
 clip_contents = true
 layout_mode = 2
 size_flags_vertical = 3
@@ -574,8 +597,8 @@ size_flags_vertical = 3
 theme_override_colors/font_color = Color(0.96, 0.91, 0.78, 1)
 theme_override_colors/font_outline_color = Color(0.03, 0.025, 0.02, 1)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 11
-text = "沿直线前进一格；不能越过其他棋子。"
+theme_override_font_sizes/font_size = 12
+text = "选择棋子后显示其行动规则。"
 vertical_alignment = 1
 autowrap_mode = 2
 
@@ -595,8 +618,8 @@ size_flags_vertical = 3
 theme_override_colors/font_color = Color(0.96, 0.91, 0.78, 1)
 theme_override_colors/font_outline_color = Color(0.03, 0.025, 0.02, 1)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 11
-text = "土献祭：消耗本回合行动，强化目标旗点。"
+theme_override_font_sizes/font_size = 12
+text = "选择棋子后显示其当前技能。"
 vertical_alignment = 1
 autowrap_mode = 2
 
@@ -641,6 +664,7 @@ theme_override_styles/disabled = SubResource("StyleButtonDisabled")
 theme_override_styles/focus = SubResource("StyleButtonFocus")
 toggle_mode = true
 text = "技能"
+disabled = true
 
 [node name="RightRail" type="VBoxContainer" parent="SafeMargin/MainRows/BodyBand" unique_id=1581610471]
 custom_minimum_size = Vector2(284, 0)
@@ -695,13 +719,13 @@ size_flags_vertical = 3
 custom_minimum_size = Vector2(55, 1)
 layout_mode = 2
 
-[node name="FlagEvent" type="Label" parent="SafeMargin/MainRows/BodyBand/RightRail/ObjectiveEvents/Rows/FlagRow" unique_id=1317359616]
+[node name="OwnFlags" type="Label" parent="SafeMargin/MainRows/BodyBand/RightRail/ObjectiveEvents/Rows/FlagRow" unique_id=1317359616]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.9, 0.86, 0.74, 1)
-theme_override_font_sizes/font_size = 12
-text = "我方已发现旗帜 1/3"
+theme_override_font_sizes/font_size = 13
+text = "我方已发现旗帜 0/3"
 vertical_alignment = 1
 text_overrun_behavior = 3
 
@@ -713,13 +737,13 @@ size_flags_vertical = 3
 custom_minimum_size = Vector2(55, 1)
 layout_mode = 2
 
-[node name="OwnLossEvent" type="Label" parent="SafeMargin/MainRows/BodyBand/RightRail/ObjectiveEvents/Rows/OwnLossRow" unique_id=2147347879]
+[node name="OwnCasualties" type="Label" parent="SafeMargin/MainRows/BodyBand/RightRail/ObjectiveEvents/Rows/OwnLossRow" unique_id=2147347879]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.9, 0.86, 0.74, 1)
-theme_override_font_sizes/font_size = 12
-text = "我方阵亡：兵 ×1"
+theme_override_font_sizes/font_size = 13
+text = "我方阵亡：无"
 vertical_alignment = 1
 text_overrun_behavior = 3
 
@@ -731,13 +755,13 @@ size_flags_vertical = 3
 custom_minimum_size = Vector2(55, 1)
 layout_mode = 2
 
-[node name="EnemyLossEvent" type="Label" parent="SafeMargin/MainRows/BodyBand/RightRail/ObjectiveEvents/Rows/EnemyLossRow" unique_id=780526688]
+[node name="EnemyCasualties" type="Label" parent="SafeMargin/MainRows/BodyBand/RightRail/ObjectiveEvents/Rows/EnemyLossRow" unique_id=780526688]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.9, 0.86, 0.74, 1)
-theme_override_font_sizes/font_size = 12
-text = "敌方阵亡：炮 ×1"
+theme_override_font_sizes/font_size = 13
+text = "敌方阵亡：无"
 vertical_alignment = 1
 text_overrun_behavior = 3
 
@@ -749,13 +773,13 @@ size_flags_vertical = 3
 custom_minimum_size = Vector2(55, 1)
 layout_mode = 2
 
-[node name="CoordinateEvent" type="Label" parent="SafeMargin/MainRows/BodyBand/RightRail/ObjectiveEvents/Rows/CoordinateRow" unique_id=27215745]
+[node name="BoardPosition" type="Label" parent="SafeMargin/MainRows/BodyBand/RightRail/ObjectiveEvents/Rows/CoordinateRow" unique_id=27215745]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.9, 0.78, 0.52, 1)
-theme_override_font_sizes/font_size = 12
-text = "当前坐标：(5,7)"
+theme_override_font_sizes/font_size = 13
+text = "当前坐标：—"
 vertical_alignment = 1
 text_overrun_behavior = 3
 
@@ -767,12 +791,12 @@ size_flags_vertical = 3
 custom_minimum_size = Vector2(55, 1)
 layout_mode = 2
 
-[node name="StatusEvent" type="Label" parent="SafeMargin/MainRows/BodyBand/RightRail/ObjectiveEvents/Rows/StatusRow" unique_id=280770292]
+[node name="MessageValue" type="Label" parent="SafeMargin/MainRows/BodyBand/RightRail/ObjectiveEvents/Rows/StatusRow" unique_id=280770292]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.78, 0.8, 0.72, 1)
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 12
 text = "选择棋子查看规则"
 vertical_alignment = 1
 text_overrun_behavior = 3
@@ -806,6 +830,7 @@ theme_override_styles/hover = SubResource("StyleButtonHover")
 theme_override_styles/disabled = SubResource("StyleButtonDisabled")
 theme_override_styles/focus = SubResource("StyleButtonFocus")
 text = "确认行动"
+disabled = true
 
 [node name="CancelButton" type="Button" parent="SafeMargin/MainRows/BodyBand/RightRail/Confirmation/Buttons" unique_id=1521523909]
 unique_name_in_owner = true
@@ -821,4 +846,4 @@ theme_override_styles/focus = SubResource("StyleButtonFocus")
 text = "取消"
 
 [node name="CountdownTimer" type="Timer" parent="." unique_id=835034824]
-autostart = true
+wait_time = 1.0

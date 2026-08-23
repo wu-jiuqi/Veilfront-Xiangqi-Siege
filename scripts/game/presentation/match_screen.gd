@@ -44,40 +44,92 @@ const PIECE_PORTRAITS := {
 	},
 }
 
+const PIECE_ROLES := {
+	"general": "主将 · 九宫核心单位",
+	"guard": "近卫 · 九宫防守单位",
+	"advisor": "近卫 · 九宫防守单位",
+	"minister": "斥候 · 区域侦察单位",
+	"elephant": "斥候 · 区域侦察单位",
+	"cavalry": "骑军 · 机动突袭单位",
+	"horse": "骑军 · 机动突袭单位",
+	"chariot": "战车 · 直线压制单位",
+	"rook": "战车 · 直线压制单位",
+	"trebuchet": "砲军 · 远程攻城单位",
+	"cannon": "砲军 · 远程攻城单位",
+	"infantry": "步卒 · 基础近战单位",
+	"soldier": "步卒 · 基础近战单位",
+	"pawn": "步卒 · 基础近战单位",
+}
+
+const PIECE_INTROS := {
+	"general": "稳守九宫，维持全军指挥。",
+	"guard": "守护主将，并可触发献祭能力。",
+	"advisor": "守护主将，并可触发献祭能力。",
+	"minister": "跨越区域并揭示战场情报。",
+	"elephant": "跨越区域并揭示战场情报。",
+	"cavalry": "绕开正面阵线，切入关键交点。",
+	"horse": "绕开正面阵线，切入关键交点。",
+	"chariot": "沿直线推进，控制长距离通道。",
+	"rook": "沿直线推进，控制长距离通道。",
+	"trebuchet": "隔子攻击，并可发动区域轰炸。",
+	"cannon": "隔子攻击，并可发动区域轰炸。",
+	"infantry": "擅长推进与占领旗点。",
+	"soldier": "擅长推进与占领旗点。",
+	"pawn": "擅长推进与占领旗点。",
+}
+
+const PIECE_SKILLS := {
+	"guard": "士献祭：消耗本回合行动，复活符合条件的己方棋子。",
+	"advisor": "士献祭：消耗本回合行动，复活符合条件的己方棋子。",
+	"trebuchet": "区域轰炸：选择合法区域，对公开目标实施炮击。",
+	"cannon": "区域轰炸：选择合法区域，对公开目标实施炮击。",
+}
+
 @export var allow_known_illegal_previews: bool = false
 @export var turn_timeout_enabled: bool = false
+@export var hud_root_path: NodePath = ^"MatchHudV2"
 
-@onready var _hud_layout: MatchHudLayout = $MatchHudV2
-@onready var _board_frame: Control = $MatchHudV2/BoardFrame
-@onready var _board_viewport: SubViewportContainer = $MatchHudV2/BoardFrame/BoardViewport
-@onready var _marker_menu: PopupPanel = %MarkerMenu
-@onready var _incense_turn_clock: IncenseTurnClock = $MatchHudV2/IncenseTurnClock
-@onready var _piece_info_drawer: PieceInfoDrawer = $MatchHudV2/PieceInfoDrawer
-@onready var _objective_events: Control = $MatchHudV2/ObjectiveEvents
-@onready var _round_incense_slot: Control = $MatchHudV2/IncenseTurnClock/RoundIncenseSlot
-@onready var _return_button: Button = $MatchHudV2/FactionLeft/ReturnButton
-@onready var _mirror_button: Button = $MatchHudV2/FactionRight/MirrorButton
-@onready var _selection_status: Label = $MatchHudV2/ObjectiveEvents/SelectionStatus
-@onready var _board_position: Label = $MatchHudV2/ObjectiveEvents/BoardPosition
-@onready var _message_value: Label = $MatchHudV2/ObjectiveEvents/MessageValue
-@onready var _move_button: Button = \
-	$MatchHudV2/PieceInfoDrawer/ContentMargin/ContentRow/SkillButtons/MoveButton
-@onready var _bombard_button: Button = \
-	$MatchHudV2/PieceInfoDrawer/ContentMargin/ContentRow/SkillButtons/BombardButton
-@onready var _resurrect_button: Button = \
-	$MatchHudV2/PieceInfoDrawer/ContentMargin/ContentRow/SkillButtons/ResurrectButton
-@onready var _pass_button: Button = $MatchHudV2/ObjectiveEvents/PassButton
-@onready var _own_flags: Label = $MatchHudV2/ObjectiveEvents/OwnFlags
-@onready var _own_casualties: Label = $MatchHudV2/ObjectiveEvents/OwnCasualties
-@onready var _enemy_casualties: Label = $MatchHudV2/ObjectiveEvents/EnemyCasualties
-@onready var _faction_left_turn: Label = $MatchHudV2/FactionLeft/FactionLeftTurn
-@onready var _faction_left_stats: Label = $MatchHudV2/FactionLeft/FactionLeftStats
-@onready var _faction_right_turn: Label = $MatchHudV2/FactionRight/FactionRightTurn
-@onready var _faction_right_stats: Label = $MatchHudV2/FactionRight/FactionRightStats
-@onready var _unit_name: Label = $MatchHudV2/UnitInfo/UnitName
-@onready var _unit_portrait: TextureRect = $MatchHudV2/UnitInfo/UnitPortrait
-@onready var _tactical_minimap: TacticalMinimap = $MatchHudV2/Minimap/TacticalMinimap
-@onready var _terminal_dialog: MatchTerminalDialog = $TerminalDialog
+var _hud_layout: Control
+var _board_frame: Control
+var _board_viewport: SubViewportContainer
+var _marker_menu: PopupPanel
+var _turn_status_controller: Node
+var _piece_info_drawer: PieceInfoDrawer
+var _objective_events: Control
+var _round_incense_slot: Control
+var _return_button: Button
+var _mirror_button: Button
+var _selection_status: Label
+var _board_position: Label
+var _message_value: Label
+var _move_button: Button
+var _bombard_button: Button
+var _resurrect_button: Button
+var _skill_button: Button
+var _confirm_button: Button
+var _cancel_button: Button
+var _pass_button: Button
+var _own_flags: Label
+var _own_casualties: Label
+var _enemy_casualties: Label
+var _faction_left_turn: Label
+var _faction_left_stats: Label
+var _faction_right_turn: Label
+var _faction_right_stats: Label
+var _red_captured: Label
+var _red_lost: Label
+var _red_capturing: Label
+var _black_captured: Label
+var _black_lost: Label
+var _black_capturing: Label
+var _unit_name: Label
+var _unit_portrait: TextureRect
+var _unit_role: Label
+var _unit_intro: Label
+var _action_rule: Label
+var _skill_description: Label
+var _tactical_minimap: TacticalMinimap
+var _terminal_dialog: MatchTerminalDialog
 
 var _compact: bool = false
 var _interaction_state: String = IDLE
@@ -105,6 +157,7 @@ var _action_button_default_texts: Dictionary[String, String] = {}
 
 
 func _ready() -> void:
+	_bind_hud_nodes()
 	_enforce_action_target_sizes()
 	get_viewport().size_changed.connect(_on_viewport_size_changed)
 	resized.connect(_on_match_screen_resized)
@@ -119,16 +172,27 @@ func _ready() -> void:
 	_marker_menu.popup_hide.connect(_on_marker_menu_hidden)
 	_return_button.pressed.connect(func() -> void: return_requested.emit())
 	_mirror_button.pressed.connect(_toggle_mirror_view)
-	_action_button_default_texts = {
-		"move": _move_button.text,
-		"bombard": _bombard_button.text,
-		"resurrect": _resurrect_button.text,
-	}
+	_action_button_default_texts = {"move": _move_button.text}
+	if is_instance_valid(_bombard_button):
+		_action_button_default_texts["bombard"] = _bombard_button.text
+	if is_instance_valid(_resurrect_button):
+		_action_button_default_texts["resurrect"] = _resurrect_button.text
 	_move_button.pressed.connect(_on_action_button_pressed.bind("move"))
-	_bombard_button.pressed.connect(_on_action_button_pressed.bind("bombard"))
-	_resurrect_button.pressed.connect(_on_action_button_pressed.bind("resurrect"))
-	_pass_button.pressed.connect(_prepare_pass)
-	_incense_turn_clock.timed_out.connect(_on_turn_timeout_requested)
+	if is_instance_valid(_bombard_button):
+		_bombard_button.pressed.connect(_on_action_button_pressed.bind("bombard"))
+	if is_instance_valid(_resurrect_button):
+		_resurrect_button.pressed.connect(_on_action_button_pressed.bind("resurrect"))
+	if is_instance_valid(_skill_button):
+		_skill_button.pressed.connect(_on_skill_button_pressed)
+	if is_instance_valid(_pass_button):
+		_pass_button.pressed.connect(_prepare_pass)
+	if is_instance_valid(_confirm_button):
+		_confirm_button.pressed.connect(_on_confirm_button_pressed)
+	if is_instance_valid(_cancel_button):
+		_cancel_button.pressed.connect(_cancel_only)
+	if is_instance_valid(_turn_status_controller) \
+	and _turn_status_controller.has_signal("timed_out"):
+		_turn_status_controller.connect("timed_out", _on_turn_timeout_requested)
 	_terminal_dialog.restart_requested.connect(
 		func() -> void: terminal_restart_requested.emit()
 	)
@@ -140,12 +204,84 @@ func _ready() -> void:
 	call_deferred("apply_layout_for_size", size)
 
 
+func _bind_hud_nodes() -> void:
+	_hud_layout = get_node_or_null(hud_root_path) as Control
+	if not is_instance_valid(_hud_layout):
+		push_error("MatchScreen 找不到 HUD 根节点：%s" % hud_root_path)
+		return
+	_board_frame = _hud_node(&"BoardFrame") as Control
+	_board_viewport = _hud_node(&"BoardViewport") as SubViewportContainer
+	_marker_menu = get_node_or_null("%MarkerMenu") as PopupPanel
+	_piece_info_drawer = _hud_node(&"PieceInfoDrawer") as PieceInfoDrawer
+	_objective_events = _hud_node(&"ObjectiveEvents") as Control
+	_round_incense_slot = _hud_node(&"RoundIncenseSlot") as Control
+	_return_button = _hud_node(&"ReturnButton") as Button
+	_mirror_button = _hud_node(&"MirrorButton") as Button
+	_selection_status = _hud_node(&"SelectionStatus") as Label
+	_board_position = _hud_node(&"BoardPosition") as Label
+	_message_value = _hud_node(&"MessageValue") as Label
+	_move_button = _hud_node(&"MoveButton") as Button
+	_bombard_button = _hud_node(&"BombardButton") as Button
+	_resurrect_button = _hud_node(&"ResurrectButton") as Button
+	_skill_button = _hud_node(&"SkillButton") as Button
+	_confirm_button = _hud_node(&"ConfirmButton") as Button
+	_cancel_button = _hud_node(&"CancelButton") as Button
+	_pass_button = _hud_node(&"PassButton") as Button
+	_own_flags = _hud_node(&"OwnFlags") as Label
+	_own_casualties = _hud_node(&"OwnCasualties") as Label
+	_enemy_casualties = _hud_node(&"EnemyCasualties") as Label
+	_faction_left_turn = _hud_node(&"FactionLeftTurn") as Label
+	_faction_left_stats = _hud_node(&"FactionLeftStats") as Label
+	_faction_right_turn = _hud_node(&"FactionRightTurn") as Label
+	_faction_right_stats = _hud_node(&"FactionRightStats") as Label
+	_red_captured = _hud_node(&"RedCaptured") as Label
+	_red_lost = _hud_node(&"RedLost") as Label
+	_red_capturing = _hud_node(&"RedCapturing") as Label
+	_black_captured = _hud_node(&"BlackCaptured") as Label
+	_black_lost = _hud_node(&"BlackLost") as Label
+	_black_capturing = _hud_node(&"BlackCapturing") as Label
+	_unit_name = _hud_node(&"UnitName") as Label
+	_unit_portrait = _hud_node(&"UnitPortrait") as TextureRect
+	_unit_role = _hud_node(&"UnitRole") as Label
+	_unit_intro = _hud_node(&"UnitIntro") as Label
+	_action_rule = _hud_node(&"ActionRule") as Label
+	_skill_description = _hud_node(&"SkillDescription") as Label
+	_tactical_minimap = _hud_node(&"TacticalMinimap") as TacticalMinimap
+	_turn_status_controller = _hud_node(&"IncenseTurnClock")
+	if not is_instance_valid(_turn_status_controller) \
+	and _hud_layout.has_method("sync_player_view"):
+		_turn_status_controller = _hud_layout
+	_terminal_dialog = get_node_or_null("TerminalDialog") as MatchTerminalDialog
+
+
+func _hud_node(node_name: StringName) -> Node:
+	if not is_instance_valid(_hud_layout):
+		return null
+	return _hud_layout.find_child(str(node_name), true, false)
+
+
 func _enforce_action_target_sizes() -> void:
-	for button: Button in [_move_button, _bombard_button, _resurrect_button, _pass_button]:
+	for button: Button in _main_action_buttons():
 		button.custom_minimum_size.y = maxf(
 			button.custom_minimum_size.y,
 			MINIMUM_ACTION_TARGET_HEIGHT
 		)
+
+
+func _main_action_buttons() -> Array[Button]:
+	var buttons: Array[Button] = []
+	for button: Button in [
+		_move_button,
+		_bombard_button,
+		_resurrect_button,
+		_skill_button,
+		_pass_button,
+		_confirm_button,
+		_cancel_button,
+	]:
+		if is_instance_valid(button) and button not in buttons:
+			buttons.append(button)
+	return buttons
 
 
 func _toggle_mirror_view() -> void:
@@ -211,7 +347,8 @@ func reset_for_session_end() -> void:
 	_terminal_dialog.hide_result()
 	_board_viewport.clear_session_view()
 	_tactical_minimap.clear_session_view()
-	_incense_turn_clock.sync_player_view({}, false)
+	if is_instance_valid(_turn_status_controller):
+		_turn_status_controller.call("sync_player_view", {}, false)
 	_message_value.text = "等待正式战局。"
 	_update_status_controls()
 
@@ -282,11 +419,16 @@ func _sync_tutorial_hud_layout() -> void:
 	_set_default_objective_content_visible(false)
 	if not is_instance_valid(_tutorial_round_incense_layout_source):
 		return
+	if not is_instance_valid(_round_incense_slot) \
+	or not _turn_status_controller is Control:
+		return
 	_round_incense_slot.set_anchors_preset(Control.PRESET_TOP_LEFT)
-	_round_incense_slot.position = _incense_turn_clock.get_global_transform().affine_inverse() \
+	_round_incense_slot.position = (_turn_status_controller as Control) \
+		.get_global_transform().affine_inverse() \
 		* _tutorial_round_incense_layout_source.global_position
 	_round_incense_slot.size = _tutorial_round_incense_layout_source.size
-	_incense_turn_clock.refresh_layout()
+	if _turn_status_controller.has_method("refresh_layout"):
+		_turn_status_controller.call("refresh_layout")
 
 
 func _set_default_objective_content_visible(visible: bool) -> void:
@@ -299,7 +441,8 @@ func _set_default_objective_content_visible(visible: bool) -> void:
 		_pass_button,
 		_message_value,
 	]:
-		control.visible = visible
+		if is_instance_valid(control):
+			control.visible = visible
 
 
 func set_action_mode(mode: String) -> void:
@@ -339,7 +482,8 @@ func render_player_view(view: Dictionary) -> void:
 	if not bool(view.get("terminal", false)) and _terminal_dialog.visible:
 		_terminal_dialog.hide_result()
 	_presentation_model = _presenter.player_view_model(view)
-	_incense_turn_clock.sync_player_view(view, turn_timeout_enabled)
+	if is_instance_valid(_turn_status_controller):
+		_turn_status_controller.call("sync_player_view", view, turn_timeout_enabled)
 	_board_viewport.render_player_view(view)
 	_tactical_minimap.render_player_view(view, _board_viewport.get_presentation_side())
 	_update_faction_panels()
@@ -473,7 +617,10 @@ func set_local_interaction_state(
 	_prepared_preview_id = prepared_preview_id
 	_update_status_controls()
 	if state == CONFIRMING:
-		_action_button_for_mode(_action_mode).grab_focus()
+		var focus_button: Button = _confirm_button \
+			if is_instance_valid(_confirm_button) else _action_button_for_mode(_action_mode)
+		if is_instance_valid(focus_button):
+			focus_button.grab_focus()
 
 
 func get_local_interaction_state() -> String:
@@ -543,7 +690,7 @@ func get_layout_snapshot() -> Dictionary:
 	)
 	var main_buttons_inside: bool = true
 	var minimum_button_height: float = INF
-	for button: Button in [_move_button, _bombard_button, _resurrect_button, _pass_button]:
+	for button: Button in _main_action_buttons():
 		var button_rect := Rect2(button.global_position - global_position, button.size)
 		main_buttons_inside = main_buttons_inside \
 			and button_rect.position.x >= -0.5 \
@@ -565,10 +712,12 @@ func get_layout_snapshot() -> Dictionary:
 		"main_button_min_height": minimum_button_height,
 		"central_confirmation_ui_removed": get_node_or_null("ActionConfirmationPanel") == null,
 		"confirming_action_button_inside": _control_inside_screen(confirming_action_button),
-		"confirming_action_button_min_height": confirming_action_button.custom_minimum_size.y,
-		"confirming_action_button_text": confirming_action_button.text,
-		"incense_clock": _incense_turn_clock.get_state_snapshot(),
-		"piece_info_drawer": _piece_info_drawer.get_state_snapshot(),
+		"confirming_action_button_min_height": confirming_action_button.custom_minimum_size.y \
+			if is_instance_valid(confirming_action_button) else 0.0,
+		"confirming_action_button_text": confirming_action_button.text \
+			if is_instance_valid(confirming_action_button) else "",
+		"incense_clock": _turn_status_snapshot(),
+		"piece_info_drawer": _piece_info_drawer_snapshot(),
 	}
 
 
@@ -597,12 +746,12 @@ func get_hud_snapshot() -> Dictionary:
 	return {
 		"layout": _hud_layout.get_layout_snapshot(),
 		"faction_left": {
-			"turn": _faction_left_turn.text,
-			"stats": _faction_left_stats.text,
+			"turn": _faction_left_turn.text if is_instance_valid(_faction_left_turn) else "",
+			"stats": _faction_left_stats.text if is_instance_valid(_faction_left_stats) else "",
 		},
 		"faction_right": {
-			"turn": _faction_right_turn.text,
-			"stats": _faction_right_stats.text,
+			"turn": _faction_right_turn.text if is_instance_valid(_faction_right_turn) else "",
+			"stats": _faction_right_stats.text if is_instance_valid(_faction_right_stats) else "",
 		},
 		"unit": {
 			"name": _unit_name.text,
@@ -610,7 +759,7 @@ func get_hud_snapshot() -> Dictionary:
 				if _unit_portrait.texture != null else "",
 		},
 		"objective": {
-			"selection": _selection_status.text,
+			"selection": _selection_status.text if is_instance_valid(_selection_status) else "",
 			"position": _board_position.text,
 			"mode": _action_mode,
 			"message": _message_value.text,
@@ -620,9 +769,22 @@ func get_hud_snapshot() -> Dictionary:
 			"enemy_casualties": _enemy_casualties.text,
 		},
 		"minimap": _tactical_minimap.get_state_snapshot(),
-		"incense_clock": _incense_turn_clock.get_state_snapshot(),
-		"piece_info_drawer": _piece_info_drawer.get_state_snapshot(),
+		"incense_clock": _turn_status_snapshot(),
+		"piece_info_drawer": _piece_info_drawer_snapshot(),
 	}
+
+
+func _turn_status_snapshot() -> Dictionary:
+	if not is_instance_valid(_turn_status_controller) \
+	or not _turn_status_controller.has_method("get_state_snapshot"):
+		return {}
+	return _turn_status_controller.call("get_state_snapshot") as Dictionary
+
+
+func _piece_info_drawer_snapshot() -> Dictionary:
+	if not is_instance_valid(_piece_info_drawer):
+		return {}
+	return _piece_info_drawer.get_state_snapshot()
 
 
 func _set_compact_layout(compact: bool) -> void:
@@ -644,7 +806,8 @@ func _clear_local_interaction() -> void:
 	_inflight_prepare_generation = 0
 	_inflight_prepare_preview_id = ""
 	_board_viewport.clear_interaction()
-	_piece_info_drawer.hide_drawer()
+	if is_instance_valid(_piece_info_drawer):
+		_piece_info_drawer.hide_drawer()
 	_update_status_controls()
 
 
@@ -684,6 +847,8 @@ func _consume_prepare_tombstone(preview_id: String) -> void:
 
 
 func _control_inside_screen(control: Control) -> bool:
+	if not is_instance_valid(control):
+		return false
 	var control_rect := Rect2(control.global_position - global_position, control.size)
 	return control_rect.position.x >= -0.5 \
 		and control_rect.position.y >= -0.5 \
@@ -704,7 +869,7 @@ func _on_board_hovered_cell_changed(cell: Vector2i) -> void:
 		_board_position.text = "位置: (%d, %d)" % [cell.x, cell.y]
 	else:
 		_board_position.text = _hud_layout.get_catalog_text(
-			"objective-events", "text-1787297730520-1", "位置: (x, y)"
+			"objective-events", "text-1787297730520-1", "当前坐标：—"
 		)
 
 
@@ -775,11 +940,11 @@ func _piece_cell_by_id(piece_id: String) -> Vector2i:
 func _select_piece(piece: Dictionary) -> void:
 	_selected_piece_id = str(piece.get("id", ""))
 	var piece_type := str(piece.get("piece_type", ""))
-	if (_action_mode == "bombard" and piece_type != "cannon") \
-	or (_action_mode == "resurrect" and piece_type != "advisor"):
+	if (_action_mode == "bombard" and piece_type not in ["cannon", "trebuchet"]) \
+	or (_action_mode == "resurrect" and piece_type not in ["advisor", "guard"]):
 		_action_mode = "move"
 	_interaction_state = SELECTED
-	_message_value.text = "已选择 %s；请选择目标交点。" % _selected_piece_id
+	_message_value.text = "已选择：%s；请选择目标交点。" % _piece_display_name(piece_type)
 	request_action_previews(_selected_piece_id, _action_mode)
 	if _action_mode == "resurrect":
 		_prepare_empty_target_preview()
@@ -873,17 +1038,16 @@ func _refresh_selected_previews() -> void:
 
 
 func _update_status_controls() -> void:
-	if not is_instance_valid(_selection_status):
-		return
 	_board_viewport.set_piece_visual_hit_enabled(_selected_piece_id.is_empty())
 	var selected_piece := _piece_by_id(_selected_piece_id)
 	var selected_name := "无"
 	if not selected_piece.is_empty():
 		selected_name = _piece_display_name(str(selected_piece.get("piece_type", "")))
-	_selection_status.text = "行动方: %s 已选: %s" % [
-		_side_display_name(str(_current_view.get("active_side", ""))),
-		selected_name,
-	]
+	if is_instance_valid(_selection_status):
+		_selection_status.text = "行动方: %s 已选: %s" % [
+			_side_display_name(str(_current_view.get("active_side", ""))),
+			selected_name,
+		]
 	_update_faction_panels()
 	_update_objective_summary()
 	_update_unit_card()
@@ -893,6 +1057,23 @@ func _update_status_controls() -> void:
 func _update_action_buttons() -> void:
 	var unavailable: bool = not _can_submit_action()
 	var confirming: bool = _interaction_state == CONFIRMING
+	if is_instance_valid(_skill_button):
+		var skill_mode := _selected_skill_mode()
+		if _action_mode in ["bombard", "resurrect"] and _action_mode != skill_mode:
+			_action_mode = "move"
+		_move_button.disabled = unavailable or confirming
+		_move_button.button_pressed = _action_mode == "move"
+		_move_button.text = _action_button_default_text("move", "移动")
+		_skill_button.text = {
+			"bombard": "轰炸",
+			"resurrect": "复活",
+		}.get(skill_mode, "无技能")
+		_skill_button.disabled = unavailable or confirming or skill_mode.is_empty()
+		_skill_button.button_pressed = not skill_mode.is_empty() and _action_mode == skill_mode
+		_confirm_button.text = "确认行动" if confirming else "跳过回合"
+		_confirm_button.disabled = unavailable or _interaction_state not in [IDLE, CONFIRMING]
+		_cancel_button.disabled = _interaction_state == IDLE
+		return
 	_move_button.disabled = unavailable or (confirming and _action_mode != "move")
 	_bombard_button.disabled = unavailable or (confirming and _action_mode != "bombard")
 	_resurrect_button.disabled = unavailable or (confirming and _action_mode != "resurrect")
@@ -913,6 +1094,8 @@ func _action_button_default_text(mode: String, fallback: String) -> String:
 
 
 func _action_button_for_mode(mode: String) -> Button:
+	if is_instance_valid(_skill_button) and mode in ["bombard", "resurrect"]:
+		return _skill_button
 	match mode:
 		"bombard":
 			return _bombard_button
@@ -922,22 +1105,51 @@ func _action_button_for_mode(mode: String) -> Button:
 			return _move_button
 
 
+func _selected_skill_mode() -> String:
+	var piece := _piece_by_id(_selected_piece_id)
+	var piece_type := str(piece.get("piece_type", ""))
+	if piece_type in ["cannon", "trebuchet"]:
+		return "bombard"
+	if piece_type in ["advisor", "guard"]:
+		return "resurrect"
+	return ""
+
+
+func _on_skill_button_pressed() -> void:
+	var skill_mode := _selected_skill_mode()
+	if not skill_mode.is_empty():
+		_set_action_mode(skill_mode)
+
+
+func _on_confirm_button_pressed() -> void:
+	if _interaction_state == CONFIRMING:
+		confirm_prepared_action()
+	elif _interaction_state == IDLE:
+		_prepare_pass()
+
+
 func _update_faction_panels() -> void:
-	if not is_instance_valid(_faction_left_turn):
-		return
 	var active_side := str(_current_view.get("active_side", ""))
-	_faction_left_turn.text = "正在行动" if active_side == "red" else "等待行动"
-	_faction_right_turn.text = "正在行动" if active_side == "black" else "等待行动"
-	_faction_left_stats.text = "墙 %s · 旗 %d · 损 %d" % [
-		_side_wall_status("red"),
-		_side_flag_count("red"),
-		_side_casualty_count("red"),
-	]
-	_faction_right_stats.text = "墙 %s · 旗 %d · 损 %d" % [
-		_side_wall_status("black"),
-		_side_flag_count("black"),
-		_side_casualty_count("black"),
-	]
+	if is_instance_valid(_faction_left_turn):
+		_faction_left_turn.text = "正在行动" if active_side == "red" else "等待行动"
+		_faction_right_turn.text = "正在行动" if active_side == "black" else "等待行动"
+		_faction_left_stats.text = "墙 %s · 旗 %d · 损 %d" % [
+			_side_wall_status("red"),
+			_side_flag_count("red"),
+			_side_casualty_count("red"),
+		]
+		_faction_right_stats.text = "墙 %s · 旗 %d · 损 %d" % [
+			_side_wall_status("black"),
+			_side_flag_count("black"),
+			_side_casualty_count("black"),
+		]
+	if is_instance_valid(_red_captured):
+		_red_captured.text = "旗帜 %d/3" % _side_flag_count("red")
+		_red_lost.text = "损失 %d" % _side_casualty_count("red")
+		_red_capturing.text = "占领 %d/3" % _side_capture_progress("red")
+		_black_captured.text = "旗帜 %d/3" % _side_flag_count("black")
+		_black_lost.text = "损失 %d" % _side_casualty_count("black")
+		_black_capturing.text = "占领 %d/3" % _side_capture_progress("black")
 
 
 func _update_unit_card() -> void:
@@ -947,8 +1159,14 @@ func _update_unit_card() -> void:
 	if piece.is_empty():
 		_unit_name.text = "未选择棋子"
 		_unit_portrait.texture = null
-		_unit_portrait.visible = true
-		_piece_info_drawer.hide_drawer()
+		_unit_portrait.visible = not is_instance_valid(_unit_role)
+		if is_instance_valid(_unit_role):
+			_unit_role.text = "选择棋盘上的己方棋子"
+			_unit_intro.text = "此处显示棋子身份、定位和简要介绍。"
+			_action_rule.text = "选择棋子后显示其行动规则。"
+			_skill_description.text = "选择棋子后显示其当前技能。"
+		if is_instance_valid(_piece_info_drawer):
+			_piece_info_drawer.hide_drawer()
 		return
 
 	var piece_type := str(piece.get("piece_type", "unknown"))
@@ -956,7 +1174,19 @@ func _update_unit_card() -> void:
 	_unit_name.text = piece_name
 	_unit_portrait.texture = _piece_portrait_texture(str(piece.get("side", "")), piece_type)
 	_unit_portrait.visible = _unit_portrait.texture != null
-	_piece_info_drawer.show_piece(piece, _can_submit_action())
+	if is_instance_valid(_unit_role):
+		_unit_role.text = str(PIECE_ROLES.get(piece_type, "战场单位"))
+		_unit_intro.text = str(PIECE_INTROS.get(piece_type, "该单位的定位说明尚未登记。"))
+		_action_rule.text = str(PieceInfoDrawer.MOVE_DESCRIPTIONS.get(
+			piece_type,
+			"该棋子的行动规则尚未登记。"
+		))
+		_skill_description.text = str(PIECE_SKILLS.get(
+			piece_type,
+			"无主动技能；仍可执行基础移动。"
+		))
+	if is_instance_valid(_piece_info_drawer):
+		_piece_info_drawer.show_piece(piece, _can_submit_action())
 
 
 func _update_objective_summary() -> void:
@@ -1049,7 +1279,7 @@ func _on_turn_timeout_requested(expected_action_index: int) -> void:
 	or not _can_submit_action():
 		return
 	_clear_local_interaction()
-	_message_value.text = "计时香已燃尽，系统正在选择一条合法移动。"
+	_message_value.text = "回合计时结束，系统正在选择一条合法移动。"
 	turn_timeout_requested.emit(expected_action_index)
 
 
@@ -1090,6 +1320,15 @@ func _side_casualty_count(side: String) -> int:
 		if casualty_value is Dictionary and str(casualty_value.get("side", "")) == side:
 			count += 1
 	return count
+
+
+func _side_capture_progress(side: String) -> int:
+	var progress := 0
+	for flag_value: Variant in _current_view.get("flags", []):
+		if flag_value is Dictionary \
+		and str(flag_value.get("capturing_side", "")) == side:
+			progress = maxi(progress, int(flag_value.get("capture_progress", 0)))
+	return progress
 
 
 func _tutorial_actor_matches(piece_id: String) -> bool:

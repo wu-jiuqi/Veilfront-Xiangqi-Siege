@@ -70,8 +70,8 @@ func _run() -> void:
 	var client_match: Control = _client_app.get_node("ScreenHost/MatchScreen")
 	_check(str(server_match.get_player_view_snapshot().get("viewer_side", "")) == "red", "房主 MatchScreen 只绑定赤方 PlayerView")
 	_check(str(client_match.get_player_view_snapshot().get("viewer_side", "")) == "black", "客户端 MatchScreen 只绑定玄方 PlayerView")
-	_check(not (server_match.get_node("MatchHudV2/FactionRight/MirrorButton") as Button).visible, "LAN 隐藏镜像视角按钮")
-	_check((server_match.get_node("MatchHudV2/FactionLeft/ReturnButton") as Button).visible, "LAN 显示退出对局按钮")
+	_check(not (server_match.get_node("MatchHudV3/SafeMargin/MainRows/TopBand/FactionRight/MirrorButton") as Button).visible, "LAN 隐藏镜像视角按钮")
+	_check((server_match.get_node("MatchHudV3/SafeMargin/MainRows/TopBand/FactionLeft/ReturnButton") as Button).visible, "LAN 显示退出对局按钮")
 	_check(
 		not (server_match.get_node("TerminalDialog").get_node("%RestartButton") as BaseButton).visible,
 		"LAN 隐藏直接重赛按钮",
@@ -198,7 +198,7 @@ func _disable_board_rendering(app: Control) -> void:
 	# never samples pixels, so rendering two formal large board targets only adds
 	# GPU/driver lifecycle cost to the headless runner.
 	var board_render_target := app.get_node(
-		"ScreenHost/MatchScreen/MatchHudV2/BoardFrame/BoardViewport/BoardSubViewport"
+		"ScreenHost/MatchScreen/MatchHudV3/SafeMargin/MainRows/BodyBand/CenterColumn/BoardFrame/BoardViewport/BoardSubViewport"
 	) as SubViewport
 	board_render_target.render_target_update_mode = SubViewport.UPDATE_DISABLED
 

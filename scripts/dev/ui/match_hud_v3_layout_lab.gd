@@ -118,7 +118,6 @@ const ART_TYPE_ALIASES := {
 @onready var _skill_description: Label = %SkillDescription
 @onready var _move_button: Button = %MoveButton
 @onready var _skill_button: Button = %SkillButton
-@onready var _marker_button: Button = %MarkerButton
 @onready var _confirm_button: Button = %ConfirmButton
 @onready var _cancel_button: Button = %CancelButton
 @onready var _countdown_timer: Timer = $CountdownTimer
@@ -139,7 +138,6 @@ func _ready() -> void:
 	_minimap.overview_navigation_requested.connect(_board_viewport.navigate_to_overview_ratio)
 	_move_button.pressed.connect(func() -> void: _set_action_mode("move"))
 	_skill_button.pressed.connect(func() -> void: _set_action_mode("skill"))
-	_marker_button.pressed.connect(_on_marker_pressed)
 	_confirm_button.pressed.connect(_on_confirm_pressed)
 	_cancel_button.pressed.connect(_on_cancel_pressed)
 	_countdown_timer.timeout.connect(_on_countdown_timeout)
@@ -356,14 +354,6 @@ func _set_action_mode(mode: String) -> void:
 	_show_selection_preview()
 
 
-func _on_marker_pressed() -> void:
-	if Mapper.is_authority_cell_valid(_selected_cell):
-		_board_viewport.set_marker(_selected_cell, "flag")
-		_status_event.text = "已在当前坐标放置本地标记"
-	else:
-		_status_event.text = "请先选择棋子或交点"
-
-
 func _on_confirm_pressed() -> void:
 	_demo_capture_progress += 1
 	if _demo_capture_progress > 3:
@@ -475,10 +465,9 @@ func _format_casualties(side: String) -> String:
 func _wire_focus_neighbors() -> void:
 	_move_button.focus_neighbor_bottom = _skill_button.get_path()
 	_skill_button.focus_neighbor_top = _move_button.get_path()
-	_skill_button.focus_neighbor_right = _marker_button.get_path()
-	_marker_button.focus_neighbor_left = _skill_button.get_path()
-	_marker_button.focus_neighbor_bottom = _cancel_button.get_path()
+	_skill_button.focus_neighbor_right = _confirm_button.get_path()
 	_confirm_button.focus_neighbor_right = _cancel_button.get_path()
+	_confirm_button.focus_neighbor_left = _skill_button.get_path()
 	_cancel_button.focus_neighbor_left = _confirm_button.get_path()
-	_cancel_button.focus_neighbor_top = _marker_button.get_path()
+	_cancel_button.focus_neighbor_top = _skill_button.get_path()
 	_move_button.grab_focus()

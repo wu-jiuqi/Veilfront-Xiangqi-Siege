@@ -2,13 +2,13 @@
 
 日期：2026-08-23
 
-状态：`owner_approved_mockup / purple_assets_ready / lab_ready / formal_integration_pending`
+状态：`owner_approved_mockup / purple_assets_ready / lab_ready / formal_online_integrated`
 
 预览场景：`res://scenes/dev/ui/match_hud_v3_layout_lab.tscn`
 
-验收脚本：`res://tests/game/ui/run_match_hud_v3_layout_lab_contract.gd`
+验收脚本：`res://tests/game/ui/run_match_hud_v3_layout_lab_contract.gd`、`res://tests/game/ui/run_online_match_hud_v3_contract.gd`
 
-证据截图：`res://evidence/ui/match-hud-v3-layout-lab-1280x720.png`
+证据截图：`res://evidence/ui/match-hud-v3-layout-lab-1280x720.png`、`res://evidence/ui/online-match-hud-v3-1280x720.png`
 
 ## 已实现
 
@@ -17,7 +17,7 @@
 - 左侧单位卡只显示棋子名称、现有全身立绘、身份定位与一句介绍；不显示兵力、士气、数值条或放大按钮。
 - 右侧战局板固定为五行：发现旗帜、我方损失、敌方损失、当前坐标、当前操作状态。
 - 底部左侧仅显示当前棋子的行动规则与技能说明；右侧只有上下排列的`移动 / 技能`模式按钮。
-- 标记、确认行动与取消保持独立区域。
+- 屏幕标记按钮已删除，继续使用棋盘右键私有标记菜单；确认行动与取消保持独立区域。
 
 ## 项目内容复用
 
@@ -43,7 +43,16 @@
 | 单位卡 | 选中棋子的 `side / piece_type / position` 与现有立绘路径 |
 | 行动区 | 当前棋子行动规则、技能说明、技能可用性与当前模式 |
 
-测试中的`确认行动`只循环演示占旗进度，不会写入正式规则核心；正式接入时应由对局控制器提交规范化意图，再用服务端返回的观察者安全 `PlayerView` 刷新 HUD。
+实验场景中的`确认行动`只循环演示占旗进度，不会写入正式规则核心。正式联机场景已由对局控制器提交规范化意图，再用服务端返回的观察者安全 `PlayerView` 刷新 HUD。
+
+## 正式联机接入
+
+- `res://scenes/game/match/online_match_screen.tscn` 作为联机专用组合根，实例化 `res://scenes/game/ui/match_hud_v3.tscn`。
+- `formal_lan_game_app.tscn` 已切换到联机专用组合根；教程和本地旧入口继续使用 V2，避免香盘教学布局被连带替换。
+- `match_screen.gd` 通过导出的 `hud_root_path` 一次性绑定预置节点，同时兼容 V2 和 V3，不在运行时生成 UI。
+- 顶部回合栏、双方三项摘要、战局五行、单位介绍、行动规则和技能按钮全部使用真实 `PlayerView` 动态刷新。
+- 正式 V3 Theme 使用项目所有者提供的`檎风黑体 Alt CHS Regular`单字体面；字体授权随资源保留。
+- 空闲态确认按钮动态显示`跳过回合`，预提交态显示`确认行动`；炮／士的技能按钮动态显示`轰炸 / 复活`。
 
 ## 验收
 
@@ -55,9 +64,11 @@
 - 无香类节点、无兵力／士气节点、双侧各三项摘要、右侧坐标行、两个纵向行动按钮检查。
 - 占旗进度、损失数量、回合、倒计时与战局事件动态刷新检查。
 - `1024×576`、`1280×720`、`1600×900`、`1680×720` 布局边界与非重叠检查。
+- 正式联机大厅到对局、红黑视角、行动提交、右键私有标记、终局和断线清理全链路检查。
+- 旧 V2 HUD 兼容与正式场景冒烟检查。
 
 ## 尚未完成
 
-- 尚未把 V3 替换进正式 `MatchScreen / match_hud_v2.tscn`。
+- V3 目前只接入正式联机入口；教程／关卡模式尚未迁移。
 - 尚未将按钮状态拆为独立手绘贴图；实验场景使用同一底板的 Godot 样式调色完成交互态。
 - 关卡闯关界面会复用同一骨架，但右侧五行内容需要改为关卡目标、步骤、当前操作和提示；本次没有把两个界面合成一张图或一个场景。

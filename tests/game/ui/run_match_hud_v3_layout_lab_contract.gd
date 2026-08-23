@@ -67,6 +67,7 @@ func _run() -> void:
 	_expect(not _tree_contains_name_fragment(lab, "Incense"), "V3 实验场景仍含香盘／燃香节点")
 	_expect(not _tree_contains_name_fragment(lab, "Morale"), "V3 实验场景仍含士气节点")
 	_expect(not _tree_contains_name_fragment(lab, "Strength"), "V3 实验场景仍含兵力节点")
+	_expect(lab.find_child("MarkerButton", true, false) == null, "V3 实验场景仍有独立标记按钮")
 	_expect(_rects_do_not_overlap(lab), "HUD 三列或底部区域发生重叠")
 
 	var capture_result := await _save_viewport(viewport, SCREENSHOT_PATH)
