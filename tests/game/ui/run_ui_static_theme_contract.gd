@@ -60,10 +60,11 @@ func _find_ext_resource_id(source: String, resource_path: String) -> String:
 		if not line.begins_with("[ext_resource ") \
 		or not line.contains('path="%s"' % resource_path):
 			continue
-		var id_start := line.find('id="')
+		var id_field_marker := ' id="'
+		var id_start := line.find(id_field_marker)
 		if id_start < 0:
 			return ""
-		id_start += 4
+		id_start += id_field_marker.length()
 		var id_end := line.find('"', id_start)
 		return line.substr(id_start, id_end - id_start) if id_end > id_start else ""
 	return ""
