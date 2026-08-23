@@ -187,8 +187,20 @@ func _setup_apps() -> void:
 	set_multiplayer(MultiplayerAPI.create_default_interface(), _client_root.get_path())
 	_server_app = APP_SCENE.instantiate() as Control
 	_client_app = APP_SCENE.instantiate() as Control
+	_disable_board_rendering(_server_app)
+	_disable_board_rendering(_client_app)
 	_server_root.add_child(_server_app)
 	_client_root.add_child(_client_app)
+
+
+func _disable_board_rendering(app: Control) -> void:
+	# This contract verifies LAN lifecycle, PlayerView safety, and HUD state. It
+	# never samples pixels, so rendering two formal large board targets only adds
+	# GPU/driver lifecycle cost to the headless runner.
+	var board_render_target := app.get_node(
+		"ScreenHost/MatchScreen/MatchHudV2/BoardFrame/BoardViewport/BoardSubViewport"
+	) as SubViewport
+	board_render_target.render_target_update_mode = SubViewport.UPDATE_DISABLED
 
 
 func _set_endpoint(lobby: Control, address: String, port: int) -> void:

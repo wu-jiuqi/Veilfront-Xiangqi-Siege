@@ -277,6 +277,11 @@ func _sync_layout() -> void:
 	_fit_zoom = maxf((float(viewport_size.x) - SCREEN_MARGIN) / BOARD_WORLD_SIZE.x, 0.05)
 	if BoardCoordinateMapper.is_authority_cell_valid(_focused_cell):
 		focus_authority_cell(_focused_cell)
+	elif _has_session_view:
+		# A same-side resize/layout notification must preserve player camera authority.
+		# Explicit side changes still reset through set_presentation_side().
+		_update_camera_zoom()
+		_apply_camera_position(_camera.position)
 	else:
 		reset_camera()
 

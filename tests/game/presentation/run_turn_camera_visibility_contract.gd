@@ -18,6 +18,8 @@ func _run() -> void:
 	root.add_child(viewport)
 	var board_viewport := BOARD_VIEWPORT_SCENE.instantiate() as SubViewportContainer
 	board_viewport.size = Vector2(VIEWPORT_SIZE)
+	var board_render_target := board_viewport.get_node("BoardSubViewport") as SubViewport
+	board_render_target.render_target_update_mode = SubViewport.UPDATE_DISABLED
 	viewport.add_child(board_viewport)
 	await process_frame
 

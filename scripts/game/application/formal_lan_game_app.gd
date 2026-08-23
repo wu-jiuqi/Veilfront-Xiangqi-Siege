@@ -51,6 +51,10 @@ var _failure_role: String = ""
 func _ready() -> void:
 	_match_screen.visible = false
 	_lobby.visible = true
+	# Transport errors can be emitted by more than one lifecycle signal and test
+	# harnesses may host two app instances under the same root window. Recovery
+	# must not compete with another app's exclusive child window.
+	_connection_error_dialog.exclusive = false
 	_match_screen.call(&"set_session_navigation_enabled", true)
 	_lobby.call(&"render_connection_snapshot", _session.call(&"get_public_state_snapshot"))
 
@@ -160,7 +164,7 @@ func _enter_match() -> void:
 
 
 func _handle_transport_failure(state: String, error_code: String) -> void:
-	if _handled_failure_state == state and _connection_error_dialog.visible:
+	if _handled_failure_state == state:
 		return
 	_handled_failure_state = state
 	_cleanup_match_presentation()
@@ -168,7 +172,8 @@ func _handle_transport_failure(state: String, error_code: String) -> void:
 		error_code,
 		ERROR_TEXT.get(state, "联机连接已经中断。")
 	)
-	_connection_error_dialog.popup_centered()
+	if not _connection_error_dialog.visible:
+		_connection_error_dialog.popup_centered()
 
 
 func _handle_operation_result(result: Dictionary, fallback: String) -> void:

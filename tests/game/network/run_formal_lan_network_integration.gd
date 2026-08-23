@@ -171,6 +171,18 @@ func _run() -> void:
 			and int(_client_state.get("action_index", -1)) == 2 \
 			and str(_server_state.get("active_side", "")) == "red"
 	, 360)
+	if not black_completed:
+		var diagnostic_port: RefCounted = _client_session.create_client_port()
+		print("BLACK_RPC_DIAGNOSTIC server_state=%s client_state=%s server_feedback=%s client_feedback=%s prepared=%s client_sequence=%s client_previews=%d processed=%s" % [
+			JSON.stringify(_server_state),
+			JSON.stringify(_client_state),
+			JSON.stringify(_server_feedback),
+			JSON.stringify(_client_feedback),
+			str(diagnostic_port._prepared_preview_id),
+			str(diagnostic_port._last_frame_sequence),
+			diagnostic_port._available_previews.size(),
+			JSON.stringify(_server_session._processed_action_requests),
+		])
 	_check(black_completed, "黑方正式移动经可靠 RPC 结算并切回红方回合")
 	_check(_all_views_belong_to(_server_views, "red"), "多批次后红方端仍未串入黑方视图")
 	_check(_all_views_belong_to(_client_views, "black"), "多批次后黑方端仍未串入红方视图")
