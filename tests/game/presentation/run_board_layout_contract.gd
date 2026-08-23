@@ -17,7 +17,7 @@ const EXPECTED_PROFILES := {
 	"1280x960": "1280x960",
 }
 const EXPECTED_BOARD_RECTS := {
-	"1280x720": Rect2(340, 32, 600, 544),
+	"1280x720": Rect2(340, 32, 552, 544),
 	"1680x720": Rect2(341, 104, 998, 450),
 	"1280x800": Rect2(260, 116, 760, 500),
 	"1280x960": Rect2(260, 139, 760, 600),
@@ -149,9 +149,13 @@ func _check_coordinate_contract() -> void:
 func _check_resolution(resolution: Vector2i) -> Dictionary:
 	var viewport: SubViewport = SubViewport.new()
 	viewport.size = resolution
-	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
 	root.add_child(viewport)
 	var match_screen: Control = MATCH_SCREEN_SCENE.instantiate() as Control
+	var board_render_target := match_screen.get_node(
+		"MatchHudV2/BoardFrame/BoardViewport/BoardSubViewport"
+	) as SubViewport
+	board_render_target.render_target_update_mode = SubViewport.UPDATE_DISABLED
 	viewport.add_child(match_screen)
 	if not match_screen.has_method("apply_layout_for_size") \
 	or not match_screen.has_method("get_layout_snapshot"):

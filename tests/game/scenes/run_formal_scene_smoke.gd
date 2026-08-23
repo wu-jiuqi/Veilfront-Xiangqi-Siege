@@ -131,6 +131,7 @@ func _check_scene(scene_path: String) -> void:
 	if instance == null:
 		_failures.append("scene failed to instantiate: %s" % scene_path)
 		return
+	_disable_render_targets(instance)
 	root.add_child(instance)
 	await process_frame
 	if scene_path.ends_with("game_app.tscn"):
@@ -142,6 +143,13 @@ func _check_scene(scene_path: String) -> void:
 
 	instance.queue_free()
 	await process_frame
+
+
+func _disable_render_targets(instance: Node) -> void:
+	# Scene smoke checks construction and preset wiring, never rendered pixels.
+	# Large formal board targets can keep headless renderer teardown alive.
+	for node: Node in instance.find_children("*", "SubViewport", true, false):
+		(node as SubViewport).render_target_update_mode = SubViewport.UPDATE_DISABLED
 
 
 func _check_component_scene(scene_path: String) -> void:

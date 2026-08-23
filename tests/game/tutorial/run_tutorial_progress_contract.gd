@@ -15,6 +15,10 @@ func _run() -> void:
 	root.set_meta("veilfront_selected_level_id", "T0")
 	var level: Control = TUTORIAL_LEVEL_SCENE.instantiate() as Control
 	level.progress_path = TEST_PROGRESS_PATH
+	var board_render_target := level.get_node(
+		"MatchScreen/MatchHudV2/BoardFrame/BoardViewport/BoardSubViewport"
+	) as SubViewport
+	board_render_target.render_target_update_mode = SubViewport.UPDATE_DISABLED
 	root.add_child(level)
 	await process_frame
 	await process_frame
@@ -34,6 +38,8 @@ func _run() -> void:
 	var completed_ids: Variant = config.get_value("progress", "completed_ids", [])
 	_expect(completed_ids is Array and "T0" in completed_ids, "tutorial completion did not record T0")
 	_remove_test_progress()
+	level.queue_free()
+	await process_frame
 	if _failures.is_empty():
 		print("TUTORIAL_PROGRESS_CONTRACT_PASS level=T0")
 		quit(0)

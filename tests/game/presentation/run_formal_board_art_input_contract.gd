@@ -19,11 +19,19 @@ func _init() -> void:
 
 
 func _run() -> void:
+	var capture_screenshot := "--capture-screenshot" in OS.get_cmdline_user_args()
 	var viewport := SubViewport.new()
 	viewport.size = Vector2i(1280, 720)
-	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	viewport.render_target_update_mode = (
+		SubViewport.UPDATE_ALWAYS if capture_screenshot else SubViewport.UPDATE_DISABLED
+	)
 	root.add_child(viewport)
 	var match_screen: Control = MATCH_SCREEN_SCENE.instantiate() as Control
+	if not capture_screenshot:
+		var board_render_target := match_screen.get_node(
+			"MatchHudV2/BoardFrame/BoardViewport/BoardSubViewport"
+		) as SubViewport
+		board_render_target.render_target_update_mode = SubViewport.UPDATE_DISABLED
 	viewport.add_child(match_screen)
 	match_screen.apply_layout_for_size(Vector2(viewport.size))
 
@@ -48,7 +56,7 @@ func _run() -> void:
 	var snapshot: Dictionary = match_screen.get_board_render_snapshot()
 	_check_fullscreen_layout(match_screen, viewport)
 	await process_frame
-	if "--capture-screenshot" in OS.get_cmdline_user_args():
+	if capture_screenshot:
 		_capture_screenshot(viewport, "formal-fullscreen-2560x1080.png")
 	viewport.size = Vector2i(1280, 720)
 	match_screen.apply_layout_for_size(Vector2(viewport.size))

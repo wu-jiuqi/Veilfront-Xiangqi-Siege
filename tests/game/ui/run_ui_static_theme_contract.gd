@@ -36,17 +36,43 @@ func _run() -> void:
 		assert(not FileAccess.file_exists(removed_path), "dynamic skin resource must be removed: %s" % removed_path)
 
 	for scene_path: String in SCENE_THEME_PATHS:
-		var packed_scene := load(scene_path) as PackedScene
-		assert(packed_scene != null, "scene must load: %s" % scene_path)
-		var scene_root := packed_scene.instantiate() as Control
-		assert(scene_root != null, "scene root must be Control: %s" % scene_path)
-		assert(scene_root.get_node_or_null("UiThemeBinder") == null, "scene must not contain UiThemeBinder: %s" % scene_path)
-		assert(scene_root.theme != null, "scene must bind a static Theme: %s" % scene_path)
+		var source := FileAccess.get_file_as_string(scene_path)
+		assert(FileAccess.get_open_error() == OK, "scene must be readable: %s" % scene_path)
 		assert(
-			scene_root.theme.resource_path == SCENE_THEME_PATHS[scene_path],
+			not source.contains('name="UiThemeBinder"'),
+			"scene must not contain UiThemeBinder: %s" % scene_path
+		)
+		var theme_path: String = SCENE_THEME_PATHS[scene_path]
+		var theme_resource_id := _find_ext_resource_id(source, theme_path)
+		assert(not theme_resource_id.is_empty(), "scene Theme resource missing: %s" % scene_path)
+		var root_block := _root_node_block(source)
+		assert(
+			root_block.contains('theme = ExtResource("%s")' % theme_resource_id),
 			"scene Theme mismatch: %s" % scene_path
 		)
-		scene_root.free()
 
 	print("UI_STATIC_THEME_CONTRACT_PASS roots=%d removed=%d dynamic_skin=false" % [SCENE_THEME_PATHS.size(), REMOVED_PATHS.size()])
 	quit(0)
+
+
+func _find_ext_resource_id(source: String, resource_path: String) -> String:
+	for line: String in source.split("\n"):
+		if not line.begins_with("[ext_resource ") \
+		or not line.contains('path="%s"' % resource_path):
+			continue
+		var id_start := line.find('id="')
+		if id_start < 0:
+			return ""
+		id_start += 4
+		var id_end := line.find('"', id_start)
+		return line.substr(id_start, id_end - id_start) if id_end > id_start else ""
+	return ""
+
+
+func _root_node_block(source: String) -> String:
+	var root_start := source.find("[node ")
+	if root_start < 0:
+		return ""
+	var next_node := source.find("\n[node ", root_start + 1)
+	return source.substr(root_start) if next_node < 0 \
+		else source.substr(root_start, next_node - root_start)
