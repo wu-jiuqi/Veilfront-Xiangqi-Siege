@@ -2767,3 +2767,882 @@ event_history:
     digest_algorithm: sha256
     previous_event_digest: 09e5af244acbf7540fb10dffc7b043e8c923cfea1e4784b58047d93ee85ce6ce
     event_digest: 16f6825e405c26eb9c6c5a0b87535accf091907e2feac72b36f63685c7ba6514
+- schema_version: '0.1'
+  event_id: fc90ad5a-981c-462b-9271-84c0ec1a5607
+  mutation_id: e8c101f6-c2cd-49b4-8bbe-90bea6297304
+  loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+  sequence: 62
+  event_type: core.output_registered
+  occurred_at: '2026-08-23T14:46:28.434347+08:00'
+  recorded_at: '2026-08-23T14:46:28.434347+08:00'
+  actor:
+    actor_id: inst:01M02M6X3Q8YWJXHY52K3V5AR2
+    role: pos:veilfront-xiangqi-siege:root:project-manager
+    authority_id: AUTH-VEILFRONT-PROJECT-MANAGER
+  causality:
+    correlation_id: abde6c32-4837-440b-b229-4b028c54207f
+    causation_event_id: 7ce6e6e0-0c13-4b08-b312-3bca8b6258eb
+    request_id: GATE-2-v3-register-DELIVERABLE-PRESENTATION-2D-001
+  concurrency:
+    expected_record_revision: 61
+    resulting_record_revision: 62
+  binding_snapshot:
+    contract_digest: 9ea1fbab25b1a560b83896194099bd9b0131552d7321223622161615c1a2a205
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    deliverable_id: DELIVERABLE-PRESENTATION-2D-001
+    before: null
+    after:
+      deliverable_id: DELIVERABLE-PRESENTATION-2D-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:deliverable-presentation-2d-001@candidate-419e2ce
+        artifact_type: preset-godot-2d-match-shell
+        version: candidate-419e2ce
+        uri: evidence/gate2/gate2-v3-technical-handoff.md
+        manifest_paths:
+        - evidence/gate2/gate2-v3-technical-handoff.md
+        - evidence/gate2/gate2-v3-ui-readability-handoff.md
+        - evidence/gate2/gate2-v3-systems-experience-handoff.md
+        - scenes/game/match/board/board_viewport.tscn
+        - scenes/game/match/match_screen.tscn
+        - scenes/game/ui/tutorial_overlay.tscn
+        - scripts/game/presentation/board/board_viewport_controller.gd
+        - tests/game/presentation/run_turn_camera_visibility_contract.gd
+        source_commit: 419e2cef5d4fac9f099c8ea487b5e6d6a5c57445
+        digest:
+          algorithm: sha256
+          value: fb3b985d6e590e5225fdebde5abed69da1a961b5ee3d8b3fe0be3bb72243f000
+      produced_in_iteration: 3
+      lifecycle_status: submitted
+      registered_by_event_id: fc90ad5a-981c-462b-9271-84c0ec1a5607
+  evidence_refs:
+  - evidence/gate2/gate2-v3-technical-handoff.md
+  - evidence/gate2/gate2-v3-ui-readability-handoff.md
+  - evidence/gate2/gate2-v3-systems-experience-handoff.md
+  - scenes/game/match/board/board_viewport.tscn
+  - scenes/game/match/match_screen.tscn
+  - scenes/game/ui/tutorial_overlay.tscn
+  - scripts/game/presentation/board/board_viewport_controller.gd
+  - tests/game/presentation/run_turn_camera_visibility_contract.gd
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: 16f6825e405c26eb9c6c5a0b87535accf091907e2feac72b36f63685c7ba6514
+    event_digest: 5b371e53b2f634b0e436c7e4bbf76101f1f4e79037a4ae8852ff27874e09f942
+- schema_version: '0.1'
+  event_id: ee42c26a-8f0d-4d37-9346-4c2ec692cace
+  mutation_id: 746dcb81-e127-44d7-a982-e2c4cd373a90
+  loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+  sequence: 63
+  event_type: core.output_registered
+  occurred_at: '2026-08-23T14:46:28.434347+08:00'
+  recorded_at: '2026-08-23T14:46:28.434347+08:00'
+  actor:
+    actor_id: inst:01M02M6X3Q8YWJXHY52K3V5AR2
+    role: pos:veilfront-xiangqi-siege:root:project-manager
+    authority_id: AUTH-VEILFRONT-PROJECT-MANAGER
+  causality:
+    correlation_id: abde6c32-4837-440b-b229-4b028c54207f
+    causation_event_id: fc90ad5a-981c-462b-9271-84c0ec1a5607
+    request_id: GATE-2-v3-register-DELIVERABLE-ART-2D-001
+  concurrency:
+    expected_record_revision: 62
+    resulting_record_revision: 63
+  binding_snapshot:
+    contract_digest: 9ea1fbab25b1a560b83896194099bd9b0131552d7321223622161615c1a2a205
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    deliverable_id: DELIVERABLE-ART-2D-001
+    before: null
+    after:
+      deliverable_id: DELIVERABLE-ART-2D-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:deliverable-art-2d-001@rc4-419e2ce
+        artifact_type: demo-2d-visual-baseline-and-asset-inventory
+        version: rc4-419e2ce
+        uri: evidence/gate2/gate2-v3-visual-handoff.md
+        manifest_paths:
+        - docs/art/veilfront-2d-current-direction-v1.md
+        - docs/art/demo-2d-asset-inventory-v1.yaml
+        - evidence/gate2/gate2-v3-visual-handoff.md
+        - evidence/gate2/v3-candidate-419e2ce/screenshots/match-960x540-red.png
+        - evidence/gate2/v3-candidate-419e2ce/screenshots/match-960x540-black.png
+        - evidence/gate2/v3-candidate-419e2ce/screenshots/match-1280x720-red.png
+        - evidence/gate2/v3-candidate-419e2ce/screenshots/match-1280x720-black.png
+        - evidence/gate2/v3-candidate-419e2ce/screenshots/match-1920x1080-red.png
+        - evidence/gate2/v3-candidate-419e2ce/screenshots/match-1920x1080-black.png
+        source_commit: 7404d78
+        digest:
+          algorithm: sha256
+          value: 8970adea9d4f9967ed1964022736c0e7dca9a99c1e0c392cde0ed3c4a44ff423
+      produced_in_iteration: 3
+      lifecycle_status: submitted
+      registered_by_event_id: ee42c26a-8f0d-4d37-9346-4c2ec692cace
+  evidence_refs:
+  - docs/art/veilfront-2d-current-direction-v1.md
+  - docs/art/demo-2d-asset-inventory-v1.yaml
+  - evidence/gate2/gate2-v3-visual-handoff.md
+  - evidence/gate2/v3-candidate-419e2ce/screenshots/match-960x540-red.png
+  - evidence/gate2/v3-candidate-419e2ce/screenshots/match-960x540-black.png
+  - evidence/gate2/v3-candidate-419e2ce/screenshots/match-1280x720-red.png
+  - evidence/gate2/v3-candidate-419e2ce/screenshots/match-1280x720-black.png
+  - evidence/gate2/v3-candidate-419e2ce/screenshots/match-1920x1080-red.png
+  - evidence/gate2/v3-candidate-419e2ce/screenshots/match-1920x1080-black.png
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: 5b371e53b2f634b0e436c7e4bbf76101f1f4e79037a4ae8852ff27874e09f942
+    event_digest: fd397ca20e4556f065435e142eb805ff9495b98e0e20c92548d6273a2c769c1e
+- schema_version: '0.1'
+  event_id: 2e67fa87-c88c-4937-95ae-9c9095ec3447
+  mutation_id: 53287b4f-6d32-48e1-adf5-1da252b8c14c
+  loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+  sequence: 64
+  event_type: core.output_registered
+  occurred_at: '2026-08-23T14:46:28.434347+08:00'
+  recorded_at: '2026-08-23T14:46:28.434347+08:00'
+  actor:
+    actor_id: inst:01M02M6X3Q8YWJXHY52K3V5AR2
+    role: pos:veilfront-xiangqi-siege:root:project-manager
+    authority_id: AUTH-VEILFRONT-PROJECT-MANAGER
+  causality:
+    correlation_id: abde6c32-4837-440b-b229-4b028c54207f
+    causation_event_id: ee42c26a-8f0d-4d37-9346-4c2ec692cace
+    request_id: GATE-2-v3-register-DELIVERABLE-QA-2D-001
+  concurrency:
+    expected_record_revision: 63
+    resulting_record_revision: 64
+  binding_snapshot:
+    contract_digest: 9ea1fbab25b1a560b83896194099bd9b0131552d7321223622161615c1a2a205
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    deliverable_id: DELIVERABLE-QA-2D-001
+    before: null
+    after:
+      deliverable_id: DELIVERABLE-QA-2D-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:deliverable-qa-2d-001@rc4-7404d78
+        artifact_type: independent-gate2-v3-evidence
+        version: rc4-7404d78
+        uri: evidence/gate2/gate2-v3-independent-qa-rc4.md
+        manifest_paths:
+        - evidence/gate2/gate2-v3-independent-qa-rc4.md
+        - evidence/gate2/v3-candidate-419e2ce/impact-files-54ba299-to-419e2ce.txt
+        - evidence/gate2/v3-candidate-419e2ce/logs/board_camera_layer.stderr.log
+        - evidence/gate2/v3-candidate-419e2ce/logs/board_camera_layer.stdout.log
+        - evidence/gate2/v3-candidate-419e2ce/logs/board_layout.stderr.log
+        - evidence/gate2/v3-candidate-419e2ce/logs/board_layout.stdout.log
+        - evidence/gate2/v3-candidate-419e2ce/logs/hidden_equivalence.stderr.log
+        - evidence/gate2/v3-candidate-419e2ce/logs/hidden_equivalence.stdout.log
+        - evidence/gate2/v3-candidate-419e2ce/logs/match-capture.log
+        - evidence/gate2/v3-candidate-419e2ce/logs/performance-1280x720-default.log
+        - evidence/gate2/v3-candidate-419e2ce/logs/performance-960x540-reduced-motion.log
+        - evidence/gate2/v3-candidate-419e2ce/logs/regression-summary.json
+        - evidence/gate2/v3-candidate-419e2ce/logs/turn-camera-visibility-5-run-summary.json
+        - evidence/gate2/v3-candidate-419e2ce/logs/turn-camera-visibility-run-1.stderr.log
+        - evidence/gate2/v3-candidate-419e2ce/logs/turn-camera-visibility-run-1.stdout.log
+        - evidence/gate2/v3-candidate-419e2ce/logs/turn-camera-visibility-run-2.stderr.log
+        - evidence/gate2/v3-candidate-419e2ce/logs/turn-camera-visibility-run-2.stdout.log
+        - evidence/gate2/v3-candidate-419e2ce/logs/turn-camera-visibility-run-3.stderr.log
+        - evidence/gate2/v3-candidate-419e2ce/logs/turn-camera-visibility-run-3.stdout.log
+        - evidence/gate2/v3-candidate-419e2ce/logs/turn-camera-visibility-run-4.stderr.log
+        - evidence/gate2/v3-candidate-419e2ce/logs/turn-camera-visibility-run-4.stdout.log
+        - evidence/gate2/v3-candidate-419e2ce/logs/turn-camera-visibility-run-5.stderr.log
+        - evidence/gate2/v3-candidate-419e2ce/logs/turn-camera-visibility-run-5.stdout.log
+        - evidence/gate2/v3-candidate-419e2ce/logs/windows-export.log
+        - evidence/gate2/v3-candidate-419e2ce/logs/windows-lan-export-verify.log
+        - evidence/gate2/v3-candidate-419e2ce/performance-1280x720-default.json
+        - evidence/gate2/v3-candidate-419e2ce/performance-960x540-reduced-motion.json
+        - evidence/gate2/v3-candidate-419e2ce/screenshots/match-1280x720-black.png
+        - evidence/gate2/v3-candidate-419e2ce/screenshots/match-1280x720-red.png
+        - evidence/gate2/v3-candidate-419e2ce/screenshots/match-1920x1080-black.png
+        - evidence/gate2/v3-candidate-419e2ce/screenshots/match-1920x1080-red.png
+        - evidence/gate2/v3-candidate-419e2ce/screenshots/match-960x540-black.png
+        - evidence/gate2/v3-candidate-419e2ce/screenshots/match-960x540-red.png
+        source_commit: 7404d78
+        digest:
+          algorithm: sha256
+          value: e59f1d0a1e466b94e33b5405de6b843b6f4228c5ec8380b9b17f3391bb4346d1
+      produced_in_iteration: 3
+      lifecycle_status: submitted
+      registered_by_event_id: 2e67fa87-c88c-4937-95ae-9c9095ec3447
+  evidence_refs:
+  - evidence/gate2/gate2-v3-independent-qa-rc4.md
+  - evidence/gate2/v3-candidate-419e2ce/impact-files-54ba299-to-419e2ce.txt
+  - evidence/gate2/v3-candidate-419e2ce/logs/board_camera_layer.stderr.log
+  - evidence/gate2/v3-candidate-419e2ce/logs/board_camera_layer.stdout.log
+  - evidence/gate2/v3-candidate-419e2ce/logs/board_layout.stderr.log
+  - evidence/gate2/v3-candidate-419e2ce/logs/board_layout.stdout.log
+  - evidence/gate2/v3-candidate-419e2ce/logs/hidden_equivalence.stderr.log
+  - evidence/gate2/v3-candidate-419e2ce/logs/hidden_equivalence.stdout.log
+  - evidence/gate2/v3-candidate-419e2ce/logs/match-capture.log
+  - evidence/gate2/v3-candidate-419e2ce/logs/performance-1280x720-default.log
+  - evidence/gate2/v3-candidate-419e2ce/logs/performance-960x540-reduced-motion.log
+  - evidence/gate2/v3-candidate-419e2ce/logs/regression-summary.json
+  - evidence/gate2/v3-candidate-419e2ce/logs/turn-camera-visibility-5-run-summary.json
+  - evidence/gate2/v3-candidate-419e2ce/logs/turn-camera-visibility-run-1.stderr.log
+  - evidence/gate2/v3-candidate-419e2ce/logs/turn-camera-visibility-run-1.stdout.log
+  - evidence/gate2/v3-candidate-419e2ce/logs/turn-camera-visibility-run-2.stderr.log
+  - evidence/gate2/v3-candidate-419e2ce/logs/turn-camera-visibility-run-2.stdout.log
+  - evidence/gate2/v3-candidate-419e2ce/logs/turn-camera-visibility-run-3.stderr.log
+  - evidence/gate2/v3-candidate-419e2ce/logs/turn-camera-visibility-run-3.stdout.log
+  - evidence/gate2/v3-candidate-419e2ce/logs/turn-camera-visibility-run-4.stderr.log
+  - evidence/gate2/v3-candidate-419e2ce/logs/turn-camera-visibility-run-4.stdout.log
+  - evidence/gate2/v3-candidate-419e2ce/logs/turn-camera-visibility-run-5.stderr.log
+  - evidence/gate2/v3-candidate-419e2ce/logs/turn-camera-visibility-run-5.stdout.log
+  - evidence/gate2/v3-candidate-419e2ce/logs/windows-export.log
+  - evidence/gate2/v3-candidate-419e2ce/logs/windows-lan-export-verify.log
+  - evidence/gate2/v3-candidate-419e2ce/performance-1280x720-default.json
+  - evidence/gate2/v3-candidate-419e2ce/performance-960x540-reduced-motion.json
+  - evidence/gate2/v3-candidate-419e2ce/screenshots/match-1280x720-black.png
+  - evidence/gate2/v3-candidate-419e2ce/screenshots/match-1280x720-red.png
+  - evidence/gate2/v3-candidate-419e2ce/screenshots/match-1920x1080-black.png
+  - evidence/gate2/v3-candidate-419e2ce/screenshots/match-1920x1080-red.png
+  - evidence/gate2/v3-candidate-419e2ce/screenshots/match-960x540-black.png
+  - evidence/gate2/v3-candidate-419e2ce/screenshots/match-960x540-red.png
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: fd397ca20e4556f065435e142eb805ff9495b98e0e20c92548d6273a2c769c1e
+    event_digest: 2f348d8983e8f7989915bd35916ac8d4201390bf5428ec90db56d396d1bfcdf4
+- schema_version: '0.1'
+  event_id: 5239c401-3fbf-47a5-b292-fedded9daffe
+  mutation_id: 580d469d-1ef3-4362-b295-aa0e676c4a99
+  loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+  sequence: 65
+  event_type: core.acceptance_recorded
+  occurred_at: '2026-08-23T14:46:28.434347+08:00'
+  recorded_at: '2026-08-23T14:46:28.434347+08:00'
+  actor:
+    actor_id: inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
+    role: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+    authority_id: AUTH-VEILFRONT-QA-RELEASE
+  causality:
+    correlation_id: abde6c32-4837-440b-b229-4b028c54207f
+    causation_event_id: 2e67fa87-c88c-4937-95ae-9c9095ec3447
+    request_id: GATE-2-v3-CHECK-CONTRACT-V3-001
+  concurrency:
+    expected_record_revision: 64
+    resulting_record_revision: 65
+  binding_snapshot:
+    contract_digest: 9ea1fbab25b1a560b83896194099bd9b0131552d7321223622161615c1a2a205
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    acceptance_kind: automated_check
+    record_id: CHECK-CONTRACT-V3-001
+    subject_digest: 6ef1550efb53444cdcebbf61a17ce9aee36a6ce73de69797e4fefe9270f14931
+    record:
+      check_id: CHECK-CONTRACT-V3-001
+      result: pass
+      candidate_commit: 419e2cef5d4fac9f099c8ea487b5e6d6a5c57445
+      qa_evidence_commit: 7404d78
+      evidence_ref: git:veilfront-xiangqi-siege:7404d78#evidence/gate2/gate2-v3-independent-qa-rc4.md
+      subject_digest: 6ef1550efb53444cdcebbf61a17ce9aee36a6ce73de69797e4fefe9270f14931
+  evidence_refs:
+  - git:veilfront-xiangqi-siege:7404d78#evidence/gate2/gate2-v3-independent-qa-rc4.md
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: 2f348d8983e8f7989915bd35916ac8d4201390bf5428ec90db56d396d1bfcdf4
+    event_digest: 6b000aa8693a5755e171ca20c73df4141d26d730a112f2c1a4396dae0685e2ba
+- schema_version: '0.1'
+  event_id: c43167dd-46bb-4e99-b05d-7a1ff6dcf13b
+  mutation_id: ec9da048-85e0-4d31-bffd-37518c895589
+  loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+  sequence: 66
+  event_type: core.acceptance_recorded
+  occurred_at: '2026-08-23T14:46:28.434347+08:00'
+  recorded_at: '2026-08-23T14:46:28.434347+08:00'
+  actor:
+    actor_id: inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
+    role: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+    authority_id: AUTH-VEILFRONT-QA-RELEASE
+  causality:
+    correlation_id: abde6c32-4837-440b-b229-4b028c54207f
+    causation_event_id: 5239c401-3fbf-47a5-b292-fedded9daffe
+    request_id: GATE-2-v3-CHECK-DEPENDENCY-001
+  concurrency:
+    expected_record_revision: 65
+    resulting_record_revision: 66
+  binding_snapshot:
+    contract_digest: 9ea1fbab25b1a560b83896194099bd9b0131552d7321223622161615c1a2a205
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    acceptance_kind: automated_check
+    record_id: CHECK-DEPENDENCY-001
+    subject_digest: 6ef1550efb53444cdcebbf61a17ce9aee36a6ce73de69797e4fefe9270f14931
+    record:
+      check_id: CHECK-DEPENDENCY-001
+      result: pass
+      candidate_commit: 419e2cef5d4fac9f099c8ea487b5e6d6a5c57445
+      qa_evidence_commit: 7404d78
+      evidence_ref: git:veilfront-xiangqi-siege:7404d78#evidence/gate2/gate2-v3-independent-qa-rc4.md
+      subject_digest: 6ef1550efb53444cdcebbf61a17ce9aee36a6ce73de69797e4fefe9270f14931
+  evidence_refs:
+  - git:veilfront-xiangqi-siege:7404d78#evidence/gate2/gate2-v3-independent-qa-rc4.md
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: 6b000aa8693a5755e171ca20c73df4141d26d730a112f2c1a4396dae0685e2ba
+    event_digest: d6a2cc8833797b6cca9daa14acd89042cc3cad0df0104e47a0d520a57b432524
+- schema_version: '0.1'
+  event_id: 6069f589-ff63-4193-8f31-cb3207fd6c81
+  mutation_id: 9700faeb-6570-4c6c-b644-2e9498ca8e1c
+  loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+  sequence: 67
+  event_type: core.acceptance_recorded
+  occurred_at: '2026-08-23T14:46:28.434347+08:00'
+  recorded_at: '2026-08-23T14:46:28.434347+08:00'
+  actor:
+    actor_id: inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
+    role: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+    authority_id: AUTH-VEILFRONT-QA-RELEASE
+  causality:
+    correlation_id: abde6c32-4837-440b-b229-4b028c54207f
+    causation_event_id: c43167dd-46bb-4e99-b05d-7a1ff6dcf13b
+    request_id: GATE-2-v3-CHECK-INFORMATION-2D-001
+  concurrency:
+    expected_record_revision: 66
+    resulting_record_revision: 67
+  binding_snapshot:
+    contract_digest: 9ea1fbab25b1a560b83896194099bd9b0131552d7321223622161615c1a2a205
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    acceptance_kind: automated_check
+    record_id: CHECK-INFORMATION-2D-001
+    subject_digest: 6ef1550efb53444cdcebbf61a17ce9aee36a6ce73de69797e4fefe9270f14931
+    record:
+      check_id: CHECK-INFORMATION-2D-001
+      result: pass
+      candidate_commit: 419e2cef5d4fac9f099c8ea487b5e6d6a5c57445
+      qa_evidence_commit: 7404d78
+      evidence_ref: git:veilfront-xiangqi-siege:7404d78#evidence/gate2/gate2-v3-independent-qa-rc4.md
+      subject_digest: 6ef1550efb53444cdcebbf61a17ce9aee36a6ce73de69797e4fefe9270f14931
+  evidence_refs:
+  - git:veilfront-xiangqi-siege:7404d78#evidence/gate2/gate2-v3-independent-qa-rc4.md
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: d6a2cc8833797b6cca9daa14acd89042cc3cad0df0104e47a0d520a57b432524
+    event_digest: 50d4b8654902fff61b3537c521c33aab48c5f2c4481deb2788b30ca0312e22ab
+- schema_version: '0.1'
+  event_id: 572b42dc-4279-479b-b8bc-7011a9b5aeab
+  mutation_id: 5d7b5e87-5ce0-4842-9154-48ccadbc2c9a
+  loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+  sequence: 68
+  event_type: core.acceptance_recorded
+  occurred_at: '2026-08-23T14:46:28.434347+08:00'
+  recorded_at: '2026-08-23T14:46:28.434347+08:00'
+  actor:
+    actor_id: inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
+    role: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+    authority_id: AUTH-VEILFRONT-QA-RELEASE
+  causality:
+    correlation_id: abde6c32-4837-440b-b229-4b028c54207f
+    causation_event_id: 6069f589-ff63-4193-8f31-cb3207fd6c81
+    request_id: GATE-2-v3-CHECK-GODOT-2D-001
+  concurrency:
+    expected_record_revision: 67
+    resulting_record_revision: 68
+  binding_snapshot:
+    contract_digest: 9ea1fbab25b1a560b83896194099bd9b0131552d7321223622161615c1a2a205
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    acceptance_kind: automated_check
+    record_id: CHECK-GODOT-2D-001
+    subject_digest: 6ef1550efb53444cdcebbf61a17ce9aee36a6ce73de69797e4fefe9270f14931
+    record:
+      check_id: CHECK-GODOT-2D-001
+      result: pass
+      candidate_commit: 419e2cef5d4fac9f099c8ea487b5e6d6a5c57445
+      qa_evidence_commit: 7404d78
+      evidence_ref: git:veilfront-xiangqi-siege:7404d78#evidence/gate2/gate2-v3-independent-qa-rc4.md
+      subject_digest: 6ef1550efb53444cdcebbf61a17ce9aee36a6ce73de69797e4fefe9270f14931
+  evidence_refs:
+  - git:veilfront-xiangqi-siege:7404d78#evidence/gate2/gate2-v3-independent-qa-rc4.md
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: 50d4b8654902fff61b3537c521c33aab48c5f2c4481deb2788b30ca0312e22ab
+    event_digest: 551277a7a9a7ba6ff6b20eb2eb0a39ed3cc09025f4ae380012dda1fc2c6cf6da
+- schema_version: '0.1'
+  event_id: f7b69ceb-0740-4292-ab81-d0a11c97e67b
+  mutation_id: 51bbd91c-b52a-4856-b03e-158223d17425
+  loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+  sequence: 69
+  event_type: core.acceptance_recorded
+  occurred_at: '2026-08-23T14:46:28.434347+08:00'
+  recorded_at: '2026-08-23T14:46:28.434347+08:00'
+  actor:
+    actor_id: inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
+    role: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+    authority_id: AUTH-VEILFRONT-QA-RELEASE
+  causality:
+    correlation_id: abde6c32-4837-440b-b229-4b028c54207f
+    causation_event_id: 572b42dc-4279-479b-b8bc-7011a9b5aeab
+    request_id: GATE-2-v3-CHECK-COORDINATE-001
+  concurrency:
+    expected_record_revision: 68
+    resulting_record_revision: 69
+  binding_snapshot:
+    contract_digest: 9ea1fbab25b1a560b83896194099bd9b0131552d7321223622161615c1a2a205
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    acceptance_kind: automated_check
+    record_id: CHECK-COORDINATE-001
+    subject_digest: 6ef1550efb53444cdcebbf61a17ce9aee36a6ce73de69797e4fefe9270f14931
+    record:
+      check_id: CHECK-COORDINATE-001
+      result: pass
+      candidate_commit: 419e2cef5d4fac9f099c8ea487b5e6d6a5c57445
+      qa_evidence_commit: 7404d78
+      evidence_ref: git:veilfront-xiangqi-siege:7404d78#evidence/gate2/gate2-v3-independent-qa-rc4.md
+      subject_digest: 6ef1550efb53444cdcebbf61a17ce9aee36a6ce73de69797e4fefe9270f14931
+  evidence_refs:
+  - git:veilfront-xiangqi-siege:7404d78#evidence/gate2/gate2-v3-independent-qa-rc4.md
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: 551277a7a9a7ba6ff6b20eb2eb0a39ed3cc09025f4ae380012dda1fc2c6cf6da
+    event_digest: 7dd08d99b9fc1b7a16d1e52580992781593e4cffb4b30f9331bdb9f89f0b5875
+- schema_version: '0.1'
+  event_id: c1c82d03-9edc-4ded-8f0f-0c52fa2bed92
+  mutation_id: fd9a81f9-b270-4cc6-992d-b0bd04b4c337
+  loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+  sequence: 70
+  event_type: core.acceptance_recorded
+  occurred_at: '2026-08-23T14:46:28.434347+08:00'
+  recorded_at: '2026-08-23T14:46:28.434347+08:00'
+  actor:
+    actor_id: inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
+    role: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+    authority_id: AUTH-VEILFRONT-QA-RELEASE
+  causality:
+    correlation_id: abde6c32-4837-440b-b229-4b028c54207f
+    causation_event_id: f7b69ceb-0740-4292-ab81-d0a11c97e67b
+    request_id: GATE-2-v3-CHECK-RESPONSIVE-2D-001
+  concurrency:
+    expected_record_revision: 69
+    resulting_record_revision: 70
+  binding_snapshot:
+    contract_digest: 9ea1fbab25b1a560b83896194099bd9b0131552d7321223622161615c1a2a205
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    acceptance_kind: automated_check
+    record_id: CHECK-RESPONSIVE-2D-001
+    subject_digest: 6ef1550efb53444cdcebbf61a17ce9aee36a6ce73de69797e4fefe9270f14931
+    record:
+      check_id: CHECK-RESPONSIVE-2D-001
+      result: pass
+      candidate_commit: 419e2cef5d4fac9f099c8ea487b5e6d6a5c57445
+      qa_evidence_commit: 7404d78
+      evidence_ref: git:veilfront-xiangqi-siege:7404d78#evidence/gate2/gate2-v3-independent-qa-rc4.md
+      subject_digest: 6ef1550efb53444cdcebbf61a17ce9aee36a6ce73de69797e4fefe9270f14931
+  evidence_refs:
+  - git:veilfront-xiangqi-siege:7404d78#evidence/gate2/gate2-v3-independent-qa-rc4.md
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: 7dd08d99b9fc1b7a16d1e52580992781593e4cffb4b30f9331bdb9f89f0b5875
+    event_digest: 681cdd1bec949cb4fbdd9e9407d7d0c093e348c0b70860e2c645d7579c94831a
+- schema_version: '0.1'
+  event_id: a8ace6e4-0c10-4e32-a545-480fde93e015
+  mutation_id: d5f3342c-339c-4d43-ba10-d22f29a68e01
+  loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+  sequence: 71
+  event_type: core.acceptance_recorded
+  occurred_at: '2026-08-23T14:46:28.434347+08:00'
+  recorded_at: '2026-08-23T14:46:28.434347+08:00'
+  actor:
+    actor_id: inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
+    role: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+    authority_id: AUTH-VEILFRONT-QA-RELEASE
+  causality:
+    correlation_id: abde6c32-4837-440b-b229-4b028c54207f
+    causation_event_id: c1c82d03-9edc-4ded-8f0f-0c52fa2bed92
+    request_id: GATE-2-v3-CHECK-PERFORMANCE-2D-001
+  concurrency:
+    expected_record_revision: 70
+    resulting_record_revision: 71
+  binding_snapshot:
+    contract_digest: 9ea1fbab25b1a560b83896194099bd9b0131552d7321223622161615c1a2a205
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    acceptance_kind: automated_check
+    record_id: CHECK-PERFORMANCE-2D-001
+    subject_digest: 6ef1550efb53444cdcebbf61a17ce9aee36a6ce73de69797e4fefe9270f14931
+    record:
+      check_id: CHECK-PERFORMANCE-2D-001
+      result: pass
+      candidate_commit: 419e2cef5d4fac9f099c8ea487b5e6d6a5c57445
+      qa_evidence_commit: 7404d78
+      evidence_ref: git:veilfront-xiangqi-siege:7404d78#evidence/gate2/gate2-v3-independent-qa-rc4.md
+      subject_digest: 6ef1550efb53444cdcebbf61a17ce9aee36a6ce73de69797e4fefe9270f14931
+  evidence_refs:
+  - git:veilfront-xiangqi-siege:7404d78#evidence/gate2/gate2-v3-independent-qa-rc4.md
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: 681cdd1bec949cb4fbdd9e9407d7d0c093e348c0b70860e2c645d7579c94831a
+    event_digest: 56b5ac2571749d537ee708d0d040db34357dfed38e978e397c355d47d987e24e
+- schema_version: '0.1'
+  event_id: bdc17071-fce5-48df-80df-fb6f78fbf2ae
+  mutation_id: 9b19b9ea-1a64-4c36-8521-f793dd6ea43f
+  loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+  sequence: 72
+  event_type: core.acceptance_recorded
+  occurred_at: '2026-08-23T14:46:28.434347+08:00'
+  recorded_at: '2026-08-23T14:46:28.434347+08:00'
+  actor:
+    actor_id: inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
+    role: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+    authority_id: AUTH-VEILFRONT-QA-RELEASE
+  causality:
+    correlation_id: abde6c32-4837-440b-b229-4b028c54207f
+    causation_event_id: a8ace6e4-0c10-4e32-a545-480fde93e015
+    request_id: GATE-2-v3-CHECK-ART-2D-001
+  concurrency:
+    expected_record_revision: 71
+    resulting_record_revision: 72
+  binding_snapshot:
+    contract_digest: 9ea1fbab25b1a560b83896194099bd9b0131552d7321223622161615c1a2a205
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    acceptance_kind: automated_check
+    record_id: CHECK-ART-2D-001
+    subject_digest: 6ef1550efb53444cdcebbf61a17ce9aee36a6ce73de69797e4fefe9270f14931
+    record:
+      check_id: CHECK-ART-2D-001
+      result: pass
+      candidate_commit: 419e2cef5d4fac9f099c8ea487b5e6d6a5c57445
+      qa_evidence_commit: 7404d78
+      evidence_ref: git:veilfront-xiangqi-siege:7404d78#evidence/gate2/gate2-v3-independent-qa-rc4.md
+      subject_digest: 6ef1550efb53444cdcebbf61a17ce9aee36a6ce73de69797e4fefe9270f14931
+  evidence_refs:
+  - git:veilfront-xiangqi-siege:7404d78#evidence/gate2/gate2-v3-independent-qa-rc4.md
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: 56b5ac2571749d537ee708d0d040db34357dfed38e978e397c355d47d987e24e
+    event_digest: bef3398d9480792acd0f3e26f850326ee77d9c0e06209d905f13b54ca43deaa5
+- schema_version: '0.1'
+  event_id: a553391b-3058-4103-a8af-c0e61ed984af
+  mutation_id: 775b1c1c-34f0-40ea-8d67-dc16046e54ef
+  loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+  sequence: 73
+  event_type: core.acceptance_recorded
+  occurred_at: '2026-08-23T14:46:28.434347+08:00'
+  recorded_at: '2026-08-23T14:46:28.434347+08:00'
+  actor:
+    actor_id: inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
+    role: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+    authority_id: AUTH-VEILFRONT-QA-RELEASE
+  causality:
+    correlation_id: abde6c32-4837-440b-b229-4b028c54207f
+    causation_event_id: bdc17071-fce5-48df-80df-fb6f78fbf2ae
+    request_id: GATE-2-v3-CHECK-REGRESSION-001
+  concurrency:
+    expected_record_revision: 72
+    resulting_record_revision: 73
+  binding_snapshot:
+    contract_digest: 9ea1fbab25b1a560b83896194099bd9b0131552d7321223622161615c1a2a205
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    acceptance_kind: automated_check
+    record_id: CHECK-REGRESSION-001
+    subject_digest: 6ef1550efb53444cdcebbf61a17ce9aee36a6ce73de69797e4fefe9270f14931
+    record:
+      check_id: CHECK-REGRESSION-001
+      result: pass_with_limitation
+      candidate_commit: 419e2cef5d4fac9f099c8ea487b5e6d6a5c57445
+      qa_evidence_commit: 7404d78
+      evidence_ref: git:veilfront-xiangqi-siege:7404d78#evidence/gate2/gate2-v3-independent-qa-rc4.md
+      subject_digest: 6ef1550efb53444cdcebbf61a17ce9aee36a6ce73de69797e4fefe9270f14931
+      limitation:
+        current_evidence: 1-seed-pass
+        current_3_or_20_seed: not_rerun
+        historical_20_seed: background_only
+        frozen_representative_threshold_satisfied: true
+  evidence_refs:
+  - git:veilfront-xiangqi-siege:7404d78#evidence/gate2/gate2-v3-independent-qa-rc4.md
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: bef3398d9480792acd0f3e26f850326ee77d9c0e06209d905f13b54ca43deaa5
+    event_digest: 3dbccf979042723d0b0d638ac54ec7151d7a08ac4ced79394d18410f6371d5b0
+- schema_version: '0.1'
+  event_id: e090d972-71c1-49ed-9b54-3bd3ba24a643
+  mutation_id: 54c02408-6728-4808-ac36-a4e50d53184f
+  loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+  sequence: 74
+  event_type: core.acceptance_recorded
+  occurred_at: '2026-08-23T14:46:28.434347+08:00'
+  recorded_at: '2026-08-23T14:46:28.434347+08:00'
+  actor:
+    actor_id: inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
+    role: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+    authority_id: AUTH-VEILFRONT-QA-RELEASE
+  causality:
+    correlation_id: abde6c32-4837-440b-b229-4b028c54207f
+    causation_event_id: a553391b-3058-4103-a8af-c0e61ed984af
+    request_id: GATE-2-v3-CHECK-SCOPE-001
+  concurrency:
+    expected_record_revision: 73
+    resulting_record_revision: 74
+  binding_snapshot:
+    contract_digest: 9ea1fbab25b1a560b83896194099bd9b0131552d7321223622161615c1a2a205
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    acceptance_kind: automated_check
+    record_id: CHECK-SCOPE-001
+    subject_digest: 6ef1550efb53444cdcebbf61a17ce9aee36a6ce73de69797e4fefe9270f14931
+    record:
+      check_id: CHECK-SCOPE-001
+      result: pass
+      candidate_commit: 419e2cef5d4fac9f099c8ea487b5e6d6a5c57445
+      qa_evidence_commit: 7404d78
+      evidence_ref: git:veilfront-xiangqi-siege:7404d78#evidence/gate2/gate2-v3-independent-qa-rc4.md
+      subject_digest: 6ef1550efb53444cdcebbf61a17ce9aee36a6ce73de69797e4fefe9270f14931
+  evidence_refs:
+  - git:veilfront-xiangqi-siege:7404d78#evidence/gate2/gate2-v3-independent-qa-rc4.md
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: 3dbccf979042723d0b0d638ac54ec7151d7a08ac4ced79394d18410f6371d5b0
+    event_digest: 2e2eaa87d113b0a9a10b7f8424a2653773634084bd2c85e6e67d4b8c5ed437ea
+- schema_version: '0.1'
+  event_id: a68e6d17-4b7c-4e1b-8b1a-57b599ca7d46
+  mutation_id: a394c71a-d136-4006-ad87-9f3d6ee92868
+  loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+  sequence: 75
+  event_type: core.acceptance_recorded
+  occurred_at: '2026-08-23T14:46:28.434347+08:00'
+  recorded_at: '2026-08-23T14:46:28.434347+08:00'
+  actor:
+    actor_id: inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
+    role: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+    authority_id: AUTH-VEILFRONT-QA-RELEASE
+  causality:
+    correlation_id: abde6c32-4837-440b-b229-4b028c54207f
+    causation_event_id: e090d972-71c1-49ed-9b54-3bd3ba24a643
+    request_id: GATE-2-v3-RC4-independent-review
+  concurrency:
+    expected_record_revision: 74
+    resulting_record_revision: 75
+  binding_snapshot:
+    contract_digest: 9ea1fbab25b1a560b83896194099bd9b0131552d7321223622161615c1a2a205
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    acceptance_kind: professional_review
+    record_id: GATE-2-v3-RC4-independent-review
+    subject_digest: 6ef1550efb53444cdcebbf61a17ce9aee36a6ce73de69797e4fefe9270f14931
+    record:
+      review_id: GATE-2-v3-RC4-independent-review
+      reviewer_instance_id: inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
+      reviewer_role: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+      verdict: pass
+      route_recommendation: recommend_awaiting_human
+      evidence_state: sufficient_with_disclosed_regression_limitation
+      gate_decision: not_made
+      evidence_ref: git:veilfront-xiangqi-siege:7404d78#evidence/gate2/gate2-v3-independent-qa-rc4.md
+      subject_digest: 6ef1550efb53444cdcebbf61a17ce9aee36a6ce73de69797e4fefe9270f14931
+      new_blocking_defects: []
+  evidence_refs:
+  - git:veilfront-xiangqi-siege:7404d78#evidence/gate2/gate2-v3-independent-qa-rc4.md
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: 2e2eaa87d113b0a9a10b7f8424a2653773634084bd2c85e6e67d4b8c5ed437ea
+    event_digest: d69fa52dc66ddf652808b74a3025fb8dc92cbaea797ef4958f86b60a3f497c7c
+- schema_version: '0.1'
+  event_id: 0023ca40-6a07-494b-9c44-e50e3ecffc88
+  mutation_id: 3126f91c-34e5-4724-a3ef-77ff703d154b
+  loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+  sequence: 76
+  event_type: core.state_transitioned
+  occurred_at: '2026-08-23T14:46:28.434347+08:00'
+  recorded_at: '2026-08-23T14:46:28.434347+08:00'
+  actor:
+    actor_id: inst:01M02M6X3Q8YWJXHY52K3V5AR2
+    role: pos:veilfront-xiangqi-siege:root:project-manager
+    authority_id: AUTH-VEILFRONT-PROJECT-MANAGER
+  causality:
+    correlation_id: abde6c32-4837-440b-b229-4b028c54207f
+    causation_event_id: a68e6d17-4b7c-4e1b-8b1a-57b599ca7d46
+    request_id: GATE-2-v3-RC4-submit-review
+  concurrency:
+    expected_record_revision: 75
+    resulting_record_revision: 76
+  binding_snapshot:
+    contract_digest: 9ea1fbab25b1a560b83896194099bd9b0131552d7321223622161615c1a2a205
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    transition_id: TR-ACTIVE-REVIEW
+    from_state: active
+    to_state: review
+    iteration:
+      before: 3
+      after: 3
+    reason: iteration_3_rc4_submitted_after_contract_v3_independent_qa_pass
+    subject_digest: 6ef1550efb53444cdcebbf61a17ce9aee36a6ce73de69797e4fefe9270f14931
+  evidence_refs:
+  - git:veilfront-xiangqi-siege:7404d78#evidence/gate2/gate2-v3-independent-qa-rc4.md
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: d69fa52dc66ddf652808b74a3025fb8dc92cbaea797ef4958f86b60a3f497c7c
+    event_digest: 908377484c44c8bc8d3739a6362ad43bf1c102b4d1fe72d9dec169b7decccb07
+- schema_version: '0.1'
+  event_id: a40ac085-2d32-4f15-8932-01b3ab36661a
+  mutation_id: ea5df50a-83bc-465f-9cea-b1ec54c4c0e5
+  loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+  sequence: 77
+  event_type: core.output_registered
+  occurred_at: '2026-08-23T14:46:28.434347+08:00'
+  recorded_at: '2026-08-23T14:46:28.434347+08:00'
+  actor:
+    actor_id: inst:01M02M6X3Q8YWJXHY52K3V5AR2
+    role: pos:veilfront-xiangqi-siege:root:project-manager
+    authority_id: AUTH-VEILFRONT-PROJECT-MANAGER
+  causality:
+    correlation_id: abde6c32-4837-440b-b229-4b028c54207f
+    causation_event_id: 0023ca40-6a07-494b-9c44-e50e3ecffc88
+    request_id: GATE-2-v3-decision-package-preparation
+  concurrency:
+    expected_record_revision: 76
+    resulting_record_revision: 77
+  binding_snapshot:
+    contract_digest: 9ea1fbab25b1a560b83896194099bd9b0131552d7321223622161615c1a2a205
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    deliverable_id: DELIVERABLE-GATE2-2D-001
+    before: null
+    after:
+      deliverable_id: DELIVERABLE-GATE2-2D-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:deliverable-gate2-2d-001@awaiting-human@sha256:67d26c0c418a4da66ae7832ee35b6762a73334a40c0fb11bf7dc5a1cd7de3ffd
+        artifact_type: human-decision-package
+        version: awaiting-human@sha256:67d26c0c418a4da66ae7832ee35b6762a73334a40c0fb11bf7dc5a1cd7de3ffd
+        uri: game-pipeline/loops/evidence/GATE-2-v3-decision-package.md
+        manifest_paths:
+        - game-pipeline/loops/evidence/GATE-2-v3-decision-package.md
+        source_commit: 7404d78
+        digest:
+          algorithm: sha256
+          value: 67d26c0c418a4da66ae7832ee35b6762a73334a40c0fb11bf7dc5a1cd7de3ffd
+      produced_in_iteration: 3
+      lifecycle_status: submitted
+      registered_by_event_id: a40ac085-2d32-4f15-8932-01b3ab36661a
+  evidence_refs:
+  - game-pipeline/loops/evidence/GATE-2-v3-decision-package.md@sha256:67d26c0c418a4da66ae7832ee35b6762a73334a40c0fb11bf7dc5a1cd7de3ffd
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: 908377484c44c8bc8d3739a6362ad43bf1c102b4d1fe72d9dec169b7decccb07
+    event_digest: af8d83d88a17892abbb32fbfdec18806914545f79e88581f70983d0cbcdb32ee
+- schema_version: '0.1'
+  event_id: 49c660fe-5952-4929-a928-0935b42d0003
+  mutation_id: 0a970045-746f-4fa2-a4e5-2128ea5f81e5
+  loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+  sequence: 78
+  event_type: core.approval_requested
+  occurred_at: '2026-08-23T14:46:28.434347+08:00'
+  recorded_at: '2026-08-23T14:46:28.434347+08:00'
+  actor:
+    actor_id: inst:01M02M6X3Q8YWJXHY52K3V5AR2
+    role: pos:veilfront-xiangqi-siege:root:project-manager
+    authority_id: AUTH-VEILFRONT-PROJECT-MANAGER
+  causality:
+    correlation_id: abde6c32-4837-440b-b229-4b028c54207f
+    causation_event_id: a40ac085-2d32-4f15-8932-01b3ab36661a
+    request_id: approval:veilfront-xiangqi-siege:gate-2:36efd026dd33
+  concurrency:
+    expected_record_revision: 77
+    resulting_record_revision: 78
+  binding_snapshot:
+    contract_digest: 9ea1fbab25b1a560b83896194099bd9b0131552d7321223622161615c1a2a205
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    request_id: approval:veilfront-xiangqi-siege:gate-2:36efd026dd33
+    requested_action: decide_gate_2_for_demo_2d_batch_production
+    subject_digest: 36efd026dd33a1caab9bd9d72e4a593c6853850e92904e865d29f434c4317a84
+    request:
+      request_id: approval:veilfront-xiangqi-siege:gate-2:36efd026dd33
+      requested_action: decide_gate_2_for_demo_2d_batch_production
+      subject_digest: 36efd026dd33a1caab9bd9d72e4a593c6853850e92904e865d29f434c4317a84
+      status: pending
+      requested_by:
+        actor_id: inst:01M02M6X3Q8YWJXHY52K3V5AR2
+        role: pos:veilfront-xiangqi-siege:root:project-manager
+        authority_id: AUTH-VEILFRONT-PROJECT-MANAGER
+      decision_authority: project-owner
+      request_ref: game-pipeline/loops/evidence/GATE-2-v3-decision-package.md
+      requested_at: '2026-08-23T14:46:28.434347+08:00'
+      decision: null
+  evidence_refs:
+  - game-pipeline/loops/evidence/GATE-2-v3-decision-package.md
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: af8d83d88a17892abbb32fbfdec18806914545f79e88581f70983d0cbcdb32ee
+    event_digest: 003af4430f4ef30a290df7fb5326461c9ea8a0498502ef4a1315a2ca1c9bd471
+- schema_version: '0.1'
+  event_id: 48ed20e2-60c1-4cdc-8f1b-72ef30c73744
+  mutation_id: 2fb58bb5-2f3a-48d8-89b1-287b32949e54
+  loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+  sequence: 79
+  event_type: core.interruption_entered
+  occurred_at: '2026-08-23T14:46:28.434347+08:00'
+  recorded_at: '2026-08-23T14:46:28.434347+08:00'
+  actor:
+    actor_id: inst:01M02M6X3Q8YWJXHY52K3V5AR2
+    role: pos:veilfront-xiangqi-siege:root:project-manager
+    authority_id: AUTH-VEILFRONT-PROJECT-MANAGER
+  causality:
+    correlation_id: abde6c32-4837-440b-b229-4b028c54207f
+    causation_event_id: 49c660fe-5952-4929-a928-0935b42d0003
+    request_id: approval:veilfront-xiangqi-siege:gate-2:36efd026dd33
+  concurrency:
+    expected_record_revision: 78
+    resulting_record_revision: 79
+  binding_snapshot:
+    contract_digest: 9ea1fbab25b1a560b83896194099bd9b0131552d7321223622161615c1a2a205
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    transition_id: TR-OPERATIONAL-INTERRUPTED
+    from_state: review
+    to_state: waiting_approval
+    iteration:
+      before: 3
+      after: 3
+    interruption:
+      interruption_id: 34c8d0f7-b8a4-43cc-9c6d-775badc82679
+      current_interruption_state: waiting_approval
+      resume_state: review
+      first_entered_from_state: review
+      first_entered_at: '2026-08-23T14:46:28.434347+08:00'
+      current_reason:
+        reason_code: gate_2_project_owner_decision_required
+        description: Contract v3 自动检查和独立专业审查已满足；等待项目所有者测试 RC4 EXE 并对精确决策摘要批准、修订或拒绝。
+        responsible_role: project-owner
+        evidence_refs:
+        - game-pipeline/loops/evidence/GATE-2-v3-decision-package.md
+        - evidence/gate2/gate2-v3-independent-qa-rc4.md
+        - builds/windows/Veilfront_Xiangqi_Siege_Gate2_v3_419e2ce.exe
+      entry_snapshot:
+        contract_id: LOOP-CTR-FORMAL-FOUNDATION-GATE2-001
+        contract_version: 3
+        contract_digest: 9ea1fbab25b1a560b83896194099bd9b0131552d7321223622161615c1a2a205
+        input_set_digest: d76aab5b51998da90349c84e344d4a41cc32a21684b83fd94fddd5c42621704a
+        dependency_set_digest: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+        authority_set_digest: 59164b09989f70da30e8f2655c6fb4372905534bac2804bb9775bf7738859904
+        budget_usage_digest: 8cd26cff9518b616c7f9b84314d2adc987ca26722d7778dcd5897b1a44df6a69
+      latest_revalidation: null
+  evidence_refs:
+  - game-pipeline/loops/evidence/GATE-2-v3-decision-package.md
+  - git:veilfront-xiangqi-siege:7404d78#evidence/gate2/gate2-v3-independent-qa-rc4.md
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: 003af4430f4ef30a290df7fb5326461c9ea8a0498502ef4a1315a2ca1c9bd471
+    event_digest: a704bd14ed6c47f12c6aed74db9b652e1f1f5b658ab3575a52b79a38eb4a2603
