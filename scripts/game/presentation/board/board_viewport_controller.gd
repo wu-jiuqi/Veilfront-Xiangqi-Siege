@@ -1,6 +1,7 @@
 extends SubViewportContainer
 
 signal point_activated(cell: Vector2i)
+signal point_double_activated(cell: Vector2i)
 signal cancel_or_marker_requested(cell: Vector2i)
 signal hovered_cell_changed(cell: Vector2i)
 signal overview_changed(state: Dictionary)
@@ -45,6 +46,7 @@ var _previous_player_view: Dictionary = {}
 func _ready() -> void:
 	resized.connect(_sync_layout)
 	_board_world.point_activated.connect(_on_point_activated)
+	_board_world.point_double_activated.connect(_on_point_double_activated)
 	_board_world.cancel_or_marker_requested.connect(_on_cancel_or_marker_requested)
 	_board_world.zoom_requested.connect(_apply_zoom_step)
 	_board_world.pan_requested.connect(_on_pan_requested)
@@ -144,6 +146,10 @@ func set_interaction(selected_cell: Vector2i, action_previews: Array) -> void:
 
 func clear_interaction() -> void:
 	_board_world.clear_interaction()
+
+
+func set_selected_point(cell: Vector2i) -> void:
+	_board_world.set_selected_point(cell)
 
 
 func set_piece_visual_hit_enabled(enabled: bool) -> void:
@@ -362,6 +368,10 @@ func _on_point_activated(cell: Vector2i) -> void:
 	point_activated.emit(cell)
 
 
+func _on_point_double_activated(cell: Vector2i) -> void:
+	point_double_activated.emit(cell)
+
+
 func _on_cancel_or_marker_requested(cell: Vector2i) -> void:
 	cancel_or_marker_requested.emit(cell)
 
@@ -413,7 +423,10 @@ func _on_screen_input_surface_gui_input(event: InputEvent) -> void:
 	if not BoardCoordinateMapper.is_authority_cell_valid(cell):
 		return
 	if mouse_event.button_index == MOUSE_BUTTON_LEFT:
-		point_activated.emit(cell)
+		if mouse_event.double_click:
+			point_double_activated.emit(cell)
+		else:
+			point_activated.emit(cell)
 		_screen_input_surface.accept_event()
 	elif mouse_event.button_index == MOUSE_BUTTON_RIGHT:
 		cancel_or_marker_requested.emit(cell)

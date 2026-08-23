@@ -151,6 +151,11 @@ func _run() -> void:
 			"pointer click on a formal piece did not select it"
 		)
 		_expect(
+			match_screen.get_board_render_snapshot().get("selected_point", Vector2i.ZERO) \
+				== source_cell,
+			"single click did not expose the source point selection indicator"
+		)
+		_expect(
 			not bool(match_screen.get_board_render_snapshot().get(
 				"piece_visual_hit_enabled", true
 			)),
@@ -163,6 +168,18 @@ func _run() -> void:
 			"pointer click on a legal target did not enter confirmation"
 		)
 		_expect(
+			match_screen.get_board_render_snapshot().get("selected_point", Vector2i.ZERO) \
+				== target_cell,
+			"single click did not move the point selection indicator to the target"
+		)
+		_expect(
+			"双击" in str(match_screen.get_hud_snapshot().get("objective", {}).get("message", "")),
+			"selected target did not explain the double-click movement shortcut"
+		)
+		if capture_screenshot:
+			await process_frame
+			_capture_screenshot(viewport, "formal-board-selected-point-1280x720.png")
+		_expect(
 			match_screen.get_node_or_null("ActionConfirmationPanel") == null,
 			"removed central confirmation UI still exists"
 		)
@@ -170,7 +187,7 @@ func _run() -> void:
 		_expect(move_button != null, "bottom move button is missing")
 		if move_button != null:
 			_expect(move_button.text == "确认移动", "move button did not expose its confirm state")
-			move_button.pressed.emit()
+		_double_click_board_cell(viewport, input_surface, board_viewport, target_cell)
 		await process_frame
 		await process_frame
 		_expect(
@@ -222,6 +239,22 @@ func _click_board_cell(
 	var event := InputEventMouseButton.new()
 	event.button_index = MOUSE_BUTTON_LEFT
 	event.pressed = true
+	event.position = input_surface.global_position \
+		+ board_viewport.get_container_position_for_authority_cell(cell)
+	event.global_position = event.position
+	viewport.push_input(event, true)
+
+
+func _double_click_board_cell(
+	viewport: SubViewport,
+	input_surface: Control,
+	board_viewport: SubViewportContainer,
+	cell: Vector2i
+) -> void:
+	var event := InputEventMouseButton.new()
+	event.button_index = MOUSE_BUTTON_LEFT
+	event.pressed = true
+	event.double_click = true
 	event.position = input_surface.global_position \
 		+ board_viewport.get_container_position_for_authority_cell(cell)
 	event.global_position = event.position

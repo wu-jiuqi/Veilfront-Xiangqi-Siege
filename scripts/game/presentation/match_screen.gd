@@ -156,6 +156,8 @@ var _session_navigation_enabled: bool = false
 var _level_guide_layout_enabled: bool = false
 var _submission_pending: bool = false
 var _action_button_default_texts: Dictionary[String, String] = {}
+var _selected_point := Vector2i.ZERO
+var _double_click_confirm_preview_id: String = ""
 
 
 func _ready() -> void:
@@ -164,6 +166,7 @@ func _ready() -> void:
 	get_viewport().size_changed.connect(_on_viewport_size_changed)
 	resized.connect(_on_match_screen_resized)
 	_board_viewport.point_activated.connect(handle_board_point)
+	_board_viewport.point_double_activated.connect(handle_board_point_double)
 	_board_viewport.cancel_or_marker_requested.connect(_on_cancel_or_marker_requested)
 	_board_viewport.hovered_cell_changed.connect(_on_board_hovered_cell_changed)
 	_board_viewport.overview_changed.connect(_tactical_minimap.set_overview_state)
@@ -550,7 +553,16 @@ func render_prepared_action(preview_id: String) -> void:
 	_inflight_prepare_generation = 0
 	_inflight_prepare_preview_id = ""
 	set_local_interaction_state(CONFIRMING, _selected_piece_id, preview_id)
-	_message_value.text = _preview_message_key(preview_id)
+	var target := _target_cell_for_preview(preview_id)
+	if _action_mode == "move" and BoardCoordinateMapper.is_authority_cell_valid(target):
+		_message_value.text = "已选中交点（%d,%d）；双击该点立即移动，或点击“确认移动”。" % [
+			target.x, target.y,
+		]
+	else:
+		_message_value.text = _preview_message_key(preview_id)
+	if preview_id == _double_click_confirm_preview_id:
+		_double_click_confirm_preview_id = ""
+		call_deferred(&"confirm_prepared_action")
 
 
 func render_action_previews(selected_cell: Vector2i, previews: Array) -> void:
@@ -565,6 +577,7 @@ func request_action_previews(piece_id: String, action_type: String) -> void:
 
 func handle_board_point(cell: Vector2i) -> void:
 	board_point_activated.emit(cell)
+	_select_board_point(cell)
 	var tutorial_type := str(_tutorial_step.get("type", ""))
 	if tutorial_type in ["observe", "quiz", "annotate"]:
 		_reject_tutorial_input("当前步骤不接受棋盘行动，请按教学面板操作。")
@@ -575,7 +588,9 @@ func handle_board_point(cell: Vector2i) -> void:
 	var own_piece: Dictionary = _owned_piece_at(cell)
 	if _selected_piece_id.is_empty():
 		if own_piece.is_empty():
-			_message_value.text = "请先选择一枚己方棋子。"
+			_message_value.text = "已选中交点（%d,%d）。请先单击一枚己方棋子。" % [
+				cell.x, cell.y,
+			]
 			return
 		if not _tutorial_actor_matches(str(own_piece.get("id", ""))):
 			_reject_tutorial_input("当前目标需要使用另一枚棋子。")
@@ -598,14 +613,32 @@ func handle_board_point(cell: Vector2i) -> void:
 		return
 	var preview: Dictionary = _preview_for_target(cell)
 	if preview.is_empty():
-		_message_value.text = "该交点不是当前模式下可提交的公开预览。"
+		_message_value.text = "已选中交点（%d,%d），但它不是当前模式下的合法落点。" % [
+			cell.x, cell.y,
+		]
 		return
 	prepare_action(str(preview.get("preview_id", "")))
+
+
+func handle_board_point_double(cell: Vector2i) -> void:
+	if cell != _selected_point:
+		handle_board_point(cell)
+		return
+	if _action_mode != "move" or not _prepared_preview_targets_cell(cell):
+		handle_board_point(cell)
+		return
+	if _interaction_state == CONFIRMING:
+		_message_value.text = "正在移动至交点（%d,%d）…" % [cell.x, cell.y]
+		confirm_prepared_action()
+	elif _interaction_state == PREVIEW_SELECTED:
+		_double_click_confirm_preview_id = _prepared_preview_id
+		_message_value.text = "已双击交点（%d,%d），正在确认移动…" % [cell.x, cell.y]
 
 
 func prepare_action(preview_id: String) -> void:
 	if not _has_preview(preview_id):
 		return
+	_double_click_confirm_preview_id = ""
 	_prepare_generation += 1
 	_inflight_prepare_generation = _prepare_generation
 	_inflight_prepare_preview_id = preview_id
@@ -618,6 +651,7 @@ func confirm_prepared_action() -> void:
 	if _interaction_state != CONFIRMING or _prepared_preview_id.is_empty():
 		return
 	var preview_id: String = _prepared_preview_id
+	_double_click_confirm_preview_id = ""
 	_clear_local_interaction()
 	_submission_pending = true
 	_update_status_controls()
@@ -751,6 +785,7 @@ func get_presentation_snapshot() -> Dictionary:
 		"prepared_preview_id": _prepared_preview_id,
 		"interaction_state": _interaction_state,
 		"selected_piece_id": _selected_piece_id,
+		"selected_point": _selected_point,
 		"action_mode": _action_mode,
 		"action_index": int(_current_view.get("action_index", 0)),
 		"submission_pending": _submission_pending,
@@ -824,6 +859,8 @@ func _clear_local_interaction() -> void:
 	_prepared_preview_id = ""
 	_inflight_prepare_generation = 0
 	_inflight_prepare_preview_id = ""
+	_selected_point = Vector2i.ZERO
+	_double_click_confirm_preview_id = ""
 	_board_viewport.clear_interaction()
 	if is_instance_valid(_piece_info_drawer):
 		_piece_info_drawer.hide_drawer()
@@ -963,7 +1000,7 @@ func _select_piece(piece: Dictionary) -> void:
 	or (_action_mode == "resurrect" and piece_type not in ["advisor", "guard"]):
 		_action_mode = "move"
 	_interaction_state = SELECTED
-	_message_value.text = "已选择：%s；请选择目标交点。" % _piece_display_name(piece_type)
+	_message_value.text = "已选择：%s；单击交点可预览，双击同一合法交点可立即移动。" % _piece_display_name(piece_type)
 	request_action_previews(_selected_piece_id, _action_mode)
 	if _action_mode == "resurrect":
 		_prepare_empty_target_preview()
@@ -984,6 +1021,27 @@ func _preview_for_target(cell: Vector2i) -> Dictionary:
 	return {}
 
 
+func _select_board_point(cell: Vector2i) -> void:
+	_selected_point = cell if BoardCoordinateMapper.is_authority_cell_valid(cell) \
+		else Vector2i.ZERO
+	_board_viewport.set_selected_point(_selected_point)
+
+
+func _target_cell_for_preview(preview_id: String) -> Vector2i:
+	for preview_value: Variant in _current_previews:
+		if preview_value is Dictionary \
+		and str(preview_value.get("preview_id", "")) == preview_id:
+			return BoardCoordinateMapper.coordinate_from_variant(
+				preview_value.get("target_cell", [])
+			)
+	return Vector2i.ZERO
+
+
+func _prepared_preview_targets_cell(cell: Vector2i) -> bool:
+	return not _prepared_preview_id.is_empty() \
+		and _target_cell_for_preview(_prepared_preview_id) == cell
+
+
 func _set_action_mode(mode: String) -> void:
 	var expected_mode := _tutorial_expected_action_mode()
 	if not expected_mode.is_empty() and mode != expected_mode:
@@ -993,9 +1051,11 @@ func _set_action_mode(mode: String) -> void:
 		return
 	_action_mode = mode
 	_prepared_preview_id = ""
+	_double_click_confirm_preview_id = ""
 	_board_viewport.clear_interaction()
+	_select_board_point(_piece_cell_by_id(_selected_piece_id))
 	_message_value.text = {
-		"move": "普通移动：选择己方棋子和目标交点。",
+		"move": "普通移动：单击己方棋子后选点，双击同一合法交点可立即移动。",
 		"bombard": "区域炮击：先选择大本营内仍有弹药的己方炮。",
 		"resurrect": "献祭复活：选择一枚在场己方士。",
 	}.get(mode, "请选择行动。")

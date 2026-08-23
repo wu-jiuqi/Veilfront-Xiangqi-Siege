@@ -1,6 +1,7 @@
 extends Node2D
 
 signal point_activated(cell: Vector2i)
+signal point_double_activated(cell: Vector2i)
 signal cancel_or_marker_requested(cell: Vector2i)
 signal zoom_requested(step: float)
 signal pan_requested(amount: float)
@@ -30,6 +31,7 @@ var _current_view: Dictionary = {}
 
 func _ready() -> void:
 	_input_surface.point_activated.connect(_on_point_activated)
+	_input_surface.point_double_activated.connect(_on_point_double_activated)
 	_input_surface.cancel_or_marker_requested.connect(_on_cancel_or_marker_requested)
 	_input_surface.zoom_requested.connect(_on_zoom_requested)
 	_input_surface.pan_requested.connect(_on_pan_requested)
@@ -100,6 +102,10 @@ func clear_interaction() -> void:
 	_interaction_overlay.clear()
 
 
+func set_selected_point(cell: Vector2i) -> void:
+	_interaction_overlay.set_selected_point(cell)
+
+
 func clear_session_view() -> void:
 	_current_view.clear()
 	_viewer_side = "red"
@@ -130,6 +136,7 @@ func get_render_snapshot() -> Dictionary:
 		"marker_asset_count": _marker_overlay.get_marker_asset_count(),
 		"tactical_group_count": _tactical_overlay.get_group_count(),
 		"interaction_preview_count": _interaction_overlay.get_preview_count(),
+		"selected_point": _interaction_overlay.get_selected_point(),
 		"tutorial_target": _interaction_overlay.get_tutorial_target(),
 		"horizontal_grid_line_count": _grid_renderer.get_horizontal_line_count(),
 		"flag_cell_fogged": _fog_overlay.is_cell_fogged(flag_cell) \
@@ -229,6 +236,10 @@ func _configure_map_background() -> void:
 
 func _on_point_activated(cell: Vector2i) -> void:
 	point_activated.emit(cell)
+
+
+func _on_point_double_activated(cell: Vector2i) -> void:
+	point_double_activated.emit(cell)
 
 
 func _on_cancel_or_marker_requested(cell: Vector2i) -> void:

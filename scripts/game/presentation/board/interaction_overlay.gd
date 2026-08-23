@@ -6,6 +6,7 @@ var _side: String = "red"
 var _cell_size := Vector2(128.0, 128.0)
 var _previews: Array = []
 var _selected_cell := Vector2i.ZERO
+var _selected_point := Vector2i.ZERO
 var _tutorial_target := Vector2i.ZERO
 
 
@@ -26,7 +27,13 @@ func render_selection(
 
 func clear() -> void:
 	_selected_cell = Vector2i.ZERO
+	_selected_point = Vector2i.ZERO
 	_previews.clear()
+	queue_redraw()
+
+
+func set_selected_point(cell: Vector2i) -> void:
+	_selected_point = cell if Mapper.is_authority_cell_valid(cell) else Vector2i.ZERO
 	queue_redraw()
 
 
@@ -37,6 +44,10 @@ func set_tutorial_target(cell: Vector2i) -> void:
 
 func get_preview_count() -> int:
 	return _previews.size()
+
+
+func get_selected_point() -> Vector2i:
+	return _selected_point
 
 
 func get_tutorial_target() -> Vector2i:
@@ -61,7 +72,9 @@ func _draw() -> void:
 			5.0,
 			true
 		)
-	if Mapper.is_authority_cell_valid(_selected_cell):
+	if Mapper.is_authority_cell_valid(_selected_point):
+		_draw_selected_point(_selected_point)
+	if Mapper.is_authority_cell_valid(_selected_cell) and _selected_cell != _selected_point:
 		var selected_center: Vector2 = Mapper.authority_to_world(_selected_cell, _side, _cell_size)
 		draw_arc(
 			selected_center,
@@ -81,6 +94,20 @@ func _draw() -> void:
 		var center: Vector2 = Mapper.authority_to_world(target, _side, _cell_size)
 		draw_circle(center, minf(_cell_size.x, _cell_size.y) * 0.12, color)
 		draw_arc(center, minf(_cell_size.x, _cell_size.y) * 0.24, 0.0, TAU, 28, color, 5.0, true)
+
+
+func _draw_selected_point(cell: Vector2i) -> void:
+	var center: Vector2 = Mapper.authority_to_world(cell, _side, _cell_size)
+	var unit: float = minf(_cell_size.x, _cell_size.y)
+	draw_circle(center, unit * 0.29, Color(1.0, 0.58, 0.08, 0.3))
+	draw_arc(
+		center, unit * 0.39, 0.0, TAU, 40,
+		Color(1.0, 0.86, 0.28, 1.0), 10.0, true
+	)
+	draw_arc(
+		center, unit * 0.27, 0.0, TAU, 36,
+		Color(1.0, 0.97, 0.78, 0.96), 4.0, true
+	)
 
 
 func _classification_color(classification: String) -> Color:

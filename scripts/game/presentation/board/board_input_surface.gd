@@ -1,6 +1,7 @@
 extends Control
 
 signal point_activated(cell: Vector2i)
+signal point_double_activated(cell: Vector2i)
 signal cancel_or_marker_requested(cell: Vector2i)
 signal zoom_requested(step: float)
 signal pan_requested(amount: float)
@@ -50,7 +51,10 @@ func _gui_input(event: InputEvent) -> void:
 	if not Mapper.is_authority_cell_valid(cell):
 		return
 	if mouse_event.button_index == MOUSE_BUTTON_LEFT:
-		point_activated.emit(cell)
+		if mouse_event.double_click:
+			point_double_activated.emit(cell)
+		else:
+			point_activated.emit(cell)
 		accept_event()
 	elif mouse_event.button_index == MOUSE_BUTTON_RIGHT:
 		cancel_or_marker_requested.emit(cell)
