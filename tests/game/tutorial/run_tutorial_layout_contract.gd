@@ -69,6 +69,7 @@ func _run() -> void:
 	})
 	await process_frame
 	var quiz_layout: Dictionary = overlay.get_layout_snapshot()
+	_check_decision_button_styles(overlay)
 	_expect(
 		_rect_inside(quiz_layout.get("decision_rect", Rect2()), level.size),
 		"quiz decision panel exceeds the screen"
@@ -101,6 +102,26 @@ func _check_readability(overlay: Control) -> void:
 		if button != null:
 			_expect(button.custom_minimum_size.y >= 44.0, "level decision button is below the 44px target: %s" % button_name)
 			_expect(button.get_theme_font_size("font_size") >= 16, "level decision button text is below 16px: %s" % button_name)
+
+
+func _check_decision_button_styles(overlay: Control) -> void:
+	for button_name: String in [
+		"Option0", "Option1", "Option2", "ContinueButton",
+		"NextChapterButton", "StayButton", "RetryButton", "BackToLevelsButton",
+	]:
+		var button := overlay.find_child(button_name, true, false) as Button
+		_expect(button != null, "level decision button is missing: %s" % button_name)
+		if button == null:
+			continue
+		for style_name: StringName in [&"normal", &"hover", &"pressed", &"disabled", &"focus"]:
+			_expect(
+				button.has_theme_stylebox_override(style_name),
+				"%s still relies on the global Button skin for %s" % [button_name, style_name]
+			)
+			_expect(
+				button.get_theme_stylebox(style_name) is StyleBoxFlat,
+				"%s resolved a non-local textured Button style for %s" % [button_name, style_name]
+			)
 
 
 func _rect_inside(rect: Rect2, bounds: Vector2) -> bool:

@@ -4,9 +4,9 @@ const THEME_PATH := "res://resources/game/ui/themes/terracotta_ui_theme.tres"
 const VECTOR_ROOT := "res://assets/art/ui/terracotta_metal"
 const HUD_V2_ROOT := "res://assets/art/ui/terracotta_hud_v2"
 const PANEL_TEXTURE_PATH := HUD_V2_ROOT + "/hud_panel_9slice_v1.png"
-const BUTTON_TEXTURE_PATH := HUD_V2_ROOT + "/action_button_states_v1.png"
 const MINIMAP_TEXTURE_PATH := HUD_V2_ROOT + "/minimap_frame_v1.png"
 const TURN_STATUS_TEXTURE_PATH := HUD_V2_ROOT + "/turn_status_bar_v1.png"
+const MATCH_THEME_PATH := "res://resources/game/ui/themes/match_hud_v3_theme.tres"
 
 const BUTTON_VARIATIONS := [
 	&"PrimaryButton", &"SecondaryButton", &"DangerButton",
@@ -28,12 +28,10 @@ func _init() -> void:
 	var theme := load(THEME_PATH) as Theme
 	_assert(theme != null, "兵马俑 Theme 无法加载")
 	_assert(theme.default_font != null, "Theme 未接入统一中文字体")
-	_assert(theme.get_stylebox(&"normal", &"Button") is StyleBoxTexture, "普通按钮未使用金属贴图")
-	_assert(theme.get_stylebox(&"hover", &"Button") is StyleBoxTexture, "悬停按钮未使用金属贴图")
-	_assert(theme.get_stylebox(&"pressed", &"Button") is StyleBoxTexture, "按下按钮未使用金属贴图")
-	_assert(theme.get_stylebox(&"disabled", &"Button") is StyleBoxTexture, "禁用按钮未使用金属贴图")
-	_assert(theme.get_stylebox(&"focus", &"Button") is StyleBoxFlat, "焦点框未使用轻量金线样式")
-	_assert(_style_texture_path(theme, &"normal", &"Button") == BUTTON_TEXTURE_PATH, "按钮仍引用旧废案图集")
+	_assert_no_global_button_skin(theme, THEME_PATH)
+	var match_theme := load(MATCH_THEME_PATH) as Theme
+	_assert(match_theme != null, "正式战局 Theme 无法加载")
+	_assert_no_global_button_skin(match_theme, MATCH_THEME_PATH)
 	_assert(_style_texture_path(theme, &"panel", &"Panel") == PANEL_TEXTURE_PATH, "面板仍引用旧废案贴图")
 	_assert(_style_texture_path(theme, &"panel", &"MinimapFrame") == MINIMAP_TEXTURE_PATH, "小地图框未接入 V2")
 	_assert(_style_texture_path(theme, &"panel", &"TurnStatusPanel") == TURN_STATUS_TEXTURE_PATH, "回合状态条未接入 V2")
@@ -50,8 +48,26 @@ func _init() -> void:
 		print("TERRACOTTA_UI_THEME_CONTRACT_FAIL failures=%d" % _failures.size())
 		quit(1)
 		return
-	print("TERRACOTTA_UI_THEME_CONTRACT_PASS buttons=6 panels=8 frames=8 vectors=49 hud_v2=9")
+	print("TERRACOTTA_UI_THEME_CONTRACT_PASS global_button_skin=false variations=6 panels=8 frames=8 vectors=49 hud_v2=9")
 	quit(0)
+
+
+func _assert_no_global_button_skin(theme: Theme, theme_path: String) -> void:
+	if theme == null:
+		return
+	for style_name: StringName in [&"normal", &"hover", &"pressed", &"disabled", &"focus"]:
+		_assert(
+			not theme.has_stylebox(style_name, &"Button"),
+			"基础 Button 不应从根 Theme 继承样式：%s %s" % [theme_path, style_name]
+		)
+	for color_name: StringName in [
+		&"font_color", &"font_hover_color", &"font_pressed_color",
+		&"font_disabled_color", &"font_focus_color",
+	]:
+		_assert(
+			not theme.has_color(color_name, &"Button"),
+			"基础 Button 不应从根 Theme 继承颜色：%s %s" % [theme_path, color_name]
+		)
 
 
 func _style_texture_path(theme: Theme, style_name: StringName, type_name: StringName) -> String:

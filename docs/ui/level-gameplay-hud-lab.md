@@ -25,6 +25,7 @@
 - `MatchScreen` 改为实例化正式 `online_match_screen.tscn / MatchHudV3`；`RightRail` 始终保留 `284px` 布局占位，只隐藏联机战局内容。
 - `LevelGuideOverlay` 把 `TutorialPresentationTrack` 的目标、当前步骤、前后步骤、提示级别和反馈映射到 `LevelGuidePanel`；观察步骤、规则问答、完成和失败使用预置的中央决策面板。
 - 右栏确认区被关卡指引取代后，正式关卡使用行动按钮二次确认：`移动 → 确认移动`、`轰炸 → 确认轰炸`、`复活 → 确认复活`；右键继续承担取消职责。
+- `terracotta_ui_theme / match_hud_v3_theme` 不再为基础 `Button` 自动注入贴图、颜色或字号；完成、失败、问答和继续类按钮在 `LevelGuideOverlay` 内预置完整的五态 `StyleBoxFlat`，不回退到旧全局金属按钮皮肤。
 - 本次正式逻辑验收范围为 T0–T10。按项目所有者决定，C1–C3 仍保留现有测试入口，不纳入本次通过结论。
 
 ## 测试交互
