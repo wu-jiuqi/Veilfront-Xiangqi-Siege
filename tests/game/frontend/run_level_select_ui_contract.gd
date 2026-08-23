@@ -26,6 +26,16 @@ func _init() -> void:
 	assert(level_select.get_node("%DetailCode").text == "T0")
 	assert(level_select.get_node("%EnterButton").text == "进入关卡")
 	assert(level_select.get_node("%EnterButton").size.y >= 44.0)
+	var detail_backdrop := level_select.get_node("%DesignCanvas").get_node("DetailTextBackdrop") as Panel
+	var detail_summary := level_select.get_node("%DetailSummary") as Label
+	var detail_objective := level_select.get_node("%DetailObjective") as Label
+	assert(detail_backdrop != null, "level details must provide a dedicated text backdrop")
+	for detail_label: Label in [detail_summary, detail_objective]:
+		assert(detail_label.get_theme_font_size("font_size") >= 17, "%s text is still too small" % detail_label.name)
+		assert(detail_label.get_theme_font("font") is FontVariation, "%s does not use the semibold font" % detail_label.name)
+		assert((detail_label.get_theme_font("font") as FontVariation).variation_embolden > 0.0)
+		assert(detail_label.autowrap_mode == TextServer.AUTOWRAP_WORD_SMART)
+		assert(detail_label.clip_text)
 	assert(level_select.get_node("%TutorialGrid").get_child(0).position == Vector2(102, 24))
 	assert(level_select.get_node("%TutorialGrid").get_child(10).position == Vector2(445, 397))
 	var first_card := level_select.get_node("%TutorialGrid").get_child(0) as LevelCard
