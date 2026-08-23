@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://128pt5o3gpxk" path="res://scripts/game/frontend/level_select.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://7b8rhh33lgqy" path="res://assets/art/ui/level_select/level_select_empty_background_v2.png" id="2_background"]
-[ext_resource type="Theme" path="res://resources/game/ui/themes/level_select_master_v2_theme.tres" id="3_theme"]
+[ext_resource type="Theme" uid="uid://cnody7ltbktl0" path="res://resources/game/ui/themes/level_select_master_v2_theme.tres" id="3_theme"]
 [ext_resource type="Texture2D" uid="uid://ckr08sw3potmf" path="res://assets/art/ui/level_select/components/progress_ring_v2.png" id="4_progress"]
 [ext_resource type="Texture2D" uid="uid://kb0iu0wydfuq" path="res://assets/art/ui/level_select/components/reward_slot_v2.png" id="5_reward"]
 
@@ -241,10 +241,10 @@ autowrap_mode = 2
 
 [node name="RewardSlot" type="TextureRect" parent="DesignCanvas" unique_id=1043687251]
 layout_mode = 0
-offset_left = 984.0
-offset_top = 457.0
-offset_right = 1050.0
-offset_bottom = 523.0
+offset_left = 985.0
+offset_top = 464.0
+offset_right = 1051.0
+offset_bottom = 530.0
 mouse_filter = 2
 texture = ExtResource("5_reward")
 expand_mode = 1
@@ -253,10 +253,10 @@ stretch_mode = 5
 [node name="DetailStatus" type="Label" parent="DesignCanvas" unique_id=807665748]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 1063.0
-offset_top = 467.0
-offset_right = 1244.0
-offset_bottom = 514.0
+offset_left = 1068.0
+offset_top = 462.0
+offset_right = 1249.0
+offset_bottom = 509.0
 theme_override_colors/font_color = Color(0.73, 0.64, 0.45, 1)
 theme_override_font_sizes/font_size = 13
 text = "军令状态：测试开放"
@@ -275,13 +275,13 @@ text = "进入关卡"
 
 [node name="HelpText" type="Label" parent="DesignCanvas" unique_id=1596107591]
 layout_mode = 0
-offset_left = 23.0
-offset_top = 675.0
-offset_right = 920.0
-offset_bottom = 710.0
+offset_left = 32.0
+offset_top = 667.0
+offset_right = 929.0
+offset_bottom = 702.0
 theme_override_colors/font_color = Color(0.75, 0.68, 0.56, 1)
 theme_override_font_sizes/font_size = 14
-text = "W  S  切换分类     ↑  ↓  切换关卡     Enter  进入关卡     Esc  返回"
+text = "W       S           切换分类        ↑      ↓        切换关卡               Enter                进入关卡             Esc            返回"
 vertical_alignment = 1
 
 [node name="StatusLabel" type="Label" parent="DesignCanvas" unique_id=1081341565]
