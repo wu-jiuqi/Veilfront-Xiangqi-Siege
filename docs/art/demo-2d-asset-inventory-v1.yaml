@@ -2,46 +2,224 @@ asset_inventory:
   schema_version: veilfront-demo-2d-art-inventory/v1
   project_id: veilfront-xiangqi-siege
   direction_ref: docs/art/veilfront-2d-current-direction-v1.md
-  status: approved_input_bound_to_active_gate2_v3
+  contract_ref: game-pipeline/loops/contracts/loop-contract-formal-foundation-gate2-v3.yaml
+  contract_id: LOOP-CTR-FORMAL-FOUNDATION-GATE2-001
+  contract_version: 3
+  deliverable_id: DELIVERABLE-ART-2D-001
+  status: gate2_v3_visual_handoff_ready_for_independent_review
   production_gate: revised-GATE-2
   current_pipeline: godot-2d
+  fact_checked_at: '2026-08-23'
+  status_legend:
+    integrated_baseline_sample: 已绑定正式二维场景并具备当前专项自检；只证明样片，不代表最终资产。
+    integrated_partial_sample: 已有可运行局部实现，但列明状态或覆盖尚未完整。
+    resource_sample_not_active: 仓库中保留资源或样片，但不是当前正式运行时绑定。
+    deferred_post_gate2: Contract v3明确排除，必须在GATE-2后另立获批生产Contract。
+    preserved_late_optional: 保留研究资产，不进入当前二维GATE-2验收。
+
   categories:
   - category_id: board
     items:
-    - {id: ART2D-BOARD-BASE, name: 24×9二维棋盘底图, quantity: 1, phase: baseline_sample, status: planned}
-    - {id: ART2D-BOARD-GRID, name: 精确9路24线交点网格, quantity: 1, phase: baseline_sample, status: planned}
-    - {id: ART2D-BOARD-ZONES, name: 大本营缓冲区战区二维区域层, quantity: 3, phase: baseline_sample, status: planned}
+    - id: ART2D-BOARD-BASE
+      name: 24×9二维棋盘底图
+      quantity: 1
+      phase: baseline_sample
+      status: integrated_baseline_sample
+      runtime_paths:
+      - assets/art/boards/terracotta_warriors/terracotta_battlefield_board_bg_gridless_v7_low_noise.png
+      - resources/game/content/boards/terracotta_battlefield_v3_map_option.tres
+      - scenes/game/match/board/board_world.tscn
+      evidence: [tests/game/presentation/run_formal_board_art_input_contract.gd]
+      notes: 当前正式地图绑定v7低噪点底图；专项脚本存在，本次并发执行未形成可靠退出证据，须由QA在clean worktree重跑。
+    - id: ART2D-BOARD-GRID
+      name: 精确9路24线交点网格
+      quantity: 1
+      phase: baseline_sample
+      status: integrated_baseline_sample
+      runtime_paths: [scripts/game/presentation/board/grid_renderer.gd, scenes/game/match/board/board_world.tscn]
+      evidence: [tests/game/presentation/run_board_layout_contract.gd]
+      notes: 程序化绘制，不以独立栅格贴图计数；权威棋盘尺寸为9×24交点。
+    - id: ART2D-BOARD-ZONES
+      name: 大本营、缓冲区、战区二维区域层
+      quantity: 3
+      phase: baseline_sample
+      status: integrated_baseline_sample
+      runtime_paths: [resources/game/content/boards/ancient_battlefield_board_theme.tres, scenes/game/match/board/board_world.tscn]
+      notes: 使用主题色和预置TerrainLayer/ZoneTintLayer/DecalLayer表达；不是3张独立最终贴图。
+
   - category_id: pieces
     items:
-    - {id: ART2D-PIECE-SET, name: 红黑七兵种二维棋子集, quantity: 14, phase: baseline_sample, status: planned}
-    - {id: ART2D-PIECE-STATES, name: 选中隐身阵亡与行动状态, quantity: 1, phase: baseline_sample, status: planned}
+    - id: ART2D-PIECE-SET
+      name: 红黑七兵种二维圆形棋子集
+      quantity: 14
+      phase: baseline_sample
+      status: integrated_baseline_sample
+      runtime_paths: [assets/art/pieces/round_tokens_v1/, scenes/game/match/board/terracotta_piece_view.tscn, resources/game/content/boards/ancient_battlefield_board_theme.tres]
+      evidence:
+      - tests/game/presentation/run_round_token_asset_contract.gd
+      - evidence/gate2/art-samples/round-tokens-v1/round-token-board-integration-v1.png
+      - evidence/gate2/art-samples/round-tokens-v1/round-tokens-64px-contact-sheet.png
+      verification: ROUND_TOKEN_ASSET_CONTRACT_PASS assets=14 small_size=64
+      notes: 当前正式棋盘绑定14枚round_tokens_v1，不是后期可选的三渲二兵马俑棋子。
+    - id: ART2D-PIECE-STATES
+      name: 棋子选择、移动、捕获与隐藏语义反馈
+      quantity: 1
+      phase: baseline_sample
+      status: integrated_partial_sample
+      runtime_paths: [scenes/game/match/board/terracotta_piece_view.tscn, scripts/game/presentation/board/terracotta_piece_view.gd, scripts/game/presentation/board/piece_renderer.gd]
+      evidence: [tests/game/presentation/run_piece_tween_animation_contract.gd]
+      notes: 已有选择光环和最小Tween反馈；未授权隐藏棋子不创建节点，阵亡棋子由状态移除。没有独立隐身/阵亡最终美术，完整动画在GATE-2后。
+
   - category_id: structures
     items:
-    - {id: ART2D-WALL-STATES, name: 红黑城墙二维状态, quantity: 8, phase: baseline_sample, status: planned}
-    - {id: ART2D-FLAG-STATES, name: 三旗发现占领状态, quantity: 5, phase: baseline_sample, status: planned}
+    - id: ART2D-WALL-STATES
+      name: 红黑城墙二维状态样片
+      quantity: 1
+      logical_variants: 6
+      phase: baseline_sample
+      status: integrated_baseline_sample
+      runtime_paths: [assets/art/structures/terracotta_warriors/walls/generated_v1/city_wall_v1.png, scenes/game/match/board/wall_view.tscn, scripts/game/presentation/board/wall_view.gd]
+      evidence: [tests/game/presentation/run_wall_art_contract.gd]
+      verification: WALL_ART_CONTRACT_PASS
+      notes: 运行时为1张纹理，经阵营色调和INTACT/BREACHED/REPAIRING组合成2阵营×3逻辑状态，不是8份独立资产。
+    - id: ART2D-WALL-RED-SOURCE-SAMPLES
+      name: 红方城墙三状态SVG历史样片
+      quantity: 3
+      phase: source_sample
+      status: resource_sample_not_active
+      source_paths:
+      - assets/art/structures/terracotta_warriors/walls/red_wall_intact.svg
+      - assets/art/structures/terracotta_warriors/walls/red_wall_breached.svg
+      - assets/art/structures/terracotta_warriors/walls/red_wall_repairing.svg
+      notes: 保留作生产参考；当前正式wall_view未直接绑定这3份SVG。
+    - id: ART2D-FLAG-STATES
+      name: 中立、红方占领、黑方占领圆旗
+      quantity: 3
+      phase: baseline_sample
+      status: integrated_baseline_sample
+      runtime_paths:
+      - assets/art/flags/terracotta_warriors/round_v1/neutral_flag_round_v1.png
+      - assets/art/flags/terracotta_warriors/round_v1/red_flag_round_v1.png
+      - assets/art/flags/terracotta_warriors/round_v1/black_flag_round_v1.png
+      - scenes/game/match/board/flag_view.tscn
+      evidence: [tests/game/presentation/run_flag_art_contract.gd]
+      verification: FLAG_ART_CONTRACT_PASS
+      notes: 数量按3种owner视觉状态计；旗位是否创建继续受PlayerView授权约束。
+
   - category_id: fog_feedback
     items:
-    - {id: ART2D-FOG, name: 观察者安全二维迷雾, quantity: 1, phase: baseline_sample, status: planned}
-    - {id: ART2D-HIGHLIGHTS, name: 选择落点攻击路径田字范围反馈, quantity: 1, phase: baseline_sample, status: planned}
-    - {id: ART2D-MARKERS, name: 圆叉方玩家私有标记, quantity: 3, phase: baseline_sample, status: planned}
+    - id: ART2D-FOG
+      name: 观察者安全二维迷雾样片
+      quantity: 1
+      phase: baseline_sample
+      status: integrated_baseline_sample
+      runtime_paths: [shaders/game/fog_of_war.gdshader, scenes/game/match/board/fog_overlay.tscn, scripts/game/presentation/board/fog_overlay.gd]
+      evidence: [tests/game/presentation/run_formal_fog_visual_contract.gd]
+      verification: FORMAL_FOG_VISUAL_CONTRACT_PASS mask=144x384 cells=216
+      notes: 只证明当前遮罩和视觉参数样片；最终雾效层次与低配质量档仍待后续生产与性能预算。
+    - id: ART2D-HIGHLIGHTS
+      name: 选择、教程目标、合法性与战术范围反馈
+      quantity: 2
+      phase: baseline_sample
+      status: integrated_partial_sample
+      runtime_paths: [scenes/game/match/board/interaction_overlay.tscn, scripts/game/presentation/board/interaction_overlay.gd, scenes/game/match/board/tactical_overlay.tscn, scripts/game/presentation/board/tactical_overlay.gd]
+      notes: 两套程序化overlay覆盖选择/教程目标、KNOWN_LEGAL/TENTATIVE/其他分类及战术范围；完整攻击命中、伤害、占领VFX不在当前交付。
+    - id: ART2D-CAPTURE-GHOST
+      name: 捕获残影最小反馈
+      quantity: 1
+      phase: baseline_sample
+      status: integrated_partial_sample
+      runtime_paths: [scenes/game/match/board/capture_ghost_view.tscn, scripts/game/presentation/board/capture_ghost_renderer.gd]
+      notes: 当前仅为最小反馈样片，不代表全量VFX。
+    - id: ART2D-MARKERS
+      name: 圆、叉、方玩家私有标记
+      quantity: 3
+      phase: baseline_sample
+      status: integrated_baseline_sample
+      runtime_paths: [assets/art/ui/terracotta_hud_v2/markers/marker_icon_atlas_v1.png, resources/game/content/boards/ancient_battlefield_board_theme.tres, scenes/game/match/board/marker_overlay.tscn]
+      notes: 图集切分为3个AtlasTexture；标记属于玩家私有表现，不得泄露隐藏状态。
+
   - category_id: ui
     items:
-    - {id: ART2D-HUD-SAMPLE, name: 对局HUD与行动确认局部样片, quantity: 1, phase: baseline_sample, status: planned}
-    - {id: ART2D-TUTORIAL-SAMPLE, name: 教学提示与章节导航局部样片, quantity: 1, phase: baseline_sample, status: planned}
+    - id: ART2D-HUD-SAMPLE
+      name: 对局HUD、行动区、单位信息与小地图局部样片
+      quantity: 1
+      phase: baseline_sample
+      status: integrated_partial_sample
+      runtime_paths: [scenes/game/ui/match_hud_v2.tscn, assets/art/ui/terracotta_hud_v2/, resources/game/ui/themes/terracotta_ui_theme.tres]
+      evidence: [evidence/gate2/match-hud-v2-1280x720.png]
+      notes: 已有1280×720样片；10–14px正文、按钮动效配置和跨分辨率可读性仍需修订/QA。最终UI皮肤不属于Contract v3。
+    - id: ART2D-TUTORIAL-SAMPLE
+      name: 教学提示、章节导航与暂停局部样片
+      quantity: 1
+      phase: baseline_sample
+      status: integrated_partial_sample
+      runtime_paths: [scenes/game/tutorial/tutorial_level.tscn, scenes/game/ui/tutorial_overlay.tscn, scenes/game/ui/tutorial_pause_menu.tscn, resources/game/tutorials/presentation/]
+      notes: T0–T10现有教学壳已接入；正文9–12px及右栏拥挤是已知可读性缺口。双轨教学扩展与最终UI优化不在当前视觉交付中。
+
+  - category_id: animation_vfx_audio_scope
+    items:
+    - id: ART2D-ANIMATION-MINIMAL
+      name: 棋子最小Tween反馈
+      quantity: 1
+      phase: baseline_sample
+      status: integrated_partial_sample
+      runtime_paths: [scripts/game/presentation/board/terracotta_piece_view.gd]
+      evidence: [tests/game/presentation/run_piece_tween_animation_contract.gd]
+      notes: 检查脚本存在，本次没有形成可靠完成证据；完整棋子/UI动画明确延期至GATE-2后。
+    - id: ART2D-VFX-FULL
+      name: 攻击、命中、占领、修复与结算全量特效
+      quantity: 0
+      phase: post_gate2_content_production
+      status: deferred_post_gate2
+      notes: 当前只有迷雾、程序化高亮和捕获残影样片；不得把它们等同全量VFX。
+    - id: ART2D-AUDIO-FULL
+      name: BGM、界面、棋子、战斗与环境正式音频
+      quantity: 0
+      phase: post_gate2_content_production
+      status: deferred_post_gate2
+      proposal_ref: docs/audio/veilfront-bgm-sfx-contract-proposal-v1.md
+      notes: Contract v3不授权正式音频生产；当前清单不声明任何正式音频完成。
+
+  runtime_specifications:
+    board_authority_grid: 9×24 intersections; authority coordinates X=1..9/Y=1..24
+    current_board_background: v7_low_noise PNG through BoardMapOption
+    piece_baseline: 14 round token PNGs; 7 roles × 2 factions
+    observer_boundary: 仅由PlayerView决定可见节点、旗位、迷雾与反馈，不允许表现层读取隐藏FullState
+    fixed_structure: 正式壳优先使用预置Control/Node2D、Sprite2D和预置子场景
+    target_resolutions: [960×540, 1280×720, 1920×1080]
+    deferred_quality_work: 完整动画、完整音频、全量VFX、最终UI皮肤和正式小篆矢量母版
+
+  dependencies:
+  - DELIVERABLE-PRESENTATION-2D-001提供正式二维场景、坐标映射与PlayerView绑定。
+  - DELIVERABLE-QA-2D-001必须从clean worktree复现三分辨率、双方视角、层级、信息安全与性能证据。
+  - GATE-2审美与可读性判断由project-owner保留；本清单和生产者自检不能代替批准。
+
+  acceptance:
+  - 只消费PlayerView，未授权棋子和旗位不创建节点。
+  - 红黑180度映射不改变权威坐标。
+  - 960×540、1280×720、1920×1080可读且不裁切；当前仍待以GATE-2候选提交重新捕获证明。
+  - 规则、回放、随机消费与教学语义保持不变。
+  - 样片、局部实现、资源参考与GATE-2后批量项必须保持分栏，不以资源存在冒充完整生产。
+
+  cost_unknowns:
+  - 二维棋子最终角色化立绘/棋盘小图是否继续双资产制，以及14角色后续状态、表情和动画帧数量。
+  - 三目标分辨率可读性修订对HUD重排、字体授权、九宫格切片和手柄焦点适配的工时。
+  - 攻击、占领、修复、结算VFX的cue数量、变体数、粒子预算与低配降级规格。
+  - BGM/SFX数量、原创或授权来源、循环点、混音、总线和外包成本。
+  - 城墙是否继续使用单纹理程序化状态，或在GATE-2后生产红黑各自三状态正式美术。
+  - 旗帜是否需要发现/未发现过渡动画；任何过渡不得泄露未授权旗位。
+  - 后期是否重新启动三渲二研究，以及由此产生的独立成本和性能预算。
+
+  unresolved:
+  - 当前GATE-2候选提交的960×540、1280×720、1920×1080双方视角样片尚未成套归档。
+  - HUD与教程正文在低分辨率下的可读性仍需修订和人工判断。
+  - 当前工作区非clean；最终状态与截图必须绑定冻结提交和构建。
+  - 完整动画、音频、VFX与最终UI须在GATE-2通过后另立Contract，不属于本交付完成声明。
+
   deferred_research_assets:
   - id: DEFERRED-3D-TERRACOTTA
     name: 斜俯视三渲二与14枚兵马俑静态棋子
     status: preserved_late_optional
-    refs:
-    - assets/art/pieces/terracotta_warriors/
-    - scenes/dev/art/piece_art_test_3d.tscn
-    - evidence/gate2/art-samples/TW-PIECE-01-14-godot-integration-review-v1.md
-  acceptance:
-  - 只消费PlayerView，未授权棋子和旗位不创建节点
-  - 红黑180度映射不改变权威坐标
-  - 960×540、1280×720、1920×1080可读且不裁切
-  - 规则、回放、随机消费与教学语义保持不变
-  unresolved:
-  - 二维棋子最终视觉风格与动画规格
-  - UI、VFX和音频的完整数量、预算与工期
-  - 后期是否重新启动三渲二研究
+    refs: [assets/art/pieces/terracotta_warriors/, scenes/dev/art/piece_art_test_3d.tscn, evidence/gate2/art-samples/TW-PIECE-01-14-godot-integration-review-v1.md]
+    notes: 历史资源保留但不属于当前二维运行时棋子集，也不进入Contract v3验收。
