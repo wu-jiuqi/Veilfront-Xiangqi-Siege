@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3]
+[gd_scene load_steps=19 format=3]
 
 [ext_resource type="Script" path="res://scripts/game/frontend/start_menu_overlay.gd" id="1_script"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/start_sequence/veilfront_logo_gold_pair_v2.png" id="2_logo_pair"]
@@ -7,8 +7,7 @@
 [ext_resource type="Texture2D" path="res://assets/art/ui/start_sequence/settings_infantry_shield_gear_v1.png" id="5_settings_shield"]
 [ext_resource type="Shader" path="res://assets/shaders/ui/title_impact_mist.gdshader" id="6_impact_mist"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/start_sequence/menu_bronze_sword_button_v1.png" id="7_sword_button"]
-[ext_resource type="Theme" path="res://resources/game/ui/themes/terracotta_ui_theme.tres" id="8_dialog_theme"]
-[ext_resource type="Script" path="res://scripts/game/presentation/ui/terracotta_system_dialog.gd" id="9_dialog_script"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/terracotta_modal_dialog.tscn" id="8_dialog"]
 
 [sub_resource type="AtlasTexture" id="AtlasTextureMist"]
 atlas = ExtResource("2_logo_pair")
@@ -589,25 +588,23 @@ horizontal_alignment = 2
 unique_name_in_owner = true
 libraries = {&"": SubResource("AnimationLibraryMenu")}
 
-[node name="NoticeDialog" type="AcceptDialog" parent="."]
+[node name="NoticeDialog" parent="." instance=ExtResource("8_dialog")]
 unique_name_in_owner = true
-min_size = Vector2i(560, 220)
-theme = ExtResource("8_dialog_theme")
-script = ExtResource("9_dialog_script")
 title = "功能提示"
 dialog_text = "该功能尚未开放。"
+ok_button_text = "知道了"
+show_cancel_button = false
 
-[node name="QuitDialog" type="ConfirmationDialog" parent="."]
+[node name="QuitDialog" parent="." instance=ExtResource("8_dialog")]
 unique_name_in_owner = true
-min_size = Vector2i(600, 240)
-theme = ExtResource("8_dialog_theme")
-script = ExtResource("9_dialog_script")
 title = "退出游戏"
 dialog_text = "确定要退出《雾疆：九路烽棋》吗？"
+ok_button_text = "退出游戏"
+cancel_button_text = "返回"
+focus_cancel_by_default = true
 
-[node name="FatalErrorDialog" type="AcceptDialog" parent="."]
+[node name="FatalErrorDialog" parent="." instance=ExtResource("8_dialog")]
 unique_name_in_owner = true
-min_size = Vector2i(560, 220)
-theme = ExtResource("8_dialog_theme")
-script = ExtResource("9_dialog_script")
 title = "界面加载失败"
+ok_button_text = "返回"
+show_cancel_button = false

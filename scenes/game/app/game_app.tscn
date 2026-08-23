@@ -3,7 +3,7 @@
 [ext_resource type="Theme" path="res://resources/game/ui/themes/terracotta_ui_theme.tres" id="1_theme"]
 [ext_resource type="PackedScene" path="res://scenes/game/match/match_screen.tscn" id="2_match"]
 [ext_resource type="Script" path="res://scripts/game/application/application_host.gd" id="3_host"]
-[ext_resource type="Script" path="res://scripts/game/presentation/ui/terracotta_system_dialog.gd" id="4_dialog_script"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/terracotta_modal_dialog.tscn" id="4_dialog"]
 
 [node name="GameApp" type="Control"]
 layout_mode = 3
@@ -59,13 +59,11 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 1)
 
-[node name="FatalErrorDialog" type="AcceptDialog" parent="GlobalOverlayHost"]
-min_size = Vector2i(600, 230)
-theme = ExtResource("1_theme")
-script = ExtResource("4_dialog_script")
+[node name="FatalErrorDialog" parent="GlobalOverlayHost" instance=ExtResource("4_dialog")]
 title = "无法继续"
 dialog_text = "正式运行时尚未绑定。"
 ok_button_text = "返回"
+show_cancel_button = false
 
 [node name="AccessibilityAnnouncer" type="Label" parent="."]
 visible = false

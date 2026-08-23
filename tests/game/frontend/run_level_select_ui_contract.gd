@@ -31,7 +31,10 @@ func _init() -> void:
 	var first_card := level_select.get_node("%TutorialGrid").get_child(0) as LevelCard
 	assert(first_card.get_node("%StateTexture").texture.resource_path == "res://assets/art/ui/level_select/components/node_selected_v2.png")
 	assert(_count_texture_rects(first_card) == 1, "each level card must use one state texture canvas item")
-	assert(_count_texture_rects(level_select) == 16, "level select must keep its texture canvas-item budget")
+	assert(
+		_count_texture_rects(level_select) == 19,
+		"level select must keep 16 screen textures plus 3 hidden custom-dialog art textures"
+	)
 
 	var challenge_button := level_select.get_node("%ChallengeCategoryButton") as Button
 	challenge_button.pressed.emit()

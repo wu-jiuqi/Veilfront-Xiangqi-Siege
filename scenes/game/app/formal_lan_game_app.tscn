@@ -1,12 +1,11 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scripts/game/application/formal_lan_game_app.gd" id="1_app"]
 [ext_resource type="PackedScene" path="res://scenes/game/network/formal_lan_session.tscn" id="2_session"]
 [ext_resource type="Script" path="res://scripts/game/application/application_host.gd" id="3_host"]
 [ext_resource type="PackedScene" path="res://scenes/game/frontend/formal_lan_lobby.tscn" id="4_lobby"]
 [ext_resource type="PackedScene" path="res://scenes/game/match/match_screen.tscn" id="5_match"]
-[ext_resource type="Theme" path="res://resources/game/ui/themes/terracotta_ui_theme.tres" id="6_dialog_theme"]
-[ext_resource type="Script" path="res://scripts/game/presentation/ui/terracotta_system_dialog.gd" id="7_dialog_script"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/terracotta_modal_dialog.tscn" id="6_dialog"]
 
 [node name="FormalLanGameApp" type="Control"]
 layout_mode = 3
@@ -47,30 +46,24 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="LeaveSessionDialog" type="ConfirmationDialog" parent="GlobalOverlayHost"]
-min_size = Vector2i(640, 250)
-theme = ExtResource("6_dialog_theme")
-script = ExtResource("7_dialog_script")
+[node name="LeaveSessionDialog" parent="GlobalOverlayHost" instance=ExtResource("6_dialog")]
 title = "离开联机会话"
 dialog_text = "确定离开当前联机会话吗？"
 ok_button_text = "确定离开"
 cancel_button_text = "继续对局"
+focus_cancel_by_default = true
 
-[node name="ConnectionErrorDialog" type="AcceptDialog" parent="GlobalOverlayHost"]
-min_size = Vector2i(600, 230)
-theme = ExtResource("6_dialog_theme")
-script = ExtResource("7_dialog_script")
+[node name="ConnectionErrorDialog" parent="GlobalOverlayHost" instance=ExtResource("6_dialog")]
 title = "联机已中断"
 dialog_text = "局域网连接已经中断。"
 ok_button_text = "返回房间"
+show_cancel_button = false
 
-[node name="FatalErrorDialog" type="AcceptDialog" parent="GlobalOverlayHost"]
-min_size = Vector2i(600, 230)
-theme = ExtResource("6_dialog_theme")
-script = ExtResource("7_dialog_script")
+[node name="FatalErrorDialog" parent="GlobalOverlayHost" instance=ExtResource("6_dialog")]
 title = "无法继续"
 dialog_text = "正式联机运行时初始化失败。"
 ok_button_text = "返回房间"
+show_cancel_button = false
 
 [connection signal="public_state_changed" from="FormalLanSession" to="." method="_on_public_state_changed"]
 [connection signal="session_state_changed" from="ApplicationHost" to="ScreenHost/MatchScreen" method="render_session_state"]

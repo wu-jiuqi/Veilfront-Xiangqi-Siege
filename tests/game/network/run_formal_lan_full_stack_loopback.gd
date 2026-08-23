@@ -151,7 +151,7 @@ func _run() -> void:
 	terminal_dialog.hide_result()
 
 	server_match.emit_signal("return_requested")
-	var leave_dialog := _server_app.get_node("GlobalOverlayHost/LeaveSessionDialog") as ConfirmationDialog
+	var leave_dialog := _server_app.get_node("GlobalOverlayHost/LeaveSessionDialog") as TerracottaModalDialog
 	_check(leave_dialog.visible, "对局返回先显示离开确认")
 	await process_frame
 	_check(leave_dialog.get_cancel_button().has_focus(), "离开确认默认聚焦取消")
@@ -159,11 +159,11 @@ func _run() -> void:
 	leave_dialog.emit_signal("confirmed")
 	var disconnected := await _wait_until(func() -> bool:
 		return str(server_session.get_public_state_snapshot().get("state", "")) == "disconnected" \
-			and (_client_app.get_node("GlobalOverlayHost/ConnectionErrorDialog") as AcceptDialog).visible
+			and (_client_app.get_node("GlobalOverlayHost/ConnectionErrorDialog") as TerracottaModalDialog).visible
 	)
 	_check(disconnected, "房主离开后客户端进入阻断式断线恢复")
 	if disconnected:
-		(_client_app.get_node("GlobalOverlayHost/ConnectionErrorDialog") as AcceptDialog).emit_signal("confirmed")
+		(_client_app.get_node("GlobalOverlayHost/ConnectionErrorDialog") as TerracottaModalDialog).emit_signal("confirmed")
 		await process_frame
 	_check(server_lobby.visible and client_lobby.visible, "清理端口和预览后双方返回正式大厅")
 	var cleared_board: Dictionary = server_match.get_board_render_snapshot()

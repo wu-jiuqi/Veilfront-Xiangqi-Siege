@@ -33,7 +33,7 @@ const CHALLENGE_NODE_POSITIONS: Array[Vector2] = [
 @onready var _detail_summary: Label = %DetailSummary
 @onready var _detail_objective: Label = %DetailObjective
 @onready var _status_label: Label = %StatusLabel
-@onready var _reset_dialog: ConfirmationDialog = %ResetDialog
+@onready var _reset_dialog: TerracottaModalDialog = %ResetDialog
 
 var _transitioning := false
 var _completed: Dictionary = {}

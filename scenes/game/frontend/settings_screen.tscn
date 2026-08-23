@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" path="res://scenes/game/presentation/battle_command_tent_background.tscn" id="3_background"]
 [ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button.tscn" id="4_motion_button"]
 [ext_resource type="Texture2D" uid="uid://cxdwdyljintlq" path="res://assets/art/ui/settings/png_v2/settings_title_crest_v2.png" id="5_title_crest"]
-[ext_resource type="Script" path="res://scripts/game/presentation/ui/terracotta_system_dialog.gd" id="6_dialog_script"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/terracotta_modal_dialog.tscn" id="6_dialog"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxSettingsToggleEmpty"]
 
@@ -469,28 +469,26 @@ motion_profile = null
 [node name="DisplayConfirmTimer" type="Timer" parent="." unique_id=543837108]
 unique_name_in_owner = true
 
-[node name="DisplayConfirmDialog" type="ConfirmationDialog" parent="." unique_id=651942286]
+[node name="DisplayConfirmDialog" parent="." unique_id=651942286 instance=ExtResource("6_dialog")]
 unique_name_in_owner = true
-min_size = Vector2i(620, 250)
-theme = ExtResource("1_theme")
-script = ExtResource("6_dialog_script")
 title = "确认显示设置"
 dialog_text = "新的显示设置是否正常？
 10 秒后将自动恢复原设置。"
+ok_button_text = "保留设置"
+cancel_button_text = "恢复原设置"
+focus_cancel_by_default = true
 
-[node name="ResetProgressDialog" type="ConfirmationDialog" parent="." unique_id=2109329801]
+[node name="ResetProgressDialog" parent="." unique_id=2109329801 instance=ExtResource("6_dialog")]
 unique_name_in_owner = true
-min_size = Vector2i(640, 260)
-theme = ExtResource("1_theme")
-script = ExtResource("6_dialog_script")
 title = "重置关卡进度"
 ok_button_text = "确认重置"
+cancel_button_text = "取消"
 dialog_text = "确定清空全部教学与挑战关卡完成记录吗？
 此操作不会重置其他设置。"
+focus_cancel_by_default = true
 
-[node name="ErrorDialog" type="AcceptDialog" parent="." unique_id=724856708]
+[node name="ErrorDialog" parent="." unique_id=724856708 instance=ExtResource("6_dialog")]
 unique_name_in_owner = true
-min_size = Vector2i(600, 230)
-theme = ExtResource("1_theme")
-script = ExtResource("6_dialog_script")
 title = "设置操作失败"
+ok_button_text = "知道了"
+show_cancel_button = false

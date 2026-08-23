@@ -115,7 +115,7 @@ func _init() -> void:
 	resolution_option.select(1)
 	(settings_screen.get_node("%ApplyButton") as Button).pressed.emit()
 	await process_frame
-	var display_dialog := settings_screen.get_node("%DisplayConfirmDialog") as ConfirmationDialog
+	var display_dialog := settings_screen.get_node("%DisplayConfirmDialog") as TerracottaModalDialog
 	assert(display_dialog.visible, "display changes must open the ten-second confirmation")
 	assert(settings_manager.is_preview_active())
 	display_dialog.canceled.emit()

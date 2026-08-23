@@ -38,9 +38,9 @@ const ERROR_TEXT: Dictionary[String, String] = {
 @onready var _application_host: Node = $ApplicationHost
 @onready var _lobby: Control = $ScreenHost/FormalLanLobby
 @onready var _match_screen: Control = $ScreenHost/MatchScreen
-@onready var _leave_session_dialog: ConfirmationDialog = $GlobalOverlayHost/LeaveSessionDialog
-@onready var _connection_error_dialog: AcceptDialog = $GlobalOverlayHost/ConnectionErrorDialog
-@onready var _fatal_error_dialog: AcceptDialog = $GlobalOverlayHost/FatalErrorDialog
+@onready var _leave_session_dialog: TerracottaModalDialog = $GlobalOverlayHost/LeaveSessionDialog
+@onready var _connection_error_dialog: TerracottaModalDialog = $GlobalOverlayHost/ConnectionErrorDialog
+@onready var _fatal_error_dialog: TerracottaModalDialog = $GlobalOverlayHost/FatalErrorDialog
 
 var _match_active: bool = false
 var _pending_navigation: String = ""

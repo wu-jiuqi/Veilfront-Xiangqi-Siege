@@ -24,10 +24,10 @@ const DISPLAY_CONFIRM_SECONDS := 10
 @onready var _cancel_button: Button = %CancelButton
 @onready var _apply_button: Button = %ApplyButton
 @onready var _status_label: Label = %StatusLabel
-@onready var _display_confirm_dialog: ConfirmationDialog = %DisplayConfirmDialog
+@onready var _display_confirm_dialog: TerracottaModalDialog = %DisplayConfirmDialog
 @onready var _display_confirm_timer: Timer = %DisplayConfirmTimer
-@onready var _reset_progress_dialog: ConfirmationDialog = %ResetProgressDialog
-@onready var _error_dialog: AcceptDialog = %ErrorDialog
+@onready var _reset_progress_dialog: TerracottaModalDialog = %ResetProgressDialog
+@onready var _error_dialog: TerracottaModalDialog = %ErrorDialog
 
 var _display_seconds_remaining := 0
 var _transitioning := false

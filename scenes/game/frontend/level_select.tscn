@@ -4,8 +4,7 @@
 [ext_resource type="Texture2D" path="res://assets/art/ui/level_select/level_select_empty_background_v3.png" id="2_background"]
 [ext_resource type="Theme" uid="uid://cnody7ltbktl0" path="res://resources/game/ui/themes/level_select_master_v2_theme.tres" id="3_theme"]
 [ext_resource type="Texture2D" uid="uid://ckr08sw3potmf" path="res://assets/art/ui/level_select/components/progress_ring_v2.png" id="4_progress"]
-[ext_resource type="Theme" uid="uid://blq4lo6avwchq" path="res://resources/game/ui/themes/terracotta_ui_theme.tres" id="5_dialog_theme"]
-[ext_resource type="Script" path="res://scripts/game/presentation/ui/terracotta_system_dialog.gd" id="6_dialog_script"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/terracotta_modal_dialog.tscn" id="5_dialog"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroupCategory"]
 
@@ -272,13 +271,13 @@ theme_override_font_sizes/font_size = 13
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="ResetDialog" type="ConfirmationDialog" parent="." unique_id=1569314894]
+[node name="ResetDialog" parent="." unique_id=1569314894 instance=ExtResource("5_dialog")]
 unique_name_in_owner = true
-min_size = Vector2i(600, 240)
-theme = ExtResource("5_dialog_theme")
-script = ExtResource("6_dialog_script")
 title = "清空教学进度"
 dialog_text = "只清除 T0–T10 的本地完成记录，不影响局域网设置。"
+ok_button_text = "清空进度"
+cancel_button_text = "返回"
+focus_cancel_by_default = true
 
 [connection signal="pressed" from="DesignCanvas/BackButton" to="." method="_return_to_title_screen"]
 [connection signal="pressed" from="DesignCanvas/TutorialCategoryButton" to="." method="_show_tutorial_category"]

@@ -9,9 +9,9 @@ const FrontendRoutes = preload("res://scripts/integration/frontend_routes.gd")
 @onready var _quit_button: Button = %QuitButton
 @onready var _version_label: Label = %VersionLabel
 @onready var _intro_player: AnimationPlayer = %MenuIntroPlayer
-@onready var _notice_dialog: AcceptDialog = %NoticeDialog
-@onready var _quit_dialog: ConfirmationDialog = %QuitDialog
-@onready var _fatal_error_dialog: AcceptDialog = %FatalErrorDialog
+@onready var _notice_dialog: TerracottaModalDialog = %NoticeDialog
+@onready var _quit_dialog: TerracottaModalDialog = %QuitDialog
+@onready var _fatal_error_dialog: TerracottaModalDialog = %FatalErrorDialog
 
 var _active := false
 var _transitioning := false
