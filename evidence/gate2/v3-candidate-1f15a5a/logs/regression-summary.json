@@ -1,0 +1,57 @@
+[
+  {
+    "id": "dependency_boundaries",
+    "path": "tests/game/architecture/check_dependency_boundaries.gd",
+    "marker": "DEPENDENCY_BOUNDARY_CHECK_PASSED",
+    "exit_code": -999,
+    "timed_out": true,
+    "marker_found": false,
+    "forbidden_count": 0,
+    "duration_seconds": 243.675,
+    "verdict": "fail"
+  },
+  {
+    "id": "formal_scene_smoke",
+    "path": "tests/game/scenes/run_formal_scene_smoke.gd",
+    "marker": "FORMAL_SCENE_SMOKE_PASS",
+    "exit_code": 0,
+    "timed_out": false,
+    "marker_found": true,
+    "forbidden_count": 0,
+    "duration_seconds": 153.062,
+    "verdict": "pass"
+  },
+  {
+    "id": "static_theme",
+    "path": "tests/game/ui/run_ui_static_theme_contract.gd",
+    "marker": "UI_STATIC_THEME_CONTRACT_PASS",
+    "exit_code": 0,
+    "timed_out": false,
+    "marker_found": true,
+    "forbidden_count": 0,
+    "duration_seconds": 211.698,
+    "verdict": "pass"
+  },
+  {
+    "id": "board_layout",
+    "path": "tests/game/presentation/run_board_layout_contract.gd",
+    "marker": "BOARD_LAYOUT_CONTRACT_PASS",
+    "exit_code": -999,
+    "timed_out": true,
+    "marker_found": false,
+    "forbidden_count": 0,
+    "duration_seconds": 240.313,
+    "verdict": "fail"
+  },
+  {
+    "id": "formal_board_art_input",
+    "path": "tests/game/presentation/run_formal_board_art_input_contract.gd",
+    "marker": "FORMAL_BOARD_ART_INPUT_CONTRACT_PASS",
+    "exit_code": 0,
+    "timed_out": false,
+    "marker_found": true,
+    "forbidden_count": 0,
+    "duration_seconds": 173.138,
+    "verdict": "pass"
+  }
+]

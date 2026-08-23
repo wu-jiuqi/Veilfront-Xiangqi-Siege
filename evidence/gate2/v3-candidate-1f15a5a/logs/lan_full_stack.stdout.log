@@ -1,0 +1,7 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+PASS: 正式组合根完成大厅创建、加入和红黑入席
+PASS: 双方入席后显式准备按钮可见
+PASS: 双方显式准备经权威会话同步
+PASS: 仅房主在双方准备后获得开局按钮
+PASS: 客户端不显示开局按钮

@@ -1,0 +1,32 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+PASS: 正式 LAN 预置场景可加载
+PASS: 房主重复获取同一 ClientPort
+PASS: 客户端重复获取同一 ClientPort
+PASS: 房主 ClientPort 可绑定 ApplicationHost
+PASS: 客户端 ClientPort 可绑定 ApplicationHost
+PASS: 房主创建正式 ENet 会话
+PASS: 客户端发起正式 ENet 连接
+PASS: loopback 完成 host/join 与红黑席位分配
+PASS: 双方 ready 同步且仅房主满足开局条件
+PASS: 房主启动正式权威对局
+PASS: 开局向红黑分别下发首个正式观察者批次
+PASS: 正式规则核心只存在于 host
+PASS: 客户端不持有正式规则核心
+PASS: 房主端只收到红方 PlayerView
+PASS: 客户端只收到黑方 PlayerView
+PASS: 房主下行无 seed/RNG/FullState
+PASS: 客户端下行无 seed/RNG/FullState
+PASS: 相同观察者输入生成字节等价下行批次
+PASS: 正式 LAN 协议拒绝额外与隐藏字段
+PASS: 正式动作合同覆盖移动/炮击/献祭/跳过/超时
+PASS: 红方获得正式移动预览
+PASS: 红方正式移动经可靠 RPC 结算并切换黑方回合
+PASS: 重复 request_id 被房主拒绝且不重复结算
+PASS: 重复请求不推进 action_index
+PASS: 过期 expected_action_index 被房主拒绝
+PASS: 过期请求不推进 action_index
+PASS: 黑方获得正式移动预览
+PASS: 多批次后红方端仍未串入黑方视图
+PASS: 多批次后黑方端仍未串入红方视图
+FORMAL_LAN_NETWORK_INTEGRATION_FAILED count=3
