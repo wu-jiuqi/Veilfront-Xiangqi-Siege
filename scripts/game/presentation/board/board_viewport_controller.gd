@@ -12,6 +12,8 @@ const PAN_SPEED: float = 720.0
 const PAN_ACCELERATION: float = 3600.0
 const WHEEL_PAN_SPEED: float = 420.0
 const CAMERA_SCROLL_DURATION: float = 0.32
+const CAMERA_FOCUS_DURATION: float = 0.38
+const CAMERA_RESET_DURATION: float = 0.42
 const MINIMAP_NAVIGATION_DURATION: float = 0.16
 const HOVER_RADIUS_RATIO: float = 0.46
 const MIN_ZOOM_MULTIPLIER: float = 1.0
@@ -34,6 +36,7 @@ var _hovered_cell := Vector2i.ZERO
 var _hover_pointer_local := Vector2(INF, INF)
 var _camera_motion_tween: Tween
 var _camera_target_position: Vector2 = BOARD_WORLD_SIZE * 0.5
+var _camera_target_zoom_multiplier: float = MAX_ZOOM_MULTIPLIER
 var _camera_authority: StringName = CAMERA_AUTHORITY_DEFAULT
 var _camera_authority_position: Vector2 = BOARD_WORLD_SIZE * 0.5
 var _keyboard_pan_velocity: Vector2 = Vector2.ZERO
@@ -119,7 +122,7 @@ func render_player_view(view: Dictionary) -> void:
 	_board_world.render_player_view(view)
 	_previous_player_view = view.duplicate(true)
 	if is_initial_view:
-		reset_camera()
+		reset_camera(false)
 	elif BoardCoordinateMapper.is_authority_cell_valid(visible_enemy_move_cell):
 		_pan_to_authority_cell(visible_enemy_move_cell)
 
@@ -164,32 +167,32 @@ func clear_session_view() -> void:
 	_previous_player_view.clear()
 	_clear_hover()
 	_board_world.clear_session_view()
-	reset_camera()
+	reset_camera(false)
 
 
-func focus_authority_cell(cell: Vector2i) -> void:
+func focus_authority_cell(cell: Vector2i, animated: bool = true) -> void:
 	if not BoardCoordinateMapper.is_authority_cell_valid(cell):
 		return
 	_focused_cell = cell
-	_zoom_multiplier = MIN_ZOOM_MULTIPLIER
-	_update_camera_zoom()
 	var world_position: Vector2 = BoardCoordinateMapper.authority_to_world(
 		cell,
 		str(_board_world.get_display_side()),
 		_board_world.get_cell_size()
 	)
 	_set_camera_authority(CAMERA_AUTHORITY_FOCUS, world_position)
-	_set_camera_position_immediate(world_position)
+	if animated:
+		_animate_camera_to(world_position, CAMERA_FOCUS_DURATION, MIN_ZOOM_MULTIPLIER)
+	else:
+		_set_camera_state_immediate(world_position, MIN_ZOOM_MULTIPLIER)
 
 
 func set_tutorial_target(cell: Vector2i) -> void:
 	_board_world.set_tutorial_target(cell)
 
 
-func reset_camera() -> void:
-	_zoom_multiplier = MAX_ZOOM_MULTIPLIER
-	_update_camera_zoom()
-	var visible_world_height: float = size.y / maxf(_camera.zoom.y, 0.01)
+func reset_camera(animated: bool = true) -> void:
+	var target_zoom := maxf(_fit_zoom * MAX_ZOOM_MULTIPLIER, 0.01)
+	var visible_world_height: float = size.y / target_zoom
 	var anchor_position := Vector2(
 		BOARD_WORLD_SIZE.x * 0.5,
 		BOARD_WORLD_SIZE.y - visible_world_height * 0.5
@@ -206,7 +209,14 @@ func reset_camera() -> void:
 			general_world_position.y - visible_world_height * 0.5 + cell_size.y * 0.5
 		)
 	_set_camera_authority(CAMERA_AUTHORITY_DEFAULT, anchor_position)
-	_set_camera_position_immediate(_camera_authority_position)
+	if animated:
+		_animate_camera_to(
+			_camera_authority_position,
+			CAMERA_RESET_DURATION,
+			MAX_ZOOM_MULTIPLIER
+		)
+	else:
+		_set_camera_state_immediate(_camera_authority_position, MAX_ZOOM_MULTIPLIER)
 
 
 func get_point_spacing() -> Vector2:
@@ -229,12 +239,15 @@ func get_render_snapshot() -> Dictionary:
 	snapshot["default_anchor_cell"] = _default_anchor_cell
 	snapshot["camera_target_position"] = _camera_target_position
 	snapshot["camera_target_y"] = _camera_target_position.y
+	snapshot["camera_target_zoom_multiplier"] = _camera_target_zoom_multiplier
 	snapshot["camera_authority"] = str(_camera_authority)
 	snapshot["camera_authority_position"] = _camera_authority_position
 	snapshot["camera_pan_axes"] = "xy"
 	snapshot["camera_motion_active"] = _camera_motion_tween != null \
 		and _camera_motion_tween.is_valid() and _camera_motion_tween.is_running()
 	snapshot["camera_scroll_duration"] = CAMERA_SCROLL_DURATION
+	snapshot["camera_focus_duration"] = CAMERA_FOCUS_DURATION
+	snapshot["camera_reset_duration"] = CAMERA_RESET_DURATION
 	snapshot["minimap_navigation_duration"] = MINIMAP_NAVIGATION_DURATION
 	snapshot["hovered_cell"] = _hovered_cell
 	snapshot["piece_visual_hit_enabled"] = _piece_visual_hit_enabled
@@ -298,7 +311,7 @@ func _sync_layout() -> void:
 	var viewport_size := Vector2i(maxi(1, roundi(size.x)), maxi(1, roundi(size.y)))
 	_fit_zoom = maxf((float(viewport_size.x) - SCREEN_MARGIN) / BOARD_WORLD_SIZE.x, 0.05)
 	if BoardCoordinateMapper.is_authority_cell_valid(_focused_cell):
-		focus_authority_cell(_focused_cell)
+		focus_authority_cell(_focused_cell, false)
 	elif _has_session_view:
 		_update_camera_zoom()
 		if _camera_authority in [CAMERA_AUTHORITY_PLAYER, CAMERA_AUTHORITY_VISIBLE_ENEMY]:
@@ -306,9 +319,9 @@ func _sync_layout() -> void:
 			# them from the logical camera owner instead of the tween's scheduling state.
 			_set_camera_position_immediate(_camera_authority_position)
 		else:
-			reset_camera()
+			reset_camera(false)
 	else:
-		reset_camera()
+		reset_camera(false)
 
 
 func _is_cell_visible(cell: Vector2i) -> bool:
@@ -497,26 +510,51 @@ func _set_camera_position_immediate(value: Vector2) -> void:
 	_apply_camera_position(_camera_target_position)
 
 
+func _set_camera_state_immediate(value: Vector2, zoom_multiplier: float) -> void:
+	_cancel_camera_motion()
+	_apply_zoom_multiplier(zoom_multiplier)
+	_camera_target_zoom_multiplier = _zoom_multiplier
+	_camera_target_position = _clamp_camera_position(value)
+	_apply_camera_position(_camera_target_position)
+
+
 func _set_camera_authority(authority: StringName, position: Vector2) -> void:
 	_camera_authority = authority
 	_camera_authority_position = position
 
 
-func _animate_camera_to(value: Vector2, duration: float = CAMERA_SCROLL_DURATION) -> void:
+func _animate_camera_to(
+	value: Vector2,
+	duration: float = CAMERA_SCROLL_DURATION,
+	target_zoom_multiplier: float = -1.0
+) -> void:
 	_keyboard_pan_velocity = Vector2.ZERO
-	var target_position := _clamp_camera_position(value)
+	var requested_zoom := _zoom_multiplier if target_zoom_multiplier < 0.0 else clampf(
+		target_zoom_multiplier,
+		MIN_ZOOM_MULTIPLIER,
+		MAX_ZOOM_MULTIPLIER
+	)
+	var target_zoom := maxf(_fit_zoom * requested_zoom, 0.01)
+	var target_position := _clamp_camera_position_for_zoom(value, target_zoom)
 	_cancel_camera_motion()
 	_camera_target_position = target_position
-	if _camera.position.is_equal_approx(target_position) or duration <= 0.0:
+	_camera_target_zoom_multiplier = requested_zoom
+	if (
+		_camera.position.is_equal_approx(target_position)
+		and is_equal_approx(_zoom_multiplier, requested_zoom)
+	) or duration <= 0.0:
+		_apply_zoom_multiplier(requested_zoom)
 		_apply_camera_position(target_position)
 		return
 	var tween := create_tween()
 	_camera_motion_tween = tween
-	tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween.set_parallel(true).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	tween.tween_method(_apply_camera_position, _camera.position, target_position, duration)
+	tween.tween_method(_apply_zoom_multiplier, _zoom_multiplier, requested_zoom, duration)
 	tween.finished.connect(func() -> void:
 		if _camera_motion_tween == tween:
 			_camera_motion_tween = null
+			_apply_zoom_multiplier(_camera_target_zoom_multiplier)
 			_apply_camera_position(_camera_target_position)
 	)
 
@@ -526,11 +564,17 @@ func _cancel_camera_motion() -> void:
 		_camera_motion_tween.kill()
 	_camera_motion_tween = null
 	_camera_target_position = _camera.position
+	_camera_target_zoom_multiplier = _zoom_multiplier
 
 
 func _clamp_camera_position(value: Vector2) -> Vector2:
 	var zoom := Vector2(maxf(_camera.zoom.x, 0.01), maxf(_camera.zoom.y, 0.01))
-	var visible_world_size := size / zoom
+	return _clamp_camera_position_for_zoom(value, zoom.x)
+
+
+func _clamp_camera_position_for_zoom(value: Vector2, zoom_value: float) -> Vector2:
+	var safe_zoom := maxf(zoom_value, 0.01)
+	var visible_world_size := size / Vector2(safe_zoom, safe_zoom)
 	var result := value
 	for axis: int in 2:
 		if visible_world_size[axis] >= BOARD_WORLD_SIZE[axis]:
@@ -541,6 +585,11 @@ func _clamp_camera_position(value: Vector2) -> Vector2:
 				value[axis], half_visible, BOARD_WORLD_SIZE[axis] - half_visible
 			)
 	return result
+
+
+func _apply_zoom_multiplier(value: float) -> void:
+	_zoom_multiplier = clampf(value, MIN_ZOOM_MULTIPLIER, MAX_ZOOM_MULTIPLIER)
+	_update_camera_zoom()
 
 
 func _apply_camera_position(value: Vector2) -> void:

@@ -26,6 +26,7 @@ func _run() -> void:
 	await _check_own_move_keeps_camera(board_viewport)
 	await _check_hidden_enemy_move_keeps_camera(board_viewport)
 	await _check_visible_enemy_move_follows_piece(board_viewport)
+	await _check_focus_transition_is_smoothed(board_viewport)
 	await _check_explicit_side_change_resets_camera(board_viewport)
 
 	board_viewport.queue_free()
@@ -159,7 +160,12 @@ func _check_explicit_side_change_resets_camera(
 	await process_frame
 	var camera_before_change: Vector2 = await _move_camera_away(board_viewport)
 	board_viewport.set_presentation_side("black")
-	await _settle_delayed_layout(board_viewport)
+	await process_frame
+	_expect(
+		bool(board_viewport.get_render_snapshot().get("camera_motion_active", false)),
+		"explicit side change still jumps instead of starting a reset transition"
+	)
+	await _wait_for_camera_idle(board_viewport)
 	var snapshot: Dictionary = board_viewport.get_render_snapshot()
 	_expect(
 		board_viewport.get_presentation_side() == "black",
@@ -174,6 +180,41 @@ func _check_explicit_side_change_resets_camera(
 			camera_before_change
 		) > 1.0,
 		"explicit side change incorrectly retained the old world camera position"
+	)
+
+
+func _check_focus_transition_is_smoothed(
+	board_viewport: SubViewportContainer
+) -> void:
+	board_viewport.clear_session_view()
+	board_viewport.render_player_view(_turn_view(
+		"red", "red", 0, Vector2i(5, 1), Vector2i.ZERO, false
+	))
+	await process_frame
+	var camera_before_focus: Vector2 = await _move_camera_away(board_viewport)
+	board_viewport.focus_authority_cell(Vector2i(5, 18))
+	await process_frame
+	var moving: Dictionary = board_viewport.get_render_snapshot()
+	_expect(
+		bool(moving.get("camera_motion_active", false)),
+		"focused-cell camera transition is still instantaneous"
+	)
+	_expect(
+		float(moving.get("camera_focus_duration", 0.0)) > 0.0
+		and float(moving.get("camera_focus_duration", 0.0)) <= 0.5,
+		"focused-cell transition duration is missing or too sluggish"
+	)
+	_expect(
+		(moving.get("camera_position", Vector2.ZERO) as Vector2).distance_to(
+			camera_before_focus
+		) > 0.0,
+		"focused-cell transition did not begin moving"
+	)
+	await _wait_for_camera_idle(board_viewport)
+	var settled: Dictionary = board_viewport.get_render_snapshot()
+	_expect(
+		is_equal_approx(float(settled.get("zoom_multiplier", 0.0)), 1.0),
+		"focused-cell transition did not settle at the intended zoom"
 	)
 
 
