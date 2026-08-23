@@ -43,7 +43,7 @@ var _completion_summary := ""
 func _ready() -> void:
 	_guide.hint_requested.connect(func() -> void: hint_requested.emit())
 	_guide.reset_requested.connect(func() -> void: step_reset_requested.emit())
-	_continue_button.pressed.connect(func() -> void: continue_requested.emit())
+	_continue_button.pressed.connect(_on_continue_pressed)
 	_next_chapter_button.pressed.connect(func() -> void: next_chapter_requested.emit())
 	_stay_button.pressed.connect(func() -> void: stay_requested.emit())
 	_retry_button.pressed.connect(func() -> void: retry_requested.emit())
@@ -70,7 +70,7 @@ func configure_chapter(
 	_hint_available = false
 	_step_reset_available = false
 	_hint_revealed = false
-	_hint_text = "连续三次未完成后可显示本步操作提示。"
+	_hint_text = "点击“显示提示”查看本步操作提示。"
 	_assessment_status = ""
 	_completion_summary = ""
 	_hide_decision_content()
@@ -247,7 +247,15 @@ func _default_hint_for_step(step: Dictionary) -> String:
 		return "选择目标棋子和行动模式，目标交点为（%d,%d）。" % [
 			int(target[0]), int(target[1]),
 		]
-	return "连续三次未完成后可显示本步操作提示。"
+	return "选择当前目标指定的棋子和行动模式，按指引完成本步。"
+
+
+func _on_continue_pressed() -> void:
+	# 行动型提示只负责把玩家送入对应操作模式；进入模式后必须立即
+	# 让出棋盘空间，否则 T6 的右键取消与后续献祭选择会被弹层遮挡。
+	if str(_current_step.get("type", "")) in ["sacrifice_cancel", "sacrifice_confirm"]:
+		_hide_decision_content()
+	continue_requested.emit()
 
 
 func _configure_decision(step: Dictionary) -> void:

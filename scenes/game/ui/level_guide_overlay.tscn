@@ -199,7 +199,8 @@ theme_override_font_sizes/font_size = 16
 text = "请选择正确答案。"
 horizontal_alignment = 1
 vertical_alignment = 1
-autowrap_mode = 2
+autowrap_mode = 3
+clip_text = true
 
 [node name="Options" type="VBoxContainer" parent="DecisionLayer/DecisionPanel/Margin/Content"]
 layout_mode = 2

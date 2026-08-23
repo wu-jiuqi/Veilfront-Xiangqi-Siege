@@ -38,6 +38,16 @@ func _run() -> void:
 	_expect((guide.get("step_statuses", []) as Array) == ["complete", "active", "pending"], "关卡步骤初始状态错误")
 	_expect(int(guide.get("action_button_count", 0)) == 2, "关卡指引底部不是两个操作按钮")
 	_expect(
+		int(guide.get("objective_autowrap_mode", 0)) == TextServer.AUTOWRAP_WORD_SMART
+		and bool(guide.get("objective_clips_text", false)),
+		"关卡目标没有启用中文智能换行与边界裁切"
+	)
+	_expect(
+		int(guide.get("current_operation_autowrap_mode", 0)) == TextServer.AUTOWRAP_WORD_SMART
+		and bool(guide.get("current_operation_clips_text", false)),
+		"当前操作没有启用中文智能换行与边界裁切"
+	)
+	_expect(
 		str(guide.get("background_texture_path", "")) \
 			== "res://assets/art/ui/level_guide_panel/level_guide_panel_v1.png",
 		"关卡指引没有使用已审批的抠图资产"
@@ -51,14 +61,22 @@ func _run() -> void:
 		"关卡指引在项目基准分辨率 1280x720 下溢出视口"
 	)
 
-	lab.call("reveal_hint_for_test")
+	var hint_button := lab.find_child("HintButton", true, false) as Button
+	var reset_button := lab.find_child("ResetButton", true, false) as Button
+	_expect(hint_button != null and not hint_button.disabled, "显示提示按钮初始不可用")
+	_expect(reset_button != null and not reset_button.disabled, "重置步骤按钮初始不可用")
+	if hint_button != null:
+		hint_button.pressed.emit()
 	await process_frame
 	var hinted: Dictionary = lab.call("get_lab_snapshot") as Dictionary
 	_expect(bool((hinted.get("guide", {}) as Dictionary).get("hint_revealed", false)), "显示提示没有刷新关卡指引")
-	lab.call("reset_guide_for_test")
+	_expect(str(hinted.get("last_guide_event", "")) == "hint_requested", "显示提示没有发出业务信号")
+	if reset_button != null:
+		reset_button.pressed.emit()
 	await process_frame
 	var reset: Dictionary = lab.call("get_lab_snapshot") as Dictionary
 	_expect((reset.get("guide", {}) as Dictionary).get("step_statuses", []) == ["active", "pending", "pending"], "重置步骤没有恢复初始进度")
+	_expect(str(reset.get("last_guide_event", "")) == "reset_requested", "重置步骤没有发出业务信号")
 	lab.call("collapse_guide_for_test", true)
 	await process_frame
 	var collapsed: Dictionary = lab.call("get_lab_snapshot") as Dictionary

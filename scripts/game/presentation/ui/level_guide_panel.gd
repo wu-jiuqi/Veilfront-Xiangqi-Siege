@@ -110,9 +110,13 @@ func get_state_snapshot() -> Dictionary:
 	return {
 		"title": _title_label.text,
 		"objective": _objective_label.text,
+		"objective_autowrap_mode": _objective_label.autowrap_mode,
+		"objective_clips_text": _objective_label.clip_text,
 		"step_texts": _step_text_labels.map(func(label: Label) -> String: return label.text),
 		"step_statuses": _step_statuses.duplicate(),
 		"current_operation": _current_operation_label.text,
+		"current_operation_autowrap_mode": _current_operation_label.autowrap_mode,
+		"current_operation_clips_text": _current_operation_label.clip_text,
 		"hint_text": _hint_label.text,
 		"hint_revealed": _hint_revealed,
 		"hint_available": _hint_available,

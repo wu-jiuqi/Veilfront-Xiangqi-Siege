@@ -32,7 +32,7 @@ var _last_visible_sequence: int = 0
 var _mistakes: int = 0
 var _assessment_actions_used: int = 0
 var _assessment_invalid_count: int = 0
-var _tier_three_hint_used: bool = false
+var _hint_used: bool = false
 var _assessment_capture_started: bool = false
 var _latest_player_view: Dictionary = {}
 
@@ -54,7 +54,7 @@ func configure(level_id: String, track: TutorialPresentationTrack) -> bool:
 	_mistakes = 0
 	_assessment_actions_used = 0
 	_assessment_invalid_count = 0
-	_tier_three_hint_used = false
+	_hint_used = false
 	_assessment_capture_started = false
 	_latest_player_view = {}
 	return true
@@ -180,7 +180,7 @@ func consume_authority_resolution(request_name: String, accepted: bool) -> void:
 			_mistakes = 0
 			_assessment_actions_used = 0
 			_assessment_invalid_count = 0
-			_tier_three_hint_used = false
+			_hint_used = false
 			_assessment_capture_started = false
 			_latest_player_view = {}
 			_state = FlowState.PROMPTING
@@ -252,9 +252,7 @@ func submit_quiz_answer(option_index: int) -> void:
 
 
 func request_hint() -> void:
-	if _mistakes < 3:
-		return
-	_tier_three_hint_used = true
+	_hint_used = true
 	var step: Dictionary = _current_step()
 	var target: Array = step.get("target", [])
 	var target_text := ""
@@ -268,8 +266,6 @@ func request_hint() -> void:
 
 
 func request_step_reset() -> void:
-	if _mistakes < 4:
-		return
 	_mistakes = 0
 	step_reset_requested.emit()
 	_emit_current_step()
@@ -298,8 +294,8 @@ func _emit_current_step() -> void:
 	step["step_count"] = presentation_track.steps.size()
 	step["mistakes"] = _mistakes
 	step["show_target"] = not presentation_track.assessment or _mistakes >= 2
-	step["hint_available"] = _mistakes >= 3
-	step["step_reset_available"] = _mistakes >= 4
+	step["hint_available"] = true
+	step["step_reset_available"] = true
 	if presentation_track.assessment:
 		step["assessment_status"] = "综合考核：行动 %d / %d · 无效 %d" % [
 			_assessment_actions_used,
@@ -357,9 +353,9 @@ func _assessment_summary() -> Array:
 			ammo_remaining,
 			"已" if advisor_preserved else "未",
 		],
-		"无效操作：%d 次；%s三级提示" % [
+		"无效操作：%d 次；%s操作提示" % [
 			_assessment_invalid_count,
-			"使用过" if _tier_three_hint_used else "未使用",
+			"使用过" if _hint_used else "未使用",
 		],
 	]
 
@@ -397,12 +393,10 @@ func _register_mistake(message: String) -> void:
 		_assessment_invalid_count += 1
 	var supplement := ""
 	if _mistakes == 1:
-		supplement = " 本次没有消耗行动。"
-	if _mistakes == 2:
+		supplement = " 本次没有消耗行动；可使用“显示提示”或“重置步骤”。"
+	elif _mistakes == 2:
 		supplement = " 目标交点现已高亮。"
-	elif _mistakes == 3:
-		supplement = " 可以使用“显示操作提示”。"
-	elif _mistakes >= 4:
-		supplement = " 可以使用“显示操作提示”或“重置本步骤”。"
+	elif _mistakes >= 3:
+		supplement = " 建议查看提示或重置步骤后重试。"
 	_emit_current_step()
 	public_feedback_changed.emit("info", "尚未完成", message + supplement)

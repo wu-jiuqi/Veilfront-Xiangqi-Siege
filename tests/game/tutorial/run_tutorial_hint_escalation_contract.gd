@@ -17,25 +17,30 @@ func _run() -> void:
 	await process_frame
 	var screen: Control = level.get_node("MatchScreen")
 	var overlay: Control = level.get_node("TutorialOverlay") as Control
-	_expect(not bool(overlay.get_public_snapshot().get("hint_visible", true)), "hint starts visible")
+	_expect(bool(overlay.get_public_snapshot().get("hint_visible", false)), "hint is not available at step start")
+	_expect(bool(overlay.get_public_snapshot().get("step_reset_visible", false)), "step reset is not available at step start")
 	_expect(_tutorial_target(screen) == Vector2i.ZERO, "assessment target starts revealed")
+	var hint_button: Button = overlay.find_child("HintButton", true, false)
+	var reset_button: Button = overlay.find_child("ResetButton", true, false)
+	_expect(hint_button != null and not hint_button.disabled, "hint button starts disabled")
+	_expect(reset_button != null and not reset_button.disabled, "step reset button starts disabled")
 
 	_reject_wrong_actor(screen)
 	_expect(_tutorial_target(screen) == Vector2i.ZERO, "first mistake revealed assessment target")
 	_reject_wrong_actor(screen)
 	_expect(_tutorial_target(screen) == Vector2i(5, 12), "second mistake did not reveal target")
-	_expect(not bool(overlay.get_public_snapshot().get("hint_visible", true)), "hint opened before third mistake")
+	_expect(bool(overlay.get_public_snapshot().get("hint_visible", false)), "hint became unavailable after second mistake")
 
 	_reject_wrong_actor(screen)
-	_expect(bool(overlay.get_public_snapshot().get("hint_visible", false)), "third mistake did not open hint")
+	_expect(bool(overlay.get_public_snapshot().get("hint_visible", false)), "hint became unavailable after third mistake")
 	_reject_wrong_actor(screen)
-	_expect(bool(overlay.get_public_snapshot().get("step_reset_visible", false)), "fourth mistake did not open step reset")
+	_expect(bool(overlay.get_public_snapshot().get("step_reset_visible", false)), "step reset became unavailable after fourth mistake")
 
-	var reset_button: Button = overlay.find_child("ResetButton", true, false)
 	reset_button.pressed.emit()
 	await process_frame
 	_expect(_tutorial_target(screen) == Vector2i.ZERO, "step reset did not hide assessment target")
-	_expect(not bool(overlay.get_public_snapshot().get("hint_visible", true)), "step reset did not reset hint tier")
+	_expect(bool(overlay.get_public_snapshot().get("hint_visible", false)), "step reset disabled the hint button")
+	_expect(bool(overlay.get_public_snapshot().get("step_reset_visible", false)), "step reset disabled itself")
 
 	if _failures.is_empty():
 		print("TUTORIAL_HINT_ESCALATION_CONTRACT_PASS")

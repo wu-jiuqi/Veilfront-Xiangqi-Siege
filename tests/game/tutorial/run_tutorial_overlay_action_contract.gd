@@ -31,6 +31,11 @@ func _run() -> void:
 			str(screen.get_presentation_snapshot().get("action_mode", "")) == "resurrect",
 			"T6 sacrifice action button did not switch the match screen to resurrect mode"
 		)
+		var decision_panel := overlay.find_child("DecisionPanel", true, false) as Control
+		_expect(
+			decision_panel != null and not decision_panel.visible,
+			"T6 sacrifice action prompt did not close after entering resurrect mode"
+		)
 	if _failures.is_empty():
 		print("TUTORIAL_OVERLAY_ACTION_CONTRACT_PASS level=T6")
 		quit(0)
