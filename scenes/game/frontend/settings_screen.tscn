@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" path="res://scenes/game/presentation/battle_command_tent_background.tscn" id="3_background"]
 [ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button.tscn" id="4_motion_button"]
 [ext_resource type="Texture2D" uid="uid://cxdwdyljintlq" path="res://assets/art/ui/settings/png_v2/settings_title_crest_v2.png" id="5_title_crest"]
+[ext_resource type="Script" path="res://scripts/game/presentation/ui/terracotta_system_dialog.gd" id="6_dialog_script"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxSettingsToggleEmpty"]
 
@@ -470,12 +471,18 @@ unique_name_in_owner = true
 
 [node name="DisplayConfirmDialog" type="ConfirmationDialog" parent="." unique_id=651942286]
 unique_name_in_owner = true
+min_size = Vector2i(620, 250)
+theme = ExtResource("1_theme")
+script = ExtResource("6_dialog_script")
 title = "确认显示设置"
 dialog_text = "新的显示设置是否正常？
 10 秒后将自动恢复原设置。"
 
 [node name="ResetProgressDialog" type="ConfirmationDialog" parent="." unique_id=2109329801]
 unique_name_in_owner = true
+min_size = Vector2i(640, 260)
+theme = ExtResource("1_theme")
+script = ExtResource("6_dialog_script")
 title = "重置关卡进度"
 ok_button_text = "确认重置"
 dialog_text = "确定清空全部教学与挑战关卡完成记录吗？
@@ -483,4 +490,7 @@ dialog_text = "确定清空全部教学与挑战关卡完成记录吗？
 
 [node name="ErrorDialog" type="AcceptDialog" parent="." unique_id=724856708]
 unique_name_in_owner = true
+min_size = Vector2i(600, 230)
+theme = ExtResource("1_theme")
+script = ExtResource("6_dialog_script")
 title = "设置操作失败"

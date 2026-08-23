@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3]
+[gd_scene load_steps=20 format=3]
 
 [ext_resource type="Script" path="res://scripts/game/frontend/start_menu_overlay.gd" id="1_script"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/start_sequence/veilfront_logo_gold_pair_v2.png" id="2_logo_pair"]
@@ -7,6 +7,8 @@
 [ext_resource type="Texture2D" path="res://assets/art/ui/start_sequence/settings_infantry_shield_gear_v1.png" id="5_settings_shield"]
 [ext_resource type="Shader" path="res://assets/shaders/ui/title_impact_mist.gdshader" id="6_impact_mist"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/start_sequence/menu_bronze_sword_button_v1.png" id="7_sword_button"]
+[ext_resource type="Theme" path="res://resources/game/ui/themes/terracotta_ui_theme.tres" id="8_dialog_theme"]
+[ext_resource type="Script" path="res://scripts/game/presentation/ui/terracotta_system_dialog.gd" id="9_dialog_script"]
 
 [sub_resource type="AtlasTexture" id="AtlasTextureMist"]
 atlas = ExtResource("2_logo_pair")
@@ -377,7 +379,6 @@ anchor_right = 0.0625
 anchor_bottom = 0.111111
 focus_mode = 2
 mouse_default_cursor_shape = 2
-tooltip_text = "设置"
 theme_override_colors/icon_normal_color = Color(0.92, 0.92, 0.86, 1)
 theme_override_colors/icon_hover_color = Color(1.12, 1.05, 0.82, 1)
 theme_override_colors/icon_pressed_color = Color(0.74, 0.68, 0.52, 1)
@@ -590,14 +591,23 @@ libraries = {&"": SubResource("AnimationLibraryMenu")}
 
 [node name="NoticeDialog" type="AcceptDialog" parent="."]
 unique_name_in_owner = true
+min_size = Vector2i(560, 220)
+theme = ExtResource("8_dialog_theme")
+script = ExtResource("9_dialog_script")
 title = "功能提示"
 dialog_text = "该功能尚未开放。"
 
 [node name="QuitDialog" type="ConfirmationDialog" parent="."]
 unique_name_in_owner = true
+min_size = Vector2i(600, 240)
+theme = ExtResource("8_dialog_theme")
+script = ExtResource("9_dialog_script")
 title = "退出游戏"
 dialog_text = "确定要退出《雾疆：九路烽棋》吗？"
 
 [node name="FatalErrorDialog" type="AcceptDialog" parent="."]
 unique_name_in_owner = true
+min_size = Vector2i(560, 220)
+theme = ExtResource("8_dialog_theme")
+script = ExtResource("9_dialog_script")
 title = "界面加载失败"
