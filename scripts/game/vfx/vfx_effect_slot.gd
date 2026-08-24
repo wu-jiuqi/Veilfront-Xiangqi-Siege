@@ -2,6 +2,7 @@ class_name VfxEffectSlot
 extends Node2D
 
 @onready var _particles: GPUParticles2D = $Particles
+@onready var _callout_label: Label = $CalloutLabel
 
 var _definition: VfxCueDefinition
 var _cue: Dictionary = {}
@@ -31,12 +32,14 @@ func trigger(cue: Dictionary, definition: VfxCueDefinition) -> void:
 	visible = true
 	modulate = Color.WHITE
 	_configure_particles()
+	_configure_callout()
 	set_process(true)
 	queue_redraw()
 
 
 func stop_immediately() -> void:
 	_particles.emitting = false
+	_callout_label.visible = false
 	_active = false
 	visible = false
 	set_process(false)
@@ -94,6 +97,7 @@ func effect_snapshot() -> Dictionary:
 		"particles_emitting": _particles.emitting,
 		"particle_amount": _particles.amount,
 		"review_hold": _review_hold,
+		"callout_text": _callout_label.text if _callout_label.visible else "",
 	}
 
 
@@ -101,12 +105,14 @@ func _process(delta: float) -> void:
 	if not _active:
 		return
 	if _review_hold:
+		_update_callout_visual()
 		queue_redraw()
 		return
 	_elapsed += maxf(delta, 0.0)
 	if _elapsed >= _duration:
 		stop_immediately()
 		return
+	_update_callout_visual()
 	queue_redraw()
 
 
@@ -141,12 +147,23 @@ func _draw() -> void:
 				var inner := Vector2.from_angle(angle) * radius * 0.22
 				var outer := Vector2.from_angle(angle) * radius * (0.48 + eased * 0.5)
 				draw_line(inner, outer, accent, 4.0)
+		"callout":
+			draw_circle(Vector2(0.0, -radius * 0.78), radius * (0.52 + 0.08 * pulse), Color(base, 0.72 * fade))
+			draw_arc(Vector2(0.0, -radius * 0.78), radius * (0.58 + 0.1 * eased), 0.0, TAU, 40, accent, 4.0)
 		"bombardment":
 			for ring: int in 3:
 				var ring_phase := clampf(eased * 1.28 - float(ring) * 0.14, 0.0, 1.0)
 				draw_arc(Vector2.ZERO, radius * (0.18 + ring_phase), 0.0, TAU, 56, Color(accent, fade * (0.9 - ring * 0.18)), 5.0 - ring)
 			draw_line(Vector2(-radius, 0.0), Vector2(radius, 0.0), Color(base, fade * 0.72), 3.0)
 			draw_line(Vector2(0.0, -radius), Vector2(0.0, radius), Color(base, fade * 0.72), 3.0)
+		"resurrection":
+			for ring: int in 2:
+				var ring_radius := radius * (0.34 + eased * (0.36 + 0.18 * ring))
+				draw_arc(Vector2.ZERO, ring_radius, 0.0, TAU, 48, Color(accent, fade * (0.86 - ring * 0.22)), 4.0 - ring)
+			for stroke: int in 5:
+				var x := lerpf(-radius * 0.48, radius * 0.48, float(stroke) / 4.0)
+				var rise := radius * (0.24 + eased * (0.72 + 0.08 * (stroke % 2)))
+				draw_line(Vector2(x, radius * 0.34), Vector2(x * 0.5, radius * 0.34 - rise), Color(base, fade * 0.82), 3.0)
 		"wall":
 			var half_width := radius * 2.8
 			draw_line(Vector2(-half_width, 0.0), Vector2(half_width, 0.0), Color(base, fade * 0.35), 15.0)
@@ -193,6 +210,12 @@ func _draw_reduced_family(
 				Vector2(0.0, radius * 0.55), Vector2(-radius * 0.45, 0.0), Vector2(0.0, -radius * 0.55),
 			])
 			draw_polyline(points, Color(accent, 0.7 * fade), 4.0)
+		"callout":
+			draw_circle(Vector2(0.0, -radius * 0.78), radius * 0.5, Color(base, 0.58 * fade))
+			draw_arc(Vector2(0.0, -radius * 0.78), radius * 0.56, 0.0, TAU, 32, Color(accent, 0.72 * fade), 4.0)
+		"resurrection":
+			draw_arc(Vector2.ZERO, radius * 0.68, 0.0, TAU, 40, Color(accent, 0.72 * fade), 5.0)
+			draw_line(Vector2(0.0, radius * 0.34), Vector2(0.0, -radius * 0.52), Color(base, 0.72 * fade), 4.0)
 		_:
 			draw_arc(Vector2.ZERO, radius * 0.72, 0.0, TAU, 40, Color(accent, 0.72 * fade), 5.0)
 
@@ -211,6 +234,27 @@ func _configure_particles() -> void:
 		return
 	_particles.restart()
 	_particles.emitting = true
+
+
+func _configure_callout() -> void:
+	_callout_label.visible = _definition.family == "callout"
+	if not _callout_label.visible:
+		_callout_label.text = ""
+		return
+	_callout_label.text = "将" if cue_key() == "vfx.callout.general" else "吃"
+	_update_callout_visual()
+
+
+func _update_callout_visual() -> void:
+	if not _callout_label.visible or _duration <= 0.0:
+		return
+	var progress := clampf(_elapsed / _duration, 0.0, 1.0)
+	var eased := 1.0 - pow(1.0 - progress, 3.0)
+	var rise := 0.0 if _reduced_motion else 18.0 * eased
+	_callout_label.position = Vector2(-48.0, -98.0 - rise)
+	var pop := 1.0 if _reduced_motion else 0.72 + 0.34 * sin(minf(progress * 2.0, 1.0) * PI * 0.5)
+	_callout_label.scale = Vector2.ONE * pop
+	_callout_label.modulate = Color(1.0, 1.0, 1.0, 1.0 - progress)
 
 
 func _faction_color(source: Color) -> Color:

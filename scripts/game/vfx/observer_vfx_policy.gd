@@ -32,6 +32,7 @@ static func derive_batch(
 		_append_terminal_candidate(candidates, {}, current_view)
 	else:
 		_append_settlement_candidates(candidates, previous_view, current_view, visible_events)
+		_append_resurrection_candidates(candidates, previous_view, current_view)
 		_append_capture_candidates(candidates, previous_view, current_view)
 		_append_wall_candidates(candidates, previous_view, current_view)
 		_append_flag_candidates(candidates, previous_view, current_view)
@@ -154,6 +155,8 @@ static func _append_settlement_candidates(
 		var current_position: Array = _public_position(current_piece.get("position", []))
 		if previous_position.is_empty() or current_position.is_empty() \
 		or previous_position == current_position \
+		or not bool(previous_piece.get("alive", true)) \
+		or bool(previous_piece.get("in_reserve", false)) \
 		or not bool(current_piece.get("alive", true)) \
 		or bool(current_piece.get("in_reserve", false)):
 			continue
@@ -195,7 +198,7 @@ static func _append_capture_candidates(
 			continue
 		candidates.append(_candidate(
 			PHASE_CASUALTY,
-			"capture-%s" % piece_id,
+			"capture-%s-010-impact" % piece_id,
 			"vfx.capture.impact",
 			"view_diff",
 			"board_2d",
@@ -205,6 +208,59 @@ static func _append_capture_candidates(
 			"play_once",
 			str(ghost.get("side", "")),
 			"ghost-%s" % piece_id
+		))
+		var is_general: bool = str(ghost.get("piece_type", "")) in ["general", "king"]
+		candidates.append(_candidate(
+			PHASE_CASUALTY,
+			"capture-%s-020-callout" % piece_id,
+			"vfx.callout.general" if is_general else "vfx.callout.capture",
+			"view_diff",
+			"board_2d",
+			position,
+			"critical" if is_general else "high",
+			"callout",
+			"replace_group",
+			str(previous_view.get("active_side", "")),
+			"callout-%s-%s" % [piece_id, "general" if is_general else "capture"]
+		))
+
+
+static func _append_resurrection_candidates(
+	candidates: Array[Dictionary],
+	previous_view: Dictionary,
+	current_view: Dictionary
+) -> void:
+	if int(current_view["action_index"]) != int(previous_view["action_index"]) + 1:
+		return
+	var previous_pieces: Dictionary = _records_by_id(previous_view.get("pieces", []), "id")
+	var current_pieces: Dictionary = _records_by_id(current_view.get("pieces", []), "id")
+	var piece_ids: Array = current_pieces.keys()
+	piece_ids.sort()
+	for piece_id_value: Variant in piece_ids:
+		var piece_id: String = str(piece_id_value)
+		if not previous_pieces.has(piece_id):
+			continue
+		var previous_piece: Dictionary = previous_pieces[piece_id]
+		var current_piece: Dictionary = current_pieces[piece_id]
+		var was_unavailable: bool = not bool(previous_piece.get("alive", true)) \
+			or bool(previous_piece.get("in_reserve", false))
+		var is_restored: bool = bool(current_piece.get("alive", false)) \
+			and not bool(current_piece.get("in_reserve", false))
+		var position: Array = _public_position(current_piece.get("position", []))
+		if not was_unavailable or not is_restored or position.is_empty():
+			continue
+		candidates.append(_candidate(
+			PHASE_SETTLEMENT,
+			"030-resurrection-%s" % piece_id,
+			"vfx.resurrection.revive",
+			"view_diff",
+			"board_2d",
+			position,
+			"high",
+			"resurrection",
+			"play_once",
+			str(current_piece.get("side", "")),
+			"resurrection-%s" % piece_id
 		))
 
 

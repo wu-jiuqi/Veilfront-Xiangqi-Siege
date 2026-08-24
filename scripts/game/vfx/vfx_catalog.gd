@@ -2,7 +2,8 @@ class_name VfxCatalog
 extends Resource
 
 const REQUIRED_FAMILIES: Array[String] = [
-	"selection", "move", "capture", "bombardment", "wall", "flag", "terminal",
+	"selection", "move", "capture", "callout", "bombardment", "resurrection",
+	"wall", "flag", "terminal",
 ]
 
 @export var definitions: Array[VfxCueDefinition] = []

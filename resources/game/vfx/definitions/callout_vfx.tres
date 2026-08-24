@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="VfxCueDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/vfx/vfx_cue_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+family = "callout"
+cue_prefix = "vfx.callout"
+display_name = "吃将 · 军令弹字"
+base_color = Color(0.24, 0.08, 0.055, 0.88)
+accent_color = Color(1, 0.78, 0.34, 1)
+duration_standard = 0.72
+duration_reduced = 0.28
+radius = 48.0
+particles_standard = 0
+particles_reduced = 0
+overdraw_points_standard = 2
+overdraw_points_reduced = 1
+max_instances = 2
+flash_hz_max = 0.0
+flash_area_ratio_max = 0.02

@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="VfxCatalog" load_steps=10 format=3]
+[gd_resource type="Resource" script_class="VfxCatalog" load_steps=12 format=3]
 
 [ext_resource type="Script" path="res://scripts/game/vfx/vfx_catalog.gd" id="1"]
 [ext_resource type="Script" path="res://scripts/game/vfx/vfx_cue_definition.gd" id="9"]
@@ -9,7 +9,9 @@
 [ext_resource type="Resource" path="res://resources/game/vfx/definitions/wall_vfx.tres" id="6"]
 [ext_resource type="Resource" path="res://resources/game/vfx/definitions/flag_vfx.tres" id="7"]
 [ext_resource type="Resource" path="res://resources/game/vfx/definitions/terminal_vfx.tres" id="8"]
+[ext_resource type="Resource" path="res://resources/game/vfx/definitions/callout_vfx.tres" id="10"]
+[ext_resource type="Resource" path="res://resources/game/vfx/definitions/resurrection_vfx.tres" id="11"]
 
 [resource]
 script = ExtResource("1")
-definitions = Array[ExtResource("9")]([ExtResource("2"), ExtResource("3"), ExtResource("4"), ExtResource("5"), ExtResource("6"), ExtResource("7"), ExtResource("8")])
+definitions = Array[ExtResource("9")]([ExtResource("2"), ExtResource("3"), ExtResource("4"), ExtResource("10"), ExtResource("5"), ExtResource("11"), ExtResource("6"), ExtResource("7"), ExtResource("8")])

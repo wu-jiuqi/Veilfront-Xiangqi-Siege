@@ -24,9 +24,10 @@ func _capture() -> void:
 		families.append(str(effect_value.get("family", "")))
 	families.sort()
 	var expected := PackedStringArray([
-		"bombardment", "capture", "flag", "move", "selection", "terminal", "wall",
+		"bombardment", "callout", "capture", "flag", "move", "resurrection",
+		"selection", "terminal", "wall",
 	])
-	if int(snapshot.get("active_count", 0)) != 7 or families != expected:
+	if int(snapshot.get("active_count", 0)) != 9 or families != expected:
 		push_error("VFX review hold missing families: active=%s families=%s" % [snapshot.get("active_count", 0), families])
 		quit(4)
 		return
@@ -39,7 +40,7 @@ func _capture() -> void:
 		return
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://evidence/gate3/vfx"))
 	var result := image.save_png(ProjectSettings.globalize_path(OUTPUT_PATH))
-	print("VFX_REVIEW_CAPTURE_%s path=%s active=7 families=%s review_hold=true" % ["PASS" if result == OK else "FAIL", OUTPUT_PATH, families])
+	print("VFX_REVIEW_CAPTURE_%s path=%s active=9 families=%s review_hold=true" % ["PASS" if result == OK else "FAIL", OUTPUT_PATH, families])
 	review.queue_free()
 	viewport.queue_free()
 	await process_frame

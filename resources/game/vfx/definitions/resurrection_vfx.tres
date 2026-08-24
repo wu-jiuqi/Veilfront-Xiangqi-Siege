@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="VfxCueDefinition" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/vfx/vfx_cue_definition.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/vfx/source/seal_shard_v1.svg" id="2"]
+
+[resource]
+script = ExtResource("1")
+family = "resurrection"
+cue_prefix = "vfx.resurrection"
+display_name = "复活 · 回魂军印"
+base_color = Color(0.35, 0.66, 0.52, 0.88)
+accent_color = Color(0.96, 0.86, 0.52, 1)
+duration_standard = 0.9
+duration_reduced = 0.3
+radius = 62.0
+particles_standard = 8
+particles_reduced = 2
+overdraw_points_standard = 3
+overdraw_points_reduced = 2
+max_instances = 1
+flash_hz_max = 1.2
+flash_area_ratio_max = 0.03
+particle_texture = ExtResource("2")

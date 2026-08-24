@@ -13,7 +13,7 @@ offset_right = 930.0
 offset_bottom = 58.0
 theme_override_colors/font_color = Color(0.94, 0.82, 0.57, 1)
 theme_override_font_sizes/font_size = 26
-text = "雾疆 · VFX Cue v1 七族运行时样片"
+text = "雾疆 · VFX Cue v1 九族运行时样片"
 
 [node name="Subtitle" type="Label" parent="."]
 offset_left = 820.0
@@ -59,18 +59,18 @@ offset_right = 1180.0
 offset_bottom = 462.0
 theme_override_colors/font_color = Color(0.82, 0.84, 0.79, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.7)
-theme_override_constants/line_spacing = 13
-theme_override_font_sizes/font_size = 20
-text = "01  选中  · 双层定位金环\n02  移动  · 墨尘行迹\n03  吃子  · 碎印冲击\n04  炮击  · 固定三重震环\n05  城墙  · 九路符印波\n06  旗帜  · 军印回响\n07  终局  · 天幕军印"
+theme_override_constants/line_spacing = 4
+theme_override_font_sizes/font_size = 18
+text = "01  选中  · 双层定位金环\n02  移动  · 墨尘行迹\n03  吃子  · 碎印冲击\n04  吃将  · 军令弹字\n05  炮击  · 固定三重震环\n06  复活  · 回魂军印\n07  城墙  · 九路符印波\n08  旗帜  · 军印回响\n09  终局  · 天幕军印"
 
 [node name="Guardrails" type="Label" parent="."]
 offset_left = 560.0
-offset_top = 492.0
+offset_top = 456.0
 offset_right = 1184.0
 offset_bottom = 626.0
 theme_override_colors/font_color = Color(0.57, 0.7, 0.65, 1)
 theme_override_font_sizes/font_size = 16
-text = "标准档：12 个预置槽 · 100 overdraw points\n减少动态：粒子 0–3 · 仅淡入淡出/静态符号 · 56 points\n闪烁：≤ 3 Hz；全屏面积峰值 ≤ 18%；禁止相机震动\n位置：只接受 position_public；空位置只进入 global 层"
+text = "标准档：12 个预置槽 · 100 overdraw points\n减少动态：粒子 0–3 · 静态弹字/符号 · 37/56 points\n闪烁：≤ 3 Hz；全屏面积峰值 ≤ 18%；禁止相机震动\n位置：只接受 position_public；空位置只进入 global 层"
 
 [node name="Footer" type="Label" parent="."]
 offset_left = 560.0

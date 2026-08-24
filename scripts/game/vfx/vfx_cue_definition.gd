@@ -26,7 +26,8 @@ func matches(cue_key: String) -> bool:
 
 func is_valid_definition() -> bool:
 	return family in [
-		"selection", "move", "capture", "bombardment", "wall", "flag", "terminal",
+		"selection", "move", "capture", "callout", "bombardment", "resurrection",
+		"wall", "flag", "terminal",
 	] and cue_prefix == "vfx.%s" % family \
 		and not display_name.is_empty() \
 		and duration_reduced <= duration_standard \
