@@ -36,10 +36,12 @@ func reset_for_new_session() -> void:
 	_last_frame_sequence = 0
 
 
-func request_action_previews(_piece_id: String, _action_type: String) -> void:
-	# The authoritative batch already contains the complete observer-safe preview
-	# set. Re-publishing it keeps the local and LAN ports behaviorally aligned.
-	action_previews_updated.emit(_available_previews.duplicate(true))
+func request_action_previews(piece_id: String, action_type: String) -> void:
+	# The authoritative observer batch remains the only preview source. Selection
+	# only narrows that already validated cache and never republishes PlayerView.
+	action_previews_updated.emit(
+		_filter_action_previews(_available_previews, piece_id, action_type)
+	)
 
 
 func prepare_action(preview_id: String) -> void:

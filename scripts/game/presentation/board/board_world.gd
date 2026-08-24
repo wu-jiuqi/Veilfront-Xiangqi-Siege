@@ -53,7 +53,7 @@ func set_presentation_assets(theme: BoardTheme, selected_map: BoardMapOption) ->
 		render_player_view(_current_view)
 
 
-func render_player_view(view: Dictionary) -> void:
+func render_player_view(view: Dictionary, fog_mask_texture: ImageTexture = null) -> void:
 	_current_view = view.duplicate(true)
 	_viewer_side = str(_current_view.get("viewer_side", "red"))
 	if _side not in ["red", "black"]:
@@ -65,7 +65,8 @@ func render_player_view(view: Dictionary) -> void:
 		_current_view.get("visible_cells", []),
 		_current_view.get("hidden_detection_cells", []),
 		_side,
-		cell_size
+		cell_size,
+		fog_mask_texture
 	)
 	_wall_renderer.render(_current_view.get("walls", []), _side, cell_size)
 	_flag_renderer.render(_current_view.get("flags", []), _side, cell_size)
@@ -177,6 +178,10 @@ func set_presentation_side(side: String) -> void:
 
 func get_cell_size() -> Vector2:
 	return board_theme.cell_size
+
+
+func get_fog_mask_texture() -> ImageTexture:
+	return _fog_overlay.get_mask_texture() as ImageTexture
 
 
 func find_piece_cell_at_world_position(world_position: Vector2) -> Vector2i:

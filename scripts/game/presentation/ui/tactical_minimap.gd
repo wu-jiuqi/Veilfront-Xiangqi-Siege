@@ -35,11 +35,15 @@ func _ready() -> void:
 	queue_redraw()
 
 
-func render_player_view(view: Dictionary, display_side: String = "red") -> void:
+func render_player_view(
+	view: Dictionary,
+	display_side: String = "red",
+	fog_mask_texture: ImageTexture = null
+) -> void:
 	_view = view.duplicate(true)
 	_display_side = display_side if display_side in ["red", "black"] else "red"
 	_bird_eye_world.set_presentation_side(_display_side)
-	_bird_eye_world.render_player_view(_view)
+	_bird_eye_world.render_player_view(_view, fog_mask_texture)
 	_sync_bird_eye_layout()
 	queue_redraw()
 

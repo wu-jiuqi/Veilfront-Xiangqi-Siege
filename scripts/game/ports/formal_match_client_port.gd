@@ -3,6 +3,7 @@ extends MatchClientPort
 
 var _session: RefCounted
 var _prepared_preview_id: String = ""
+var _available_previews: Array = []
 
 
 func _init(session: RefCounted, bound_side: String = "red") -> void:
@@ -14,8 +15,10 @@ func publish_current() -> Dictionary:
 	return _publish_payload(_session.current_payload())
 
 
-func request_action_previews(_piece_id: String, _action_type: String) -> void:
-	publish_current()
+func request_action_previews(piece_id: String, action_type: String) -> void:
+	action_previews_updated.emit(
+		_filter_action_previews(_available_previews, piece_id, action_type)
+	)
 
 
 func prepare_action(preview_id: String) -> void:
@@ -46,8 +49,7 @@ func cancel_prepared_action() -> void:
 
 
 func request_skip() -> void:
-	var previews: Array = _session.current_payload().get("action_previews", [])
-	for preview_value: Variant in previews:
+	for preview_value: Variant in _available_previews:
 		if preview_value is Dictionary and str(preview_value.get("action_type", "")) == "skip":
 			confirm_prepared_action(str(preview_value.get("preview_id", "")))
 			return
@@ -82,8 +84,7 @@ func apply_tutorial_effect(step_id: String) -> Dictionary:
 
 
 func _find_preview(preview_id: String) -> Dictionary:
-	var previews: Array = _session.current_payload().get("action_previews", [])
-	for preview_value: Variant in previews:
+	for preview_value: Variant in _available_previews:
 		if preview_value is Dictionary and str(preview_value.get("preview_id", "")) == preview_id:
 			return preview_value.duplicate(true)
 	return {}
@@ -121,6 +122,7 @@ func _publish_payload(payload: Dictionary) -> Dictionary:
 		_prepared_preview_id
 	)
 	if bool(publish_result.get("ok", false)):
+		_available_previews = payload.get("action_previews", []).duplicate(true)
 		session_state_changed.emit({
 			"state": "ready",
 			"match_id": str(player_view.get("match_id", "")),

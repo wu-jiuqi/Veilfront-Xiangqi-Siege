@@ -81,6 +81,20 @@ func _decode_many(codec: Variant, encoded_values: Array) -> Dictionary:
 	return {"ok": true, "values": values, "error_code": ""}
 
 
+func _filter_action_previews(previews: Array, piece_id: String, action_type: String) -> Array:
+	var filtered: Array = []
+	for preview_value: Variant in previews:
+		if not preview_value is Dictionary:
+			continue
+		var preview: Dictionary = preview_value
+		if not piece_id.is_empty() and str(preview.get("piece_id", "")) != piece_id:
+			continue
+		if not action_type.is_empty() and str(preview.get("action_type", "")) != action_type:
+			continue
+		filtered.append(preview.duplicate(true))
+	return filtered
+
+
 func _port_failure() -> Dictionary:
 	return {"ok": false, "error_code": "invalid_observer_payload"}
 

@@ -507,7 +507,11 @@ func render_player_view(view: Dictionary) -> void:
 	if is_instance_valid(_turn_status_controller):
 		_turn_status_controller.call("sync_player_view", view, turn_timeout_enabled)
 	_board_viewport.render_player_view(view)
-	_tactical_minimap.render_player_view(view, _board_viewport.get_presentation_side())
+	_tactical_minimap.render_player_view(
+		view,
+		_board_viewport.get_presentation_side(),
+		_board_viewport.get_fog_mask_texture()
+	)
 	_update_faction_panels()
 	_update_unit_card()
 	_update_mirror_button()

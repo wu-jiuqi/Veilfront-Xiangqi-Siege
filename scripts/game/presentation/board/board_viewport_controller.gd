@@ -109,6 +109,10 @@ func get_presentation_side() -> String:
 	return _board_world.get_display_side()
 
 
+func get_fog_mask_texture() -> ImageTexture:
+	return _board_world.get_fog_mask_texture() as ImageTexture
+
+
 func render_player_view(view: Dictionary) -> void:
 	var is_initial_view: bool = not _has_session_view
 	var visible_enemy_move_cell: Vector2i = Vector2i.ZERO
