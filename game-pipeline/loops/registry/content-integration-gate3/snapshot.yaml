@@ -75,13 +75,13 @@ registry_snapshot:
       - GATE-3
   runtime:
     current_state: active
-    state_entered_at: '2026-08-24T17:11:11.859059+08:00'
-    current_iteration: 1
-    last_transition_id: TR-READY-ACTIVE
-    last_event_id: 2987b7ad-b6a6-4282-9e02-f2b374d8bb6a
-    last_event_digest: 2b94e6598384a3695d6b2ce98f9509148ed5f1e9089646a594acd98b82b75748
-    last_event_sequence: 15
-    record_revision: 15
+    state_entered_at: '2026-08-24T19:23:46.989995+08:00'
+    current_iteration: 2
+    last_transition_id: TR-REVIEW-ACTIVE
+    last_event_id: 0102ed5c-6c76-41b1-bc38-bb86f5a032f7
+    last_event_digest: bfb500d971119f35e09fcdfb277e4910101c9952776ce48ff9ee1e2f94804eab
+    last_event_sequence: 21
+    record_revision: 21
   budget:
     limits:
       iteration_limit: 5
@@ -90,13 +90,13 @@ registry_snapshot:
         amount: 0
         unit: CNY
     usage:
-      completed_iterations: 0
+      completed_iterations: 1
       active_time_seconds: 0
       cost:
         amount: 0
         unit: CNY
     status: available
-    last_updated_at: '2026-08-24T17:11:11.859059+08:00'
+    last_updated_at: '2026-08-24T19:23:46.989995+08:00'
   resources:
     inputs:
     - input_slot_id: INPUT-GATE2-HANDOFF-001
@@ -180,9 +180,68 @@ registry_snapshot:
       produced_in_iteration: 1
       lifecycle_status: submitted
       registered_by_event_id: ff08dc60-3e6e-4328-bbb0-11d9e6e4095e
+    - deliverable_id: DELIVERABLE-AUDIO-G3-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:deliverable-audio-g3-001@g3-iteration1-foundation-v1
+        artifact_type: observer-safe-audio-cue-foundation
+        version: g3-iteration1-foundation-v1
+        uri: docs/audio/observer-safe-audio-cue-contract-v1.md
+        digest:
+          algorithm: sha256
+          value: 19fa58a0b19500d131e90e4f3a23fce35eafa9fb66bea840a39aaa4db89c4d93
+        manifest_paths:
+        - docs/audio/observer-safe-audio-cue-contract-v1.md
+        - scripts/game/audio/observer_audio_policy.gd
+        - tests/game/audio/run_observer_audio_policy_contract.gd
+      produced_in_iteration: 1
+      lifecycle_status: foundation_submitted
+      registered_by_event_id: 323d4d63-dd5a-42ca-a228-c60cfbe99ce0
+    - deliverable_id: DELIVERABLE-VFX-G3-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:deliverable-vfx-g3-001@g3-iteration1-foundation-v1
+        artifact_type: observer-safe-vfx-cue-foundation
+        version: g3-iteration1-foundation-v1
+        uri: docs/vfx/observer-safe-vfx-cue-contract-v1.md
+        digest:
+          algorithm: sha256
+          value: 8c705261ae96b0778397a56e4b67f935b60d99c08b2acbc88f2f996e4662c970
+        manifest_paths:
+        - docs/vfx/observer-safe-vfx-cue-contract-v1.md
+        - scripts/game/vfx/observer_vfx_policy.gd
+        - tests/game/vfx/run_vfx_cue_contract.gd
+      produced_in_iteration: 1
+      lifecycle_status: foundation_submitted
+      registered_by_event_id: e7acd884-eecd-4955-9e5e-357e392e77eb
+    - deliverable_id: DELIVERABLE-UIUX-G3-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:deliverable-uiux-g3-001@g3-iteration1-foundation-v1
+        artifact_type: unified-desktop-ui-interaction-foundation
+        version: g3-iteration1-foundation-v1
+        uri: docs/ui/gate3-ui-foundation-v1.md
+        digest:
+          algorithm: sha256
+          value: 3d1638fc9369c5602a354d341891c73954b7bbab6cf4100160a381a889304ee6
+        manifest_paths:
+        - docs/ui/gate3-ui-foundation-v1.md
+        - scenes/game/ui/ui_motion_button.tscn
+        - scenes/game/ui/ui_motion_button_primary.tscn
+        - scenes/game/ui/ui_motion_button_secondary.tscn
+        - scenes/game/ui/ui_motion_button_danger.tscn
+        - scenes/game/ui/ui_motion_button_confirm.tscn
+        - tests/game/ui/run_gate3_ui_foundation_contract.gd
+      produced_in_iteration: 1
+      lifecycle_status: foundation_submitted
+      registered_by_event_id: e048785e-1193-44a4-8679-543edce75bfa
   acceptance_snapshot:
-    subject_digest: null
-    automated_checks: []
+    subject_digest: 8a4610c3a5d6817fbce53b8bdda5bc49690c3dd6c55ad9dfb920c2acba719606
+    automated_checks:
+    - check_id: CHECK-G3-ITERATION1-FOUNDATION
+      decision: passed
+      scope:
+      - TASK-EXPORT-G3-001
+      - TASK-CUE-CONTRACT-G3-001
+      - TASK-UI-FOUNDATION-G3-001
+      evidence_ref: evidence/gate3/iteration1-foundation-handoff-v1.md
     professional_reviews: []
     human_gates: []
     final_handoff_ref: null

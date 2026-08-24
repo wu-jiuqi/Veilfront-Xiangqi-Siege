@@ -651,3 +651,279 @@ event_history:
     digest_algorithm: sha256
     previous_event_digest: 8457eb50dcb99df671f42c52dd8a4ed29df1ed17ced2aa2cf0050b15a70f1d07
     event_digest: 2b94e6598384a3695d6b2ce98f9509148ed5f1e9089646a594acd98b82b75748
+- schema_version: '0.1'
+  event_id: 323d4d63-dd5a-42ca-a228-c60cfbe99ce0
+  mutation_id: bd488a4e-5ea2-4603-8753-7008ad97c786
+  loop_instance_id: e6e0f300-2130-41d0-8020-f7f4006deb3f
+  sequence: 16
+  event_type: core.output_registered
+  occurred_at: '2026-08-24T19:23:46.989995+08:00'
+  recorded_at: '2026-08-24T19:23:46.989995+08:00'
+  actor:
+    actor_id: inst:01M02NJ3JEQXKV6PT6DPX0NKQ0
+    role: pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+    authority_id: AUTH-VEILFRONT-GODOT-TECHNOLOGY
+  causality:
+    correlation_id: 185cf172-89bd-48d9-a198-30178688a9ac
+    causation_event_id: 2987b7ad-b6a6-4282-9e02-f2b374d8bb6a
+    request_id: register-deliverable-audio-g3-001-foundation
+  concurrency:
+    expected_record_revision: 15
+    resulting_record_revision: 16
+  binding_snapshot:
+    contract_digest: d97937b94c07399e00c63e1a5651d55c9eceb30378214838902dbe377d0a7e2a
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    deliverable_id: DELIVERABLE-AUDIO-G3-001
+    before: null
+    after:
+      deliverable_id: DELIVERABLE-AUDIO-G3-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:deliverable-audio-g3-001@g3-iteration1-foundation-v1
+        artifact_type: observer-safe-audio-cue-foundation
+        version: g3-iteration1-foundation-v1
+        uri: docs/audio/observer-safe-audio-cue-contract-v1.md
+        digest:
+          algorithm: sha256
+          value: 19fa58a0b19500d131e90e4f3a23fce35eafa9fb66bea840a39aaa4db89c4d93
+        manifest_paths:
+        - docs/audio/observer-safe-audio-cue-contract-v1.md
+        - scripts/game/audio/observer_audio_policy.gd
+        - tests/game/audio/run_observer_audio_policy_contract.gd
+      produced_in_iteration: 1
+      lifecycle_status: foundation_submitted
+      registered_by_event_id: 323d4d63-dd5a-42ca-a228-c60cfbe99ce0
+  evidence_refs:
+  - docs/audio/observer-safe-audio-cue-contract-v1.md
+  - scripts/game/audio/observer_audio_policy.gd
+  - tests/game/audio/run_observer_audio_policy_contract.gd
+  - evidence/gate3/iteration1-foundation-handoff-v1.md
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: 2b94e6598384a3695d6b2ce98f9509148ed5f1e9089646a594acd98b82b75748
+    event_digest: 8c39b7d61f08c44eb5bbd002a84d4feed977a2315dccc40d2b47345b6232591a
+- schema_version: '0.1'
+  event_id: e7acd884-eecd-4955-9e5e-357e392e77eb
+  mutation_id: f1aeb73e-007e-4b65-abe0-303992a72209
+  loop_instance_id: e6e0f300-2130-41d0-8020-f7f4006deb3f
+  sequence: 17
+  event_type: core.output_registered
+  occurred_at: '2026-08-24T19:23:46.989995+08:00'
+  recorded_at: '2026-08-24T19:23:46.989995+08:00'
+  actor:
+    actor_id: inst:01M0QY1VFX7SFXVFXGATE3VFX1
+    role: pos:veilfront-xiangqi-siege:design-experience:visual-production-lead
+    authority_id: AUTH-VEILFRONT-VISUAL-PRODUCTION
+  causality:
+    correlation_id: 185cf172-89bd-48d9-a198-30178688a9ac
+    causation_event_id: 323d4d63-dd5a-42ca-a228-c60cfbe99ce0
+    request_id: register-deliverable-vfx-g3-001-foundation
+  concurrency:
+    expected_record_revision: 16
+    resulting_record_revision: 17
+  binding_snapshot:
+    contract_digest: d97937b94c07399e00c63e1a5651d55c9eceb30378214838902dbe377d0a7e2a
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    deliverable_id: DELIVERABLE-VFX-G3-001
+    before: null
+    after:
+      deliverable_id: DELIVERABLE-VFX-G3-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:deliverable-vfx-g3-001@g3-iteration1-foundation-v1
+        artifact_type: observer-safe-vfx-cue-foundation
+        version: g3-iteration1-foundation-v1
+        uri: docs/vfx/observer-safe-vfx-cue-contract-v1.md
+        digest:
+          algorithm: sha256
+          value: 8c705261ae96b0778397a56e4b67f935b60d99c08b2acbc88f2f996e4662c970
+        manifest_paths:
+        - docs/vfx/observer-safe-vfx-cue-contract-v1.md
+        - scripts/game/vfx/observer_vfx_policy.gd
+        - tests/game/vfx/run_vfx_cue_contract.gd
+      produced_in_iteration: 1
+      lifecycle_status: foundation_submitted
+      registered_by_event_id: e7acd884-eecd-4955-9e5e-357e392e77eb
+  evidence_refs:
+  - docs/vfx/observer-safe-vfx-cue-contract-v1.md
+  - scripts/game/vfx/observer_vfx_policy.gd
+  - tests/game/vfx/run_vfx_cue_contract.gd
+  - evidence/gate3/iteration1-foundation-handoff-v1.md
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: 8c39b7d61f08c44eb5bbd002a84d4feed977a2315dccc40d2b47345b6232591a
+    event_digest: 392278ec287ecc65cc676e63d380cb29089c0c15da107ba69caa85aa54f83b3b
+- schema_version: '0.1'
+  event_id: e048785e-1193-44a4-8679-543edce75bfa
+  mutation_id: cebaeb2a-3b89-4be8-91bd-7462d597fb48
+  loop_instance_id: e6e0f300-2130-41d0-8020-f7f4006deb3f
+  sequence: 18
+  event_type: core.output_registered
+  occurred_at: '2026-08-24T19:23:46.989995+08:00'
+  recorded_at: '2026-08-24T19:23:46.989995+08:00'
+  actor:
+    actor_id: inst:01M02NJ3JENHD8VV7EKC9G198Q
+    role: pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
+    authority_id: AUTH-VEILFRONT-SYSTEMS-EXPERIENCE
+  causality:
+    correlation_id: 185cf172-89bd-48d9-a198-30178688a9ac
+    causation_event_id: e7acd884-eecd-4955-9e5e-357e392e77eb
+    request_id: register-deliverable-uiux-g3-001-foundation
+  concurrency:
+    expected_record_revision: 17
+    resulting_record_revision: 18
+  binding_snapshot:
+    contract_digest: d97937b94c07399e00c63e1a5651d55c9eceb30378214838902dbe377d0a7e2a
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    deliverable_id: DELIVERABLE-UIUX-G3-001
+    before: null
+    after:
+      deliverable_id: DELIVERABLE-UIUX-G3-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:deliverable-uiux-g3-001@g3-iteration1-foundation-v1
+        artifact_type: unified-desktop-ui-interaction-foundation
+        version: g3-iteration1-foundation-v1
+        uri: docs/ui/gate3-ui-foundation-v1.md
+        digest:
+          algorithm: sha256
+          value: 3d1638fc9369c5602a354d341891c73954b7bbab6cf4100160a381a889304ee6
+        manifest_paths:
+        - docs/ui/gate3-ui-foundation-v1.md
+        - scenes/game/ui/ui_motion_button.tscn
+        - scenes/game/ui/ui_motion_button_primary.tscn
+        - scenes/game/ui/ui_motion_button_secondary.tscn
+        - scenes/game/ui/ui_motion_button_danger.tscn
+        - scenes/game/ui/ui_motion_button_confirm.tscn
+        - tests/game/ui/run_gate3_ui_foundation_contract.gd
+      produced_in_iteration: 1
+      lifecycle_status: foundation_submitted
+      registered_by_event_id: e048785e-1193-44a4-8679-543edce75bfa
+  evidence_refs:
+  - docs/ui/gate3-ui-foundation-v1.md
+  - scenes/game/ui/ui_motion_button.tscn
+  - scenes/game/ui/ui_motion_button_primary.tscn
+  - scenes/game/ui/ui_motion_button_secondary.tscn
+  - scenes/game/ui/ui_motion_button_danger.tscn
+  - scenes/game/ui/ui_motion_button_confirm.tscn
+  - tests/game/ui/run_gate3_ui_foundation_contract.gd
+  - evidence/gate3/iteration1-foundation-handoff-v1.md
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: 392278ec287ecc65cc676e63d380cb29089c0c15da107ba69caa85aa54f83b3b
+    event_digest: 3267fc7469a8fceed46ca87ead78da1fa8bc7b34b9c4fab2a85ccb8e2f167f8a
+- schema_version: '0.1'
+  event_id: cbf15237-a929-4a03-9bae-030d34260bf7
+  mutation_id: 4a500bf6-ef41-49e0-9f96-72f7d0142c53
+  loop_instance_id: e6e0f300-2130-41d0-8020-f7f4006deb3f
+  sequence: 19
+  event_type: core.acceptance_recorded
+  occurred_at: '2026-08-24T19:23:46.989995+08:00'
+  recorded_at: '2026-08-24T19:23:46.989995+08:00'
+  actor: &id003
+    actor_id: inst:01M02M6X3Q8YWJXHY52K3V5AR2
+    role: pos:veilfront-xiangqi-siege:root:project-manager
+    authority_id: AUTH-VEILFRONT-PROJECT-MANAGER
+  causality:
+    correlation_id: 185cf172-89bd-48d9-a198-30178688a9ac
+    causation_event_id: e048785e-1193-44a4-8679-543edce75bfa
+    request_id: record-gate3-iteration1-foundation-check
+  concurrency:
+    expected_record_revision: 18
+    resulting_record_revision: 19
+  binding_snapshot:
+    contract_digest: d97937b94c07399e00c63e1a5651d55c9eceb30378214838902dbe377d0a7e2a
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    acceptance_kind: automated_check
+    record_id: CHECK-G3-ITERATION1-FOUNDATION
+    subject_digest: 8a4610c3a5d6817fbce53b8bdda5bc49690c3dd6c55ad9dfb920c2acba719606
+    record:
+      check_id: CHECK-G3-ITERATION1-FOUNDATION
+      decision: passed
+      scope:
+      - TASK-EXPORT-G3-001
+      - TASK-CUE-CONTRACT-G3-001
+      - TASK-UI-FOUNDATION-G3-001
+      evidence_ref: evidence/gate3/iteration1-foundation-handoff-v1.md
+  evidence_refs:
+  - evidence/gate3/iteration1-foundation-handoff-v1.md
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: 3267fc7469a8fceed46ca87ead78da1fa8bc7b34b9c4fab2a85ccb8e2f167f8a
+    event_digest: 6d40148acee4e42ce28cf65b6cba7846cc796078041168b29cc593941c375506
+- schema_version: '0.1'
+  event_id: 4f2a7a0b-af0d-4ee0-81c7-bd4bba5808a1
+  mutation_id: 1954c7dd-1854-4745-a7c0-db6977f66dd7
+  loop_instance_id: e6e0f300-2130-41d0-8020-f7f4006deb3f
+  sequence: 20
+  event_type: core.state_transitioned
+  occurred_at: '2026-08-24T19:23:46.989995+08:00'
+  recorded_at: '2026-08-24T19:23:46.989995+08:00'
+  actor: *id003
+  causality:
+    correlation_id: 185cf172-89bd-48d9-a198-30178688a9ac
+    causation_event_id: cbf15237-a929-4a03-9bae-030d34260bf7
+    request_id: submit-gate3-iteration1-foundations
+  concurrency:
+    expected_record_revision: 19
+    resulting_record_revision: 20
+  binding_snapshot:
+    contract_digest: d97937b94c07399e00c63e1a5651d55c9eceb30378214838902dbe377d0a7e2a
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    transition_id: TR-ACTIVE-REVIEW
+    from_state: active
+    to_state: review
+    iteration:
+      before: 1
+      after: 1
+    reason: gate3_iteration1_foundations_submitted_and_checks_passed
+    subject_digest: 8a4610c3a5d6817fbce53b8bdda5bc49690c3dd6c55ad9dfb920c2acba719606
+  evidence_refs:
+  - evidence/gate3/iteration1-foundation-handoff-v1.md
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: 6d40148acee4e42ce28cf65b6cba7846cc796078041168b29cc593941c375506
+    event_digest: 668b45db223e2844da8befaa005b6fd3cde32d87d73ad1c261ab8d4c55580599
+- schema_version: '0.1'
+  event_id: 0102ed5c-6c76-41b1-bc38-bb86f5a032f7
+  mutation_id: e986f23b-4d45-46bf-b9c0-64fa9808f7d5
+  loop_instance_id: e6e0f300-2130-41d0-8020-f7f4006deb3f
+  sequence: 21
+  event_type: core.state_transitioned
+  occurred_at: '2026-08-24T19:23:46.989995+08:00'
+  recorded_at: '2026-08-24T19:23:46.989995+08:00'
+  actor: *id003
+  causality:
+    correlation_id: 185cf172-89bd-48d9-a198-30178688a9ac
+    causation_event_id: 4f2a7a0b-af0d-4ee0-81c7-bd4bba5808a1
+    request_id: start-gate3-iteration2-parallel-content-production
+  concurrency:
+    expected_record_revision: 20
+    resulting_record_revision: 21
+  binding_snapshot:
+    contract_digest: d97937b94c07399e00c63e1a5651d55c9eceb30378214838902dbe377d0a7e2a
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    transition_id: TR-REVIEW-ACTIVE
+    from_state: review
+    to_state: active
+    iteration:
+      before: 1
+      after: 2
+    reason: contract_defined_content_production_deliverables_remain_pending
+    subject_digest: 8a4610c3a5d6817fbce53b8bdda5bc49690c3dd6c55ad9dfb920c2acba719606
+  evidence_refs:
+  - evidence/gate3/iteration1-foundation-handoff-v1.md
+  - contract:LOOP-CTR-CONTENT-INTEGRATION-GATE3-001@v1
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: 668b45db223e2844da8befaa005b6fd3cde32d87d73ad1c261ab8d4c55580599
+    event_digest: bfb500d971119f35e09fcdfb277e4910101c9952776ce48ff9ee1e2f94804eab
