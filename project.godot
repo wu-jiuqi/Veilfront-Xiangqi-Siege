@@ -19,6 +19,7 @@ config/icon="res://assets/art/ui/app_icon/veilfront_app_icon_concept_v1.png"
 
 SettingsManager="*res://scripts/game/settings/settings_manager.gd"
 SceneTransition="*res://scenes/game/ui/scene_transition_controller.tscn"
+MusicManager="*res://scenes/game/audio/music_manager.tscn"
 
 [display]
 

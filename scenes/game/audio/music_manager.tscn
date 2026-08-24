@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/audio/music_manager.gd" id="1_manager"]
+[ext_resource type="AudioStream" path="res://assets/audio/bgm/bgm_match_standard_loop_v01.ogg" id="2_bgm"]
+
+[node name="MusicManager" type="Node"]
+process_mode = 3
+script = ExtResource("1_manager")
+excluded_scene_paths = PackedStringArray("res://scenes/game/frontend/start_screen.tscn")
+
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+stream = ExtResource("2_bgm")
+bus = &"Music"
+max_polyphony = 1
