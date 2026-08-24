@@ -32,6 +32,10 @@
 & .\docs\audio\generate_original_sfx_v1.ps1 -FilePattern 'sfx_opening_*'
 ```
 
+## 退役资产
+
+- `sfx_opening_gate_open_v01.wav`（opening_gate_open / 1112）于 2026-08-25 从开场时间轴、活动 Catalog、工程资源与生成 recipe 中移除；原 SHA-256 为 `ab03dd0f6761cbcd477c022798b03a0f58571cfc7f1065b64ccd43e2b7e53d18`，仅保留本条历史溯源。
+
 ## 文件清单与 SHA-256
 
 | 文件 | recipe / seed | SHA-256 |
@@ -40,7 +44,6 @@
 | `sfx_ui_cancel_v01.wav` | ui_cancel / 1102 | `ad2897e3d8b5ef534bc8caac59f798af11cb6df6f8fafab1ac20012e343aee14` |
 | `sfx_ui_reject_v01.wav` | ui_reject / 1103 | `31b671d4d8adb990c7580a1b9824bb6aac8eef354c86b20df5aebb9a9abb550d` |
 | `sfx_opening_gate_strain_v01.wav` | opening_gate_strain / 1111 | `9ed1dd67e187fbb5ecec363b56f5b35277c935e88b6d1952807c256600572a29` |
-| `sfx_opening_gate_open_v01.wav` | opening_gate_open / 1112 | `ab03dd0f6761cbcd477c022798b03a0f58571cfc7f1065b64ccd43e2b7e53d18` |
 | `sfx_opening_fog_reveal_v01.wav` | opening_fog_reveal / 1113 | `5583d3692df62368bea9e75f63dcafb5b2852571c3407734bc697412121a06e6` |
 | `sfx_opening_menu_reveal_v01.wav` | opening_menu_reveal / 1114 | `9187316a3df8ec9b805a015a169b87e8144ace4ee20bc7caf016cab7a3920970` |
 | `sfx_board_select_v01.wav` | board_select / 1201 | `72d7639f4ea89884eb46524dc0735463dc920eb666c384a9bbed6c455d2bb442` |

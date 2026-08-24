@@ -18,7 +18,7 @@ func _run() -> void:
 	_check_opening_timeline()
 	await _check_frontend_runtime()
 	await _check_opening_audio_guard()
-	print("FRONTEND_AUDIO_FEEDBACK_PASS scenes=6 opening_cues=4 opening_bgm=timeline_guarded dynamic_buttons=true modal_edges=true skip_guard=true")
+	print("FRONTEND_AUDIO_FEEDBACK_PASS scenes=6 opening_cues=3 opening_bgm=timeline_guarded dynamic_buttons=true modal_edges=true skip_guard=true")
 	quit()
 
 
@@ -47,10 +47,10 @@ func _check_opening_timeline() -> void:
 			method_track = track_index
 			break
 	assert(method_track >= 0, "opening sequence must own a method track for exact SFX timing")
-	var expected_times: Array[float] = [0.32, 0.72, 1.45, 4.65]
+	var expected_times: Array[float] = [0.32, 1.45, 4.65]
 	var expected_keys: Array[String] = [
-		"sfx.opening.gate_strain", "sfx.opening.gate_open",
-		"sfx.opening.fog_reveal", "sfx.opening.menu_reveal",
+		"sfx.opening.gate_strain", "sfx.opening.fog_reveal",
+		"sfx.opening.menu_reveal",
 	]
 	assert(animation.track_get_key_count(method_track) == expected_times.size())
 	for key_index: int in expected_times.size():
@@ -111,11 +111,11 @@ func _check_opening_audio_guard() -> void:
 		played.append(str(cue.get("cue_key", "")))
 	)
 	start_screen.set("_opening_audio_enabled", false)
-	start_screen.call("_play_opening_cue", "sfx.opening.gate_open")
+	start_screen.call("_play_opening_cue", "sfx.opening.gate_strain")
 	assert(played.is_empty(), "menu-ready and reduced-motion paths must not burst opening cues")
 	start_screen.set("_opening_audio_enabled", true)
-	start_screen.call("_play_opening_cue", "sfx.opening.gate_open")
-	assert(played == ["sfx.opening.gate_open"], "normal opening path must forward its timeline cue")
+	start_screen.call("_play_opening_cue", "sfx.opening.gate_strain")
+	assert(played == ["sfx.opening.gate_strain"], "normal opening path must forward its timeline cue")
 	start_screen.call(&"request_entry")
 	sequence_player.advance(0.02)
 	assert(opening_music.playing, "normal opening path must start its timeline BGM")

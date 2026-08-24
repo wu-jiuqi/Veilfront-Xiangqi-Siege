@@ -47,7 +47,6 @@ function Get-Sample {
         "ui_cancel" { $f = 440 - 170 * ($Time / $Duration); return $env * 0.48 * [Math]::Sin($tau * $f * $Time) }
         "ui_reject" { return $env * (0.30 * [Math]::Sin($tau * 185 * $Time) + 0.12 * [Math]::Sin($tau * 197 * $Time) + 0.05 * $noise) }
 		"opening_gate_strain" { $rise = [Math]::Min(1.0, $Time / 0.24); return $env * $rise * (0.30 * [Math]::Sin($tau * 58 * $Time) + 0.18 * [Math]::Sin($tau * 91 * $Time) + 0.12 * $noise) }
-		"opening_gate_open" { $grind = 0.16 * $noise + 0.24 * [Math]::Sin($tau * (43 + 6 * [Math]::Sin($tau * 0.42 * $Time)) * $Time); $pulse = 0.72 + 0.28 * [Math]::Sin($tau * 2.4 * $Time); return $env * $pulse * ($grind + 0.10 * [Math]::Sin($tau * 79 * $Time)) }
 		"opening_fog_reveal" { $sweep = 270 + 540 * ($Time / $Duration); return $env * (0.17 * $noise + 0.23 * [Math]::Sin($tau * $sweep * $Time) + 0.10 * [Math]::Sin($tau * 135 * $Time)) }
 		"opening_menu_reveal" { return $env * [Math]::Exp(-2.2 * $Time) * (0.34 * [Math]::Sin($tau * 392 * $Time) + 0.22 * [Math]::Sin($tau * 588 * $Time) + 0.13 * [Math]::Sin($tau * 784 * $Time)) }
         "board_select" { return $env * (0.34 * [Math]::Sin($tau * 560 * $Time) + 0.16 * $noise) * [Math]::Exp(-12 * $Time) }
@@ -122,7 +121,6 @@ $recipes = @(
     @("sfx_ui_cancel_v01.wav", "ui_cancel", 0.16, 1102),
     @("sfx_ui_reject_v01.wav", "ui_reject", 0.20, 1103),
 	@("sfx_opening_gate_strain_v01.wav", "opening_gate_strain", 0.64, 1111),
-	@("sfx_opening_gate_open_v01.wav", "opening_gate_open", 3.95, 1112),
 	@("sfx_opening_fog_reveal_v01.wav", "opening_fog_reveal", 1.05, 1113),
 	@("sfx_opening_menu_reveal_v01.wav", "opening_menu_reveal", 0.58, 1114),
     @("sfx_board_select_v01.wav", "board_select", 0.14, 1201),
