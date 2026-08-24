@@ -1,0 +1,39 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Theme" path="res://resources/game/ui/themes/terracotta_ui_theme.tres" id="1_theme"]
+[ext_resource type="PackedScene" path="res://scenes/game/match/online_match_screen.tscn" id="2_match"]
+[ext_resource type="Script" path="res://scripts/game/application/application_host.gd" id="3_host"]
+[ext_resource type="Script" path="res://scripts/game/challenge/challenge_level.gd" id="4_level"]
+
+[node name="ChallengeLevel" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+script = ExtResource("4_level")
+
+[node name="ApplicationHost" type="Node" parent="."]
+script = ExtResource("3_host")
+
+[node name="MatchScreen" parent="." instance=ExtResource("2_match")]
+layout_mode = 1
+allow_known_illegal_previews = true
+turn_timeout_enabled = false
+
+[connection signal="session_state_changed" from="ApplicationHost" to="MatchScreen" method="render_session_state"]
+[connection signal="player_view_updated" from="ApplicationHost" to="MatchScreen" method="render_player_view"]
+[connection signal="player_view_updated" from="ApplicationHost" to="." method="_on_player_view_updated"]
+[connection signal="visible_events_received" from="ApplicationHost" to="MatchScreen" method="render_visible_events"]
+[connection signal="visible_error_received" from="ApplicationHost" to="MatchScreen" method="render_visible_error"]
+[connection signal="action_previews_updated" from="ApplicationHost" to="MatchScreen" method="render_action_previews_from_port"]
+[connection signal="prepared_action_changed" from="ApplicationHost" to="MatchScreen" method="render_prepared_action"]
+[connection signal="action_previews_requested" from="MatchScreen" to="ApplicationHost" method="request_action_previews"]
+[connection signal="action_prepare_requested" from="MatchScreen" to="ApplicationHost" method="prepare_action"]
+[connection signal="action_confirm_requested" from="MatchScreen" to="ApplicationHost" method="confirm_prepared_action"]
+[connection signal="prepared_action_cancel_requested" from="MatchScreen" to="ApplicationHost" method="cancel_prepared_action"]
+[connection signal="return_requested" from="MatchScreen" to="." method="return_to_level_select"]
+[connection signal="terminal_restart_requested" from="MatchScreen" to="." method="_on_terminal_restart_requested"]
+[connection signal="terminal_exit_requested" from="MatchScreen" to="." method="_on_terminal_exit_requested"]

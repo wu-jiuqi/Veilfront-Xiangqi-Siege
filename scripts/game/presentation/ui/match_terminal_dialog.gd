@@ -18,6 +18,8 @@ const REASON_TEXT: Dictionary[String, String] = {
 	"three_flags": "夺得三面军旗",
 	"round_limit_flags": "轮次上限按军旗数裁定",
 	"round_limit_draw": "轮次上限时军旗数相同",
+	"challenge_enemies_cleared": "敌军已全部歼灭",
+	"challenge_round_limit": "敌军坚守至挑战轮次上限",
 }
 const RESULT_COLORS: Dictionary[String, Color] = {
 	"victory": Color(0.96, 0.79, 0.43, 1.0),

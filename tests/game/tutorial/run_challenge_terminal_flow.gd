@@ -1,6 +1,7 @@
 extends SceneTree
 
-const TUTORIAL_LEVEL_SCENE: PackedScene = preload("res://scenes/game/tutorial/tutorial_level.tscn")
+const TUTORIAL_LEVEL_SCENE: PackedScene = preload("res://scenes/game/challenge/challenge_level.tscn")
+const TEST_PROGRESS_PATH: String = "user://challenge_terminal_flow_progress.cfg"
 
 var _failures: Array[String] = []
 
@@ -12,6 +13,7 @@ func _init() -> void:
 func _run() -> void:
 	root.set_meta("veilfront_selected_level_id", "C1")
 	var level := TUTORIAL_LEVEL_SCENE.instantiate() as Control
+	level.set("progress_path", TEST_PROGRESS_PATH)
 	root.add_child(level)
 	await process_frame
 	await process_frame
@@ -28,13 +30,9 @@ func _run() -> void:
 	var terminal_view := initial_view.duplicate(true)
 	terminal_view["terminal"] = true
 	terminal_view["winner"] = "red"
-	terminal_view["win_reason"] = "three_flags"
+	terminal_view["win_reason"] = "challenge_enemies_cleared"
 	terminal_view["full_round_index"] = 12
-	terminal_view["flags"] = [
-		{"discovered": true, "owner": "red"},
-		{"discovered": true, "owner": "red"},
-		{"discovered": true, "owner": "red"},
-	]
+	terminal_view["flags"] = []
 	terminal_view["casualties"] = []
 	level.call(&"_on_player_view_updated", terminal_view)
 	await process_frame
@@ -73,6 +71,8 @@ func _finish(level: Node) -> void:
 	if is_instance_valid(level):
 		level.queue_free()
 	await process_frame
+	if FileAccess.file_exists(TEST_PROGRESS_PATH):
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(TEST_PROGRESS_PATH))
 	if _failures.is_empty():
 		print("CHALLENGE_TERMINAL_FLOW_PASS actions=replay-level-select")
 		quit(0)

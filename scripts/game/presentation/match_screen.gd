@@ -313,6 +313,15 @@ func set_tutorial_navigation_enabled(enabled: bool) -> void:
 		_return_button.text = "退出对局"
 
 
+func set_level_navigation_enabled(enabled: bool) -> void:
+	_tutorial_navigation_enabled = enabled
+	_update_return_button()
+	if enabled:
+		_return_button.text = "退出挑战"
+	elif _session_navigation_enabled:
+		_return_button.text = "退出对局"
+
+
 func set_level_guide_layout_enabled(enabled: bool) -> void:
 	_level_guide_layout_enabled = enabled
 	var right_rail := _hud_node(&"RightRail") as Control
