@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="ChallengeDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/challenge/challenge_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+scenario_id = "challenge-c1-authority-v1"
+level_id = "C1"
+fixture_key = "challenge-c1-lone-elephant"
+bound_seat = "red"
+seed_value = 481001
+initial_pieces = Array[Dictionary]([{"id":"red-rook-1","side":"red","piece_type":"rook","position":[1,1]},{"id":"red-horse-1","side":"red","piece_type":"horse","position":[2,1]},{"id":"red-elephant-1","side":"red","piece_type":"elephant","position":[3,1]},{"id":"red-advisor-1","side":"red","piece_type":"advisor","position":[4,1]},{"id":"red-general-1","side":"red","piece_type":"general","position":[5,1]},{"id":"red-advisor-2","side":"red","piece_type":"advisor","position":[6,1]},{"id":"red-elephant-2","side":"red","piece_type":"elephant","position":[7,1]},{"id":"red-horse-2","side":"red","piece_type":"horse","position":[8,1]},{"id":"red-rook-2","side":"red","piece_type":"rook","position":[9,1]},{"id":"red-cannon-1","side":"red","piece_type":"cannon","position":[2,3]},{"id":"red-cannon-2","side":"red","piece_type":"cannon","position":[8,3]},{"id":"red-pawn-1","side":"red","piece_type":"pawn","position":[1,4]},{"id":"red-pawn-2","side":"red","piece_type":"pawn","position":[3,4]},{"id":"red-pawn-3","side":"red","piece_type":"pawn","position":[5,4]},{"id":"red-pawn-4","side":"red","piece_type":"pawn","position":[7,4]},{"id":"red-pawn-5","side":"red","piece_type":"pawn","position":[9,4]},{"id":"black-elephant-1","side":"black","piece_type":"elephant","position":[5,16]}])
+initial_visible_cells = Array[Vector2i]([])
+allow_any_public_preview = true
+restart_allowed = true
+skip_allowed = false
+playable_max_y = 16
+round_limit = 50
+opponent_policy_seed = 73101

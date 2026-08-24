@@ -9,6 +9,7 @@ const PublicActionPreviewer = preload("res://scripts/game/projection/public_acti
 const VisibleOutcomeProjector = preload("res://scripts/game/projection/visible_outcome_projector.gd")
 const ObserverReplayValidator = preload("res://scripts/game/application/observer_replay_validator.gd")
 const ScenarioBootstrap = preload("res://scripts/game/domain/scenario_bootstrap.gd")
+const ScenarioObjectiveResolver = preload("res://scripts/game/domain/scenario_objective_resolver.gd")
 
 var _state: Dictionary = {}
 var _viewer_context: RefCounted
@@ -18,6 +19,7 @@ var _observer_frames: Array = []
 var _initial_player_view: Dictionary = {}
 var _tutorial_scenario: TutorialScenarioDefinition
 var _action_preview_cache_by_side: Dictionary = {}
+var _scenario_objective: Dictionary = {}
 
 
 static func create_trusted(
@@ -49,6 +51,32 @@ static func create_authoritative(
 	# must use the explicit per-seat application methods below.
 	application._viewer_context = application._viewer_contexts["red"]
 	application._prepare_authority_turn()
+	application._initial_player_view = application.current_player_view().duplicate(true)
+	return application
+
+
+static func create_authoritative_scenario(
+	scenario: TutorialScenarioDefinition,
+	scenario_objective: Dictionary,
+	configuration: Dictionary = {}
+) -> RefCounted:
+	if scenario == null or not scenario.is_valid_definition() or scenario_objective.is_empty():
+		return null
+	var application: RefCounted = new()
+	var base_state: Dictionary = RuleEngine.create_match(scenario.seed_value, configuration)
+	var bootstrap_result: Dictionary = ScenarioBootstrap.create_validated(base_state, scenario)
+	if not bool(bootstrap_result.get("ok", false)):
+		return null
+	application._state = bootstrap_result.get("state", {}).duplicate(true)
+	application._scenario_objective = scenario_objective.duplicate(true)
+	application._viewer_contexts = {
+		"red": ViewerContext.create_trusted("red"),
+		"black": ViewerContext.create_trusted("black"),
+	}
+	application._viewer_context = application._viewer_contexts[scenario.bound_seat]
+	application._resolve_configured_objective()
+	if not bool(application._state.get("terminal", false)):
+		application._prepare_authority_turn()
 	application._initial_player_view = application.current_player_view().duplicate(true)
 	return application
 
@@ -205,6 +233,8 @@ func _submit_intent_for_context(
 	var visible_error: Dictionary = VisibleOutcomeProjector.project_visible_error(
 		result, intent_id, expected_index
 	)
+	if bool(result.get("consumed", false)):
+		_resolve_configured_objective()
 	if bool(result.get("consumed", false)) and not bool(_state.get("terminal", false)):
 		_prepare_authority_turn()
 	var frame: Dictionary = _compose_safe_frame(
@@ -248,6 +278,8 @@ func advance_trusted_scripted_pass() -> Dictionary:
 		"preparation_token": str(_preparation.get("token", "")),
 		"public_classification": "KNOWN_LEGAL",
 	})
+	if bool(result.get("consumed", false)):
+		_resolve_configured_objective()
 	if bool(result.get("consumed", false)) and not bool(_state.get("terminal", false)):
 		_prepare_authority_turn()
 	var frame: Dictionary = _compose_safe_frame(
@@ -307,6 +339,8 @@ func _submit_trusted_timeout_for_context(
 		"include_state_summary": false,
 		"preparation_token": str(_preparation.get("token", "")),
 	})
+	if bool(result.get("consumed", false)):
+		_resolve_configured_objective()
 	if bool(result.get("consumed", false)) and not bool(_state.get("terminal", false)):
 		_prepare_authority_turn()
 	var frame: Dictionary = _compose_safe_frame(
@@ -464,6 +498,11 @@ func _cached_public_classification(
 func _prepare_authority_turn() -> void:
 	var prepared_result: Dictionary = RuleEngine.prepare_action(_state)
 	_preparation = prepared_result.get("preparation", {}).duplicate(true)
+
+
+func _resolve_configured_objective() -> void:
+	if not _scenario_objective.is_empty():
+		ScenarioObjectiveResolver.resolve(_state, _scenario_objective)
 
 
 func _safe_rejection(intent: Dictionary, public_code: String) -> Dictionary:
