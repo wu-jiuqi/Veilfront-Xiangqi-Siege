@@ -25,6 +25,9 @@ const CAMERA_AUTHORITY_VISIBLE_ENEMY: StringName = &"visible_enemy"
 
 @onready var _sub_viewport: SubViewport = $BoardSubViewport
 @onready var _board_world: Node2D = $BoardSubViewport/BoardWorld
+@onready var _board_audio_emitter_pool: BoardAudioEmitterPool = \
+	$BoardSubViewport/BoardFeedbackLayer/BoardAudioEmitterPool
+@onready var _vfx_director: VfxDirector = $BoardSubViewport/BoardFeedbackLayer/VfxRoot
 @onready var _camera: Camera2D = $BoardSubViewport/BoardWorld/BoardCamera2D
 @onready var _screen_input_surface: Control = $ScreenInputSurface
 
@@ -59,6 +62,7 @@ func _ready() -> void:
 	if world_input_surface != null:
 		world_input_surface.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_camera.position_smoothing_enabled = false
+	_sync_feedback_coordinate_space()
 	_sync_layout()
 
 
@@ -99,6 +103,7 @@ func toggle_presentation_side() -> void:
 
 func set_presentation_side(side: String) -> void:
 	_board_world.set_presentation_side(side)
+	_sync_feedback_coordinate_space()
 	if BoardCoordinateMapper.is_authority_cell_valid(_focused_cell):
 		focus_authority_cell(_focused_cell)
 	else:
@@ -121,6 +126,7 @@ func render_player_view(view: Dictionary) -> void:
 	var viewer_side: String = str(view.get("viewer_side", "red"))
 	if is_initial_view and viewer_side in ["red", "black"]:
 		_board_world.set_presentation_side(viewer_side)
+	_sync_feedback_coordinate_space()
 	_has_session_view = true
 	_default_anchor_cell = _find_general_cell(view, viewer_side)
 	_board_world.render_player_view(view)
@@ -133,6 +139,7 @@ func render_player_view(view: Dictionary) -> void:
 
 func set_presentation_assets(theme: BoardTheme, map_option: BoardMapOption) -> void:
 	_board_world.set_presentation_assets(theme, map_option)
+	_sync_feedback_coordinate_space()
 
 
 func set_marker(cell: Vector2i, marker_type: String) -> void:
@@ -232,6 +239,14 @@ func get_board_world() -> Node2D:
 	return _board_world
 
 
+func get_board_audio_emitter_pool() -> BoardAudioEmitterPool:
+	return _board_audio_emitter_pool
+
+
+func get_vfx_director() -> VfxDirector:
+	return _vfx_director
+
+
 func get_render_snapshot() -> Dictionary:
 	var snapshot: Dictionary = _board_world.get_render_snapshot()
 	snapshot["focused_cell"] = _focused_cell
@@ -326,6 +341,15 @@ func _sync_layout() -> void:
 			reset_camera(false)
 	else:
 		reset_camera(false)
+
+
+func _sync_feedback_coordinate_space() -> void:
+	var display_side := str(_board_world.get_display_side())
+	var cell_size: Vector2 = _board_world.get_cell_size()
+	_board_audio_emitter_pool.set_presentation_side(display_side)
+	_board_audio_emitter_pool.cell_size = cell_size
+	_vfx_director.set_display_side(display_side)
+	_vfx_director.cell_size = cell_size
 
 
 func _is_cell_visible(cell: Vector2i) -> bool:

@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/game/presentation/battle_command_tent_background.tscn" id="1_background"]
 [ext_resource type="Theme" path="res://resources/game/ui/themes/terracotta_ui_theme.tres" id="1_theme"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" path="res://scenes/game/ui/marker_menu.tscn" id="3_marker"]
 [ext_resource type="PackedScene" path="res://scenes/game/ui/terminal_dialog.tscn" id="5_terminal"]
 [ext_resource type="Script" path="res://scripts/game/presentation/match_screen.gd" id="6_screen_script"]
+[ext_resource type="PackedScene" path="res://scenes/game/presentation/match_feedback_coordinator.tscn" id="7_feedback"]
 
 [node name="MatchScreen" type="Control"]
 layout_mode = 3
@@ -19,6 +20,8 @@ script = ExtResource("6_screen_script")
 
 [node name="Backdrop" parent="." instance=ExtResource("1_background")]
 layout_mode = 1
+
+[node name="MatchFeedbackCoordinator" parent="." instance=ExtResource("7_feedback")]
 
 [node name="MatchHudV2" parent="." instance=ExtResource("2_hud")]
 unique_name_in_owner = true

@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/presentation/match_feedback_coordinator.gd" id="1_coordinator"]
+[ext_resource type="PackedScene" path="res://scenes/game/audio/audio_root.tscn" id="2_audio"]
+
+[node name="MatchFeedbackCoordinator" type="Node"]
+script = ExtResource("1_coordinator")
+
+[node name="AudioRoot" parent="." instance=ExtResource("2_audio")]

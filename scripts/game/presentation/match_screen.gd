@@ -131,6 +131,7 @@ var _action_rule: Label
 var _skill_description: Label
 var _tactical_minimap: TacticalMinimap
 var _terminal_dialog: MatchTerminalDialog
+var _feedback: MatchFeedbackCoordinator
 
 var _compact: bool = false
 var _interaction_state: String = IDLE
@@ -162,6 +163,12 @@ var _double_click_confirm_preview_id: String = ""
 
 func _ready() -> void:
 	_bind_hud_nodes()
+	_feedback = get_node_or_null("MatchFeedbackCoordinator") as MatchFeedbackCoordinator
+	if is_instance_valid(_feedback) and is_instance_valid(_board_viewport):
+		_feedback.bind_board_feedback(
+			_board_viewport.get_board_audio_emitter_pool(),
+			_board_viewport.get_vfx_director()
+		)
 	_enforce_action_target_sizes()
 	get_viewport().size_changed.connect(_on_viewport_size_changed)
 	resized.connect(_on_match_screen_resized)
@@ -367,6 +374,8 @@ func get_terminal_snapshot() -> Dictionary:
 
 func reset_for_session_end() -> void:
 	_clear_local_interaction()
+	if is_instance_valid(_feedback):
+		_feedback.reset_session()
 	_current_view.clear()
 	_current_previews.clear()
 	_last_event_model.clear()
@@ -510,6 +519,8 @@ func reset_tutorial_step_interaction() -> void:
 func render_player_view(view: Dictionary) -> void:
 	_submission_pending = false
 	_current_view = view.duplicate(true)
+	if is_instance_valid(_feedback):
+		_feedback.consume_player_view(view)
 	if not bool(view.get("terminal", false)) and _terminal_dialog.visible:
 		_terminal_dialog.hide_result()
 	_presentation_model = _presenter.player_view_model(view)
@@ -532,6 +543,8 @@ func render_session_state(_public_state: Dictionary) -> void:
 
 
 func render_visible_events(events: Array) -> void:
+	if is_instance_valid(_feedback):
+		_feedback.consume_visible_events(events)
 	_last_event_model = _presenter.visible_event_model(events)
 	var event_message := str(_last_event_model.get("message_key", ""))
 	if _interaction_state == IDLE and not event_message.is_empty():
@@ -540,6 +553,8 @@ func render_visible_events(events: Array) -> void:
 
 func render_visible_error(error: Dictionary) -> void:
 	_submission_pending = false
+	if is_instance_valid(_feedback):
+		_feedback.consume_visible_error(error)
 	_last_error_model = _presenter.visible_error_model(error)
 	var message_key: String = str(_last_error_model.get("message_key", ""))
 	if not message_key.is_empty():
@@ -657,6 +672,7 @@ func prepare_action(preview_id: String) -> void:
 	_inflight_prepare_preview_id = preview_id
 	_prepared_preview_id = preview_id
 	_interaction_state = PREVIEW_SELECTED
+	_play_local_feedback("sfx.board.prepare")
 	action_prepare_requested.emit(preview_id)
 
 
@@ -668,6 +684,7 @@ func confirm_prepared_action() -> void:
 	_clear_local_interaction()
 	_submission_pending = true
 	_update_status_controls()
+	_play_local_feedback("sfx.ui.confirm")
 	action_confirm_requested.emit(preview_id)
 
 
@@ -702,6 +719,7 @@ func handle_cancel_or_marker(
 		return "cancel_prepared_action"
 	if _interaction_state == SELECTED:
 		_clear_local_interaction()
+		_play_local_feedback("sfx.board.selection_cancel")
 		selection_cancelled.emit()
 		return "cancel_selection"
 	if _interaction_state == MARKER_MENU:
@@ -731,9 +749,11 @@ func apply_marker(cell: Vector2i, marker_type: String) -> void:
 			return
 	if marker_type.is_empty():
 		_board_viewport.clear_marker(cell)
+		_play_local_feedback("sfx.marker.clear", cell)
 		_message_value.text = "已清除交点（%d,%d）的本地标注。" % [cell.x, cell.y]
 	else:
 		_board_viewport.set_marker(cell, marker_type)
+		_play_local_feedback("sfx.marker.set", cell)
 		_message_value.text = "已更新交点（%d,%d）的本地标注。" % [cell.x, cell.y]
 	_marker_menu.hide()
 	_interaction_state = IDLE
@@ -885,6 +905,7 @@ func _cancel_only() -> void:
 		_cancel_prepared_action_locally()
 	elif _interaction_state != IDLE:
 		_clear_local_interaction()
+		_play_local_feedback("sfx.board.selection_cancel")
 		selection_cancelled.emit()
 
 
@@ -900,6 +921,7 @@ func _cancel_prepared_action_locally() -> void:
 		generations.append(_inflight_prepare_generation)
 		_cancelled_prepare_tombstones[cancelled_preview_id] = generations
 	_clear_local_interaction()
+	_play_local_feedback("sfx.board.prepare_cancel")
 	prepared_action_cancel_requested.emit()
 
 
@@ -1013,6 +1035,9 @@ func _select_piece(piece: Dictionary) -> void:
 	or (_action_mode == "resurrect" and piece_type not in ["advisor", "guard"]):
 		_action_mode = "move"
 	_interaction_state = SELECTED
+	var selected_cell := BoardCoordinateMapper.coordinate_from_variant(piece.get("position", []))
+	if is_instance_valid(_feedback):
+		_feedback.play_local_selection(selected_cell)
 	_message_value.text = "已选择：%s；单击交点可预览，双击同一合法交点可立即移动。" % _piece_display_name(piece_type)
 	request_action_previews(_selected_piece_id, _action_mode)
 	if _action_mode == "resurrect":
@@ -1475,4 +1500,10 @@ func _tutorial_expected_action_mode() -> String:
 
 func _reject_tutorial_input(message: String) -> void:
 	_message_value.text = message
+	_play_local_feedback("sfx.ui.reject")
 	tutorial_input_rejected.emit(message)
+
+
+func _play_local_feedback(cue_key: String, cell: Vector2i = Vector2i.ZERO) -> void:
+	if is_instance_valid(_feedback):
+		_feedback.play_local_cue(cue_key, cell)

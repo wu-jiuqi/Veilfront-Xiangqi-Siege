@@ -1,7 +1,9 @@
 # GATE-3 Iteration 1 基础交接 v1
 
-日期：2026-08-24（Asia/Shanghai）  
-Loop：`LOOP-CTR-CONTENT-INTEGRATION-GATE3-001@v1`  
+日期：2026-08-24（Asia/Shanghai）
+
+Loop：`LOOP-CTR-CONTENT-INTEGRATION-GATE3-001@v1`
+
 状态：`foundation_checks_passed / ready_for_iteration_2`
 
 ## 结论

@@ -8,6 +8,11 @@ const SCENE_PATHS: Array[String] = [
 
 const COMPONENT_SCENE_PATHS: Array[String] = [
 	"res://scenes/game/match/board/board_viewport.tscn",
+	"res://scenes/game/presentation/board_feedback_layer.tscn",
+	"res://scenes/game/presentation/match_feedback_coordinator.tscn",
+	"res://scenes/game/audio/audio_root.tscn",
+	"res://scenes/game/audio/board_audio_emitter_pool.tscn",
+	"res://scenes/game/vfx/vfx_root.tscn",
 	"res://scenes/game/match/board/board_world.tscn",
 	"res://scenes/game/match/board/fog_overlay.tscn",
 	"res://scenes/game/match/board/marker_overlay.tscn",
@@ -185,6 +190,11 @@ func _check_match_screen(instance: Node) -> void:
 		"MatchHudV2",
 		"MatchHudV2/BoardFrame/BoardViewport",
 		"MatchHudV2/BoardFrame/BoardViewport/ScreenInputSurface",
+		"MatchHudV2/BoardFrame/BoardViewport/BoardSubViewport/BoardFeedbackLayer",
+		"MatchHudV2/BoardFrame/BoardViewport/BoardSubViewport/BoardFeedbackLayer/BoardAudioEmitterPool",
+		"MatchHudV2/BoardFrame/BoardViewport/BoardSubViewport/BoardFeedbackLayer/VfxRoot",
+		"MatchFeedbackCoordinator",
+		"MatchFeedbackCoordinator/AudioRoot",
 		"MatchHudV2/FactionLeft",
 		"MatchHudV2/FactionRight",
 		"MatchHudV2/UnitInfo",
@@ -211,6 +221,8 @@ func _check_match_screen(instance: Node) -> void:
 	if board_world == null:
 		_failures.append("MatchScreen missing preset BoardWorld")
 		return
+	if board_world.get_node_or_null("BoardFeedbackLayer") != null:
+		_failures.append("BoardWorld must remain feedback-free for minimap reuse")
 	if _count_named_nodes(board_world, "FogOverlay") != 1:
 		_failures.append("BoardWorld must contain exactly one FogOverlay")
 	if _count_named_nodes(board_world, "InputSurface") != 1:
