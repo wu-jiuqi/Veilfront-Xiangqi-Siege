@@ -4,10 +4,15 @@ loop_contract:
   loop_type: formal-2d-content-and-integration
   title: 第三生产循环v1——二维内容制作、交互打磨与集成冻结
   version: 1
-  status: draft
-approval_binding: null
+  status: approved
+approval_binding:
+  approval_id: approval:veilfront-xiangqi-siege:loop-contract:7c735748becb
+  subject_digest: 7c735748becb46c0834f2935863e0576be07aa8a48868df9655c06a362f6206d
+  approved_by: project-owner
+  approved_at: '2026-08-24T17:08:07.5246737+08:00'
+  source_ref: codex-thread://current#gate3-contract-v1-approval
 draft_review:
-  status: awaiting_project_owner_approval
+  status: approved_by_project_owner
   prepared_against:
     project_brief_version: 7
     project_brief_subject_digest: 8e9d4285c1c7237a22f308808e944fd8571700f896b8dd8cfb118f0fe0de3d3e
@@ -15,7 +20,7 @@ draft_review:
     gate_2_subject_digest: 0213f500a10070198ccdf1090ddcdd2ea519828233251e9896076ff0ced68525
     gate_2_loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
     gate_2_registry_revision: 102
-  note: 本草案只定义GATE-3生产和冻结边界；未获精确摘要批准前，不登记新Loop、不启动正式SFX/VFX/关卡批量生产。
+  note: 项目所有者已按原始草案文件的精确SHA-256摘要批准；允许登记新Loop并执行Contract列明的GATE-3工作，不替代最终GATE-3内容冻结或GATE-4发布批准。
 purpose:
   objective: 在已批准二维灰盒基线上，先收敛导出资源和运行预算，再并行完成观察者安全SFX、观察者安全VFX、统一UI交互手感、T0-T10教学打磨与C1-C3闯关关卡，最终形成可进入发布候选测试的二维内容与集成冻结版本。
   design_principles:

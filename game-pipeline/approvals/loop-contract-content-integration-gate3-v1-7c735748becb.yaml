@@ -1,0 +1,48 @@
+approval:
+  schema_version: game-production-approval/v1
+  approval_id: approval:veilfront-xiangqi-siege:loop-contract:7c735748becb
+  subject_kind: loop-contract-draft
+  subject_id: LOOP-CTR-CONTENT-INTEGRATION-GATE3-001@v1
+  subject_digest: 7c735748becb46c0834f2935863e0576be07aa8a48868df9655c06a362f6206d
+  decision: approved
+  decided_by: project-owner
+  decided_at: '2026-08-24T17:08:07.5246737+08:00'
+  evidence:
+    source_refs:
+    - codex-thread://current#gate3-contract-v1-approval
+    - game-pipeline/loops/evidence/GATE-3-v1-contract-decision-package.md@sha256:f2b8ec16ea37ec7fe195ee01ec6eae2da7241a152fde4a130b692df22c44e99a
+    confirmation:
+      method: exact-64-character-digest-reply
+      received_digest: 7C735748BECB46C0834F2935863E0576BE07AA8A48868DF9655C06A362F6206D
+      matches_subject_digest: true
+    immutable_source:
+      git_commit: 4995208191b67a09e579819f6596f5d1ec0180c0
+      path: game-pipeline/loops/contracts/loop-contract-content-integration-gate3-v1.yaml
+      canonicalization: raw-file-sha256-v1
+      subject_digest: 7c735748becb46c0834f2935863e0576be07aa8a48868df9655c06a362f6206d
+    bound_project_brief:
+      version: 7
+      subject_digest: 8e9d4285c1c7237a22f308808e944fd8571700f896b8dd8cfb118f0fe0de3d3e
+      approval_id: approval:veilfront-xiangqi-siege:project-brief:8e9d4285c1c7
+    previous_gate:
+      gate_id: GATE-2
+      approval_id: approval:veilfront-xiangqi-siege:gate-2:0213f500a100
+      registry_revision: 102
+  authorized_action:
+    summary: 批准第三生产循环v1的范围、预算、责任、验收与回退规则，允许先收敛导出资源和运行预算，再并行推进观察者安全内容生产。
+    allowed:
+    - 物化Contract v1 approved状态并登记GATE-3新Loop。
+    - 执行TASK-EXPORT-G3-001、TASK-CUE-CONTRACT-G3-001、TASK-UI-FOUNDATION-G3-001及后续已列明任务。
+    - 按合同并行推进观察者安全SFX、VFX、UI交互、T0-T10与C1-C3内容。
+    - 在320,000,000 bytes Windows EXE和0元外部支出上限内调优资源与质量档。
+    forbidden:
+    - 自动批准最终GATE-3内容冻结或GATE-4外部发布。
+    - 修改owner rule revision 5、确定性随机、PlayerView信息边界、回放摘要或迷雾信任边界。
+    - 引入正式BGM量产、语音、双轨新增模块、C4+、互联网服务、AI交付或三渲二主线。
+    - 接入来源、许可、署名或可分发范围不明确的正式SFX源文件。
+  application:
+    materialized_path: game-pipeline/loops/contracts/loop-contract-content-integration-gate3-v1.yaml
+    materialized_status: approved
+    materialized_subject_digest: 7c735748becb46c0834f2935863e0576be07aa8a48868df9655c06a362f6206d
+    materialized_digest: d97937b94c07399e00c63e1a5651d55c9eceb30378214838902dbe377d0a7e2a
+    applied_at: '2026-08-24T17:08:07.5246737+08:00'
