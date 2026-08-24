@@ -78,10 +78,10 @@ registry_snapshot:
     state_entered_at: '2026-08-24T17:11:11.859059+08:00'
     current_iteration: 1
     last_transition_id: TR-READY-ACTIVE
-    last_event_id: 34824ce0-4e71-4f6a-8967-e8b714622b19
-    last_event_digest: 5ace8a8f7afee79c7ecdb85a5dce62ea437f7681453d2073cfba693df890eb28
-    last_event_sequence: 13
-    record_revision: 13
+    last_event_id: ff08dc60-3e6e-4328-bbb0-11d9e6e4095e
+    last_event_digest: 8457eb50dcb99df671f42c52dd8a4ed29df1ed17ced2aa2cf0050b15a70f1d07
+    last_event_sequence: 14
+    record_revision: 14
   budget:
     limits:
       iteration_limit: 5
@@ -159,7 +159,27 @@ registry_snapshot:
       source_loop_id: null
       bound_by_event_id: 313eace8-f295-4fd2-a80a-9cdc6cf63986
       bound_at: '2026-08-24T17:11:11.859059+08:00'
-    outputs: []
+    outputs:
+    - deliverable_id: DELIVERABLE-EXPORT-G3-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:filtered-windows-export-and-budget@g3-iteration1-producer-v1
+        artifact_type: filtered-windows-export-and-budget
+        version: g3-iteration1-producer-v1
+        uri: docs/architecture/windows-runtime-resource-budget-v1.md
+        digest:
+          algorithm: sha256
+          value: 85fad3de9c174a401908589a5fdffd9db00090af45f579867555f852e76d73d8
+        manifest_paths:
+        - docs/architecture/windows-runtime-resource-budget-v1.md
+        - export_presets.cfg
+        - tools/release/windows_runtime_manifest.json
+        - tools/release/verify_windows_runtime_budget.ps1
+        - tools/release/build_windows_runtime_candidate.ps1
+        - tools/release/verify_windows_lan_export.ps1
+        - tests/game/performance/run_match_interaction_performance_contract.gd
+      produced_in_iteration: 1
+      lifecycle_status: submitted
+      registered_by_event_id: ff08dc60-3e6e-4328-bbb0-11d9e6e4095e
   acceptance_snapshot:
     subject_digest: null
     automated_checks: []

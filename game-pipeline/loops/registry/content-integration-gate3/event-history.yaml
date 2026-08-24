@@ -541,3 +541,55 @@ event_history:
     digest_algorithm: sha256
     previous_event_digest: 6e8dcb6a8d0a4191d9dce37f32e6e55ea51a22a44266c0510ca008078dd7b962
     event_digest: 5ace8a8f7afee79c7ecdb85a5dce62ea437f7681453d2073cfba693df890eb28
+- schema_version: '0.1'
+  event_id: ff08dc60-3e6e-4328-bbb0-11d9e6e4095e
+  mutation_id: b9f43993-3356-4951-aeed-5c12274684f3
+  loop_instance_id: e6e0f300-2130-41d0-8020-f7f4006deb3f
+  sequence: 14
+  event_type: core.output_registered
+  occurred_at: '2026-08-24T17:42:12.550402+08:00'
+  recorded_at: '2026-08-24T17:42:12.550402+08:00'
+  actor:
+    actor_id: inst:01M02NJ3JEQXKV6PT6DPX0NKQ0
+    role: pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+    authority_id: AUTH-VEILFRONT-GODOT-TECHNOLOGY
+  causality:
+    correlation_id: dc6d3430-3da4-483e-9c2c-039dc5fa9961
+    causation_event_id: 34824ce0-4e71-4f6a-8967-e8b714622b19
+    request_id: register-gate3-export-budget-producer-deliverable
+  concurrency:
+    expected_record_revision: 13
+    resulting_record_revision: 14
+  binding_snapshot:
+    contract_digest: d97937b94c07399e00c63e1a5651d55c9eceb30378214838902dbe377d0a7e2a
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    deliverable_id: DELIVERABLE-EXPORT-G3-001
+    before: null
+    after:
+      deliverable_id: DELIVERABLE-EXPORT-G3-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:filtered-windows-export-and-budget@g3-iteration1-producer-v1
+        artifact_type: filtered-windows-export-and-budget
+        version: g3-iteration1-producer-v1
+        uri: docs/architecture/windows-runtime-resource-budget-v1.md
+        digest:
+          algorithm: sha256
+          value: 85fad3de9c174a401908589a5fdffd9db00090af45f579867555f852e76d73d8
+        manifest_paths: &id002
+        - docs/architecture/windows-runtime-resource-budget-v1.md
+        - export_presets.cfg
+        - tools/release/windows_runtime_manifest.json
+        - tools/release/verify_windows_runtime_budget.ps1
+        - tools/release/build_windows_runtime_candidate.ps1
+        - tools/release/verify_windows_lan_export.ps1
+        - tests/game/performance/run_match_interaction_performance_contract.gd
+      produced_in_iteration: 1
+      lifecycle_status: submitted
+      registered_by_event_id: ff08dc60-3e6e-4328-bbb0-11d9e6e4095e
+  evidence_refs: *id002
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: 5ace8a8f7afee79c7ecdb85a5dce62ea437f7681453d2073cfba693df890eb28
+    event_digest: 8457eb50dcb99df671f42c52dd8a4ed29df1ed17ced2aa2cf0050b15a70f1d07
