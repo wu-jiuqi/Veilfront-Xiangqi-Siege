@@ -1,0 +1,63 @@
+approval:
+  schema_version: game-production-approval/v1
+  approval_id: approval:veilfront-xiangqi-siege:gate-2:0213f500a100
+  subject_kind: human-gate-decision
+  subject_id: GATE-2@iteration-3-rc5
+  subject_digest: 0213f500a10070198ccdf1090ddcdd2ea519828233251e9896076ff0ced68525
+  decision: approved
+  decided_by: project-owner
+  decided_at: '2026-08-24T16:47:40.6589920+08:00'
+  evidence:
+    source_refs:
+    - codex-thread://current#owner-gate2-rc5-approved-0213f500a100
+    - game-pipeline/loops/evidence/GATE-2-v3-decision-package.md@sha256:5c5dc3973341807e813da4a27daea970d0114ff0fc45441c64e7ef2866d7816d
+    - git:veilfront-xiangqi-siege:d1f5482f058ec66db20087ab27b6c12539c0d176#evidence/gate2/gate2-v3-independent-qa-rc5.md
+    confirmation:
+      method: exact-64-character-digest-reply
+      received_digest: 0213f500a10070198ccdf1090ddcdd2ea519828233251e9896076ff0ced68525
+      matches_subject_digest: true
+    immutable_subject:
+      subject: GATE-2-v3-formal-2d-baseline-rc5
+      gate_id: GATE-2
+      loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+      decision: approved
+      approved_decision_package_subject_digest: 0213f500a10070198ccdf1090ddcdd2ea519828233251e9896076ff0ced68525
+      baseline:
+        registry_record_revision: 98
+        registry_last_event_sequence: 98
+        registry_contract_digest: 9ea1fbab25b1a560b83896194099bd9b0131552d7321223622161615c1a2a205
+        project_brief_digest: 8e9d4285c1c7237a22f308808e944fd8571700f896b8dd8cfb118f0fe0de3d3e
+        product_candidate: 05ada9848c20c41b6d6cc92ce552df643c31438c
+        qa_evidence_commit: d1f5482f058ec66db20087ab27b6c12539c0d176
+        qa_report_sha256: c9da0e9d0b747d65dd9a32282860f3784b8a90cdf40a53298cc1ceb45c1e7b8c
+        executable:
+          path: builds/windows/Veilfront_Xiangqi_Siege_Gate2_v3_05ada98.exe
+          size_bytes: 363175248
+          sha256: 0841a22ba8701c30546da7b6f66a25a74e204733b7a404a4b966d4b4deb012e0
+      accepted_residual_risks:
+        formal_equivalence: 当前1-seed九通道通过；3-seed在240秒上限超时；20-seed仅历史golden。
+        export_scope: all_resources仍包含概念图、漫画源图和未用资源，必须在GATE-3执行过滤与包体预算。
+        quality_tier: 尚无独立质量档位开关。
+        minimum_resolution: 960×540辅助信息密度仍需继续打磨。
+  authorized_action:
+    summary: 批准RC5正式二维灰盒基线，关闭GATE-2并允许准备GATE-3内容与集成Contract。
+    allowed:
+    - 追加GATE-2 approved人工验收记录。
+    - 解除waiting_approval并执行TR-REVIEW-COMPLETED。
+    - 固化GATE-2最终交接与已接受残余风险。
+    - 起草并提交GATE-3内容与集成Contract供项目所有者另行批准。
+    forbidden:
+    - 在GATE-3 Contract获批前把SFX、VFX、UI交互或关卡批量生产记为正式开工。
+    - 修改owner rule revision 5、确定性随机、PlayerView、回放或迷雾信任边界。
+    - 把三渲二研究资产恢复为当前正式主线。
+    - 在GATE-4前把当前EXE作为对外发布版本。
+  application:
+    initial_state: waiting_approval
+    resumed_state: review
+    final_state: completed
+    iteration: 3
+    approval_decision_event_sequence: 99
+    gate_acceptance_event_sequence: 100
+    resume_event_sequence: 101
+    completion_event_sequence: 102
+    applied_at: '2026-08-24T16:47:40.6589920+08:00'

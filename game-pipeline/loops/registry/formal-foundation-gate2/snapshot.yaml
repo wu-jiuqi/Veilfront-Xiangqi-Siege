@@ -77,14 +77,14 @@ registry_snapshot:
       review_scope:
       - GATE-2
   runtime:
-    current_state: waiting_approval
-    state_entered_at: '2026-08-24T16:19:59.277570+08:00'
+    current_state: completed
+    state_entered_at: '2026-08-24T16:47:40.6589920+08:00'
     current_iteration: 3
-    last_transition_id: TR-OPERATIONAL-INTERRUPTED
-    last_event_id: a059e2bc-670c-468b-99cd-cafefdc77cc8
-    last_event_digest: 0aa5795f24f8cae09c9759fa91f19eca0ff3662555ebd5abd6e9406bee9e21a9
-    last_event_sequence: 98
-    record_revision: 98
+    last_transition_id: TR-REVIEW-COMPLETED
+    last_event_id: 09e8d25e-8b4f-45c9-9ae0-3cfe0384f1b8
+    last_event_digest: 57f76274c2d78da4bc0732f125c8861ea794ddf347f45605068a786a9ca79204
+    last_event_sequence: 102
+    record_revision: 102
   budget:
     limits:
       iteration_limit: 4
@@ -399,30 +399,20 @@ registry_snapshot:
       evidence_ref: game-pipeline/approvals/production-scope-exception-formal-lan-assembly-9e65df07d193.yaml
       subject_digest: 9e65df07d19398a083e8d024336180e37d5fc1fd998829cafc7559e7c04031b1
       release_approval: false
-    final_handoff_ref: null
-  interruption:
-    interruption_id: 34c8d0f7-b8a4-43cc-9c6d-775badc82679
-    current_interruption_state: waiting_approval
-    resume_state: review
-    first_entered_from_state: review
-    first_entered_at: '2026-08-23T14:46:28.434347+08:00'
-    current_reason:
-      reason_code: gate_2_rc5_project_owner_decision_required
-      description: RC5 自动检查和独立专业审查已满足；等待项目所有者对精确更新摘要批准、修订或拒绝。
-      responsible_role: project-owner
-      evidence_refs:
-      - game-pipeline/loops/evidence/GATE-2-v3-decision-package.md
-      - evidence/gate2/gate2-v3-independent-qa-rc5.md
-      - builds/windows/Veilfront_Xiangqi_Siege_Gate2_v3_05ada98.exe
-    entry_snapshot:
-      contract_id: LOOP-CTR-FORMAL-FOUNDATION-GATE2-001
-      contract_version: 3
-      contract_digest: 9ea1fbab25b1a560b83896194099bd9b0131552d7321223622161615c1a2a205
-      input_set_digest: d76aab5b51998da90349c84e344d4a41cc32a21684b83fd94fddd5c42621704a
-      dependency_set_digest: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-      authority_set_digest: 59164b09989f70da30e8f2655c6fb4372905534bac2804bb9775bf7738859904
-      budget_usage_digest: 8cd26cff9518b616c7f9b84314d2adc987ca26722d7778dcd5897b1a44df6a69
-    latest_revalidation: null
+    - gate_record_id: 8a70e768-d6df-412e-ab8e-21cfc33dca8b
+      gate_id: GATE-2
+      decision: approved
+      decided_by: project-owner
+      decision_ref: game-pipeline/approvals/gate-2-approval-0213f500a100.yaml@subject-digest:0213f500a10070198ccdf1090ddcdd2ea519828233251e9896076ff0ced68525
+      subject_digest: 0213f500a10070198ccdf1090ddcdd2ea519828233251e9896076ff0ced68525
+      approved_decision_package_subject_digest: 0213f500a10070198ccdf1090ddcdd2ea519828233251e9896076ff0ced68525
+      evidence_state: accepted_with_recorded_residual_risks
+      iteration_reviewed: 3
+      content_and_integration_contract_required: true
+      gate_3_production_started: false
+      external_release: forbidden_until_gate_4
+    final_handoff_ref: game-pipeline/loops/evidence/GATE-2-v3-final-handoff.md@sha256:7c7753727d278e71be1fcb4a5e5a526a8f3665fefa5d325d1a9de9413e0a6a37
+  interruption: null
   pending_approvals:
   - request_id: approval:veilfront-xiangqi-siege:gate-2:36efd026dd33
     requested_action: decide_gate_2_for_demo_2d_batch_production
@@ -447,9 +437,13 @@ registry_snapshot:
   - request_id: approval:veilfront-xiangqi-siege:gate-2:0213f500a100
     requested_action: close_gate_2_and_prepare_gate_3_contract
     subject_digest: 0213f500a10070198ccdf1090ddcdd2ea519828233251e9896076ff0ced68525
-    status: pending
+    status: approved
     requested_by: *id001
     decision_authority: project-owner
     request_ref: game-pipeline/loops/evidence/GATE-2-v3-decision-package.md
     requested_at: '2026-08-24T16:19:59.277570+08:00'
-    decision: null
+    decision:
+      result: approved
+      decided_by: project-owner
+      decided_at: '2026-08-24T16:47:40.6589920+08:00'
+      decision_ref: game-pipeline/approvals/gate-2-approval-0213f500a100.yaml@subject-digest:0213f500a10070198ccdf1090ddcdd2ea519828233251e9896076ff0ced68525
