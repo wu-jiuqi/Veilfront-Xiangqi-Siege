@@ -1,0 +1,128 @@
+{
+  "candidate": "05ada9848c20c41b6d6cc92ce552df643c31438c",
+  "total": 12,
+  "passed": 12,
+  "failed": 0,
+  "results": [
+    {
+      "name": "tutorial_board_visual_1",
+      "script": "res://tests/game/tutorial/run_tutorial_board_visual_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 16.898,
+      "marker": "TUTORIAL_BOARD_VISUAL_CONTRACT_PASS",
+      "forbidden_count": 0,
+      "passed": true
+    },
+    {
+      "name": "tutorial_board_visual_2",
+      "script": "res://tests/game/tutorial/run_tutorial_board_visual_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 18.139,
+      "marker": "TUTORIAL_BOARD_VISUAL_CONTRACT_PASS",
+      "forbidden_count": 0,
+      "passed": true
+    },
+    {
+      "name": "board_hover_coordinate_1",
+      "script": "res://tests/game/tutorial/run_board_hover_coordinate_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 2.605,
+      "marker": "BOARD_HOVER_COORDINATE_CONTRACT_PASS",
+      "forbidden_count": 0,
+      "passed": true
+    },
+    {
+      "name": "board_hover_coordinate_2",
+      "script": "res://tests/game/tutorial/run_board_hover_coordinate_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 2.488,
+      "marker": "BOARD_HOVER_COORDINATE_CONTRACT_PASS",
+      "forbidden_count": 0,
+      "passed": true
+    },
+    {
+      "name": "turn_camera_1",
+      "script": "res://tests/game/presentation/run_turn_camera_visibility_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 6.203,
+      "marker": "TURN_CAMERA_VISIBILITY_CONTRACT_PASS",
+      "forbidden_count": 0,
+      "passed": true
+    },
+    {
+      "name": "turn_camera_2",
+      "script": "res://tests/game/presentation/run_turn_camera_visibility_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 6.299,
+      "marker": "TURN_CAMERA_VISIBILITY_CONTRACT_PASS",
+      "forbidden_count": 0,
+      "passed": true
+    },
+    {
+      "name": "turn_camera_3",
+      "script": "res://tests/game/presentation/run_turn_camera_visibility_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 6.198,
+      "marker": "TURN_CAMERA_VISIBILITY_CONTRACT_PASS",
+      "forbidden_count": 0,
+      "passed": true
+    },
+    {
+      "name": "turn_camera_4",
+      "script": "res://tests/game/presentation/run_turn_camera_visibility_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 6.105,
+      "marker": "TURN_CAMERA_VISIBILITY_CONTRACT_PASS",
+      "forbidden_count": 0,
+      "passed": true
+    },
+    {
+      "name": "turn_camera_5",
+      "script": "res://tests/game/presentation/run_turn_camera_visibility_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 6.108,
+      "marker": "TURN_CAMERA_VISIBILITY_CONTRACT_PASS",
+      "forbidden_count": 0,
+      "passed": true
+    },
+    {
+      "name": "board_camera_layer",
+      "script": "res://tests/game/presentation/run_board_camera_layer_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 3.514,
+      "marker": "BOARD_CAMERA_LAYER_CONTRACT_PASS",
+      "forbidden_count": 0,
+      "passed": true
+    },
+    {
+      "name": "board_layout",
+      "script": "res://tests/game/presentation/run_board_layout_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 9.651,
+      "marker": "BOARD_LAYOUT_CONTRACT_PASS",
+      "forbidden_count": 0,
+      "passed": true
+    },
+    {
+      "name": "tutorial_navigation",
+      "script": "res://tests/game/tutorial/run_tutorial_navigation_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 9.72,
+      "marker": "TUTORIAL_NAVIGATION_CONTRACT_PASS",
+      "forbidden_count": 0,
+      "passed": true
+    }
+  ]
+}

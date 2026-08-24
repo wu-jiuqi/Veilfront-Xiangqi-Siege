@@ -1,0 +1,70 @@
+{
+  "schema_version": "veilfront-gate2-v3-rc5-qa-summary-v1",
+  "candidate": "05ada9848c20c41b6d6cc92ce552df643c31438c",
+  "base_product_candidate": "0a8ab17cdd633ee68e604bb687c1c86f6b93e9a3",
+  "contract_id": "LOOP-CTR-FORMAL-FOUNDATION-GATE2-001",
+  "contract_version": 3,
+  "contract_approval_digest": "9d9e3cfc5e92d41d38eea336dbcca95040bb858706ffd8130a8b33a3594e7dd9",
+  "qa_instance": "inst:01M02NJ3JFHVZ5C4SP5MTJFJR6",
+  "technical_verdict": "pass",
+  "gate_route": "recommend_updated_owner_approval",
+  "pipeline": {
+    "project_validator": "pass",
+    "registry_validator": "pass",
+    "registry_state_observed": "waiting_approval",
+    "registry_iteration": 3,
+    "registry_revision": 79,
+    "stale_prior_approval": true
+  },
+  "contracts": {
+    "base_0a8ab17": {"total": 48, "passed": 45, "failed": 3},
+    "resolved_as_test_timing": ["tutorial_board_visual", "board_hover_coordinate"],
+    "resolved_as_headless_capture_infrastructure": ["match_hud_v3_layout_lab"],
+    "current_targeted_regression": {"total": 12, "passed": 12, "failed": 0},
+    "current_effective_total": {"total": 48, "passed": 48, "failed": 0}
+  },
+  "formal_equivalence": {
+    "one_seed": {"status": "pass", "seconds": 25.254, "channels": 9, "visible_error_checked": 104, "observer_replay_frames_checked": 200},
+    "three_seed": {"status": "timeout", "hard_limit_seconds": 240, "forbidden_count": 0},
+    "twenty_seed": {"status": "historical_golden_only", "current_run": false}
+  },
+  "performance": [
+    {"resolution": [1280, 720], "reduce_motion": false, "average_fps": 105.140, "p99_frame_ms": 14.255, "one_percent_low_fps_equivalent": 70.151, "core_layout_readable": true},
+    {"resolution": [960, 540], "reduce_motion": true, "average_fps": 162.597, "p99_frame_ms": 9.472, "one_percent_low_fps_equivalent": 105.574, "core_layout_readable": true}
+  ],
+  "asset_memory": {
+    "png_source_total": 262,
+    "source_chroma_ignored": 19,
+    "importable_export_candidate_count": 243,
+    "worst_case_rgba_mib": 880.294,
+    "worst_case_rgba_with_mips_mib": 1173.726,
+    "rc5_integrated_ui_count": 13,
+    "rc5_integrated_ui_rgba_with_mips_mib": 55.784,
+    "font_file_count": 3,
+    "font_raw_mib": 51.670,
+    "simultaneous_residency_claimed": false
+  },
+  "windows_artifact": {
+    "path": "builds/windows/Veilfront_Xiangqi_Siege_Gate2_v3_05ada98.exe",
+    "size_bytes": 363175248,
+    "sha256": "0841A22BA8701C30546DA7B6F66A25A74E204733B7A404A4B966D4B4DEB012E0",
+    "embedded_pck": true,
+    "export": "pass",
+    "direct_launch": "pass",
+    "packaged_lan_full_stack": "pass"
+  },
+  "check_matrix": {
+    "CHECK-CONTRACT-V3-001": "pass",
+    "CHECK-DEPENDENCY-001": "pass",
+    "CHECK-INFORMATION-2D-001": "pass",
+    "CHECK-GODOT-2D-001": "pass",
+    "CHECK-COORDINATE-001": "pass",
+    "CHECK-RESPONSIVE-2D-001": "pass",
+    "CHECK-PERFORMANCE-2D-001": "pass",
+    "CHECK-ART-2D-001": "pass",
+    "CHECK-REGRESSION-001": "pass_with_limitation",
+    "CHECK-SCOPE-001": "pass_with_risk"
+  },
+  "recommendation_canonical": "candidate=05ada9848c20c41b6d6cc92ce552df643c31438c|contract_digest=9d9e3cfc5e92d41d38eea336dbcca95040bb858706ffd8130a8b33a3594e7dd9|exe_sha256=0841A22BA8701C30546DA7B6F66A25A74E204733B7A404A4B966D4B4DEB012E0|qa_instance=inst:01M02NJ3JFHVZ5C4SP5MTJFJR6|technical_verdict=pass",
+  "recommendation_digest": "0a04ec17f07f6b55211475ac76d96462edb812caac4b8ff176d0f41f2934b895"
+}

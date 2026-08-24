@@ -1,0 +1,209 @@
+{
+	"candidate": "05ada9848c20c41b6d6cc92ce552df643c31438c",
+	"categories": {
+		"concepts_export_candidate": {
+			"count": 21,
+			"rgba_bytes": 132157712
+		},
+		"game_art_runtime_or_reference": {
+			"count": 53,
+			"rgba_bytes": 182096480
+		},
+		"ignored_source_chroma": {
+			"count": 19,
+			"rgba_bytes": 119536272
+		},
+		"rc5_integrated_ui_runtime": {
+			"count": 13,
+			"rgba_bytes": 43870664
+		},
+		"tutorial_comic_runtime": {
+			"count": 18,
+			"rgba_bytes": 113237916
+		},
+		"ui_runtime_or_reference": {
+			"count": 138,
+			"rgba_bytes": 451692556
+		}
+	},
+	"font_file_bytes": 54180108,
+	"font_file_count": 3,
+	"fonts": [
+		{
+			"file_bytes": 17772300,
+			"path": "res://assets/fonts/noto_sans_sc/NotoSansSC-VariableFont_wght.ttf"
+		},
+		{
+			"file_bytes": 25858412,
+			"path": "res://assets/fonts/qyn_flavor_grotesk_alt_chs/QynFlavorGroteskAltCHS-Regular.ttf"
+		},
+		{
+			"file_bytes": 10549396,
+			"path": "res://assets/fonts/ramega_zhang_qingping/ramega_zhang_qingping_xingshu.ttf"
+		}
+	],
+	"limitations": [
+		"worst-case export-candidate estimate is not simultaneous resident VRAM",
+		"font atlas GPU allocation is dynamic and not represented by raw TTF bytes",
+		"driver compression and texture import format are not modeled"
+	],
+	"method": "source PNG dimensions x RGBA8; full mip-chain conservative multiplier 4/3; source_chroma excluded by .gdignore; all other assets/* remain export candidates under all_resources",
+	"png_importable_candidate_count": 243,
+	"png_importable_rgba_bytes": 923055328,
+	"png_importable_rgba_mips_bytes": 1230740438,
+	"png_source_chroma_ignored": 19,
+	"png_source_total": 262,
+	"schema_version": "veilfront-gate2-rc5-asset-memory-estimate-v1",
+	"top_importable_textures": [
+		{
+			"height": 1327,
+			"path": "res://assets/art/ui/terracotta_hud_v2/minimap_frame_v1.png",
+			"rgba_bytes": 6295288,
+			"width": 1186
+		},
+		{
+			"height": 1327,
+			"path": "res://assets/art/ui/terracotta_hud_v2/source_rgb/minimap_frame_v1.png",
+			"rgba_bytes": 6295288,
+			"width": 1186
+		},
+		{
+			"height": 1428,
+			"path": "res://assets/art/ui/terracotta_hud_v2/unit_info_card_v1.png",
+			"rgba_bytes": 6294624,
+			"width": 1102
+		},
+		{
+			"height": 1428,
+			"path": "res://assets/art/ui/terracotta_hud_v2/source_rgb/unit_info_card_v1.png",
+			"rgba_bytes": 6294624,
+			"width": 1102
+		},
+		{
+			"height": 887,
+			"path": "res://assets/art/boards/terracotta_battle_stage_test/north_backdrop.png",
+			"rgba_bytes": 6294152,
+			"width": 1774
+		},
+		{
+			"height": 1774,
+			"path": "res://assets/art/boards/terracotta_warriors/terracotta_battlefield_board_bg_gridless_v1.png",
+			"rgba_bytes": 6294152,
+			"width": 887
+		},
+		{
+			"height": 887,
+			"path": "res://assets/art/ui/start_sequence/veilfront_logo_gold_pair_v2.png",
+			"rgba_bytes": 6294152,
+			"width": 1774
+		},
+		{
+			"height": 829,
+			"path": "res://assets/art/ui/terracotta_hud_v2/faction_status_plate_v1.png",
+			"rgba_bytes": 6293768,
+			"width": 1898
+		},
+		{
+			"height": 829,
+			"path": "res://assets/art/ui/terracotta_hud_v2/source_rgb/faction_status_plate_v1.png",
+			"rgba_bytes": 6293768,
+			"width": 1898
+		},
+		{
+			"height": 941,
+			"path": "res://assets/art/ui/concepts/main_menu_start_screen_v6_click_anywhere.png",
+			"rgba_bytes": 6293408,
+			"width": 1672
+		},
+		{
+			"height": 941,
+			"path": "res://assets/art/ui/concepts/main_menu_concept_v4_colossal_gate_project_soldiers.png",
+			"rgba_bytes": 6293408,
+			"width": 1672
+		},
+		{
+			"height": 941,
+			"path": "res://assets/art/ui/concepts/main_menu_concept_v3_bronze_gate.png",
+			"rgba_bytes": 6293408,
+			"width": 1672
+		},
+		{
+			"height": 941,
+			"path": "res://assets/art/ui/concepts/main_menu_concept_v2_ink_xiangqi.png",
+			"rgba_bytes": 6293408,
+			"width": 1672
+		},
+		{
+			"height": 941,
+			"path": "res://assets/art/ui/concepts/main_menu_background_v7_denoised.png",
+			"rgba_bytes": 6293408,
+			"width": 1672
+		},
+		{
+			"height": 941,
+			"path": "res://assets/art/ui/concepts/main_menu_background_v5_great_wall_gate.png",
+			"rgba_bytes": 6293408,
+			"width": 1672
+		},
+		{
+			"height": 941,
+			"path": "res://assets/art/ui/concepts/loading_transition_reference_v1.png",
+			"rgba_bytes": 6293408,
+			"width": 1672
+		},
+		{
+			"height": 941,
+			"path": "res://assets/art/ui/concepts/level_select_ux_reference_v3.png",
+			"rgba_bytes": 6293408,
+			"width": 1672
+		},
+		{
+			"height": 941,
+			"path": "res://assets/art/ui/concepts/level_select_concept_v1_campaign_map.png",
+			"rgba_bytes": 6293408,
+			"width": 1672
+		},
+		{
+			"height": 941,
+			"path": "res://assets/art/ui/concepts/level_gameplay_hud_concept_v1_t03_field_lattice.png",
+			"rgba_bytes": 6293408,
+			"width": 1672
+		},
+		{
+			"height": 941,
+			"path": "res://assets/art/ui/concepts/level_challenge_hud_ux_reference_v2.png",
+			"rgba_bytes": 6293408,
+			"width": 1672
+		},
+		{
+			"height": 941,
+			"path": "res://assets/art/ui/concepts/level_challenge_hud_ux_reference_v1.png",
+			"rgba_bytes": 6293408,
+			"width": 1672
+		},
+		{
+			"height": 941,
+			"path": "res://assets/art/ui/concepts/lan_lobby_reference_v2_board_metal.png",
+			"rgba_bytes": 6293408,
+			"width": 1672
+		},
+		{
+			"height": 941,
+			"path": "res://assets/art/ui/concepts/battle_hud_concept_v1.png",
+			"rgba_bytes": 6293408,
+			"width": 1672
+		},
+		{
+			"height": 941,
+			"path": "res://assets/art/ui/level_select/level_campaign_map_background_v1.png",
+			"rgba_bytes": 6293408,
+			"width": 1672
+		},
+		{
+			"height": 941,
+			"path": "res://assets/art/ui/level_select/level_select_empty_background_v2.png",
+			"rgba_bytes": 6293408,
+			"width": 1672
+		}
+	]
+}

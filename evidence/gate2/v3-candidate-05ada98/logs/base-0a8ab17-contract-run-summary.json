@@ -1,0 +1,737 @@
+{
+  "schema_version": "veilfront-gate2-rc5-contract-summary-v1",
+  "candidate": "0a8ab17cdd633ee68e604bb687c1c86f6b93e9a3",
+  "generated_at": "2026-08-24T15:21:41.0799174+08:00",
+  "total": 48,
+  "passed": 45,
+  "failed": 3,
+  "results": [
+    {
+      "name": "formal_architecture",
+      "script": "res://tests/game/architecture/run_formal_architecture_checks.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 9.437,
+      "expected_markers": [
+        "DEPENDENCY_BOUNDARY_CHECK_PASSED",
+        "FORMAL_ARCHITECTURE_CHECKS_PASSED"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/formal_architecture.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/formal_architecture.stderr.log"
+    },
+    {
+      "name": "ui_static_theme",
+      "script": "res://tests/game/ui/run_ui_static_theme_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 1.207,
+      "expected_markers": [
+        "UI_STATIC_THEME_CONTRACT_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/ui_static_theme.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/ui_static_theme.stderr.log"
+    },
+    {
+      "name": "formal_scene_smoke",
+      "script": "res://tests/game/scenes/run_formal_scene_smoke.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 10.111,
+      "expected_markers": [
+        "FORMAL_SCENE_SMOKE_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/formal_scene_smoke.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/formal_scene_smoke.stderr.log"
+    },
+    {
+      "name": "board_camera_layer",
+      "script": "res://tests/game/presentation/run_board_camera_layer_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 3.727,
+      "expected_markers": [
+        "BOARD_CAMERA_LAYER_CONTRACT_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/board_camera_layer.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/board_camera_layer.stderr.log"
+    },
+    {
+      "name": "turn_camera_visibility_1",
+      "script": "res://tests/game/presentation/run_turn_camera_visibility_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 5.834,
+      "expected_markers": [
+        "TURN_CAMERA_VISIBILITY_CONTRACT_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/turn_camera_visibility_1.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/turn_camera_visibility_1.stderr.log"
+    },
+    {
+      "name": "turn_camera_visibility_2",
+      "script": "res://tests/game/presentation/run_turn_camera_visibility_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 6.385,
+      "expected_markers": [
+        "TURN_CAMERA_VISIBILITY_CONTRACT_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/turn_camera_visibility_2.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/turn_camera_visibility_2.stderr.log"
+    },
+    {
+      "name": "turn_camera_visibility_3",
+      "script": "res://tests/game/presentation/run_turn_camera_visibility_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 6.493,
+      "expected_markers": [
+        "TURN_CAMERA_VISIBILITY_CONTRACT_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/turn_camera_visibility_3.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/turn_camera_visibility_3.stderr.log"
+    },
+    {
+      "name": "turn_camera_visibility_4",
+      "script": "res://tests/game/presentation/run_turn_camera_visibility_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 6.58,
+      "expected_markers": [
+        "TURN_CAMERA_VISIBILITY_CONTRACT_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/turn_camera_visibility_4.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/turn_camera_visibility_4.stderr.log"
+    },
+    {
+      "name": "turn_camera_visibility_5",
+      "script": "res://tests/game/presentation/run_turn_camera_visibility_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 6.292,
+      "expected_markers": [
+        "TURN_CAMERA_VISIBILITY_CONTRACT_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/turn_camera_visibility_5.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/turn_camera_visibility_5.stderr.log"
+    },
+    {
+      "name": "board_layout",
+      "script": "res://tests/game/presentation/run_board_layout_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 10.859,
+      "expected_markers": [
+        "BOARD_LAYOUT_CONTRACT_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/board_layout.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/board_layout.stderr.log"
+    },
+    {
+      "name": "formal_board_art_input",
+      "script": "res://tests/game/presentation/run_formal_board_art_input_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 6.59,
+      "expected_markers": [
+        "FORMAL_BOARD_ART_INPUT_CONTRACT_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/formal_board_art_input.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/formal_board_art_input.stderr.log"
+    },
+    {
+      "name": "formal_fog_visual",
+      "script": "res://tests/game/presentation/run_formal_fog_visual_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 2.304,
+      "expected_markers": [
+        "FORMAL_FOG_VISUAL_CONTRACT_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/formal_fog_visual.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/formal_fog_visual.stderr.log"
+    },
+    {
+      "name": "hidden_equivalence",
+      "script": "res://tests/game/contracts/run_hidden_equivalence.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 3.446,
+      "expected_markers": [
+        "HIDDEN_EQUIVALENCE_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/hidden_equivalence.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/hidden_equivalence.stderr.log"
+    },
+    {
+      "name": "observer_contract",
+      "script": "res://tests/game/contracts/run_observer_contract_checks.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 1.29,
+      "expected_markers": [
+        "OBSERVER_CONTRACT_CHECKS_PASSED"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/observer_contract.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/observer_contract.stderr.log"
+    },
+    {
+      "name": "frontend_scene_smoke",
+      "script": "res://tests/game/frontend/run_frontend_scene_smoke.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 2.498,
+      "expected_markers": [
+        "FRONTEND_SCENE_SMOKE_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/frontend_scene_smoke.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/frontend_scene_smoke.stderr.log"
+    },
+    {
+      "name": "level_select_ui",
+      "script": "res://tests/game/frontend/run_level_select_ui_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 1.688,
+      "expected_markers": [
+        "LEVEL_SELECT_UI_CONTRACT_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/level_select_ui.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/level_select_ui.stderr.log"
+    },
+    {
+      "name": "settings_screen",
+      "script": "res://tests/game/frontend/run_settings_screen_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 3.467,
+      "expected_markers": [
+        "SETTINGS_SCREEN_CONTRACT_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/settings_screen.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/settings_screen.stderr.log"
+    },
+    {
+      "name": "start_screen_routing",
+      "script": "res://tests/game/frontend/run_start_screen_routing_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 1.393,
+      "expected_markers": [
+        "START_SCREEN_ROUTING_CONTRACT_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/start_screen_routing.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/start_screen_routing.stderr.log"
+    },
+    {
+      "name": "formal_lan_integration",
+      "script": "res://tests/game/network/run_formal_lan_network_integration.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 7.406,
+      "expected_markers": [
+        "FORMAL_LAN_NETWORK_INTEGRATION_PASSED"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/formal_lan_integration.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/formal_lan_integration.stderr.log"
+    },
+    {
+      "name": "formal_lan_security",
+      "script": "res://tests/game/network/run_formal_lan_security_recovery_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 2.58,
+      "expected_markers": [
+        "FORMAL_LAN_SECURITY_RECOVERY_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/formal_lan_security.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/formal_lan_security.stderr.log"
+    },
+    {
+      "name": "formal_lan_public_fail_closed",
+      "script": "res://tests/game/network/run_formal_lan_public_state_fail_closed_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 1.755,
+      "expected_markers": [
+        "FORMAL_LAN_PUBLIC_STATE_FAIL_CLOSED_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/formal_lan_public_fail_closed.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/formal_lan_public_fail_closed.stderr.log"
+    },
+    {
+      "name": "formal_lan_full_stack",
+      "script": "res://tests/game/network/run_formal_lan_full_stack_loopback.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 13.726,
+      "expected_markers": [
+        "FORMAL_LAN_FULL_STACK_LOOPBACK_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/formal_lan_full_stack.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/formal_lan_full_stack.stderr.log"
+    },
+    {
+      "name": "tutorial_all_flows",
+      "script": "res://tests/game/tutorial/run_all_tutorial_flows.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 100.385,
+      "expected_markers": [
+        "ALL_TUTORIAL_FLOWS_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_all_flows.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_all_flows.stderr.log"
+    },
+    {
+      "name": "tutorial_rule_boundary",
+      "script": "res://tests/game/tutorial/run_tutorial_rule_boundary_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 1.658,
+      "expected_markers": [
+        "TUTORIAL_RULE_BOUNDARY_CONTRACT_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_rule_boundary.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_rule_boundary.stderr.log"
+    },
+    {
+      "name": "tutorial_progress",
+      "script": "res://tests/game/tutorial/run_tutorial_progress_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 8.335,
+      "expected_markers": [
+        "TUTORIAL_PROGRESS_CONTRACT_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_progress.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_progress.stderr.log"
+    },
+    {
+      "name": "tutorial_layout",
+      "script": "res://tests/game/tutorial/run_tutorial_layout_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 4.447,
+      "expected_markers": [
+        "TUTORIAL_LAYOUT_CONTRACT_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_layout.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_layout.stderr.log"
+    },
+    {
+      "name": "tutorial_pause",
+      "script": "res://tests/game/tutorial/run_tutorial_pause_menu_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 2.21,
+      "expected_markers": [
+        "TUTORIAL_PAUSE_MENU_CONTRACT_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_pause.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_pause.stderr.log"
+    },
+    {
+      "name": "tutorial_navigation",
+      "script": "res://tests/game/tutorial/run_tutorial_navigation_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 8.88,
+      "expected_markers": [
+        "TUTORIAL_NAVIGATION_CONTRACT_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_navigation.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_navigation.stderr.log"
+    },
+    {
+      "name": "tutorial_completion_failure",
+      "script": "res://tests/game/tutorial/run_tutorial_completion_failure_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 9.167,
+      "expected_markers": [
+        "TUTORIAL_COMPLETION_FAILURE_CONTRACT_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_completion_failure.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_completion_failure.stderr.log"
+    },
+    {
+      "name": "tutorial_input_guard",
+      "script": "res://tests/game/tutorial/run_tutorial_input_guard_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 5.073,
+      "expected_markers": [
+        "TUTORIAL_INPUT_GUARD_CONTRACT_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_input_guard.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_input_guard.stderr.log"
+    },
+    {
+      "name": "tutorial_match_interaction",
+      "script": "res://tests/game/tutorial/run_tutorial_match_interaction_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 4.837,
+      "expected_markers": [
+        "TUTORIAL_MATCH_INTERACTION_CONTRACT_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_match_interaction.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_match_interaction.stderr.log"
+    },
+    {
+      "name": "tutorial_overlay_action",
+      "script": "res://tests/game/tutorial/run_tutorial_overlay_action_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 6.187,
+      "expected_markers": [
+        "TUTORIAL_OVERLAY_ACTION_CONTRACT_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_overlay_action.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_overlay_action.stderr.log"
+    },
+    {
+      "name": "tutorial_fixed_effect",
+      "script": "res://tests/game/tutorial/run_tutorial_fixed_effect_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 99.258,
+      "expected_markers": [
+        "TUTORIAL_FIXED_EFFECT_CONTRACT_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_fixed_effect.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_fixed_effect.stderr.log"
+    },
+    {
+      "name": "tutorial_hint_escalation",
+      "script": "res://tests/game/tutorial/run_tutorial_hint_escalation_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 4.618,
+      "expected_markers": [
+        "TUTORIAL_HINT_ESCALATION_CONTRACT_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_hint_escalation.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_hint_escalation.stderr.log"
+    },
+    {
+      "name": "tutorial_t0_flow",
+      "script": "res://tests/game/tutorial/run_tutorial_t0_flow_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 8.035,
+      "expected_markers": [
+        "TUTORIAL_T0_FLOW_CONTRACT_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_t0_flow.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_t0_flow.stderr.log"
+    },
+    {
+      "name": "tutorial_t1_flow",
+      "script": "res://tests/game/tutorial/run_tutorial_t1_flow_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 10.458,
+      "expected_markers": [
+        "TUTORIAL_T1_FLOW_CONTRACT_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_t1_flow.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_t1_flow.stderr.log"
+    },
+    {
+      "name": "tutorial_restart",
+      "script": "res://tests/game/tutorial/run_tutorial_restart_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 6.338,
+      "expected_markers": [
+        "TUTORIAL_RESTART_CONTRACT_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_restart.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_restart.stderr.log"
+    },
+    {
+      "name": "tutorial_level_routing",
+      "script": "res://tests/game/tutorial/run_tutorial_level_routing_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 4.724,
+      "expected_markers": [
+        "TUTORIAL_LEVEL_ROUTING_CONTRACT_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_level_routing.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_level_routing.stderr.log"
+    },
+    {
+      "name": "tutorial_first_action",
+      "script": "res://tests/game/tutorial/run_tutorial_first_action_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 2.04,
+      "expected_markers": [
+        "TUTORIAL_FIRST_ACTION_CONTRACT_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_first_action.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_first_action.stderr.log"
+    },
+    {
+      "name": "tutorial_board_visual",
+      "script": "res://tests/game/tutorial/run_tutorial_board_visual_contract.gd",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_seconds": 15.876,
+      "expected_markers": [
+        "TUTORIAL_BOARD_VISUAL_CONTRACT_PASS"
+      ],
+      "missing_markers": [
+        "TUTORIAL_BOARD_VISUAL_CONTRACT_PASS"
+      ],
+      "forbidden_count": 2,
+      "passed": false,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_board_visual.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_board_visual.stderr.log"
+    },
+    {
+      "name": "tutorial_chapter_content",
+      "script": "res://tests/game/tutorial/run_tutorial_chapter_content_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 1.222,
+      "expected_markers": [
+        "TUTORIAL_CHAPTER_CONTENT_CONTRACT_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_chapter_content.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/tutorial_chapter_content.stderr.log"
+    },
+    {
+      "name": "challenge_terminal_flow",
+      "script": "res://tests/game/tutorial/run_challenge_terminal_flow.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 5.778,
+      "expected_markers": [
+        "CHALLENGE_TERMINAL_FLOW_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/challenge_terminal_flow.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/challenge_terminal_flow.stderr.log"
+    },
+    {
+      "name": "board_hover_coordinate",
+      "script": "res://tests/game/tutorial/run_board_hover_coordinate_contract.gd",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_seconds": 2.217,
+      "expected_markers": [
+        "BOARD_HOVER_COORDINATE_CONTRACT_PASS"
+      ],
+      "missing_markers": [
+        "BOARD_HOVER_COORDINATE_CONTRACT_PASS"
+      ],
+      "forbidden_count": 1,
+      "passed": false,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/board_hover_coordinate.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/board_hover_coordinate.stderr.log"
+    },
+    {
+      "name": "level_gameplay_hud_lab",
+      "script": "res://tests/game/ui/run_level_gameplay_hud_lab_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 5.57,
+      "expected_markers": [
+        "LEVEL_GAMEPLAY_HUD_LAB_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/level_gameplay_hud_lab.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/level_gameplay_hud_lab.stderr.log"
+    },
+    {
+      "name": "match_hud_v3_layout_lab",
+      "script": "res://tests/game/ui/run_match_hud_v3_layout_lab_contract.gd",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_seconds": 5.377,
+      "expected_markers": [
+        "MATCH_HUD_V3_LAYOUT_LAB_PASS"
+      ],
+      "missing_markers": [
+        "MATCH_HUD_V3_LAYOUT_LAB_PASS"
+      ],
+      "forbidden_count": 3,
+      "passed": false,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/match_hud_v3_layout_lab.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/match_hud_v3_layout_lab.stderr.log"
+    },
+    {
+      "name": "online_match_hud_v3",
+      "script": "res://tests/game/ui/run_online_match_hud_v3_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 7.049,
+      "expected_markers": [
+        "ONLINE_MATCH_HUD_V3_CONTRACT_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/online_match_hud_v3.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/online_match_hud_v3.stderr.log"
+    },
+    {
+      "name": "system_dialog_theme",
+      "script": "res://tests/game/ui/run_system_dialog_theme_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 6.753,
+      "expected_markers": [
+        "SYSTEM_DIALOG_ART_CONTRACT_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/system_dialog_theme.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/system_dialog_theme.stderr.log"
+    },
+    {
+      "name": "terracotta_ui_theme",
+      "script": "res://tests/game/ui/run_terracotta_ui_theme_contract.gd",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 1.658,
+      "expected_markers": [
+        "TERRACOTTA_UI_THEME_CONTRACT_PASS"
+      ],
+      "missing_markers": [],
+      "forbidden_count": 0,
+      "passed": true,
+      "stdout": "evidence/gate2/v3-candidate-0a8ab17/logs/terracotta_ui_theme.stdout.log",
+      "stderr": "evidence/gate2/v3-candidate-0a8ab17/logs/terracotta_ui_theme.stderr.log"
+    }
+  ]
+}
