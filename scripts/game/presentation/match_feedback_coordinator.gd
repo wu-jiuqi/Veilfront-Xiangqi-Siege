@@ -8,6 +8,7 @@ const VfxCueContract = preload("res://scripts/game/vfx/vfx_cue.gd")
 @onready var _audio_root: VeilfrontAudioRoot = $AudioRoot
 
 var _vfx_director: VfxDirector
+var _screen_callout_overlay: ScreenCalloutOverlay
 var _previous_view: Dictionary = {}
 var _pending_view: Dictionary = {}
 var _local_sequence: int = 0
@@ -23,6 +24,12 @@ func bind_board_feedback(
 	_board_emitter = board_emitter
 	_audio_root.register_board_emitter(board_emitter)
 	_vfx_director = vfx_director
+
+
+func bind_screen_callout_overlay(overlay: ScreenCalloutOverlay) -> void:
+	if is_instance_valid(_screen_callout_overlay) and _screen_callout_overlay != overlay:
+		_screen_callout_overlay.clear_all()
+	_screen_callout_overlay = overlay
 
 
 func consume_player_view(view: Dictionary) -> void:
@@ -69,8 +76,12 @@ func consume_visible_events(events: Array) -> Dictionary:
 			"vfx_played": 0,
 		}
 	var vfx_played := 0
+	var board_vfx_batch: Dictionary = vfx_batch
+	if is_instance_valid(_screen_callout_overlay):
+		vfx_played += _screen_callout_overlay.play_batch(vfx_batch)
+		board_vfx_batch = _without_screen_callouts(vfx_batch)
 	if is_instance_valid(_vfx_director):
-		vfx_played = _vfx_director.play_batch(vfx_batch)
+		vfx_played += _vfx_director.play_batch(board_vfx_batch)
 	_previous_view = current_view
 	_pending_view.clear()
 	return {
@@ -120,6 +131,8 @@ func reset_session() -> void:
 	_audio_root.reset_session()
 	if is_instance_valid(_vfx_director):
 		_vfx_director.clear_all()
+	if is_instance_valid(_screen_callout_overlay):
+		_screen_callout_overlay.clear_all()
 
 
 func _exit_tree() -> void:
@@ -133,6 +146,10 @@ func get_audio_root() -> VeilfrontAudioRoot:
 	return _audio_root
 
 
+func get_screen_callout_overlay() -> ScreenCalloutOverlay:
+	return _screen_callout_overlay
+
+
 func get_feedback_snapshot() -> Dictionary:
 	return {
 		"has_previous_view": not _previous_view.is_empty(),
@@ -141,7 +158,28 @@ func get_feedback_snapshot() -> Dictionary:
 		"vfx_bound": is_instance_valid(_vfx_director),
 		"vfx": _vfx_director.get_pool_snapshot() \
 			if is_instance_valid(_vfx_director) else {},
+		"screen_callout_bound": is_instance_valid(_screen_callout_overlay),
+		"screen_callout": _screen_callout_overlay.effect_snapshot() \
+			if is_instance_valid(_screen_callout_overlay) else {},
 	}
+
+
+func _without_screen_callouts(batch: Dictionary) -> Dictionary:
+	var board_cues: Array = []
+	for cue_value: Variant in batch.get("cues", []):
+		if not cue_value is Dictionary:
+			continue
+		var cue: Dictionary = cue_value
+		if str(cue.get("cue_key", "")).begins_with("vfx.callout."):
+			continue
+		board_cues.append(cue.duplicate(true))
+	return VfxCueContract.build_batch(
+		str(batch.get("session_public_id", "")),
+		int(batch.get("frame_action_index", -1)),
+		int(batch.get("visible_event_cursor", -1)),
+		str(batch.get("motion_profile", "")),
+		board_cues
+	)
 
 
 func _feedback_view() -> Dictionary:

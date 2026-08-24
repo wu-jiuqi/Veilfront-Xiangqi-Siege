@@ -1,0 +1,177 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/vfx/screen_callout_overlay.gd" id="1_script"]
+[ext_resource type="Font" path="res://resources/game/ui/fonts/noto_sans_sc_semibold.tres" id="2_font"]
+[ext_resource type="Texture2D" path="res://assets/vfx/source/screen_callout_seal_v1.svg" id="3_seal"]
+[ext_resource type="Texture2D" path="res://assets/vfx/source/brush_spark_v1.svg" id="4_spark"]
+
+[sub_resource type="Curve" id="Curve_particle_scale"]
+_data = [Vector2(0, 0.18), 0.0, 4.0, 0, 0, Vector2(0.18, 1), 1.4, 0.0, 0, 0, Vector2(1, 0), -1.6, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_particle_scale"]
+curve = SubResource("Curve_particle_scale")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_burst"]
+resource_local_to_scene = true
+particle_flag_disable_z = true
+emission_shape = 1
+emission_sphere_radius = 86.0
+direction = Vector3(0, -1, 0)
+spread = 180.0
+gravity = Vector3(0, 18, 0)
+initial_velocity_min = 210.0
+initial_velocity_max = 390.0
+angular_velocity_min = -120.0
+angular_velocity_max = 120.0
+scale_min = 0.55
+scale_max = 1.45
+scale_curve = SubResource("CurveTexture_particle_scale")
+color = Color(1, 0.82, 0.42, 0.92)
+
+[node name="ScreenCalloutOverlay" type="Control"]
+visible = false
+z_index = 300
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_script")
+
+[node name="Backdrop" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.018, 0.012, 0.01, 0.42)
+
+[node name="CenterBand" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -126.0
+offset_bottom = 126.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.19, 0.045, 0.025, 0.88)
+
+[node name="TopEdge" type="ColorRect" parent="CenterBand"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 4.0
+grow_horizontal = 2
+mouse_filter = 2
+color = Color(1, 0.82, 0.42, 0.78)
+
+[node name="BottomEdge" type="ColorRect" parent="CenterBand"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -3.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+color = Color(1, 0.82, 0.42, 0.5)
+
+[node name="ScreenBurst" type="GPUParticles2D" parent="."]
+emitting = false
+amount = 28
+lifetime = 0.68
+one_shot = true
+explosiveness = 0.96
+randomness = 0.18
+fixed_fps = 30
+visibility_rect = Rect2(-640, -360, 1280, 720)
+process_material = SubResource("ParticleProcessMaterial_burst")
+texture = ExtResource("4_spark")
+
+[node name="CenterPivot" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -280.0
+offset_top = -190.0
+offset_right = 280.0
+offset_bottom = 190.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+pivot_offset = Vector2(280, 190)
+
+[node name="Seal" type="TextureRect" parent="CenterPivot"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -220.0
+offset_top = -220.0
+offset_right = 220.0
+offset_bottom = 220.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("3_seal")
+expand_mode = 1
+stretch_mode = 5
+pivot_offset = Vector2(220, 220)
+
+[node name="CalloutLabel" type="Label" parent="CenterPivot"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 0.82, 0.42, 1)
+theme_override_colors/font_outline_color = Color(0.1, 0.008, 0.006, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.82)
+theme_override_constants/outline_size = 22
+theme_override_constants/shadow_offset_x = 5
+theme_override_constants/shadow_offset_y = 8
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 232
+text = "吃"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CaptionLabel" type="Label" parent="CenterPivot"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -180.0
+offset_top = -74.0
+offset_right = 180.0
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.66, 1)
+theme_override_colors/font_outline_color = Color(0.08, 0.01, 0.008, 1)
+theme_override_constants/outline_size = 8
+theme_override_constants/letter_spacing = 12
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 28
+text = "斩 获 敌 军"
+horizontal_alignment = 1
+vertical_alignment = 1

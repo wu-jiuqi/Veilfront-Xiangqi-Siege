@@ -29,6 +29,14 @@ vfx_asset_license_manifest:
       modification_allowed: true
       commercial_distribution: allowed_with_project
       attribution_required: false
+    - id: VFX-SRC-SCREEN-CALLOUT-001
+      path: assets/vfx/source/screen_callout_seal_v1.svg
+      authoring: project_original_hand_authored_svg_geometry
+      external_input: none
+      license_holder: veilfront-xiangqi-siege-project-owner
+      modification_allowed: true
+      commercial_distribution: allowed_with_project
+      attribution_required: false
   runtime_assets:
     - resources/game/vfx/vfx_catalog.tres
     - resources/game/vfx/definitions/selection_vfx.tres
@@ -40,6 +48,7 @@ vfx_asset_license_manifest:
     - resources/game/vfx/definitions/terminal_vfx.tres
     - scenes/game/vfx/vfx_effect_slot.tscn
     - scenes/game/vfx/vfx_root.tscn
+    - scenes/game/vfx/screen_callout_overlay.tscn
   import_requirements:
     renderer: gl_compatibility
     svg_import: Texture2D default, no external font or linked raster

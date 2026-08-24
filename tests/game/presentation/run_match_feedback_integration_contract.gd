@@ -132,6 +132,10 @@ func _check_formal_screen(screen_path: String) -> void:
 		var snapshot: Dictionary = feedback.get_feedback_snapshot()
 		_expect(bool(snapshot.get("board_emitter_bound", false)), "formal screen did not bind board audio: %s" % screen_path)
 		_expect(bool(snapshot.get("vfx_bound", false)), "formal screen did not bind VFX: %s" % screen_path)
+		_expect(
+			bool(snapshot.get("screen_callout_bound", false)),
+			"formal screen did not preset the screen-center callout overlay: %s" % screen_path
+		)
 		feedback.get_audio_root().dry_run = true
 		feedback.get_audio_root().cue_played.connect(
 			func(cue: Dictionary) -> void: _played_audio_keys.append(str(cue.get("cue_key", "")))
@@ -256,7 +260,7 @@ func _finish() -> void:
 		print(
 			"MATCH_FEEDBACK_INTEGRATION_CONTRACT_PASS screens=2 "
 			+ "audio_observer=true vfx_observer=true local_selection=true "
-			+ "minimap_isolation=true reset=true"
+			+ "screen_callout=true minimap_isolation=true reset=true"
 		)
 		quit(0)
 		return

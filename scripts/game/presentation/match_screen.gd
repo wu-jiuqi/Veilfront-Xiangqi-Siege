@@ -169,6 +169,9 @@ func _ready() -> void:
 			_board_viewport.get_board_audio_emitter_pool(),
 			_board_viewport.get_vfx_director()
 		)
+		_feedback.bind_screen_callout_overlay(
+			get_node_or_null("ScreenCalloutOverlay") as ScreenCalloutOverlay
+		)
 	_enforce_action_target_sizes()
 	get_viewport().size_changed.connect(_on_viewport_size_changed)
 	resized.connect(_on_match_screen_resized)

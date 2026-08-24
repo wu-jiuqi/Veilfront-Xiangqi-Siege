@@ -98,6 +98,10 @@ func effect_snapshot() -> Dictionary:
 		"particle_amount": _particles.amount,
 		"review_hold": _review_hold,
 		"callout_text": _callout_label.text if _callout_label.visible else "",
+		"callout_font_size": _callout_label.get_theme_font_size("font_size") \
+			if _callout_label.visible else 0,
+		"callout_outline_size": _callout_label.get_theme_constant("outline_size") \
+			if _callout_label.visible else 0,
 	}
 
 
@@ -148,8 +152,10 @@ func _draw() -> void:
 				var outer := Vector2.from_angle(angle) * radius * (0.48 + eased * 0.5)
 				draw_line(inner, outer, accent, 4.0)
 		"callout":
-			draw_circle(Vector2(0.0, -radius * 0.78), radius * (0.52 + 0.08 * pulse), Color(base, 0.72 * fade))
-			draw_arc(Vector2(0.0, -radius * 0.78), radius * (0.58 + 0.1 * eased), 0.0, TAU, 40, accent, 4.0)
+			draw_circle(Vector2.ZERO, radius * (0.48 + 0.06 * pulse), Color(base, 0.72 * fade))
+			draw_arc(Vector2.ZERO, radius * (0.62 + 0.18 * eased), 0.0, TAU, 56, accent, 7.0)
+			draw_arc(Vector2.ZERO, radius * (0.86 + 0.22 * eased), 0.0, TAU, 56, Color(accent, 0.48 * fade), 3.0)
+			draw_line(Vector2(-radius * 2.1, 0.0), Vector2(radius * 2.1, 0.0), Color(accent, 0.34 * fade), 4.0)
 		"bombardment":
 			for ring: int in 3:
 				var ring_phase := clampf(eased * 1.28 - float(ring) * 0.14, 0.0, 1.0)
@@ -211,8 +217,8 @@ func _draw_reduced_family(
 			])
 			draw_polyline(points, Color(accent, 0.7 * fade), 4.0)
 		"callout":
-			draw_circle(Vector2(0.0, -radius * 0.78), radius * 0.5, Color(base, 0.58 * fade))
-			draw_arc(Vector2(0.0, -radius * 0.78), radius * 0.56, 0.0, TAU, 32, Color(accent, 0.72 * fade), 4.0)
+			draw_circle(Vector2.ZERO, radius * 0.5, Color(base, 0.58 * fade))
+			draw_arc(Vector2.ZERO, radius * 0.7, 0.0, TAU, 48, Color(accent, 0.72 * fade), 6.0)
 		"resurrection":
 			draw_arc(Vector2.ZERO, radius * 0.68, 0.0, TAU, 40, Color(accent, 0.72 * fade), 5.0)
 			draw_line(Vector2(0.0, radius * 0.34), Vector2(0.0, -radius * 0.52), Color(base, 0.72 * fade), 4.0)
@@ -250,9 +256,9 @@ func _update_callout_visual() -> void:
 		return
 	var progress := clampf(_elapsed / _duration, 0.0, 1.0)
 	var eased := 1.0 - pow(1.0 - progress, 3.0)
-	var rise := 0.0 if _reduced_motion else 18.0 * eased
-	_callout_label.position = Vector2(-48.0, -98.0 - rise)
-	var pop := 1.0 if _reduced_motion else 0.72 + 0.34 * sin(minf(progress * 2.0, 1.0) * PI * 0.5)
+	var rise := 0.0 if _reduced_motion else 10.0 * eased
+	_callout_label.position = Vector2(-180.0, -160.0 - rise)
+	var pop := 1.0 if _reduced_motion else 0.58 + 0.48 * sin(minf(progress * 2.0, 1.0) * PI * 0.5)
 	_callout_label.scale = Vector2.ONE * pop
 	_callout_label.modulate = Color(1.0, 1.0, 1.0, 1.0 - progress)
 

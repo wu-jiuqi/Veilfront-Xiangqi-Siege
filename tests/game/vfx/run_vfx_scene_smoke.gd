@@ -66,8 +66,10 @@ func _run() -> void:
 	for snapshot_value: Variant in peak_snapshot["active"]:
 		var snapshot: Dictionary = snapshot_value
 		if snapshot["family"] == "callout":
-			callout_found = snapshot["callout_text"] == "吃"
-	_expect(callout_found, "吃子弹字必须由预置Label呈现", failures)
+			callout_found = snapshot["callout_text"] == "吃" \
+				and int(snapshot.get("callout_font_size", 0)) >= 160 \
+				and int(snapshot.get("callout_outline_size", 0)) >= 16
+	_expect(callout_found, "吃子弹字必须由大字号粗描边预置Label呈现", failures)
 
 	director.clear_all()
 	var reduced_peak := _peak_batch("reduced")
@@ -78,7 +80,7 @@ func _run() -> void:
 	director.clear_all()
 	var general_cue := CueContract.build(
 		"vfx-smoke-general", 11, "vfx.callout.general", "view_diff", 11, 0,
-		"board_2d", [5, 12], "critical", "callout", "replace_group",
+		"global", [], "critical", "callout", "replace_group",
 		"black", "standard", "general-callout"
 	)
 	var general_batch := CueContract.build_batch(
@@ -87,6 +89,12 @@ func _run() -> void:
 	_expect(director.play_batch(general_batch) == 1, "将字提示必须可独立播放", failures)
 	var general_snapshot: Dictionary = director.get_pool_snapshot()
 	_expect(general_snapshot["active"][0]["callout_text"] == "将", "将领被摧毁必须显示将字", failures)
+	var general_slot := director.get_node("GlobalCanvas/GlobalAnchor/GlobalPool/Global01") as VfxEffectSlot
+	_expect(
+		general_slot.position == Vector2(640.0, 360.0),
+		"将字global槽必须固定在1280×720视口中心",
+		failures
+	)
 
 	if failures.is_empty():
 		print("VFX_SCENE_SMOKE_PASS pool=9+3 peak_standard=100 peak_reduced=37 dedup=true reduced_motion=true gl_compatibility=true")
@@ -129,7 +137,7 @@ func _peak_batch(motion_profile: String) -> Dictionary:
 		{"key": "vfx.selection.focus", "position": [2, 5], "priority": "normal", "group": "selection", "late": "replace_group"},
 		{"key": "vfx.move.step", "position": [7, 7], "priority": "normal", "group": "move", "late": "drop_if_late"},
 		{"key": "vfx.capture.impact", "position": [3, 11], "priority": "high", "group": "capture", "late": "play_once"},
-		{"key": "vfx.callout.capture", "position": [3, 11], "priority": "high", "group": "callout", "late": "replace_group"},
+		{"key": "vfx.callout.capture", "position": [], "priority": "high", "group": "callout", "late": "replace_group"},
 		{"key": "vfx.bombardment.resolve", "position": [7, 14], "priority": "high", "group": "bombardment", "late": "play_once"},
 		{"key": "vfx.resurrection.revive", "position": [6, 16], "priority": "high", "group": "resurrection", "late": "play_once"},
 		{"key": "vfx.wall.breached", "position": [5, 21], "priority": "high", "group": "wall", "late": "replace_group"},

@@ -32,7 +32,12 @@ func _init() -> void:
 	_expect(cues[5]["spatial_mode"] == "global" and cues[5]["position_public"].is_empty(), "未发现旗位只能global", failures)
 	_expect(cues[6]["spatial_mode"] == "board_2d" and cues[6]["position_public"] == [5, 12], "已发现旗位使用公开坐标", failures)
 	_expect(cues[4]["position_public"] == [5, 4], "红墙映射到公开固定线中心", failures)
-	_expect(cues[3]["position_public"] == [4, 8], "吃字只能落在公开吃子坐标", failures)
+	_expect(
+		cues[3]["spatial_mode"] == "global" \
+		and cues[3]["position_public"].is_empty(),
+		"吃/将弹字必须升级为屏幕中央global提示",
+		failures
+	)
 	var shared_fields := [
 		"schema_version", "cue_id", "cue_key", "source_kind", "action_index",
 		"occurrence_index", "spatial_mode", "position_public", "priority",
@@ -67,6 +72,15 @@ func _init() -> void:
 		general_keys.append(str(cue_value.get("cue_key", "")))
 	_expect(general_keys.has("vfx.callout.general"), "公开将领被摧毁必须生成将字", failures)
 	_expect(not general_keys.has("vfx.callout.capture"), "将字不能与吃字重复叠加", failures)
+	for cue_value: Variant in general_batch.get("cues", []):
+		var cue: Dictionary = cue_value
+		if str(cue.get("cue_key", "")) == "vfx.callout.general":
+			_expect(
+				cue.get("spatial_mode", "") == "global" \
+				and (cue.get("position_public", []) as Array).is_empty(),
+				"将字必须固定在屏幕中央而非棋盘坐标",
+				failures
+			)
 
 	var resurrection_previous := _resurrection_view(false)
 	var resurrection_current := _resurrection_view(true)
