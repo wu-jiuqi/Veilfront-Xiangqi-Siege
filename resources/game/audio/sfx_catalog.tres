@@ -1,0 +1,444 @@
+[gd_resource type="Resource" script_class="SfxCatalog" load_steps=72 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/audio/sfx_catalog.gd" id="1_catalog"]
+[ext_resource type="Script" path="res://scripts/game/audio/audio_cue_definition.gd" id="2_definition"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_ui_activate_v01.wav" id="3_ui_activate"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_ui_cancel_v01.wav" id="4_ui_cancel"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_ui_reject_v01.wav" id="5_ui_reject"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_board_select_v01.wav" id="6_board_select"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_move_foot_v01.wav" id="7_move_foot"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_move_cavalry_v01.wav" id="8_move_cavalry"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_move_chariot_v01.wav" id="9_move_chariot"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_move_cannon_v01.wav" id="10_move_cannon"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_action_pass_v01.wav" id="11_pass"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_turn_timeout_v01.wav" id="12_timeout"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_capture_impact_v01.wav" id="13_capture"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_casualty_public_v01.wav" id="14_casualty"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_bombard_launch_v01.wav" id="15_bombard_launch"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_bombard_impact_bed_v01.wav" id="16_bombard_impact"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_advisor_sacrifice_v01.wav" id="17_advisor_sacrifice"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_advisor_resurrect_v01.wav" id="18_advisor_resurrect"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_wall_breached_v01.wav" id="19_wall_breach"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_wall_repairing_v01.wav" id="20_wall_repairing"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_wall_repaired_v01.wav" id="21_wall_repaired"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_flag_discovered_v01.wav" id="22_flag_discovered"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_flag_capture_progress_v01.wav" id="23_flag_progress"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_flag_captured_v01.wav" id="24_flag_captured"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_flag_capture_cancelled_v01.wav" id="25_flag_cancelled"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_fog_reveal_v01.wav" id="26_fog"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_contact_unknown_v01.wav" id="27_contact"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_reveal_piece_v01.wav" id="28_reveal"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_special_elephant_field_v01.wav" id="29_elephant"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_turn_local_start_v01.wav" id="30_turn"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_match_victory_v01.wav" id="31_victory"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_match_defeat_v01.wav" id="32_defeat"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_match_draw_v01.wav" id="33_draw"]
+
+[sub_resource type="Resource" id="Cue_ui_focus"]
+script = ExtResource("2_definition")
+cue_key = "sfx.ui.focus"
+streams = Array[AudioStream]([ExtResource("3_ui_activate")])
+bus = &"SFX_UI"
+volume_db_min = -13.0
+volume_db_max = -10.0
+priority = "low"
+concurrency_group = "ui_focus"
+max_instances = 1
+cooldown_ms = 45
+
+[sub_resource type="Resource" id="Cue_ui_activate"]
+script = ExtResource("2_definition")
+cue_key = "sfx.ui.activate"
+streams = Array[AudioStream]([ExtResource("3_ui_activate")])
+bus = &"SFX_UI"
+volume_db_min = -9.0
+volume_db_max = -6.0
+concurrency_group = "ui_action"
+
+[sub_resource type="Resource" id="Cue_ui_confirm"]
+script = ExtResource("2_definition")
+cue_key = "sfx.ui.confirm"
+streams = Array[AudioStream]([ExtResource("3_ui_activate")])
+bus = &"SFX_UI"
+volume_db_min = -6.0
+volume_db_max = -3.0
+priority = "high"
+concurrency_group = "ui_action"
+
+[sub_resource type="Resource" id="Cue_ui_cancel"]
+script = ExtResource("2_definition")
+cue_key = "sfx.ui.cancel"
+streams = Array[AudioStream]([ExtResource("4_ui_cancel")])
+bus = &"SFX_UI"
+volume_db_min = -9.0
+volume_db_max = -6.0
+concurrency_group = "ui_action"
+
+[sub_resource type="Resource" id="Cue_ui_reject"]
+script = ExtResource("2_definition")
+cue_key = "sfx.ui.reject"
+streams = Array[AudioStream]([ExtResource("5_ui_reject")])
+bus = &"SFX_UI"
+volume_db_min = -8.0
+volume_db_max = -5.0
+concurrency_group = "ui_action"
+
+[sub_resource type="Resource" id="Cue_ui_modal_open"]
+script = ExtResource("2_definition")
+cue_key = "sfx.ui.modal_open"
+streams = Array[AudioStream]([ExtResource("3_ui_activate")])
+bus = &"SFX_UI"
+volume_db_min = -12.0
+volume_db_max = -9.0
+priority = "low"
+concurrency_group = "ui_action"
+
+[sub_resource type="Resource" id="Cue_ui_modal_close"]
+script = ExtResource("2_definition")
+cue_key = "sfx.ui.modal_close"
+streams = Array[AudioStream]([ExtResource("4_ui_cancel")])
+bus = &"SFX_UI"
+volume_db_min = -12.0
+volume_db_max = -9.0
+priority = "low"
+concurrency_group = "ui_action"
+
+[sub_resource type="Resource" id="Cue_board_select"]
+script = ExtResource("2_definition")
+cue_key = "sfx.board.select"
+streams = Array[AudioStream]([ExtResource("6_board_select")])
+bus = &"SFX_Board"
+volume_db_min = -8.0
+volume_db_max = -5.0
+concurrency_group = "board_move"
+spatial_modes_allowed = Array[String](["global", "board_2d"])
+
+[sub_resource type="Resource" id="Cue_board_cancel"]
+script = ExtResource("2_definition")
+cue_key = "sfx.board.selection_cancel"
+streams = Array[AudioStream]([ExtResource("4_ui_cancel")])
+bus = &"SFX_UI"
+volume_db_min = -11.0
+volume_db_max = -8.0
+priority = "low"
+concurrency_group = "ui_action"
+
+[sub_resource type="Resource" id="Cue_board_preview"]
+script = ExtResource("2_definition")
+cue_key = "sfx.board.preview_select"
+streams = Array[AudioStream]([ExtResource("6_board_select")])
+bus = &"SFX_Board"
+volume_db_min = -12.0
+volume_db_max = -9.0
+priority = "low"
+concurrency_group = "board_move"
+spatial_modes_allowed = Array[String](["global", "board_2d"])
+
+[sub_resource type="Resource" id="Cue_board_prepare"]
+script = ExtResource("2_definition")
+cue_key = "sfx.board.prepare"
+streams = Array[AudioStream]([ExtResource("3_ui_activate")])
+bus = &"SFX_UI"
+volume_db_min = -8.0
+volume_db_max = -5.0
+concurrency_group = "ui_action"
+
+[sub_resource type="Resource" id="Cue_board_prepare_cancel"]
+script = ExtResource("2_definition")
+cue_key = "sfx.board.prepare_cancel"
+streams = Array[AudioStream]([ExtResource("4_ui_cancel")])
+bus = &"SFX_UI"
+volume_db_min = -10.0
+volume_db_max = -7.0
+concurrency_group = "ui_action"
+
+[sub_resource type="Resource" id="Cue_marker_set"]
+script = ExtResource("2_definition")
+cue_key = "sfx.marker.set"
+streams = Array[AudioStream]([ExtResource("6_board_select")])
+bus = &"SFX_Board"
+volume_db_min = -12.0
+volume_db_max = -9.0
+priority = "low"
+concurrency_group = "marker"
+spatial_modes_allowed = Array[String](["board_2d"])
+
+[sub_resource type="Resource" id="Cue_marker_clear"]
+script = ExtResource("2_definition")
+cue_key = "sfx.marker.clear"
+streams = Array[AudioStream]([ExtResource("4_ui_cancel")])
+bus = &"SFX_Board"
+volume_db_min = -12.0
+volume_db_max = -9.0
+priority = "low"
+concurrency_group = "marker"
+spatial_modes_allowed = Array[String](["board_2d"])
+
+[sub_resource type="Resource" id="Cue_action_pass"]
+script = ExtResource("2_definition")
+cue_key = "sfx.action.pass"
+streams = Array[AudioStream]([ExtResource("11_pass")])
+bus = &"SFX_System"
+volume_db_min = -7.0
+volume_db_max = -4.0
+concurrency_group = "board_move"
+
+[sub_resource type="Resource" id="Cue_move_foot"]
+script = ExtResource("2_definition")
+cue_key = "sfx.move.foot"
+streams = Array[AudioStream]([ExtResource("7_move_foot")])
+bus = &"SFX_Board"
+concurrency_group = "board_move"
+max_instances = 3
+spatial_modes_allowed = Array[String](["board_2d"])
+
+[sub_resource type="Resource" id="Cue_move_cavalry"]
+script = ExtResource("2_definition")
+cue_key = "sfx.move.cavalry"
+streams = Array[AudioStream]([ExtResource("8_move_cavalry")])
+bus = &"SFX_Board"
+concurrency_group = "board_move"
+max_instances = 3
+spatial_modes_allowed = Array[String](["board_2d"])
+
+[sub_resource type="Resource" id="Cue_move_chariot"]
+script = ExtResource("2_definition")
+cue_key = "sfx.move.chariot"
+streams = Array[AudioStream]([ExtResource("9_move_chariot")])
+bus = &"SFX_Board"
+concurrency_group = "board_move"
+max_instances = 3
+spatial_modes_allowed = Array[String](["board_2d"])
+
+[sub_resource type="Resource" id="Cue_move_cannon"]
+script = ExtResource("2_definition")
+cue_key = "sfx.move.cannon"
+streams = Array[AudioStream]([ExtResource("10_move_cannon")])
+bus = &"SFX_Board"
+concurrency_group = "board_move"
+max_instances = 3
+spatial_modes_allowed = Array[String](["board_2d"])
+
+[sub_resource type="Resource" id="Cue_capture"]
+script = ExtResource("2_definition")
+cue_key = "sfx.capture.impact"
+streams = Array[AudioStream]([ExtResource("13_capture")])
+bus = &"SFX_Board"
+volume_db_min = -4.0
+volume_db_max = -2.0
+priority = "high"
+concurrency_group = "impact"
+max_instances = 4
+spatial_modes_allowed = Array[String](["board_2d"])
+
+[sub_resource type="Resource" id="Cue_casualty"]
+script = ExtResource("2_definition")
+cue_key = "sfx.casualty.public"
+streams = Array[AudioStream]([ExtResource("14_casualty")])
+bus = &"SFX_System"
+volume_db_min = -8.0
+volume_db_max = -5.0
+concurrency_group = "impact"
+max_instances = 4
+
+[sub_resource type="Resource" id="Cue_general"]
+script = ExtResource("2_definition")
+cue_key = "sfx.general.destroyed"
+streams = Array[AudioStream]([ExtResource("19_wall_breach")])
+bus = &"SFX_System"
+volume_db_min = -3.0
+volume_db_max = -1.5
+priority = "critical"
+concurrency_group = "general"
+max_instances = 1
+
+[sub_resource type="Resource" id="Cue_fog"]
+script = ExtResource("2_definition")
+cue_key = "sfx.fog.reveal"
+streams = Array[AudioStream]([ExtResource("26_fog")])
+bus = &"SFX_System"
+volume_db_min = -12.0
+volume_db_max = -9.0
+priority = "low"
+concurrency_group = "reveal"
+
+[sub_resource type="Resource" id="Cue_contact"]
+script = ExtResource("2_definition")
+cue_key = "sfx.contact.unknown"
+streams = Array[AudioStream]([ExtResource("27_contact")])
+bus = &"SFX_System"
+volume_db_min = -8.0
+volume_db_max = -5.0
+concurrency_group = "contact"
+max_instances = 1
+
+[sub_resource type="Resource" id="Cue_reveal_piece"]
+script = ExtResource("2_definition")
+cue_key = "sfx.reveal.piece"
+streams = Array[AudioStream]([ExtResource("28_reveal")])
+bus = &"SFX_Board"
+concurrency_group = "reveal"
+spatial_modes_allowed = Array[String](["board_2d"])
+
+[sub_resource type="Resource" id="Cue_elephant"]
+script = ExtResource("2_definition")
+cue_key = "sfx.special.elephant_field"
+streams = Array[AudioStream]([ExtResource("29_elephant")])
+bus = &"SFX_System"
+concurrency_group = "reveal"
+
+[sub_resource type="Resource" id="Cue_bombard_launch"]
+script = ExtResource("2_definition")
+cue_key = "sfx.bombard.launch"
+streams = Array[AudioStream]([ExtResource("15_bombard_launch")])
+bus = &"SFX_System"
+volume_db_min = -4.0
+volume_db_max = -2.0
+priority = "high"
+concurrency_group = "bombard"
+max_instances = 2
+
+[sub_resource type="Resource" id="Cue_bombard_impact"]
+script = ExtResource("2_definition")
+cue_key = "sfx.bombard.impact_bed"
+streams = Array[AudioStream]([ExtResource("16_bombard_impact")])
+bus = &"SFX_System"
+volume_db_min = -3.0
+volume_db_max = -1.5
+priority = "high"
+concurrency_group = "bombard"
+max_instances = 2
+
+[sub_resource type="Resource" id="Cue_advisor_sacrifice"]
+script = ExtResource("2_definition")
+cue_key = "sfx.advisor.sacrifice"
+streams = Array[AudioStream]([ExtResource("17_advisor_sacrifice")])
+bus = &"SFX_System"
+priority = "high"
+concurrency_group = "advisor"
+max_instances = 2
+
+[sub_resource type="Resource" id="Cue_advisor_resurrect"]
+script = ExtResource("2_definition")
+cue_key = "sfx.advisor.resurrect"
+streams = Array[AudioStream]([ExtResource("18_advisor_resurrect")])
+bus = &"SFX_System"
+priority = "high"
+concurrency_group = "advisor"
+max_instances = 2
+
+[sub_resource type="Resource" id="Cue_wall_breach"]
+script = ExtResource("2_definition")
+cue_key = "sfx.wall.breached"
+streams = Array[AudioStream]([ExtResource("19_wall_breach")])
+bus = &"SFX_System"
+volume_db_min = -4.0
+volume_db_max = -2.0
+priority = "high"
+concurrency_group = "wall_flag"
+
+[sub_resource type="Resource" id="Cue_wall_repairing"]
+script = ExtResource("2_definition")
+cue_key = "sfx.wall.repairing"
+streams = Array[AudioStream]([ExtResource("20_wall_repairing")])
+bus = &"SFX_System"
+priority = "high"
+concurrency_group = "wall_flag"
+
+[sub_resource type="Resource" id="Cue_wall_repaired"]
+script = ExtResource("2_definition")
+cue_key = "sfx.wall.repaired"
+streams = Array[AudioStream]([ExtResource("21_wall_repaired")])
+bus = &"SFX_System"
+priority = "high"
+concurrency_group = "wall_flag"
+
+[sub_resource type="Resource" id="Cue_flag_discovered"]
+script = ExtResource("2_definition")
+cue_key = "sfx.flag.discovered"
+streams = Array[AudioStream]([ExtResource("22_flag_discovered")])
+bus = &"SFX_Board"
+priority = "high"
+concurrency_group = "wall_flag"
+spatial_modes_allowed = Array[String](["global", "board_2d"])
+
+[sub_resource type="Resource" id="Cue_flag_progress"]
+script = ExtResource("2_definition")
+cue_key = "sfx.flag.capture_progress"
+streams = Array[AudioStream]([ExtResource("23_flag_progress")])
+bus = &"SFX_Board"
+concurrency_group = "wall_flag"
+spatial_modes_allowed = Array[String](["global", "board_2d"])
+
+[sub_resource type="Resource" id="Cue_flag_captured"]
+script = ExtResource("2_definition")
+cue_key = "sfx.flag.captured"
+streams = Array[AudioStream]([ExtResource("24_flag_captured")])
+bus = &"SFX_Board"
+priority = "high"
+concurrency_group = "wall_flag"
+spatial_modes_allowed = Array[String](["global", "board_2d"])
+
+[sub_resource type="Resource" id="Cue_flag_cancelled"]
+script = ExtResource("2_definition")
+cue_key = "sfx.flag.capture_cancelled"
+streams = Array[AudioStream]([ExtResource("25_flag_cancelled")])
+bus = &"SFX_Board"
+concurrency_group = "wall_flag"
+spatial_modes_allowed = Array[String](["global", "board_2d"])
+
+[sub_resource type="Resource" id="Cue_turn_start"]
+script = ExtResource("2_definition")
+cue_key = "sfx.turn.local_start"
+streams = Array[AudioStream]([ExtResource("30_turn")])
+bus = &"SFX_System"
+priority = "high"
+concurrency_group = "turn"
+max_instances = 1
+
+[sub_resource type="Resource" id="Cue_turn_timeout"]
+script = ExtResource("2_definition")
+cue_key = "sfx.turn.timeout"
+streams = Array[AudioStream]([ExtResource("12_timeout")])
+bus = &"SFX_System"
+priority = "high"
+concurrency_group = "turn"
+max_instances = 1
+
+[sub_resource type="Resource" id="Cue_match_victory"]
+script = ExtResource("2_definition")
+cue_key = "sfx.match.victory"
+streams = Array[AudioStream]([ExtResource("31_victory")])
+bus = &"SFX_System"
+volume_db_min = -3.0
+volume_db_max = -1.5
+priority = "critical"
+concurrency_group = "terminal"
+max_instances = 1
+
+[sub_resource type="Resource" id="Cue_match_defeat"]
+script = ExtResource("2_definition")
+cue_key = "sfx.match.defeat"
+streams = Array[AudioStream]([ExtResource("32_defeat")])
+bus = &"SFX_System"
+volume_db_min = -3.0
+volume_db_max = -1.5
+priority = "critical"
+concurrency_group = "terminal"
+max_instances = 1
+
+[sub_resource type="Resource" id="Cue_match_draw"]
+script = ExtResource("2_definition")
+cue_key = "sfx.match.draw"
+streams = Array[AudioStream]([ExtResource("33_draw")])
+bus = &"SFX_System"
+volume_db_min = -3.0
+volume_db_max = -1.5
+priority = "critical"
+concurrency_group = "terminal"
+max_instances = 1
+
+[resource]
+script = ExtResource("1_catalog")
+catalog_version = "veilfront-sfx-catalog-v1"
+definitions = Array[ExtResource("2_definition")]([SubResource("Cue_ui_focus"), SubResource("Cue_ui_activate"), SubResource("Cue_ui_confirm"), SubResource("Cue_ui_cancel"), SubResource("Cue_ui_reject"), SubResource("Cue_ui_modal_open"), SubResource("Cue_ui_modal_close"), SubResource("Cue_board_select"), SubResource("Cue_board_cancel"), SubResource("Cue_board_preview"), SubResource("Cue_board_prepare"), SubResource("Cue_board_prepare_cancel"), SubResource("Cue_marker_set"), SubResource("Cue_marker_clear"), SubResource("Cue_action_pass"), SubResource("Cue_move_foot"), SubResource("Cue_move_cavalry"), SubResource("Cue_move_chariot"), SubResource("Cue_move_cannon"), SubResource("Cue_capture"), SubResource("Cue_casualty"), SubResource("Cue_general"), SubResource("Cue_fog"), SubResource("Cue_contact"), SubResource("Cue_reveal_piece"), SubResource("Cue_elephant"), SubResource("Cue_bombard_launch"), SubResource("Cue_bombard_impact"), SubResource("Cue_advisor_sacrifice"), SubResource("Cue_advisor_resurrect"), SubResource("Cue_wall_breach"), SubResource("Cue_wall_repairing"), SubResource("Cue_wall_repaired"), SubResource("Cue_flag_discovered"), SubResource("Cue_flag_progress"), SubResource("Cue_flag_captured"), SubResource("Cue_flag_cancelled"), SubResource("Cue_turn_start"), SubResource("Cue_turn_timeout"), SubResource("Cue_match_victory"), SubResource("Cue_match_defeat"), SubResource("Cue_match_draw")])

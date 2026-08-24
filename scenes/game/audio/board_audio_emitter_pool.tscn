@@ -1,0 +1,62 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/audio/board_audio_emitter_pool.gd" id="1_pool"]
+
+[node name="BoardAudioEmitterPool" type="Node2D"]
+script = ExtResource("1_pool")
+
+[node name="Board01" type="AudioStreamPlayer2D" parent="."]
+bus = &"SFX_Board"
+max_distance = 1800.0
+attenuation = 0.65
+area_mask = 0
+max_polyphony = 1
+
+[node name="Board02" type="AudioStreamPlayer2D" parent="."]
+bus = &"SFX_Board"
+max_distance = 1800.0
+attenuation = 0.65
+area_mask = 0
+max_polyphony = 1
+
+[node name="Board03" type="AudioStreamPlayer2D" parent="."]
+bus = &"SFX_Board"
+max_distance = 1800.0
+attenuation = 0.65
+area_mask = 0
+max_polyphony = 1
+
+[node name="Board04" type="AudioStreamPlayer2D" parent="."]
+bus = &"SFX_Board"
+max_distance = 1800.0
+attenuation = 0.65
+area_mask = 0
+max_polyphony = 1
+
+[node name="Board05" type="AudioStreamPlayer2D" parent="."]
+bus = &"SFX_Board"
+max_distance = 1800.0
+attenuation = 0.65
+area_mask = 0
+max_polyphony = 1
+
+[node name="Board06" type="AudioStreamPlayer2D" parent="."]
+bus = &"SFX_Board"
+max_distance = 1800.0
+attenuation = 0.65
+area_mask = 0
+max_polyphony = 1
+
+[node name="Board07" type="AudioStreamPlayer2D" parent="."]
+bus = &"SFX_Board"
+max_distance = 1800.0
+attenuation = 0.65
+area_mask = 0
+max_polyphony = 1
+
+[node name="Board08" type="AudioStreamPlayer2D" parent="."]
+bus = &"SFX_Board"
+max_distance = 1800.0
+attenuation = 0.65
+area_mask = 0
+max_polyphony = 1
