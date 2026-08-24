@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="VfxCueDefinition" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/vfx/vfx_cue_definition.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/vfx/source/seal_shard_v1.svg" id="2"]
+
+[resource]
+script = ExtResource("1")
+family = "flag"
+cue_prefix = "vfx.flag"
+display_name = "旗帜 · 军印回响"
+base_color = Color(0.48, 0.65, 0.54, 0.82)
+accent_color = Color(0.96, 0.78, 0.4, 1)
+duration_standard = 0.78
+duration_reduced = 0.28
+radius = 58.0
+particles_standard = 10
+particles_reduced = 2
+overdraw_points_standard = 12
+overdraw_points_reduced = 4
+max_instances = 2
+flash_hz_max = 1.4
+flash_area_ratio_max = 0.03
+particle_texture = ExtResource("2")

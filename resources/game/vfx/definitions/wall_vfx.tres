@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="VfxCueDefinition" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/vfx/vfx_cue_definition.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/vfx/source/ink_dust_v1.svg" id="2"]
+
+[resource]
+script = ExtResource("1")
+family = "wall"
+cue_prefix = "vfx.wall"
+display_name = "城墙 · 九路符印波"
+base_color = Color(0.48, 0.55, 0.48, 0.74)
+accent_color = Color(0.92, 0.67, 0.3, 0.94)
+duration_standard = 0.9
+duration_reduced = 0.3
+radius = 44.0
+particles_standard = 12
+particles_reduced = 2
+overdraw_points_standard = 18
+overdraw_points_reduced = 6
+max_instances = 2
+flash_hz_max = 1.2
+flash_area_ratio_max = 0.06
+particle_texture = ExtResource("2")

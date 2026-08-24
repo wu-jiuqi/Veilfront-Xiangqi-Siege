@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="VfxCueDefinition" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/vfx/vfx_cue_definition.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/vfx/source/brush_spark_v1.svg" id="2"]
+
+[resource]
+script = ExtResource("1")
+family = "bombardment"
+cue_prefix = "vfx.bombardment"
+display_name = "炮击 · 三重震环"
+base_color = Color(0.72, 0.26, 0.16, 0.9)
+accent_color = Color(1, 0.68, 0.26, 1)
+duration_standard = 0.82
+duration_reduced = 0.3
+radius = 78.0
+particles_standard = 18
+particles_reduced = 3
+overdraw_points_standard = 22
+overdraw_points_reduced = 8
+max_instances = 1
+flash_hz_max = 2.0
+flash_area_ratio_max = 0.08
+particle_texture = ExtResource("2")

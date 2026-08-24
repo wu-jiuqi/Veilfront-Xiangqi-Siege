@@ -1,0 +1,82 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/vfx/vfx_review_lab.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/game/vfx/vfx_root.tscn" id="2"]
+
+[node name="VfxReviewLab" type="Node2D"]
+script = ExtResource("1")
+
+[node name="Title" type="Label" parent="."]
+offset_left = 44.0
+offset_top = 22.0
+offset_right = 930.0
+offset_bottom = 58.0
+theme_override_colors/font_color = Color(0.94, 0.82, 0.57, 1)
+theme_override_font_sizes/font_size = 26
+text = "雾疆 · VFX Cue v1 七族运行时样片"
+
+[node name="Subtitle" type="Label" parent="."]
+offset_left = 820.0
+offset_top = 30.0
+offset_right = 1236.0
+offset_bottom = 54.0
+theme_override_colors/font_color = Color(0.62, 0.7, 0.68, 1)
+theme_override_font_sizes/font_size = 14
+text = "GL Compatibility · 无 trails · 观察者安全"
+horizontal_alignment = 2
+
+[node name="BoardPreview" type="SubViewportContainer" parent="."]
+offset_left = 44.0
+offset_top = 72.0
+offset_right = 496.0
+offset_bottom = 664.0
+mouse_filter = 2
+stretch = true
+
+[node name="BoardViewport" type="SubViewport" parent="BoardPreview"]
+transparent_bg = true
+size = Vector2i(452, 592)
+render_target_update_mode = 4
+
+[node name="VfxRoot" parent="BoardPreview/BoardViewport" instance=ExtResource("2")]
+position = Vector2(24, 12)
+cell_size = Vector2(48, 24)
+review_hold = true
+
+[node name="LegendTitle" type="Label" parent="."]
+offset_left = 560.0
+offset_top = 96.0
+offset_right = 920.0
+offset_bottom = 130.0
+theme_override_colors/font_color = Color(0.9, 0.75, 0.45, 1)
+theme_override_font_sizes/font_size = 22
+text = "公开 Cue → 预置池表现"
+
+[node name="Legend" type="Label" parent="."]
+offset_left = 560.0
+offset_top = 146.0
+offset_right = 1180.0
+offset_bottom = 462.0
+theme_override_colors/font_color = Color(0.82, 0.84, 0.79, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.7)
+theme_override_constants/line_spacing = 13
+theme_override_font_sizes/font_size = 20
+text = "01  选中  · 双层定位金环\n02  移动  · 墨尘行迹\n03  吃子  · 碎印冲击\n04  炮击  · 固定三重震环\n05  城墙  · 九路符印波\n06  旗帜  · 军印回响\n07  终局  · 天幕军印"
+
+[node name="Guardrails" type="Label" parent="."]
+offset_left = 560.0
+offset_top = 492.0
+offset_right = 1184.0
+offset_bottom = 626.0
+theme_override_colors/font_color = Color(0.57, 0.7, 0.65, 1)
+theme_override_font_sizes/font_size = 16
+text = "标准档：12 个预置槽 · 100 overdraw points\n减少动态：粒子 0–3 · 仅淡入淡出/静态符号 · 56 points\n闪烁：≤ 3 Hz；全屏面积峰值 ≤ 18%；禁止相机震动\n位置：只接受 position_public；空位置只进入 global 层"
+
+[node name="Footer" type="Label" parent="."]
+offset_left = 560.0
+offset_top = 628.0
+offset_right = 1184.0
+offset_bottom = 654.0
+theme_override_colors/font_color = Color(0.5, 0.55, 0.58, 1)
+theme_override_font_sizes/font_size = 13
+text = "色彩与强度为 GATE-3 审美候选，需项目所有者在内容冻结闸门确认。"

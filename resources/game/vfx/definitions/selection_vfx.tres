@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="VfxCueDefinition" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/vfx/vfx_cue_definition.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/vfx/source/brush_spark_v1.svg" id="2"]
+
+[resource]
+script = ExtResource("1")
+family = "selection"
+cue_prefix = "vfx.selection"
+display_name = "选中 · 定位金环"
+base_color = Color(0.72, 0.5, 0.22, 0.92)
+accent_color = Color(1, 0.86, 0.48, 1)
+duration_standard = 0.58
+duration_reduced = 0.24
+radius = 46.0
+particles_standard = 4
+particles_reduced = 0
+overdraw_points_standard = 6
+overdraw_points_reduced = 2
+max_instances = 1
+flash_hz_max = 1.8
+flash_area_ratio_max = 0.01
+particle_texture = ExtResource("2")

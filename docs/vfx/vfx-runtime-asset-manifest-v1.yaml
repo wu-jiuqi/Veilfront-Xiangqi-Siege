@@ -1,0 +1,66 @@
+vfx_runtime_asset_manifest:
+  schema_version: veilfront-vfx-runtime-manifest/v1
+  project_id: veilfront-xiangqi-siege
+  cue_contract: docs/vfx/observer-safe-vfx-cue-contract-v1.md
+  visual_budget: docs/vfx/vfx-visual-baseline-and-budget-v1.md
+  status: gate3_foundation_candidate_not_yet_mounted_to_shared_board
+  renderer: gl_compatibility
+  particle_trails: false
+  pool:
+    scene: scenes/game/vfx/vfx_root.tscn
+    world_slots: 9
+    global_slots: 3
+    dynamic_node_instantiation: false
+  catalog: resources/game/vfx/vfx_catalog.tres
+  families:
+    - id: selection
+      cue_prefix: vfx.selection
+      definition: resources/game/vfx/definitions/selection_vfx.tres
+      source_texture: assets/vfx/source/brush_spark_v1.svg
+      standard: {duration_seconds: 0.58, particles: 4, overdraw_points: 6, max_instances: 1}
+      reduced: {duration_seconds: 0.24, particles: 0, overdraw_points: 2}
+    - id: move
+      cue_prefix: vfx.move
+      definition: resources/game/vfx/definitions/move_vfx.tres
+      source_texture: assets/vfx/source/ink_dust_v1.svg
+      standard: {duration_seconds: 0.42, particles: 8, overdraw_points: 7, max_instances: 3}
+      reduced: {duration_seconds: 0.18, particles: 0, overdraw_points: 2}
+    - id: capture
+      cue_prefix: vfx.capture
+      definition: resources/game/vfx/definitions/capture_vfx.tres
+      source_texture: assets/vfx/source/seal_shard_v1.svg
+      standard: {duration_seconds: 0.62, particles: 14, overdraw_points: 12, max_instances: 3}
+      reduced: {duration_seconds: 0.24, particles: 2, overdraw_points: 4}
+    - id: bombardment
+      cue_prefix: vfx.bombardment
+      definition: resources/game/vfx/definitions/bombardment_vfx.tres
+      source_texture: assets/vfx/source/brush_spark_v1.svg
+      standard: {duration_seconds: 0.82, particles: 18, overdraw_points: 22, max_instances: 1}
+      reduced: {duration_seconds: 0.30, particles: 3, overdraw_points: 8}
+    - id: wall
+      cue_prefix: vfx.wall
+      definition: resources/game/vfx/definitions/wall_vfx.tres
+      source_texture: assets/vfx/source/ink_dust_v1.svg
+      standard: {duration_seconds: 0.90, particles: 12, overdraw_points: 18, max_instances: 2}
+      reduced: {duration_seconds: 0.30, particles: 2, overdraw_points: 6}
+    - id: flag
+      cue_prefix: vfx.flag
+      definition: resources/game/vfx/definitions/flag_vfx.tres
+      source_texture: assets/vfx/source/seal_shard_v1.svg
+      standard: {duration_seconds: 0.78, particles: 10, overdraw_points: 12, max_instances: 2}
+      reduced: {duration_seconds: 0.28, particles: 2, overdraw_points: 4}
+    - id: terminal
+      cue_prefix: vfx.terminal
+      definition: resources/game/vfx/definitions/terminal_vfx.tres
+      source_texture: assets/vfx/source/seal_shard_v1.svg
+      standard: {duration_seconds: 1.45, particles: 6, overdraw_points: 18, max_instances: 1}
+      reduced: {duration_seconds: 0.42, particles: 0, overdraw_points: 8}
+  peak_budget:
+    standard_points: 95
+    standard_limit: 100
+    reduced_points: 34
+    reduced_limit: 56
+  review:
+    scene: scenes/game/vfx/vfx_review_lab.tscn
+    capture: evidence/gate3/vfx/vfx-review-1280x720.png
+    aesthetic_approval: pending_project_owner_gate3

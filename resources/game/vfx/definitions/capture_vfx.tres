@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="VfxCueDefinition" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/vfx/vfx_cue_definition.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/vfx/source/seal_shard_v1.svg" id="2"]
+
+[resource]
+script = ExtResource("1")
+family = "capture"
+cue_prefix = "vfx.capture"
+display_name = "吃子 · 碎印冲击"
+base_color = Color(0.66, 0.21, 0.18, 0.88)
+accent_color = Color(0.98, 0.72, 0.32, 1)
+duration_standard = 0.62
+duration_reduced = 0.24
+radius = 54.0
+particles_standard = 14
+particles_reduced = 2
+overdraw_points_standard = 12
+overdraw_points_reduced = 4
+max_instances = 3
+flash_hz_max = 1.6
+flash_area_ratio_max = 0.03
+particle_texture = ExtResource("2")

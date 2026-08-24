@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="VfxCueDefinition" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/vfx/vfx_cue_definition.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/vfx/source/seal_shard_v1.svg" id="2"]
+
+[resource]
+script = ExtResource("1")
+family = "terminal"
+cue_prefix = "vfx.terminal"
+display_name = "终局 · 天幕军印"
+base_color = Color(0.12, 0.18, 0.2, 0.75)
+accent_color = Color(0.94, 0.75, 0.38, 0.9)
+duration_standard = 1.45
+duration_reduced = 0.42
+radius = 220.0
+particles_standard = 6
+particles_reduced = 0
+overdraw_points_standard = 18
+overdraw_points_reduced = 8
+max_instances = 1
+flash_hz_max = 0.8
+flash_area_ratio_max = 0.18
+particle_texture = ExtResource("2")

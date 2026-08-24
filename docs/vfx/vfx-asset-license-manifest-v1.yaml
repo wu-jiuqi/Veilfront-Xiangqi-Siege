@@ -1,0 +1,47 @@
+vfx_asset_license_manifest:
+  schema_version: veilfront-vfx-license-manifest/v1
+  project_id: veilfront-xiangqi-siege
+  status: producer_verified_no_external_dependency
+  external_spend_cny: 0
+  third_party_assets: []
+  source_assets:
+    - id: VFX-SRC-SPARK-001
+      path: assets/vfx/source/brush_spark_v1.svg
+      authoring: project_original_hand_authored_svg_geometry
+      external_input: none
+      license_holder: veilfront-xiangqi-siege-project-owner
+      modification_allowed: true
+      commercial_distribution: allowed_with_project
+      attribution_required: false
+    - id: VFX-SRC-DUST-001
+      path: assets/vfx/source/ink_dust_v1.svg
+      authoring: project_original_hand_authored_svg_geometry
+      external_input: none
+      license_holder: veilfront-xiangqi-siege-project-owner
+      modification_allowed: true
+      commercial_distribution: allowed_with_project
+      attribution_required: false
+    - id: VFX-SRC-SEAL-001
+      path: assets/vfx/source/seal_shard_v1.svg
+      authoring: project_original_hand_authored_svg_geometry
+      external_input: none
+      license_holder: veilfront-xiangqi-siege-project-owner
+      modification_allowed: true
+      commercial_distribution: allowed_with_project
+      attribution_required: false
+  runtime_assets:
+    - resources/game/vfx/vfx_catalog.tres
+    - resources/game/vfx/definitions/selection_vfx.tres
+    - resources/game/vfx/definitions/move_vfx.tres
+    - resources/game/vfx/definitions/capture_vfx.tres
+    - resources/game/vfx/definitions/bombardment_vfx.tres
+    - resources/game/vfx/definitions/wall_vfx.tres
+    - resources/game/vfx/definitions/flag_vfx.tres
+    - resources/game/vfx/definitions/terminal_vfx.tres
+    - scenes/game/vfx/vfx_effect_slot.tscn
+    - scenes/game/vfx/vfx_root.tscn
+  import_requirements:
+    renderer: gl_compatibility
+    svg_import: Texture2D default, no external font or linked raster
+    particle_trails: forbidden
+    source_runtime_separation: SVG sources remain under assets/vfx/source; authored parameters remain under resources/game/vfx
