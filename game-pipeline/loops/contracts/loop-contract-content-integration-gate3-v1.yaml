@@ -1,0 +1,264 @@
+loop_contract:
+  schema_version: '0.2'
+  contract_id: LOOP-CTR-CONTENT-INTEGRATION-GATE3-001
+  loop_type: formal-2d-content-and-integration
+  title: 第三生产循环v1——二维内容制作、交互打磨与集成冻结
+  version: 1
+  status: draft
+approval_binding: null
+draft_review:
+  status: awaiting_project_owner_approval
+  prepared_against:
+    project_brief_version: 7
+    project_brief_subject_digest: 8e9d4285c1c7237a22f308808e944fd8571700f896b8dd8cfb118f0fe0de3d3e
+    gate_2_approval_id: approval:veilfront-xiangqi-siege:gate-2:0213f500a100
+    gate_2_subject_digest: 0213f500a10070198ccdf1090ddcdd2ea519828233251e9896076ff0ced68525
+    gate_2_loop_instance_id: 83c995ff-37b9-4df8-9e84-8417d6632187
+    gate_2_registry_revision: 102
+  note: 本草案只定义GATE-3生产和冻结边界；未获精确摘要批准前，不登记新Loop、不启动正式SFX/VFX/关卡批量生产。
+purpose:
+  objective: 在已批准二维灰盒基线上，先收敛导出资源和运行预算，再并行完成观察者安全SFX、观察者安全VFX、统一UI交互手感、T0-T10教学打磨与C1-C3闯关关卡，最终形成可进入发布候选测试的二维内容与集成冻结版本。
+  design_principles:
+  - 所有棋局音效和特效只消费PlayerView、VisibleEvent、VisibleError或经过审查的公开Cue，不读取FullState或隐藏规则事实。
+  - 固定界面、播放器池、粒子池、HUD与关卡壳优先使用预置Godot节点和Resource。
+  - 音频变化、VFX变化和UI动效不得消费规则RNG，也不得改变权威状态摘要或回放。
+  - GATE-3冻结的是当前二维内容与集成范围，不恢复三渲二主线，不等于GATE-4发布批准。
+  required_deliverables:
+  - deliverable_id: DELIVERABLE-EXPORT-G3-001
+    artifact_type: filtered-windows-export-and-budget
+    description: 运行时资源白名单、非运行时源图排除、纹理/字体预算、质量档与Windows embedded-PCK构建证据。
+  - deliverable_id: DELIVERABLE-AUDIO-G3-001
+    artifact_type: observer-safe-sfx-system-and-core-cues
+    description: 观察者安全AudioCue合同、预置播放器池、SFX Resource目录、混音总线和核心cue资产；不包含正式BGM作曲量产。
+  - deliverable_id: DELIVERABLE-VFX-G3-001
+    artifact_type: observer-safe-2d-vfx-system-and-core-effects
+    description: 观察者安全VfxCue合同、预置粒子/动画池、核心棋局与目标反馈、性能预算和减少动态降级。
+  - deliverable_id: DELIVERABLE-UIUX-G3-001
+    artifact_type: unified-desktop-ui-interaction-baseline
+    description: 主菜单、关卡、联机、对局、教学、设置与结算的统一按钮变体、显式焦点链、字号对比、低分辨率和reduced-motion行为。
+  - deliverable_id: DELIVERABLE-CONTENT-G3-001
+    artifact_type: tutorial-and-challenge-content-wave-one
+    description: T0-T10教学完整打磨、C1-C3闯关关卡目标/失败恢复/通关闭环及固定回归；双轨教学新增模块不在本v1内自动获批。
+  - deliverable_id: DELIVERABLE-QA-G3-001
+    artifact_type: independent-content-integration-evidence
+    description: 独立复现信息边界、输入、内容、性能、内存、包体、长流程、Windows构建与回归的证据。
+  - deliverable_id: DELIVERABLE-GATE3-001
+    artifact_type: human-content-freeze-decision-package
+    description: 绑定正式资产、集成构建、独立QA、残余缺陷和冻结范围的GATE-3人工决策包。
+  out_of_scope:
+  - 修改owner rule revision 5、确定性随机、PlayerView、VisibleEvent网络协议、回放摘要或迷雾信任边界。
+  - 正式BGM作曲量产、语音、旁白、环境声完整系统、付费外包或新增采购预算。
+  - 双轨教学P0/B1/B2/B3模块、能力状态迁移和正式玩家分流；需另行批准设计附录或Contract修订。
+  - C1-C3以外的新闯关批量、剧情扩写、互联网Relay、专用服务器、匹配、账号、重连、观战或聊天。
+  - 三渲二正式接入、新三维资产、正式小篆矢量母版和GATE-4发布活动。
+responsibility:
+  owner_role: pos:veilfront-xiangqi-siege:root:project-manager
+  producer_roles:
+  - pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+  - pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
+  - pos:veilfront-xiangqi-siege:design-experience:visual-production-lead
+  reviewer_roles:
+  - pos:veilfront-xiangqi-siege:quality:qa-release-lead
+  - project-owner
+  responsibility_split:
+    pos:veilfront-xiangqi-siege:technology:godot-technical-lead:
+    - 导出过滤、资源预算、质量档、音频/VFX Cue运行时、预置池、场景接入和自动化合同。
+    pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead:
+    - SFX/VFX体验词表、UI交互规范、T0-T10与C1-C3关卡事实、失败恢复和试玩指标。
+    pos:veilfront-xiangqi-siege:design-experience:visual-production-lead:
+    - VFX视觉基线、二维特效资产、UI视觉一致性和可审样片。
+    pos:veilfront-xiangqi-siege:quality:qa-release-lead:
+    - 独立信息泄露、内容、交互、性能、包体、构建和回归验收。
+  audio_asset_ownership_gap:
+    status: acknowledged
+    rule: 当前正式编制没有独立音频制作岗位；Systems负责人拥有cue体验合同，技术负责人拥有运行时接入，但正式SFX源文件必须来自项目所有者提供、许可清晰的资产库或另行批准的临时音频制作授权。
+    external_spend_without_new_approval: forbidden
+  required_authority_scope:
+  - AUTH-VEILFRONT-PROJECT-MANAGER
+  - AUTH-VEILFRONT-GODOT-TECHNOLOGY
+  - AUTH-VEILFRONT-SYSTEMS-EXPERIENCE
+  - AUTH-VEILFRONT-VISUAL-PRODUCTION
+  - AUTH-VEILFRONT-QA-RELEASE
+  - GATE-3由project-owner保留
+  escalation_to: project-owner
+start:
+  triggers:
+  - trigger_id: TRIGGER-GATE2-COMPLETED
+    description: GATE-2 RC5批准已物化，上一Loop为completed。
+  - trigger_id: TRIGGER-GATE3-CONTRACT-APPROVED
+    description: 本Contract v1精确摘要由项目所有者另行批准。
+  entry_conditions:
+  - condition_id: ENTRY-INSTANCE-NORMAL
+    description: 项目实例、插件锁、Organization Registry、生成Agent适配器和Git基线为normal。
+  - condition_id: ENTRY-GATE2-APPROVAL-FRESH
+    description: GATE-2 approval、最终交接和completed Registry摘要一致。
+  - condition_id: ENTRY-CONTRACT-V1-APPROVED
+    description: 本Contract不可变approval与当前文件摘要一致。
+  - condition_id: ENTRY-SFX-SOURCE-ROUTE
+    description: 在提交任何正式SFX源文件前，必须登记来源、许可、署名和可分发范围；没有该记录时音频线仅可实现运行时与占位测试。
+  required_inputs:
+  - input_slot_id: INPUT-GATE2-HANDOFF-001
+    artifact_type: approved-gate2-final-handoff
+    version_requirement: GATE-2 RC5、Registry revision 102。
+    required: true
+  - input_slot_id: INPUT-AUDIO-PROPOSAL-001
+    artifact_type: observer-safe-audio-contract-proposal
+    version_requirement: docs/audio/veilfront-bgm-sfx-contract-proposal-v1.md；只采纳SFX和运行时边界，不自动批准BGM量产。
+    required: true
+  - input_slot_id: INPUT-UI-AUDIT-001
+    artifact_type: ui-ux-audit
+    version_requirement: docs/ui/ui-ux-audit-2026-08-23.md。
+    required: true
+  - input_slot_id: INPUT-CONTENT-CATALOG-001
+    artifact_type: tutorial-and-challenge-catalog
+    version_requirement: 当前T0-T10与C1-C3 catalog、场景和回归基线。
+    required: true
+iterations:
+  - iteration_id: ITERATION-1-BUDGET-AND-CUE-FOUNDATION
+    objective: 在新增高成本内容前完成资源过滤、包体预算、公开AudioCue/VfxCue词表、UI动效基线和内容验收清单。
+    owner_role: pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+    tasks:
+    - task_id: TASK-EXPORT-G3-001
+      description: 把Windows导出从all_resources收敛为运行时资源集合，排除concept/source_chroma/非运行时漫画源图和测试资产，形成可审manifest。
+      output_refs: [DELIVERABLE-EXPORT-G3-001]
+    - task_id: TASK-CUE-CONTRACT-G3-001
+      description: 冻结AudioCue/VfxCue v1公开输入、去重、顺序、位置、reduced-motion和隐藏等价合同。
+      output_refs: [DELIVERABLE-AUDIO-G3-001, DELIVERABLE-VFX-G3-001]
+    - task_id: TASK-UI-FOUNDATION-G3-001
+      description: 冻结UiMotionButton四类预置变体、字号/颜色角色、显式焦点链和三分辨率布局标准。
+      output_refs: [DELIVERABLE-UIUX-G3-001]
+  - iteration_id: ITERATION-2-PARALLEL-CONTENT-PRODUCTION
+    objective: 在共享Cue、预算和公开信息边界上并行制作SFX、VFX、UI交互和第一波教学/闯关内容。
+    tasks:
+    - task_id: TASK-SFX-G3-001
+      owner_role: pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+      description: 实现预置AudioRoot、BoardAudioEmitterPool、Catalog与不少于12个核心cue族；正式源文件受ENTRY-SFX-SOURCE-ROUTE约束。
+      output_refs: [DELIVERABLE-AUDIO-G3-001]
+    - task_id: TASK-VFX-G3-001
+      owner_role: pos:veilfront-xiangqi-siege:design-experience:visual-production-lead
+      description: 完成选中/移动/吃子/炮击/城墙/旗帜/终局核心二维特效族及技术接入样片。
+      output_refs: [DELIVERABLE-VFX-G3-001]
+    - task_id: TASK-UIUX-G3-001
+      owner_role: pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
+      description: 完成主菜单、关卡、联机、对局、教学、设置和结算的按钮状态、焦点、字号、对比、reduced-motion与低分辨率优化。
+      output_refs: [DELIVERABLE-UIUX-G3-001]
+    - task_id: TASK-CONTENT-G3-001
+      owner_role: pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
+      description: 补全T0-T10现有教学和C1-C3挑战的目标、局面、提示、失败恢复、完成条件和回归，不新增第二套规则。
+      output_refs: [DELIVERABLE-CONTENT-G3-001]
+  - iteration_id: ITERATION-3-INTEGRATION-AND-PLAYTEST
+    objective: 合并四条生产线，完成音画时序、输入、内容节奏、性能、包体和两类玩家试玩修订。
+    owner_role: pos:veilfront-xiangqi-siege:root:project-manager
+  - iteration_id: ITERATION-4-INDEPENDENT-QA
+    objective: QA从冻结构建独立复现全部自动检查、长流程、泄露、性能、包体和Windows成品证据。
+    owner_role: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+    output_refs: [DELIVERABLE-QA-G3-001]
+  - iteration_id: ITERATION-5-GATE3-REVIEW
+    objective: 汇总正式内容、集成冻结、残余缺陷和独立QA，提交GATE-3人工判断。
+    owner_role: pos:veilfront-xiangqi-siege:root:project-manager
+    output_refs: [DELIVERABLE-GATE3-001]
+budget:
+  iteration_limit: 5
+  external_spend:
+    amount: 0
+    unit: CNY
+    rule: 任何采购、订阅、授权费用或外包必须另行批准，不由本Contract隐含授权。
+  runtime_targets:
+    windows_exe_max_bytes: 320000000
+    performance_reference: Intel Iris Xe / Windows / gl_compatibility
+    average_fps_min: 60
+    p99_frame_ms_max: 16.7
+    target_profiles:
+    - 1280x720-default-motion
+    - 960x540-reduced-motion
+acceptance:
+  automated_checks:
+  - check_id: CHECK-CONTRACT-G3-001
+    description: GATE-2批准、本Contract approval、Registry、授权、Git和交付物摘要全部匹配。
+    required: true
+  - check_id: CHECK-EXPORT-G3-001
+    description: Windows运行时manifest不含concept/source_chroma/未用测试资产，EXE不超过320,000,000 bytes；超出必须取得项目所有者例外。
+    required: true
+  - check_id: CHECK-INFORMATION-G3-001
+    description: SFX、VFX、提示、碰撞、位置与时序在隐藏等价状态下不产生额外差异，禁止读取FullState。
+    required: true
+  - check_id: CHECK-AUDIO-G3-001
+    description: 至少12个核心cue族、预置播放器池、来源许可、去重、并发、总线、设置和终局时序通过；无音频错误或削波阻断。
+    required: true
+  - check_id: CHECK-VFX-G3-001
+    description: 七类核心特效族、预置池、公开位置映射、过绘预算、闪烁限制和reduced-motion降级通过。
+    required: true
+  - check_id: CHECK-UIUX-G3-001
+    description: 主要流程具有一致hover/press/focus/disabled反馈、显式闭环焦点、44px最小点击高度、可读字号和reduced-motion行为。
+    required: true
+  - check_id: CHECK-CONTENT-G3-001
+    description: T0-T10与C1-C3均可从目录进入、完成、失败、重试和返回；所有行动通过正式Intent/Event，进度可保存恢复。
+    required: true
+  - check_id: CHECK-RESPONSIVE-G3-001
+    description: 960×540、1280×720、1920×1080及21:9背景延展下无核心裁切、遮挡或焦点不可达。
+    required: true
+  - check_id: CHECK-PERFORMANCE-G3-001
+    description: 两目标配置平均不低于60 FPS、p99不高于16.7 ms；高峰特效、音频并发和教学HUD保持核心可读。
+    required: true
+  - check_id: CHECK-REGRESSION-G3-001
+    description: 规则、PlayerView、回放、LAN、教学、输入与导出代表性回归通过，不能用GATE-2历史证据替代受影响项。
+    required: true
+  - check_id: CHECK-SCOPE-G3-001
+    description: 未引入BGM量产、语音、双轨新增模块、C4+批量关卡、互联网、AI、三渲二、外部支出或发布承诺。
+    required: true
+  professional_review:
+    required: true
+    reviewer_role: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+    criteria:
+    - 生产者不是自己交付物的唯一审查者，QA以冻结构建独立复现关键证据。
+    - 音频、VFX、UI与内容没有突破PlayerView/公开事件边界或修改正式规则。
+    - 正式资产来源、许可、署名和可分发范围可追踪。
+    - 当前内容不再需要结构性增加，剩余问题可以通过修复和调优解决。
+  human_gate:
+    required: true
+    gate_id: GATE-3
+    question: 当前正式二维资产、SFX、VFX、UI交互、T0-T10与C1-C3内容是否风格一致、集成稳定且范围收敛，可以冻结并进入发布候选测试？
+  success_conditions:
+  - 所有必要自动检查和独立专业审查通过。
+  - 四条内容生产线在同一公开Cue、性能、输入和资源预算上集成。
+  - 正式内容范围冻结，未决问题不再要求结构性新增。
+  - GATE-3只进入awaiting_human，任何Agent不得代替项目所有者批准。
+state_machine:
+  state_machine_id: LOOP-SM-DEFAULT
+  version: '0.2'
+  allowed_overrides: []
+failure_and_exit:
+  blocking_conditions:
+  - 本Contract未批准、项目实例非normal、SFX来源许可不清或必要责任无人承担。
+  - 音频/VFX必须读取隐藏FullState、位置或规则RNG才能达到效果。
+  - 资源过滤后仍无法满足包体/内存预算且没有项目所有者例外。
+  - T0-T10或C1-C3需要复制规则、直接改状态或突破PlayerView才能完成。
+  - 任一必要自动检查失败且修订预算不足。
+  rollback:
+    return_to: 对应TASK-SFX/VFX/UIUX/CONTENT/EXPORT；若影响核心规则或二维方向，返回Project Brief或新Contract审批。
+    preserve:
+    - GATE-2 RC5批准、最终交接与二维正式基线。
+    - 已通过来源/许可审查的SFX与VFX资产。
+    - 已验证的公开Cue合同、UI预置、关卡Resource和独立QA证据。
+  cancellation_conditions:
+  - 项目所有者取消当前GATE-3范围或改变二维主线。
+  - 证据证明当前预算内不可行且项目所有者选择停止而非修订。
+  final_handoff:
+    receiver_role: pos:veilfront-xiangqi-siege:root:project-manager
+    required_contents:
+    - 正式SFX/VFX/UI/教学/闯关资产与场景清单、来源和版本。
+    - 公开Cue与信息安全证据、性能/包体/质量档和Windows构建。
+    - 独立QA、试玩观察、已知缺陷、冻结范围和GATE-4前置条件。
+coordination:
+  dependency_rules:
+  - ITERATION-1预算与Cue合同先于正式内容资产接入；四条生产线不得各自定义不兼容事件。
+  - SFX来源路由未登记时，只能实现AudioCue运行时和占位测试，不能把占位音记为正式交付。
+  - Systems负责人拥有体验词表和内容事实，视觉负责人拥有VFX视觉事实，技术负责人拥有Godot运行时和导出事实，QA保持独立。
+  - 双轨教学、BGM量产、C4+关卡、三渲二和外部支出必须另立获批修订或例外。
+  child_loop_creation:
+    allowed: false
+    conditions: []
+    required_authority_scope: []
+  registry_binding:
+    create_after_contract_approval: true
+    store_runtime_relationships_in_registry: true
