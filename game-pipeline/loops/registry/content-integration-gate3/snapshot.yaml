@@ -78,10 +78,10 @@ registry_snapshot:
     state_entered_at: '2026-08-24T17:11:11.859059+08:00'
     current_iteration: 1
     last_transition_id: TR-READY-ACTIVE
-    last_event_id: ff08dc60-3e6e-4328-bbb0-11d9e6e4095e
-    last_event_digest: 8457eb50dcb99df671f42c52dd8a4ed29df1ed17ced2aa2cf0050b15a70f1d07
-    last_event_sequence: 14
-    record_revision: 14
+    last_event_id: 2987b7ad-b6a6-4282-9e02-f2b374d8bb6a
+    last_event_digest: 2b94e6598384a3695d6b2ce98f9509148ed5f1e9089646a594acd98b82b75748
+    last_event_sequence: 15
+    record_revision: 15
   budget:
     limits:
       iteration_limit: 5
@@ -151,14 +151,14 @@ registry_snapshot:
       artifact:
         artifact_id: registry:veilfront-xiangqi-siege:organization@current
         artifact_type: approved-organization-and-authority
-        version: current-approved-snapshot
+        version: current-approved-snapshot-plus-gate3-vfx-position-instance
         uri: game-pipeline/organization/snapshot.yaml
         digest:
           algorithm: sha256
-          value: 5e8e28a7a0c97c1b21eb26c0d8c8f33a036ab99f36e21dd87dc02d45b3df3aa3
+          value: fc08f5bdb69595827de0d4edd19c91df0ca8e1d3f7af31836a004cf0053174d1
       source_loop_id: null
-      bound_by_event_id: 313eace8-f295-4fd2-a80a-9cdc6cf63986
-      bound_at: '2026-08-24T17:11:11.859059+08:00'
+      bound_by_event_id: 2987b7ad-b6a6-4282-9e02-f2b374d8bb6a
+      bound_at: '2026-08-24T18:30:36.798056+08:00'
     outputs:
     - deliverable_id: DELIVERABLE-EXPORT-G3-001
       artifact:

@@ -593,3 +593,61 @@ event_history:
     digest_algorithm: sha256
     previous_event_digest: 5ace8a8f7afee79c7ecdb85a5dce62ea437f7681453d2073cfba693df890eb28
     event_digest: 8457eb50dcb99df671f42c52dd8a4ed29df1ed17ced2aa2cf0050b15a70f1d07
+- schema_version: '0.1'
+  event_id: 2987b7ad-b6a6-4282-9e02-f2b374d8bb6a
+  mutation_id: 72261ef5-3cdc-4cd5-92eb-9d259020ee7d
+  loop_instance_id: e6e0f300-2130-41d0-8020-f7f4006deb3f
+  sequence: 15
+  event_type: core.input_bound
+  occurred_at: '2026-08-24T18:30:36.798056+08:00'
+  recorded_at: '2026-08-24T18:30:36.798056+08:00'
+  actor:
+    actor_id: inst:01M02M6X3Q8YWJXHY52K3V5AR2
+    role: pos:veilfront-xiangqi-siege:root:project-manager
+    authority_id: AUTH-VEILFRONT-PROJECT-MANAGER
+  causality:
+    correlation_id: 8f0f0846-0348-4891-aee6-3c0c51532c28
+    causation_event_id: ff08dc60-3e6e-4328-bbb0-11d9e6e4095e
+    request_id: refresh-gate3-organization-input-after-vfx-instance-start
+  concurrency:
+    expected_record_revision: 14
+    resulting_record_revision: 15
+  binding_snapshot:
+    contract_digest: d97937b94c07399e00c63e1a5651d55c9eceb30378214838902dbe377d0a7e2a
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    input_slot_id: INPUT-ORG-G3-001
+    before:
+      input_slot_id: INPUT-ORG-G3-001
+      artifact:
+        artifact_id: registry:veilfront-xiangqi-siege:organization@current
+        artifact_type: approved-organization-and-authority
+        version: current-approved-snapshot
+        uri: game-pipeline/organization/snapshot.yaml
+        digest:
+          algorithm: sha256
+          value: 5e8e28a7a0c97c1b21eb26c0d8c8f33a036ab99f36e21dd87dc02d45b3df3aa3
+      source_loop_id: null
+      bound_by_event_id: 313eace8-f295-4fd2-a80a-9cdc6cf63986
+      bound_at: '2026-08-24T17:11:11.859059+08:00'
+    after:
+      input_slot_id: INPUT-ORG-G3-001
+      artifact:
+        artifact_id: registry:veilfront-xiangqi-siege:organization@current
+        artifact_type: approved-organization-and-authority
+        version: current-approved-snapshot-plus-gate3-vfx-position-instance
+        uri: game-pipeline/organization/snapshot.yaml
+        digest:
+          algorithm: sha256
+          value: fc08f5bdb69595827de0d4edd19c91df0ca8e1d3f7af31836a004cf0053174d1
+      source_loop_id: null
+      bound_by_event_id: 2987b7ad-b6a6-4282-9e02-f2b374d8bb6a
+      bound_at: '2026-08-24T18:30:36.798056+08:00'
+  evidence_refs:
+  - game-pipeline/organization/snapshot.yaml
+  - .codex/agents/visual-production-lead.toml
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: 8457eb50dcb99df671f42c52dd8a4ed29df1ed17ced2aa2cf0050b15a70f1d07
+    event_digest: 2b94e6598384a3695d6b2ce98f9509148ed5f1e9089646a594acd98b82b75748

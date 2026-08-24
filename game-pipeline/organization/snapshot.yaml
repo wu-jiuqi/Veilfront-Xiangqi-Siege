@@ -1,10 +1,9 @@
 organization_snapshot:
-  schema_version: 0.2-alpha
   identity:
     project_id: veilfront-xiangqi-siege
-    organization_revision: 12
+    organization_revision: 14
     created_at: '2026-08-15T00:00:00+08:00'
-    updated_at: '2026-08-15T20:15:17.6009401+08:00'
+    updated_at: '2026-08-24T18:30:36.646060+08:00'
   governance_bindings:
     organization_contract:
       id: ORG-CONTRACT-CORE
@@ -513,6 +512,25 @@ organization_snapshot:
       audit:
         registered_by_event_id: evt:01M02NJ3JF9VEQKNTPG4R95FKP
         last_changed_by_event_id: evt:01M02NJ3JF9VEQKNTPG4R95FKP
+    - instance_id: inst:01M0QY1VFX7SFXVFXGATE3VFX1
+      instance_kind: position
+      preset_binding:
+        preset_id: preset:veilfront-xiangqi-siege:visual-production-lead
+        version: 0.1.0
+        digest: 42156e275853b6a73611af1ec436e676c21b99f936130fb951ca75e23787daa5
+      position_binding:
+        position_id: pos:veilfront-xiangqi-siege:design-experience:visual-production-lead
+        definition_digest: cc502a9feae5b7f38827d5fd8c85e75ad237cb147d2c40404b75b652b0022240
+      temporary_binding: null
+      lifecycle:
+        state: active
+        state_entered_at: '2026-08-24T18:30:36.646060+08:00'
+        transition_ref: evt:01M0SN4WVV8JDKBQ1J8DP3ACFH
+      started_at: '2026-08-24T18:30:36.646060+08:00'
+      expires_at: null
+      audit:
+        registered_by_event_id: evt:01M0SN4WV67138439KA95T65SZ
+        last_changed_by_event_id: evt:01M0SN4WV67138439KA95T65SZ
     temporary_grants: []
   governance:
     used_identity_index:
@@ -534,6 +552,7 @@ organization_snapshot:
       - inst:01M02NJ3JEQXKV6PT6DPX0NKQ0
       - inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
       - inst:01M02NJ3JFS7AH6WNNHK31B3EX
+      - inst:01M0QY1VFX7SFXVFXGATE3VFX1
       temporary_grant_ids: []
     tombstones: []
     pending_change_set_refs: []
@@ -545,11 +564,12 @@ organization_snapshot:
       decision_basis_digest: 710aae3700484ce14113dd4bef9c0a5cb6f8e3bf830d90579e76ea6d9a15402e
       approval_ref: approval:veilfront-xiangqi-siege:organization-change-set:fdd6fec0a5f4
       applied_by_event_id: evt:QFHA6TR0WEX5FQX5XG7BJPPND3
+  schema_version: 0.2-alpha
   event_watermark:
-    last_event_id: evt:01M02NJ3JF3NK21NN1S6V5201W
-    last_event_sequence: 12
-    last_event_digest: 737fb99668fa94e29ff36d202b119d2806392fa628fad6fba659f783a0168bbb
+    last_event_id: evt:01M0SN4WVV8JDKBQ1J8DP3ACFH
+    last_event_sequence: 14
+    last_event_digest: 1e272ffd7657498d5da0db83d2a116092860f1fe1a30322adf6f697823e11d5c
   snapshot_integrity:
     canonicalization: organization-snapshot-canonical-json-v1
     digest_algorithm: sha256
-    snapshot_digest: 6ba5b5caf0115d894557d750e505ee53bd03bc4feb26c7058c794a85b353f81c
+    snapshot_digest: e29ba4a236274384e3b523bb0bf99ef038dfb8ee7d55e0e907267d0287c15f52
