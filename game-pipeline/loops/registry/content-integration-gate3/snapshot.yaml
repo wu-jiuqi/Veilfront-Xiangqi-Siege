@@ -78,10 +78,10 @@ registry_snapshot:
     state_entered_at: '2026-08-24T19:23:46.989995+08:00'
     current_iteration: 2
     last_transition_id: TR-REVIEW-ACTIVE
-    last_event_id: 9ee6a3bb-37e3-42a7-8ff1-9e91b80765fc
-    last_event_digest: 752e9dc126c64901be60500f26b72fcd37dbcc350c3e17019f6cac61353af436
-    last_event_sequence: 25
-    record_revision: 25
+    last_event_id: 01aa58f7-4171-4cb3-b9c0-09d0be65e789
+    last_event_digest: 5e77450078fa000f4fce9b8bbf38bca89167425483e584b152de0c8ecc32d8d6
+    last_event_sequence: 26
+    record_revision: 26
   budget:
     limits:
       iteration_limit: 5
@@ -209,31 +209,43 @@ registry_snapshot:
       registered_by_event_id: 975a5c44-7124-41aa-9428-1ff9a3346231
     - deliverable_id: DELIVERABLE-VFX-G3-001
       artifact:
-        artifact_id: artifact:veilfront-xiangqi-siege:deliverable-vfx-g3-001@g3-iteration2-producer-integrated-v2
+        artifact_id: artifact:veilfront-xiangqi-siege:deliverable-vfx-g3-001@g3-iteration2-producer-integrated-v3
         artifact_type: observer-safe-2d-vfx-system-and-core-effects
-        version: g3-iteration2-producer-integrated-v2
+        version: g3-iteration2-producer-integrated-v3
         uri: evidence/gate3/opening-sfx-and-callout-vfx-integration-v1.md
         digest:
           algorithm: sha256
-          value: 9a898c1398bac06cbe8e32ba9d5c07b300015d8139406c8afa7bdf4fa8542629
+          value: 8eb516fb09618d2424a28889fd0d77523518ae7d4a92eb2505ead3d16e133cf9
         manifest_paths:
         - evidence/gate3/opening-sfx-and-callout-vfx-integration-v1.md
+        - assets/vfx/source/README.md
+        - assets/vfx/source/screen_callout_seal_v1.svg
+        - docs/vfx/vfx-asset-license-manifest-v1.yaml
         - evidence/gate3/vfx/vfx-review-1280x720.png
+        - evidence/gate3/vfx/screen-callout-capture-1280x720.png
+        - evidence/gate3/vfx/screen-callout-general-1280x720.png
         - resources/game/vfx/vfx_catalog.tres
         - resources/game/vfx/definitions/bombardment_vfx.tres
         - resources/game/vfx/definitions/callout_vfx.tres
         - resources/game/vfx/definitions/resurrection_vfx.tres
+        - scenes/game/presentation/match_feedback_coordinator.tscn
+        - scenes/game/vfx/screen_callout_overlay.tscn
         - scenes/game/vfx/vfx_effect_slot.tscn
         - scenes/game/vfx/vfx_review_lab.tscn
+        - scripts/game/presentation/match_feedback_coordinator.gd
         - scripts/game/vfx/observer_vfx_policy.gd
+        - scripts/game/vfx/screen_callout_overlay.gd
         - scripts/game/vfx/vfx_effect_slot.gd
         - scripts/game/vfx/vfx_review_lab.gd
+        - tests/game/presentation/run_match_feedback_integration_contract.gd
+        - tests/game/vfx/capture_vfx_review_sample.gd
+        - tests/game/vfx/capture_screen_callout_samples.gd
+        - tests/game/vfx/run_screen_callout_overlay_smoke.gd
         - tests/game/vfx/run_vfx_cue_contract.gd
         - tests/game/vfx/run_vfx_scene_smoke.gd
-        - tests/game/vfx/capture_vfx_review_sample.gd
       produced_in_iteration: 2
       lifecycle_status: producer_integrated
-      registered_by_event_id: 9ee6a3bb-37e3-42a7-8ff1-9e91b80765fc
+      registered_by_event_id: 01aa58f7-4171-4cb3-b9c0-09d0be65e789
     - deliverable_id: DELIVERABLE-UIUX-G3-001
       artifact:
         artifact_id: artifact:veilfront-xiangqi-siege:deliverable-uiux-g3-001@g3-iteration1-foundation-v1

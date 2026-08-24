@@ -2,7 +2,7 @@
 
 日期：2026-08-24（Asia/Shanghai）
 
-实现提交：`48e8141`（音效）、`27eeea4`（特效）
+实现提交：`48e8141`（音效）、`27eeea4`（特殊能力与局部提示）、`064cfc5`（吃将全屏中央提示）、`0582fba`（资源收尾验证稳定化）
 
 状态：`producer_integrated / iteration_2_active / independent_qa_pending`
 
@@ -17,10 +17,18 @@
 
 ## 吃 / 将语义边界
 
-- `吃`：只由新出现的公开 `capture_ghost` 触发，位置严格取公开吃子坐标。
+- `吃`：只由新出现的公开 `capture_ghost` 触发；对应碎印冲击严格取公开吃子坐标，中央弹字本身不携带棋盘位置。
 - `将`：当前 owner rule revision 5 没有传统象棋“将军中”状态；本轮只在公开被吃棋子为 `general/king` 时显示，语义是“公开将领被摧毁”。
 - 不根据迷雾下棋子、隐藏攻击线或未来行动推断 `将`，因此不新增 PlayerView / VisibleEvent 字段，也不泄露隐藏信息。
 - 若后续需要传统“将军预警”，必须先修订规则和可见事件合同，不能由表现层自行推断。
+
+### 屏幕中央强提示修订
+
+- 按项目所有者后续要求，`吃/将` 不再落在棋盘公开坐标处，而是固定投射到比赛根视口正中央；棋盘坐标仍只供同时发生的 `vfx.capture.impact` 使用。
+- 新增预置 `ScreenCalloutOverlay`：232 px 主字、22 px 粗描边、全屏压暗、252 px 高横向军令带、440 px 军令印和 28 枚一次性火花；`将` 使用“主将告破”，`吃` 使用“斩获敌军”。
+- `MatchFeedbackCoordinator` 从观察者安全 VfxCue batch 中分流 `vfx.callout.*` 到根视口，其余 VFX 继续进入棋盘预置池；同一 cue 去重，多吃同帧时若含公开将领则优先显示 `将`。
+- reduced-motion 保留中央大字、粗描边、横幅和压暗，但禁用爆发粒子与旋转/缩放冲击，只做短淡入淡出。
+- 响应式契约覆盖 960×540、1024×768、1280×720、1920×1080、2560×1080：主字中心始终等于视口中心，军令带始终覆盖完整屏宽。
 
 ## 特殊能力
 
@@ -35,6 +43,7 @@
 - `OBSERVER_AUDIO_POLICY_CONTRACT_PASS checks=30 schema=v1`
 - `VFX_CUE_CONTRACT_PASS cues=8 families=9 shared_fields=11 hidden_equivalence=true`
 - `VFX_SCENE_SMOKE_PASS pool=9+3 peak_standard=100 peak_reduced=37 dedup=true reduced_motion=true gl_compatibility=true`
+- `SCREEN_CALLOUT_OVERLAY_PASS center=640,360 font=232 outline=22 backdrop=true band=true responsive=5 dedup=true reduced_motion=true`
 - `HIDDEN_EQUIVALENCE_PASS pairs=6 checks=2723`
 - `MATCH_FEEDBACK_INTEGRATION_CONTRACT_PASS screens=2 audio_observer=true vfx_observer=true local_selection=true minimap_isolation=true reset=true`
 - `FORMAL_SCENE_SMOKE_PASS roots=3 components=24 inputs=11`
@@ -42,17 +51,19 @@
 ## Windows 候选
 
 - 在隔离干净 worktree、Godot `4.7.1.stable.official.a13da4feb`、Intel Iris Xe / OpenGL 3.3 Compatibility 上构建通过。
-- 性能：`selection_p99_ms=0.566`、`confirmation_p99_ms=9.199`、`fog_cache_p99_ms=0.088`，均低于 16.7 ms。
+- 性能：`selection_p99_ms=1.115`、`confirmation_p99_ms=14.694`、`fog_cache_p99_ms=0.067`，均低于 16.7 ms。
 - `WINDOWS_LAN_EXPORT_VERIFY_PASS frames=120`。
 - `WINDOWS_RUNTIME_CANDIDATE_PASS`。
-- 预算：EXE `209,904,808` bytes；headroom `110,095,192` bytes；pack zip `99,467,886` bytes；展开 `100,615,667` bytes；570 entries。
+- 预算：EXE `209,953,184` bytes；headroom `110,046,816` bytes；pack zip `99,504,995` bytes；展开 `100,663,464` bytes；575 entries。
 - 主工作区构建目录已同步本次成功候选与日志；主编辑器旧 `.godot` 缓存导致的首次导出缺失引用未进入隔离构建，也未修改运行时源码。
 
 ## 可审样片
 
 - `evidence/gate3/vfx/vfx-review-1280x720.png`
+- `evidence/gate3/vfx/screen-callout-capture-1280x720.png`
+- `evidence/gate3/vfx/screen-callout-general-1280x720.png`
 - 九族 review hold：`bombardment / callout / capture / flag / move / resurrection / selection / terminal / wall`。
-- 样片仅用于生产者视觉复核，不替代项目所有者审美确认。
+- 屏幕中央样片基于正式 `match_screen.tscn` 与正式 `ScreenCalloutOverlay` 预置生成；样片仅用于生产者视觉复核，不替代项目所有者审美确认。
 
 ## 来源与许可
 
