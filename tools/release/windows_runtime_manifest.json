@@ -19,6 +19,7 @@
     "res://scenes/game/frontend/settings_screen.tscn",
     "res://scenes/game/frontend/level_select.tscn",
     "res://scenes/game/tutorial/tutorial_level.tscn",
+    "res://scenes/game/match/match_screen.tscn",
     "res://scenes/game/ui/level_guide_overlay.tscn",
     "res://resources/game/tutorials/authority/t0.tres",
     "res://resources/game/tutorials/authority/t1.tres",

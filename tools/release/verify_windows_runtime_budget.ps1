@@ -59,6 +59,13 @@ foreach ($includedFile in $policy.included_non_resources) {
     }
 }
 
+foreach ($dynamicAsset in $policy.required_dynamic_assets) {
+    $dynamicAssetPath = ([string]$dynamicAsset).Substring(6)
+    if ($presetText -notmatch [regex]::Escape($dynamicAssetPath)) {
+        throw "导出 include_filter 缺少 HUD 动态资产：$dynamicAsset"
+    }
+}
+
 $catalogPath = Join-Path $projectRoot ([string]$policy.dynamic_asset_catalog)
 $catalog = Get-Content -LiteralPath $catalogPath -Raw | ConvertFrom-Json
 $catalogAssets = @(
