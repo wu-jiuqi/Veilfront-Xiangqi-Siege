@@ -38,12 +38,7 @@ func create_client_port(bound_side: String = "red") -> RefCounted:
 
 
 func current_payload() -> Dictionary:
-	return {
-		"player_view": _application.current_player_view(),
-		"visible_events": _application.current_visible_events(),
-		"visible_error": {},
-		"action_previews": _application.current_action_previews(),
-	}
+	return _application.current_payload()
 
 
 func submit_intent(intent: Dictionary) -> Dictionary:
@@ -51,12 +46,12 @@ func submit_intent(intent: Dictionary) -> Dictionary:
 
 
 func submit_preview(preview: Dictionary) -> Dictionary:
-	var view: Dictionary = current_payload().get("player_view", {})
+	var action_index: int = _application.current_action_index()
 	var preview_id := str(preview.get("preview_id", ""))
 	var intent: Dictionary = {
 		"schema_version": NormalizedIntentCodec.SCHEMA_VERSION,
-		"intent_id": "local:%d:%s" % [int(view.get("action_index", 0)), preview_id],
-		"expected_action_index": int(view.get("action_index", 0)),
+		"intent_id": "local:%d:%s" % [action_index, preview_id],
+		"expected_action_index": action_index,
 		"piece_id": str(preview.get("piece_id", "")),
 		"action_type": str(preview.get("action_type", "")),
 		"target_cell": preview.get("target_cell", []).duplicate(),

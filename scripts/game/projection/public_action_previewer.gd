@@ -73,7 +73,7 @@ static func preview_intent(player_view: Dictionary, intent: Dictionary) -> Dicti
 			public_code = ""
 	return {
 		"schema_version": "veilfront-action-preview-v1",
-		"preview_id": _action_id(piece_id, action_type, target, skill_type),
+		"preview_id": preview_id_for_intent(intent),
 		"piece_id": piece_id,
 		"action_type": action_type,
 		"target_cell": public_target,
@@ -83,6 +83,16 @@ static func preview_intent(player_view: Dictionary, intent: Dictionary) -> Dicti
 		"public_cost": {},
 		"message_key": "action.%s" % (public_code if not public_code.is_empty() else action_type),
 	}
+
+
+static func preview_id_for_intent(intent: Dictionary) -> String:
+	return _action_id(
+		str(intent.get("piece_id", "")),
+		str(intent.get("action_type", "")),
+		Canonical.coordinate(intent.get("target_cell", [])),
+		str(intent.get("skill_type", ""))
+	)
+
 
 static func _find_piece(player_view: Dictionary, piece_id: String) -> Dictionary:
 	for piece: Dictionary in player_view["pieces"]:

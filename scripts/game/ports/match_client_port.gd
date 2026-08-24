@@ -69,6 +69,31 @@ func _decode_and_publish_batch(
 	return {"ok": true, "error_code": ""}
 
 
+func _publish_trusted_batch(
+	player_view: Dictionary,
+	visible_events: Array,
+	visible_error: Dictionary,
+	action_previews: Array,
+	prepared_preview_id: String
+) -> Dictionary:
+	# Only in-process adapters may call this path. Network/file boundaries must
+	# continue through _decode_and_publish_batch and the canonical codecs.
+	var incoming_side: String = str(player_view.get("viewer_side", ""))
+	if player_view.is_empty() \
+	or (not _bound_side.is_empty() and incoming_side != _bound_side) \
+	or not _is_batch_coherent(player_view, visible_events, visible_error):
+		return _port_failure()
+	if _bound_side.is_empty():
+		_bound_side = incoming_side
+	player_view_updated.emit(player_view.duplicate(true))
+	visible_events_received.emit(visible_events.duplicate(true))
+	if not visible_error.is_empty():
+		visible_error_received.emit(visible_error.duplicate(true))
+	action_previews_updated.emit(action_previews.duplicate(true))
+	prepared_action_changed.emit(prepared_preview_id)
+	return {"ok": true, "error_code": ""}
+
+
 func _decode_many(codec: Variant, encoded_values: Array) -> Dictionary:
 	var values: Array = []
 	for encoded_value: Variant in encoded_values:

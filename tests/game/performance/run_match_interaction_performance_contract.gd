@@ -19,6 +19,7 @@ func _init() -> void:
 
 func _run() -> void:
 	var selection_metrics := _measure_incremental_selection()
+	var confirmation_metrics := _measure_action_confirmation()
 	var fog_metrics := _measure_fog_cache()
 	if _failures.is_empty():
 		print(
@@ -26,6 +27,10 @@ func _run() -> void:
 			+ "selection_p95_ms=%.3f selection_p99_ms=%.3f " % [
 				selection_metrics.get("p95_ms", 0.0),
 				selection_metrics.get("p99_ms", 0.0),
+			]
+			+ "confirmation_p95_ms=%.3f confirmation_p99_ms=%.3f " % [
+				confirmation_metrics.get("p95_ms", 0.0),
+				confirmation_metrics.get("p99_ms", 0.0),
 			]
 			+ "fog_cache_p95_ms=%.3f fog_cache_p99_ms=%.3f" % [
 				fog_metrics.get("p95_ms", 0.0),
@@ -98,6 +103,45 @@ func _measure_incremental_selection() -> Dictionary:
 	_expect(
 		float(metrics.get("p99_ms", INF)) <= INTERACTION_P99_BUDGET_MS,
 		"selection request p99 exceeded %.1f ms: %.3f ms" % [
+			INTERACTION_P99_BUDGET_MS,
+			metrics.get("p99_ms", INF),
+		]
+	)
+	return metrics
+
+
+func _measure_action_confirmation() -> Dictionary:
+	var samples: Array[float] = []
+	for sample_index: int in SAMPLE_COUNT:
+		var session: RefCounted = FormalLocalSession.create(472000 + sample_index)
+		var port: RefCounted = session.create_client_port("red")
+		var available_previews: Array = []
+		port.action_previews_updated.connect(func(previews: Array) -> void:
+			available_previews.assign(previews)
+		)
+		var publish_result: Dictionary = port.publish_current()
+		_expect(
+			bool(publish_result.get("ok", false)),
+			"confirmation sample initial publish failed"
+		)
+		var selected_preview := _first_legal_move(available_previews)
+		_expect(
+			not selected_preview.is_empty(),
+			"confirmation sample exposed no legal move preview"
+		)
+		if selected_preview.is_empty():
+			continue
+		var preview_id := str(selected_preview.get("preview_id", ""))
+		port.prepare_action(preview_id)
+		var started_at := Time.get_ticks_usec()
+		port.confirm_prepared_action(preview_id)
+		samples.append(float(Time.get_ticks_usec() - started_at) / 1000.0)
+	if samples.size() != SAMPLE_COUNT:
+		return {"p95_ms": INF, "p99_ms": INF}
+	var metrics := _percentiles(samples)
+	_expect(
+		float(metrics.get("p99_ms", INF)) <= INTERACTION_P99_BUDGET_MS,
+		"action confirmation p99 exceeded %.1f ms: %.3f ms" % [
 			INTERACTION_P99_BUDGET_MS,
 			metrics.get("p99_ms", INF),
 		]

@@ -17,6 +17,7 @@ var _preparation: Dictionary = {}
 var _observer_frames: Array = []
 var _initial_player_view: Dictionary = {}
 var _tutorial_scenario: TutorialScenarioDefinition
+var _action_preview_cache_by_side: Dictionary = {}
 
 
 static func create_trusted(
@@ -76,12 +77,31 @@ func current_player_view() -> Dictionary:
 	return ObserverProjector.project_player_view(_state, _viewer_context)
 
 
+func current_action_index() -> int:
+	return int(_state.get("action_index", 0))
+
+
 func current_visible_events() -> Array:
 	return VisibleOutcomeProjector.project_visible_events(_state, _viewer_context)
 
 
 func current_action_previews() -> Array:
-	return _action_previews_for_view(current_player_view())
+	var player_view: Dictionary = current_player_view()
+	var previews: Array = _action_previews_for_view(player_view)
+	_remember_action_previews(player_view, previews)
+	return previews
+
+
+func current_payload() -> Dictionary:
+	var player_view: Dictionary = current_player_view()
+	var action_previews: Array = _action_previews_for_view(player_view)
+	_remember_action_previews(player_view, action_previews)
+	return {
+		"player_view": player_view,
+		"visible_events": current_visible_events(),
+		"visible_error": {},
+		"action_previews": action_previews,
+	}
 
 
 func current_payload_for_side(side: String) -> Dictionary:
@@ -89,16 +109,21 @@ func current_payload_for_side(side: String) -> Dictionary:
 	if context == null:
 		return {}
 	var player_view: Dictionary = ObserverProjector.project_player_view(_state, context)
+	var action_previews: Array = _action_previews_for_view(player_view)
+	_remember_action_previews(player_view, action_previews)
 	return {
 		"player_view": player_view,
 		"visible_events": VisibleOutcomeProjector.project_visible_events(_state, context),
 		"visible_error": {},
-		"action_previews": _action_previews_for_view(player_view),
+		"action_previews": action_previews,
 	}
 
 
 func current_player_view_for_side(side: String) -> Dictionary:
-	return current_payload_for_side(side).get("player_view", {}).duplicate(true)
+	var context: RefCounted = _context_for_side(side)
+	if context == null:
+		return {}
+	return ObserverProjector.project_player_view(_state, context)
 
 
 func preview_intent_for_side(side: String, intent: Dictionary) -> Dictionary:
@@ -163,14 +188,19 @@ func _submit_intent_for_context(
 	if str(_state["active_side"]) != str(context.call("side")):
 		return _safe_rejection_for_context(normalized_intent, "known_illegal", context)
 	var domain_intent: Dictionary = NormalizedIntentCodec.to_domain_intent(normalized_intent)
-	var preview: Dictionary = PublicActionPreviewer.preview_intent(
-		ObserverProjector.project_player_view(_state, context), domain_intent
+	var public_classification := _cached_public_classification(
+		context, expected_index, domain_intent
 	)
+	if public_classification.is_empty():
+		var preview: Dictionary = PublicActionPreviewer.preview_intent(
+			ObserverProjector.project_player_view(_state, context), domain_intent
+		)
+		public_classification = str(preview.get("classification", "KNOWN_ILLEGAL"))
 	var result: Dictionary = RuleEngine.submit_action(_state, domain_intent, {
 		"trusted_generated_action": false,
 		"include_state_summary": false,
 		"preparation_token": str(_preparation.get("token", "")),
-		"public_classification": str(preview.get("classification", "KNOWN_ILLEGAL")),
+		"public_classification": public_classification,
 	})
 	var visible_error: Dictionary = VisibleOutcomeProjector.project_visible_error(
 		result, intent_id, expected_index
@@ -180,6 +210,7 @@ func _submit_intent_for_context(
 	var frame: Dictionary = _compose_safe_frame(
 		_state, context, visible_error, _observer_frames.size() + 1
 	)
+	_remember_action_previews(frame["player_view_or_digest"], frame["action_previews"])
 	if record_observer_frame:
 		_observer_frames.append(frame)
 	return {
@@ -225,6 +256,7 @@ func advance_trusted_scripted_pass() -> Dictionary:
 		{},
 		_observer_frames.size() + 1
 	)
+	_remember_action_previews(frame["player_view_or_digest"], frame["action_previews"])
 	_observer_frames.append(frame)
 	return {
 		"ok": bool(result.get("ok", false)),
@@ -280,6 +312,7 @@ func _submit_trusted_timeout_for_context(
 	var frame: Dictionary = _compose_safe_frame(
 		_state, context, {}, _observer_frames.size() + 1
 	)
+	_remember_action_previews(frame["player_view_or_digest"], frame["action_previews"])
 	if record_observer_frame:
 		_observer_frames.append(frame)
 	return {
@@ -310,6 +343,7 @@ func submit_trusted_tutorial_transition(step_id: String) -> Dictionary:
 	var frame: Dictionary = _compose_safe_frame(
 		_state, _viewer_context, {}, _observer_frames.size() + 1
 	)
+	_remember_action_previews(frame["player_view_or_digest"], frame["action_previews"])
 	_observer_frames.append(frame)
 	return {
 		"ok": true,
@@ -394,6 +428,37 @@ static func _action_previews_for_view(player_view: Dictionary) -> Array:
 	or str(player_view.get("active_side", "")) != str(player_view.get("viewer_side", "")):
 		return []
 	return PublicActionPreviewer.generate_action_intents(player_view)
+
+
+func _remember_action_previews(player_view: Dictionary, previews: Array) -> void:
+	var viewer_side := str(player_view.get("viewer_side", ""))
+	if viewer_side.is_empty():
+		return
+	var classifications: Dictionary = {}
+	for preview_value: Variant in previews:
+		if not preview_value is Dictionary:
+			continue
+		var preview: Dictionary = preview_value
+		classifications[str(preview.get("preview_id", ""))] = str(
+			preview.get("classification", "KNOWN_ILLEGAL")
+		)
+	_action_preview_cache_by_side[viewer_side] = {
+		"action_index": int(player_view.get("action_index", -1)),
+		"classifications": classifications,
+	}
+
+
+func _cached_public_classification(
+	context: RefCounted,
+	expected_action_index: int,
+	intent: Dictionary
+) -> String:
+	var viewer_side := str(context.call("side"))
+	var cached: Dictionary = _action_preview_cache_by_side.get(viewer_side, {})
+	if int(cached.get("action_index", -1)) != expected_action_index:
+		return ""
+	var preview_id := PublicActionPreviewer.preview_id_for_intent(intent)
+	return str(cached.get("classifications", {}).get(preview_id, ""))
 
 
 func _prepare_authority_turn() -> void:

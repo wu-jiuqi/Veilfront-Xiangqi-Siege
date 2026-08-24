@@ -91,38 +91,28 @@ func _find_preview(preview_id: String) -> Dictionary:
 
 
 func _publish_payload(payload: Dictionary) -> Dictionary:
-	var player_view: Dictionary = payload.get("player_view", {})
-	var view_result: Dictionary = PlayerViewCodec.encode(player_view)
-	if not bool(view_result.get("ok", false)):
+	var player_view_value: Variant = payload.get("player_view", {})
+	var visible_events_value: Variant = payload.get("visible_events", [])
+	var visible_error_value: Variant = payload.get("visible_error", {})
+	var action_previews_value: Variant = payload.get("action_previews", [])
+	if not player_view_value is Dictionary \
+	or not visible_events_value is Array \
+	or not visible_error_value is Dictionary \
+	or not action_previews_value is Array:
 		return _port_failure()
-	var event_jsons: Array = []
-	for event_value: Variant in payload.get("visible_events", []):
-		var event_result: Dictionary = VisibleEventCodec.encode(event_value)
-		if not bool(event_result.get("ok", false)):
-			return _port_failure()
-		event_jsons.append(str(event_result.get("bytes", "")))
-	var preview_jsons: Array = []
-	for preview_value: Variant in payload.get("action_previews", []):
-		var preview_result: Dictionary = ActionPreviewCodec.encode(preview_value)
-		if not bool(preview_result.get("ok", false)):
-			return _port_failure()
-		preview_jsons.append(str(preview_result.get("bytes", "")))
-	var error_json := ""
-	var visible_error: Dictionary = payload.get("visible_error", {})
-	if not visible_error.is_empty():
-		var error_result: Dictionary = VisibleErrorCodec.encode(visible_error)
-		if not bool(error_result.get("ok", false)):
-			return _port_failure()
-		error_json = str(error_result.get("bytes", ""))
-	var publish_result: Dictionary = _decode_and_publish_batch(
-		str(view_result.get("bytes", "")),
-		event_jsons,
-		error_json,
-		preview_jsons,
+	var player_view: Dictionary = player_view_value
+	var visible_events: Array = visible_events_value
+	var visible_error: Dictionary = visible_error_value
+	var action_previews: Array = action_previews_value
+	var publish_result: Dictionary = _publish_trusted_batch(
+		player_view,
+		visible_events,
+		visible_error,
+		action_previews,
 		_prepared_preview_id
 	)
 	if bool(publish_result.get("ok", false)):
-		_available_previews = payload.get("action_previews", []).duplicate(true)
+		_available_previews = action_previews.duplicate(true)
 		session_state_changed.emit({
 			"state": "ready",
 			"match_id": str(player_view.get("match_id", "")),
