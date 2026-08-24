@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3]
+[gd_scene load_steps=25 format=3]
 
 [ext_resource type="Texture2D" path="res://assets/art/ui/start_sequence/gate_environment_open_v1.png" id="1_environment"]
 [ext_resource type="Script" path="res://scripts/game/frontend/start_screen.gd" id="2_script"]
@@ -12,6 +12,7 @@
 [ext_resource type="Shader" path="res://assets/shaders/ui/gate_door_open.gdshader" id="10_door_shader"]
 [ext_resource type="Shader" path="res://assets/shaders/ui/gate_fog_curtain.gdshader" id="11_fog_shader"]
 [ext_resource type="PackedScene" path="res://scenes/game/audio/frontend_audio_feedback.tscn" id="12_frontend_audio"]
+[ext_resource type="AudioStream" path="res://assets/audio/bgm/bgm_opening_bronze_gate_v01.ogg" id="13_opening_bgm"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_left_door"]
 shader = ExtResource("10_door_shader")
@@ -234,6 +235,21 @@ tracks/9/path = NodePath(".")
 tracks/9/interp = 1
 tracks/9/loop_wrap = true
 tracks/9/keys = {"times": PackedFloat32Array(0.32, 0.72, 1.45, 4.65), "transitions": PackedFloat32Array(1, 1, 1, 1), "values": [{"args": ["sfx.opening.gate_strain"], "method": &"_play_opening_cue"}, {"args": ["sfx.opening.gate_open"], "method": &"_play_opening_cue"}, {"args": ["sfx.opening.fog_reveal"], "method": &"_play_opening_cue"}, {"args": ["sfx.opening.menu_reveal"], "method": &"_play_opening_cue"}]}
+tracks/10/type = "audio"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("OpeningMusic")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"clips": [{
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource("13_opening_bgm")
+}],
+"times": PackedFloat32Array(0)
+}
+tracks/10/use_blend = true
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_sequence"]
 _data = {&"RESET": SubResource("Animation_sequence_reset"), &"opening_sequence": SubResource("Animation_opening_sequence")}
@@ -403,6 +419,12 @@ horizontal_alignment = 1
 
 [node name="FrontendAudioFeedback" parent="." instance=ExtResource("12_frontend_audio")]
 unique_name_in_owner = true
+
+[node name="OpeningMusic" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+volume_db = -3.0
+bus = &"Music"
+max_polyphony = 1
 
 [node name="PromptAnimation" type="AnimationPlayer" parent="."]
 unique_name_in_owner = true

@@ -18,7 +18,7 @@ func _run() -> void:
 	_check_opening_timeline()
 	await _check_frontend_runtime()
 	await _check_opening_audio_guard()
-	print("FRONTEND_AUDIO_FEEDBACK_PASS scenes=6 opening_cues=4 dynamic_buttons=true modal_edges=true skip_guard=true")
+	print("FRONTEND_AUDIO_FEEDBACK_PASS scenes=6 opening_cues=4 opening_bgm=timeline_guarded dynamic_buttons=true modal_edges=true skip_guard=true")
 	quit()
 
 
@@ -101,6 +101,8 @@ func _check_frontend_runtime() -> void:
 func _check_opening_audio_guard() -> void:
 	var start_screen := START_SCREEN_SCENE.instantiate() as Control
 	var feedback := start_screen.get_node("FrontendAudioFeedback") as FrontendAudioFeedback
+	var sequence_player := start_screen.get_node("SequencePlayer") as AnimationPlayer
+	var opening_music := start_screen.get_node("OpeningMusic") as AudioStreamPlayer
 	feedback.dry_run = true
 	root.add_child(start_screen)
 	await process_frame
@@ -114,5 +116,10 @@ func _check_opening_audio_guard() -> void:
 	start_screen.set("_opening_audio_enabled", true)
 	start_screen.call("_play_opening_cue", "sfx.opening.gate_open")
 	assert(played == ["sfx.opening.gate_open"], "normal opening path must forward its timeline cue")
+	start_screen.call(&"request_entry")
+	sequence_player.advance(0.02)
+	assert(opening_music.playing, "normal opening path must start its timeline BGM")
+	start_screen.call(&"_enter_menu_ready_immediately")
+	assert(not opening_music.playing, "menu-ready and reduced-motion paths must stop the opening BGM")
 	start_screen.queue_free()
 	await process_frame

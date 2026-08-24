@@ -24,6 +24,7 @@ builds/
 tmp/
 output/
 .playwright-cli/
+.media/
 .mono/
 .import/
 bin/

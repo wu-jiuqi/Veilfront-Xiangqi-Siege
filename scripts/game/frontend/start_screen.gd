@@ -7,6 +7,7 @@ const SettingsManagerScript = preload("res://scripts/game/settings/settings_mana
 @onready var _prompt_animation: AnimationPlayer = %PromptAnimation
 @onready var _sequence_player: AnimationPlayer = %SequencePlayer
 @onready var _frontend_audio: FrontendAudioFeedback = %FrontendAudioFeedback
+@onready var _opening_music: AudioStreamPlayer = %OpeningMusic
 
 var _transitioning := false
 var _opening_audio_enabled := false
@@ -71,6 +72,7 @@ func _enter_menu_ready_immediately() -> void:
 	_prompt_animation.stop()
 	_sequence_player.play(&"opening_sequence")
 	_sequence_player.seek(_sequence_player.current_animation_length, true)
+	_opening_music.stop()
 	_menu_overlay.call(&"reveal_menu_immediately")
 
 

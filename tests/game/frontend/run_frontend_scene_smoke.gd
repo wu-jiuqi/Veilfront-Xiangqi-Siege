@@ -25,7 +25,26 @@ func _init() -> void:
 	assert(enter_prompt.text == "点击任意位置继续")
 	assert(start_root.get_node("Stage/Environment").texture.resource_path == "res://assets/art/ui/start_sequence/gate_environment_open_v1.png")
 	assert(sequence_player.has_animation(&"opening_sequence"))
-	assert(is_equal_approx(sequence_player.get_animation(&"opening_sequence").length, 4.85))
+	var opening_sequence := sequence_player.get_animation(&"opening_sequence")
+	assert(is_equal_approx(opening_sequence.length, 4.85))
+	var opening_music := start_root.get_node("%OpeningMusic") as AudioStreamPlayer
+	assert(opening_music != null, "opening BGM must use a preset non-positional audio player")
+	assert(opening_music.bus == &"Music", "opening BGM must respect the Music settings bus")
+	assert(is_equal_approx(opening_music.volume_db, -3.0), "opening BGM must leave headroom for authored opening SFX")
+	var opening_audio_track := -1
+	for track_index: int in opening_sequence.get_track_count():
+		if opening_sequence.track_get_type(track_index) == Animation.TYPE_AUDIO:
+			opening_audio_track = track_index
+			break
+	assert(opening_audio_track >= 0, "opening sequence must own a timeline-synchronised BGM track")
+	assert(opening_sequence.track_get_path(opening_audio_track) == NodePath("OpeningMusic"))
+	assert(opening_sequence.track_get_key_count(opening_audio_track) == 1)
+	assert(is_zero_approx(opening_sequence.track_get_key_time(opening_audio_track, 0)))
+	var opening_bgm := opening_sequence.audio_track_get_key_stream(opening_audio_track, 0) as AudioStreamOggVorbis
+	assert(opening_bgm != null, "opening BGM must use OGG Vorbis to avoid MP3 start padding")
+	assert(opening_bgm.resource_path == "res://assets/audio/bgm/bgm_opening_bronze_gate_v01.ogg")
+	assert(not opening_bgm.loop, "opening BGM must remain a one-shot clip")
+	assert(is_equal_approx(opening_bgm.get_length(), 4.85), "opening BGM must end with the door sequence")
 	assert(start_root.get_node("Stage/DoorLayer/LeftDoor").texture.resource_path == "res://assets/art/ui/start_sequence/gate_left_door_v2.png")
 	assert(start_root.get_node("Stage/DoorLayer/RightDoor").texture.resource_path == "res://assets/art/ui/start_sequence/gate_right_door_v2.png")
 	var menu_overlay := start_root.get_node("MenuOverlay")
