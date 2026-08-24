@@ -34,7 +34,7 @@ func _run() -> void:
 
 	viewport.set_presentation_side("black")
 	viewport.focus_authority_cell(cell)
-	await process_frame
+	await _wait_for_camera_idle(viewport)
 	var mirrored_position: Vector2 = viewport.get_container_position_for_authority_cell(cell)
 	_hover(input_surface, mirrored_position)
 	await process_frame
@@ -61,3 +61,12 @@ func _hover(input_surface: Control, position: Vector2) -> void:
 func _expect(condition: bool, message: String) -> void:
 	if not condition:
 		_failures.append(message)
+
+
+func _wait_for_camera_idle(viewport: SubViewportContainer) -> void:
+	for _frame: int in range(120):
+		var snapshot: Dictionary = viewport.get_render_snapshot()
+		if not bool(snapshot.get("camera_motion_active", true)):
+			return
+		await process_frame
+	_failures.append("camera focus did not settle within 120 frames")

@@ -20,6 +20,7 @@ func _run() -> void:
 		await process_frame
 		await process_frame
 		var screen: Control = level.get_node("MatchScreen") as Control
+		await _wait_for_camera_idle(screen, level_id)
 		var snapshot: Dictionary = screen.get_board_render_snapshot()
 		_expect(int(snapshot.get("piece_count", 0)) > 0, "%s renders no pieces" % level_id)
 		var glyphs: Array = snapshot.get("piece_glyphs", [])
@@ -59,3 +60,12 @@ func _run() -> void:
 func _expect(condition: bool, message: String) -> void:
 	if not condition:
 		_failures.append(message)
+
+
+func _wait_for_camera_idle(screen: Control, level_id: String) -> void:
+	for _frame: int in range(120):
+		var snapshot: Dictionary = screen.get_board_render_snapshot()
+		if not bool(snapshot.get("camera_motion_active", true)):
+			return
+		await process_frame
+	_failures.append("%s camera focus did not settle within 120 frames" % level_id)
