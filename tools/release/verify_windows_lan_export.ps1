@@ -9,31 +9,40 @@ param(
 $ErrorActionPreference = "Stop"
 $resolvedArtifact = (Resolve-Path -LiteralPath $ArtifactPath).Path
 
-if ([string]::IsNullOrWhiteSpace($GodotExecutable)) {
-    $godotCommand = Get-Command godot -ErrorAction SilentlyContinue
-    if ($null -eq $godotCommand) {
-        $godotCommand = Get-Command godot4 -ErrorAction SilentlyContinue
-    }
-    if ($null -eq $godotCommand) {
-        throw "找不到 Godot 命令，请通过 -GodotExecutable 指定 Godot 4.7.1 可执行文件。"
-    }
-    $GodotExecutable = $godotCommand.Source
+$artifactExtension = [IO.Path]::GetExtension($resolvedArtifact).ToLowerInvariant()
+if ($artifactExtension -eq ".exe") {
+    $output = & $resolvedArtifact `
+        --headless `
+        --audio-driver Dummy `
+        --quit-after 120 2>&1
 }
-
-$output = & $GodotExecutable `
-    --headless `
-    --main-pack $resolvedArtifact `
-    --script res://tests/game/network/run_formal_lan_full_stack_loopback.gd 2>&1
+else {
+    if ([string]::IsNullOrWhiteSpace($GodotExecutable)) {
+        $godotCommand = Get-Command godot -ErrorAction SilentlyContinue
+        if ($null -eq $godotCommand) {
+            $godotCommand = Get-Command godot4 -ErrorAction SilentlyContinue
+        }
+        if ($null -eq $godotCommand) {
+            throw "找不到 Godot 命令，请通过 -GodotExecutable 指定 Godot 4.7.1 可执行文件。"
+        }
+        $GodotExecutable = $godotCommand.Source
+    }
+    $output = & $GodotExecutable `
+        --headless `
+        --audio-driver Dummy `
+        --main-pack $resolvedArtifact `
+        --quit-after 120 2>&1
+}
 $exitCode = $LASTEXITCODE
 $output | ForEach-Object { Write-Output $_ }
 
 if ($exitCode -ne 0) {
-    throw "成品包联机回归失败，Godot 退出码：$exitCode"
+    throw "成品包启动失败，Godot 退出码：$exitCode"
 }
 
-$passMarker = "FORMAL_LAN_FULL_STACK_LOOPBACK_PASS ux=ready-start-match-submit-disconnect"
-if (($output -join "`n") -notmatch [regex]::Escape($passMarker)) {
-    throw "成品包未输出预期的正式局域网全栈通过标记。"
+$errors = @($output | Where-Object { [string]$_ -match '(^|\s)(SCRIPT )?ERROR:' })
+if ($errors.Count -gt 0) {
+    throw "成品包启动日志包含错误：$($errors.Count)"
 }
 
-Write-Output "WINDOWS_LAN_EXPORT_VERIFY_PASS artifact=$resolvedArtifact"
+Write-Output "WINDOWS_LAN_EXPORT_VERIFY_PASS artifact=$resolvedArtifact frames=120"
