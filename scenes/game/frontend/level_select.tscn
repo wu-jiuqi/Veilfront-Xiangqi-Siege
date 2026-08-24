@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://ckr08sw3potmf" path="res://assets/art/ui/level_select/components/progress_ring_v2.png" id="4_progress"]
 [ext_resource type="PackedScene" path="res://scenes/game/ui/terracotta_modal_dialog.tscn" id="5_dialog"]
 [ext_resource type="Font" path="res://resources/game/ui/fonts/noto_sans_sc_semibold.tres" id="6_semibold"]
+[ext_resource type="PackedScene" path="res://scenes/game/audio/frontend_audio_feedback.tscn" id="7_frontend_audio"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroupCategory"]
 
@@ -309,6 +310,9 @@ dialog_text = "只清除 T0–T10 的本地完成记录，不影响局域网设�
 ok_button_text = "清空进度"
 cancel_button_text = "返回"
 focus_cancel_by_default = true
+
+[node name="FrontendAudioFeedback" parent="." instance=ExtResource("7_frontend_audio")]
+unique_name_in_owner = true
 
 [connection signal="pressed" from="DesignCanvas/BackButton" to="." method="_return_to_title_screen"]
 [connection signal="pressed" from="DesignCanvas/TutorialCategoryButton" to="." method="_show_tutorial_category"]

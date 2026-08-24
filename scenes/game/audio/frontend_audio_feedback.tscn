@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/audio/frontend_audio_feedback.gd" id="1_feedback"]
+[ext_resource type="PackedScene" path="res://scenes/game/audio/audio_root.tscn" id="2_audio_root"]
+
+[node name="FrontendAudioFeedback" type="Node"]
+script = ExtResource("1_feedback")
+
+[node name="AudioRoot" parent="." instance=ExtResource("2_audio_root")]

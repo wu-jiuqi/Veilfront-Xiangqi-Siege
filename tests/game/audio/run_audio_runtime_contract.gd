@@ -26,7 +26,7 @@ func _run() -> void:
 		print("AUDIO_RUNTIME_CONTRACT_FAIL failures=%d" % _failures.size())
 		quit(1)
 		return
-	print("AUDIO_RUNTIME_CONTRACT_PASS checks=%d cues=%d wav=31 pools=8+8" % [
+	print("AUDIO_RUNTIME_CONTRACT_PASS checks=%d cues=%d wav=35 pools=8+8" % [
 		_checks, CATALOG.cue_keys().size(),
 	])
 	quit(0)
@@ -55,7 +55,12 @@ func _check_catalog_and_sources() -> void:
 				_expect(not wav.stereo, "board/runtime SFX must be mono")
 				_expect(wav.mix_rate == 48000, "WAV is not 48 kHz")
 	_expect(families.size() >= 12, "catalog exposes fewer than 12 logical families")
-	_expect(stream_paths.size() == 31, "expected 31 traceable original WAV files")
+	_expect(stream_paths.size() == 35, "expected 35 traceable original WAV files")
+	for opening_key: String in [
+		"sfx.opening.gate_strain", "sfx.opening.gate_open",
+		"sfx.opening.fog_reveal", "sfx.opening.menu_reveal",
+	]:
+		_expect(CATALOG.definition_for(opening_key) != null, "missing opening cue: %s" % opening_key)
 
 
 func _check_buses() -> void:

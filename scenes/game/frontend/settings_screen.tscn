@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button.tscn" id="4_motion_button"]
 [ext_resource type="Texture2D" uid="uid://cxdwdyljintlq" path="res://assets/art/ui/settings/png_v2/settings_title_crest_v2.png" id="5_title_crest"]
 [ext_resource type="PackedScene" path="res://scenes/game/ui/terracotta_modal_dialog.tscn" id="6_dialog"]
+[ext_resource type="PackedScene" path="res://scenes/game/audio/frontend_audio_feedback.tscn" id="7_frontend_audio"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxSettingsToggleEmpty"]
 
@@ -492,3 +493,6 @@ unique_name_in_owner = true
 title = "设置操作失败"
 ok_button_text = "知道了"
 show_cancel_button = false
+
+[node name="FrontendAudioFeedback" parent="." instance=ExtResource("7_frontend_audio")]
+unique_name_in_owner = true

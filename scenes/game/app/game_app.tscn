@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Theme" path="res://resources/game/ui/themes/terracotta_ui_theme.tres" id="1_theme"]
 [ext_resource type="PackedScene" path="res://scenes/game/match/match_screen.tscn" id="2_match"]
 [ext_resource type="Script" path="res://scripts/game/application/application_host.gd" id="3_host"]
 [ext_resource type="PackedScene" path="res://scenes/game/ui/terracotta_modal_dialog.tscn" id="4_dialog"]
+[ext_resource type="PackedScene" path="res://scenes/game/audio/frontend_audio_feedback.tscn" id="5_frontend_audio"]
 
 [node name="GameApp" type="Control"]
 layout_mode = 3
@@ -72,6 +73,9 @@ offset_right = 1.0
 offset_bottom = 1.0
 mouse_filter = 2
 text = "状态播报"
+
+[node name="GlobalOverlayAudioFeedback" parent="." instance=ExtResource("5_frontend_audio")]
+control_root_path = NodePath("../GlobalOverlayHost")
 
 [connection signal="session_state_changed" from="ApplicationHost" to="ScreenHost/MatchScreen" method="render_session_state"]
 [connection signal="player_view_updated" from="ApplicationHost" to="ScreenHost/MatchScreen" method="render_player_view"]

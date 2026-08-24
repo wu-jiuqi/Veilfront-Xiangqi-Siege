@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3]
+[gd_scene load_steps=24 format=3]
 
 [ext_resource type="Texture2D" path="res://assets/art/ui/start_sequence/gate_environment_open_v1.png" id="1_environment"]
 [ext_resource type="Script" path="res://scripts/game/frontend/start_screen.gd" id="2_script"]
@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" path="res://assets/art/ui/start_sequence/gate_soldiers_push_v1.png" id="9_soldiers_push"]
 [ext_resource type="Shader" path="res://assets/shaders/ui/gate_door_open.gdshader" id="10_door_shader"]
 [ext_resource type="Shader" path="res://assets/shaders/ui/gate_fog_curtain.gdshader" id="11_fog_shader"]
+[ext_resource type="PackedScene" path="res://scenes/game/audio/frontend_audio_feedback.tscn" id="12_frontend_audio"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_left_door"]
 shader = ExtResource("10_door_shader")
@@ -226,6 +227,13 @@ tracks/8/path = NodePath("Stage/FogLayer/FogCurtain:material:shader_parameter/op
 tracks/8/interp = 1
 tracks/8/loop_wrap = true
 tracks/8/keys = {"times": PackedFloat32Array(0, 4.65, 4.85), "transitions": PackedFloat32Array(1, 1, 0.65), "update": 0, "values": [0.98, 0.98, 0.86]}
+tracks/9/type = "method"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath(".")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {"times": PackedFloat32Array(0.32, 0.72, 1.45, 4.65), "transitions": PackedFloat32Array(1, 1, 1, 1), "values": [{"args": ["sfx.opening.gate_strain"], "method": &"_play_opening_cue"}, {"args": ["sfx.opening.gate_open"], "method": &"_play_opening_cue"}, {"args": ["sfx.opening.fog_reveal"], "method": &"_play_opening_cue"}, {"args": ["sfx.opening.menu_reveal"], "method": &"_play_opening_cue"}]}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_sequence"]
 _data = {&"RESET": SubResource("Animation_sequence_reset"), &"opening_sequence": SubResource("Animation_opening_sequence")}
@@ -392,6 +400,9 @@ text = "点击任意位置继续"
 horizontal_alignment = 1
 
 [node name="MenuOverlay" parent="." instance=ExtResource("3_menu_overlay")]
+
+[node name="FrontendAudioFeedback" parent="." instance=ExtResource("12_frontend_audio")]
+unique_name_in_owner = true
 
 [node name="PromptAnimation" type="AnimationPlayer" parent="."]
 unique_name_in_owner = true

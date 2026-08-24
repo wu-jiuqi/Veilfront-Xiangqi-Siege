@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="SfxCatalog" load_steps=72 format=3]
+[gd_resource type="Resource" script_class="SfxCatalog" load_steps=80 format=3]
 
 [ext_resource type="Script" path="res://scripts/game/audio/sfx_catalog.gd" id="1_catalog"]
 [ext_resource type="Script" path="res://scripts/game/audio/audio_cue_definition.gd" id="2_definition"]
@@ -33,6 +33,10 @@
 [ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_match_victory_v01.wav" id="31_victory"]
 [ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_match_defeat_v01.wav" id="32_defeat"]
 [ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_match_draw_v01.wav" id="33_draw"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_opening_gate_strain_v01.wav" id="34_opening_strain"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_opening_gate_open_v01.wav" id="35_opening_gate"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_opening_fog_reveal_v01.wav" id="36_opening_fog"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sfx_opening_menu_reveal_v01.wav" id="37_opening_menu"]
 
 [sub_resource type="Resource" id="Cue_ui_focus"]
 script = ExtResource("2_definition")
@@ -102,6 +106,46 @@ volume_db_min = -12.0
 volume_db_max = -9.0
 priority = "low"
 concurrency_group = "ui_action"
+
+[sub_resource type="Resource" id="Cue_opening_gate_strain"]
+script = ExtResource("2_definition")
+cue_key = "sfx.opening.gate_strain"
+streams = Array[AudioStream]([ExtResource("34_opening_strain")])
+bus = &"SFX_System"
+volume_db_min = -8.0
+volume_db_max = -6.0
+concurrency_group = "opening"
+max_instances = 4
+
+[sub_resource type="Resource" id="Cue_opening_gate_open"]
+script = ExtResource("2_definition")
+cue_key = "sfx.opening.gate_open"
+streams = Array[AudioStream]([ExtResource("35_opening_gate")])
+bus = &"SFX_System"
+volume_db_min = -10.0
+volume_db_max = -8.0
+concurrency_group = "opening"
+max_instances = 4
+
+[sub_resource type="Resource" id="Cue_opening_fog_reveal"]
+script = ExtResource("2_definition")
+cue_key = "sfx.opening.fog_reveal"
+streams = Array[AudioStream]([ExtResource("36_opening_fog")])
+bus = &"SFX_System"
+volume_db_min = -12.0
+volume_db_max = -9.0
+concurrency_group = "opening"
+max_instances = 4
+
+[sub_resource type="Resource" id="Cue_opening_menu_reveal"]
+script = ExtResource("2_definition")
+cue_key = "sfx.opening.menu_reveal"
+streams = Array[AudioStream]([ExtResource("37_opening_menu")])
+bus = &"SFX_System"
+volume_db_min = -8.0
+volume_db_max = -5.0
+concurrency_group = "opening"
+max_instances = 4
 
 [sub_resource type="Resource" id="Cue_board_select"]
 script = ExtResource("2_definition")
@@ -441,4 +485,4 @@ max_instances = 1
 [resource]
 script = ExtResource("1_catalog")
 catalog_version = "veilfront-sfx-catalog-v1"
-definitions = Array[ExtResource("2_definition")]([SubResource("Cue_ui_focus"), SubResource("Cue_ui_activate"), SubResource("Cue_ui_confirm"), SubResource("Cue_ui_cancel"), SubResource("Cue_ui_reject"), SubResource("Cue_ui_modal_open"), SubResource("Cue_ui_modal_close"), SubResource("Cue_board_select"), SubResource("Cue_board_cancel"), SubResource("Cue_board_preview"), SubResource("Cue_board_prepare"), SubResource("Cue_board_prepare_cancel"), SubResource("Cue_marker_set"), SubResource("Cue_marker_clear"), SubResource("Cue_action_pass"), SubResource("Cue_move_foot"), SubResource("Cue_move_cavalry"), SubResource("Cue_move_chariot"), SubResource("Cue_move_cannon"), SubResource("Cue_capture"), SubResource("Cue_casualty"), SubResource("Cue_general"), SubResource("Cue_fog"), SubResource("Cue_contact"), SubResource("Cue_reveal_piece"), SubResource("Cue_elephant"), SubResource("Cue_bombard_launch"), SubResource("Cue_bombard_impact"), SubResource("Cue_advisor_sacrifice"), SubResource("Cue_advisor_resurrect"), SubResource("Cue_wall_breach"), SubResource("Cue_wall_repairing"), SubResource("Cue_wall_repaired"), SubResource("Cue_flag_discovered"), SubResource("Cue_flag_progress"), SubResource("Cue_flag_captured"), SubResource("Cue_flag_cancelled"), SubResource("Cue_turn_start"), SubResource("Cue_turn_timeout"), SubResource("Cue_match_victory"), SubResource("Cue_match_defeat"), SubResource("Cue_match_draw")])
+definitions = Array[ExtResource("2_definition")]([SubResource("Cue_ui_focus"), SubResource("Cue_ui_activate"), SubResource("Cue_ui_confirm"), SubResource("Cue_ui_cancel"), SubResource("Cue_ui_reject"), SubResource("Cue_ui_modal_open"), SubResource("Cue_ui_modal_close"), SubResource("Cue_opening_gate_strain"), SubResource("Cue_opening_gate_open"), SubResource("Cue_opening_fog_reveal"), SubResource("Cue_opening_menu_reveal"), SubResource("Cue_board_select"), SubResource("Cue_board_cancel"), SubResource("Cue_board_preview"), SubResource("Cue_board_prepare"), SubResource("Cue_board_prepare_cancel"), SubResource("Cue_marker_set"), SubResource("Cue_marker_clear"), SubResource("Cue_action_pass"), SubResource("Cue_move_foot"), SubResource("Cue_move_cavalry"), SubResource("Cue_move_chariot"), SubResource("Cue_move_cannon"), SubResource("Cue_capture"), SubResource("Cue_casualty"), SubResource("Cue_general"), SubResource("Cue_fog"), SubResource("Cue_contact"), SubResource("Cue_reveal_piece"), SubResource("Cue_elephant"), SubResource("Cue_bombard_launch"), SubResource("Cue_bombard_impact"), SubResource("Cue_advisor_sacrifice"), SubResource("Cue_advisor_resurrect"), SubResource("Cue_wall_breach"), SubResource("Cue_wall_repairing"), SubResource("Cue_wall_repaired"), SubResource("Cue_flag_discovered"), SubResource("Cue_flag_progress"), SubResource("Cue_flag_captured"), SubResource("Cue_flag_cancelled"), SubResource("Cue_turn_start"), SubResource("Cue_turn_timeout"), SubResource("Cue_match_victory"), SubResource("Cue_match_defeat"), SubResource("Cue_match_draw")])

@@ -37,6 +37,7 @@
 [ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/ready_confirm_button_v2.png" id="37_ready_confirm"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/ready_cancel_button_v2.png" id="38_ready_cancel"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/start_game_button_v2.png" id="39_start_game"]
+[ext_resource type="PackedScene" path="res://scenes/game/audio/frontend_audio_feedback.tscn" id="40_frontend_audio"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleEmpty"]
 
@@ -488,3 +489,6 @@ theme_override_styles/hover = SubResource("StyleStartGameHover")
 theme_override_styles/pressed = SubResource("StyleStartGamePressed")
 theme_override_styles/disabled = SubResource("StyleStartGameDisabled")
 theme_override_styles/focus = SubResource("StyleActionFocus")
+
+[node name="FrontendAudioFeedback" parent="." instance=ExtResource("40_frontend_audio")]
+unique_name_in_owner = true

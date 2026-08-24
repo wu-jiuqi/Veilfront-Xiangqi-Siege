@@ -6,8 +6,10 @@ const SettingsManagerScript = preload("res://scripts/game/settings/settings_mana
 @onready var _menu_overlay: Control = %MenuOverlay
 @onready var _prompt_animation: AnimationPlayer = %PromptAnimation
 @onready var _sequence_player: AnimationPlayer = %SequencePlayer
+@onready var _frontend_audio: FrontendAudioFeedback = %FrontendAudioFeedback
 
 var _transitioning := false
+var _opening_audio_enabled := false
 
 
 func _ready() -> void:
@@ -51,7 +53,9 @@ func request_entry() -> void:
 		return
 
 	_transitioning = true
+	_opening_audio_enabled = true
 	_prompt_animation.stop()
+	_frontend_audio.play_cue("sfx.ui.confirm")
 	_sequence_player.play(&"opening_sequence")
 
 
@@ -63,7 +67,13 @@ func _on_sequence_animation_finished(animation_name: StringName) -> void:
 
 func _enter_menu_ready_immediately() -> void:
 	_transitioning = true
+	_opening_audio_enabled = false
 	_prompt_animation.stop()
 	_sequence_player.play(&"opening_sequence")
 	_sequence_player.seek(_sequence_player.current_animation_length, true)
 	_menu_overlay.call(&"reveal_menu_immediately")
+
+
+func _play_opening_cue(cue_key: String) -> void:
+	if _opening_audio_enabled:
+		_frontend_audio.play_cue(cue_key)

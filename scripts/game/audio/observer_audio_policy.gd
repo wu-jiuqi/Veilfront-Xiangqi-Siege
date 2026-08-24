@@ -438,6 +438,8 @@ static func _move_key(piece_type: String) -> String:
 
 
 static func _priority_for(cue_key: String) -> String:
+	if cue_key in ["sfx.ui.focus", "sfx.ui.modal_open", "sfx.ui.modal_close"]:
+		return "low"
 	if cue_key in ["sfx.match.victory", "sfx.match.defeat", "sfx.match.draw"]:
 		return "critical"
 	if cue_key in ["sfx.ui.confirm", "sfx.bombard.launch", "sfx.wall.breached"]:
@@ -446,6 +448,10 @@ static func _priority_for(cue_key: String) -> String:
 
 
 static func _group_for(cue_key: String) -> String:
+	if cue_key == "sfx.ui.focus":
+		return "ui_focus"
+	if cue_key.begins_with("sfx.opening."):
+		return "opening"
 	if cue_key.begins_with("sfx.ui."):
 		return "ui_action"
 	if cue_key.begins_with("sfx.board.") or cue_key.begins_with("sfx.move."):

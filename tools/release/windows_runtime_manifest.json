@@ -76,6 +76,7 @@
     "scenes/game/presentation/match_feedback_coordinator.tscn.remap",
     "scenes/game/presentation/board_feedback_layer.tscn.remap",
     "scenes/game/audio/audio_root.tscn.remap",
+    "scenes/game/audio/frontend_audio_feedback.tscn.remap",
     "scenes/game/audio/board_audio_emitter_pool.tscn.remap",
     "scenes/game/vfx/vfx_root.tscn.remap",
     "resources/game/audio/sfx_catalog.tres.remap",
