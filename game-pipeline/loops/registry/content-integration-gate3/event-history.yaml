@@ -1080,3 +1080,178 @@ event_history:
     digest_algorithm: sha256
     previous_event_digest: 1c8276495b98622dd44d1e2db0f8c28e0725695c4250792c59e8fce664019c0b
     event_digest: d6507b338a4a3bafacb74528ff6800ecc9a1e4ef0b77ad84c391f32410ea94e9
+- schema_version: '0.1'
+  event_id: 975a5c44-7124-41aa-9428-1ff9a3346231
+  mutation_id: 0e1339f8-4a03-483b-a05a-3d8181d937fb
+  loop_instance_id: e6e0f300-2130-41d0-8020-f7f4006deb3f
+  sequence: 24
+  event_type: core.output_registered
+  occurred_at: '2026-08-24T22:02:33.800138+08:00'
+  recorded_at: '2026-08-24T22:02:33.800138+08:00'
+  actor:
+    actor_id: inst:01M02NJ3JEQXKV6PT6DPX0NKQ0
+    role: pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+    authority_id: AUTH-VEILFRONT-GODOT-TECHNOLOGY
+  causality:
+    correlation_id: 18412128-8879-4542-99ef-76fac37b819d
+    causation_event_id: 7ca81419-b04b-41bd-8fbf-b57d29c23f8a
+    request_id: register-deliverable-audio-g3-001-opening-callout-update
+  concurrency:
+    expected_record_revision: 23
+    resulting_record_revision: 24
+  binding_snapshot:
+    contract_digest: d97937b94c07399e00c63e1a5651d55c9eceb30378214838902dbe377d0a7e2a
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    deliverable_id: DELIVERABLE-AUDIO-G3-001
+    before:
+      deliverable_id: DELIVERABLE-AUDIO-G3-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:deliverable-audio-g3-001@g3-iteration2-producer-integrated-v1
+        artifact_type: observer-safe-sfx-system-and-core-cues
+        version: g3-iteration2-producer-integrated-v1
+        uri: evidence/gate3/audio-vfx-mainline-integration-v1.md
+        digest:
+          algorithm: sha256
+          value: c44500dde3ae664604da4aea7d942ea955e3f5408156508a070a67dd4582f2f9
+        manifest_paths:
+        - evidence/gate3/audio-vfx-mainline-integration-v1.md
+        - docs/audio/gate3-sfx-producer-handoff-v1.md
+        - docs/audio/sfx-source-license-register-v1.md
+        - resources/game/audio/sfx_catalog.tres
+        - default_bus_layout.tres
+        - scenes/game/audio/audio_root.tscn
+        - scenes/game/audio/board_audio_emitter_pool.tscn
+        - scenes/game/presentation/match_feedback_coordinator.tscn
+        - scenes/game/presentation/board_feedback_layer.tscn
+        - scripts/game/audio/observer_audio_policy.gd
+        - scripts/game/audio/audio_root.gd
+        - scripts/game/presentation/match_feedback_coordinator.gd
+        - scenes/game/match/match_screen.tscn
+        - scenes/game/match/online_match_screen.tscn
+        - tests/game/audio/run_audio_runtime_contract.gd
+        - tests/game/presentation/run_match_feedback_integration_contract.gd
+      produced_in_iteration: 2
+      lifecycle_status: producer_integrated
+      registered_by_event_id: 5ada7cff-0fef-4736-9756-dda5ac0830d9
+    after:
+      deliverable_id: DELIVERABLE-AUDIO-G3-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:deliverable-audio-g3-001@g3-iteration2-producer-integrated-v2
+        artifact_type: observer-safe-sfx-system-and-core-cues
+        version: g3-iteration2-producer-integrated-v2
+        uri: evidence/gate3/opening-sfx-and-callout-vfx-integration-v1.md
+        digest:
+          algorithm: sha256
+          value: 9a898c1398bac06cbe8e32ba9d5c07b300015d8139406c8afa7bdf4fa8542629
+        manifest_paths: &id006
+        - evidence/gate3/opening-sfx-and-callout-vfx-integration-v1.md
+        - docs/audio/generate_original_sfx_v1.ps1
+        - docs/audio/sfx-source-license-register-v1.md
+        - resources/game/audio/sfx_catalog.tres
+        - scenes/game/audio/audio_root.tscn
+        - scenes/game/audio/frontend_audio_feedback.tscn
+        - scripts/game/audio/frontend_audio_feedback.gd
+        - scripts/game/audio/observer_audio_policy.gd
+        - scripts/game/frontend/start_screen.gd
+        - scenes/game/frontend/start_screen.tscn
+        - tests/game/audio/run_audio_runtime_contract.gd
+        - tests/game/audio/run_frontend_audio_feedback_contract.gd
+        - tests/game/audio/run_observer_audio_policy_contract.gd
+        - tools/release/windows_runtime_manifest.json
+      produced_in_iteration: 2
+      lifecycle_status: producer_integrated
+      registered_by_event_id: 975a5c44-7124-41aa-9428-1ff9a3346231
+  evidence_refs: *id006
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: d6507b338a4a3bafacb74528ff6800ecc9a1e4ef0b77ad84c391f32410ea94e9
+    event_digest: 58c30fbbf9eac594559c32b81f533bb9a0c23ca0b1db415a2af2353dbe0c4591
+- schema_version: '0.1'
+  event_id: 9ee6a3bb-37e3-42a7-8ff1-9e91b80765fc
+  mutation_id: 913f6715-bcfd-43d3-824e-a8d5a766f857
+  loop_instance_id: e6e0f300-2130-41d0-8020-f7f4006deb3f
+  sequence: 25
+  event_type: core.output_registered
+  occurred_at: '2026-08-24T22:02:33.800138+08:00'
+  recorded_at: '2026-08-24T22:02:33.800138+08:00'
+  actor:
+    actor_id: inst:01M0QY1VFX7SFXVFXGATE3VFX1
+    role: pos:veilfront-xiangqi-siege:design-experience:visual-production-lead
+    authority_id: AUTH-VEILFRONT-VISUAL-PRODUCTION
+  causality:
+    correlation_id: 18412128-8879-4542-99ef-76fac37b819d
+    causation_event_id: 975a5c44-7124-41aa-9428-1ff9a3346231
+    request_id: register-deliverable-vfx-g3-001-opening-callout-update
+  concurrency:
+    expected_record_revision: 24
+    resulting_record_revision: 25
+  binding_snapshot:
+    contract_digest: d97937b94c07399e00c63e1a5651d55c9eceb30378214838902dbe377d0a7e2a
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    deliverable_id: DELIVERABLE-VFX-G3-001
+    before:
+      deliverable_id: DELIVERABLE-VFX-G3-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:deliverable-vfx-g3-001@g3-iteration2-producer-integrated-v1
+        artifact_type: observer-safe-2d-vfx-system-and-core-effects
+        version: g3-iteration2-producer-integrated-v1
+        uri: evidence/gate3/audio-vfx-mainline-integration-v1.md
+        digest:
+          algorithm: sha256
+          value: c44500dde3ae664604da4aea7d942ea955e3f5408156508a070a67dd4582f2f9
+        manifest_paths:
+        - evidence/gate3/audio-vfx-mainline-integration-v1.md
+        - evidence/gate3/vfx/vfx-producer-handoff-v1.md
+        - resources/game/vfx/vfx_catalog.tres
+        - scenes/game/vfx/vfx_root.tscn
+        - scenes/game/presentation/board_feedback_layer.tscn
+        - scenes/game/presentation/match_feedback_coordinator.tscn
+        - scripts/game/vfx/observer_vfx_policy.gd
+        - scripts/game/vfx/vfx_director.gd
+        - scripts/game/presentation/match_feedback_coordinator.gd
+        - scenes/game/match/board/board_viewport.tscn
+        - scenes/game/match/match_screen.tscn
+        - scenes/game/match/online_match_screen.tscn
+        - tests/game/vfx/run_vfx_scene_smoke.gd
+        - tests/game/presentation/run_board_feedback_layer_contract.gd
+        - tests/game/presentation/run_match_feedback_integration_contract.gd
+      produced_in_iteration: 2
+      lifecycle_status: producer_integrated
+      registered_by_event_id: 7ca81419-b04b-41bd-8fbf-b57d29c23f8a
+    after:
+      deliverable_id: DELIVERABLE-VFX-G3-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:deliverable-vfx-g3-001@g3-iteration2-producer-integrated-v2
+        artifact_type: observer-safe-2d-vfx-system-and-core-effects
+        version: g3-iteration2-producer-integrated-v2
+        uri: evidence/gate3/opening-sfx-and-callout-vfx-integration-v1.md
+        digest:
+          algorithm: sha256
+          value: 9a898c1398bac06cbe8e32ba9d5c07b300015d8139406c8afa7bdf4fa8542629
+        manifest_paths: &id007
+        - evidence/gate3/opening-sfx-and-callout-vfx-integration-v1.md
+        - evidence/gate3/vfx/vfx-review-1280x720.png
+        - resources/game/vfx/vfx_catalog.tres
+        - resources/game/vfx/definitions/bombardment_vfx.tres
+        - resources/game/vfx/definitions/callout_vfx.tres
+        - resources/game/vfx/definitions/resurrection_vfx.tres
+        - scenes/game/vfx/vfx_effect_slot.tscn
+        - scenes/game/vfx/vfx_review_lab.tscn
+        - scripts/game/vfx/observer_vfx_policy.gd
+        - scripts/game/vfx/vfx_effect_slot.gd
+        - scripts/game/vfx/vfx_review_lab.gd
+        - tests/game/vfx/run_vfx_cue_contract.gd
+        - tests/game/vfx/run_vfx_scene_smoke.gd
+        - tests/game/vfx/capture_vfx_review_sample.gd
+      produced_in_iteration: 2
+      lifecycle_status: producer_integrated
+      registered_by_event_id: 9ee6a3bb-37e3-42a7-8ff1-9e91b80765fc
+  evidence_refs: *id007
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: 58c30fbbf9eac594559c32b81f533bb9a0c23ca0b1db415a2af2353dbe0c4591
+    event_digest: 752e9dc126c64901be60500f26b72fcd37dbcc350c3e17019f6cac61353af436
