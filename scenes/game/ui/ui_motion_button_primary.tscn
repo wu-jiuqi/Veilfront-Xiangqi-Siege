@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button.tscn" id="1_base"]
+[ext_resource type="Resource" path="res://resources/game/ui/motion/terracotta_ui_motion_profile.tres" id="2_profile"]
+
+[node name="UiMotionButtonPrimary" instance=ExtResource("1_base")]
+text = "主要操作"
+theme_type_variation = &"PrimaryButton"
+motion_profile = ExtResource("2_profile")
+semantic_role = &"primary"

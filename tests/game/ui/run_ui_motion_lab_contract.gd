@@ -17,6 +17,8 @@ const GALLERY_TEXTURES := {
 	"HudPanelTexture": "res://assets/art/ui/terracotta_hud_v2/hud_panel_9slice_v1.png",
 }
 
+var _failures: Array[String] = []
+
 
 func _init() -> void:
 	call_deferred("_run")
@@ -67,7 +69,10 @@ func _run() -> void:
 	var hud_gallery := lab.get_node_or_null("HudV2Gallery") as PanelContainer
 	_assert(hud_gallery != null, "实验场未接入 HUD V2 组件预览")
 	_assert(hud_gallery.visible, "实验场启动时必须先展示 HUD V2 组件预览")
-	var motion_buttons := get_nodes_in_group(&"ui_motion_buttons")
+	var motion_buttons: Array[Node] = []
+	for candidate: Node in get_nodes_in_group(&"ui_motion_buttons"):
+		if candidate == lab or lab.is_ancestor_of(candidate):
+			motion_buttons.append(candidate)
 	_assert(motion_buttons.size() == 9, "实验场必须预置 9 个可交互按钮")
 	lab.call("_on_reduced_motion_toggled", true)
 	for motion_button: Node in motion_buttons:
@@ -76,13 +81,18 @@ func _run() -> void:
 	lab.call("play_feedback")
 	lab.call("_on_gallery_close_requested")
 	_assert(not hud_gallery.visible, "HUD V2 组件预览无法关闭")
-	print("UI_MOTION_LAB_CONTRACT_PASS groups=6 buttons=%d hud_v2_textures=%d reduced_motion=true" % [motion_buttons.size(), GALLERY_TEXTURES.size()])
 	lab.queue_free()
-	quit(0)
+	if _failures.is_empty():
+		print("UI_MOTION_LAB_CONTRACT_PASS groups=6 buttons=%d hud_v2_textures=%d reduced_motion=true" % [motion_buttons.size(), GALLERY_TEXTURES.size()])
+		quit(0)
+		return
+	for failure: String in _failures:
+		push_error(failure)
+	print("UI_MOTION_LAB_CONTRACT_FAIL failures=%d" % _failures.size())
+	quit(1)
 
 
 func _assert(condition: bool, message: String) -> void:
 	if condition:
 		return
-	push_error(message)
-	quit(1)
+	_failures.append(message)

@@ -13,4 +13,4 @@ feedback_duration = 0.22
 hover_scale = 1.035
 pressed_scale = 0.965
 focus_scale = 1.015
-reduced_motion_duration_scale = 0.45
+reduced_motion_duration_scale = 0.75

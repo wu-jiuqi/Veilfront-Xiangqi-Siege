@@ -3,6 +3,7 @@ extends Button
 
 @export var motion_profile: Resource
 @export var reduced_motion := false
+@export var semantic_role: StringName = &"primary"
 
 var _active_tween: Tween
 var _pointer_inside := false
@@ -26,6 +27,9 @@ func is_reduced_motion_enabled() -> bool:
 
 
 func preview_state(state: StringName) -> void:
+	if disabled or state == &"disabled":
+		reset_motion()
+		return
 	match state:
 		&"hover": _animate_to(
 			_hover_scale(), Vector2(0, -1.5), Color(1.08, 1.04, 0.92, 1), _duration(&"hover")
@@ -36,6 +40,7 @@ func preview_state(state: StringName) -> void:
 		&"focus": _animate_to(
 			_focus_scale(), Vector2.ZERO, Color(1.12, 1.06, 0.9, 1), _duration(&"focus")
 		)
+		&"release": _animate_to(1.0, Vector2.ZERO, Color.WHITE, _release_duration())
 		_: reset_motion()
 
 
@@ -56,9 +61,9 @@ func _on_mouse_exited() -> void:
 	_pointer_inside = false
 	_pressed_visual = false
 	if has_focus() and not disabled:
-		preview_state(&"focus")
+		_animate_to(_focus_scale(), Vector2.ZERO, Color(1.12, 1.06, 0.9, 1), _release_duration())
 	else:
-		reset_motion()
+		preview_state(&"release")
 
 
 func _on_button_down() -> void:
@@ -73,11 +78,15 @@ func _on_button_up() -> void:
 	if disabled:
 		reset_motion()
 	elif _pointer_inside:
-		preview_state(&"hover")
+		_animate_to(
+			_hover_scale(), Vector2(0, -1.5), Color(1.08, 1.04, 0.92, 1), _release_duration()
+		)
 	elif has_focus():
-		preview_state(&"focus")
+		_animate_to(
+			_focus_scale(), Vector2.ZERO, Color(1.12, 1.06, 0.9, 1), _release_duration()
+		)
 	else:
-		reset_motion()
+		preview_state(&"release")
 
 
 func _on_focus_entered() -> void:
@@ -87,7 +96,7 @@ func _on_focus_entered() -> void:
 
 func _on_focus_exited() -> void:
 	if not _pointer_inside and not _pressed_visual:
-		reset_motion()
+		preview_state(&"release")
 
 
 func _animate_to(
@@ -97,19 +106,29 @@ func _animate_to(
 	duration: float
 ) -> void:
 	_kill_active_tween()
+	if reduced_motion:
+		# Accessibility contract: reduced motion keeps spatial transforms neutral.
+		# The remaining 80-120 ms colour change preserves interaction feedback.
+		offset_transform_scale = Vector2.ONE
+		offset_transform_position = Vector2.ZERO
+		_active_tween = create_tween()
+		_active_tween.set_trans(Tween.TRANS_CUBIC)
+		_active_tween.set_ease(Tween.EASE_OUT)
+		_active_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+		_active_tween.set_ignore_time_scale(true)
+		_active_tween.tween_property(self, "self_modulate", target_modulate, clampf(duration, 0.08, 0.12))
+		return
 	_active_tween = create_tween()
 	_active_tween.set_parallel(true)
 	_active_tween.set_trans(Tween.TRANS_CUBIC)
 	_active_tween.set_ease(Tween.EASE_OUT)
 	_active_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 	_active_tween.set_ignore_time_scale(true)
-	var visual_scale := 1.0 if reduced_motion else target_scale
-	var visual_position := Vector2.ZERO if reduced_motion else target_position
 	_active_tween.tween_property(
-		self, "offset_transform_scale", Vector2.ONE * visual_scale, duration
+		self, "offset_transform_scale", Vector2.ONE * target_scale, duration
 	)
 	_active_tween.tween_property(
-		self, "offset_transform_position", visual_position, duration
+		self, "offset_transform_position", target_position, duration
 	)
 	_active_tween.tween_property(self, "self_modulate", target_modulate, duration)
 
@@ -121,7 +140,12 @@ func _kill_active_tween() -> void:
 
 
 func _duration(group: StringName) -> float:
-	return motion_profile.duration_for(group, reduced_motion) if motion_profile != null else 0.12
+	var duration: float = motion_profile.duration_for(group, reduced_motion) if motion_profile != null else 0.12
+	return clampf(duration, 0.08, 0.12) if reduced_motion else duration
+
+
+func _release_duration() -> float:
+	return 0.12
 
 
 func _hover_scale() -> float:

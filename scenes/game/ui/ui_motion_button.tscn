@@ -12,6 +12,7 @@ offset_transform_visual_only = true
 theme_type_variation = &"PrimaryButton"
 motion_profile = ExtResource("2_profile")
 script = ExtResource("1_script")
+semantic_role = &"primary"
 
 [connection signal="button_down" from="." to="." method="_on_button_down"]
 [connection signal="button_up" from="." to="." method="_on_button_up"]

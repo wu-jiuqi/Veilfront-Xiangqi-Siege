@@ -1,0 +1,167 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Theme" path="res://resources/game/ui/themes/terracotta_ui_theme.tres" id="1_theme"]
+[ext_resource type="Script" path="res://scripts/dev/ui/gate3_ui_foundation_lab.gd" id="2_script"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_primary.tscn" id="3_primary"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_secondary.tscn" id="4_secondary"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_danger.tscn" id="5_danger"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_confirm.tscn" id="6_confirm"]
+
+[node name="Gate3UiFoundationLab" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+script = ExtResource("2_script")
+
+[node name="Background" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_type_variation = &"ScreenBackground"
+
+[node name="SafeMargin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 32.0
+offset_top = 24.0
+offset_right = -32.0
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Center" type="CenterContainer" parent="SafeMargin"]
+layout_mode = 2
+
+[node name="FoundationPanel" type="PanelContainer" parent="SafeMargin/Center"]
+custom_minimum_size = Vector2(820, 430)
+custom_maximum_size = Vector2(1120, 480)
+layout_mode = 2
+theme_type_variation = &"HUDPanel"
+
+[node name="PanelMargin" type="MarginContainer" parent="SafeMargin/Center/FoundationPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 28
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 28
+theme_override_constants/margin_bottom = 24
+
+[node name="Content" type="VBoxContainer" parent="SafeMargin/Center/FoundationPanel/PanelMargin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="SafeMargin/Center/FoundationPanel/PanelMargin/Content"]
+layout_mode = 2
+text = "GATE-3 · 统一交互基础"
+theme_type_variation = &"UiDisplayText"
+
+[node name="Subtitle" type="Label" parent="SafeMargin/Center/FoundationPanel/PanelMargin/Content"]
+layout_mode = 2
+text = "四类动作语义共享焦点、字色与动效时序；核心功能区在超宽屏保持安全宽度。"
+theme_type_variation = &"UiBodyText"
+
+[node name="ButtonGrid" type="GridContainer" parent="SafeMargin/Center/FoundationPanel/PanelMargin/Content"]
+layout_mode = 2
+size_flags_vertical = 3
+columns = 2
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 10
+
+[node name="PrimaryButton" parent="SafeMargin/Center/FoundationPanel/PanelMargin/Content/ButtonGrid" instance=ExtResource("3_primary")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Primary · 开始对局"
+focus_neighbor_left = NodePath("../ConfirmButton")
+focus_neighbor_top = NodePath("../ConfirmButton")
+focus_neighbor_right = NodePath("../SecondaryButton")
+focus_neighbor_bottom = NodePath("../SecondaryButton")
+focus_next = NodePath("../SecondaryButton")
+focus_previous = NodePath("../ConfirmButton")
+
+[node name="SecondaryButton" parent="SafeMargin/Center/FoundationPanel/PanelMargin/Content/ButtonGrid" instance=ExtResource("4_secondary")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Secondary · 返回上级"
+focus_neighbor_left = NodePath("../PrimaryButton")
+focus_neighbor_top = NodePath("../PrimaryButton")
+focus_neighbor_right = NodePath("../DangerButton")
+focus_neighbor_bottom = NodePath("../DangerButton")
+focus_next = NodePath("../DangerButton")
+focus_previous = NodePath("../PrimaryButton")
+
+[node name="DangerButton" parent="SafeMargin/Center/FoundationPanel/PanelMargin/Content/ButtonGrid" instance=ExtResource("5_danger")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Danger · 放弃战局"
+focus_neighbor_left = NodePath("../SecondaryButton")
+focus_neighbor_top = NodePath("../SecondaryButton")
+focus_neighbor_right = NodePath("../ConfirmButton")
+focus_neighbor_bottom = NodePath("../ConfirmButton")
+focus_next = NodePath("../ConfirmButton")
+focus_previous = NodePath("../SecondaryButton")
+
+[node name="ConfirmButton" parent="SafeMargin/Center/FoundationPanel/PanelMargin/Content/ButtonGrid" instance=ExtResource("6_confirm")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Confirm · 确认行动"
+focus_neighbor_left = NodePath("../DangerButton")
+focus_neighbor_top = NodePath("../DangerButton")
+focus_neighbor_right = NodePath("../PrimaryButton")
+focus_neighbor_bottom = NodePath("../PrimaryButton")
+focus_next = NodePath("../PrimaryButton")
+focus_previous = NodePath("../DangerButton")
+
+[node name="RoleGrid" type="GridContainer" parent="SafeMargin/Center/FoundationPanel/PanelMargin/Content"]
+layout_mode = 2
+columns = 3
+theme_override_constants/h_separation = 18
+theme_override_constants/v_separation = 4
+
+[node name="DisplayRole" type="Label" parent="SafeMargin/Center/FoundationPanel/PanelMargin/Content/RoleGrid"]
+layout_mode = 2
+text = "Display 38"
+theme_type_variation = &"UiDisplayText"
+
+[node name="HeadingRole" type="Label" parent="SafeMargin/Center/FoundationPanel/PanelMargin/Content/RoleGrid"]
+layout_mode = 2
+text = "Heading 24"
+theme_type_variation = &"UiHeadingText"
+
+[node name="BodyRole" type="Label" parent="SafeMargin/Center/FoundationPanel/PanelMargin/Content/RoleGrid"]
+layout_mode = 2
+text = "Body 16"
+theme_type_variation = &"UiBodyText"
+
+[node name="SecondaryRole" type="Label" parent="SafeMargin/Center/FoundationPanel/PanelMargin/Content/RoleGrid"]
+layout_mode = 2
+text = "Secondary 14"
+theme_type_variation = &"UiSecondaryText"
+
+[node name="ControlRole" type="Label" parent="SafeMargin/Center/FoundationPanel/PanelMargin/Content/RoleGrid"]
+layout_mode = 2
+text = "Control 18"
+theme_type_variation = &"UiControlText"
+
+[node name="NumericRole" type="Label" parent="SafeMargin/Center/FoundationPanel/PanelMargin/Content/RoleGrid"]
+layout_mode = 2
+text = "Numeric 20 · 09/09"
+theme_type_variation = &"UiNumericText"
+
+[node name="MotionStatus" type="Label" parent="SafeMargin/Center/FoundationPanel/PanelMargin/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "减少动态：关闭"
+theme_type_variation = &"UiSecondaryText"
