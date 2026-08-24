@@ -262,8 +262,10 @@ func _finish() -> void:
 		_client_root.queue_free()
 	if is_instance_valid(_server_root):
 		_server_root.queue_free()
-	await process_frame
-	await process_frame
+	# 首次导入后，屏幕级粒子与纹理可能跨越数帧才完成 RenderingServer 释放。
+	# 保留完整泄漏检查，同时为队列释放提供确定性的收尾窗口。
+	for _cleanup_frame: int in 8:
+		await process_frame
 	if _failures.is_empty():
 		print("FORMAL_LAN_FULL_STACK_LOOPBACK_PASS ux=ready-start-match-submit-disconnect")
 		quit(0)
