@@ -37,7 +37,7 @@ func _run() -> void:
 	)
 	_check(seated, "正式组合根完成大厅创建、加入和红黑入席")
 	if not seated:
-		_finish()
+		await _finish()
 		return
 
 	var server_ready := server_lobby.get_node("%ReadyButton") as Button
@@ -63,7 +63,7 @@ func _run() -> void:
 	)
 	_check(entered_match, "正式大厅经房主开局进入双方 MatchScreen")
 	if not entered_match:
-		_finish()
+		await _finish()
 		return
 
 	var server_match: Control = _server_app.get_node("ScreenHost/MatchScreen")
@@ -173,7 +173,7 @@ func _run() -> void:
 		and int(cleared_board.get("marker_count", -1)) == 0, "断线清除旧棋子、旗帜与私有标记")
 	_check(int(cleared_minimap.get("piece_count", -1)) == 0 \
 		and int(cleared_minimap.get("flag_count", -1)) == 0, "断线清除小地图旧 PlayerView")
-	_finish()
+	await _finish()
 
 
 func _setup_apps() -> void:
@@ -258,6 +258,12 @@ func _finish() -> void:
 		_client_app.get_node("FormalLanSession").disconnect_from_game()
 	if is_instance_valid(_server_app):
 		_server_app.get_node("FormalLanSession").disconnect_from_game()
+	if is_instance_valid(_client_root):
+		_client_root.queue_free()
+	if is_instance_valid(_server_root):
+		_server_root.queue_free()
+	await process_frame
+	await process_frame
 	if _failures.is_empty():
 		print("FORMAL_LAN_FULL_STACK_LOOPBACK_PASS ux=ready-start-match-submit-disconnect")
 		quit(0)
