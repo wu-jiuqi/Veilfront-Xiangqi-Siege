@@ -4,7 +4,7 @@
 
 Windows 正式局域网导出使用 `resources` 白名单，不再使用 `all_resources`。白名单只保留启动、设置、关卡选择、正式局域网、教程入口及 T0–T10 动态教学资源；HUD 布局 JSON 通过 `include_filter` 显式加入。
 
-`concepts`、`source_chroma`、`source_rgb`、`chroma_sources`、非运行时漫画源图、测试场景/脚本、原型和证据目录均为硬排除项。新增运行时根资源、动态 `load()` 路径或非 Resource 文件时，必须同步更新 `tools/release/windows_runtime_manifest.json` 和 `export_presets.cfg`。
+`concepts`、`source_chroma`、`source_rgb`、`chroma_sources`、测试场景/脚本、原型和证据目录均为硬排除项。战阵图鉴当前使用的 18 张 `comic_v1/page_*.png` 是明确登记的运行时图片；其余未被运行时引用的漫画源文件仍不得进入包。新增运行时根资源、动态 `load()` 路径或非 Resource 文件时，必须同步更新 `tools/release/windows_runtime_manifest.json` 和 `export_presets.cfg`。
 
 ## 预算
 
@@ -32,6 +32,20 @@ Windows 正式局域网导出使用 `resources` 白名单，不再使用 `all_re
 | 禁止路径命中 | 未验收 | 0 | 通过 |
 
 以上数字来自本地 release embedded-PCK 构建；构建产物位于被 Git 忽略的 `builds/windows/`，正式 GATE-3 证据应由独立 QA 从冻结提交重建。
+
+## 2026-08-27 当前内容候选
+
+在不新增游戏内容的前提下，导出白名单补齐现有双轨教程目录、18 模块 Resource、教学抽屉、战阵图鉴、18 张图鉴运行时图片以及棋盘 Audio/VFX 预置根。当前生产者候选结果：
+
+| 指标 | 当前候选 | 合同上限 | 结果 |
+| --- | ---: | ---: | --- |
+| Windows embedded-PCK EXE | 233,063,128 bytes | 320,000,000 bytes | 通过，余量 86,936,872 bytes |
+| ZIP 数据包 | 121,741,569 bytes | — | 607 个条目 |
+| 数据包展开体积 | 123,769,797 bytes | 160,000,000 bytes | 通过 |
+| 导入后运行时纹理 | 79,470,640 bytes | 96,000,000 bytes | 通过 |
+| 导入后运行时字体 | 39,230,269 bytes | 48,000,000 bytes | 通过 |
+
+该结果已通过 120 帧成品启动冒烟，但仍属于生产者构建；独立 QA 必须从冻结提交重建后，才能形成 GATE-3 专业验收证据。
 
 ## 可复现验证
 

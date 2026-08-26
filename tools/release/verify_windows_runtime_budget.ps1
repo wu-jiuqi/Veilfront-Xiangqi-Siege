@@ -66,6 +66,17 @@ foreach ($dynamicAsset in $policy.required_dynamic_assets) {
     }
 }
 
+foreach ($runtimeImage in $policy.required_runtime_images) {
+    $runtimeImagePath = ([string]$runtimeImage).Substring(6)
+    $sourcePath = Join-Path $projectRoot $runtimeImagePath
+    if (-not (Test-Path -LiteralPath $sourcePath -PathType Leaf)) {
+        throw "manifest 指向不存在的运行时图片：$runtimeImage"
+    }
+    if ($presetText -notmatch [regex]::Escape($runtimeImagePath)) {
+        throw "导出 include_filter 缺少运行时图片：$runtimeImage"
+    }
+}
+
 $catalogPath = Join-Path $projectRoot ([string]$policy.dynamic_asset_catalog)
 $catalog = Get-Content -LiteralPath $catalogPath -Raw | ConvertFrom-Json
 $catalogAssets = @(
@@ -102,6 +113,12 @@ try {
         $requiredImport = ([string]$dynamicAsset).Substring(6).ToLowerInvariant() + ".import"
         if ($requiredImport -notin $entryNames) {
             throw "运行时包缺少 HUD 动态资产：$dynamicAsset"
+        }
+    }
+    foreach ($runtimeImage in $policy.required_runtime_images) {
+        $requiredImport = ([string]$runtimeImage).Substring(6).ToLowerInvariant() + ".import"
+        if ($requiredImport -notin $entryNames) {
+            throw "运行时包缺少运行时图片：$runtimeImage"
         }
     }
     foreach ($requiredEntry in $policy.required_pack_entries) {
