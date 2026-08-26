@@ -1496,6 +1496,12 @@ func _tutorial_target_matches(cell: Vector2i) -> bool:
 	var step_type := str(_tutorial_step.get("type", ""))
 	if step_type not in ["move", "bombard", "reject"]:
 		return true
+	var targets_value: Variant = _tutorial_step.get("targets", [])
+	if targets_value is Array and not (targets_value as Array).is_empty():
+		for target_value: Variant in targets_value:
+			if BoardCoordinateMapper.coordinate_from_variant(target_value) == cell:
+				return true
+		return false
 	var expected := BoardCoordinateMapper.coordinate_from_variant(_tutorial_step.get("target", []))
 	return not BoardCoordinateMapper.is_authority_cell_valid(expected) or expected == cell
 

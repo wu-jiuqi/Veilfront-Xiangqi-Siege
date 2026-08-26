@@ -57,6 +57,8 @@ func _check_t10_presentation() -> void:
 	var presentation: Resource = load(path)
 	_expect(str(presentation.get("title")) == "第一面战旗", "T10 title must match the approved HTML")
 	_expect((presentation.get("steps") as Array).size() == 6, "T10 must contain six approved graybox steps")
+	var contact_step: Dictionary = (presentation.get("steps") as Array)[1]
+	_expect((contact_step.get("targets", []) as Array).size() >= 2, "T10 must keep at least two legal solution variants")
 
 
 func _expect(condition: bool, message: String) -> void:
