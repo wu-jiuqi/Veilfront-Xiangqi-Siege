@@ -1353,3 +1353,248 @@ event_history:
     digest_algorithm: sha256
     previous_event_digest: 752e9dc126c64901be60500f26b72fcd37dbcc350c3e17019f6cac61353af436
     event_digest: 5e77450078fa000f4fce9b8bbf38bca89167425483e584b152de0c8ecc32d8d6
+- schema_version: '0.1'
+  event_id: 4118695f-9dcd-4cdf-84ba-81fce8b4f38a
+  mutation_id: 9d35d65d-b4fe-427d-9a30-46602ffb810e
+  loop_instance_id: e6e0f300-2130-41d0-8020-f7f4006deb3f
+  sequence: 27
+  event_type: core.acceptance_recorded
+  occurred_at: '2026-08-26T22:47:03.129649+08:00'
+  recorded_at: '2026-08-26T22:47:03.129649+08:00'
+  actor: &id009
+    actor_id: inst:01M02M6X3Q8YWJXHY52K3V5AR2
+    role: pos:veilfront-xiangqi-siege:root:project-manager
+    authority_id: AUTH-VEILFRONT-PROJECT-MANAGER
+  causality:
+    correlation_id: be51ac2a-4e67-43e5-a49c-3b9bf8ea2164
+    causation_event_id: 01aa58f7-4171-4cb3-b9c0-09d0be65e789
+    request_id: record-owner-ftue-dual-track-scope-exception
+  concurrency:
+    expected_record_revision: 26
+    resulting_record_revision: 27
+  binding_snapshot:
+    contract_digest: d97937b94c07399e00c63e1a5651d55c9eceb30378214838902dbe377d0a7e2a
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    acceptance_kind: owner_scope_exception
+    record_id: OWNER-SCOPE-EXCEPTION-FTUE-DUAL-TRACK-001
+    subject_digest: 6e2d0f83914ed58ee053f082325503f0136e672ee392b9639ba03961d42a080e
+    record:
+      gate_id: OWNER-SCOPE-EXCEPTION-FTUE-DUAL-TRACK-001
+      decision: approved
+      evidence_ref: game-pipeline/approvals/production-scope-exception-ftue-dual-track-6e2d0f83914e.yaml
+      subject_digest: 6e2d0f83914ed58ee053f082325503f0136e672ee392b9639ba03961d42a080e
+      release_approval: false
+  evidence_refs: &id010
+  - game-pipeline/loops/evidence/FTUE-DUAL-TRACK-OWNER-EXCEPTION-decision-package-v1.yaml
+  - game-pipeline/approvals/production-scope-exception-ftue-dual-track-6e2d0f83914e.yaml
+  - docs/design/tutorial/veilfront-ftue-content-coverage-and-ux-proposal-v1.md
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: 5e77450078fa000f4fce9b8bbf38bca89167425483e584b152de0c8ecc32d8d6
+    event_digest: d4b6cf992ce10bb2833596a0017dfd960010c33c0f3ac749e8c65e5694b82b40
+- schema_version: '0.1'
+  event_id: 6b42cbba-f41b-427f-a927-33e6a81dc6ee
+  mutation_id: 87e99e4f-10b4-4fe8-af5e-7a2a2cb678ac
+  loop_instance_id: e6e0f300-2130-41d0-8020-f7f4006deb3f
+  sequence: 28
+  event_type: core.input_bound
+  occurred_at: '2026-08-26T22:47:03.129649+08:00'
+  recorded_at: '2026-08-26T22:47:03.129649+08:00'
+  actor: *id009
+  causality:
+    correlation_id: be51ac2a-4e67-43e5-a49c-3b9bf8ea2164
+    causation_event_id: 4118695f-9dcd-4cdf-84ba-81fce8b4f38a
+    request_id: bind-ftue-dual-track-scope-exception
+  concurrency:
+    expected_record_revision: 27
+    resulting_record_revision: 28
+  binding_snapshot:
+    contract_digest: d97937b94c07399e00c63e1a5651d55c9eceb30378214838902dbe377d0a7e2a
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    input_slot_id: INPUT-FTUE-DUAL-TRACK-EXCEPTION-001
+    before: null
+    after:
+      input_slot_id: INPUT-FTUE-DUAL-TRACK-EXCEPTION-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:ftue-dual-track-scope-exception@v1
+        artifact_type: owner-approved-production-scope-exception
+        version: v1@subject:6e2d0f83914e
+        uri: game-pipeline/loops/evidence/FTUE-DUAL-TRACK-OWNER-EXCEPTION-decision-package-v1.yaml
+        digest:
+          algorithm: sha256
+          value: 6e2d0f83914ed58ee053f082325503f0136e672ee392b9639ba03961d42a080e
+        manifest_paths: *id010
+      source_loop_id: null
+      bound_by_event_id: 6b42cbba-f41b-427f-a927-33e6a81dc6ee
+      bound_at: '2026-08-26T22:47:03.129649+08:00'
+  evidence_refs: *id010
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: d4b6cf992ce10bb2833596a0017dfd960010c33c0f3ac749e8c65e5694b82b40
+    event_digest: e35b562c8d73553b6b27a8d4d7441911144bd6f7b27e56fe1d9ab1055a7ee2a0
+- schema_version: '0.1'
+  event_id: 1e814db1-ac42-4491-9853-0a6f9b5f7627
+  mutation_id: bae0f264-2053-49f5-b779-a082696e02be
+  loop_instance_id: e6e0f300-2130-41d0-8020-f7f4006deb3f
+  sequence: 29
+  event_type: core.assignment_changed
+  occurred_at: '2026-08-26T22:47:03.129649+08:00'
+  recorded_at: '2026-08-26T22:47:03.129649+08:00'
+  actor: *id009
+  causality:
+    correlation_id: be51ac2a-4e67-43e5-a49c-3b9bf8ea2164
+    causation_event_id: 6b42cbba-f41b-427f-a927-33e6a81dc6ee
+    request_id: extend-executor-godot-technical-lead-ftue-dual-track
+  concurrency:
+    expected_record_revision: 28
+    resulting_record_revision: 29
+  binding_snapshot:
+    contract_digest: d97937b94c07399e00c63e1a5651d55c9eceb30378214838902dbe377d0a7e2a
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    assignment_kind: executor
+    operation: update
+    before:
+      actor_id: inst:01M02NJ3JEQXKV6PT6DPX0NKQ0
+      role: pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+      assignment_id: 83dc10ce-871a-42d0-b66c-46153eb4e901
+      authority_id: AUTH-VEILFRONT-GODOT-TECHNOLOGY
+      scope:
+      - TASK-EXPORT-G3-001
+      - TASK-CUE-CONTRACT-G3-001
+      - TASK-SFX-G3-001
+    after:
+      actor_id: inst:01M02NJ3JEQXKV6PT6DPX0NKQ0
+      role: pos:veilfront-xiangqi-siege:technology:godot-technical-lead
+      assignment_id: 83dc10ce-871a-42d0-b66c-46153eb4e901
+      authority_id: AUTH-VEILFRONT-GODOT-TECHNOLOGY
+      scope:
+      - TASK-EXPORT-G3-001
+      - TASK-CUE-CONTRACT-G3-001
+      - TASK-SFX-G3-001
+      - TASK-FTUE-DATA-G3-EX-001
+      - TASK-FTUE-RUNTIME-G3-EX-001
+      - TASK-FTUE-MIGRATION-G3-EX-001
+  evidence_refs: *id010
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: e35b562c8d73553b6b27a8d4d7441911144bd6f7b27e56fe1d9ab1055a7ee2a0
+    event_digest: a5eb2b84469e9a334e26cad3b529456ae1a5269527ef52a795c0fac4e56e7efd
+- schema_version: '0.1'
+  event_id: 92758c37-73b5-4011-be37-da13097d9cec
+  mutation_id: e769fb96-24e5-4150-9487-d09933b236b8
+  loop_instance_id: e6e0f300-2130-41d0-8020-f7f4006deb3f
+  sequence: 30
+  event_type: core.assignment_changed
+  occurred_at: '2026-08-26T22:47:03.129649+08:00'
+  recorded_at: '2026-08-26T22:47:03.129649+08:00'
+  actor: *id009
+  causality:
+    correlation_id: be51ac2a-4e67-43e5-a49c-3b9bf8ea2164
+    causation_event_id: 1e814db1-ac42-4491-9853-0a6f9b5f7627
+    request_id: extend-executor-systems-experience-lead-ftue-dual-track
+  concurrency:
+    expected_record_revision: 29
+    resulting_record_revision: 30
+  binding_snapshot:
+    contract_digest: d97937b94c07399e00c63e1a5651d55c9eceb30378214838902dbe377d0a7e2a
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    assignment_kind: executor
+    operation: update
+    before:
+      actor_id: inst:01M02NJ3JENHD8VV7EKC9G198Q
+      role: pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
+      assignment_id: a22fd415-9e26-420e-be51-7402fe3ff03c
+      authority_id: AUTH-VEILFRONT-SYSTEMS-EXPERIENCE
+      scope:
+      - TASK-UI-FOUNDATION-G3-001
+      - TASK-UIUX-G3-001
+      - TASK-CONTENT-G3-001
+    after:
+      actor_id: inst:01M02NJ3JENHD8VV7EKC9G198Q
+      role: pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
+      assignment_id: a22fd415-9e26-420e-be51-7402fe3ff03c
+      authority_id: AUTH-VEILFRONT-SYSTEMS-EXPERIENCE
+      scope:
+      - TASK-UI-FOUNDATION-G3-001
+      - TASK-UIUX-G3-001
+      - TASK-CONTENT-G3-001
+      - TASK-FTUE-UX-G3-EX-001
+      - TASK-FTUE-CONTENT-G3-EX-001
+  evidence_refs: *id010
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: a5eb2b84469e9a334e26cad3b529456ae1a5269527ef52a795c0fac4e56e7efd
+    event_digest: 6791c5868a9f0d5588e270fc608c0cd4178937083b2ce69f8ff07c6da88142ce
+- schema_version: '0.1'
+  event_id: de5fba46-6fd1-4af3-8e04-bd11ce6f3cc2
+  mutation_id: d63b314a-261e-4d3d-a6b1-f848ff575c26
+  loop_instance_id: e6e0f300-2130-41d0-8020-f7f4006deb3f
+  sequence: 31
+  event_type: core.assignment_changed
+  occurred_at: '2026-08-26T22:47:03.129649+08:00'
+  recorded_at: '2026-08-26T22:47:03.129649+08:00'
+  actor: *id009
+  causality:
+    correlation_id: be51ac2a-4e67-43e5-a49c-3b9bf8ea2164
+    causation_event_id: 92758c37-73b5-4011-be37-da13097d9cec
+    request_id: extend-reviewer-qa-release-lead-ftue-dual-track
+  concurrency:
+    expected_record_revision: 30
+    resulting_record_revision: 31
+  binding_snapshot:
+    contract_digest: d97937b94c07399e00c63e1a5651d55c9eceb30378214838902dbe377d0a7e2a
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    assignment_kind: reviewer
+    operation: update
+    before:
+      actor_id: inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
+      role: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+      assignment_id: 3c1d5aa5-56a7-45df-84fc-d7efc7f7d2ff
+      review_scope:
+      - CHECK-CONTRACT-G3-001
+      - CHECK-EXPORT-G3-001
+      - CHECK-INFORMATION-G3-001
+      - CHECK-AUDIO-G3-001
+      - CHECK-VFX-G3-001
+      - CHECK-UIUX-G3-001
+      - CHECK-CONTENT-G3-001
+      - CHECK-RESPONSIVE-G3-001
+      - CHECK-PERFORMANCE-G3-001
+      - CHECK-REGRESSION-G3-001
+      - CHECK-SCOPE-G3-001
+    after:
+      actor_id: inst:01M02NJ3JFHVZ5C4SP5MTJFJR6
+      role: pos:veilfront-xiangqi-siege:quality:qa-release-lead
+      assignment_id: 3c1d5aa5-56a7-45df-84fc-d7efc7f7d2ff
+      review_scope:
+      - CHECK-CONTRACT-G3-001
+      - CHECK-EXPORT-G3-001
+      - CHECK-INFORMATION-G3-001
+      - CHECK-AUDIO-G3-001
+      - CHECK-VFX-G3-001
+      - CHECK-UIUX-G3-001
+      - CHECK-CONTENT-G3-001
+      - CHECK-RESPONSIVE-G3-001
+      - CHECK-PERFORMANCE-G3-001
+      - CHECK-REGRESSION-G3-001
+      - CHECK-SCOPE-G3-001
+      - CHECK-FTUE-ROUTES-G3-EX-001
+      - CHECK-FTUE-PROGRESS-G3-EX-001
+      - CHECK-FTUE-INFORMATION-G3-EX-001
+      - CHECK-FTUE-RESPONSIVE-G3-EX-001
+      - CHECK-FTUE-REGRESSION-G3-EX-001
+  evidence_refs: *id010
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: 6791c5868a9f0d5588e270fc608c0cd4178937083b2ce69f8ff07c6da88142ce
+    event_digest: 2bbf0e6d2c2698a955b75dc3b777440cec5380440828d5e3eef683fb288ea159

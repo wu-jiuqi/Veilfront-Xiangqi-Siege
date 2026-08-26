@@ -1,0 +1,47 @@
+approval:
+  schema_version: game-production-approval/v1
+  approval_id: approval:veilfront-xiangqi-siege:production-scope-exception:6e2d0f83914e
+  subject_kind: production-scope-exception
+  subject_id: EXCEPTION-FTUE-DUAL-TRACK-001@v1
+  subject_digest: 6e2d0f83914ed58ee053f082325503f0136e672ee392b9639ba03961d42a080e
+  decision: approved
+  decided_by: project-owner
+  decided_at: '2026-08-26T22:45:17.9809162+08:00'
+  evidence:
+    source_refs:
+    - codex-thread://current#owner-confirmed-ftue-dual-track-6e2d0f83914e
+    - game-pipeline/loops/evidence/FTUE-DUAL-TRACK-OWNER-EXCEPTION-decision-package-v1.yaml
+    immutable_source:
+      git_commit: 4a473f7fd1612a854bd743afa0e79f686ab1883b
+      path: game-pipeline/loops/evidence/FTUE-DUAL-TRACK-OWNER-EXCEPTION-decision-package-v1.yaml
+      subject_path: exception_subject
+      raw_file_sha256: 201bcba040b979c6946d10fa0643623bbc843e029b732a4eeb5a38fa65e62ab6
+      canonicalization: canonical-json-sort-keys-ensure-ascii-false-v1
+      subject_digest: 6e2d0f83914ed58ee053f082325503f0136e672ee392b9639ba03961d42a080e
+    confirmation:
+      method: exact-64-character-digest-reply
+      received_digest: 6e2d0f83914ed58ee053f082325503f0136e672ee392b9639ba03961d42a080e
+      matches_subject_digest: true
+    bound_contract:
+      contract_id: LOOP-CTR-CONTENT-INTEGRATION-GATE3-001
+      version: 1
+      approval_id: approval:veilfront-xiangqi-siege:loop-contract:7c735748becb
+      registry_loop_id: e6e0f300-2130-41d0-8020-f7f4006deb3f
+      registry_revision_at_audit: 26
+  authorized_action:
+    summary: 允许按已审UX提案实现双入口、五态能力进度、P0/B1/B2/B3、T8-R/T9-C/T10-E、教学抽屉和上下文复习机制。
+    scope_ref: game-pipeline/loops/evidence/FTUE-DUAL-TRACK-OWNER-EXCEPTION-decision-package-v1.yaml#exception_subject.exact_scope
+    allowed_ref: game-pipeline/loops/evidence/FTUE-DUAL-TRACK-OWNER-EXCEPTION-decision-package-v1.yaml#exception_subject.approval_effect.allowed
+    forbidden_ref: game-pipeline/loops/evidence/FTUE-DUAL-TRACK-OWNER-EXCEPTION-decision-package-v1.yaml#exception_subject.approval_effect.forbidden
+    acceptance_ref: game-pipeline/loops/evidence/FTUE-DUAL-TRACK-OWNER-EXCEPTION-decision-package-v1.yaml#exception_subject.acceptance
+    limits_ref: game-pipeline/loops/evidence/FTUE-DUAL-TRACK-OWNER-EXCEPTION-decision-package-v1.yaml#exception_subject.resources_and_limits
+    does_not_approve:
+    - owner rule revision 5、棋子合法性、特殊行动语义、确定性随机、PlayerView信息权限或回放摘要变更
+    - 新增或扩大教程直接改写FullState、棋子位置、回合或随机状态的生产路径
+    - 正式语音、BGM量产、新美术方向、C4+、AI、互联网服务、外部支出或发布承诺
+    - GATE-3内容冻结、GATE-4或对外发布
+  application:
+    state: approved_prospective_limited_exception
+    decision_package_state_preserved: awaiting_human
+    decision_package_state_note: 决策包保留审批前历史快照；本文件记录项目所有者决定，不重写原证据。
+    approved_at: '2026-08-26T22:45:17.9809162+08:00'

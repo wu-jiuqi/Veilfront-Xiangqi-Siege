@@ -38,6 +38,9 @@ registry_snapshot:
       - TASK-EXPORT-G3-001
       - TASK-CUE-CONTRACT-G3-001
       - TASK-SFX-G3-001
+      - TASK-FTUE-DATA-G3-EX-001
+      - TASK-FTUE-RUNTIME-G3-EX-001
+      - TASK-FTUE-MIGRATION-G3-EX-001
     - actor_id: inst:01M02NJ3JENHD8VV7EKC9G198Q
       role: pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
       assignment_id: a22fd415-9e26-420e-be51-7402fe3ff03c
@@ -46,6 +49,8 @@ registry_snapshot:
       - TASK-UI-FOUNDATION-G3-001
       - TASK-UIUX-G3-001
       - TASK-CONTENT-G3-001
+      - TASK-FTUE-UX-G3-EX-001
+      - TASK-FTUE-CONTENT-G3-EX-001
     - actor_id: pos:veilfront-xiangqi-siege:design-experience:visual-production-lead
       role: pos:veilfront-xiangqi-siege:design-experience:visual-production-lead
       assignment_id: 378de5d5-1081-4309-aff3-a29b939de71d
@@ -68,6 +73,11 @@ registry_snapshot:
       - CHECK-PERFORMANCE-G3-001
       - CHECK-REGRESSION-G3-001
       - CHECK-SCOPE-G3-001
+      - CHECK-FTUE-ROUTES-G3-EX-001
+      - CHECK-FTUE-PROGRESS-G3-EX-001
+      - CHECK-FTUE-INFORMATION-G3-EX-001
+      - CHECK-FTUE-RESPONSIVE-G3-EX-001
+      - CHECK-FTUE-REGRESSION-G3-EX-001
     - actor_id: project-owner
       role: project-owner
       assignment_id: 28110b75-6bfb-4b1d-92c1-2f7bf901030b
@@ -78,10 +88,10 @@ registry_snapshot:
     state_entered_at: '2026-08-24T19:23:46.989995+08:00'
     current_iteration: 2
     last_transition_id: TR-REVIEW-ACTIVE
-    last_event_id: 01aa58f7-4171-4cb3-b9c0-09d0be65e789
-    last_event_digest: 5e77450078fa000f4fce9b8bbf38bca89167425483e584b152de0c8ecc32d8d6
-    last_event_sequence: 26
-    record_revision: 26
+    last_event_id: de5fba46-6fd1-4af3-8e04-bd11ce6f3cc2
+    last_event_digest: 2bbf0e6d2c2698a955b75dc3b777440cec5380440828d5e3eef683fb288ea159
+    last_event_sequence: 31
+    record_revision: 31
   budget:
     limits:
       iteration_limit: 5
@@ -159,6 +169,22 @@ registry_snapshot:
       source_loop_id: null
       bound_by_event_id: 2987b7ad-b6a6-4282-9e02-f2b374d8bb6a
       bound_at: '2026-08-24T18:30:36.798056+08:00'
+    - input_slot_id: INPUT-FTUE-DUAL-TRACK-EXCEPTION-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:ftue-dual-track-scope-exception@v1
+        artifact_type: owner-approved-production-scope-exception
+        version: v1@subject:6e2d0f83914e
+        uri: game-pipeline/loops/evidence/FTUE-DUAL-TRACK-OWNER-EXCEPTION-decision-package-v1.yaml
+        digest:
+          algorithm: sha256
+          value: 6e2d0f83914ed58ee053f082325503f0136e672ee392b9639ba03961d42a080e
+        manifest_paths:
+        - game-pipeline/loops/evidence/FTUE-DUAL-TRACK-OWNER-EXCEPTION-decision-package-v1.yaml
+        - game-pipeline/approvals/production-scope-exception-ftue-dual-track-6e2d0f83914e.yaml
+        - docs/design/tutorial/veilfront-ftue-content-coverage-and-ux-proposal-v1.md
+      source_loop_id: null
+      bound_by_event_id: 6b42cbba-f41b-427f-a927-33e6a81dc6ee
+      bound_at: '2026-08-26T22:47:03.129649+08:00'
     outputs:
     - deliverable_id: DELIVERABLE-EXPORT-G3-001
       artifact:
@@ -277,7 +303,12 @@ registry_snapshot:
       - TASK-UI-FOUNDATION-G3-001
       evidence_ref: evidence/gate3/iteration1-foundation-handoff-v1.md
     professional_reviews: []
-    human_gates: []
+    human_gates:
+    - gate_id: OWNER-SCOPE-EXCEPTION-FTUE-DUAL-TRACK-001
+      decision: approved
+      evidence_ref: game-pipeline/approvals/production-scope-exception-ftue-dual-track-6e2d0f83914e.yaml
+      subject_digest: 6e2d0f83914ed58ee053f082325503f0136e672ee392b9639ba03961d42a080e
+      release_approval: false
     final_handoff_ref: null
   interruption: null
   pending_approvals: []
