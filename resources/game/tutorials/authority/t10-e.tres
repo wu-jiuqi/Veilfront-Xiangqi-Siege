@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="TutorialScenarioDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/application/tutorial_scenario_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+scenario_id = "tutorial-t10-e-v1"
+level_id = "T10-E"
+fixture_key = "ftue-t10-endgame"
+bound_seat = "red"
+seed_value = 471101
+initial_pieces = Array[Dictionary]([{"id":"rt10e_general","side":"red","piece_type":"general","position":[5,1]},{"id":"bt10e_general","side":"black","piece_type":"general","position":[5,24]},{"id":"rt10e_cannon","side":"red","piece_type":"cannon","position":[8,3]},{"id":"bt10e_cannon","side":"black","piece_type":"cannon","position":[2,22]}])
+initial_visible_cells = Array[Vector2i]([Vector2i(4,1),Vector2i(5,1),Vector2i(6,1),Vector2i(7,2),Vector2i(8,2),Vector2i(9,2),Vector2i(7,3),Vector2i(8,3),Vector2i(9,3)])
+initial_flags = Array[Dictionary]([{"id":"flag-end-a","position":[3,12],"owner":"red","discovered_by":["red"]},{"id":"flag-end-b","position":[5,13],"owner":"red","discovered_by":["red"]},{"id":"flag-end-c","position":[7,12],"owner":"black","discovered_by":["red","black"]}])
+allow_any_public_preview = true

@@ -81,18 +81,18 @@ func _run() -> void:
 	completed_overlay.render_public_step({"id": "completed", "step_index": 2, "step_count": 3})
 	var completed_next_button: Button = completed_overlay.find_child("NextChapterButton", true, false) as Button
 	completed_next_button.pressed.emit()
-	await _wait_for_selected_level("T1", 120)
-	_expect(str(root.get_meta("veilfront_selected_level_id", "")) == "T1", "next chapter did not select T1")
+	await _wait_for_selected_level("B1", 120)
+	_expect(str(root.get_meta("veilfront_selected_level_id", "")) == "B1", "next chapter did not select B1")
 	_expect(
 		current_scene != null and current_scene.name == "TutorialLevel",
 		"next chapter did not open the tutorial scene"
 	)
 	var skipped_overlay: Control = current_scene.get_node("TutorialOverlay") as Control
 	skipped_overlay.request_skip()
-	await _wait_for_selected_level("T2", 120)
+	await _wait_for_selected_level("B2", 120)
 	_expect(
-		str(root.get_meta("veilfront_selected_level_id", "")) == "T2",
-		"skipping T1 did not advance to T2"
+		str(root.get_meta("veilfront_selected_level_id", "")) == "B2",
+		"skipping B1 did not advance to B2"
 	)
 
 	if _failures.is_empty():

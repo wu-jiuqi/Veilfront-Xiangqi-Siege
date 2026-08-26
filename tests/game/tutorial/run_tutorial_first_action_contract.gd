@@ -10,7 +10,7 @@ func _init() -> void:
 	for level_id: String in TutorialChapterCatalog.TUTORIAL_IDS:
 		_check_first_action(level_id)
 	if _failures.is_empty():
-		print("TUTORIAL_FIRST_ACTION_CONTRACT_PASS chapters=11")
+		print("TUTORIAL_FIRST_ACTION_CONTRACT_PASS chapters=18")
 		quit(0)
 		return
 	for failure: String in _failures:
@@ -31,8 +31,12 @@ func _check_first_action(level_id: String) -> void:
 		if str(step.get("type", "")) in ["move", "bombard", "reject"]:
 			first_action = step
 			break
-	_expect(not first_action.is_empty(), "%s has no formal first action" % level_id)
 	if first_action.is_empty():
+		var prediction_only := not presentation.steps.is_empty()
+		for step: Dictionary in presentation.steps:
+			prediction_only = prediction_only and str(step.get("type", "")) == "quiz"
+		_expect(prediction_only, "%s has neither a formal action nor a prediction flow" % level_id)
+		_expect(authority.step_effects.is_empty(), "%s prediction flow must not use direct effects" % level_id)
 		return
 	var expected_action := "move" if str(first_action.get("type", "")) == "reject" else str(first_action.get("type", ""))
 	var found := false

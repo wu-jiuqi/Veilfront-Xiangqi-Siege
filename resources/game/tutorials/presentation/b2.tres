@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="TutorialPresentationTrack" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/tutorial/tutorial_presentation_track.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+track_id = "tutorial-b2-presentation-v1"
+level_id = "B2"
+title = "跃阵双子"
+subtitle = "马、相普通行动"
+goal = "完成一次日字和一次田字普通移动，并区分马腿与象眼。"
+tags = PackedStringArray("马走日", "相走田", "大本营蹩腿", "大本营象眼")
+steps = Array[Dictionary]([{"id":"b2_horse","type":"move","actor":"rb2_horse","target":[3,4],"title":"马走日字","prompt":"让红马从（2,2）移动到（3,4）。起点在大本营内，所以仍检查马腿。","success":"马完成合法日字移动。"},{"id":"b2_elephant","type":"move","actor":"rb2_elephant","target":[5,4],"title":"相走田字","prompt":"让红相从（7,2）移动到（5,4）。起点在大本营内，所以仍检查象眼。","success":"相完成合法田字移动。"},{"id":"b2_quiz","type":"quiz","title":"全盘行动","prompt":"离开大本营后，马和相会被传统河界限制在半场吗？","options":["会","不会，只受本作区域与行动规则限制"],"correct":1,"success":"正确：本作没有传统河界限制。"}])
+summary = PackedStringArray("马走日、相走田", "在任意大本营内仍检查马腿和象眼", "马与相不受传统河界或半场限制")

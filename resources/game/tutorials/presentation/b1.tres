@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="TutorialPresentationTrack" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/tutorial/tutorial_presentation_track.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+track_id = "tutorial-b1-presentation-v1"
+level_id = "B1"
+title = "直线先军"
+subtitle = "兵、车、炮普通行动"
+goal = "分别完成兵、车、炮的普通移动，再辨认炮的隔架吃子。"
+tags = PackedStringArray("兵前横一步", "车走直线", "炮普通移动", "隔一架吃子")
+steps = Array[Dictionary]([{"id":"b1_pawn","type":"move","actor":"rb1_pawn","target":[5,11],"title":"兵向前一步","prompt":"让红兵从（5,10）前进到（5,11）。本作兵始终可前、左、右一步，不能后退。","success":"红兵完成普通一步。"},{"id":"b1_rook","type":"move","actor":"rb1_rook","target":[2,11],"title":"车沿直线移动","prompt":"让红车沿纵线移动到（2,11）。车不能穿过友军。","success":"红车完成直线移动。"},{"id":"b1_cannon","type":"move","actor":"rb1_cannon","target":[7,10],"title":"炮的普通移动","prompt":"让红炮横向移动到（7,10）。普通移动不需要炮架。","success":"红炮完成普通移动，没有消耗轰炸弹药。"},{"id":"b1_cannon_quiz","type":"quiz","title":"隔架吃子","prompt":"炮要精确吃掉同线目标时，炮与目标之间需要几枚棋子？","options":["不需要炮架","恰好一枚","至少两枚"],"correct":1,"success":"正确：炮普通移动不需架，精确吃子必须恰隔一枚。"}])
+summary = PackedStringArray("兵始终可前、左、右一步，不可后退", "车沿横竖直线移动且不能穿友军", "炮普通移动不需架，吃子需恰隔一架")

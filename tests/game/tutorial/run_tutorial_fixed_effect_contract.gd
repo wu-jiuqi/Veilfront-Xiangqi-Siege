@@ -14,7 +14,7 @@ func _run() -> void:
 	for level_id: String in Catalog.TUTORIAL_IDS:
 		await _run_chapter(level_id)
 	if _failures.is_empty():
-		print("TUTORIAL_FIXED_EFFECT_CONTRACT_PASS chapters=11")
+		print("TUTORIAL_FIXED_EFFECT_CONTRACT_PASS chapters=18")
 		quit(0)
 		return
 	for failure: String in _failures:

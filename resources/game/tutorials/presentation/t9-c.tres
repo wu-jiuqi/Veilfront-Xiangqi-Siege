@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="TutorialPresentationTrack" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/tutorial/tutorial_presentation_track.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+track_id = "tutorial-t9-c-presentation-v1"
+level_id = "T9-C"
+title = "旗帜争夺"
+subtitle = "中断、反占与所有权"
+goal = "判断占领中断、反占争夺和三旗胜利的公开状态。"
+tags = PackedStringArray("进度绑定棋子", "contested", "原所有权保留", "完成才翻转")
+steps = Array[Dictionary]([{"id":"t9c_interrupt","type":"quiz","title":"占领中断","prompt":"正在占领的具体棋子离开、死亡、献祭或撤回后会怎样？","options":["换同阵营棋子继续进度","该次进度清零","立刻获得旗帜"],"correct":1,"success":"正确：进度绑定具体棋子，中断后清零。"},{"id":"t9c_contested","type":"quiz","title":"敌方开始反占","prompt":"黑方开始反占红旗但尚未完成时，旗帜所有权是什么？","options":["立刻变黑方","暂时无主","仍属红方，同时contested=true"],"correct":2,"success":"正确：反占期间原所有权保留，但旗处于争夺。"},{"id":"t9c_abort","type":"quiz","title":"反占被中断","prompt":"黑方反占到2/3后占领者离开，结果是什么？","options":["红方所有权保留，争夺结束","黑方直接获得旗帜","旗帜变为中立"],"correct":0,"success":"正确：中断不会抹去原所有权。"},{"id":"t9c_flip","type":"quiz","title":"反占完成","prompt":"何时旗帜所有权才翻转给黑方？","options":["黑方踏上旗点时","反占进度完成到3/3时","公开消息出现时"],"correct":1,"success":"正确：只有完成3/3才翻转所有权。"},{"id":"t9c_victory","type":"quiz","title":"三旗胜利","prompt":"一方拥有三旗，但其中一旗仍contested，会立即胜利吗？","options":["会","不会，三旗都不在争夺中才立即胜利"],"correct":1,"success":"正确：争夺中的旗阻止三旗即时胜利。"}])
+summary = PackedStringArray("占领进度绑定具体棋子，中断即清零", "反占期间原所有权保留且contested=true", "完成3/3才翻转所有权", "三旗都不在争夺中才立即获胜")

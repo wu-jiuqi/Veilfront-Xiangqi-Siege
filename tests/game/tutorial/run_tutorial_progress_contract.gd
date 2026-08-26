@@ -31,6 +31,16 @@ func _run() -> void:
 	screen.confirm_prepared_action()
 	await process_frame
 	await process_frame
+	var director: Node = level.get_node("TutorialDirector")
+	var overlay: Control = level.get_node("TutorialOverlay") as Control
+	var quiz_guard := 0
+	while str(director.get_public_checkpoint_id()) != "completed" and quiz_guard < 10:
+		var option := overlay.find_child("Option0", true, false) as Button
+		if option == null or not option.visible:
+			break
+		option.pressed.emit()
+		quiz_guard += 1
+		await process_frame
 	var config := ConfigFile.new()
 	_expect(config.load(TEST_PROGRESS_PATH) == OK, "tutorial completion did not create progress file")
 	var completed_ids: Variant = config.get_value("progress", "completed_ids", [])

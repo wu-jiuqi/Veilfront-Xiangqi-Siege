@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="TutorialScenarioDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/application/tutorial_scenario_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+scenario_id = "tutorial-t9-c-v1"
+level_id = "T9-C"
+fixture_key = "ftue-t9-contest"
+bound_seat = "red"
+seed_value = 471091
+initial_pieces = Array[Dictionary]([{"id":"rt9c_owner","side":"red","piece_type":"pawn","position":[4,12]},{"id":"bt9c_contester","side":"black","piece_type":"pawn","position":[6,13]}])
+initial_visible_cells = Array[Vector2i]([Vector2i(3,11),Vector2i(4,11),Vector2i(5,11),Vector2i(3,12),Vector2i(4,12),Vector2i(5,12),Vector2i(5,12),Vector2i(6,12),Vector2i(7,12),Vector2i(5,13),Vector2i(6,13),Vector2i(7,13)])
+initial_flags = Array[Dictionary]([{"id":"flag-contested","position":[6,13],"owner":"red","discovered_by":["red","black"]}])
+allow_any_public_preview = true

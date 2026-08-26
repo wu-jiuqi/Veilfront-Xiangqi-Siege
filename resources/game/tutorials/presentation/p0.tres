@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="TutorialPresentationTrack" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/tutorial/tutorial_presentation_track.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+track_id = "tutorial-p0-presentation-v1"
+level_id = "P0"
+title = "雾中烽火"
+subtitle = "第一次军令"
+goal = "选择红兵、预览并确认一次移动，让前方迷雾退开。"
+tags = PackedStringArray("30秒内行动", "预览确认", "动态视野", "旗帜发现")
+steps = Array[Dictionary]([{"id":"p0_first_move","type":"move","actor":"rp0_entry","target":[5,11],"title":"向烽火前进","prompt":"选择红兵，预览（5,11），再确认移动。先行动，规则会在结果后说明。","success":"行动已提交。红兵的新3×3视野揭开前方旗帜。"},{"id":"p0_result","type":"quiz","title":"结果复盘","prompt":"为什么旗帜现在会显示？","options":["移动后的视野首次覆盖了旗点","预览会永久打开全部迷雾","旗帜本来对双方公开"],"correct":0,"success":"正确：只有已授权视野和永久发现记忆能显示旗位。"}])
+summary = PackedStringArray("预览不是提交，确认后才消耗行动", "每枚棋子提供当前位置周围3×3动态视野", "旗帜首次进入本方视野后会被记住")

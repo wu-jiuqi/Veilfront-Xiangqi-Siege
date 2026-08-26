@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="TutorialScenarioDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/application/tutorial_scenario_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+scenario_id = "tutorial-p0-v1"
+level_id = "P0"
+fixture_key = "ftue-p0"
+bound_seat = "red"
+seed_value = 470900
+initial_pieces = Array[Dictionary]([{"id":"rp0_entry","side":"red","piece_type":"pawn","position":[5,10]}])
+initial_visible_cells = Array[Vector2i]([Vector2i(4,9),Vector2i(5,9),Vector2i(6,9),Vector2i(4,10),Vector2i(5,10),Vector2i(6,10),Vector2i(4,11),Vector2i(5,11),Vector2i(6,11)])
+initial_flags = Array[Dictionary]([{"id":"flag-entry","position":[5,12],"owner":"neutral","discovered_by":[]}])
+allow_any_public_preview = true

@@ -78,4 +78,8 @@ func _is_coordinate(value: Variant) -> bool:
 
 
 func _tutorial_level_ids() -> Array[String]:
-	return ["T0", "T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9", "T10"]
+	return [
+		"P0", "B1", "B2", "B3",
+		"T0", "T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9", "T10",
+		"T8-R", "T9-C", "T10-E",
+	]

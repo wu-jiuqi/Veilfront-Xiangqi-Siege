@@ -1,0 +1,399 @@
+[gd_resource type="Resource" script_class="TutorialModuleCatalog" load_steps=59 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/tutorial/tutorial_module_catalog.gd" id="1_catalog"]
+[ext_resource type="Script" path="res://scripts/game/tutorial/tutorial_module_definition.gd" id="2_module"]
+[ext_resource type="Script" path="res://scripts/game/tutorial/tutorial_route_chapter_definition.gd" id="3_chapter"]
+[ext_resource type="Script" path="res://scripts/game/tutorial/tutorial_route_definition.gd" id="4_route"]
+[ext_resource type="Resource" path="res://resources/game/tutorials/authority/p0.tres" id="a_p0"]
+[ext_resource type="Resource" path="res://resources/game/tutorials/presentation/p0.tres" id="p_p0"]
+[ext_resource type="Resource" path="res://resources/game/tutorials/authority/b1.tres" id="a_b1"]
+[ext_resource type="Resource" path="res://resources/game/tutorials/presentation/b1.tres" id="p_b1"]
+[ext_resource type="Resource" path="res://resources/game/tutorials/authority/b2.tres" id="a_b2"]
+[ext_resource type="Resource" path="res://resources/game/tutorials/presentation/b2.tres" id="p_b2"]
+[ext_resource type="Resource" path="res://resources/game/tutorials/authority/b3.tres" id="a_b3"]
+[ext_resource type="Resource" path="res://resources/game/tutorials/presentation/b3.tres" id="p_b3"]
+[ext_resource type="Resource" path="res://resources/game/tutorials/authority/t0.tres" id="a_t0"]
+[ext_resource type="Resource" path="res://resources/game/tutorials/presentation/t0.tres" id="p_t0"]
+[ext_resource type="Resource" path="res://resources/game/tutorials/authority/t1.tres" id="a_t1"]
+[ext_resource type="Resource" path="res://resources/game/tutorials/presentation/t1.tres" id="p_t1"]
+[ext_resource type="Resource" path="res://resources/game/tutorials/authority/t2.tres" id="a_t2"]
+[ext_resource type="Resource" path="res://resources/game/tutorials/presentation/t2.tres" id="p_t2"]
+[ext_resource type="Resource" path="res://resources/game/tutorials/authority/t3.tres" id="a_t3"]
+[ext_resource type="Resource" path="res://resources/game/tutorials/presentation/t3.tres" id="p_t3"]
+[ext_resource type="Resource" path="res://resources/game/tutorials/authority/t4.tres" id="a_t4"]
+[ext_resource type="Resource" path="res://resources/game/tutorials/presentation/t4.tres" id="p_t4"]
+[ext_resource type="Resource" path="res://resources/game/tutorials/authority/t5.tres" id="a_t5"]
+[ext_resource type="Resource" path="res://resources/game/tutorials/presentation/t5.tres" id="p_t5"]
+[ext_resource type="Resource" path="res://resources/game/tutorials/authority/t6.tres" id="a_t6"]
+[ext_resource type="Resource" path="res://resources/game/tutorials/presentation/t6.tres" id="p_t6"]
+[ext_resource type="Resource" path="res://resources/game/tutorials/authority/t7.tres" id="a_t7"]
+[ext_resource type="Resource" path="res://resources/game/tutorials/presentation/t7.tres" id="p_t7"]
+[ext_resource type="Resource" path="res://resources/game/tutorials/authority/t8.tres" id="a_t8"]
+[ext_resource type="Resource" path="res://resources/game/tutorials/presentation/t8.tres" id="p_t8"]
+[ext_resource type="Resource" path="res://resources/game/tutorials/authority/t9.tres" id="a_t9"]
+[ext_resource type="Resource" path="res://resources/game/tutorials/presentation/t9.tres" id="p_t9"]
+[ext_resource type="Resource" path="res://resources/game/tutorials/authority/t10.tres" id="a_t10"]
+[ext_resource type="Resource" path="res://resources/game/tutorials/presentation/t10.tres" id="p_t10"]
+[ext_resource type="Resource" path="res://resources/game/tutorials/authority/t8-r.tres" id="a_t8r"]
+[ext_resource type="Resource" path="res://resources/game/tutorials/presentation/t8-r.tres" id="p_t8r"]
+[ext_resource type="Resource" path="res://resources/game/tutorials/authority/t9-c.tres" id="a_t9c"]
+[ext_resource type="Resource" path="res://resources/game/tutorials/presentation/t9-c.tres" id="p_t9c"]
+[ext_resource type="Resource" path="res://resources/game/tutorials/authority/t10-e.tres" id="a_t10e"]
+[ext_resource type="Resource" path="res://resources/game/tutorials/presentation/t10-e.tres" id="p_t10e"]
+
+[sub_resource type="Resource" id="ModuleP0"]
+script = ExtResource("2_module")
+module_id = "P0"
+authority = ExtResource("a_p0")
+presentation = ExtResource("p_p0")
+capability_ids = PackedStringArray("O-01", "O-07", "FOG-01", "FL-01")
+estimated_minutes = 1
+core_required = true
+positive_evidence_tags = PackedStringArray("confirmed_move", "flag_discovered")
+negative_evidence_tags = PackedStringArray("preview_not_submission")
+reset_evidence_tags = PackedStringArray("scenario_restart")
+
+[sub_resource type="Resource" id="ModuleT0"]
+script = ExtResource("2_module")
+module_id = "T0"
+authority = ExtResource("a_t0")
+presentation = ExtResource("p_t0")
+capability_ids = PackedStringArray("O-02", "O-03", "O-04", "O-05", "O-06", "O-08", "O-09", "O-10", "M-01", "M-02", "M-03")
+estimated_minutes = 3
+core_required = true
+positive_evidence_tags = PackedStringArray("cancel", "private_marker", "confirmed_move", "mode_quiz")
+negative_evidence_tags = PackedStringArray("hidden_equivalent_preview")
+reset_evidence_tags = PackedStringArray("step_reset", "scenario_restart")
+
+[sub_resource type="Resource" id="ModuleB1"]
+script = ExtResource("2_module")
+module_id = "B1"
+authority = ExtResource("a_b1")
+presentation = ExtResource("p_b1")
+capability_ids = PackedStringArray("B-01", "B-02", "B-03")
+estimated_minutes = 3
+core_required = true
+positive_evidence_tags = PackedStringArray("pawn_move", "rook_move", "cannon_move", "cannon_capture_quiz")
+negative_evidence_tags = PackedStringArray("friendly_block", "cannon_screen")
+reset_evidence_tags = PackedStringArray("scenario_restart")
+
+[sub_resource type="Resource" id="ModuleB2"]
+script = ExtResource("2_module")
+module_id = "B2"
+authority = ExtResource("a_b2")
+presentation = ExtResource("p_b2")
+capability_ids = PackedStringArray("B-04", "B-05", "B-08")
+estimated_minutes = 3
+core_required = true
+positive_evidence_tags = PackedStringArray("horse_move", "elephant_move", "river_quiz")
+negative_evidence_tags = PackedStringArray("horse_leg", "elephant_eye")
+reset_evidence_tags = PackedStringArray("scenario_restart")
+
+[sub_resource type="Resource" id="ModuleB3"]
+script = ExtResource("2_module")
+module_id = "B3"
+authority = ExtResource("a_b3")
+presentation = ExtResource("p_b3")
+capability_ids = PackedStringArray("B-06", "B-07", "S-GENERAL")
+estimated_minutes = 3
+core_required = true
+positive_evidence_tags = PackedStringArray("advisor_move", "general_move", "actual_death_quiz")
+negative_evidence_tags = PackedStringArray("palace_boundary")
+reset_evidence_tags = PackedStringArray("scenario_restart")
+
+[sub_resource type="Resource" id="ModuleT1"]
+script = ExtResource("2_module")
+module_id = "T1"
+authority = ExtResource("a_t1")
+presentation = ExtResource("p_t1")
+capability_ids = PackedStringArray("S-PAWN", "ELG-01")
+estimated_minutes = 2
+core_required = true
+positive_evidence_tags = PackedStringArray("pawn_cross", "result_quiz")
+negative_evidence_tags = PackedStringArray("shared_eligibility")
+reset_evidence_tags = PackedStringArray("scenario_restart")
+
+[sub_resource type="Resource" id="ModuleT2"]
+script = ExtResource("2_module")
+module_id = "T2"
+authority = ExtResource("a_t2")
+presentation = ExtResource("p_t2")
+capability_ids = PackedStringArray("S-HORSE", "FOG-03")
+estimated_minutes = 2
+core_required = true
+positive_evidence_tags = PackedStringArray("horse_hidden", "reveal_quiz")
+negative_evidence_tags = PackedStringArray("horse_leg_reject")
+reset_evidence_tags = PackedStringArray("scenario_restart")
+
+[sub_resource type="Resource" id="ModuleT3"]
+script = ExtResource("2_module")
+module_id = "T3"
+authority = ExtResource("a_t3")
+presentation = ExtResource("p_t3")
+capability_ids = PackedStringArray("S-ELEPHANT", "S-ELEPHANT-LIFE")
+estimated_minutes = 3
+core_required = true
+positive_evidence_tags = PackedStringArray("elephant_move", "contact_prediction", "source_lifecycle_quiz")
+negative_evidence_tags = PackedStringArray("elephant_eye_reject")
+reset_evidence_tags = PackedStringArray("scenario_restart")
+
+[sub_resource type="Resource" id="ModuleT4"]
+script = ExtResource("2_module")
+module_id = "T4"
+authority = ExtResource("a_t4")
+presentation = ExtResource("p_t4")
+capability_ids = PackedStringArray("S-ROOK", "S-ROOK-CONTACT", "C-01", "C-02")
+estimated_minutes = 3
+core_required = true
+positive_evidence_tags = PackedStringArray("rook_path", "hidden_contact", "casualty_quiz")
+negative_evidence_tags = PackedStringArray("friendly_block")
+reset_evidence_tags = PackedStringArray("scenario_restart")
+
+[sub_resource type="Resource" id="ModuleT5"]
+script = ExtResource("2_module")
+module_id = "T5"
+authority = ExtResource("a_t5")
+presentation = ExtResource("p_t5")
+capability_ids = PackedStringArray("S-CANNON", "ELG-03")
+estimated_minutes = 3
+core_required = true
+positive_evidence_tags = PackedStringArray("cannon_capture", "bombardment", "ammo_quiz")
+negative_evidence_tags = PackedStringArray("bombardment_eligibility")
+reset_evidence_tags = PackedStringArray("scenario_restart")
+
+[sub_resource type="Resource" id="ModuleT6"]
+script = ExtResource("2_module")
+module_id = "T6"
+authority = ExtResource("a_t6")
+presentation = ExtResource("p_t6")
+capability_ids = PackedStringArray("S-ADVISOR", "C-01")
+estimated_minutes = 3
+core_required = true
+positive_evidence_tags = PackedStringArray("sacrifice_cancel", "sacrifice_confirm", "candidate_quiz")
+negative_evidence_tags = PackedStringArray("no_candidate")
+reset_evidence_tags = PackedStringArray("scenario_restart")
+
+[sub_resource type="Resource" id="ModuleT7"]
+script = ExtResource("2_module")
+module_id = "T7"
+authority = ExtResource("a_t7")
+presentation = ExtResource("p_t7")
+capability_ids = PackedStringArray("S-GENERAL", "V-02")
+estimated_minutes = 2
+core_required = true
+positive_evidence_tags = PackedStringArray("general_in_danger", "actual_general_capture")
+negative_evidence_tags = PackedStringArray("no_check_rule")
+reset_evidence_tags = PackedStringArray("scenario_restart")
+
+[sub_resource type="Resource" id="ModuleT8"]
+script = ExtResource("2_module")
+module_id = "T8"
+authority = ExtResource("a_t8")
+presentation = ExtResource("p_t8")
+capability_ids = PackedStringArray("W-01", "W-02", "W-03", "W-04", "FOG-02", "FOG-03", "ELG-02")
+estimated_minutes = 4
+core_required = true
+positive_evidence_tags = PackedStringArray("wall_breach", "buffer_entry", "base_entry")
+negative_evidence_tags = PackedStringArray("intact_wall", "direct_base_reject")
+reset_evidence_tags = PackedStringArray("scenario_restart")
+
+[sub_resource type="Resource" id="ModuleT9"]
+script = ExtResource("2_module")
+module_id = "T9"
+authority = ExtResource("a_t9")
+presentation = ExtResource("p_t9")
+capability_ids = PackedStringArray("FL-01", "FL-02", "FL-03")
+estimated_minutes = 4
+core_required = true
+positive_evidence_tags = PackedStringArray("flag_discovery", "flag_memory", "capture_progress")
+negative_evidence_tags = PackedStringArray("hidden_flag_equivalence", "capture_interrupt_quiz")
+reset_evidence_tags = PackedStringArray("scenario_restart")
+
+[sub_resource type="Resource" id="ModuleT10"]
+script = ExtResource("2_module")
+module_id = "T10"
+authority = ExtResource("a_t10")
+presentation = ExtResource("p_t10")
+capability_ids = PackedStringArray("CORE-ASSESS-SCOUT", "CORE-ASSESS-PATH", "CORE-ASSESS-RESOURCE", "CORE-ASSESS-CAPTURE")
+estimated_minutes = 6
+core_required = true
+positive_evidence_tags = PackedStringArray("assessment_complete", "public_summary", "solution_variants")
+negative_evidence_tags = PackedStringArray("action_limit", "capture_interrupt", "general_death")
+reset_evidence_tags = PackedStringArray("assessment_restart")
+
+[sub_resource type="Resource" id="ModuleT8R"]
+script = ExtResource("2_module")
+module_id = "T8-R"
+authority = ExtResource("a_t8r")
+presentation = ExtResource("p_t8r")
+capability_ids = PackedStringArray("W-05", "W-06", "W-07", "W-08")
+estimated_minutes = 4
+positive_evidence_tags = PackedStringArray("repair_prediction", "withdrawal_prediction", "reserve_prediction")
+negative_evidence_tags = PackedStringArray("repair_interruption")
+reset_evidence_tags = PackedStringArray("scenario_restart")
+
+[sub_resource type="Resource" id="ModuleT9C"]
+script = ExtResource("2_module")
+module_id = "T9-C"
+authority = ExtResource("a_t9c")
+presentation = ExtResource("p_t9c")
+capability_ids = PackedStringArray("FL-03", "FL-04", "V-01")
+estimated_minutes = 4
+positive_evidence_tags = PackedStringArray("contested_prediction", "ownership_flip_prediction", "three_flag_prediction")
+negative_evidence_tags = PackedStringArray("capture_interruption")
+reset_evidence_tags = PackedStringArray("scenario_restart")
+
+[sub_resource type="Resource" id="ModuleT10E"]
+script = ExtResource("2_module")
+module_id = "T10-E"
+authority = ExtResource("a_t10e")
+presentation = ExtResource("p_t10e")
+capability_ids = PackedStringArray("V-01", "V-02", "V-03", "V-04", "O-10")
+estimated_minutes = 4
+positive_evidence_tags = PackedStringArray("terminal_priority_prediction", "double_general_prediction", "round_limit_principle")
+negative_evidence_tags = PackedStringArray("animation_order_is_not_rule_order")
+reset_evidence_tags = PackedStringArray("scenario_restart")
+
+[sub_resource type="Resource" id="FoundationA0"]
+script = ExtResource("3_chapter")
+chapter_id = "A0"
+title = "雾中烽火"
+summary = "在30秒内完成第一次军令。"
+estimated_minutes = 1
+module_ids = PackedStringArray("P0")
+
+[sub_resource type="Resource" id="FoundationA1"]
+script = ExtResource("3_chapter")
+chapter_id = "A1"
+title = "军令与普通行动"
+summary = "掌握棋盘操作和七类棋子的普通行动。"
+estimated_minutes = 11
+module_ids = PackedStringArray("T0", "B1", "B2", "B3")
+
+[sub_resource type="Resource" id="FoundationA2"]
+script = ExtResource("3_chapter")
+chapter_id = "A2"
+title = "穿阵与隐匿"
+summary = "学习兵、马、相的雾疆能力。"
+estimated_minutes = 7
+module_ids = PackedStringArray("T1", "T2", "T3")
+
+[sub_resource type="Resource" id="FoundationA3"]
+script = ExtResource("3_chapter")
+chapter_id = "A3"
+title = "路径与斩将"
+summary = "学习车路径与实际阵亡规则。"
+estimated_minutes = 5
+module_ids = PackedStringArray("T4", "T7")
+
+[sub_resource type="Resource" id="FoundationA4"]
+script = ExtResource("3_chapter")
+chapter_id = "A4"
+title = "炮火与援军"
+summary = "学习炮击资源与士献祭。"
+estimated_minutes = 6
+module_ids = PackedStringArray("T5", "T6")
+
+[sub_resource type="Resource" id="FoundationA5"]
+script = ExtResource("3_chapter")
+chapter_id = "A5"
+title = "雾墙与战旗"
+summary = "完成破墙、发现和首次占领。"
+estimated_minutes = 8
+module_ids = PackedStringArray("T8", "T9")
+
+[sub_resource type="Resource" id="FoundationA6"]
+script = ExtResource("3_chapter")
+chapter_id = "A6"
+title = "第一面战旗"
+summary = "在少提示状态下完成核心考核。"
+estimated_minutes = 6
+module_ids = PackedStringArray("T10")
+assessment = true
+
+[sub_resource type="Resource" id="FoundationA7"]
+script = ExtResource("3_chapter")
+chapter_id = "A7"
+title = "完整机制毕业"
+summary = "完成修墙、反占和终局推演。"
+estimated_minutes = 12
+module_ids = PackedStringArray("T8-R", "T9-C", "T10-E")
+assessment = true
+
+[sub_resource type="Resource" id="FoundationRoute"]
+script = ExtResource("4_route")
+route_id = "foundation"
+title = "从基础学起"
+description = "适合第一次接触象棋或希望完整复习的玩家。"
+target_minutes_min = 25
+target_minutes_max = 35
+default_hint_tier = 1
+chapters = Array[ExtResource("3_chapter")]([SubResource("FoundationA0"), SubResource("FoundationA1"), SubResource("FoundationA2"), SubResource("FoundationA3"), SubResource("FoundationA4"), SubResource("FoundationA5"), SubResource("FoundationA6"), SubResource("FoundationA7")])
+recommended_entry = "level_select"
+
+[sub_resource type="Resource" id="ExperiencedX0"]
+script = ExtResource("3_chapter")
+chapter_id = "X0"
+title = "破常一手"
+summary = "先行动，再校准本作专属操作。"
+estimated_minutes = 4
+module_ids = PackedStringArray("P0", "T0")
+
+[sub_resource type="Resource" id="ExperiencedX1"]
+script = ExtResource("3_chapter")
+chapter_id = "X1"
+title = "路径与实际阵亡"
+summary = "优先体验最反传统直觉的车与将帅规则。"
+estimated_minutes = 5
+module_ids = PackedStringArray("T4", "T7")
+
+[sub_resource type="Resource" id="ExperiencedX2"]
+script = ExtResource("3_chapter")
+chapter_id = "X2"
+title = "雾疆兵种能力"
+summary = "学习兵、马、相、炮和士的专属规则。"
+estimated_minutes = 12
+module_ids = PackedStringArray("T1", "T2", "T3", "T5", "T6")
+
+[sub_resource type="Resource" id="ExperiencedX3"]
+script = ExtResource("3_chapter")
+chapter_id = "X3"
+title = "雾墙与战旗"
+summary = "完成城墙、缓冲区、发现与占领。"
+estimated_minutes = 8
+module_ids = PackedStringArray("T8", "T9")
+
+[sub_resource type="Resource" id="ExperiencedX4"]
+script = ExtResource("3_chapter")
+chapter_id = "X4"
+title = "核心考核"
+summary = "在少提示状态下夺得第一面战旗。"
+estimated_minutes = 6
+module_ids = PackedStringArray("T10")
+assessment = true
+
+[sub_resource type="Resource" id="ExperiencedX5"]
+script = ExtResource("3_chapter")
+chapter_id = "X5"
+title = "完整机制毕业"
+summary = "完成修墙、反占和终局推演。"
+estimated_minutes = 12
+module_ids = PackedStringArray("T8-R", "T9-C", "T10-E")
+assessment = true
+
+[sub_resource type="Resource" id="ExperiencedRoute"]
+script = ExtResource("4_route")
+route_id = "xiangqi_experienced"
+title = "只学《雾疆》差异"
+description = "适合熟悉中国象棋基本走法、希望直接学习本作差异的玩家。"
+target_minutes_min = 12
+target_minutes_max = 18
+default_hint_tier = 0
+chapters = Array[ExtResource("3_chapter")]([SubResource("ExperiencedX0"), SubResource("ExperiencedX1"), SubResource("ExperiencedX2"), SubResource("ExperiencedX3"), SubResource("ExperiencedX4"), SubResource("ExperiencedX5")])
+assumed_capability_ids = PackedStringArray("B-01", "B-02", "B-03", "B-04", "B-05", "B-06", "B-07", "B-08")
+recommended_entry = "level_select"
+
+[resource]
+script = ExtResource("1_catalog")
+modules = Array[ExtResource("2_module")]([SubResource("ModuleP0"), SubResource("ModuleT0"), SubResource("ModuleB1"), SubResource("ModuleB2"), SubResource("ModuleB3"), SubResource("ModuleT1"), SubResource("ModuleT2"), SubResource("ModuleT3"), SubResource("ModuleT4"), SubResource("ModuleT5"), SubResource("ModuleT6"), SubResource("ModuleT7"), SubResource("ModuleT8"), SubResource("ModuleT9"), SubResource("ModuleT10"), SubResource("ModuleT8R"), SubResource("ModuleT9C"), SubResource("ModuleT10E")])
+routes = Array[ExtResource("4_route")]([SubResource("FoundationRoute"), SubResource("ExperiencedRoute")])

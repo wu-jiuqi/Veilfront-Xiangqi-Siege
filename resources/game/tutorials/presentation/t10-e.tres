@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="TutorialPresentationTrack" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/tutorial/tutorial_presentation_track.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+track_id = "tutorial-t10-e-presentation-v1"
+level_id = "T10-E"
+title = "终局推演"
+subtitle = "结算优先级与完整毕业"
+goal = "预测斩将、炮击同步、三旗和轮上限原则的结算结果。"
+tags = PackedStringArray("实际阵亡优先", "同窗同步", "双将和局", "轮上限动态配置")
+steps = Array[Dictionary]([{"id":"t10e_general_priority","type":"quiz","title":"斩将优先级","prompt":"车路径先吃到敌将，后方还有其他目标时如何结算？","options":["继续处理整条路径","敌将实际死亡后停止后续目标并优先终局","先检查三旗再处理敌将"],"correct":1,"success":"正确：将帅实际死亡具有更高终局优先级。"},{"id":"t10e_bombard_sync","type":"quiz","title":"炮击同窗结算","prompt":"同一次轰炸的三个命中点应如何理解？","options":["按动画先后逐个改变胜负","逻辑上同一结算窗口同时受击","玩家可选择命中顺序"],"correct":1,"success":"正确：动画顺序不能改变同步规则结果。"},{"id":"t10e_double_general","type":"quiz","title":"双将同时阵亡","prompt":"同一炮击窗口内双方将帅都实际死亡，结果是什么？","options":["先播死亡动画的一方输","红方胜","平局"],"correct":2,"success":"正确：同窗双将实际阵亡为平局。"},{"id":"t10e_three_flags","type":"quiz","title":"三旗与斩将同窗","prompt":"同一结算窗口既形成三旗又造成一方将帅死亡，优先处理什么？","options":["三旗","将帅实际死亡","随机选择"],"correct":1,"success":"正确：将帅实际死亡优先。"},{"id":"t10e_round_limit","type":"quiz","title":"轮上限原则","prompt":"达到战局公开配置的轮上限后，争夺中的旗如何计数？","options":["不计任何一方","仍计原所有者；旗数同则平局","自动计正在反占的一方"],"correct":1,"success":"正确：具体轮上限读取战局配置，教程不写死数值。"}])
+summary = PackedStringArray("实际斩将优先于同窗其他效果和三旗检查", "炮击命中逻辑同步，动画先后不改规则", "同窗双方将帅均死为平局", "轮上限取公开战局配置，争夺旗仍计原所有者")

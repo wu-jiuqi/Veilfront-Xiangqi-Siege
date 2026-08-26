@@ -11,8 +11,6 @@ signal step_reset_requested()
 signal next_chapter_requested()
 signal stay_requested()
 
-const TUTORIAL_COUNT := 11
-
 @onready var _guide: Control = %LevelGuidePanel
 @onready var _decision_panel: PanelContainer = %DecisionPanel
 @onready var _decision_title: Label = %DecisionTitle
@@ -29,6 +27,7 @@ const TUTORIAL_COUNT := 11
 var _track: TutorialPresentationTrack
 var _current_step: Dictionary = {}
 var _completed_ids: Array[String] = []
+var _route_module_ids: Array[String] = []
 var _level_id := ""
 var _title := ""
 var _step_id := ""
@@ -57,7 +56,8 @@ func _ready() -> void:
 
 func configure_chapter(
 	track: TutorialPresentationTrack,
-	completed_ids: Array[String] = []
+	completed_ids: Array[String] = [],
+	route_module_ids: Array[String] = []
 ) -> void:
 	if track == null:
 		return
@@ -65,6 +65,9 @@ func configure_chapter(
 	_level_id = track.level_id
 	_title = track.title
 	_completed_ids = completed_ids.duplicate()
+	_route_module_ids = route_module_ids.duplicate()
+	if _route_module_ids.is_empty():
+		_route_module_ids = TutorialChapterCatalog.TUTORIAL_IDS.duplicate()
 	_current_step = {}
 	_step_id = ""
 	_hint_available = false
@@ -204,6 +207,10 @@ func _refresh_guide() -> void:
 		"objective": _track.goal if _track != null else "完成当前关卡目标。",
 		"steps": _visible_step_entries(),
 		"current_operation": operation,
+		"reason": str(_current_step.get(
+			"why",
+			_current_step.get("success", "本步骤由正式规则结算；展开可复盘结果。")
+		)),
 		"hint": _hint_text,
 		"hint_revealed": _hint_revealed,
 		"hint_available": _hint_available,
@@ -286,7 +293,9 @@ func _configure_decision(step: Dictionary) -> void:
 		_decision_body.text = _completion_summary if not _completion_summary.is_empty() \
 			else str(step.get("prompt", "本章检查点已记录。"))
 		_completion_actions.visible = true
-		_next_chapter_button.text = "返回训练目录" if _level_id == "T10" else "进入下一章"
+		_next_chapter_button.text = "返回训练目录" \
+			if _route_module_ids.find(_level_id) == _route_module_ids.size() - 1 \
+			else "进入下一章"
 		_next_chapter_button.grab_focus()
 		return
 	if _step_id == "failed":
@@ -318,24 +327,30 @@ func _summary_text(summary_value: Variant) -> String:
 
 
 func _progress_value() -> float:
-	var completed_count := _completed_ids.size()
+	var route_count := maxi(1, _route_module_ids.size())
+	var completed_count := 0
+	for module_id: String in _route_module_ids:
+		if module_id in _completed_ids:
+			completed_count += 1
 	if _step_id == "completed" and _level_id not in _completed_ids:
 		completed_count += 1
 	var step_fraction := 0.0
 	if _track != null and not _track.steps.is_empty() and _step_id != "completed":
 		step_fraction = float(int(_current_step.get("step_index", 0))) \
 			/ float(_track.steps.size())
-	return clampf((float(completed_count) + step_fraction) / float(TUTORIAL_COUNT) * 100.0, 0.0, 100.0)
+	return clampf((float(completed_count) + step_fraction) / float(route_count) * 100.0, 0.0, 100.0)
 
 
 func _progress_text() -> String:
 	if _track == null:
 		return "%s · 测试入口" % _level_id
+	var route_count := maxi(1, _route_module_ids.size())
+	var route_index := maxi(0, _route_module_ids.find(_level_id))
 	var step_count := maxi(1, _track.steps.size())
 	var step_number := mini(int(_current_step.get("step_index", 0)) + 1, step_count)
 	return "章节 %d / %d · 步骤 %d / %d · 总进度 %d%%" % [
-		clampi(_level_id.trim_prefix("T").to_int(), 0, TUTORIAL_COUNT - 1) + 1,
-		TUTORIAL_COUNT,
+		route_index + 1,
+		route_count,
 		step_number,
 		step_count,
 		roundi(_progress_value()),

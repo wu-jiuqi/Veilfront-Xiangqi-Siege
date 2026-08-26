@@ -17,6 +17,7 @@ func _run() -> void:
 	await process_frame
 	var screen: Control = level.get_node("MatchScreen") as Control
 	var director: Node = level.get_node("TutorialDirector")
+	var overlay: Control = level.get_node("TutorialOverlay") as Control
 
 	screen.handle_board_point(Vector2i(5, 4))
 	screen.handle_cancel_or_marker(Vector2i(4, 5))
@@ -50,7 +51,17 @@ func _run() -> void:
 		confirm_button.pressed.emit()
 	await process_frame
 	await process_frame
-	_expect(str(director.get_public_checkpoint_id()) == "completed", "T0 confirmed move did not complete the chapter")
+	_expect(str(director.get_public_checkpoint_id()) == "t0_mirror", "T0 confirmed move did not enter operation review")
+	var quiz_guard := 0
+	while str(director.get_public_checkpoint_id()) != "completed" and quiz_guard < 10:
+		var option := overlay.find_child("Option0", true, false) as Button
+		_expect(option != null and option.visible, "T0 operation review did not expose its answer")
+		if option == null or not option.visible:
+			break
+		option.pressed.emit()
+		quiz_guard += 1
+		await process_frame
+	_expect(str(director.get_public_checkpoint_id()) == "completed", "T0 operation review did not complete the chapter")
 	_expect(screen.has_method("get_player_view_snapshot"), "MatchScreen does not expose its latest observer-safe PlayerView")
 	if screen.has_method("get_player_view_snapshot"):
 		var view: Dictionary = screen.get_player_view_snapshot()

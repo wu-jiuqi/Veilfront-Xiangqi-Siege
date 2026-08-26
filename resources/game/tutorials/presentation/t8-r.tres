@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="TutorialPresentationTrack" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/tutorial/tutorial_presentation_track.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+track_id = "tutorial-t8-r-presentation-v1"
+level_id = "T8-R"
+title = "城墙余波"
+subtitle = "修复、撤回与后备"
+goal = "预测修复启动、中断、强制撤回和后备部署的正式结算顺序。"
+tags = PackedStringArray("REPAIRING", "双方行动窗口", "强制撤回", "FIFO后备")
+steps = Array[Dictionary]([{"id":"t8r_start","type":"quiz","title":"修复何时启动","prompt":"守方缓冲区与大本营内的敌军总数少于几枚时，破墙进入修复中？","options":["少于2枚","少于3枚","少于4枚"],"correct":1,"success":"正确：少于3枚时进入REPAIRING，触发该变化的行动不计修复行动窗口。"},{"id":"t8r_interrupt","type":"quiz","title":"修复如何中断","prompt":"修复期间入侵者重新达到3枚，会发生什么？","options":["继续修复","重新变为BREACHED并清空修复计时","立刻恢复完整墙"],"correct":1,"success":"正确：第三枚入侵者会重新破坏城墙。"},{"id":"t8r_withdraw","type":"quiz","title":"哪些棋子被撤回","prompt":"修复完成时，哪些入侵棋会被强制撤回？","options":["缓冲区和大本营内全部敌棋","只撤回敌方大本营内的入侵者","只撤回缓冲区内入侵者"],"correct":1,"success":"正确：缓冲区敌棋留下，只撤回大本营内入侵者。"},{"id":"t8r_reserve","type":"quiz","title":"大本营已满","prompt":"撤回棋没有本营空点时会怎样？","options":["直接阵亡","进入FIFO后备，并在本方行动开始有空点时自动部署","随机传送到战区"],"correct":1,"success":"正确：进入后备队列，且炮弹等永久资源不会因撤回恢复。"},{"id":"t8r_finish","type":"quiz","title":"修复完成窗口","prompt":"修复启动后仍少于3枚入侵者，何时恢复完整墙？","options":["任意一方行动一次","双方各完成一次行动机会","等五个完整轮"],"correct":1,"success":"正确：双方各完成一次行动机会后恢复INTACT并移除破墙区域视野。"}])
+summary = PackedStringArray("少于3枚入侵者才启动修复，触发行动不计窗口", "修复期间回到3枚会重新破墙", "只撤回敌营内入侵者，缓冲区敌棋留下", "无空点时进入FIFO后备，永久资源不恢复")

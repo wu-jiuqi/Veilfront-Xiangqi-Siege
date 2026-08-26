@@ -1,19 +1,17 @@
 extends SceneTree
 
-const TUTORIAL_IDS: Array[String] = [
-	"T0", "T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9", "T10",
-]
+const TutorialChapterCatalog = preload("res://scripts/game/tutorial/tutorial_chapter_catalog.gd")
 
 var _failures: Array[String] = []
 
 
 func _init() -> void:
-	for level_id: String in TUTORIAL_IDS:
+	for level_id: String in TutorialChapterCatalog.TUTORIAL_IDS:
 		_check_chapter_resources(level_id)
 	_check_t1_fixed_position()
 	_check_t10_presentation()
 	if _failures.is_empty():
-		print("TUTORIAL_CHAPTER_CONTENT_CONTRACT_PASS chapters=11")
+		print("TUTORIAL_CHAPTER_CONTENT_CONTRACT_PASS chapters=18")
 		quit(0)
 		return
 	for failure: String in _failures:

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="TutorialPresentationTrack" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/tutorial/tutorial_presentation_track.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+track_id = "tutorial-b3-presentation-v1"
+level_id = "B3"
+title = "九宫中军"
+subtitle = "士、将帅与实际阵亡"
+goal = "完成士与将帅的九宫普通移动，并确认本作只以实际阵亡结算。"
+tags = PackedStringArray("九宫", "士斜走", "将帅直走", "无将军应将")
+steps = Array[Dictionary]([{"id":"b3_advisor","type":"move","actor":"rb3_advisor","target":[5,2],"title":"士在九宫斜走","prompt":"让红士从（4,1）斜走到（5,2）。士不能离开九宫。","success":"红士完成九宫斜走。"},{"id":"b3_general","type":"move","actor":"rb3_general","target":[6,2],"title":"帅在九宫直走","prompt":"让红帅从（6,1）直走到（6,2）。将帅只能在九宫内直走。","success":"红帅完成九宫直走。"},{"id":"b3_quiz","type":"quiz","title":"胜负差异","prompt":"帅进入敌方攻击范围时会立刻失败吗？","options":["会，必须应将","不会，只有实际被吃才结算"],"correct":1,"success":"正确：本作没有将军、应将、照面与飞将。"}])
+summary = PackedStringArray("士只在九宫内斜走", "将帅只在九宫内直走", "进入攻击范围不结算，实际阵亡才结束对局")

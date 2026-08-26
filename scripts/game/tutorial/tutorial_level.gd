@@ -3,7 +3,9 @@ extends Control
 const FormalLocalSession = preload("res://scripts/game/application/formal_local_session.gd")
 const FrontendRoutes = preload("res://scripts/integration/frontend_routes.gd")
 const TutorialChapterCatalog = preload("res://scripts/game/tutorial/tutorial_chapter_catalog.gd")
+const TutorialProgressStore = preload("res://scripts/game/tutorial/tutorial_progress_store.gd")
 const TERMINAL_LEVEL_DESTINATION: String = "level_select"
+const DEFAULT_ROUTE_ID: String = "foundation"
 
 @export var bootstrap_local_session: bool = true
 @export var progress_path: String = "user://level_progress.cfg"
@@ -11,6 +13,9 @@ const TERMINAL_LEVEL_DESTINATION: String = "level_select"
 var _local_session: RefCounted
 var _local_port: RefCounted
 var _level_id: String = "T0"
+var _scenario: TutorialScenarioDefinition
+var _progress_store: TutorialProgressStore
+var _route_module_ids: Array[String] = []
 
 
 func _ready() -> void:
@@ -19,22 +24,37 @@ func _ready() -> void:
 	if not bootstrap_local_session:
 		return
 	_level_id = str(get_tree().root.get_meta("veilfront_selected_level_id", "T0"))
-	var scenario: TutorialScenarioDefinition = TutorialChapterCatalog.authority(_level_id)
+	_progress_store = TutorialProgressStore.new(progress_path, TutorialChapterCatalog.CATALOG)
+	if not _progress_store.load_progress():
+		push_error("TutorialLevel could not load curriculum progress")
+	if _progress_store.selected_route() == null:
+		if _level_id == "P0":
+			_route_module_ids = ["P0"]
+		else:
+			_progress_store.select_route(DEFAULT_ROUTE_ID)
+	if _route_module_ids.is_empty():
+		_route_module_ids = _progress_store.selected_route().module_ids()
+	if _level_id not in _route_module_ids:
+		_level_id = _route_module_ids.front()
+		get_tree().root.set_meta("veilfront_selected_level_id", _level_id)
+	_progress_store.set_current_module(_level_id)
+	_scenario = TutorialChapterCatalog.authority(_level_id)
 	var presentation: TutorialPresentationTrack = TutorialChapterCatalog.presentation(_level_id)
-	if scenario == null or presentation == null:
+	if _scenario == null or presentation == null:
 		push_error("TutorialLevel could not resolve level %s" % _level_id)
 		return
-	$ApplicationHost.trusted_tutorial_scenario = scenario
+	$ApplicationHost.trusted_tutorial_scenario = _scenario
 	$TutorialDirector.configure(_level_id, presentation)
-	$TutorialOverlay.configure_chapter(presentation, _load_completed_ids())
-	_bootstrap_local_session(scenario)
+	$TutorialOverlay.configure_chapter(
+		presentation,
+		_progress_store.completed_module_ids(),
+		_route_module_ids
+	)
+	_bootstrap_local_session(_scenario)
 
 
 func _bootstrap_local_session(scenario: TutorialScenarioDefinition) -> void:
-	_local_session = FormalLocalSession.create_tutorial(
-		scenario,
-		{"full_round_limit_hypothesis": 50}
-	)
+	_local_session = FormalLocalSession.create_tutorial(scenario)
 	if _local_session == null:
 		push_error("TutorialLevel failed to create FormalLocalSession")
 		return
@@ -85,6 +105,8 @@ func apply_tutorial_step_effect(step_id: String) -> void:
 
 
 func _apply_tutorial_step_effect(step_id: String) -> void:
+	if _scenario == null or _scenario.effect_for_step(step_id).is_empty():
+		return
 	if _local_port != null and _local_port.has_method("apply_tutorial_transition"):
 		_local_port.apply_tutorial_transition(step_id)
 
@@ -101,11 +123,11 @@ func return_to_level_select() -> void:
 
 
 func advance_to_next_level() -> void:
-	var current_index := TutorialChapterCatalog.TUTORIAL_IDS.find(_level_id)
-	if current_index < 0 or current_index >= TutorialChapterCatalog.TUTORIAL_IDS.size() - 1:
+	var current_index := _route_module_ids.find(_level_id)
+	if current_index < 0 or current_index >= _route_module_ids.size() - 1:
 		return_to_level_select()
 		return
-	var next_level_id := TutorialChapterCatalog.TUTORIAL_IDS[current_index + 1]
+	var next_level_id := _route_module_ids[current_index + 1]
 	get_tree().root.set_meta("veilfront_selected_level_id", next_level_id)
 	var error := FrontendRoutes.navigate(
 		get_tree(),
@@ -116,9 +138,11 @@ func advance_to_next_level() -> void:
 		push_error("TutorialLevel could not advance to %s: %s" % [next_level_id, error_string(error)])
 
 
-func handle_level_skipped(_level_id_value: String) -> void:
+func handle_level_skipped(level_id_value: String) -> void:
 	if not bootstrap_local_session:
 		return
+	if _progress_store != null:
+		_progress_store.record_module_skipped(level_id_value)
 	call_deferred("advance_to_next_level")
 
 
@@ -127,34 +151,8 @@ func stay_on_completed_chapter() -> void:
 
 
 func record_level_completion(level_id: String) -> void:
-	var config := ConfigFile.new()
-	var load_error := config.load(progress_path)
-	if load_error not in [OK, ERR_FILE_NOT_FOUND]:
-		push_error("TutorialLevel could not load progress file: %s" % error_string(load_error))
-		return
-	var completed_ids: Array = []
-	var saved_ids: Variant = config.get_value("progress", "completed_ids", [])
-	if saved_ids is Array:
-		completed_ids = saved_ids.duplicate()
-	if level_id not in completed_ids:
-		completed_ids.append(level_id)
-		completed_ids.sort()
-	config.set_value("progress", "completed_ids", completed_ids)
-	var save_error := config.save(progress_path)
-	if save_error != OK:
-		push_error("TutorialLevel could not save progress file: %s" % error_string(save_error))
-
-
-func _load_completed_ids() -> Array[String]:
-	var completed_ids: Array[String] = []
-	var config := ConfigFile.new()
-	if config.load(progress_path) != OK:
-		return completed_ids
-	var saved_ids: Variant = config.get_value("progress", "completed_ids", [])
-	if saved_ids is Array:
-		for level_id: Variant in saved_ids:
-			completed_ids.append(str(level_id))
-	return completed_ids
+	if _progress_store != null and not _progress_store.record_module_completed(level_id):
+		push_error("TutorialLevel could not record curriculum progress for %s" % level_id)
 
 
 func get_layout_snapshot() -> Dictionary:
