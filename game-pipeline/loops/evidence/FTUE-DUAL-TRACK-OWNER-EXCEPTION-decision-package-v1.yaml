@@ -1,0 +1,132 @@
+exception_subject:
+  schema_version: veilfront-production-scope-exception/v1
+  subject_id: EXCEPTION-FTUE-DUAL-TRACK-001@v1
+  project_id: veilfront-xiangqi-siege
+  title: 新手教程双入口、能力进度与完整机制补充模块有限设计附录
+  parent_contract:
+    contract_id: LOOP-CTR-CONTENT-INTEGRATION-GATE3-001
+    version: 1
+    approval_id: approval:veilfront-xiangqi-siege:loop-contract:7c735748becb
+    registry_loop_id: e6e0f300-2130-41d0-8020-f7f4006deb3f
+    registry_revision_at_audit: 26
+    exceeded_boundary: 当前v1仅自动授权T0-T10既有教学打磨；双轨P0/B1/B2/B3、能力状态迁移和正式玩家分流被CHECK-SCOPE-G3-001排除，允许另行批准设计附录或Contract修订。
+  approved_proposal_candidate:
+    path: docs/design/tutorial/veilfront-ftue-content-coverage-and-ux-proposal-v1.md
+    git_commit: 0d145265e638a2a2a4bbcf341abcbe91be54f07d
+    raw_file_sha256: 1e99140831bedfc5b99900de4b547523dab2ab9b43f23fafe1833e25ed6ef3da
+  decision_requested:
+    decision_type: prospective_limited_scope_exception
+    question: 是否允许在不改变owner rule revision 5、正式Intent/Event、确定性随机和PlayerView信息边界的前提下，按已审提案实现双入口新手教程、能力进度、P0/B1/B2/B3、T8-R/T9-C/T10-E与对局内教学抽屉？
+    designated_decider: project-owner
+    decisions: [approved, rejected, revise]
+  objective:
+    milestone: ftue-dual-track-complete-mechanics
+    outcome: 零基础玩家和象棋熟悉玩家通过同一能力图的不同路径，完成核心胜任与完整机制教学；离开教学后仍可从对局内抽屉、教程目录和上下文提醒复习。
+    release_semantics: 本附录扩展GATE-3教学内容范围，不构成GATE-3内容冻结、GATE-4发布批准或正式规则修订。
+  exact_scope:
+    player_routes:
+    - 首次进入提供零基础路线与象棋熟悉路线；选择只改变教学顺序和默认假定，不产生第二套规则。
+    - 零基础路线包含P0、B1、B2、B3后进入共享T0-T10与补充模块；象棋熟悉路线可跳过基础棋理，但必须学习本作差异机制并完成核心考核。
+    - 玩家可以从教程目录重选路线、重玩章节和复习任意已解锁机制；跳过必须可见且不伪装成掌握。
+    capability_progress:
+    - 以UNSEEN、ASSUMED、COMPLETED、SKIPPED、NEEDS_REVIEW五态记录能力，不用单一章节序号冒充掌握程度。
+    - 旧版ConfigFile进度迁移为新结构，保留已完成章节；迁移失败时安全回退到未学习，不覆盖无关设置和挑战进度。
+    - 核心胜任和完整学习是两个独立里程碑；核心胜任不得依赖尚未确定的完整对局回合上限。
+    tutorial_content:
+    - 新增P0首次操作、B1棋盘与回合、B2基础移动与吃子、B3将帅安全及棋谱式微练习。
+    - 新增T8-R受限信息复习、T9-C规则组合挑战、T10-E完整机制综合考核，并补全现有T0-T10对项目正式机制的覆盖缺口。
+    - 教学局面、目标、允许行动、提示、失败恢复和完成条件使用Resource；固定界面与抽屉使用预置Control、Container和场景实例。
+    - 所有可影响棋局的教学行动继续经过正式Intent/Event；不得新增或扩大直接改写权威状态的step_effect路径。
+    experience_carriers:
+    - 主载体为可操作短局面，单个知识点遵循演示、行动、反馈、复做或考核的节奏。
+    - 对局HUD复用正式Match视觉，新增宽度约360至400像素的教学抽屉，提供当前目标、原因、可折叠规则说明、提示和进度。
+    - 非阻断上下文提醒只消费当前玩家已授权PlayerView、VisibleEvent、VisibleError和公开教程状态；同一机制需有频控和永久关闭能力。
+    formal_code_boundary:
+      allowed_roots:
+      - scripts/game/application
+      - scripts/game/contracts
+      - scripts/game/frontend
+      - scripts/game/presentation
+      - scripts/game/settings
+      - scripts/game/tutorial
+      - scenes/game/frontend
+      - scenes/game/match
+      - scenes/game/tutorial
+      - scenes/game/ui
+      - resources/game/tutorials
+      - resources/game/levels
+      - resources/game/ui
+      - tests/game/application
+      - tests/game/frontend
+      - tests/game/migration
+      - tests/game/scenes
+      - tests/game/tutorial
+      - tests/game/ui
+      - evidence/gate3
+      - docs/design/tutorial
+      - docs/godot-prompter/specs
+      protected_roots:
+      - scripts/game/domain
+      - scripts/game/projection
+      - scripts/prototype
+      rule: protected_roots只允许读取和回归验证；若实现证明必须修改正式规则语义、随机消费、观察者投影或prototype，立即停止并返回项目所有者修订范围。
+  approval_effect:
+    allowed:
+    - 新增教程路线、能力定义、能力进度存档迁移、目录入口、教学抽屉和上下文提醒的Resource、预置场景及非规则运行时。
+    - 新增P0、B1、B2、B3、T8-R、T9-C、T10-E并修订T0-T10目录编排、文案、提示、失败恢复和考核连接。
+    - 为复用正式Match HUD、正式PlayerView和正式Intent/Event，在application、presentation、frontend及tutorial层新增无规则语义变化的适配。
+    - 增加三分辨率布局、键鼠焦点、存档迁移、隐藏等价、章节流程、跳过重学和回归测试。
+    forbidden:
+    - 修改owner rule revision 5、棋子合法性、特殊行动语义、结算优先级、确定性随机消费、回放摘要或PlayerView信息权限。
+    - 新增或扩大通过教程脚本直接改写FullState、棋子位置、回合或随机状态的生产路径。
+    - 把ASSUMED、SKIPPED或仅看过说明记录为COMPLETED；通过客户端隐藏事实为玩家生成提示。
+    - 实现正式语音、BGM量产、新美术方向、C4+挑战、AI、互联网服务、外部采购或GATE-3/GATE-4发布承诺。
+    - 在正式规则未提供可查询值前硬编码完整对局回合上限，或以教程近似数值冒充正式规则。
+  acceptance:
+    automated:
+    - 项目实例、Contract v1、Registry、设计附录摘要和生成Agent适配器校验通过。
+    - P0/B1/B2/B3、T0-T10、T8-R/T9-C/T10-E资源标识唯一，路线引用、能力引用、前置关系和完成条件完整无环。
+    - 双路线均可从首次入口开始、暂停、恢复、跳过、重学并到达核心胜任；完整路线能到达完整学习里程碑。
+    - 旧版教程进度迁移保留已完成T章节，新五态往返保存稳定，清除教程进度不影响设置和挑战进度。
+    - 所有棋局行动经正式Intent/Event，禁止新增domain依赖或扩展step_effect直接状态写入。
+    - 上下文提醒和教学提示在隐藏等价PlayerView下输出一致，不读取FullState、seed、隐藏旗位、隐藏棋子或敌方视野源。
+    - 教学抽屉与目录在960x540、1280x720、1920x1080下无核心裁切，键鼠焦点可达，最小点击高度和reduced-motion符合GATE-3 UI标准。
+    - 现有正式规则、PlayerView、回放、LAN、T0-T10、C1-C3、UI和导出代表性回归保持通过。
+    manual:
+    - 一名零基础试玩者可在不依赖外部说明的情况下完成P0、基础模块、至少一个本作差异机制和核心考核，并能说出当前目标与失败原因。
+    - 一名象棋熟悉试玩者可跳过基础模块，完成本作差异机制和核心考核，且没有被迫重复已知棋子规则。
+    - 项目所有者确认教程抽屉、目录、跳过/重学和完整考核的形式符合已审UX提案。
+  quality_and_release:
+    independent_review_required: true
+    clean_worktree_required_for_final_qa: true
+    target_engine: Godot 4.7.1
+    target_platform: desktop
+    human_gate_after_implementation: 本次验收只决定是否接受教程扩展里程碑；不构成GATE-3内容冻结或发布批准。
+  resources_and_limits:
+    new_external_spend_limit: 0
+    new_agent_instance_limit: 0
+    new_voice_or_art_production_limit: 0
+    implementation_budget: 仅使用现有正式二维架构、现有UI资源、Godot预置节点和现有项目人员；发现需要规则重写或外部资产时停止。
+  failure_and_rollback:
+    stop_conditions:
+    - 无法在不改变规则语义、随机消费或PlayerView边界的前提下实现任一教学机制。
+    - 教学提示泄露隐藏信息、能力迁移覆盖无关存档、双路线产生不一致规则结论或新增直接状态改写路径。
+    - 三分辨率下无法同时保证正式棋盘操作区和教程抽屉核心信息可读，且需要改变已批准UI方向。
+    rollback: 首次入口恢复到现有T0目录；新增路线、能力进度与补充模块保持独立可禁用；保留旧版教程进度读取和现有T0-T10回归，记录证据并返回项目所有者修订范围。
+  decision_consequences:
+    approved: 创建绑定本摘要哈希的game-production-approval/v1记录后，把设计附录登记到当前GATE-3 Registry并依次执行数据模型、预置场景、补充模块、存档迁移、自动验证、独立QA与人工试玩。
+    rejected: 不修改教程运行时代码；GATE-3继续只打磨现有T0-T10，已审UX提案保留为未实施候选。
+    revise: 根据项目所有者意见更新附录、生成新摘要并重新请求确认；旧摘要立即失效。
+review:
+  gate_result: awaiting_human
+  designated_decider: project-owner
+  observed_facts:
+  - 当前教程目录硬编码T0-T10，进度使用ConfigFile章节完成记录，尚无路线与五态能力模型。
+  - 当前GATE-3 v1明确排除P0/B1/B2/B3、能力迁移和正式玩家分流，允许另行批准设计附录。
+  - 已审UX提案已在提交0d145265e638a2a2a4bbcf341abcbe91be54f07d中固定，但尚未形成生产范围批准记录。
+  - 正式规则的完整对局回合上限仍未确认，本附录禁止教程硬编码。
+  recommendation: approved
+  recommendation_reason: 双入口减少熟悉象棋玩家的重复负担，统一能力图避免维护两套规则；补充模块与教学抽屉能覆盖现有T0-T10缺口，且通过正式Intent/Event和PlayerView边界保持规则与信息安全。
+  canonicalization: exception_subject使用UTF-8 canonical JSON；键排序；无额外空白；ensure_ascii=false；SHA-256。
+  approval_digest: 6e2d0f83914ed58ee053f082325503f0136e672ee392b9639ba03961d42a080e
+  confirmation_rule: 项目所有者必须回复完整64位approval_digest；缩写、意译或仅回复“可以”不构成生产事实源批准。
