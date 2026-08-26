@@ -1598,3 +1598,151 @@ event_history:
     digest_algorithm: sha256
     previous_event_digest: 6791c5868a9f0d5588e270fc608c0cd4178937083b2ce69f8ff07c6da88142ce
     event_digest: 2bbf0e6d2c2698a955b75dc3b777440cec5380440828d5e3eef683fb288ea159
+- schema_version: '0.1'
+  event_id: 9a5b98ee-d9c7-4b68-91b1-edeb0842e8cd
+  mutation_id: 0fea900c-db02-4398-8b57-6ce7684693ce
+  loop_instance_id: e6e0f300-2130-41d0-8020-f7f4006deb3f
+  sequence: 32
+  event_type: core.output_registered
+  occurred_at: '2026-08-26T23:58:08.608577+08:00'
+  recorded_at: '2026-08-26T23:58:08.608577+08:00'
+  actor: &id012
+    actor_id: inst:01M02NJ3JENHD8VV7EKC9G198Q
+    role: pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
+    authority_id: AUTH-VEILFRONT-SYSTEMS-EXPERIENCE
+  causality:
+    correlation_id: 9d29b023-c9d2-4b3b-8698-28a0035467a1
+    causation_event_id: de5fba46-6fd1-4af3-8e04-bd11ce6f3cc2
+    request_id: register-deliverable-content-g3-001-dual-track-ftue
+  concurrency:
+    expected_record_revision: 31
+    resulting_record_revision: 32
+  binding_snapshot:
+    contract_digest: d97937b94c07399e00c63e1a5651d55c9eceb30378214838902dbe377d0a7e2a
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    deliverable_id: DELIVERABLE-CONTENT-G3-001
+    before: null
+    after:
+      deliverable_id: DELIVERABLE-CONTENT-G3-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:deliverable-content-g3-001@g3-iteration2-ftue-dual-track-producer-v1
+        artifact_type: tutorial-and-challenge-content-wave-one-plus-approved-dual-track-ftue
+        version: g3-iteration2-ftue-dual-track-producer-v1
+        uri: game-pipeline/loops/evidence/FTUE-DUAL-TRACK-IMPLEMENTATION-HANDOFF-v1.md
+        digest:
+          algorithm: sha256
+          value: 067208e00cd4edcd5a83d0db118563d1e2b5d9380e55607c3c7ed9031373abf6
+        manifest_paths: &id011
+        - game-pipeline/loops/evidence/FTUE-DUAL-TRACK-IMPLEMENTATION-HANDOFF-v1.md
+        - game-pipeline/approvals/production-scope-exception-ftue-dual-track-6e2d0f83914e.yaml
+        - docs/design/tutorial/veilfront-ftue-content-coverage-and-ux-proposal-v1.md
+        - resources/game/tutorials/tutorial_module_catalog.tres
+        - resources/game/tutorials/authority/p0.tres
+        - resources/game/tutorials/authority/b1.tres
+        - resources/game/tutorials/authority/b2.tres
+        - resources/game/tutorials/authority/b3.tres
+        - resources/game/tutorials/authority/t8-r.tres
+        - resources/game/tutorials/authority/t9-c.tres
+        - resources/game/tutorials/authority/t10-e.tres
+        - resources/game/tutorials/presentation/t0.tres
+        - resources/game/tutorials/presentation/t10.tres
+        - scripts/game/tutorial/tutorial_module_catalog.gd
+        - scripts/game/tutorial/tutorial_progress_store.gd
+        - scripts/game/tutorial/tutorial_level.gd
+        - tests/game/tutorial/run_all_tutorial_flows.gd
+        - tests/game/tutorial/run_tutorial_curriculum_contract.gd
+        - tests/game/tutorial/run_tutorial_t10_solution_variants_contract.gd
+      produced_in_iteration: 2
+      lifecycle_status: producer_integrated_awaiting_independent_qa
+      registered_by_event_id: 9a5b98ee-d9c7-4b68-91b1-edeb0842e8cd
+  evidence_refs: *id011
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: 2bbf0e6d2c2698a955b75dc3b777440cec5380440828d5e3eef683fb288ea159
+    event_digest: 06c33226ccdb1c6fe1cbc4b2c913253cf2acd0f0cc5a670d1044d10291e7eba6
+- schema_version: '0.1'
+  event_id: 1f1ebe92-83d3-4603-9027-a340615f77b6
+  mutation_id: af9f1072-7cfb-4d0f-8e16-cdbe71ad02eb
+  loop_instance_id: e6e0f300-2130-41d0-8020-f7f4006deb3f
+  sequence: 33
+  event_type: core.output_registered
+  occurred_at: '2026-08-26T23:58:08.608577+08:00'
+  recorded_at: '2026-08-26T23:58:08.608577+08:00'
+  actor: *id012
+  causality:
+    correlation_id: 9d29b023-c9d2-4b3b-8698-28a0035467a1
+    causation_event_id: 9a5b98ee-d9c7-4b68-91b1-edeb0842e8cd
+    request_id: register-deliverable-uiux-g3-001-dual-track-ftue
+  concurrency:
+    expected_record_revision: 32
+    resulting_record_revision: 33
+  binding_snapshot:
+    contract_digest: d97937b94c07399e00c63e1a5651d55c9eceb30378214838902dbe377d0a7e2a
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    deliverable_id: DELIVERABLE-UIUX-G3-001
+    before:
+      deliverable_id: DELIVERABLE-UIUX-G3-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:deliverable-uiux-g3-001@g3-iteration1-foundation-v1
+        artifact_type: unified-desktop-ui-interaction-foundation
+        version: g3-iteration1-foundation-v1
+        uri: docs/ui/gate3-ui-foundation-v1.md
+        digest:
+          algorithm: sha256
+          value: 3d1638fc9369c5602a354d341891c73954b7bbab6cf4100160a381a889304ee6
+        manifest_paths:
+        - docs/ui/gate3-ui-foundation-v1.md
+        - scenes/game/ui/ui_motion_button.tscn
+        - scenes/game/ui/ui_motion_button_primary.tscn
+        - scenes/game/ui/ui_motion_button_secondary.tscn
+        - scenes/game/ui/ui_motion_button_danger.tscn
+        - scenes/game/ui/ui_motion_button_confirm.tscn
+        - tests/game/ui/run_gate3_ui_foundation_contract.gd
+      produced_in_iteration: 1
+      lifecycle_status: foundation_submitted
+      registered_by_event_id: e048785e-1193-44a4-8679-543edce75bfa
+    after:
+      deliverable_id: DELIVERABLE-UIUX-G3-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:deliverable-uiux-g3-001@g3-iteration2-ftue-dual-track-producer-v1
+        artifact_type: unified-desktop-ui-interaction-baseline-plus-dual-track-ftue
+        version: g3-iteration2-ftue-dual-track-producer-v1
+        uri: game-pipeline/loops/evidence/FTUE-DUAL-TRACK-IMPLEMENTATION-HANDOFF-v1.md
+        digest:
+          algorithm: sha256
+          value: 067208e00cd4edcd5a83d0db118563d1e2b5d9380e55607c3c7ed9031373abf6
+        manifest_paths: &id013
+        - game-pipeline/loops/evidence/FTUE-DUAL-TRACK-IMPLEMENTATION-HANDOFF-v1.md
+        - docs/ui/gate3-ui-foundation-v1.md
+        - scenes/game/ui/ui_motion_button.tscn
+        - scenes/game/ui/ui_motion_button_primary.tscn
+        - scenes/game/ui/ui_motion_button_secondary.tscn
+        - scenes/game/ui/ui_motion_button_danger.tscn
+        - scenes/game/ui/ui_motion_button_confirm.tscn
+        - resources/game/levels/level_catalog.tres
+        - scenes/game/frontend/level_select.tscn
+        - scenes/game/tutorial/tutorial_level.tscn
+        - scenes/game/ui/level_guide_panel.tscn
+        - scenes/game/ui/tutorial_codex.tscn
+        - scenes/game/ui/tutorial_context_reminder.tscn
+        - scripts/game/frontend/level_select.gd
+        - scripts/game/presentation/ui/level_guide_panel.gd
+        - scripts/game/tutorial/tutorial_codex.gd
+        - scripts/game/tutorial/tutorial_context_reminder_policy.gd
+        - tests/game/ui/run_gate3_ui_foundation_contract.gd
+        - tests/game/frontend/run_level_select_ui_contract.gd
+        - tests/game/tutorial/run_tutorial_layout_contract.gd
+        - tests/game/tutorial/run_tutorial_codex_contract.gd
+        - tests/game/tutorial/run_tutorial_context_reminder_contract.gd
+      produced_in_iteration: 2
+      lifecycle_status: producer_integrated_awaiting_independent_qa
+      registered_by_event_id: 1f1ebe92-83d3-4603-9027-a340615f77b6
+  evidence_refs: *id013
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: 06c33226ccdb1c6fe1cbc4b2c913253cf2acd0f0cc5a670d1044d10291e7eba6
+    event_digest: 54ed12afd4ae9c240046a0594b21d09b20288fabedaa281127f39a157c47d6ba
