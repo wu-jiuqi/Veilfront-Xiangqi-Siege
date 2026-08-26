@@ -88,10 +88,10 @@ registry_snapshot:
     state_entered_at: '2026-08-24T19:23:46.989995+08:00'
     current_iteration: 2
     last_transition_id: TR-REVIEW-ACTIVE
-    last_event_id: 1f1ebe92-83d3-4603-9027-a340615f77b6
-    last_event_digest: 54ed12afd4ae9c240046a0594b21d09b20288fabedaa281127f39a157c47d6ba
-    last_event_sequence: 33
-    record_revision: 33
+    last_event_id: 5a5344d2-a89a-43d3-b223-d86941b3357d
+    last_event_digest: 623b9d77007dd4d0372c3d08558694251f63bf07fa34e4bdfa976040ccddd589
+    last_event_sequence: 34
+    record_revision: 34
   budget:
     limits:
       iteration_limit: 5
@@ -188,14 +188,15 @@ registry_snapshot:
     outputs:
     - deliverable_id: DELIVERABLE-EXPORT-G3-001
       artifact:
-        artifact_id: artifact:veilfront-xiangqi-siege:filtered-windows-export-and-budget@g3-iteration1-producer-v1
-        artifact_type: filtered-windows-export-and-budget
-        version: g3-iteration1-producer-v1
-        uri: docs/architecture/windows-runtime-resource-budget-v1.md
+        artifact_id: artifact:veilfront-xiangqi-siege:current-content-windows-candidate@g3-iteration2-current-content-windows-candidate-v1
+        artifact_type: reviewed-current-content-windows-candidate
+        version: g3-iteration2-current-content-windows-candidate-v1
+        uri: game-pipeline/loops/evidence/GATE3-CURRENT-CONTENT-WINDOWS-CANDIDATE-v1.md
         digest:
           algorithm: sha256
-          value: 85fad3de9c174a401908589a5fdffd9db00090af45f579867555f852e76d73d8
+          value: 8cecf9772d6f5a81af8a4d1ac1cebb844a09ca9bbf149a8e67022398bd3190d2
         manifest_paths:
+        - game-pipeline/loops/evidence/GATE3-CURRENT-CONTENT-WINDOWS-CANDIDATE-v1.md
         - docs/architecture/windows-runtime-resource-budget-v1.md
         - export_presets.cfg
         - tools/release/windows_runtime_manifest.json
@@ -203,9 +204,10 @@ registry_snapshot:
         - tools/release/build_windows_runtime_candidate.ps1
         - tools/release/verify_windows_lan_export.ps1
         - tests/game/performance/run_match_interaction_performance_contract.gd
-      produced_in_iteration: 1
-      lifecycle_status: submitted
-      registered_by_event_id: ff08dc60-3e6e-4328-bbb0-11d9e6e4095e
+        - tests/game/network/run_formal_lan_full_stack_loopback.gd
+      produced_in_iteration: 2
+      lifecycle_status: producer_reviewed_runnable_candidate_awaiting_independent_qa
+      registered_by_event_id: 5a5344d2-a89a-43d3-b223-d86941b3357d
     - deliverable_id: DELIVERABLE-AUDIO-G3-001
       artifact:
         artifact_id: artifact:veilfront-xiangqi-siege:deliverable-audio-g3-001@g3-iteration2-producer-integrated-v2
