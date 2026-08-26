@@ -43,7 +43,7 @@ corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
 
 [node name="LevelGuidePanel" type="Control"]
-custom_minimum_size = Vector2(284, 0)
+custom_minimum_size = Vector2(376, 0)
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -124,7 +124,7 @@ theme_override_constants/separation = 3
 layout_mode = 2
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.9, 0.7, 0.34, 1)
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 14
 text = "关卡目标"
 
 [node name="ObjectiveText" type="Label" parent="ExpandedContent/GoalContent"]
@@ -133,7 +133,7 @@ layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.88, 0.84, 0.73, 1)
-theme_override_font_sizes/font_size = 13
+theme_override_font_sizes/font_size = 16
 text = "田字封路：控制中央区域并完成协同行动。"
 vertical_alignment = 1
 autowrap_mode = 3
@@ -172,7 +172,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.82, 0.8, 0.71, 1)
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 14
 text = "移动兵至指定交点"
 vertical_alignment = 1
 text_overrun_behavior = 3
@@ -202,7 +202,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.96, 0.78, 0.42, 1)
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 15
 text = "形成田字封路"
 vertical_alignment = 1
 text_overrun_behavior = 3
@@ -243,7 +243,7 @@ anchors_preset = -1
 anchor_left = 0.105
 anchor_top = 0.622
 anchor_right = 0.895
-anchor_bottom = 0.727
+anchor_bottom = 0.718
 mouse_filter = 2
 theme_override_constants/separation = 2
 
@@ -251,7 +251,7 @@ theme_override_constants/separation = 2
 layout_mode = 2
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.9, 0.7, 0.34, 1)
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 14
 text = "当前操作"
 
 [node name="CurrentOperationText" type="Label" parent="ExpandedContent/CurrentContent"]
@@ -260,9 +260,32 @@ layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.9, 0.86, 0.75, 1)
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 15
 text = "选择兵并移动至高亮交点"
 vertical_alignment = 1
+autowrap_mode = 3
+clip_text = true
+
+[node name="ReasonFoldable" type="FoldableContainer" parent="ExpandedContent"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.105
+anchor_top = 0.725
+anchor_right = 0.895
+anchor_bottom = 0.815
+mouse_filter = 0
+title = "为什么会这样"
+folded = true
+
+[node name="ReasonText" type="Label" parent="ExpandedContent/ReasonFoldable"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.78, 0.77, 0.68, 1)
+theme_override_font_sizes/font_size = 14
+text = "完成军令后，这里会解释公开规则结果。"
 autowrap_mode = 3
 clip_text = true
 
@@ -270,9 +293,9 @@ clip_text = true
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.105
-anchor_top = 0.752
+anchor_top = 0.822
 anchor_right = 0.895
-anchor_bottom = 0.866
+anchor_bottom = 0.9
 mouse_filter = 2
 theme_override_constants/separation = 2
 
@@ -280,7 +303,7 @@ theme_override_constants/separation = 2
 layout_mode = 2
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.72, 0.67, 0.55, 1)
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 14
 text = "关卡提示"
 
 [node name="HintText" type="Label" parent="ExpandedContent/HintContent"]
@@ -289,7 +312,7 @@ layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.7, 0.72, 0.66, 1)
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 14
 text = "点击「显示提示」查看本步提示"
 vertical_alignment = 1
 autowrap_mode = 2
@@ -298,9 +321,9 @@ autowrap_mode = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.09
-anchor_top = 0.89
+anchor_top = 0.912
 anchor_right = 0.91
-anchor_bottom = 0.958
+anchor_bottom = 0.982
 theme_override_constants/separation = 8
 
 [node name="HintButton" type="Button" parent="ExpandedContent/BottomActions"]
@@ -310,7 +333,7 @@ size_flags_horizontal = 3
 focus_mode = 2
 theme_override_colors/font_color = Color(0.88, 0.82, 0.68, 1)
 theme_override_colors/font_disabled_color = Color(0.58, 0.57, 0.51, 1)
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 14
 theme_override_styles/normal = SubResource("StyleButtonNormal")
 theme_override_styles/hover = SubResource("StyleButtonHover")
 theme_override_styles/pressed = SubResource("StyleButtonPressed")
@@ -324,7 +347,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 2
 theme_override_colors/font_color = Color(0.88, 0.82, 0.68, 1)
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 14
 theme_override_styles/normal = SubResource("StyleButtonNormal")
 theme_override_styles/hover = SubResource("StyleButtonHover")
 theme_override_styles/pressed = SubResource("StyleButtonPressed")

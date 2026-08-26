@@ -49,7 +49,10 @@ func _run() -> void:
 		_expect(board_rect.end.x <= guide_rect.position.x + 0.5, "%s board is covered by the level guide" % resolution)
 		_expect(bool(snapshot.get("buttons_inside", false)), "%s visible guide actions exceed the screen" % resolution)
 		if is_equal_approx(resolution.x, 1280.0):
-			_expect(absf(guide_rect.size.x - 284.0) <= 1.0, "1280 level guide must retain the approved 284px width")
+			_expect(
+				guide_rect.size.x >= 360.0 and guide_rect.size.x <= 400.0,
+				"1280 level guide must use the approved 360-400px width"
+			)
 
 	overlay.set_collapsed(true)
 	await process_frame

@@ -3,6 +3,7 @@ extends Control
 
 signal restart_requested()
 signal exit_requested()
+signal codex_requested()
 
 @onready var _continue_button: Button = %ContinueButton
 
@@ -58,6 +59,10 @@ func _on_continue_pressed() -> void:
 func _on_restart_pressed() -> void:
 	close_menu()
 	restart_requested.emit()
+
+
+func _on_codex_pressed() -> void:
+	codex_requested.emit()
 
 
 func _on_exit_pressed() -> void:

@@ -3,6 +3,16 @@
 [ext_resource type="Script" uid="uid://dmcpaf4fdoo15" path="res://scripts/game/frontend/level_definition.gd" id="1_definition"]
 [ext_resource type="Script" uid="uid://bpytsmnal2j86" path="res://scripts/game/frontend/level_catalog.gd" id="2_catalog"]
 
+[sub_resource type="Resource" id="LevelP0"]
+script = ExtResource("1_definition")
+level_id = "P0"
+title = "雾中烽火"
+summary = "先下第一道军令，在行动后认识揭雾与战旗。"
+objective_text = "移动斥候并发现战旗。"
+scene_path = "res://scenes/game/tutorial/tutorial_level.tscn"
+recommended_order = -1
+available = true
+
 [sub_resource type="Resource" id="LevelT0"]
 script = ExtResource("1_definition")
 level_id = "T0"
@@ -21,6 +31,36 @@ objective_text = "完成兵卒训练。"
 scene_path = "res://scenes/game/tutorial/tutorial_level.tscn"
 unlock_after = "T0"
 recommended_order = 1
+available = true
+
+[sub_resource type="Resource" id="LevelB1"]
+script = ExtResource("1_definition")
+level_id = "B1"
+title = "直线先军"
+summary = "掌握兵、车、炮的普通行动。"
+objective_text = "完成三类棋子的普通移动并判断炮架。"
+scene_path = "res://scenes/game/tutorial/tutorial_level.tscn"
+recommended_order = 11
+available = true
+
+[sub_resource type="Resource" id="LevelB2"]
+script = ExtResource("1_definition")
+level_id = "B2"
+title = "跃阵双子"
+summary = "掌握马、相的普通行动、蹩腿与象眼。"
+objective_text = "完成马相移动并辨析本作无河界限制。"
+scene_path = "res://scenes/game/tutorial/tutorial_level.tscn"
+recommended_order = 12
+available = true
+
+[sub_resource type="Resource" id="LevelB3"]
+script = ExtResource("1_definition")
+level_id = "B3"
+title = "九宫中军"
+summary = "掌握士、将帅的九宫行动与实际阵亡规则。"
+objective_text = "完成九宫移动并辨析终局条件。"
+scene_path = "res://scenes/game/tutorial/tutorial_level.tscn"
+recommended_order = 13
 available = true
 
 [sub_resource type="Resource" id="LevelT2"]
@@ -122,6 +162,36 @@ unlock_after = "T9"
 recommended_order = 10
 available = true
 
+[sub_resource type="Resource" id="LevelT8R"]
+script = ExtResource("1_definition")
+level_id = "T8-R"
+title = "城墙余波"
+summary = "推演修复、中断、强制撤回与后备部署。"
+objective_text = "完成城墙生命周期预测。"
+scene_path = "res://scenes/game/tutorial/tutorial_level.tscn"
+recommended_order = 14
+available = true
+
+[sub_resource type="Resource" id="LevelT9C"]
+script = ExtResource("1_definition")
+level_id = "T9-C"
+title = "旗帜争夺"
+summary = "理解占领中断、反占争夺、所有权保留与翻转。"
+objective_text = "完成旗帜争夺推演。"
+scene_path = "res://scenes/game/tutorial/tutorial_level.tscn"
+recommended_order = 15
+available = true
+
+[sub_resource type="Resource" id="LevelT10E"]
+script = ExtResource("1_definition")
+level_id = "T10-E"
+title = "终局推演"
+summary = "辨析三旗、斩将、同步双将与轮上限原则。"
+objective_text = "完成全部终局优先级判断。"
+scene_path = "res://scenes/game/tutorial/tutorial_level.tscn"
+recommended_order = 16
+available = true
+
 [sub_resource type="Resource" id="LevelC1"]
 script = ExtResource("1_definition")
 level_id = "C1"
@@ -157,4 +227,4 @@ available = true
 
 [resource]
 script = ExtResource("2_catalog")
-levels = Array[ExtResource("1_definition")]([SubResource("LevelT0"), SubResource("LevelT1"), SubResource("LevelT2"), SubResource("LevelT3"), SubResource("LevelT4"), SubResource("LevelT5"), SubResource("LevelT6"), SubResource("LevelT7"), SubResource("LevelT8"), SubResource("LevelT9"), SubResource("LevelT10"), SubResource("LevelC1"), SubResource("LevelC2"), SubResource("LevelC3")])
+levels = Array[ExtResource("1_definition")]([SubResource("LevelP0"), SubResource("LevelT0"), SubResource("LevelB1"), SubResource("LevelB2"), SubResource("LevelB3"), SubResource("LevelT1"), SubResource("LevelT2"), SubResource("LevelT3"), SubResource("LevelT4"), SubResource("LevelT5"), SubResource("LevelT6"), SubResource("LevelT7"), SubResource("LevelT8"), SubResource("LevelT9"), SubResource("LevelT10"), SubResource("LevelT8R"), SubResource("LevelT9C"), SubResource("LevelT10E"), SubResource("LevelC1"), SubResource("LevelC2"), SubResource("LevelC3")])

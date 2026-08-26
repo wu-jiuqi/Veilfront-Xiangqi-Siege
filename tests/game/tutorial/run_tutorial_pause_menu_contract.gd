@@ -25,10 +25,11 @@ func _run() -> void:
 
 	var continue_button: Button = menu.get_node("%ContinueButton") as Button
 	var restart_button: Button = menu.get_node("%RestartChapterButton") as Button
+	var codex_button: Button = menu.get_node("%CodexButton") as Button
 	var exit_button: Button = menu.get_node("%ExitTutorialButton") as Button
 	_expect(menu.process_mode == Node.PROCESS_MODE_ALWAYS, "pause menu must process while paused")
 	_expect(not menu.visible and not menu.is_open(), "pause menu must start closed")
-	for button: Button in [continue_button, restart_button, exit_button]:
+	for button: Button in [continue_button, restart_button, codex_button, exit_button]:
 		_expect(button.focus_mode == Control.FOCUS_ALL, "%s must accept keyboard focus" % button.name)
 		_expect(button.flat, "%s must leave rendering to the preset texture frame" % button.name)
 	_expect(
@@ -41,6 +42,7 @@ func _run() -> void:
 	)
 	for frame_path: String in [
 		"DialogCenter/DialogCanvas/ActionColumn/RestartSlot/RestartFrame",
+		"DialogCenter/DialogCanvas/ActionColumn/CodexSlot/CodexFrame",
 		"DialogCenter/DialogCanvas/ActionColumn/ExitSlot/ExitFrame",
 	]:
 		_expect(
@@ -66,9 +68,15 @@ func _run() -> void:
 	_expect(not menu.visible and not menu.is_open(), "second Escape did not close the pause menu")
 	_expect(not paused, "closing the pause menu did not resume the scene tree")
 
-	var emissions := {"restart": 0, "exit": 0}
+	var emissions := {"restart": 0, "codex": 0, "exit": 0}
 	menu.restart_requested.connect(func() -> void: emissions["restart"] += 1)
+	menu.codex_requested.connect(func() -> void: emissions["codex"] += 1)
 	menu.exit_requested.connect(func() -> void: emissions["exit"] += 1)
+	menu.open_menu()
+	codex_button.pressed.emit()
+	_expect(int(emissions["codex"]) == 1, "codex button did not emit codex_requested")
+	_expect(paused and menu.visible, "opening the codex must preserve pause menu state")
+	menu.close_menu()
 	menu.open_menu()
 	restart_button.pressed.emit()
 	_expect(int(emissions["restart"]) == 1, "restart button did not emit restart_requested")
@@ -87,7 +95,7 @@ func _run() -> void:
 	menu.free()
 
 	if _failures.is_empty():
-		print("TUTORIAL_PAUSE_MENU_CONTRACT_PASS buttons=3")
+		print("TUTORIAL_PAUSE_MENU_CONTRACT_PASS buttons=4 codex=true")
 		quit(0)
 		return
 	for failure: String in _failures:

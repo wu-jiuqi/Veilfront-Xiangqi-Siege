@@ -1,10 +1,13 @@
 extends SceneTree
 
 const LEVEL_SELECT_SCENE := preload("res://scenes/game/frontend/level_select.tscn")
+const TEST_PROGRESS_PATH := "user://level-select-ui-contract.cfg"
 
 
 func _init() -> void:
+	_remove_test_progress()
 	var level_select := LEVEL_SELECT_SCENE.instantiate() as Control
+	level_select.progress_path = TEST_PROGRESS_PATH
 	root.add_child(level_select)
 	await process_frame
 
@@ -17,13 +20,13 @@ func _init() -> void:
 	assert(not card_text.contains("level_node_states_v1"))
 	assert(level_select.get_node("%DesignCanvas").get_node("CampaignBackground") is TextureRect)
 	assert(level_select.get_node("%DesignCanvas").get_node("CampaignBackground").texture.resource_path == "res://assets/art/ui/level_select/level_select_empty_background_v3.png")
-	assert(level_select.get_node("%TutorialGrid").get_child_count() == 11)
+	assert(level_select.get_node("%TutorialGrid").get_child_count() == 1)
 	assert(level_select.get_node("%ChallengeGrid").get_child_count() == 3)
 	assert(not level_select.has_node("%RewardSlot"), "level details must not show a military-order reward slot")
 	assert(not level_select.has_node("%DetailStatus"), "level details must not show military-order status text")
 	assert(level_select.get_node("%CategoryTabs").tabs_visible == false)
 	assert(level_select.get_node("%TutorialCategoryButton").button_pressed)
-	assert(level_select.get_node("%DetailCode").text == "T0")
+	assert(level_select.get_node("%DetailCode").text == "P0")
 	assert(level_select.get_node("%EnterButton").text == "进入关卡")
 	assert(level_select.get_node("%EnterButton").size.y >= 44.0)
 	var detail_backdrop := level_select.get_node("%DesignCanvas").get_node("DetailTextBackdrop") as Panel
@@ -36,15 +39,24 @@ func _init() -> void:
 		assert((detail_label.get_theme_font("font") as FontVariation).variation_embolden > 0.0)
 		assert(detail_label.autowrap_mode == TextServer.AUTOWRAP_WORD_SMART)
 		assert(detail_label.clip_text)
-	assert(level_select.get_node("%TutorialGrid").get_child(0).position == Vector2(102, 24))
-	assert(level_select.get_node("%TutorialGrid").get_child(10).position == Vector2(445, 397))
+	var foundation_button := level_select.get_node("%FoundationRouteButton") as Button
+	foundation_button.pressed.emit()
+	await process_frame
+	assert(foundation_button.button_pressed)
+	assert(level_select.get_node("%TutorialGrid").get_child_count() == 18)
+	assert(level_select.get_node("%TutorialGrid").get_child(0).position == Vector2(12, 4))
+	assert(level_select.get_node("%TutorialGrid").get_child(17).position == Vector2(276, 358))
 	var first_card := level_select.get_node("%TutorialGrid").get_child(0) as LevelCard
 	assert(first_card.get_node("%StateTexture").texture.resource_path == "res://assets/art/ui/level_select/components/node_selected_v2.png")
 	assert(_count_texture_rects(first_card) == 1, "each level card must use one state texture canvas item")
 	assert(
-		_count_texture_rects(level_select) == 19,
-		"level select must keep 16 screen textures plus 3 hidden custom-dialog art textures"
+		_count_texture_rects(level_select) == 27,
+		"level select must keep 23 screen textures, the codex page, and 3 dialog textures"
 	)
+	var experienced_button := level_select.get_node("%ExperiencedRouteButton") as Button
+	experienced_button.pressed.emit()
+	await process_frame
+	assert(level_select.get_node("%TutorialGrid").get_child_count() == 15)
 
 	var challenge_button := level_select.get_node("%ChallengeCategoryButton") as Button
 	challenge_button.pressed.emit()
@@ -59,6 +71,7 @@ func _init() -> void:
 		viewport.size = viewport_size
 		root.add_child(viewport)
 		var responsive_level_select := LEVEL_SELECT_SCENE.instantiate() as Control
+		responsive_level_select.progress_path = TEST_PROGRESS_PATH
 		viewport.add_child(responsive_level_select)
 		await process_frame
 		await process_frame
@@ -71,7 +84,8 @@ func _init() -> void:
 		viewport.queue_free()
 		await process_frame
 
-	print("LEVEL_SELECT_UI_CONTRACT_PASS source=approved_master_v3 nodes=14 resolutions=3 military_order_ui=false old_ui=false")
+	_remove_test_progress()
+	print("LEVEL_SELECT_UI_CONTRACT_PASS source=approved_master_v3 modules=18 routes=2 resolutions=3")
 	quit()
 
 
@@ -80,3 +94,9 @@ func _count_texture_rects(node: Node) -> int:
 	for child: Node in node.get_children():
 		count += _count_texture_rects(child)
 	return count
+
+
+func _remove_test_progress() -> void:
+	var absolute_path := ProjectSettings.globalize_path(TEST_PROGRESS_PATH)
+	if FileAccess.file_exists(absolute_path):
+		DirAccess.remove_absolute(absolute_path)

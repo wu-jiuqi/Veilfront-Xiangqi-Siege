@@ -17,6 +17,7 @@ signal terminal_exit_requested(destination: String)
 
 const COMPACT_BREAKPOINT: float = 1100.0
 const MINIMUM_ACTION_TARGET_HEIGHT: float = 44.0
+const TUTORIAL_GUIDE_WIDTH: float = 376.0
 const IDLE: String = "IDLE"
 const SELECTED: String = "SELECTED"
 const PREVIEW_SELECTED: String = "PREVIEW_SELECTED"
@@ -132,6 +133,7 @@ var _skill_description: Label
 var _tactical_minimap: TacticalMinimap
 var _terminal_dialog: MatchTerminalDialog
 var _feedback: MatchFeedbackCoordinator
+var _context_reminder: TutorialContextReminder
 
 var _compact: bool = false
 var _interaction_state: String = IDLE
@@ -164,6 +166,7 @@ var _double_click_confirm_preview_id: String = ""
 func _ready() -> void:
 	_bind_hud_nodes()
 	_feedback = get_node_or_null("MatchFeedbackCoordinator") as MatchFeedbackCoordinator
+	_context_reminder = get_node_or_null("%TutorialContextReminder") as TutorialContextReminder
 	if is_instance_valid(_feedback) and is_instance_valid(_board_viewport):
 		_feedback.bind_board_feedback(
 			_board_viewport.get_board_audio_emitter_pool(),
@@ -339,12 +342,15 @@ func set_level_guide_layout_enabled(enabled: bool) -> void:
 		# Keep the authored rail in its HBoxContainer so the center board keeps
 		# exactly the same width as the approved online-match layout.
 		right_rail.visible = true
+		right_rail.custom_minimum_size.x = TUTORIAL_GUIDE_WIDTH if enabled else 284.0
 		right_rail.mouse_filter = Control.MOUSE_FILTER_IGNORE if enabled \
 			else Control.MOUSE_FILTER_PASS
 	if is_instance_valid(_objective_events):
 		_objective_events.visible = not enabled
 	if is_instance_valid(_confirmation_panel):
 		_confirmation_panel.visible = not enabled
+	if is_instance_valid(_context_reminder):
+		_context_reminder.set_enabled(not enabled)
 	_update_status_controls()
 
 
@@ -548,6 +554,8 @@ func render_session_state(_public_state: Dictionary) -> void:
 func render_visible_events(events: Array) -> void:
 	if is_instance_valid(_feedback):
 		_feedback.consume_visible_events(events)
+	if is_instance_valid(_context_reminder):
+		_context_reminder.consume_visible_events(events)
 	_last_event_model = _presenter.visible_event_model(events)
 	var event_message := str(_last_event_model.get("message_key", ""))
 	if _interaction_state == IDLE and not event_message.is_empty():
@@ -558,6 +566,8 @@ func render_visible_error(error: Dictionary) -> void:
 	_submission_pending = false
 	if is_instance_valid(_feedback):
 		_feedback.consume_visible_error(error)
+	if is_instance_valid(_context_reminder):
+		_context_reminder.consume_visible_error(error)
 	_last_error_model = _presenter.visible_error_model(error)
 	var message_key: String = str(_last_error_model.get("message_key", ""))
 	if not message_key.is_empty():

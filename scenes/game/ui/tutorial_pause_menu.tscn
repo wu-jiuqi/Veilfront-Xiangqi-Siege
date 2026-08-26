@@ -42,7 +42,7 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="DialogCanvas" type="Control" parent="DialogCenter"]
-custom_minimum_size = Vector2(780, 480)
+custom_minimum_size = Vector2(780, 540)
 layout_mode = 2
 mouse_filter = 0
 
@@ -111,9 +111,9 @@ vertical_alignment = 1
 [node name="ActionColumn" type="VBoxContainer" parent="DialogCenter/DialogCanvas"]
 layout_mode = 0
 offset_left = 142.0
-offset_top = 180.0
+offset_top = 164.0
 offset_right = 638.0
-offset_bottom = 420.0
+offset_bottom = 504.0
 theme_override_constants/separation = 12
 
 [node name="ContinueSlot" type="Control" parent="DialogCenter/DialogCanvas/ActionColumn"]
@@ -182,7 +182,7 @@ grow_horizontal = 2
 grow_vertical = 2
 focus_mode = 2
 focus_neighbor_top = NodePath("../../ContinueSlot/ContinueButton")
-focus_neighbor_bottom = NodePath("../../ExitSlot/ExitTutorialButton")
+focus_neighbor_bottom = NodePath("../../CodexSlot/CodexButton")
 mouse_default_cursor_shape = 2
 theme_override_colors/font_color = Color(0.86, 0.83, 0.75, 1)
 theme_override_colors/font_hover_color = Color(1, 0.91, 0.66, 1)
@@ -194,6 +194,45 @@ theme_override_styles/hover = SubResource("StyleBoxEmptyButton")
 theme_override_styles/pressed = SubResource("StyleBoxEmptyButton")
 theme_override_styles/focus = SubResource("StyleBoxEmptyButton")
 text = "重新开始本章"
+flat = true
+
+[node name="CodexSlot" type="Control" parent="DialogCenter/DialogCanvas/ActionColumn"]
+custom_minimum_size = Vector2(496, 72)
+layout_mode = 2
+
+[node name="CodexFrame" type="TextureRect" parent="DialogCenter/DialogCanvas/ActionColumn/CodexSlot"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("5_secondary")
+expand_mode = 1
+stretch_mode = 0
+
+[node name="CodexButton" type="Button" parent="DialogCenter/DialogCanvas/ActionColumn/CodexSlot"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 2
+focus_neighbor_top = NodePath("../../RestartSlot/RestartChapterButton")
+focus_neighbor_bottom = NodePath("../../ExitSlot/ExitTutorialButton")
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.86, 0.83, 0.75, 1)
+theme_override_colors/font_hover_color = Color(1, 0.91, 0.66, 1)
+theme_override_colors/font_focus_color = Color(1, 0.91, 0.66, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxEmptyButton")
+theme_override_styles/hover = SubResource("StyleBoxEmptyButton")
+theme_override_styles/pressed = SubResource("StyleBoxEmptyButton")
+theme_override_styles/focus = SubResource("StyleBoxEmptyButton")
+text = "打开战阵图鉴"
 flat = true
 
 [node name="ExitSlot" type="Control" parent="DialogCenter/DialogCanvas/ActionColumn"]
@@ -222,7 +261,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 focus_mode = 2
-focus_neighbor_top = NodePath("../../RestartSlot/RestartChapterButton")
+focus_neighbor_top = NodePath("../../CodexSlot/CodexButton")
 focus_neighbor_bottom = NodePath("../../ContinueSlot/ContinueButton")
 mouse_default_cursor_shape = 2
 theme_override_colors/font_color = Color(1, 0.82, 0.72, 1)
@@ -240,4 +279,5 @@ flat = true
 [connection signal="pressed" from="DialogCenter/DialogCanvas/CloseButton" to="." method="_on_continue_pressed"]
 [connection signal="pressed" from="DialogCenter/DialogCanvas/ActionColumn/ContinueSlot/ContinueButton" to="." method="_on_continue_pressed"]
 [connection signal="pressed" from="DialogCenter/DialogCanvas/ActionColumn/RestartSlot/RestartChapterButton" to="." method="_on_restart_pressed"]
+[connection signal="pressed" from="DialogCenter/DialogCanvas/ActionColumn/CodexSlot/CodexButton" to="." method="_on_codex_pressed"]
 [connection signal="pressed" from="DialogCenter/DialogCanvas/ActionColumn/ExitSlot/ExitTutorialButton" to="." method="_on_exit_pressed"]

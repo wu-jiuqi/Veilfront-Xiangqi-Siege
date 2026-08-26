@@ -4,7 +4,7 @@ signal hint_requested
 signal reset_requested
 signal collapsed_changed(collapsed: bool)
 
-const EXPANDED_WIDTH := 284.0
+const EXPANDED_WIDTH := 376.0
 const COLLAPSED_WIDTH := 44.0
 const STATUS_GLYPHS := {
 	"complete": "✓",
@@ -23,6 +23,8 @@ const STATUS_COLORS := {
 @onready var _title_label: Label = %GuideTitle
 @onready var _objective_label: Label = %ObjectiveText
 @onready var _current_operation_label: Label = %CurrentOperationText
+@onready var _reason_foldable: FoldableContainer = %ReasonFoldable
+@onready var _reason_label: Label = %ReasonText
 @onready var _hint_label: Label = %HintText
 @onready var _hint_button: Button = %HintButton
 @onready var _reset_button: Button = %ResetButton
@@ -62,6 +64,7 @@ func configure(view: Dictionary) -> void:
 	_title_label.text = str(view.get("title", "关卡指引"))
 	_objective_label.text = str(view.get("objective", "完成当前关卡目标"))
 	_current_operation_label.text = str(view.get("current_operation", "等待玩家操作"))
+	_reason_label.text = str(view.get("reason", "完成军令后，这里会解释公开规则结果。"))
 	_hint_text = str(view.get("hint", "观察高亮交点，规划下一步行动。"))
 	_hint_revealed = bool(view.get("hint_revealed", false))
 	_hint_available = bool(view.get("hint_available", true))
@@ -117,6 +120,8 @@ func get_state_snapshot() -> Dictionary:
 		"current_operation": _current_operation_label.text,
 		"current_operation_autowrap_mode": _current_operation_label.autowrap_mode,
 		"current_operation_clips_text": _current_operation_label.clip_text,
+		"reason": _reason_label.text,
+		"reason_folded": _reason_foldable.folded,
 		"hint_text": _hint_label.text,
 		"hint_revealed": _hint_revealed,
 		"hint_available": _hint_available,
@@ -137,6 +142,7 @@ func _default_view() -> Dictionary:
 			{"text": "第三步", "status": "pending"},
 		],
 		"current_operation": "等待玩家操作",
+		"reason": "完成军令后，这里会解释公开规则结果。",
 		"hint": "观察高亮交点，规划下一步行动。",
 		"hint_revealed": false,
 	}

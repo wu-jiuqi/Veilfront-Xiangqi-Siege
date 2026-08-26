@@ -16,18 +16,32 @@ signal level_selected(level: LevelDefinition)
 
 var _level: LevelDefinition
 var _completed := false
+var _progress_state := TutorialProgressStore.UNSEEN
 var _selected := false
 var _pointer_inside := false
 var _focused := false
 
 
-func configure(level: LevelDefinition, unlocked: bool, test_mode: bool = false, completed: bool = false) -> void:
+func configure(
+	level: LevelDefinition,
+	unlocked: bool,
+	test_mode: bool = false,
+	completed: bool = false,
+	progress_state: String = TutorialProgressStore.UNSEEN
+) -> void:
 	_level = level
 	_completed = completed
+	_progress_state = progress_state
 	_code_label.text = level.level_id
 	_node_button.disabled = not unlocked or not level.available
-	if completed:
-		_status_label.text = "已完成"
+	if progress_state == TutorialProgressStore.COMPLETED or completed:
+		_status_label.text = "已掌握"
+	elif progress_state == TutorialProgressStore.SKIPPED:
+		_status_label.text = "已跳过"
+	elif progress_state == TutorialProgressStore.ASSUMED:
+		_status_label.text = "自报掌握"
+	elif progress_state == TutorialProgressStore.NEEDS_REVIEW:
+		_status_label.text = "建议复习"
 	elif test_mode and unlocked and level.available:
 		_status_label.text = "测试开放"
 	elif not level.available:
@@ -36,6 +50,7 @@ func configure(level: LevelDefinition, unlocked: bool, test_mode: bool = false, 
 		_status_label.text = "可进入"
 	else:
 		_status_label.text = "尚未解锁"
+	_status_label.visible = true
 	_update_visual_state()
 
 

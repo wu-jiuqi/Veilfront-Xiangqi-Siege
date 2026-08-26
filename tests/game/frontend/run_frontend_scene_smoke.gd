@@ -11,7 +11,8 @@ func _init() -> void:
 	assert(not FileAccess.file_exists("res://scenes/game/frontend/main_menu.tscn"), "legacy main menu scene must be removed")
 	assert(not FileAccess.file_exists("res://scripts/game/frontend/main_menu.gd"), "legacy main menu script must be removed")
 	assert(not FileAccess.file_exists("res://scripts/game/frontend/main_menu.gd.uid"), "legacy main menu script UID must be removed")
-	assert(CATALOG.levels.size() == 14, "catalog must contain T0-T10 and C1-C3")
+	assert(CATALOG.levels.size() == 21, "catalog must contain 18 tutorials and C1-C3")
+	assert(CATALOG.find_level("P0").available, "P0 must be available")
 	assert(CATALOG.find_level("T0").available, "T0 must be available")
 	assert(CATALOG.find_level("T1").unlock_after == "T0", "tutorial unlock chain must start at T0")
 	assert(CATALOG.find_level("C1").category == "challenge", "C1 must be a challenge")
@@ -137,21 +138,29 @@ func _init() -> void:
 	await process_frame
 
 	var level_root := level_scene.instantiate()
+	level_root.test_all_levels_unlocked = true
+	level_root.load_saved_progress = false
+	level_root.progress_path = "user://frontend-scene-smoke-progress.cfg"
 	root.add_child(level_root)
 	await process_frame
-	assert(level_root.get_node("%TutorialGrid").get_child_count() == 11)
+	(level_root.get_node("%FoundationRouteButton") as Button).pressed.emit()
+	await process_frame
+	assert(level_root.get_node("%TutorialGrid").get_child_count() == 18)
 	assert(level_root.get_node("%ChallengeGrid").get_child_count() == 3)
 	for card: Control in level_root.get_node("%TutorialGrid").get_children():
 		assert(not card.get_node("%NodeButton").disabled, "tutorial test node must be open")
 	for card: Control in level_root.get_node("%ChallengeGrid").get_children():
 		assert(not card.get_node("%NodeButton").disabled, "challenge test node must be open")
 	assert(level_root.get_node("%DesignCanvas").get_node("CampaignBackground").texture.resource_path == "res://assets/art/ui/level_select/level_select_empty_background_v3.png")
-	assert(level_root.get_node("%DetailCode").text == "T0")
+	assert(level_root.get_node("%DetailCode").text == "P0")
 	assert(level_root.get_node("%EnterButton").size.y >= 44.0)
 	var first_node_texture := level_root.get_node("%TutorialGrid").get_child(0).get_node("%StateTexture").texture as Texture2D
 	assert(first_node_texture.resource_path == "res://assets/art/ui/level_select/components/node_selected_v2.png")
 	assert(level_root.get_node("%BackButton").focus_mode != Control.FOCUS_NONE)
-	print("FRONTEND_SCENE_SMOKE_PASS catalog=14 tutorial=11 challenge=3 level_ui=approved_master_v3")
+	var smoke_progress := ProjectSettings.globalize_path("user://frontend-scene-smoke-progress.cfg")
+	if FileAccess.file_exists(smoke_progress):
+		DirAccess.remove_absolute(smoke_progress)
+	print("FRONTEND_SCENE_SMOKE_PASS catalog=21 tutorial=18 challenge=3 routes=2")
 	quit()
 
 

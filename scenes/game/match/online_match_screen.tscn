@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/game/presentation/battle_command_tent_background.tscn" id="1_background"]
 [ext_resource type="Theme" path="res://resources/game/ui/themes/terracotta_ui_theme.tres" id="1_theme"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" path="res://scripts/game/presentation/match_screen.gd" id="6_screen_script"]
 [ext_resource type="PackedScene" path="res://scenes/game/presentation/match_feedback_coordinator.tscn" id="7_feedback"]
 [ext_resource type="PackedScene" path="res://scenes/game/vfx/screen_callout_overlay.tscn" id="8_callout"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/tutorial_context_reminder.tscn" id="9_reminder"]
 
 [node name="OnlineMatchScreen" type="Control"]
 layout_mode = 3
@@ -44,5 +45,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+
+[node name="TutorialContextReminder" parent="." instance=ExtResource("9_reminder")]
+unique_name_in_owner = true
 
 [node name="TerminalDialog" parent="." instance=ExtResource("5_terminal")]
