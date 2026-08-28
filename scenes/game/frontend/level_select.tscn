@@ -52,6 +52,7 @@ unique_name_in_owner = true
 anchors_preset = 0
 offset_right = 1280.0
 offset_bottom = 720.0
+clip_contents = true
 
 [node name="CampaignBackground" type="TextureRect" parent="DesignCanvas" unique_id=1707756944]
 layout_mode = 0
@@ -64,67 +65,73 @@ expand_mode = 1
 [node name="BackButton" type="Button" parent="DesignCanvas" unique_id=2052370368]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 5.0
-offset_top = -3.0
-offset_right = 147.0
-offset_bottom = 93.0
+offset_left = 18.0
+offset_top = 10.0
+offset_right = 150.0
+offset_bottom = 68.0
 theme_type_variation = &"LevelBackButton"
 text = "‹  返回"
+clip_text = true
 
 [node name="Title" type="Label" parent="DesignCanvas" unique_id=1707236561]
 layout_mode = 0
 offset_left = 472.0
-offset_top = 15.0
+offset_top = 12.0
 offset_right = 808.0
-offset_bottom = 66.0
+offset_bottom = 64.0
 theme_override_colors/font_color = Color(0.92, 0.78, 0.53, 1)
-theme_override_font_sizes/font_size = 31
+theme_override_font_sizes/font_size = 29
 text = "关卡模式"
 horizontal_alignment = 1
 vertical_alignment = 1
+clip_text = true
 
 [node name="TutorialCategoryButton" type="Button" parent="DesignCanvas" unique_id=1814841203]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 1.0
-offset_top = 81.0
-offset_right = 241.0
-offset_bottom = 264.0
+offset_left = 15.0
+offset_top = 91.0
+offset_right = 225.0
+offset_bottom = 237.0
 theme_type_variation = &"LevelCategoryButton"
 toggle_mode = true
 button_pressed = true
 button_group = SubResource("ButtonGroupCategory")
 text = "新手教学"
+clip_text = true
 
 [node name="ChallengeCategoryButton" type="Button" parent="DesignCanvas" unique_id=1002798098]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = -1.0
-offset_top = 242.0
-offset_right = 239.0
-offset_bottom = 426.0
+offset_left = 15.0
+offset_top = 258.0
+offset_right = 225.0
+offset_bottom = 406.0
 theme_type_variation = &"LevelCategoryButton"
 toggle_mode = true
 button_group = SubResource("ButtonGroupCategory")
 text = "挑战关卡"
+clip_text = true
 
 [node name="ProgressLabel" type="Label" parent="DesignCanvas" unique_id=1835754773]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 36.0
-offset_top = 454.0
+offset_top = 453.0
 offset_right = 204.0
-offset_bottom = 482.0
-theme_override_font_sizes/font_size = 17
+offset_bottom = 479.0
+theme_override_font_sizes/font_size = 16
 text = "教学进度"
 horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
 
 [node name="ProgressRing" type="TextureRect" parent="DesignCanvas" unique_id=2067008334]
 layout_mode = 0
-offset_left = 48.0
-offset_top = 480.0
-offset_right = 192.0
-offset_bottom = 624.0
+offset_left = 69.0
+offset_top = 481.0
+offset_right = 171.0
+offset_bottom = 577.0
 mouse_filter = 2
 texture = ExtResource("4_progress")
 expand_mode = 1
@@ -145,44 +152,48 @@ show_percentage = false
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 73.0
-offset_top = 525.0
+offset_top = 508.0
 offset_right = 169.0
-offset_bottom = 582.0
+offset_bottom = 552.0
 theme_override_colors/font_color = Color(0.94, 0.77, 0.43, 1)
-theme_override_font_sizes/font_size = 25
+theme_override_font_sizes/font_size = 22
 text = "0 / 11"
 horizontal_alignment = 1
 vertical_alignment = 1
+clip_text = true
 
 [node name="ResetButton" type="Button" parent="DesignCanvas" unique_id=1532159649]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
 offset_left = 55.0
-offset_top = 610.0
+offset_top = 584.0
 offset_right = 185.0
-offset_bottom = 640.0
+offset_bottom = 637.0
 theme_type_variation = &"LevelSecondaryButton"
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 11
 text = "清空教学进度"
+clip_text = true
 
 [node name="CodexButton" type="Button" parent="DesignCanvas"]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 45.0
-offset_top = 624.0
-offset_right = 195.0
-offset_bottom = 668.0
+offset_left = 31.0
+offset_top = 584.0
+offset_right = 209.0
+offset_bottom = 637.0
 theme_type_variation = &"LevelSecondaryButton"
 text = "战阵图鉴"
+clip_text = true
 
 [node name="CategoryTabs" type="TabContainer" parent="DesignCanvas" unique_id=1152323492]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 235.0
-offset_top = 152.0
+offset_left = 238.0
+offset_top = 148.0
 offset_right = 940.0
-offset_bottom = 650.0
+offset_bottom = 644.0
+clip_contents = true
 theme_override_styles/panel = SubResource("StyleEmpty")
 current_tab = 0
 tabs_visible = false
@@ -215,28 +226,33 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="RouteStrip" type="HBoxContainer" parent="DesignCanvas"]
+unique_name_in_owner = true
 layout_mode = 0
-offset_left = 247.0
+offset_left = 250.0
 offset_top = 88.0
 offset_right = 928.0
 offset_bottom = 144.0
-theme_override_constants/separation = 8
+theme_override_constants/separation = 10
 
 [node name="FoundationRouteButton" type="Button" parent="DesignCanvas/RouteStrip"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(156, 44)
+custom_minimum_size = Vector2(172, 48)
 layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroupRoute")
+theme_override_font_sizes/font_size = 16
 text = "从基础学起"
+clip_text = true
 
 [node name="ExperiencedRouteButton" type="Button" parent="DesignCanvas/RouteStrip"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 44)
+custom_minimum_size = Vector2(210, 48)
 layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroupRoute")
+theme_override_font_sizes/font_size = 16
 text = "只学《雾疆》差异"
+clip_text = true
 
 [node name="RouteSummary" type="Label" parent="DesignCanvas/RouteStrip"]
 unique_name_in_owner = true
@@ -246,74 +262,81 @@ theme_override_colors/font_color = Color(0.82, 0.75, 0.62, 1)
 theme_override_font_sizes/font_size = 13
 text = "完成 P0 后请选择路线；以后可随时切换。"
 vertical_alignment = 1
-autowrap_mode = 3
 clip_text = true
 
 [node name="DetailCode" type="Label" parent="DesignCanvas" unique_id=753590606]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 976.0
-offset_top = 106.0
+offset_top = 101.0
 offset_right = 1246.0
-offset_bottom = 156.0
+offset_bottom = 150.0
 theme_override_colors/font_color = Color(0.94, 0.81, 0.57, 1)
-theme_override_font_sizes/font_size = 34
+theme_override_font_sizes/font_size = 30
 text = "T0"
 horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
 
 [node name="DetailTitle" type="Label" parent="DesignCanvas" unique_id=2135251411]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 965.0
-offset_top = 164.0
+offset_top = 153.0
 offset_right = 1257.0
-offset_bottom = 211.0
+offset_bottom = 205.0
 theme_override_colors/font_color = Color(0.9, 0.81, 0.66, 1)
-theme_override_font_sizes/font_size = 19
+theme_override_font_sizes/font_size = 18
 text = "操作校准：棋落交点"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 clip_text = true
 
-[node name="DetailTextBackdrop" type="Panel" parent="DesignCanvas"]
+[node name="DetailTextBackdrop" type="PanelContainer" parent="DesignCanvas"]
 layout_mode = 0
 offset_left = 958.0
-offset_top = 240.0
+offset_top = 238.0
 offset_right = 1264.0
-offset_bottom = 444.0
+offset_bottom = 447.0
+clip_contents = true
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleDetailTextBackdrop")
 
-[node name="DetailSummary" type="Label" parent="DesignCanvas" unique_id=1665603912]
+[node name="DetailTextMargin" type="MarginContainer" parent="DesignCanvas/DetailTextBackdrop"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 10
+
+[node name="DetailTextStack" type="VBoxContainer" parent="DesignCanvas/DetailTextBackdrop/DetailTextMargin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="DetailSummary" type="Label" parent="DesignCanvas/DetailTextBackdrop/DetailTextMargin/DetailTextStack" unique_id=1665603912]
 unique_name_in_owner = true
-layout_mode = 0
-offset_left = 973.0
-offset_top = 252.0
-offset_right = 1249.0
-offset_bottom = 348.0
+layout_mode = 2
+size_flags_vertical = 3
 theme_override_colors/font_color = Color(0.91, 0.86, 0.76, 1)
 theme_override_colors/font_outline_color = Color(0.015, 0.012, 0.009, 0.96)
 theme_override_constants/outline_size = 1
 theme_override_fonts/font = ExtResource("6_semibold")
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 16
 text = "认识九路棋盘、选择、取消与确认。"
 vertical_alignment = 1
 autowrap_mode = 3
 clip_text = true
 
-[node name="DetailObjective" type="Label" parent="DesignCanvas" unique_id=970032561]
+[node name="DetailObjective" type="Label" parent="DesignCanvas/DetailTextBackdrop/DetailTextMargin/DetailTextStack" unique_id=970032561]
 unique_name_in_owner = true
-layout_mode = 0
-offset_left = 973.0
-offset_top = 354.0
-offset_right = 1249.0
-offset_bottom = 432.0
+custom_minimum_size = Vector2(0, 68)
+layout_mode = 2
 theme_override_colors/font_color = Color(0.98, 0.84, 0.58, 1)
 theme_override_colors/font_outline_color = Color(0.015, 0.012, 0.009, 0.96)
 theme_override_constants/outline_size = 1
 theme_override_fonts/font = ExtResource("6_semibold")
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 16
 text = "作战目标：完成一次合法移动。"
 vertical_alignment = 1
 autowrap_mode = 3
@@ -322,34 +345,128 @@ clip_text = true
 [node name="EnterButton" type="Button" parent="DesignCanvas" unique_id=558069176]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 954.0
-offset_top = 537.0
-offset_right = 1261.0
-offset_bottom = 654.0
+offset_left = 970.0
+offset_top = 548.0
+offset_right = 1248.0
+offset_bottom = 632.0
 theme_type_variation = &"LevelEnterButton"
 text = "进入关卡"
+clip_text = true
 
-[node name="HelpText" type="Label" parent="DesignCanvas" unique_id=1596107591]
+[node name="FooterHints" type="Control" parent="DesignCanvas"]
 layout_mode = 0
-offset_left = 32.0
-offset_top = 667.0
-offset_right = 929.0
-offset_bottom = 702.0
-theme_override_colors/font_color = Color(0.75, 0.68, 0.56, 1)
-theme_override_font_sizes/font_size = 14
-text = "W       S           切换分类        ↑      ↓        切换关卡               Enter                进入关卡             Esc            返回"
+offset_left = 22.0
+offset_top = 660.0
+offset_right = 640.0
+offset_bottom = 710.0
+
+[node name="CategoryKeys" type="Label" parent="DesignCanvas/FooterHints"]
+layout_mode = 0
+offset_right = 62.0
+offset_bottom = 50.0
+theme_override_colors/font_color = Color(0.84, 0.75, 0.6, 1)
+theme_override_font_sizes/font_size = 11
+text = "W    S"
+horizontal_alignment = 1
 vertical_alignment = 1
+clip_text = true
+
+[node name="CategoryAction" type="Label" parent="DesignCanvas/FooterHints"]
+layout_mode = 0
+offset_left = 68.0
+offset_right = 151.0
+offset_bottom = 50.0
+theme_override_colors/font_color = Color(0.75, 0.68, 0.56, 1)
+theme_override_font_sizes/font_size = 12
+text = "切换分类"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+
+[node name="LevelKeys" type="Label" parent="DesignCanvas/FooterHints"]
+layout_mode = 0
+offset_left = 157.0
+offset_right = 219.0
+offset_bottom = 50.0
+theme_override_colors/font_color = Color(0.84, 0.75, 0.6, 1)
+theme_override_font_sizes/font_size = 12
+text = "↑    ↓"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+
+[node name="LevelAction" type="Label" parent="DesignCanvas/FooterHints"]
+layout_mode = 0
+offset_left = 225.0
+offset_right = 310.0
+offset_bottom = 50.0
+theme_override_colors/font_color = Color(0.75, 0.68, 0.56, 1)
+theme_override_font_sizes/font_size = 12
+text = "切换关卡"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+
+[node name="EnterKey" type="Label" parent="DesignCanvas/FooterHints"]
+layout_mode = 0
+offset_left = 316.0
+offset_right = 391.0
+offset_bottom = 50.0
+theme_override_colors/font_color = Color(0.84, 0.75, 0.6, 1)
+theme_override_font_sizes/font_size = 11
+text = "Enter"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+
+[node name="EnterAction" type="Label" parent="DesignCanvas/FooterHints"]
+layout_mode = 0
+offset_left = 397.0
+offset_right = 499.0
+offset_bottom = 50.0
+theme_override_colors/font_color = Color(0.75, 0.68, 0.56, 1)
+theme_override_font_sizes/font_size = 12
+text = "进入关卡"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+
+[node name="EscKey" type="Label" parent="DesignCanvas/FooterHints"]
+layout_mode = 0
+offset_left = 505.0
+offset_right = 555.0
+offset_bottom = 50.0
+theme_override_colors/font_color = Color(0.84, 0.75, 0.6, 1)
+theme_override_font_sizes/font_size = 11
+text = "Esc"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+
+[node name="EscAction" type="Label" parent="DesignCanvas/FooterHints"]
+layout_mode = 0
+offset_left = 561.0
+offset_right = 618.0
+offset_bottom = 50.0
+theme_override_colors/font_color = Color(0.75, 0.68, 0.56, 1)
+theme_override_font_sizes/font_size = 12
+text = "返回"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
 
 [node name="StatusLabel" type="Label" parent="DesignCanvas" unique_id=1081341565]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 930.0
-offset_top = 675.0
+offset_left = 650.0
+offset_top = 660.0
 offset_right = 1258.0
 offset_bottom = 710.0
-theme_override_font_sizes/font_size = 13
+theme_override_font_sizes/font_size = 12
 horizontal_alignment = 2
 vertical_alignment = 1
+autowrap_mode = 3
+clip_text = true
 
 [node name="ResetDialog" parent="." unique_id=1569314894 instance=ExtResource("5_dialog")]
 unique_name_in_owner = true

@@ -70,6 +70,7 @@ func _process(_delta: float) -> void:
 func open_codex(page_index: int = 0) -> void:
 	_page_index = clampi(page_index, 0, PAGES.size() - 1)
 	visible = true
+	move_to_front()
 	_render_page()
 	_close_button.grab_focus()
 

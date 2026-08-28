@@ -38,6 +38,8 @@ const TUTORIAL_GRID_ORIGIN := Vector2(12.0, 4.0)
 @onready var _foundation_route_button: Button = %FoundationRouteButton
 @onready var _experienced_route_button: Button = %ExperiencedRouteButton
 @onready var _route_summary: Label = %RouteSummary
+@onready var _route_strip: HBoxContainer = %RouteStrip
+@onready var _tutorial_codex: TutorialCodex = %TutorialCodex
 
 var _transitioning := false
 var _completed: Dictionary = {}
@@ -68,6 +70,8 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if _reset_dialog.visible or _tutorial_codex.visible:
+		return
 	if event.is_action_pressed(&"ui_cancel"):
 		_return_to_title_screen()
 		get_viewport().set_input_as_handled()
@@ -112,12 +116,14 @@ func _is_unlocked(level: LevelDefinition) -> bool:
 
 func _show_tutorial_category() -> void:
 	_tabs.current_tab = 0
+	_route_strip.show()
 	_tutorial_category_button.set_pressed_no_signal(true)
 	_select_first_level("tutorial")
 
 
 func _show_challenge_category() -> void:
 	_tabs.current_tab = 1
+	_route_strip.hide()
 	_challenge_category_button.set_pressed_no_signal(true)
 	_select_first_level("challenge")
 

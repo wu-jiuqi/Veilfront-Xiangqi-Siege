@@ -9,10 +9,10 @@
 
 [sub_resource type="StyleBoxTexture" id="StyleBack"]
 texture = ExtResource("2_back")
-texture_margin_left = 42.0
-texture_margin_top = 32.0
-texture_margin_right = 42.0
-texture_margin_bottom = 32.0
+texture_margin_left = 24.0
+texture_margin_top = 15.0
+texture_margin_right = 24.0
+texture_margin_bottom = 15.0
 
 [sub_resource type="StyleBoxFlat" id="StyleFocus"]
 bg_color = Color(0, 0, 0, 0)
@@ -28,47 +28,47 @@ expand_margin_bottom = 2.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBackHover"]
 texture = ExtResource("2_back")
-texture_margin_left = 42.0
-texture_margin_top = 32.0
-texture_margin_right = 42.0
-texture_margin_bottom = 32.0
+texture_margin_left = 24.0
+texture_margin_top = 15.0
+texture_margin_right = 24.0
+texture_margin_bottom = 15.0
 modulate_color = Color(1.18, 1.08, 0.82, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleCategoryNormal"]
 texture = ExtResource("4_category_normal")
-texture_margin_left = 74.0
-texture_margin_top = 66.0
-texture_margin_right = 74.0
-texture_margin_bottom = 66.0
+texture_margin_left = 38.0
+texture_margin_top = 28.0
+texture_margin_right = 38.0
+texture_margin_bottom = 28.0
 
 [sub_resource type="StyleBoxTexture" id="StyleCategorySelected"]
 texture = ExtResource("5_category_selected")
-texture_margin_left = 74.0
-texture_margin_top = 66.0
-texture_margin_right = 74.0
-texture_margin_bottom = 66.0
+texture_margin_left = 38.0
+texture_margin_top = 28.0
+texture_margin_right = 38.0
+texture_margin_bottom = 28.0
 
 [sub_resource type="StyleBoxTexture" id="StyleEnter"]
 texture = ExtResource("3_enter")
-texture_margin_left = 96.0
-texture_margin_top = 40.0
-texture_margin_right = 96.0
-texture_margin_bottom = 40.0
+texture_margin_left = 48.0
+texture_margin_top = 20.0
+texture_margin_right = 48.0
+texture_margin_bottom = 20.0
 
 [sub_resource type="StyleBoxTexture" id="StyleEnterHover"]
 texture = ExtResource("3_enter")
-texture_margin_left = 96.0
-texture_margin_top = 40.0
-texture_margin_right = 96.0
-texture_margin_bottom = 40.0
+texture_margin_left = 48.0
+texture_margin_top = 20.0
+texture_margin_right = 48.0
+texture_margin_bottom = 20.0
 modulate_color = Color(1.16, 1.08, 0.86, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleSecondary"]
 texture = ExtResource("6_secondary")
-texture_margin_left = 66.0
-texture_margin_top = 42.0
-texture_margin_right = 66.0
-texture_margin_bottom = 42.0
+texture_margin_left = 32.0
+texture_margin_top = 12.0
+texture_margin_right = 32.0
+texture_margin_bottom = 12.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleEmpty"]
 
@@ -91,24 +91,24 @@ Label/colors/font_color = Color(0.86, 0.78, 0.65, 1)
 Label/colors/font_outline_color = Color(0.035, 0.03, 0.025, 1)
 Label/constants/outline_size = 1
 LevelBackButton/base_type = &"Button"
-LevelBackButton/font_sizes/font_size = 21
+LevelBackButton/font_sizes/font_size = 19
 LevelBackButton/styles/focus = SubResource("StyleBackHover")
 LevelCategoryButton/base_type = &"Button"
-LevelCategoryButton/font_sizes/font_size = 23
+LevelCategoryButton/font_sizes/font_size = 20
 LevelCategoryButton/styles/disabled = SubResource("StyleCategoryNormal")
 LevelCategoryButton/styles/focus = SubResource("StyleCategorySelected")
 LevelCategoryButton/styles/hover = SubResource("StyleCategorySelected")
 LevelCategoryButton/styles/normal = SubResource("StyleCategoryNormal")
 LevelCategoryButton/styles/pressed = SubResource("StyleCategorySelected")
 LevelEnterButton/base_type = &"Button"
-LevelEnterButton/font_sizes/font_size = 25
+LevelEnterButton/font_sizes/font_size = 22
 LevelEnterButton/styles/disabled = SubResource("StyleEnter")
 LevelEnterButton/styles/focus = SubResource("StyleEnterHover")
 LevelEnterButton/styles/hover = SubResource("StyleEnterHover")
 LevelEnterButton/styles/normal = SubResource("StyleEnter")
 LevelEnterButton/styles/pressed = SubResource("StyleEnterHover")
 LevelSecondaryButton/base_type = &"Button"
-LevelSecondaryButton/font_sizes/font_size = 14
+LevelSecondaryButton/font_sizes/font_size = 13
 LevelSecondaryButton/styles/disabled = SubResource("StyleSecondary")
 LevelSecondaryButton/styles/focus = SubResource("StyleSecondary")
 LevelSecondaryButton/styles/hover = SubResource("StyleSecondary")

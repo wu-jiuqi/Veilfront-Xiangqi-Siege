@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scripts/game/frontend/level_card.gd" id="1_script"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/level_select/components/node_available_v2.png" id="2_available"]
@@ -6,12 +6,25 @@
 [ext_resource type="Texture2D" path="res://assets/art/ui/level_select/components/node_completed_v2.png" id="4_completed"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/level_select/components/node_locked_v2.png" id="5_locked"]
 
+[sub_resource type="StyleBoxFlat" id="StyleStatusBackdrop"]
+bg_color = Color(0.025, 0.022, 0.016, 0.82)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.38, 0.29, 0.16, 0.72)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
 [node name="LevelCard" type="Control"]
-custom_minimum_size = Vector2(92, 104)
+custom_minimum_size = Vector2(92, 108)
 layout_mode = 3
 anchors_preset = 0
 offset_right = 92.0
-offset_bottom = 104.0
+offset_bottom = 108.0
+clip_contents = true
 script = ExtResource("1_script")
 normal_texture = ExtResource("2_available")
 focus_texture = ExtResource("3_selected")
@@ -21,12 +34,10 @@ locked_texture = ExtResource("5_locked")
 
 [node name="StateTexture" type="TextureRect" parent="."]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 0
+offset_left = 2.0
+offset_right = 90.0
+offset_bottom = 87.0
 mouse_filter = 2
 texture = ExtResource("2_available")
 expand_mode = 1
@@ -41,9 +52,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -36.0
-offset_top = -22.0
+offset_top = -33.0
 offset_right = 36.0
-offset_bottom = 10.0
+offset_bottom = -1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -53,20 +64,32 @@ theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 18
 horizontal_alignment = 1
 vertical_alignment = 1
+clip_text = true
+
+[node name="StatusBackdrop" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 89.0
+offset_right = 86.0
+offset_bottom = 107.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleStatusBackdrop")
 
 [node name="StatusLabel" type="Label" parent="."]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 12
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -19.0
-grow_horizontal = 2
-grow_vertical = 0
+layout_mode = 0
+offset_left = 7.0
+offset_top = 89.0
+offset_right = 85.0
+offset_bottom = 107.0
 mouse_filter = 2
-theme_override_colors/font_color = Color(0.82, 0.75, 0.61, 1)
-theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.88, 0.8, 0.65, 1)
+theme_override_colors/font_outline_color = Color(0.015, 0.012, 0.009, 0.96)
+theme_override_constants/outline_size = 1
+theme_override_font_sizes/font_size = 10
 horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
 
 [node name="NodeButton" type="Button" parent="."]
 unique_name_in_owner = true
