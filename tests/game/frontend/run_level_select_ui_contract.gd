@@ -109,9 +109,17 @@ func _init() -> void:
 	assert(codex.get_node("Backdrop").mouse_filter == Control.MOUSE_FILTER_STOP)
 	assert((codex.get_node("Panel") as Control).clip_contents)
 	assert(_rect_contains_rect(codex.get_global_rect(), (codex.get_node("Panel") as Control).get_global_rect()))
-	for codex_label_name: String in ["%PageLabel", "%PageTitle", "%PageBody"]:
+	for codex_label_name: String in [
+		"%PageLabel",
+		"%PageCategory",
+		"%PageTitle",
+		"%KeyRule",
+		"%StepsText",
+		"%PitfallText",
+		"%VisualCaption",
+	]:
 		var codex_label := codex.get_node(codex_label_name) as Label
-		assert(codex_label.clip_text)
+		assert(not codex_label.text.is_empty(), "%s must expose tutorial text" % codex_label.name)
 		assert(
 			codex_label.get_line_count() == codex_label.get_visible_line_count(),
 			"%s text is clipped: lines=%d visible=%d size=%s" % [
