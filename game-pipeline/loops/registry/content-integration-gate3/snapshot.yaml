@@ -88,10 +88,10 @@ registry_snapshot:
     state_entered_at: '2026-08-24T19:23:46.989995+08:00'
     current_iteration: 2
     last_transition_id: TR-REVIEW-ACTIVE
-    last_event_id: 5a5344d2-a89a-43d3-b223-d86941b3357d
-    last_event_digest: 623b9d77007dd4d0372c3d08558694251f63bf07fa34e4bdfa976040ccddd589
-    last_event_sequence: 34
-    record_revision: 34
+    last_event_id: 7138c3e4-a5fa-4935-9fa6-ed6880120b57
+    last_event_digest: b611917c49e53ebc92d3883ff70153f319195ee316a5e5b8aa33588fb9a49b49
+    last_event_sequence: 36
+    record_revision: 36
   budget:
     limits:
       iteration_limit: 5
@@ -276,15 +276,14 @@ registry_snapshot:
       registered_by_event_id: 01aa58f7-4171-4cb3-b9c0-09d0be65e789
     - deliverable_id: DELIVERABLE-UIUX-G3-001
       artifact:
-        artifact_id: artifact:veilfront-xiangqi-siege:deliverable-uiux-g3-001@g3-iteration2-ftue-dual-track-producer-v1
-        artifact_type: unified-desktop-ui-interaction-baseline-plus-dual-track-ftue
-        version: g3-iteration2-ftue-dual-track-producer-v1
-        uri: game-pipeline/loops/evidence/FTUE-DUAL-TRACK-IMPLEMENTATION-HANDOFF-v1.md
+        artifact_id: artifact:veilfront-xiangqi-siege:deliverable-uiux-g3-001@g3-iteration2-ftue-tutorial-clarity-producer-v2
+        artifact_type: desktop-ui-plus-tutorial-codex-v2
+        version: g3-iteration2-ftue-tutorial-clarity-producer-v2
+        uri: game-pipeline/loops/evidence/FTUE-TUTORIAL-CLARITY-IMPLEMENTATION-HANDOFF-v2.md
         digest:
           algorithm: sha256
-          value: 067208e00cd4edcd5a83d0db118563d1e2b5d9380e55607c3c7ed9031373abf6
+          value: a6938e27a31523aab3ab6ecd7ae8eefd555d743f24f3885eeb8598b9f5639f64
         manifest_paths:
-        - game-pipeline/loops/evidence/FTUE-DUAL-TRACK-IMPLEMENTATION-HANDOFF-v1.md
         - docs/ui/gate3-ui-foundation-v1.md
         - scenes/game/ui/ui_motion_button.tscn
         - scenes/game/ui/ui_motion_button_primary.tscn
@@ -306,20 +305,46 @@ registry_snapshot:
         - tests/game/tutorial/run_tutorial_layout_contract.gd
         - tests/game/tutorial/run_tutorial_codex_contract.gd
         - tests/game/tutorial/run_tutorial_context_reminder_contract.gd
+        - game-pipeline/loops/evidence/FTUE-TUTORIAL-CLARITY-IMPLEMENTATION-HANDOFF-v2.md
+        - assets/art/tutorial/comic_v2/README.md
+        - assets/art/tutorial/comic_v2/page_00_board_turns.png
+        - assets/art/tutorial/comic_v2/page_01_pawn.png
+        - assets/art/tutorial/comic_v2/page_02_horse_elephant.png
+        - assets/art/tutorial/comic_v2/page_03_rook_cannon.png
+        - assets/art/tutorial/comic_v2/page_04_palace_general.png
+        - assets/art/tutorial/comic_v2/page_05_fog_flag_memory.png
+        - assets/art/tutorial/comic_v2/page_06_special_eligibility.png
+        - assets/art/tutorial/comic_v2/page_07_hidden_horse_elephant_field.png
+        - assets/art/tutorial/comic_v2/page_08_special_rook_pawn.png
+        - assets/art/tutorial/comic_v2/page_09_bombardment.png
+        - assets/art/tutorial/comic_v2/page_10_advisor_sacrifice.png
+        - assets/art/tutorial/comic_v2/page_11_wall_breach_entry.png
+        - assets/art/tutorial/comic_v2/page_12_wall_repair.png
+        - assets/art/tutorial/comic_v2/page_13_flag_capture.png
+        - assets/art/tutorial/comic_v2/page_14_flag_contest.png
+        - assets/art/tutorial/comic_v2/page_15_victory.png
+        - assets/art/tutorial/comic_v2/page_16_casualty_reserve.png
+        - assets/art/tutorial/comic_v2/page_17_action_preview.png
+        - tests/game/tutorial/capture_tutorial_codex_v2.gd
+        - evidence/ui/tutorial-codex-v2-p00-1280x720.png
+        - evidence/ui/tutorial-codex-v2-p09-1280x720.png
+        - evidence/ui/tutorial-codex-v2-p12-960x540.png
+        - docs/architecture/windows-runtime-resource-budget-v1.md
+        - export_presets.cfg
+        - tools/release/windows_runtime_manifest.json
       produced_in_iteration: 2
       lifecycle_status: producer_integrated_awaiting_independent_qa
-      registered_by_event_id: 1f1ebe92-83d3-4603-9027-a340615f77b6
+      registered_by_event_id: 7138c3e4-a5fa-4935-9fa6-ed6880120b57
     - deliverable_id: DELIVERABLE-CONTENT-G3-001
       artifact:
-        artifact_id: artifact:veilfront-xiangqi-siege:deliverable-content-g3-001@g3-iteration2-ftue-dual-track-producer-v1
-        artifact_type: tutorial-and-challenge-content-wave-one-plus-approved-dual-track-ftue
-        version: g3-iteration2-ftue-dual-track-producer-v1
-        uri: game-pipeline/loops/evidence/FTUE-DUAL-TRACK-IMPLEMENTATION-HANDOFF-v1.md
+        artifact_id: artifact:veilfront-xiangqi-siege:deliverable-content-g3-001@g3-iteration2-ftue-tutorial-clarity-producer-v2
+        artifact_type: tutorial-content-plus-clarity-v2
+        version: g3-iteration2-ftue-tutorial-clarity-producer-v2
+        uri: game-pipeline/loops/evidence/FTUE-TUTORIAL-CLARITY-IMPLEMENTATION-HANDOFF-v2.md
         digest:
           algorithm: sha256
-          value: 067208e00cd4edcd5a83d0db118563d1e2b5d9380e55607c3c7ed9031373abf6
+          value: a6938e27a31523aab3ab6ecd7ae8eefd555d743f24f3885eeb8598b9f5639f64
         manifest_paths:
-        - game-pipeline/loops/evidence/FTUE-DUAL-TRACK-IMPLEMENTATION-HANDOFF-v1.md
         - game-pipeline/approvals/production-scope-exception-ftue-dual-track-6e2d0f83914e.yaml
         - docs/design/tutorial/veilfront-ftue-content-coverage-and-ux-proposal-v1.md
         - resources/game/tutorials/tutorial_module_catalog.tres
@@ -338,9 +363,35 @@ registry_snapshot:
         - tests/game/tutorial/run_all_tutorial_flows.gd
         - tests/game/tutorial/run_tutorial_curriculum_contract.gd
         - tests/game/tutorial/run_tutorial_t10_solution_variants_contract.gd
+        - game-pipeline/loops/evidence/FTUE-TUTORIAL-CLARITY-IMPLEMENTATION-HANDOFF-v2.md
+        - assets/art/tutorial/comic_v2/README.md
+        - assets/art/tutorial/comic_v2/page_00_board_turns.png
+        - assets/art/tutorial/comic_v2/page_01_pawn.png
+        - assets/art/tutorial/comic_v2/page_02_horse_elephant.png
+        - assets/art/tutorial/comic_v2/page_03_rook_cannon.png
+        - assets/art/tutorial/comic_v2/page_04_palace_general.png
+        - assets/art/tutorial/comic_v2/page_05_fog_flag_memory.png
+        - assets/art/tutorial/comic_v2/page_06_special_eligibility.png
+        - assets/art/tutorial/comic_v2/page_07_hidden_horse_elephant_field.png
+        - assets/art/tutorial/comic_v2/page_08_special_rook_pawn.png
+        - assets/art/tutorial/comic_v2/page_09_bombardment.png
+        - assets/art/tutorial/comic_v2/page_10_advisor_sacrifice.png
+        - assets/art/tutorial/comic_v2/page_11_wall_breach_entry.png
+        - assets/art/tutorial/comic_v2/page_12_wall_repair.png
+        - assets/art/tutorial/comic_v2/page_13_flag_capture.png
+        - assets/art/tutorial/comic_v2/page_14_flag_contest.png
+        - assets/art/tutorial/comic_v2/page_15_victory.png
+        - assets/art/tutorial/comic_v2/page_16_casualty_reserve.png
+        - assets/art/tutorial/comic_v2/page_17_action_preview.png
+        - tests/game/tutorial/capture_tutorial_codex_v2.gd
+        - evidence/ui/tutorial-codex-v2-p00-1280x720.png
+        - evidence/ui/tutorial-codex-v2-p09-1280x720.png
+        - evidence/ui/tutorial-codex-v2-p12-960x540.png
+        - scripts/game/tutorial/tutorial_codex.gd
+        - tests/game/tutorial/run_tutorial_codex_contract.gd
       produced_in_iteration: 2
       lifecycle_status: producer_integrated_awaiting_independent_qa
-      registered_by_event_id: 9a5b98ee-d9c7-4b68-91b1-edeb0842e8cd
+      registered_by_event_id: e7724552-9cf4-445f-8599-5a6fbcb4c58f
   acceptance_snapshot:
     subject_digest: 8a4610c3a5d6817fbce53b8bdda5bc49690c3dd6c55ad9dfb920c2acba719606
     automated_checks:

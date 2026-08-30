@@ -1820,3 +1820,249 @@ event_history:
     digest_algorithm: sha256
     previous_event_digest: 54ed12afd4ae9c240046a0594b21d09b20288fabedaa281127f39a157c47d6ba
     event_digest: 623b9d77007dd4d0372c3d08558694251f63bf07fa34e4bdfa976040ccddd589
+- schema_version: '0.1'
+  event_id: e7724552-9cf4-445f-8599-5a6fbcb4c58f
+  mutation_id: b04b65ec-104b-425e-a97e-05bf2bc9a837
+  loop_instance_id: e6e0f300-2130-41d0-8020-f7f4006deb3f
+  sequence: 35
+  event_type: core.output_registered
+  occurred_at: '2026-08-30T20:51:45.732313+08:00'
+  recorded_at: '2026-08-30T20:51:45.732313+08:00'
+  actor: &id016
+    actor_id: inst:01M02NJ3JENHD8VV7EKC9G198Q
+    role: pos:veilfront-xiangqi-siege:design-experience:systems-experience-lead
+    authority_id: AUTH-VEILFRONT-SYSTEMS-EXPERIENCE
+  causality:
+    correlation_id: 42d55462-324b-44e6-8562-250648ec1836
+    causation_event_id: 5a5344d2-a89a-43d3-b223-d86941b3357d
+    request_id: register-deliverable-content-g3-001-tutorial-clarity-v2
+  concurrency:
+    expected_record_revision: 34
+    resulting_record_revision: 35
+  binding_snapshot:
+    contract_digest: d97937b94c07399e00c63e1a5651d55c9eceb30378214838902dbe377d0a7e2a
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    deliverable_id: DELIVERABLE-CONTENT-G3-001
+    before:
+      deliverable_id: DELIVERABLE-CONTENT-G3-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:deliverable-content-g3-001@g3-iteration2-ftue-dual-track-producer-v1
+        artifact_type: tutorial-and-challenge-content-wave-one-plus-approved-dual-track-ftue
+        version: g3-iteration2-ftue-dual-track-producer-v1
+        uri: game-pipeline/loops/evidence/FTUE-DUAL-TRACK-IMPLEMENTATION-HANDOFF-v1.md
+        digest:
+          algorithm: sha256
+          value: 067208e00cd4edcd5a83d0db118563d1e2b5d9380e55607c3c7ed9031373abf6
+        manifest_paths:
+        - game-pipeline/loops/evidence/FTUE-DUAL-TRACK-IMPLEMENTATION-HANDOFF-v1.md
+        - game-pipeline/approvals/production-scope-exception-ftue-dual-track-6e2d0f83914e.yaml
+        - docs/design/tutorial/veilfront-ftue-content-coverage-and-ux-proposal-v1.md
+        - resources/game/tutorials/tutorial_module_catalog.tres
+        - resources/game/tutorials/authority/p0.tres
+        - resources/game/tutorials/authority/b1.tres
+        - resources/game/tutorials/authority/b2.tres
+        - resources/game/tutorials/authority/b3.tres
+        - resources/game/tutorials/authority/t8-r.tres
+        - resources/game/tutorials/authority/t9-c.tres
+        - resources/game/tutorials/authority/t10-e.tres
+        - resources/game/tutorials/presentation/t0.tres
+        - resources/game/tutorials/presentation/t10.tres
+        - scripts/game/tutorial/tutorial_module_catalog.gd
+        - scripts/game/tutorial/tutorial_progress_store.gd
+        - scripts/game/tutorial/tutorial_level.gd
+        - tests/game/tutorial/run_all_tutorial_flows.gd
+        - tests/game/tutorial/run_tutorial_curriculum_contract.gd
+        - tests/game/tutorial/run_tutorial_t10_solution_variants_contract.gd
+      produced_in_iteration: 2
+      lifecycle_status: producer_integrated_awaiting_independent_qa
+      registered_by_event_id: 9a5b98ee-d9c7-4b68-91b1-edeb0842e8cd
+    after:
+      deliverable_id: DELIVERABLE-CONTENT-G3-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:deliverable-content-g3-001@g3-iteration2-ftue-tutorial-clarity-producer-v2
+        artifact_type: tutorial-content-plus-clarity-v2
+        version: g3-iteration2-ftue-tutorial-clarity-producer-v2
+        uri: game-pipeline/loops/evidence/FTUE-TUTORIAL-CLARITY-IMPLEMENTATION-HANDOFF-v2.md
+        digest:
+          algorithm: sha256
+          value: a6938e27a31523aab3ab6ecd7ae8eefd555d743f24f3885eeb8598b9f5639f64
+        manifest_paths: &id015
+        - game-pipeline/approvals/production-scope-exception-ftue-dual-track-6e2d0f83914e.yaml
+        - docs/design/tutorial/veilfront-ftue-content-coverage-and-ux-proposal-v1.md
+        - resources/game/tutorials/tutorial_module_catalog.tres
+        - resources/game/tutorials/authority/p0.tres
+        - resources/game/tutorials/authority/b1.tres
+        - resources/game/tutorials/authority/b2.tres
+        - resources/game/tutorials/authority/b3.tres
+        - resources/game/tutorials/authority/t8-r.tres
+        - resources/game/tutorials/authority/t9-c.tres
+        - resources/game/tutorials/authority/t10-e.tres
+        - resources/game/tutorials/presentation/t0.tres
+        - resources/game/tutorials/presentation/t10.tres
+        - scripts/game/tutorial/tutorial_module_catalog.gd
+        - scripts/game/tutorial/tutorial_progress_store.gd
+        - scripts/game/tutorial/tutorial_level.gd
+        - tests/game/tutorial/run_all_tutorial_flows.gd
+        - tests/game/tutorial/run_tutorial_curriculum_contract.gd
+        - tests/game/tutorial/run_tutorial_t10_solution_variants_contract.gd
+        - game-pipeline/loops/evidence/FTUE-TUTORIAL-CLARITY-IMPLEMENTATION-HANDOFF-v2.md
+        - assets/art/tutorial/comic_v2/README.md
+        - assets/art/tutorial/comic_v2/page_00_board_turns.png
+        - assets/art/tutorial/comic_v2/page_01_pawn.png
+        - assets/art/tutorial/comic_v2/page_02_horse_elephant.png
+        - assets/art/tutorial/comic_v2/page_03_rook_cannon.png
+        - assets/art/tutorial/comic_v2/page_04_palace_general.png
+        - assets/art/tutorial/comic_v2/page_05_fog_flag_memory.png
+        - assets/art/tutorial/comic_v2/page_06_special_eligibility.png
+        - assets/art/tutorial/comic_v2/page_07_hidden_horse_elephant_field.png
+        - assets/art/tutorial/comic_v2/page_08_special_rook_pawn.png
+        - assets/art/tutorial/comic_v2/page_09_bombardment.png
+        - assets/art/tutorial/comic_v2/page_10_advisor_sacrifice.png
+        - assets/art/tutorial/comic_v2/page_11_wall_breach_entry.png
+        - assets/art/tutorial/comic_v2/page_12_wall_repair.png
+        - assets/art/tutorial/comic_v2/page_13_flag_capture.png
+        - assets/art/tutorial/comic_v2/page_14_flag_contest.png
+        - assets/art/tutorial/comic_v2/page_15_victory.png
+        - assets/art/tutorial/comic_v2/page_16_casualty_reserve.png
+        - assets/art/tutorial/comic_v2/page_17_action_preview.png
+        - tests/game/tutorial/capture_tutorial_codex_v2.gd
+        - evidence/ui/tutorial-codex-v2-p00-1280x720.png
+        - evidence/ui/tutorial-codex-v2-p09-1280x720.png
+        - evidence/ui/tutorial-codex-v2-p12-960x540.png
+        - scripts/game/tutorial/tutorial_codex.gd
+        - tests/game/tutorial/run_tutorial_codex_contract.gd
+      produced_in_iteration: 2
+      lifecycle_status: producer_integrated_awaiting_independent_qa
+      registered_by_event_id: e7724552-9cf4-445f-8599-5a6fbcb4c58f
+  evidence_refs: *id015
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: 623b9d77007dd4d0372c3d08558694251f63bf07fa34e4bdfa976040ccddd589
+    event_digest: a2e53305f2348963729d01f7c96e72a5c2895fd431c02c6a67919f4688e1780c
+- schema_version: '0.1'
+  event_id: 7138c3e4-a5fa-4935-9fa6-ed6880120b57
+  mutation_id: 3e1c98e5-8c37-4dbc-b3ec-c8bafc6f03ed
+  loop_instance_id: e6e0f300-2130-41d0-8020-f7f4006deb3f
+  sequence: 36
+  event_type: core.output_registered
+  occurred_at: '2026-08-30T20:51:45.732313+08:00'
+  recorded_at: '2026-08-30T20:51:45.732313+08:00'
+  actor: *id016
+  causality:
+    correlation_id: 42d55462-324b-44e6-8562-250648ec1836
+    causation_event_id: e7724552-9cf4-445f-8599-5a6fbcb4c58f
+    request_id: register-deliverable-uiux-g3-001-tutorial-clarity-v2
+  concurrency:
+    expected_record_revision: 35
+    resulting_record_revision: 36
+  binding_snapshot:
+    contract_digest: d97937b94c07399e00c63e1a5651d55c9eceb30378214838902dbe377d0a7e2a
+    state_machine_digest: 810f414928b370a869b3a36a17cb504f290d17fa07c9ce5db9001136bfdb160c
+  payload:
+    deliverable_id: DELIVERABLE-UIUX-G3-001
+    before:
+      deliverable_id: DELIVERABLE-UIUX-G3-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:deliverable-uiux-g3-001@g3-iteration2-ftue-dual-track-producer-v1
+        artifact_type: unified-desktop-ui-interaction-baseline-plus-dual-track-ftue
+        version: g3-iteration2-ftue-dual-track-producer-v1
+        uri: game-pipeline/loops/evidence/FTUE-DUAL-TRACK-IMPLEMENTATION-HANDOFF-v1.md
+        digest:
+          algorithm: sha256
+          value: 067208e00cd4edcd5a83d0db118563d1e2b5d9380e55607c3c7ed9031373abf6
+        manifest_paths:
+        - game-pipeline/loops/evidence/FTUE-DUAL-TRACK-IMPLEMENTATION-HANDOFF-v1.md
+        - docs/ui/gate3-ui-foundation-v1.md
+        - scenes/game/ui/ui_motion_button.tscn
+        - scenes/game/ui/ui_motion_button_primary.tscn
+        - scenes/game/ui/ui_motion_button_secondary.tscn
+        - scenes/game/ui/ui_motion_button_danger.tscn
+        - scenes/game/ui/ui_motion_button_confirm.tscn
+        - resources/game/levels/level_catalog.tres
+        - scenes/game/frontend/level_select.tscn
+        - scenes/game/tutorial/tutorial_level.tscn
+        - scenes/game/ui/level_guide_panel.tscn
+        - scenes/game/ui/tutorial_codex.tscn
+        - scenes/game/ui/tutorial_context_reminder.tscn
+        - scripts/game/frontend/level_select.gd
+        - scripts/game/presentation/ui/level_guide_panel.gd
+        - scripts/game/tutorial/tutorial_codex.gd
+        - scripts/game/tutorial/tutorial_context_reminder_policy.gd
+        - tests/game/ui/run_gate3_ui_foundation_contract.gd
+        - tests/game/frontend/run_level_select_ui_contract.gd
+        - tests/game/tutorial/run_tutorial_layout_contract.gd
+        - tests/game/tutorial/run_tutorial_codex_contract.gd
+        - tests/game/tutorial/run_tutorial_context_reminder_contract.gd
+      produced_in_iteration: 2
+      lifecycle_status: producer_integrated_awaiting_independent_qa
+      registered_by_event_id: 1f1ebe92-83d3-4603-9027-a340615f77b6
+    after:
+      deliverable_id: DELIVERABLE-UIUX-G3-001
+      artifact:
+        artifact_id: artifact:veilfront-xiangqi-siege:deliverable-uiux-g3-001@g3-iteration2-ftue-tutorial-clarity-producer-v2
+        artifact_type: desktop-ui-plus-tutorial-codex-v2
+        version: g3-iteration2-ftue-tutorial-clarity-producer-v2
+        uri: game-pipeline/loops/evidence/FTUE-TUTORIAL-CLARITY-IMPLEMENTATION-HANDOFF-v2.md
+        digest:
+          algorithm: sha256
+          value: a6938e27a31523aab3ab6ecd7ae8eefd555d743f24f3885eeb8598b9f5639f64
+        manifest_paths: &id017
+        - docs/ui/gate3-ui-foundation-v1.md
+        - scenes/game/ui/ui_motion_button.tscn
+        - scenes/game/ui/ui_motion_button_primary.tscn
+        - scenes/game/ui/ui_motion_button_secondary.tscn
+        - scenes/game/ui/ui_motion_button_danger.tscn
+        - scenes/game/ui/ui_motion_button_confirm.tscn
+        - resources/game/levels/level_catalog.tres
+        - scenes/game/frontend/level_select.tscn
+        - scenes/game/tutorial/tutorial_level.tscn
+        - scenes/game/ui/level_guide_panel.tscn
+        - scenes/game/ui/tutorial_codex.tscn
+        - scenes/game/ui/tutorial_context_reminder.tscn
+        - scripts/game/frontend/level_select.gd
+        - scripts/game/presentation/ui/level_guide_panel.gd
+        - scripts/game/tutorial/tutorial_codex.gd
+        - scripts/game/tutorial/tutorial_context_reminder_policy.gd
+        - tests/game/ui/run_gate3_ui_foundation_contract.gd
+        - tests/game/frontend/run_level_select_ui_contract.gd
+        - tests/game/tutorial/run_tutorial_layout_contract.gd
+        - tests/game/tutorial/run_tutorial_codex_contract.gd
+        - tests/game/tutorial/run_tutorial_context_reminder_contract.gd
+        - game-pipeline/loops/evidence/FTUE-TUTORIAL-CLARITY-IMPLEMENTATION-HANDOFF-v2.md
+        - assets/art/tutorial/comic_v2/README.md
+        - assets/art/tutorial/comic_v2/page_00_board_turns.png
+        - assets/art/tutorial/comic_v2/page_01_pawn.png
+        - assets/art/tutorial/comic_v2/page_02_horse_elephant.png
+        - assets/art/tutorial/comic_v2/page_03_rook_cannon.png
+        - assets/art/tutorial/comic_v2/page_04_palace_general.png
+        - assets/art/tutorial/comic_v2/page_05_fog_flag_memory.png
+        - assets/art/tutorial/comic_v2/page_06_special_eligibility.png
+        - assets/art/tutorial/comic_v2/page_07_hidden_horse_elephant_field.png
+        - assets/art/tutorial/comic_v2/page_08_special_rook_pawn.png
+        - assets/art/tutorial/comic_v2/page_09_bombardment.png
+        - assets/art/tutorial/comic_v2/page_10_advisor_sacrifice.png
+        - assets/art/tutorial/comic_v2/page_11_wall_breach_entry.png
+        - assets/art/tutorial/comic_v2/page_12_wall_repair.png
+        - assets/art/tutorial/comic_v2/page_13_flag_capture.png
+        - assets/art/tutorial/comic_v2/page_14_flag_contest.png
+        - assets/art/tutorial/comic_v2/page_15_victory.png
+        - assets/art/tutorial/comic_v2/page_16_casualty_reserve.png
+        - assets/art/tutorial/comic_v2/page_17_action_preview.png
+        - tests/game/tutorial/capture_tutorial_codex_v2.gd
+        - evidence/ui/tutorial-codex-v2-p00-1280x720.png
+        - evidence/ui/tutorial-codex-v2-p09-1280x720.png
+        - evidence/ui/tutorial-codex-v2-p12-960x540.png
+        - docs/architecture/windows-runtime-resource-budget-v1.md
+        - export_presets.cfg
+        - tools/release/windows_runtime_manifest.json
+      produced_in_iteration: 2
+      lifecycle_status: producer_integrated_awaiting_independent_qa
+      registered_by_event_id: 7138c3e4-a5fa-4935-9fa6-ed6880120b57
+  evidence_refs: *id017
+  integrity:
+    canonicalization: registry-event-canonical-json-v1
+    digest_algorithm: sha256
+    previous_event_digest: a2e53305f2348963729d01f7c96e72a5c2895fd431c02c6a67919f4688e1780c
+    event_digest: b611917c49e53ebc92d3883ff70153f319195ee316a5e5b8aa33588fb9a49b49
