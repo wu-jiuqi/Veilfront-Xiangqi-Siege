@@ -24,8 +24,8 @@ func _run() -> void:
 	_expect(start_root != null, "start screen failed to instantiate")
 	if start_root != null:
 		_expect(
-			start_root.theme.resource_path == "res://resources/game/ui/themes/veilfront_ui_theme_v2.tres",
-			"start screen must use the rebuilt unified theme",
+			start_root.theme.resource_path == "res://resources/game/ui/themes/terracotta_ui_theme.tres",
+			"start screen must keep the original menu theme",
 		)
 		var prompt := start_root.get_node("%EnterPrompt") as Label
 		_expect(prompt != null and prompt.text == "点击任意位置继续", "opening prompt changed")
@@ -33,15 +33,19 @@ func _run() -> void:
 		_expect(sequence != null and sequence.has_animation(&"opening_sequence"), "opening sequence is missing")
 		if sequence != null and sequence.has_animation(&"opening_sequence"):
 			_expect(is_equal_approx(sequence.get_animation(&"opening_sequence").length, 4.85), "opening timing changed")
-		var overlay := start_root.get_node("%MenuOverlay") as Control
+		var overlay := start_root.get_node("MenuOverlay") as Control
 		_expect(
-			overlay.theme.resource_path == "res://resources/game/ui/themes/veilfront_ui_theme_v2.tres",
-			"menu overlay must use the rebuilt unified theme",
+			overlay.scene_file_path == "res://scenes/game/frontend/start_menu_overlay.tscn",
+			"start screen must keep the original menu overlay",
 		)
-		_expect(
-			(overlay.get_node("SafeMargin/ContentRoot/MenuPanel") as PanelContainer).get_theme_stylebox(&"panel") is StyleBoxFlat,
-			"main menu panel must be a scalable surface",
-		)
+		var sword_button := overlay.get_node("UiRoot/MenuPanel/LanButton") as Button
+		var sword_style := sword_button.get_theme_stylebox(&"normal") as StyleBoxTexture
+		_expect(sword_style != null, "main menu must keep the original bronze sword buttons")
+		if sword_style != null:
+			_expect(
+				sword_style.texture.resource_path == "res://assets/art/ui/start_sequence/menu_bronze_sword_button_v1.png",
+				"main menu bronze sword artwork changed",
+			)
 	start_root.queue_free()
 	await process_frame
 
@@ -81,7 +85,7 @@ func _expect(condition: bool, message: String) -> void:
 
 func _finish() -> void:
 	if _failures.is_empty():
-		print("FRONTEND_SCENE_SMOKE_PASS catalog=21 pages=2 unified_theme=ok")
+		print("FRONTEND_SCENE_SMOKE_PASS catalog=21 pages=2 menu_locked=true")
 		quit(0)
 		return
 	for failure: String in _failures:

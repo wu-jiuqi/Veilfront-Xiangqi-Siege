@@ -2,74 +2,86 @@ extends SceneTree
 
 const START_SCREEN_SCENE := preload("res://scenes/game/frontend/start_screen.tscn")
 
-var _failures: Array[String] = []
-
 
 func _init() -> void:
-	call_deferred("_run")
+	await _verify_start_sequence_gate()
+	await _verify_inline_menu_input_gate()
+	print("FRONTEND_INTRO_CONTRACT_PASS sequence_gate=ok menu_input_gate=ok")
+	quit()
 
 
-func _run() -> void:
+func _verify_start_sequence_gate() -> void:
 	var start_screen := START_SCREEN_SCENE.instantiate() as Control
+	var sequence_player := start_screen.get_node("SequencePlayer") as AnimationPlayer
+	sequence_player.speed_scale = 0.0
 	root.add_child(start_screen)
 	current_scene = start_screen
 	await process_frame
-	_expect(start_screen != null, "start screen did not instantiate")
-	if start_screen == null:
-		_finish()
-		return
 
-	var overlay := start_screen.get_node("%MenuOverlay") as Control
-	_expect(overlay != null, "inline menu overlay is missing")
-	_expect(not overlay.visible, "menu must remain hidden before the gate sequence completes")
-	var sequence := start_screen.get_node("%SequencePlayer") as AnimationPlayer
-	_expect(sequence != null and sequence.has_animation(&"opening_sequence"), "opening sequence is missing")
 	start_screen.request_entry()
 	start_screen.request_entry()
-	_expect(sequence.current_animation == &"opening_sequence", "entry must start the opening sequence once")
-	start_screen.call("_on_sequence_animation_finished", &"opening_sequence")
+	assert(sequence_player.current_animation == &"opening_sequence", "entry must start the cinematic sequence")
+	assert(current_scene == start_screen, "scene routing must wait until the cinematic finishes")
+	sequence_player.seek(4.65, true)
+	assert(is_zero_approx((start_screen.get_node("Stage/SoldierLayer/PushSoldiers") as TextureRect).modulate.a), "pushing pose must be gone when the doors finish moving")
+	assert(is_equal_approx((start_screen.get_node("Stage/SoldierLayer/IdleSoldiers") as TextureRect).modulate.a, 1.0), "standing pose must be restored when the doors finish moving")
+
+	sequence_player.speed_scale = 1.0
+	sequence_player.advance(5.0)
 	await process_frame
-	_expect(overlay.call(&"is_active"), "opening completion must activate the inline menu")
-	_expect(overlay.visible, "opening completion must reveal the inline menu")
+	assert(current_scene == start_screen, "cinematic completion must keep the start scene as the menu background")
+	var menu_overlay := start_screen.get_node("MenuOverlay")
+	assert(menu_overlay.call(&"is_active"), "cinematic completion must activate the inline menu")
+	assert(is_equal_approx((start_screen.get_node("Stage/SoldierLayer/IdleSoldiers") as TextureRect).modulate.a, 1.0), "soldiers must return to their standing pose")
+	assert(is_zero_approx((start_screen.get_node("Stage/SoldierLayer/PushSoldiers") as TextureRect).modulate.a), "pushing pose must be hidden after the doors open")
+	var fog_curtain := start_screen.get_node("Stage/FogLayer/FogCurtain") as ColorRect
+	var fog_material := fog_curtain.material as ShaderMaterial
+	assert(is_equal_approx(fog_material.get_shader_parameter(&"reveal"), 1.0), "fog curtain must remain fully revealed behind the menu")
+	assert(float(fog_material.get_shader_parameter(&"opacity")) >= 0.86, "fog curtain must remain dense behind the menu")
+	assert(float(fog_material.get_shader_parameter(&"drift_amplitude")) >= 1.35, "fog curtain must keep a broad irregular drift")
+	assert((start_screen.get_node("Stage/FogLayer/GateMist") as GPUParticles2D).emitting, "gate mist must keep emitting after the logo appears")
 
-	var buttons: Array[Button] = []
-	for button_name: String in ["LanButton", "LevelModeButton", "CommunityButton", "SettingsButton", "QuitButton"]:
-		var button := overlay.get_node("%%%s" % button_name) as Button
-		buttons.append(button)
-		_expect(button != null, "%s is missing" % button_name)
-		if button == null:
-			continue
-		_expect(not button.get_signal_connection_list(&"pressed").is_empty(), "%s lost its action binding" % button_name)
-		_expect(button.has_method("set_reduced_motion"), "%s must use the reusable motion button" % button_name)
-		_expect(button.custom_minimum_size.y >= 44.0, "%s is below the interaction target" % button_name)
-		_expect(button.get_theme_stylebox(&"normal") is StyleBoxFlat, "%s must use the unified scalable surface" % button_name)
-
-	var intro := overlay.get_node("%MenuIntroPlayer") as AnimationPlayer
-	_expect(intro.current_animation == &"menu_intro", "menu entrance animation did not start")
-	intro.advance(1.0)
+	current_scene.queue_free()
 	await process_frame
-	for button: Button in buttons:
-		if button != null:
-			_expect(not button.disabled, "%s stayed disabled after menu reveal" % button.name)
-	_expect((overlay.get_node("%LanButton") as Button).has_focus(), "first menu action must receive keyboard focus")
 
-	current_scene = null
+
+func _verify_inline_menu_input_gate() -> void:
+	var start_screen := START_SCREEN_SCENE.instantiate() as Control
+	root.add_child(start_screen)
+	await process_frame
+
+	var menu_overlay := start_screen.get_node("MenuOverlay")
+	var intro_animation := menu_overlay.get_node("MenuIntroPlayer") as AnimationPlayer
+	var lan_button := menu_overlay.get_node("UiRoot/MenuPanel/LanButton") as Button
+	var level_button := menu_overlay.get_node("UiRoot/MenuPanel/LevelModeButton") as Button
+	var community_button := menu_overlay.get_node("UiRoot/MenuPanel/CommunityButton") as Button
+	var quit_button := menu_overlay.get_node("UiRoot/MenuPanel/QuitButton") as Button
+	assert(not lan_button.get_signal_connection_list(&"pressed").is_empty(), "LAN button must keep its previous routing logic")
+	assert(not level_button.get_signal_connection_list(&"pressed").is_empty(), "level button must keep its previous routing logic")
+	assert(not community_button.get_signal_connection_list(&"pressed").is_empty(), "community button must provide a configured-state notice")
+	assert(not quit_button.get_signal_connection_list(&"pressed").is_empty(), "quit button must keep its confirmation logic")
+	assert(lan_button.disabled and level_button.disabled and community_button.disabled and quit_button.disabled, "menu buttons must stay disabled before reveal")
+
+	menu_overlay.call(&"reveal_menu")
+	intro_animation.advance(0.08)
+	assert((menu_overlay.get_node("UiRoot/MistCharacter") as TextureRect).scale.x >= 4.0, "the title must begin as a near-camera foreground glyph")
+	intro_animation.advance(0.22)
+	await process_frame
+	assert((menu_overlay.get_node("UiRoot/MistCharacter") as TextureRect).modulate.a > 0.9, "the mist character must strike first")
+	assert(is_zero_approx((menu_overlay.get_node("UiRoot/FrontierCharacter") as TextureRect).modulate.a), "the frontier character must wait for its own strike")
+	intro_animation.advance(1.0)
+	assert(lan_button.offset_transform_position.x >= 500.0, "sword buttons must begin outside the right edge")
+	assert(level_button.offset_transform_position.x > lan_button.offset_transform_position.x, "sword buttons must use a staggered right-side entry")
+	assert(community_button.offset_transform_position.x > level_button.offset_transform_position.x, "later sword buttons must start farther right")
+	assert(quit_button.offset_transform_position.x > community_button.offset_transform_position.x, "quit sword must be the final staggered entry")
+	intro_animation.advance(1.0)
+	await process_frame
+	assert(not lan_button.disabled and not level_button.disabled and not community_button.disabled and not quit_button.disabled, "menu buttons must enable after fade-in")
+	assert(lan_button.offset_transform_position.is_zero_approx(), "LAN sword must settle at its responsive container position")
+	assert(level_button.offset_transform_position.is_zero_approx(), "level sword must settle at its responsive container position")
+	assert(community_button.offset_transform_position.is_zero_approx(), "community sword must settle at its responsive container position")
+	assert(quit_button.offset_transform_position.is_zero_approx(), "quit sword must settle at its responsive container position")
+	assert(menu_overlay.visible, "inline menu must remain visible after fade-in")
+
 	start_screen.queue_free()
 	await process_frame
-	_finish()
-
-
-func _expect(condition: bool, message: String) -> void:
-	if not condition:
-		_failures.append(message)
-
-
-func _finish() -> void:
-	if _failures.is_empty():
-		print("FRONTEND_INTRO_CONTRACT_PASS sequence_gate=ok unified_menu=ok focus=ok")
-		quit(0)
-		return
-	for failure: String in _failures:
-		push_error(failure)
-	print("FRONTEND_INTRO_CONTRACT_FAIL failures=%d" % _failures.size())
-	quit(1)

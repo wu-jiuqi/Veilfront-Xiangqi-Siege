@@ -1,49 +1,345 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=19 format=3]
 
 [ext_resource type="Script" path="res://scripts/game/frontend/start_menu_overlay.gd" id="1_script"]
-[ext_resource type="Theme" path="res://resources/game/ui/themes/veilfront_ui_theme_v2.tres" id="2_theme"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/start_sequence/veilfront_logo_vertical_v2.png" id="3_logo"]
-[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_primary.tscn" id="4_primary"]
-[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_secondary.tscn" id="5_secondary"]
-[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_danger.tscn" id="6_danger"]
-[ext_resource type="PackedScene" path="res://scenes/game/ui/terracotta_modal_dialog.tscn" id="7_dialog"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/start_sequence/veilfront_logo_gold_pair_v2.png" id="2_logo_pair"]
+[ext_resource type="FontFile" path="res://assets/fonts/noto_sans_sc/NotoSansSC-VariableFont_wght.ttf" id="3_ui_font"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/start_sequence/veilfront_subtitle_square_seal_v2.png" id="4_subtitle"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/start_sequence/settings_infantry_shield_gear_v1.png" id="5_settings_shield"]
+[ext_resource type="Shader" path="res://assets/shaders/ui/title_impact_mist.gdshader" id="6_impact_mist"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/start_sequence/menu_bronze_sword_button_v1.png" id="7_sword_button"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/terracotta_modal_dialog.tscn" id="8_dialog"]
 
-[sub_resource type="Animation" id="AnimationReset"]
+[sub_resource type="AtlasTexture" id="AtlasTextureMist"]
+atlas = ExtResource("2_logo_pair")
+region = Rect2(0, 0, 887, 887)
+
+[sub_resource type="AtlasTexture" id="AtlasTextureFrontier"]
+atlas = ExtResource("2_logo_pair")
+region = Rect2(887, 0, 887, 887)
+
+[sub_resource type="StyleBoxTexture" id="StyleSwordNormal"]
+content_margin_right = 45.5
+texture = ExtResource("7_sword_button")
+modulate_color = Color(0.82, 0.8, 0.72, 0.96)
+
+[sub_resource type="StyleBoxTexture" id="StyleSwordHover"]
+content_margin_right = 45.5
+texture = ExtResource("7_sword_button")
+modulate_color = Color(1.16, 1.06, 0.78, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleSwordPressed"]
+content_margin_right = 45.5
+content_margin_top = 2.0
+texture = ExtResource("7_sword_button")
+modulate_color = Color(0.72, 0.62, 0.43, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleSwordDisabled"]
+content_margin_right = 45.5
+texture = ExtResource("7_sword_button")
+modulate_color = Color(0.32, 0.34, 0.32, 0.5)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterialImpactMist"]
+shader = ExtResource("6_impact_mist")
+shader_parameter/impact_strength = 0.0
+shader_parameter/impact_center = Vector2(0.4825, 0.326667)
+shader_parameter/mist_color = Color(0.36, 0.45, 0.48, 1)
+
+[sub_resource type="Animation" id="AnimationMenuReset"]
 length = 0.0
 tracks/0/type = "value"
-tracks/0/path = NodePath("SafeMargin/ContentRoot:modulate:a")
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("UiRoot:modulate:a")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
 tracks/0/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [0.0]}
 tracks/1/type = "value"
-tracks/1/path = NodePath("SafeMargin/ContentRoot:offset_transform_position")
-tracks/1/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [Vector2(28, 0)]}
-
-[sub_resource type="Animation" id="AnimationIntro"]
-resource_name = "menu_intro"
-length = 0.38
-tracks/0/type = "value"
-tracks/0/path = NodePath("SafeMargin/ContentRoot:modulate:a")
-tracks/0/interp = 1
-tracks/0/keys = {"times": PackedFloat32Array(0, 0.38), "transitions": PackedFloat32Array(0.45, 1), "update": 0, "values": [0.0, 1.0]}
-tracks/1/type = "value"
-tracks/1/path = NodePath("SafeMargin/ContentRoot:offset_transform_position")
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("UiRoot/MistCharacter:modulate:a")
 tracks/1/interp = 1
-tracks/1/keys = {"times": PackedFloat32Array(0, 0.38), "transitions": PackedFloat32Array(0.45, 1), "update": 0, "values": [Vector2(28, 0), Vector2(0, 0)]}
+tracks/1/loop_wrap = true
+tracks/1/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [0.0]}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("UiRoot/MistCharacter:scale")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [Vector2(4.2, 4.2)]}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("UiRoot/MistCharacter:rotation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [-0.04]}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("UiRoot/MistCharacter:offset_top")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [0.0]}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("UiRoot/MistCharacter:offset_bottom")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [0.0]}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("UiRoot/FrontierCharacter:modulate:a")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [0.0]}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("UiRoot/FrontierCharacter:scale")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [Vector2(4.2, 4.2)]}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("UiRoot/FrontierCharacter:rotation")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [0.04]}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("UiRoot/FrontierCharacter:offset_top")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [0.0]}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("UiRoot/FrontierCharacter:offset_bottom")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [0.0]}
+tracks/11/type = "value"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("UiRoot/GameSubtitle:modulate:a")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [0.0]}
+tracks/12/type = "value"
+tracks/12/imported = false
+tracks/12/enabled = true
+tracks/12/path = NodePath("UiRoot/GameSubtitle:scale")
+tracks/12/interp = 1
+tracks/12/loop_wrap = true
+tracks/12/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [Vector2(3, 3)]}
+tracks/13/type = "value"
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/path = NodePath("UiRoot/MenuPanel:modulate:a")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [0.0]}
+tracks/14/type = "value"
+tracks/14/imported = false
+tracks/14/enabled = true
+tracks/14/path = NodePath("UiRoot/ImpactMist:material:shader_parameter/impact_strength")
+tracks/14/interp = 1
+tracks/14/loop_wrap = true
+tracks/14/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [0.0]}
+tracks/15/type = "value"
+tracks/15/imported = false
+tracks/15/enabled = true
+tracks/15/path = NodePath("UiRoot/MenuPanel/LanButton:offset_transform_position")
+tracks/15/interp = 1
+tracks/15/loop_wrap = true
+tracks/15/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [Vector2(600, 0)]}
+tracks/16/type = "value"
+tracks/16/imported = false
+tracks/16/enabled = true
+tracks/16/path = NodePath("UiRoot/MenuPanel/LevelModeButton:offset_transform_position")
+tracks/16/interp = 1
+tracks/16/loop_wrap = true
+tracks/16/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [Vector2(620, 0)]}
+tracks/17/type = "value"
+tracks/17/imported = false
+tracks/17/enabled = true
+tracks/17/path = NodePath("UiRoot/MenuPanel/CommunityButton:offset_transform_position")
+tracks/17/interp = 1
+tracks/17/loop_wrap = true
+tracks/17/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [Vector2(640, 0)]}
+tracks/18/type = "value"
+tracks/18/imported = false
+tracks/18/enabled = true
+tracks/18/path = NodePath("UiRoot/MenuPanel/QuitButton:offset_transform_position")
+tracks/18/interp = 1
+tracks/18/loop_wrap = true
+tracks/18/keys = {"times": PackedFloat32Array(0), "transitions": PackedFloat32Array(1), "update": 0, "values": [Vector2(660, 0)]}
+
+[sub_resource type="Animation" id="AnimationMenuIntro"]
+resource_name = "menu_intro"
+length = 2.15
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("UiRoot:modulate:a")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {"times": PackedFloat32Array(0, 0.08), "transitions": PackedFloat32Array(0.35, 1), "update": 0, "values": [0.0, 1.0]}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("UiRoot/MenuPanel:modulate:a")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {"times": PackedFloat32Array(0, 1.28, 1.5), "transitions": PackedFloat32Array(1, 0.48, 1), "update": 0, "values": [0.0, 0.0, 1.0]}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("UiRoot/MistCharacter:modulate:a")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {"times": PackedFloat32Array(0, 0.04, 0.1), "transitions": PackedFloat32Array(1, 0.4, 1), "update": 0, "values": [0.0, 0.0, 1.0]}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("UiRoot/MistCharacter:scale")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {"times": PackedFloat32Array(0.04, 0.12, 0.34, 0.48, 0.62, 0.76), "transitions": PackedFloat32Array(1, 0.28, 0.62, 0.76, 0.84, 1), "update": 0, "values": [Vector2(4.2, 4.2), Vector2(4.2, 4.2), Vector2(0.84, 0.84), Vector2(1.08, 1.08), Vector2(0.97, 0.97), Vector2(1, 1)]}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("UiRoot/MistCharacter:rotation")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {"times": PackedFloat32Array(0.04, 0.12, 0.34, 0.48, 0.62, 0.76), "transitions": PackedFloat32Array(1, 0.28, 0.62, 0.76, 0.84, 1), "update": 0, "values": [-0.025, -0.025, 0.006, -0.012, 0.005, 0.0]}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("UiRoot/MistCharacter:offset_top")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {"times": PackedFloat32Array(0, 0.76), "transitions": PackedFloat32Array(1, 1), "update": 0, "values": [0.0, 0.0]}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("UiRoot/MistCharacter:offset_bottom")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {"times": PackedFloat32Array(0, 0.76), "transitions": PackedFloat32Array(1, 1), "update": 0, "values": [0.0, 0.0]}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("UiRoot/FrontierCharacter:modulate:a")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {"times": PackedFloat32Array(0, 0.52, 0.6), "transitions": PackedFloat32Array(1, 0.4, 1), "update": 0, "values": [0.0, 0.0, 1.0]}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("UiRoot/FrontierCharacter:scale")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {"times": PackedFloat32Array(0.52, 0.6, 0.84, 0.98, 1.12, 1.26), "transitions": PackedFloat32Array(1, 0.28, 0.62, 0.76, 0.84, 1), "update": 0, "values": [Vector2(4.2, 4.2), Vector2(4.2, 4.2), Vector2(0.84, 0.84), Vector2(1.08, 1.08), Vector2(0.97, 0.97), Vector2(1, 1)]}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("UiRoot/FrontierCharacter:rotation")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {"times": PackedFloat32Array(0.52, 0.6, 0.84, 0.98, 1.12, 1.26), "transitions": PackedFloat32Array(1, 0.28, 0.62, 0.76, 0.84, 1), "update": 0, "values": [0.025, 0.025, -0.006, 0.012, -0.005, 0.0]}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("UiRoot/FrontierCharacter:offset_top")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {"times": PackedFloat32Array(0, 1.26), "transitions": PackedFloat32Array(1, 1), "update": 0, "values": [0.0, 0.0]}
+tracks/11/type = "value"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("UiRoot/FrontierCharacter:offset_bottom")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {"times": PackedFloat32Array(0, 1.26), "transitions": PackedFloat32Array(1, 1), "update": 0, "values": [0.0, 0.0]}
+tracks/12/type = "value"
+tracks/12/imported = false
+tracks/12/enabled = true
+tracks/12/path = NodePath("UiRoot/GameSubtitle:modulate:a")
+tracks/12/interp = 1
+tracks/12/loop_wrap = true
+tracks/12/keys = {"times": PackedFloat32Array(0, 1.04, 1.12), "transitions": PackedFloat32Array(1, 0.42, 1), "update": 0, "values": [0.0, 0.0, 1.0]}
+tracks/13/type = "value"
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/path = NodePath("UiRoot/GameSubtitle:scale")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/keys = {"times": PackedFloat32Array(1.04, 1.12, 1.34, 1.48, 1.62), "transitions": PackedFloat32Array(1, 0.3, 0.68, 0.82, 1), "update": 0, "values": [Vector2(3, 3), Vector2(3, 3), Vector2(0.9, 0.9), Vector2(1.05, 1.05), Vector2(1, 1)]}
+tracks/14/type = "value"
+tracks/14/imported = false
+tracks/14/enabled = true
+tracks/14/path = NodePath("UiRoot/ImpactMist:material:shader_parameter/impact_strength")
+tracks/14/interp = 1
+tracks/14/loop_wrap = true
+tracks/14/keys = {"times": PackedFloat32Array(0, 0.33, 0.34, 0.55, 0.83, 0.84, 1.05, 1.33, 1.34, 1.6), "transitions": PackedFloat32Array(1, 1, 0.35, 1, 1, 0.35, 1, 1, 0.42, 1), "update": 0, "values": [0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.72, 0.0]}
+tracks/15/type = "value"
+tracks/15/imported = false
+tracks/15/enabled = true
+tracks/15/path = NodePath("UiRoot/ImpactMist:material:shader_parameter/impact_center")
+tracks/15/interp = 0
+tracks/15/loop_wrap = true
+tracks/15/keys = {"times": PackedFloat32Array(0, 0.34, 0.84, 1.34), "transitions": PackedFloat32Array(1, 1, 1, 1), "update": 0, "values": [Vector2(0.4825, 0.326667), Vector2(0.4825, 0.326667), Vector2(0.503125, 0.633333), Vector2(0.58125, 0.744444)]}
+tracks/16/type = "value"
+tracks/16/imported = false
+tracks/16/enabled = true
+tracks/16/path = NodePath("UiRoot/MenuPanel/LanButton:offset_transform_position")
+tracks/16/interp = 1
+tracks/16/loop_wrap = true
+tracks/16/keys = {"times": PackedFloat32Array(0, 1.28, 1.67, 1.82), "transitions": PackedFloat32Array(1, 1, 0.42, 0.78), "update": 0, "values": [Vector2(600, 0), Vector2(600, 0), Vector2(-14, 0), Vector2(0, 0)]}
+tracks/17/type = "value"
+tracks/17/imported = false
+tracks/17/enabled = true
+tracks/17/path = NodePath("UiRoot/MenuPanel/LevelModeButton:offset_transform_position")
+tracks/17/interp = 1
+tracks/17/loop_wrap = true
+tracks/17/keys = {"times": PackedFloat32Array(0, 1.36, 1.75, 1.9), "transitions": PackedFloat32Array(1, 1, 0.42, 0.78), "update": 0, "values": [Vector2(620, 0), Vector2(620, 0), Vector2(-12, 0), Vector2(0, 0)]}
+tracks/18/type = "value"
+tracks/18/imported = false
+tracks/18/enabled = true
+tracks/18/path = NodePath("UiRoot/MenuPanel/CommunityButton:offset_transform_position")
+tracks/18/interp = 1
+tracks/18/loop_wrap = true
+tracks/18/keys = {"times": PackedFloat32Array(0, 1.44, 1.83, 1.98), "transitions": PackedFloat32Array(1, 1, 0.42, 0.78), "update": 0, "values": [Vector2(640, 0), Vector2(640, 0), Vector2(-10, 0), Vector2(0, 0)]}
+tracks/19/type = "value"
+tracks/19/imported = false
+tracks/19/enabled = true
+tracks/19/path = NodePath("UiRoot/MenuPanel/QuitButton:offset_transform_position")
+tracks/19/interp = 1
+tracks/19/loop_wrap = true
+tracks/19/keys = {"times": PackedFloat32Array(0, 1.52, 1.91, 2.08, 2.15), "transitions": PackedFloat32Array(1, 1, 0.42, 0.78, 1), "update": 0, "values": [Vector2(660, 0), Vector2(660, 0), Vector2(-8, 0), Vector2(3, 0), Vector2(0, 0)]}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibraryMenu"]
-_data = {&"RESET": SubResource("AnimationReset"), &"menu_intro": SubResource("AnimationIntro")}
+_data = {&"RESET": SubResource("AnimationMenuReset"), &"menu_intro": SubResource("AnimationMenuIntro")}
 
-[node name="StartMenuOverlay" type="Control"]
-visible = false
+[node name="MenuOverlay" type="Control"]
+unique_name_in_owner = true
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("2_theme")
+mouse_filter = 2
 script = ExtResource("1_script")
 
-[node name="Veil" type="ColorRect" parent="."]
+[node name="UiRoot" type="Control" parent="."]
+modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -51,156 +347,264 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.008, 0.013, 0.014, 0.5)
 
-[node name="SafeMargin" type="MarginContainer" parent="."]
+[node name="ScreenTint" type="ColorRect" parent="UiRoot"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 48.0
-offset_top = 40.0
-offset_right = -48.0
-offset_bottom = -36.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
+color = Color(0.015, 0.035, 0.045, 0.28)
 
-[node name="ContentRoot" type="HBoxContainer" parent="SafeMargin"]
+[node name="ImpactMist" type="ColorRect" parent="UiRoot"]
+material = SubResource("ShaderMaterialImpactMist")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(1, 1, 1, 1)
+
+[node name="SettingsButton" type="Button" parent="UiRoot"]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_left = 0.0125
+anchor_top = 0.022222
+anchor_right = 0.0625
+anchor_bottom = 0.111111
+focus_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/icon_normal_color = Color(0.92, 0.92, 0.86, 1)
+theme_override_colors/icon_hover_color = Color(1.12, 1.05, 0.82, 1)
+theme_override_colors/icon_pressed_color = Color(0.74, 0.68, 0.52, 1)
+theme_override_colors/icon_focus_color = Color(1.08, 0.98, 0.74, 1)
+theme_override_colors/icon_disabled_color = Color(0.42, 0.45, 0.42, 0.62)
+icon = ExtResource("5_settings_shield")
+flat = true
+expand_icon = true
+icon_max_width = 48
+
+[node name="MistCharacter" type="TextureRect" parent="UiRoot"]
+layout_mode = 1
+anchors_preset = 0
+anchor_left = 0.3875
+anchor_top = 0.166667
+anchor_right = 0.5775
+anchor_bottom = 0.486667
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("AtlasTextureMist")
+expand_mode = 1
+stretch_mode = 5
+pivot_offset = Vector2(121.6, 115.2)
+
+[node name="FrontierCharacter" type="TextureRect" parent="UiRoot"]
+layout_mode = 1
+anchors_preset = 0
+anchor_left = 0.4125
+anchor_top = 0.477778
+anchor_right = 0.59375
+anchor_bottom = 0.788889
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("AtlasTextureFrontier")
+expand_mode = 1
+stretch_mode = 5
+pivot_offset = Vector2(116, 112)
+
+[node name="GameSubtitle" type="TextureRect" parent="UiRoot"]
+layout_mode = 1
+anchor_left = 0.55
+anchor_top = 0.688889
+anchor_right = 0.6125
+anchor_bottom = 0.8
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("4_subtitle")
+expand_mode = 1
+stretch_mode = 5
+pivot_offset = Vector2(40, 40)
+
+[node name="MenuPanel" type="VBoxContainer" parent="UiRoot"]
+layout_mode = 1
+anchor_left = 0.73125
+anchor_top = 0.2
+anchor_right = 0.9875
+anchor_bottom = 0.755556
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="LanButton" type="Button" parent="UiRoot/MenuPanel"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
 offset_transform_enabled = true
-offset_transform_visual_only = true
-theme_override_constants/separation = 40
-
-[node name="Identity" type="VBoxContainer" parent="SafeMargin/ContentRoot"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 12
-
-[node name="Logo" type="TextureRect" parent="SafeMargin/ContentRoot/Identity"]
-custom_minimum_size = Vector2(420, 420)
-layout_mode = 2
-size_flags_vertical = 3
-mouse_filter = 2
-texture = ExtResource("3_logo")
-expand_mode = 3
-stretch_mode = 5
-
-[node name="Title" type="Label" parent="SafeMargin/ContentRoot/Identity"]
-layout_mode = 2
-theme_type_variation = &"DisplayTitle"
-text = "雾疆 · 九路烽棋"
-
-[node name="Description" type="Label" parent="SafeMargin/ContentRoot/Identity"]
-custom_minimum_size = Vector2(0, 52)
-layout_mode = 2
-theme_type_variation = &"BodyText"
-text = "以迷雾遮蔽战场，以军令争夺九路。"
-vertical_alignment = 1
-
-[node name="MenuPanel" type="PanelContainer" parent="SafeMargin/ContentRoot"]
-custom_minimum_size = Vector2(380, 0)
-layout_mode = 2
-theme_type_variation = &"PageSurface"
-
-[node name="MenuColumn" type="VBoxContainer" parent="SafeMargin/ContentRoot/MenuPanel"]
-layout_mode = 2
-theme_override_constants/separation = 12
-
-[node name="Header" type="VBoxContainer" parent="SafeMargin/ContentRoot/MenuPanel/MenuColumn"]
-layout_mode = 2
-
-[node name="Eyebrow" type="Label" parent="SafeMargin/ContentRoot/MenuPanel/MenuColumn/Header"]
-layout_mode = 2
-theme_type_variation = &"SecondaryText"
-text = "军帐总览"
-
-[node name="Title" type="Label" parent="SafeMargin/ContentRoot/MenuPanel/MenuColumn/Header"]
-layout_mode = 2
-theme_type_variation = &"ScreenTitle"
-text = "选择行动"
-
-[node name="Separator" type="HSeparator" parent="SafeMargin/ContentRoot/MenuPanel/MenuColumn"]
-layout_mode = 2
-
-[node name="LanButton" parent="SafeMargin/ContentRoot/MenuPanel/MenuColumn" instance=ExtResource("4_primary")]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 60)
-layout_mode = 2
-focus_neighbor_top = NodePath("../QuitButton")
-focus_neighbor_bottom = NodePath("../LevelModeButton")
-focus_next = NodePath("../LevelModeButton")
-focus_previous = NodePath("../QuitButton")
+offset_transform_position = Vector2(600, 0)
+focus_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.76, 0.64, 0.38, 1)
+theme_override_colors/font_hover_color = Color(1, 0.87, 0.56, 1)
+theme_override_colors/font_pressed_color = Color(0.88, 0.73, 0.42, 1)
+theme_override_colors/font_focus_color = Color(1, 0.87, 0.56, 1)
+theme_override_colors/font_disabled_color = Color(0.46, 0.42, 0.32, 0.58)
+theme_override_colors/font_outline_color = Color(0.035, 0.025, 0.015, 0.96)
+theme_override_colors/font_shadow_color = Color(0.02, 0.015, 0.01, 0.9)
+theme_override_constants/outline_size = 2
+theme_override_constants/shadow_offset_y = -1
+theme_override_fonts/font = ExtResource("3_ui_font")
+theme_override_font_sizes/font_size = 27
+theme_override_styles/normal = SubResource("StyleSwordNormal")
+theme_override_styles/hover = SubResource("StyleSwordHover")
+theme_override_styles/pressed = SubResource("StyleSwordPressed")
+theme_override_styles/focus = SubResource("StyleSwordHover")
+theme_override_styles/disabled = SubResource("StyleSwordDisabled")
 text = "联机对战"
 
-[node name="LevelModeButton" parent="SafeMargin/ContentRoot/MenuPanel/MenuColumn" instance=ExtResource("4_primary")]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 60)
+[node name="LanLevelSpacer" type="Control" parent="UiRoot/MenuPanel"]
+custom_minimum_size = Vector2(0, 37.3333)
 layout_mode = 2
-focus_neighbor_top = NodePath("../LanButton")
-focus_neighbor_bottom = NodePath("../CommunityButton")
-focus_next = NodePath("../CommunityButton")
-focus_previous = NodePath("../LanButton")
+mouse_filter = 2
+
+[node name="LevelModeButton" type="Button" parent="UiRoot/MenuPanel"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+offset_transform_enabled = true
+offset_transform_position = Vector2(620, 0)
+focus_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.76, 0.64, 0.38, 1)
+theme_override_colors/font_hover_color = Color(1, 0.87, 0.56, 1)
+theme_override_colors/font_pressed_color = Color(0.88, 0.73, 0.42, 1)
+theme_override_colors/font_focus_color = Color(1, 0.87, 0.56, 1)
+theme_override_colors/font_disabled_color = Color(0.46, 0.42, 0.32, 0.58)
+theme_override_colors/font_outline_color = Color(0.035, 0.025, 0.015, 0.96)
+theme_override_colors/font_shadow_color = Color(0.02, 0.015, 0.01, 0.9)
+theme_override_constants/outline_size = 2
+theme_override_constants/shadow_offset_y = -1
+theme_override_fonts/font = ExtResource("3_ui_font")
+theme_override_font_sizes/font_size = 27
+theme_override_styles/normal = SubResource("StyleSwordNormal")
+theme_override_styles/hover = SubResource("StyleSwordHover")
+theme_override_styles/pressed = SubResource("StyleSwordPressed")
+theme_override_styles/focus = SubResource("StyleSwordHover")
+theme_override_styles/disabled = SubResource("StyleSwordDisabled")
 text = "关卡模式"
 
-[node name="CommunityButton" parent="SafeMargin/ContentRoot/MenuPanel/MenuColumn" instance=ExtResource("5_secondary")]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 52)
+[node name="LevelCommunitySpacer" type="Control" parent="UiRoot/MenuPanel"]
+custom_minimum_size = Vector2(0, 37.3333)
 layout_mode = 2
-focus_neighbor_top = NodePath("../LevelModeButton")
-focus_neighbor_bottom = NodePath("../SettingsButton")
-focus_next = NodePath("../SettingsButton")
-focus_previous = NodePath("../LevelModeButton")
+mouse_filter = 2
+
+[node name="CommunityButton" type="Button" parent="UiRoot/MenuPanel"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+offset_transform_enabled = true
+offset_transform_position = Vector2(640, 0)
+focus_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.76, 0.64, 0.38, 1)
+theme_override_colors/font_hover_color = Color(1, 0.87, 0.56, 1)
+theme_override_colors/font_pressed_color = Color(0.88, 0.73, 0.42, 1)
+theme_override_colors/font_focus_color = Color(1, 0.87, 0.56, 1)
+theme_override_colors/font_disabled_color = Color(0.46, 0.42, 0.32, 0.58)
+theme_override_colors/font_outline_color = Color(0.035, 0.025, 0.015, 0.96)
+theme_override_colors/font_shadow_color = Color(0.02, 0.015, 0.01, 0.9)
+theme_override_constants/outline_size = 2
+theme_override_constants/shadow_offset_y = -1
+theme_override_fonts/font = ExtResource("3_ui_font")
+theme_override_font_sizes/font_size = 27
+theme_override_styles/normal = SubResource("StyleSwordNormal")
+theme_override_styles/hover = SubResource("StyleSwordHover")
+theme_override_styles/pressed = SubResource("StyleSwordPressed")
+theme_override_styles/focus = SubResource("StyleSwordHover")
+theme_override_styles/disabled = SubResource("StyleSwordDisabled")
 text = "社群"
 
-[node name="SettingsButton" parent="SafeMargin/ContentRoot/MenuPanel/MenuColumn" instance=ExtResource("5_secondary")]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 52)
+[node name="CommunityQuitSpacer" type="Control" parent="UiRoot/MenuPanel"]
+custom_minimum_size = Vector2(0, 37.3333)
 layout_mode = 2
-focus_neighbor_top = NodePath("../CommunityButton")
-focus_neighbor_bottom = NodePath("../QuitButton")
-focus_next = NodePath("../QuitButton")
-focus_previous = NodePath("../CommunityButton")
-text = "设置"
+mouse_filter = 2
 
-[node name="Spacer" type="Control" parent="SafeMargin/ContentRoot/MenuPanel/MenuColumn"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="QuitButton" parent="SafeMargin/ContentRoot/MenuPanel/MenuColumn" instance=ExtResource("6_danger")]
+[node name="QuitButton" type="Button" parent="UiRoot/MenuPanel"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 52)
+custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
-focus_neighbor_top = NodePath("../SettingsButton")
-focus_neighbor_bottom = NodePath("../LanButton")
-focus_next = NodePath("../LanButton")
-focus_previous = NodePath("../SettingsButton")
+offset_transform_enabled = true
+offset_transform_position = Vector2(660, 0)
+focus_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.76, 0.64, 0.38, 1)
+theme_override_colors/font_hover_color = Color(1, 0.87, 0.56, 1)
+theme_override_colors/font_pressed_color = Color(0.88, 0.73, 0.42, 1)
+theme_override_colors/font_focus_color = Color(1, 0.87, 0.56, 1)
+theme_override_colors/font_disabled_color = Color(0.46, 0.42, 0.32, 0.58)
+theme_override_colors/font_outline_color = Color(0.035, 0.025, 0.015, 0.96)
+theme_override_colors/font_shadow_color = Color(0.02, 0.015, 0.01, 0.9)
+theme_override_constants/outline_size = 2
+theme_override_constants/shadow_offset_y = -1
+theme_override_fonts/font = ExtResource("3_ui_font")
+theme_override_font_sizes/font_size = 27
+theme_override_styles/normal = SubResource("StyleSwordNormal")
+theme_override_styles/hover = SubResource("StyleSwordHover")
+theme_override_styles/pressed = SubResource("StyleSwordPressed")
+theme_override_styles/focus = SubResource("StyleSwordHover")
+theme_override_styles/disabled = SubResource("StyleSwordDisabled")
 text = "退出游戏"
 
-[node name="VersionLabel" type="Label" parent="SafeMargin/ContentRoot/MenuPanel/MenuColumn"]
+[node name="VersionLabel" type="Label" parent="UiRoot"]
 unique_name_in_owner = true
-layout_mode = 2
-theme_type_variation = &"SecondaryText"
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -286.0
+offset_top = -39.0
+offset_right = -18.0
+offset_bottom = -16.0
+grow_horizontal = 0
+grow_vertical = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.5, 0.53, 0.52, 0.82)
+theme_override_colors/font_outline_color = Color(0.02, 0.03, 0.035, 0.9)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("3_ui_font")
+theme_override_font_sizes/font_size = 16
 text = "Godot 4.7.1 · Iteration 3"
-horizontal_alignment = 1
+horizontal_alignment = 2
 
 [node name="MenuIntroPlayer" type="AnimationPlayer" parent="."]
 unique_name_in_owner = true
 libraries = {&"": SubResource("AnimationLibraryMenu")}
 
-[node name="NoticeDialog" parent="." instance=ExtResource("7_dialog")]
+[node name="NoticeDialog" parent="." instance=ExtResource("8_dialog")]
 unique_name_in_owner = true
-title = "提示"
+title = "功能提示"
+dialog_text = "该功能尚未开放。"
+ok_button_text = "知道了"
 show_cancel_button = false
 
-[node name="QuitDialog" parent="." instance=ExtResource("7_dialog")]
+[node name="QuitDialog" parent="." instance=ExtResource("8_dialog")]
 unique_name_in_owner = true
 title = "退出游戏"
-dialog_text = "确定退出《雾疆：九路烽棋》吗？"
-ok_button_text = "退出"
+dialog_text = "确定要退出《雾疆：九路烽棋》吗？"
+ok_button_text = "退出游戏"
 cancel_button_text = "返回"
 focus_cancel_by_default = true
 
-[node name="FatalErrorDialog" parent="." instance=ExtResource("7_dialog")]
+[node name="FatalErrorDialog" parent="." instance=ExtResource("8_dialog")]
 unique_name_in_owner = true
-title = "界面错误"
+title = "界面加载失败"
+ok_button_text = "返回"
 show_cancel_button = false
