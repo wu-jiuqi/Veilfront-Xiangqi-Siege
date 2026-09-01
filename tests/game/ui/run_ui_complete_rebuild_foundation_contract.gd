@@ -5,18 +5,19 @@ const GALLERY_PATH := "res://scenes/dev/ui/ui_complete_rebuild_gallery.tscn"
 const SURFACES: Array[StringName] = [
 	&"PageSurface", &"PrimarySurface", &"SecondarySurface",
 	&"InsetSurface", &"OverlaySurface", &"DangerSurface",
+	&"CalloutSurface", &"WarningSurface", &"PauseOverlaySurface",
 ]
 const BUTTONS: Array[StringName] = [
 	&"PrimaryButton", &"ConfirmButton", &"SecondaryButton",
 	&"GhostButton", &"DangerButton", &"CompactButton",
 ]
 const LABELS := {
-	&"DisplayTitle": 38,
-	&"ScreenTitle": 28,
-	&"SectionTitle": 20,
+	&"DisplayTitle": 40,
+	&"ScreenTitle": 30,
+	&"SectionTitle": 22,
 	&"BodyText": 16,
 	&"SecondaryText": 14,
-	&"NumericText": 22,
+	&"NumericText": 23,
 }
 const VIEWPORTS: Array[Vector2i] = [
 	Vector2i(960, 540), Vector2i(1280, 720),
@@ -37,6 +38,8 @@ func _run() -> void:
 		for surface: StringName in SURFACES:
 			_expect(theme.get_type_variation_base(surface) == &"PanelContainer", "表面变体缺失：%s" % surface)
 			_expect(theme.has_stylebox(&"panel", surface), "表面样式缺失：%s" % surface)
+		_expect(theme.get_stylebox(&"panel", &"PageSurface") is StyleBoxTexture, "页面必须使用风格化可缩放材质框")
+		_expect(theme.get_stylebox(&"panel", &"OverlaySurface") is StyleBoxTexture, "模态必须使用风格化可缩放材质框")
 		for button: StringName in BUTTONS:
 			_expect(theme.get_type_variation_base(button) == &"Button", "按钮变体缺失：%s" % button)
 			for state: StringName in [&"normal", &"hover", &"pressed", &"disabled", &"focus"]:
@@ -79,7 +82,7 @@ func _check_gallery() -> void:
 
 func _finish() -> void:
 	if _failures.is_empty():
-		print("UI_COMPLETE_REBUILD_FOUNDATION_PASS surfaces=6 buttons=6 labels=6 viewports=4")
+		print("UI_COMPLETE_REBUILD_FOUNDATION_PASS surfaces=9 buttons=6 labels=6 viewports=4 stylized=true")
 		quit(0)
 		return
 	for failure: String in _failures:

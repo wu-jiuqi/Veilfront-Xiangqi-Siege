@@ -39,9 +39,9 @@ func _run() -> void:
 		"settings screen must use the rebuilt unified theme",
 	)
 	_expect(not source.contains("settings/png_v2"), "settings screen still depends on layout-defining PNG controls")
-	_expect(not source.contains("StyleBoxTexture"), "settings screen must use scalable panel and button surfaces")
+	_expect(not source.contains("StyleBoxTexture"), "settings scene must inherit its scalable surfaces from the shared Theme")
 	_expect(screen.get_node("Background") is TextureRect, "settings background is missing")
-	_expect(_is_flat_surface(screen.get_node("%SettingsFrame"), &"panel"), "settings frame must use a scalable flat surface")
+	_expect(_is_scalable_surface(screen.get_node("%SettingsFrame"), &"panel"), "settings frame must use a scalable themed surface")
 
 	var tabs := screen.get_node("%SettingsTabs") as TabContainer
 	_expect(tabs != null and tabs.get_tab_count() == 3, "settings must keep three preference groups")
@@ -75,7 +75,7 @@ func _run() -> void:
 		_expect(button.custom_minimum_size.y >= 44.0, "%s is below the interaction target" % button_name)
 		_expect(button.has_method("set_reduced_motion"), "%s must use the reusable motion button" % button_name)
 		_expect(button.theme_type_variation == expected_variations[button_name], "%s uses the wrong button role" % button_name)
-		_expect(button.get_theme_stylebox(&"normal") is StyleBoxFlat, "%s must inherit a scalable flat surface" % button_name)
+		_expect(_is_scalable_surface(button, &"normal"), "%s must inherit a scalable themed surface" % button_name)
 
 	for viewport_size: Vector2i in VIEWPORTS:
 		root.size = viewport_size
@@ -106,8 +106,20 @@ func _run() -> void:
 	_finish()
 
 
-func _is_flat_surface(control: Control, style_name: StringName) -> bool:
-	return control != null and control.get_theme_stylebox(style_name) is StyleBoxFlat
+func _is_scalable_surface(control: Control, style_name: StringName) -> bool:
+	if control == null:
+		return false
+	var style := control.get_theme_stylebox(style_name)
+	if style is StyleBoxFlat:
+		return true
+	if style is StyleBoxTexture:
+		var textured := style as StyleBoxTexture
+		return textured.texture != null \
+			and textured.texture_margin_left > 0.0 \
+			and textured.texture_margin_top > 0.0 \
+			and textured.texture_margin_right > 0.0 \
+			and textured.texture_margin_bottom > 0.0
+	return false
 
 
 func _assert_inside_viewport(control: Control, viewport_size: Vector2i, label: String) -> void:

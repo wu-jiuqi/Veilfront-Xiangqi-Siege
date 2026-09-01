@@ -25,7 +25,7 @@ func _run() -> void:
 	for button: Button in [continue_button, restart_button, codex_button, exit_button]:
 		_expect(button.focus_mode == Control.FOCUS_ALL, "%s must accept keyboard focus" % button.name)
 		_expect(button.custom_minimum_size.y >= 44.0, "%s must keep a 44px target" % button.name)
-		_expect(button.get_theme_stylebox("normal") is StyleBoxFlat, "%s must use a scalable theme surface" % button.name)
+		_expect(_is_scalable_stylebox(button.get_theme_stylebox("normal")), "%s must use a scalable theme surface" % button.name)
 	_expect(
 		menu.theme != null and menu.theme.resource_path.ends_with("veilfront_ui_theme_v2.tres"),
 		"pause menu does not use the unified V2 theme"
@@ -92,3 +92,16 @@ func _run() -> void:
 func _expect(condition: bool, message: String) -> void:
 	if not condition:
 		_failures.append(message)
+
+
+func _is_scalable_stylebox(style: StyleBox) -> bool:
+	if style is StyleBoxFlat:
+		return true
+	if style is StyleBoxTexture:
+		var textured := style as StyleBoxTexture
+		return textured.texture != null \
+			and textured.texture_margin_left > 0.0 \
+			and textured.texture_margin_top > 0.0 \
+			and textured.texture_margin_right > 0.0 \
+			and textured.texture_margin_bottom > 0.0
+	return false

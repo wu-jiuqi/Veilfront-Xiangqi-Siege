@@ -36,7 +36,7 @@ func _run() -> void:
 	_expect(not source.contains("level_select_master_v2_theme"), "level select still uses the retired private theme")
 	_expect(not card_source.contains("node_selected_v2"), "level cards still depend on fixed state-image geometry")
 	_expect((screen.get_node("%DesignCanvas") as Control).scale == Vector2.ONE, "level select canvas must remain at native scale")
-	_expect(_is_flat_surface(screen.get_node("DesignCanvas/Page"), &"panel"), "level select page must be a scalable surface")
+	_expect(_is_scalable_surface(screen.get_node("DesignCanvas/Page"), &"panel"), "level select page must be a scalable surface")
 	_expect((screen.get_node("%CategoryTabs") as TabContainer).tabs_visible == false, "category tabs must remain controlled by the sidebar")
 	_expect(screen.get_node("%TutorialGrid").get_child_count() == 1, "onboarding must begin with P0")
 	_expect(screen.get_node("%ChallengeGrid").get_child_count() == 3, "challenge catalog count changed")
@@ -54,7 +54,7 @@ func _run() -> void:
 			continue
 		_expect(button.custom_minimum_size.y >= 44.0, "%s is below the interaction target" % button_name)
 		_expect(button.has_method("set_reduced_motion"), "%s must use the reusable motion button" % button_name)
-		_expect(button.get_theme_stylebox(&"normal") is StyleBoxFlat, "%s must use a scalable flat surface" % button_name)
+		_expect(_is_scalable_stylebox(button.get_theme_stylebox(&"normal")), "%s must use a scalable themed surface" % button_name)
 
 	(screen.get_node("%FoundationRouteButton") as Button).pressed.emit()
 	await process_frame
@@ -105,11 +105,24 @@ func _assert_card_surfaces(grid: Control) -> void:
 		var card := child as Control
 		var button := card.get_node("%NodeButton") as Button
 		_expect(card.custom_minimum_size.y >= 44.0, "level card is below the interaction target")
-		_expect(button != null and button.get_theme_stylebox(&"normal") is StyleBoxFlat, "level card must use the unified button surface")
+		_expect(button != null and _is_scalable_stylebox(button.get_theme_stylebox(&"normal")), "level card must use the unified button surface")
 
 
-func _is_flat_surface(control: Control, style_name: StringName) -> bool:
-	return control != null and control.get_theme_stylebox(style_name) is StyleBoxFlat
+func _is_scalable_surface(control: Control, style_name: StringName) -> bool:
+	return control != null and _is_scalable_stylebox(control.get_theme_stylebox(style_name))
+
+
+func _is_scalable_stylebox(style: StyleBox) -> bool:
+	if style is StyleBoxFlat:
+		return true
+	if style is StyleBoxTexture:
+		var textured := style as StyleBoxTexture
+		return textured.texture != null \
+			and textured.texture_margin_left > 0.0 \
+			and textured.texture_margin_top > 0.0 \
+			and textured.texture_margin_right > 0.0 \
+			and textured.texture_margin_bottom > 0.0
+	return false
 
 
 func _assert_inside_viewport(control: Control, viewport_size: Vector2i, label: String) -> void:

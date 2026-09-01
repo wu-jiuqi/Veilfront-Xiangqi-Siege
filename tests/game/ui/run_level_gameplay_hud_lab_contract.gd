@@ -91,8 +91,11 @@ func _run() -> void:
 func _rects_match(snapshot: Dictionary) -> bool:
 	var original: Rect2 = snapshot.get("original_right_rect", Rect2())
 	var guide: Rect2 = snapshot.get("guide_rect", Rect2())
-	return original.position.distance_to(guide.position) <= 1.0 \
+	var matches := original.position.distance_to(guide.position) <= 1.0 \
 		and original.size.distance_to(guide.size) <= 1.0
+	if not matches:
+		print("LEVEL_GUIDE_RECT_DIAGNOSTIC original=%s guide=%s" % [original, guide])
+	return matches
 
 
 func _center_column_clear_of_guide(lab: Control) -> bool:

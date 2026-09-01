@@ -29,7 +29,7 @@ func _run() -> void:
 	_expect(not source.contains("ready_confirm_button_v2.png"), "ready action still depends on fixed PNG geometry")
 	_expect(not source.contains("start_game_button_v2.png"), "start action still depends on fixed PNG geometry")
 	_expect(
-		(lobby.get_node("SafeMargin/Page") as PanelContainer).get_theme_stylebox(&"panel") is StyleBoxFlat,
+		_is_scalable_stylebox((lobby.get_node("SafeMargin/Page") as PanelContainer).get_theme_stylebox(&"panel")),
 		"formal lobby page must use a scalable panel surface",
 	)
 	for button_name: String in [
@@ -42,7 +42,7 @@ func _run() -> void:
 			continue
 		_expect(button.custom_minimum_size.y >= 44.0, "%s is below the interaction target" % button_name)
 		_expect(button.has_method("set_reduced_motion"), "%s must use the reusable motion button" % button_name)
-		_expect(button.get_theme_stylebox(&"normal") is StyleBoxFlat, "%s must use a scalable surface" % button_name)
+		_expect(_is_scalable_stylebox(button.get_theme_stylebox(&"normal")), "%s must use a scalable surface" % button_name)
 	var page := lobby.get_node("SafeMargin/Page") as Control
 	_expect(
 		lobby.get_viewport_rect().encloses(page.get_global_rect()),
@@ -127,6 +127,19 @@ func _find_signal(node: Object, signal_name: String) -> Dictionary:
 		if str(signal_info.get("name", "")) == signal_name:
 			return signal_info
 	return {}
+
+
+func _is_scalable_stylebox(style: StyleBox) -> bool:
+	if style is StyleBoxFlat:
+		return true
+	if style is StyleBoxTexture:
+		var textured := style as StyleBoxTexture
+		return textured.texture != null \
+			and textured.texture_margin_left > 0.0 \
+			and textured.texture_margin_top > 0.0 \
+			and textured.texture_margin_right > 0.0 \
+			and textured.texture_margin_bottom > 0.0
+	return false
 
 
 func _expect(condition: bool, message: String) -> void:

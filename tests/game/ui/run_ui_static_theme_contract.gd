@@ -10,7 +10,6 @@ const SCENE_THEME_PATHS: Array[String] = [
 	"res://scenes/game/frontend/formal_lan_lobby.tscn",
 	"res://scenes/game/frontend/level_select.tscn",
 	"res://scenes/game/frontend/settings_screen.tscn",
-	"res://scenes/game/frontend/start_screen.tscn",
 	"res://scenes/game/match/match_screen.tscn",
 	"res://scenes/game/match/online_match_screen.tscn",
 	"res://scenes/game/tutorial/tutorial_level.tscn",
@@ -27,7 +26,6 @@ const PRODUCTION_UI_SCENES: Array[String] = [
 	"res://scenes/game/frontend/level_card.tscn",
 	"res://scenes/game/frontend/level_select.tscn",
 	"res://scenes/game/frontend/settings_screen.tscn",
-	"res://scenes/game/frontend/start_menu_overlay.tscn",
 	"res://scenes/game/ui/level_guide_overlay.tscn",
 	"res://scenes/game/ui/level_guide_panel.tscn",
 	"res://scenes/game/ui/marker_menu.tscn",
@@ -59,6 +57,7 @@ func _init() -> void:
 
 
 func _run() -> void:
+	_check_start_menu_lock()
 	for scene_path: String in SCENE_THEME_PATHS:
 		var source := FileAccess.get_file_as_string(scene_path)
 		_expect(FileAccess.get_open_error() == OK, "scene must be readable: %s" % scene_path)
@@ -78,7 +77,7 @@ func _run() -> void:
 			_expect(not source.contains(forbidden), "%s still contains %s" % [scene_path, forbidden])
 
 	if _failures.is_empty():
-		print("UI_STATIC_THEME_CONTRACT_PASS roots=%d production_scenes=%d theme=v2" % [
+		print("UI_STATIC_THEME_CONTRACT_PASS roots=%d production_scenes=%d theme=v2 menu_locked=true" % [
 			SCENE_THEME_PATHS.size(), PRODUCTION_UI_SCENES.size()
 		])
 		quit(0)
@@ -87,6 +86,17 @@ func _run() -> void:
 		push_error(failure)
 	print("UI_STATIC_THEME_CONTRACT_FAIL failures=%d" % _failures.size())
 	quit(1)
+
+
+func _check_start_menu_lock() -> void:
+	var start_source := FileAccess.get_file_as_string("res://scenes/game/frontend/start_screen.tscn")
+	var menu_source := FileAccess.get_file_as_string("res://scenes/game/frontend/start_menu_overlay.tscn")
+	_expect(start_source.contains("terracotta_ui_theme.tres"), "start screen must keep its original theme")
+	_expect(not start_source.contains("veilfront_ui_theme_v2.tres"), "start screen must not inherit the rebuilt page theme")
+	_expect(menu_source.contains("menu_bronze_sword_button_v1.png"), "start menu sword buttons were replaced")
+	_expect(menu_source.contains("veilfront_logo_gold_pair_v2.png"), "start menu title composition was replaced")
+	_expect(menu_source.contains('[node name="MenuOverlay" type="Control"]'), "start menu original root was replaced")
+	_expect(not menu_source.contains("veilfront_ui_theme_v2.tres"), "start menu must remain outside the rebuilt page theme")
 
 
 func _find_ext_resource_id(source: String, resource_path: String) -> String:

@@ -124,9 +124,22 @@ func _check_decision_button_styles(overlay: Control) -> void:
 		)
 		for style_name: StringName in [&"normal", &"hover", &"pressed", &"disabled", &"focus"]:
 			_expect(
-				button.get_theme_stylebox(style_name) is StyleBoxFlat,
+				_is_scalable_stylebox(button.get_theme_stylebox(style_name)),
 				"%s resolved a non-scalable Button style for %s" % [button_name, style_name]
 			)
+
+
+func _is_scalable_stylebox(style: StyleBox) -> bool:
+	if style is StyleBoxFlat:
+		return true
+	if style is StyleBoxTexture:
+		var textured := style as StyleBoxTexture
+		return textured.texture != null \
+			and textured.texture_margin_left > 0.0 \
+			and textured.texture_margin_top > 0.0 \
+			and textured.texture_margin_right > 0.0 \
+			and textured.texture_margin_bottom > 0.0
+	return false
 
 
 func _rect_inside(rect: Rect2, bounds: Vector2) -> bool:

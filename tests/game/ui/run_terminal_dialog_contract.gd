@@ -25,12 +25,12 @@ func _run() -> void:
 		dialog.theme.resource_path == "res://resources/game/ui/themes/veilfront_ui_theme_v2.tres",
 		"terminal dialog must use the rebuilt unified theme",
 	)
-	_expect(panel.get_theme_stylebox(&"panel") is StyleBoxFlat, "terminal frame must use a scalable surface")
+	_expect(_is_scalable_stylebox(panel.get_theme_stylebox(&"panel")), "terminal frame must use a scalable surface")
 	var restart_button := dialog.get_node("%RestartButton") as Button
 	var lobby_button := dialog.get_node("%LobbyButton") as Button
 	_expect(
-		restart_button.get_theme_stylebox(&"normal") is StyleBoxFlat \
-		and lobby_button.get_theme_stylebox(&"normal") is StyleBoxFlat,
+		_is_scalable_stylebox(restart_button.get_theme_stylebox(&"normal")) \
+		and _is_scalable_stylebox(lobby_button.get_theme_stylebox(&"normal")),
 		"terminal actions must use unified scalable button surfaces",
 	)
 	_expect(restart_button.has_method("set_reduced_motion"), "terminal actions must use the reusable motion button")
@@ -153,6 +153,19 @@ func _run() -> void:
 func _expect(condition: bool, message: String) -> void:
 	if not condition:
 		_failures.append(message)
+
+
+func _is_scalable_stylebox(style: StyleBox) -> bool:
+	if style is StyleBoxFlat:
+		return true
+	if style is StyleBoxTexture:
+		var textured := style as StyleBoxTexture
+		return textured.texture != null \
+			and textured.texture_margin_left > 0.0 \
+			and textured.texture_margin_top > 0.0 \
+			and textured.texture_margin_right > 0.0 \
+			and textured.texture_margin_bottom > 0.0
+	return false
 
 
 func _finish() -> void:
