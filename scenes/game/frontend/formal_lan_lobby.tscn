@@ -1,107 +1,26 @@
-[gd_scene format=3 uid="uid://3t72osg281ny"]
+[gd_scene load_steps=10 format=3]
 
-[ext_resource type="Script" uid="uid://ch1mvygbw7kk7" path="res://scripts/game/frontend/formal_lan_lobby.gd" id="1_lobby"]
-[ext_resource type="Theme" path="res://resources/game/ui/themes/terracotta_ui_theme.tres" id="3_theme"]
-[ext_resource type="Texture2D" uid="uid://bsraibdjkmajb" path="res://assets/art/ui/lan_lobby/lan_lobby_board_backdrop_v1.png" id="5_backdrop"]
-[ext_resource type="Texture2D" uid="uid://d2e5xk56vou2u" path="res://assets/art/ui/lan_lobby/slices_v3/header_frame.png" id="6_header"]
-[ext_resource type="Texture2D" uid="uid://8a3a7nwlljhj" path="res://assets/art/ui/lan_lobby/slices_v3/return_button.png" id="7_return"]
-[ext_resource type="Texture2D" uid="uid://sw1oxd8m3s2i" path="res://assets/art/ui/lan_lobby/slices_v3/return_button_hover.png" id="8_return_hover"]
-[ext_resource type="Texture2D" uid="uid://dfxcwfckgx5w4" path="res://assets/art/ui/lan_lobby/slices_v3/return_button_pressed.png" id="9_return_pressed"]
-[ext_resource type="Texture2D" uid="uid://dxlb4d81sja0d" path="res://assets/art/ui/lan_lobby/slices_v3/connection_bars.png" id="10_bars"]
-[ext_resource type="Texture2D" uid="uid://bw1gte5v63ac1" path="res://assets/art/ui/lan_lobby/slices_v3/room_info_panel.png" id="11_room"]
-[ext_resource type="Texture2D" uid="uid://dudepuksmws6h" path="res://assets/art/ui/lan_lobby/slices_v3/copy_address_button.png" id="12_copy"]
-[ext_resource type="Texture2D" uid="uid://dn8fhy28h2tip" path="res://assets/art/ui/lan_lobby/slices_v3/copy_address_button_hover.png" id="13_copy_hover"]
-[ext_resource type="Texture2D" uid="uid://dvk2fd31bx1kb" path="res://assets/art/ui/lan_lobby/slices_v3/copy_address_button_pressed.png" id="14_copy_pressed"]
-[ext_resource type="Texture2D" uid="uid://2gj8urp6uwan" path="res://assets/art/ui/lan_lobby/slices_v3/versus_panel.png" id="15_versus"]
-[ext_resource type="Texture2D" uid="uid://cpnpufj06w5e6" path="res://assets/art/ui/lan_lobby/slices_v3/rules_panel.png" id="16_rules"]
-[ext_resource type="Texture2D" uid="uid://dkr8v516j0wsh" path="res://assets/art/ui/lan_lobby/slices_v3/status_panel.png" id="17_status"]
-[ext_resource type="Texture2D" uid="uid://dglgy87o505re" path="res://assets/art/ui/lan_lobby/slices_v3/action_group.png" id="18_actions"]
-[ext_resource type="Texture2D" uid="uid://dkaw60qt4ad02" path="res://assets/art/ui/lan_lobby/slices_v3/disconnect_button.png" id="19_disconnect"]
-[ext_resource type="Texture2D" uid="uid://dcbuyp45sawut" path="res://assets/art/ui/lan_lobby/slices_v3/disconnect_button_hover.png" id="20_disconnect_hover"]
-[ext_resource type="Texture2D" uid="uid://djrknp77s2xfw" path="res://assets/art/ui/lan_lobby/slices_v3/disconnect_button_pressed.png" id="21_disconnect_pressed"]
-[ext_resource type="Texture2D" uid="uid://dkge6nb13kvuv" path="res://assets/art/ui/lan_lobby/slices_v3/disconnect_button_disabled.png" id="22_disconnect_disabled"]
-[ext_resource type="Texture2D" uid="uid://bbhdiojtb0fhw" path="res://assets/art/ui/lan_lobby/slices_v3/join_button.png" id="23_join"]
-[ext_resource type="Texture2D" uid="uid://csyaec1ntu7jx" path="res://assets/art/ui/lan_lobby/slices_v3/join_button_hover.png" id="24_join_hover"]
-[ext_resource type="Texture2D" uid="uid://cdq4mmqinrm84" path="res://assets/art/ui/lan_lobby/slices_v3/join_button_pressed.png" id="25_join_pressed"]
-[ext_resource type="Texture2D" uid="uid://dseih3bovswyq" path="res://assets/art/ui/lan_lobby/slices_v3/join_button_disabled.png" id="26_join_disabled"]
-[ext_resource type="Texture2D" uid="uid://0rqrryolhwdn" path="res://assets/art/ui/lan_lobby/slices_v3/host_button.png" id="27_host"]
-[ext_resource type="Texture2D" uid="uid://cd8nqytdsi8q1" path="res://assets/art/ui/lan_lobby/slices_v3/host_button_hover.png" id="28_host_hover"]
-[ext_resource type="Texture2D" uid="uid://ba6fgria0v5ex" path="res://assets/art/ui/lan_lobby/slices_v3/host_button_pressed.png" id="29_host_pressed"]
-[ext_resource type="Texture2D" uid="uid://s6eaqsw77ex1" path="res://assets/art/ui/lan_lobby/slices_v3/host_button_disabled.png" id="30_host_disabled"]
-[ext_resource type="FontFile" uid="uid://cb5frowqdactf" path="res://assets/fonts/ramega_zhang_qingping/ramega_zhang_qingping_xingshu.ttf" id="31_display_font"]
-[ext_resource type="FontFile" uid="uid://b0cc3b0elf1x6" path="res://assets/fonts/noto_sans_sc/NotoSansSC-VariableFont_wght.ttf" id="32_ui_font"]
-[ext_resource type="Texture2D" uid="uid://dmkbf1wp88y5h" path="res://assets/art/ui/lan_lobby/slices_v3/header_status_backing.png" id="33_header_backing"]
-[ext_resource type="Texture2D" uid="uid://btl11l3qb6bpu" path="res://assets/art/ui/lan_lobby/slices_v3/room_value_backing.png" id="34_room_backing"]
-[ext_resource type="Texture2D" uid="uid://dwrjj0k1jwee5" path="res://assets/art/ui/lan_lobby/slices_v3/red_status_backing.png" id="35_red_backing"]
-[ext_resource type="Texture2D" uid="uid://clko7q5kgg3h1" path="res://assets/art/ui/lan_lobby/slices_v3/black_status_backing.png" id="36_black_backing"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/ready_confirm_button_v2.png" id="37_ready_confirm"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/ready_cancel_button_v2.png" id="38_ready_cancel"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/start_game_button_v2.png" id="39_start_game"]
-[ext_resource type="PackedScene" path="res://scenes/game/audio/frontend_audio_feedback.tscn" id="40_frontend_audio"]
+[ext_resource type="Script" path="res://scripts/game/frontend/formal_lan_lobby.gd" id="1_script"]
+[ext_resource type="Theme" path="res://resources/game/ui/themes/veilfront_ui_theme_v2.tres" id="2_theme"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/lan_lobby_board_backdrop_v1.png" id="3_background"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/connection_bars.png" id="4_bars"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/red_status_backing.png" id="5_red"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/black_status_backing.png" id="6_black"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_primary.tscn" id="7_primary"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_secondary.tscn" id="8_secondary"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_danger.tscn" id="9_danger"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleEmpty"]
-
-[sub_resource type="StyleBoxFlat" id="StyleActionFocus"]
-bg_color = Color(0, 0, 0, 0)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.96, 0.73, 0.3, 0.9)
-expand_margin_left = 2.0
-expand_margin_top = 2.0
-expand_margin_right = 2.0
-expand_margin_bottom = 2.0
-
-[sub_resource type="StyleBoxTexture" id="StyleReadyConfirm"]
-texture = ExtResource("37_ready_confirm")
-
-[sub_resource type="StyleBoxTexture" id="StyleReadyConfirmHover"]
-texture = ExtResource("37_ready_confirm")
-modulate_color = Color(1.16, 1.1, 0.88, 1)
-
-[sub_resource type="StyleBoxTexture" id="StyleReadyCancel"]
-texture = ExtResource("38_ready_cancel")
-
-[sub_resource type="StyleBoxTexture" id="StyleReadyDisabled"]
-texture = ExtResource("38_ready_cancel")
-modulate_color = Color(0.52, 0.52, 0.5, 0.86)
-
-[sub_resource type="StyleBoxTexture" id="StyleStartGame"]
-texture = ExtResource("39_start_game")
-
-[sub_resource type="StyleBoxTexture" id="StyleStartGameHover"]
-texture = ExtResource("39_start_game")
-modulate_color = Color(1.14, 1.08, 0.84, 1)
-
-[sub_resource type="StyleBoxTexture" id="StyleStartGamePressed"]
-texture = ExtResource("39_start_game")
-modulate_color = Color(0.84, 0.78, 0.68, 1)
-
-[sub_resource type="StyleBoxTexture" id="StyleStartGameDisabled"]
-texture = ExtResource("39_start_game")
-modulate_color = Color(0.46, 0.45, 0.42, 0.82)
-
-[node name="FormalLanLobby" type="Control" unique_id=2021386468]
+[node name="FormalLanLobby" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("3_theme")
-script = ExtResource("1_lobby")
+theme = ExtResource("2_theme")
+script = ExtResource("1_script")
 
-[node name="LobbyChrome" type="Control" parent="." unique_id=1223438536]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="BattlefieldBackdrop" type="TextureRect" parent="LobbyChrome" unique_id=2014843233]
-modulate = Color(0.56, 0.53, 0.48, 1)
+[node name="Background" type="TextureRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -109,11 +28,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource("5_backdrop")
+texture = ExtResource("3_background")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="BackdropShade" type="ColorRect" parent="LobbyChrome" unique_id=2032778619]
+[node name="Veil" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -121,374 +40,360 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.015, 0.018, 0.017, 0.34)
+color = Color(0.006, 0.009, 0.01, 0.7)
 
-[node name="HeaderFrame" type="TextureRect" parent="LobbyChrome" unique_id=1174777324]
-layout_mode = 0
-offset_right = 1280.0
-offset_bottom = 75.0
-mouse_filter = 2
-texture = ExtResource("6_header")
-expand_mode = 1
+[node name="SafeMargin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 18.0
+offset_right = -20.0
+offset_bottom = -18.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="HeaderStatusBacking" type="TextureRect" parent="LobbyChrome" unique_id=1135909258]
-layout_mode = 0
-offset_left = 1124.0
-offset_top = 16.0
-offset_right = 1269.0
-offset_bottom = 61.0
-mouse_filter = 2
-texture = ExtResource("33_header_backing")
-expand_mode = 1
+[node name="Page" type="PanelContainer" parent="SafeMargin"]
+layout_mode = 2
+theme_type_variation = &"PageSurface"
 
-[node name="ConnectionBars" type="TextureRect" parent="LobbyChrome" unique_id=1918366597]
+[node name="Content" type="VBoxContainer" parent="SafeMargin/Page"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Header" type="HBoxContainer" parent="SafeMargin/Page/Content"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="ReturnToMainMenuButton" parent="SafeMargin/Page/Content/Header" instance=ExtResource("8_secondary")]
 unique_name_in_owner = true
-layout_mode = 0
-offset_left = 1131.0
-offset_top = 27.0
-offset_right = 1165.0
-offset_bottom = 52.0
-mouse_filter = 2
-texture = ExtResource("10_bars")
-expand_mode = 1
+custom_minimum_size = Vector2(132, 48)
+layout_mode = 2
+text = "← 返回"
 
-[node name="ConnectionStatus" type="Label" parent="LobbyChrome" unique_id=607531979]
-unique_name_in_owner = true
-layout_mode = 0
-offset_left = 1167.0
-offset_top = 20.0
-offset_right = 1262.0
-offset_bottom = 59.0
-theme_override_colors/font_color = Color(0.46, 0.62, 0.42, 1)
-theme_override_fonts/font = ExtResource("31_display_font")
-theme_override_font_sizes/font_size = 19
-text = "等待联机"
+[node name="TitleGroup" type="VBoxContainer" parent="SafeMargin/Page/Content/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Title" type="Label" parent="SafeMargin/Page/Content/Header/TitleGroup"]
+layout_mode = 2
+theme_type_variation = &"ScreenTitle"
+text = "联机房间"
 horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="SafeMargin/Page/Content/Header/TitleGroup"]
+layout_mode = 2
+theme_type_variation = &"SecondaryText"
+text = "同一局域网内创建或加入战局"
+horizontal_alignment = 1
+
+[node name="ConnectionBadge" type="PanelContainer" parent="SafeMargin/Page/Content/Header"]
+custom_minimum_size = Vector2(200, 48)
+layout_mode = 2
+theme_type_variation = &"InsetSurface"
+
+[node name="Row" type="HBoxContainer" parent="SafeMargin/Page/Content/Header/ConnectionBadge"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 10
+
+[node name="ConnectionBars" type="TextureRect" parent="SafeMargin/Page/Content/Header/ConnectionBadge/Row"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+texture = ExtResource("4_bars")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="ConnectionStatus" type="Label" parent="SafeMargin/Page/Content/Header/ConnectionBadge/Row"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "等待联机"
 vertical_alignment = 1
 
-[node name="ReturnToMainMenuButton" type="TextureButton" parent="LobbyChrome" unique_id=1466750775]
+[node name="Separator" type="HSeparator" parent="SafeMargin/Page/Content"]
+layout_mode = 2
+
+[node name="Body" type="HBoxContainer" parent="SafeMargin/Page/Content"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="RoomPanel" type="PanelContainer" parent="SafeMargin/Page/Content/Body"]
+custom_minimum_size = Vector2(290, 0)
+layout_mode = 2
+theme_type_variation = &"SecondarySurface"
+
+[node name="Column" type="VBoxContainer" parent="SafeMargin/Page/Content/Body/RoomPanel"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="SafeMargin/Page/Content/Body/RoomPanel/Column"]
+layout_mode = 2
+theme_type_variation = &"SectionTitle"
+text = "房间信息"
+
+[node name="RoomLabel" type="Label" parent="SafeMargin/Page/Content/Body/RoomPanel/Column"]
+layout_mode = 2
+theme_type_variation = &"SecondaryText"
+text = "房间代号"
+
+[node name="RoomValuePanel" type="PanelContainer" parent="SafeMargin/Page/Content/Body/RoomPanel/Column"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_type_variation = &"InsetSurface"
+
+[node name="RoomCodeValue" type="Label" parent="SafeMargin/Page/Content/Body/RoomPanel/Column/RoomValuePanel"]
 unique_name_in_owner = true
-layout_mode = 0
-offset_left = 2.0
-offset_top = 13.0
-offset_right = 87.0
-offset_bottom = 63.0
-mouse_default_cursor_shape = 2
-texture_normal = ExtResource("7_return")
-texture_pressed = ExtResource("9_return_pressed")
-texture_hover = ExtResource("8_return_hover")
-ignore_texture_size = true
-stretch_mode = 0
-
-[node name="RoomInfoPanel" type="TextureRect" parent="LobbyChrome" unique_id=324985797]
-layout_mode = 0
-offset_left = 28.0
-offset_top = 144.0
-offset_right = 292.0
-offset_bottom = 565.0
-mouse_filter = 2
-texture = ExtResource("11_room")
-expand_mode = 1
-
-[node name="RoomCodeBacking" type="TextureRect" parent="LobbyChrome" unique_id=1312300409]
-layout_mode = 0
-offset_left = 54.0
-offset_top = 218.0
-offset_right = 268.0
-offset_bottom = 270.0
-mouse_filter = 2
-texture = ExtResource("34_room_backing")
-expand_mode = 1
-
-[node name="RoomCodeValue" type="Label" parent="LobbyChrome" unique_id=1650184696]
-unique_name_in_owner = true
-layout_mode = 0
-offset_left = 52.0
-offset_top = 216.0
-offset_right = 270.0
-offset_bottom = 270.0
-theme_override_colors/font_color = Color(0.82, 0.76, 0.63, 1)
-theme_override_fonts/font = ExtResource("31_display_font")
-theme_override_font_sizes/font_size = 28
+layout_mode = 2
+theme_type_variation = &"NumericText"
 text = "雾疆-7771"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="AddressBacking" type="TextureRect" parent="LobbyChrome" unique_id=996771530]
-layout_mode = 0
-offset_left = 53.0
-offset_top = 329.0
-offset_right = 268.0
-offset_bottom = 371.0
-mouse_filter = 2
-texture = ExtResource("34_room_backing")
-expand_mode = 1
+[node name="AddressLabel" type="Label" parent="SafeMargin/Page/Content/Body/RoomPanel/Column"]
+layout_mode = 2
+theme_type_variation = &"SecondaryText"
+text = "房主地址"
 
-[node name="AddressInput" type="LineEdit" parent="LobbyChrome" unique_id=1969253394]
+[node name="AddressInput" type="LineEdit" parent="SafeMargin/Page/Content/Body/RoomPanel/Column"]
 unique_name_in_owner = true
-layout_mode = 0
-offset_left = 55.0
-offset_top = 330.0
-offset_right = 266.0
-offset_bottom = 369.0
-theme_override_colors/font_color = Color(0.82, 0.76, 0.63, 1)
-theme_override_colors/font_selected_color = Color(0.11, 0.09, 0.05, 1)
-theme_override_colors/selection_color = Color(0.72, 0.52, 0.2, 0.85)
-theme_override_fonts/font = ExtResource("32_ui_font")
-theme_override_font_sizes/font_size = 18
-theme_override_styles/normal = SubResource("StyleEmpty")
-theme_override_styles/read_only = SubResource("StyleEmpty")
-theme_override_styles/focus = SubResource("StyleEmpty")
-text = "192.168.1.20:27771"
-placeholder_text = "IP 地址:端口"
-alignment = 1
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+focus_mode = 2
+placeholder_text = "192.168.1.20:27771"
 
-[node name="PortInput" type="SpinBox" parent="LobbyChrome" unique_id=196153407]
+[node name="PortRow" type="HBoxContainer" parent="SafeMargin/Page/Content/Body/RoomPanel/Column"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="PortLabel" type="Label" parent="SafeMargin/Page/Content/Body/RoomPanel/Column/PortRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "端口"
+vertical_alignment = 1
+
+[node name="PortInput" type="SpinBox" parent="SafeMargin/Page/Content/Body/RoomPanel/Column/PortRow"]
 unique_name_in_owner = true
-visible = false
-layout_mode = 0
-offset_left = 52.0
-offset_top = 371.0
-offset_right = 265.0
-offset_bottom = 405.0
+custom_minimum_size = Vector2(150, 48)
+layout_mode = 2
 min_value = 1024.0
 max_value = 65535.0
 value = 27771.0
+allow_greater = false
+allow_lesser = false
 
-[node name="CopyAddressButton" type="TextureButton" parent="LobbyChrome" unique_id=623456462]
+[node name="CopyAddressButton" parent="SafeMargin/Page/Content/Body/RoomPanel/Column" instance=ExtResource("8_secondary")]
 unique_name_in_owner = true
-layout_mode = 0
-offset_left = 63.0
-offset_top = 377.0
-offset_right = 256.0
-offset_bottom = 427.0
-mouse_default_cursor_shape = 2
-texture_normal = ExtResource("12_copy")
-texture_pressed = ExtResource("14_copy_pressed")
-texture_hover = ExtResource("13_copy_hover")
-ignore_texture_size = true
-stretch_mode = 0
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+text = "复制房间地址"
 
-[node name="VersusPanel" type="TextureRect" parent="LobbyChrome" unique_id=2077974636]
-layout_mode = 0
-offset_left = 301.0
-offset_top = 145.0
-offset_right = 978.0
-offset_bottom = 566.0
-mouse_filter = 2
-texture = ExtResource("15_versus")
-expand_mode = 1
+[node name="Spacer" type="Control" parent="SafeMargin/Page/Content/Body/RoomPanel/Column"]
+layout_mode = 2
+size_flags_vertical = 3
 
-[node name="RedStateBacking" type="TextureRect" parent="LobbyChrome" unique_id=1428087113]
-layout_mode = 0
-offset_left = 318.0
-offset_top = 504.0
-offset_right = 635.0
-offset_bottom = 548.0
-mouse_filter = 2
-texture = ExtResource("35_red_backing")
-expand_mode = 1
+[node name="SeatLabel" type="Label" parent="SafeMargin/Page/Content/Body/RoomPanel/Column"]
+layout_mode = 2
+theme_type_variation = &"SecondaryText"
+text = "当前席位"
 
-[node name="RedReadyState" type="Label" parent="LobbyChrome" unique_id=71629760]
+[node name="SeatValue" type="Label" parent="SafeMargin/Page/Content/Body/RoomPanel/Column"]
 unique_name_in_owner = true
-layout_mode = 0
-offset_left = 320.0
-offset_top = 500.0
-offset_right = 633.0
-offset_bottom = 549.0
-theme_override_colors/font_color = Color(0.92, 0.68, 0.28, 1)
-theme_override_fonts/font = ExtResource("31_display_font")
-theme_override_font_sizes/font_size = 21
-text = "赤方 · 等待入席"
+layout_mode = 2
+theme_type_variation = &"StatusWarning"
+text = "未分配"
+
+[node name="VersusPanel" type="PanelContainer" parent="SafeMargin/Page/Content/Body"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"PrimarySurface"
+
+[node name="Column" type="VBoxContainer" parent="SafeMargin/Page/Content/Body/VersusPanel"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="SafeMargin/Page/Content/Body/VersusPanel/Column"]
+layout_mode = 2
+theme_type_variation = &"SectionTitle"
+text = "对阵席位"
+horizontal_alignment = 1
+
+[node name="Seats" type="HBoxContainer" parent="SafeMargin/Page/Content/Body/VersusPanel/Column"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="RedSeat" type="PanelContainer" parent="SafeMargin/Page/Content/Body/VersusPanel/Column/Seats"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"SecondarySurface"
+
+[node name="Column" type="VBoxContainer" parent="SafeMargin/Page/Content/Body/VersusPanel/Column/Seats/RedSeat"]
+layout_mode = 2
+alignment = 1
+
+[node name="Portrait" type="TextureRect" parent="SafeMargin/Page/Content/Body/VersusPanel/Column/Seats/RedSeat/Column"]
+custom_minimum_size = Vector2(0, 170)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("5_red")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Side" type="Label" parent="SafeMargin/Page/Content/Body/VersusPanel/Column/Seats/RedSeat/Column"]
+layout_mode = 2
+theme_type_variation = &"ScreenTitle"
+text = "赤方"
+horizontal_alignment = 1
+
+[node name="RedReadyState" type="Label" parent="SafeMargin/Page/Content/Body/VersusPanel/Column/Seats/RedSeat/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "等待入席"
+horizontal_alignment = 1
+
+[node name="Vs" type="Label" parent="SafeMargin/Page/Content/Body/VersusPanel/Column/Seats"]
+custom_minimum_size = Vector2(56, 0)
+layout_mode = 2
+theme_type_variation = &"NumericText"
+text = "对阵"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="BlackStateBacking" type="TextureRect" parent="LobbyChrome" unique_id=1771484814]
-layout_mode = 0
-offset_left = 641.0
-offset_top = 504.0
-offset_right = 958.0
-offset_bottom = 548.0
+[node name="BlackSeat" type="PanelContainer" parent="SafeMargin/Page/Content/Body/VersusPanel/Column/Seats"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"SecondarySurface"
+
+[node name="Column" type="VBoxContainer" parent="SafeMargin/Page/Content/Body/VersusPanel/Column/Seats/BlackSeat"]
+layout_mode = 2
+alignment = 1
+
+[node name="Portrait" type="TextureRect" parent="SafeMargin/Page/Content/Body/VersusPanel/Column/Seats/BlackSeat/Column"]
+custom_minimum_size = Vector2(0, 170)
+layout_mode = 2
 mouse_filter = 2
-texture = ExtResource("36_black_backing")
+texture = ExtResource("6_black")
 expand_mode = 1
+stretch_mode = 5
 
-[node name="BlackPlayerName" type="Label" parent="LobbyChrome" unique_id=1044600688]
-unique_name_in_owner = true
-layout_mode = 0
-offset_left = 643.0
-offset_top = 500.0
-offset_right = 956.0
-offset_bottom = 549.0
-theme_override_colors/font_color = Color(0.92, 0.68, 0.28, 1)
-theme_override_fonts/font = ExtResource("31_display_font")
-theme_override_font_sizes/font_size = 21
-text = "玄方 · 等待入席"
+[node name="Side" type="Label" parent="SafeMargin/Page/Content/Body/VersusPanel/Column/Seats/BlackSeat/Column"]
+layout_mode = 2
+theme_type_variation = &"ScreenTitle"
+text = "玄方"
 horizontal_alignment = 1
-vertical_alignment = 1
 
-[node name="BlackReadyState" type="Label" parent="LobbyChrome" unique_id=412853797]
+[node name="BlackPlayerName" type="Label" parent="SafeMargin/Page/Content/Body/VersusPanel/Column/Seats/BlackSeat/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "等待同袍加入"
+horizontal_alignment = 1
+
+[node name="BlackReadyState" type="Label" parent="SafeMargin/Page/Content/Body/VersusPanel/Column/Seats/BlackSeat/Column"]
 unique_name_in_owner = true
 visible = false
-layout_mode = 0
-offset_left = 643.0
-offset_top = 500.0
-offset_right = 956.0
-offset_bottom = 549.0
+layout_mode = 2
 text = "未准备"
 
-[node name="RulesPanel" type="TextureRect" parent="LobbyChrome" unique_id=1053734739]
-layout_mode = 0
-offset_left = 989.0
-offset_top = 145.0
-offset_right = 1252.0
-offset_bottom = 566.0
-mouse_filter = 2
-texture = ExtResource("16_rules")
-expand_mode = 1
+[node name="RulesPanel" type="PanelContainer" parent="SafeMargin/Page/Content/Body"]
+custom_minimum_size = Vector2(270, 0)
+layout_mode = 2
+theme_type_variation = &"SecondarySurface"
 
-[node name="RulesClockBacking" type="ColorRect" parent="LobbyChrome" unique_id=927741288]
-layout_mode = 0
-offset_left = 1021.0
-offset_top = 495.0
-offset_right = 1219.0
-offset_bottom = 542.0
-mouse_filter = 2
-color = Color(0.035, 0.043, 0.04, 0.98)
+[node name="Column" type="VBoxContainer" parent="SafeMargin/Page/Content/Body/RulesPanel"]
+layout_mode = 2
+theme_override_constants/separation = 14
 
-[node name="RulesTurnClockValue" type="Label" parent="LobbyChrome" unique_id=492469372]
+[node name="Title" type="Label" parent="SafeMargin/Page/Content/Body/RulesPanel/Column"]
+layout_mode = 2
+theme_type_variation = &"SectionTitle"
+text = "战局规则"
+
+[node name="Rule1" type="Label" parent="SafeMargin/Page/Content/Body/RulesPanel/Column"]
+layout_mode = 2
+text = "▦  九路烽棋"
+
+[node name="Rule2" type="Label" parent="SafeMargin/Page/Content/Body/RulesPanel/Column"]
+layout_mode = 2
+text = "☁  标准迷雾"
+
+[node name="RulesTurnClockValue" type="Label" parent="SafeMargin/Page/Content/Body/RulesPanel/Column"]
 unique_name_in_owner = true
-layout_mode = 0
-offset_left = 1018.0
-offset_top = 495.0
-offset_right = 1221.0
-offset_bottom = 542.0
-theme_override_colors/font_color = Color(0.78, 0.72, 0.61, 1)
-theme_override_fonts/font = ExtResource("32_ui_font")
-theme_override_font_sizes/font_size = 15
-text = "回合计时：以战局配置为准"
-horizontal_alignment = 1
-vertical_alignment = 1
+layout_mode = 2
+text = "◷  回合计时以战局配置为准"
+autowrap_mode = 2
 
-[node name="StatusPanel" type="TextureRect" parent="LobbyChrome" unique_id=1853505070]
-layout_mode = 0
-offset_left = 28.0
-offset_top = 634.0
-offset_right = 611.0
-offset_bottom = 704.0
-mouse_filter = 2
-texture = ExtResource("17_status")
-expand_mode = 1
+[node name="Rule4" type="Label" parent="SafeMargin/Page/Content/Body/RulesPanel/Column"]
+layout_mode = 2
+text = "⚑  夺旗或斩将"
 
-[node name="StatusValue" type="Label" parent="LobbyChrome" unique_id=1079865792]
+[node name="Rule5" type="Label" parent="SafeMargin/Page/Content/Body/RulesPanel/Column"]
+layout_mode = 2
+text = "⌂  仅限局域网"
+
+[node name="Spacer" type="Control" parent="SafeMargin/Page/Content/Body/RulesPanel/Column"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Hint" type="Label" parent="SafeMargin/Page/Content/Body/RulesPanel/Column"]
+layout_mode = 2
+theme_type_variation = &"SecondaryText"
+text = "房主创建后，将地址发送给同一网络内的玩家。"
+autowrap_mode = 2
+
+[node name="Separator2" type="HSeparator" parent="SafeMargin/Page/Content"]
+layout_mode = 2
+
+[node name="Footer" type="HBoxContainer" parent="SafeMargin/Page/Content"]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="StatusPanel" type="PanelContainer" parent="SafeMargin/Page/Content/Footer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"InsetSurface"
+
+[node name="StatusValue" type="Label" parent="SafeMargin/Page/Content/Footer/StatusPanel"]
 unique_name_in_owner = true
-layout_mode = 0
-offset_left = 96.0
-offset_top = 641.0
-offset_right = 600.0
-offset_bottom = 698.0
-theme_override_colors/font_color = Color(0.77, 0.7, 0.55, 1)
-theme_override_fonts/font = ExtResource("32_ui_font")
-theme_override_font_sizes/font_size = 17
+layout_mode = 2
+theme_type_variation = &"SecondaryText"
 text = "等待创建或加入房间"
 vertical_alignment = 1
 
-[node name="SeatValue" type="Label" parent="LobbyChrome" unique_id=1421825795]
+[node name="DisconnectButton" parent="SafeMargin/Page/Content/Footer" instance=ExtResource("9_danger")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 52)
+layout_mode = 2
+text = "离开房间"
+
+[node name="JoinButton" parent="SafeMargin/Page/Content/Footer" instance=ExtResource("8_secondary")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 52)
+layout_mode = 2
+text = "加入房间"
+
+[node name="HostButton" parent="SafeMargin/Page/Content/Footer" instance=ExtResource("7_primary")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 52)
+layout_mode = 2
+text = "创建房间"
+
+[node name="ReadyButton" parent="SafeMargin/Page/Content/Footer" instance=ExtResource("7_primary")]
 unique_name_in_owner = true
 visible = false
-layout_mode = 0
-offset_left = 69.0
-offset_top = 641.0
-offset_right = 300.0
-offset_bottom = 698.0
-text = "未分配"
-
-[node name="ActionGroup" type="TextureRect" parent="LobbyChrome" unique_id=776972851]
-layout_mode = 0
-offset_left = 625.0
-offset_top = 634.0
-offset_right = 1252.0
-offset_bottom = 704.0
-mouse_filter = 2
-texture = ExtResource("18_actions")
-expand_mode = 1
-
-[node name="DisconnectButton" type="TextureButton" parent="LobbyChrome" unique_id=872558267]
-unique_name_in_owner = true
-layout_mode = 0
-offset_left = 626.0
-offset_top = 635.0
-offset_right = 824.0
-offset_bottom = 702.0
-mouse_default_cursor_shape = 2
-disabled = true
-texture_normal = ExtResource("19_disconnect")
-texture_pressed = ExtResource("21_disconnect_pressed")
-texture_hover = ExtResource("20_disconnect_hover")
-texture_disabled = ExtResource("22_disconnect_disabled")
-ignore_texture_size = true
-stretch_mode = 0
-
-[node name="JoinButton" type="TextureButton" parent="LobbyChrome" unique_id=33444202]
-unique_name_in_owner = true
-layout_mode = 0
-offset_left = 839.0
-offset_top = 635.0
-offset_right = 1023.0
-offset_bottom = 702.0
-mouse_default_cursor_shape = 2
-texture_normal = ExtResource("23_join")
-texture_pressed = ExtResource("25_join_pressed")
-texture_hover = ExtResource("24_join_hover")
-texture_disabled = ExtResource("26_join_disabled")
-ignore_texture_size = true
-stretch_mode = 0
-
-[node name="HostButton" type="TextureButton" parent="LobbyChrome" unique_id=178335980]
-unique_name_in_owner = true
-layout_mode = 0
-offset_left = 1036.0
-offset_top = 635.0
-offset_right = 1250.0
-offset_bottom = 702.0
-mouse_default_cursor_shape = 2
-texture_normal = ExtResource("27_host")
-texture_pressed = ExtResource("29_host_pressed")
-texture_hover = ExtResource("28_host_hover")
-texture_disabled = ExtResource("30_host_disabled")
-ignore_texture_size = true
-stretch_mode = 0
-
-[node name="ReadyButton" type="Button" parent="LobbyChrome" unique_id=1979154577]
-unique_name_in_owner = true
-visible = false
-layout_mode = 0
-offset_left = 839.0
-offset_top = 635.0
-offset_right = 1023.0
-offset_bottom = 702.0
-mouse_default_cursor_shape = 2
-theme_override_styles/normal = SubResource("StyleReadyConfirm")
-theme_override_styles/hover = SubResource("StyleReadyConfirmHover")
-theme_override_styles/pressed = SubResource("StyleReadyCancel")
-theme_override_styles/disabled = SubResource("StyleReadyDisabled")
-theme_override_styles/focus = SubResource("StyleActionFocus")
+custom_minimum_size = Vector2(160, 52)
+layout_mode = 2
 toggle_mode = true
+text = "确认准备"
 
-[node name="StartButton" type="Button" parent="LobbyChrome" unique_id=1578484669]
+[node name="StartButton" parent="SafeMargin/Page/Content/Footer" instance=ExtResource("7_primary")]
 unique_name_in_owner = true
 visible = false
-layout_mode = 0
-offset_left = 1036.0
-offset_top = 635.0
-offset_right = 1250.0
-offset_bottom = 702.0
-mouse_default_cursor_shape = 2
-theme_override_styles/normal = SubResource("StyleStartGame")
-theme_override_styles/hover = SubResource("StyleStartGameHover")
-theme_override_styles/pressed = SubResource("StyleStartGamePressed")
-theme_override_styles/disabled = SubResource("StyleStartGameDisabled")
-theme_override_styles/focus = SubResource("StyleActionFocus")
-
-[node name="FrontendAudioFeedback" parent="." instance=ExtResource("40_frontend_audio")]
-unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 52)
+layout_mode = 2
+text = "开始战局"

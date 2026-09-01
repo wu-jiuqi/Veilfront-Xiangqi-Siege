@@ -47,11 +47,14 @@ func _init() -> void:
 	start_screen = _add_start_screen()
 	await process_frame
 	_assert_inline_menu(start_screen, "lan_return")
-	var lan_button := start_screen.get_node("MenuOverlay/UiRoot/MenuPanel/LanButton") as Button
+	var lan_button := start_screen.get_node("MenuOverlay/%LanButton") as Button
 	assert(not lan_button.disabled, "LAN return must restore an immediately operable menu")
 	assert((start_screen.get_node("SequencePlayer") as AnimationPlayer).current_animation_position >= 4.8,
 		"LAN return must apply the opened-gate end state without replaying it")
 
+	current_scene = null
+	start_screen.queue_free()
+	await process_frame
 	print("START_SCREEN_ROUTING_CONTRACT_PASS inputs=left_click,touch,ui_accept lan_return=menu_ready inline_menu=ok duplicate_guard=ok")
 	quit()
 

@@ -22,6 +22,32 @@ func _run() -> void:
 	var source := FileAccess.get_file_as_string(LOBBY_SOURCE)
 	_expect(not source.contains("res://scenes/prototype"), "formal lobby still depends on prototype scenes")
 	_expect(not source.contains("LanNetworkSession"), "formal lobby still owns a network session")
+	_expect(
+		lobby.theme.resource_path == "res://resources/game/ui/themes/veilfront_ui_theme_v2.tres",
+		"formal lobby must use the rebuilt unified theme",
+	)
+	_expect(not source.contains("ready_confirm_button_v2.png"), "ready action still depends on fixed PNG geometry")
+	_expect(not source.contains("start_game_button_v2.png"), "start action still depends on fixed PNG geometry")
+	_expect(
+		(lobby.get_node("SafeMargin/Page") as PanelContainer).get_theme_stylebox(&"panel") is StyleBoxFlat,
+		"formal lobby page must use a scalable panel surface",
+	)
+	for button_name: String in [
+		"ReturnToMainMenuButton", "CopyAddressButton", "DisconnectButton",
+		"JoinButton", "HostButton", "ReadyButton", "StartButton",
+	]:
+		var button := lobby.get_node("%%%s" % button_name) as Button
+		_expect(button != null, "%s is missing" % button_name)
+		if button == null:
+			continue
+		_expect(button.custom_minimum_size.y >= 44.0, "%s is below the interaction target" % button_name)
+		_expect(button.has_method("set_reduced_motion"), "%s must use the reusable motion button" % button_name)
+		_expect(button.get_theme_stylebox(&"normal") is StyleBoxFlat, "%s must use a scalable surface" % button_name)
+	var page := lobby.get_node("SafeMargin/Page") as Control
+	_expect(
+		lobby.get_viewport_rect().encloses(page.get_global_rect()),
+		"formal lobby page must remain inside the logical viewport",
+	)
 	var signal_info: Dictionary = _find_signal(lobby, "host_requested")
 	_expect(signal_info.get("args", []).size() == 1, "lobby must not expose a private match seed")
 
@@ -63,20 +89,8 @@ func _run() -> void:
 	_expect(_ready_button(lobby).visible and not _ready_button(lobby).disabled, "seated player must be able to ready")
 	_expect(_start_button(lobby).visible and _start_button(lobby).disabled, "host start must wait for both players")
 	_expect(
-		_style_texture_path(_ready_button(lobby), &"normal").ends_with("ready_confirm_button_v2.png"),
-		"ready action must use the generated confirm-ready PNG",
-	)
-	_expect(
-		_style_texture_path(_ready_button(lobby), &"pressed").ends_with("ready_cancel_button_v2.png"),
-		"pressed ready action must use the generated cancel-ready PNG",
-	)
-	_expect(
-		_style_texture_path(_start_button(lobby), &"normal").ends_with("start_game_button_v2.png"),
-		"host start action must use the generated start-game PNG",
-	)
-	_expect(
 		_ready_button(lobby).get_theme_stylebox(&"focus") is StyleBoxFlat,
-		"ready action must keep a local focus frame instead of inheriting the global button texture",
+		"ready action must keep a visible keyboard focus frame",
 	)
 	_expect(rules_turn_clock_value.text == "每回合 45 秒", "lobby must render the synchronized turn clock")
 
@@ -157,10 +171,3 @@ func _copy_address_button(lobby: Node) -> BaseButton:
 
 func _rules_turn_clock_value(lobby: Node) -> Label:
 	return lobby.get_node_or_null("%RulesTurnClockValue") as Label
-
-
-func _style_texture_path(button: Button, style_name: StringName) -> String:
-	var style := button.get_theme_stylebox(style_name) as StyleBoxTexture
-	if style == null or style.texture == null:
-		return ""
-	return style.texture.resource_path

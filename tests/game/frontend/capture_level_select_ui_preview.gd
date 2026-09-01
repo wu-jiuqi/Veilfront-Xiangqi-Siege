@@ -1,8 +1,8 @@
 extends SceneTree
 
 const LEVEL_SELECT_SCENE := preload("res://scenes/game/frontend/level_select.tscn")
-const OUTPUT_PATH := "res://evidence/ui/level-select-approved-master-v2-1280x720.png"
-const CODEX_OUTPUT_PATH := "res://evidence/ui/level-select-codex-layout-v3-1280x720.png"
+const OUTPUT_PATH := "res://evidence/ui/ui-rebuild-level-select-1280x720.png"
+const CODEX_OUTPUT_PATH := "res://evidence/ui/ui-rebuild-tutorial-codex-1280x720.png"
 const TEST_PROGRESS_PATH := "user://level-select-layout-preview.cfg"
 
 

@@ -1,43 +1,26 @@
-[gd_scene load_steps=9 format=3 uid="uid://dggtl1ydqi28y"]
+[gd_scene load_steps=10 format=3]
 
-[ext_resource type="Script" uid="uid://128pt5o3gpxk" path="res://scripts/game/frontend/level_select.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/level_select/level_select_empty_background_v3.png" id="2_background"]
-[ext_resource type="Theme" uid="uid://cnody7ltbktl0" path="res://resources/game/ui/themes/level_select_master_v2_theme.tres" id="3_theme"]
-[ext_resource type="Texture2D" uid="uid://ckr08sw3potmf" path="res://assets/art/ui/level_select/components/progress_ring_v2.png" id="4_progress"]
-[ext_resource type="PackedScene" path="res://scenes/game/ui/terracotta_modal_dialog.tscn" id="5_dialog"]
-[ext_resource type="Font" path="res://resources/game/ui/fonts/noto_sans_sc_semibold.tres" id="6_semibold"]
-[ext_resource type="PackedScene" path="res://scenes/game/audio/frontend_audio_feedback.tscn" id="7_frontend_audio"]
+[ext_resource type="Script" path="res://scripts/game/frontend/level_select.gd" id="1_script"]
+[ext_resource type="Theme" path="res://resources/game/ui/themes/veilfront_ui_theme_v2.tres" id="2_theme"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/level_select/level_select_empty_background_v3.png" id="3_background"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_primary.tscn" id="4_primary"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_secondary.tscn" id="5_secondary"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_danger.tscn" id="6_danger"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/terracotta_modal_dialog.tscn" id="7_dialog"]
 [ext_resource type="PackedScene" path="res://scenes/game/ui/tutorial_codex.tscn" id="8_codex"]
+[ext_resource type="PackedScene" path="res://scenes/game/audio/frontend_audio_feedback.tscn" id="9_audio"]
 
-[sub_resource type="ButtonGroup" id="ButtonGroupCategory"]
-
-[sub_resource type="ButtonGroup" id="ButtonGroupRoute"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleEmpty"]
-
-[sub_resource type="StyleBoxFlat" id="StyleDetailTextBackdrop"]
-bg_color = Color(0.055, 0.045, 0.032, 0.93)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.46, 0.35, 0.21, 0.7)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-
-[node name="LevelSelect" type="Control" unique_id=244578464]
+[node name="LevelSelect" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("3_theme")
+theme = ExtResource("2_theme")
 script = ExtResource("1_script")
 
-[node name="Backdrop" type="ColorRect" parent="." unique_id=1584000001]
+[node name="Background" type="TextureRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -45,446 +28,292 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.004, 0.005, 0.005, 1)
-
-[node name="DesignCanvas" type="Control" parent="." unique_id=1004446105]
-unique_name_in_owner = true
-anchors_preset = 0
-offset_right = 1280.0
-offset_bottom = 720.0
-clip_contents = true
-
-[node name="CampaignBackground" type="TextureRect" parent="DesignCanvas" unique_id=1707756944]
-layout_mode = 0
-offset_right = 1280.0
-offset_bottom = 720.0
-mouse_filter = 2
-texture = ExtResource("2_background")
+texture = ExtResource("3_background")
 expand_mode = 1
+stretch_mode = 6
 
-[node name="BackButton" type="Button" parent="DesignCanvas" unique_id=2052370368]
+[node name="Veil" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.006, 0.009, 0.01, 0.62)
+
+[node name="DesignCanvas" type="MarginContainer" parent="."]
 unique_name_in_owner = true
-layout_mode = 0
-offset_left = 18.0
-offset_top = 10.0
-offset_right = 150.0
-offset_bottom = 68.0
-theme_type_variation = &"LevelBackButton"
-text = "‹  返回"
-clip_text = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 14.0
+offset_right = -16.0
+offset_bottom = -14.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="Title" type="Label" parent="DesignCanvas" unique_id=1707236561]
-layout_mode = 0
-offset_left = 472.0
-offset_top = 12.0
-offset_right = 808.0
-offset_bottom = 64.0
-theme_override_colors/font_color = Color(0.92, 0.78, 0.53, 1)
-theme_override_font_sizes/font_size = 29
+[node name="Page" type="PanelContainer" parent="DesignCanvas"]
+layout_mode = 2
+theme_type_variation = &"PageSurface"
+
+[node name="Content" type="VBoxContainer" parent="DesignCanvas/Page"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Header" type="HBoxContainer" parent="DesignCanvas/Page/Content"]
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="BackButton" parent="DesignCanvas/Page/Content/Header" instance=ExtResource("5_secondary")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 48)
+layout_mode = 2
+text = "← 返回"
+
+[node name="Title" type="Label" parent="DesignCanvas/Page/Content/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"ScreenTitle"
 text = "关卡模式"
 horizontal_alignment = 1
 vertical_alignment = 1
-clip_text = true
 
-[node name="TutorialCategoryButton" type="Button" parent="DesignCanvas" unique_id=1814841203]
+[node name="CodexButton" parent="DesignCanvas/Page/Content/Header" instance=ExtResource("5_secondary")]
 unique_name_in_owner = true
-layout_mode = 0
-offset_left = 15.0
-offset_top = 91.0
-offset_right = 225.0
-offset_bottom = 237.0
-theme_type_variation = &"LevelCategoryButton"
-toggle_mode = true
-button_pressed = true
-button_group = SubResource("ButtonGroupCategory")
-text = "新手教学"
-clip_text = true
-
-[node name="ChallengeCategoryButton" type="Button" parent="DesignCanvas" unique_id=1002798098]
-unique_name_in_owner = true
-layout_mode = 0
-offset_left = 15.0
-offset_top = 258.0
-offset_right = 225.0
-offset_bottom = 406.0
-theme_type_variation = &"LevelCategoryButton"
-toggle_mode = true
-button_group = SubResource("ButtonGroupCategory")
-text = "挑战关卡"
-clip_text = true
-
-[node name="ProgressLabel" type="Label" parent="DesignCanvas" unique_id=1835754773]
-unique_name_in_owner = true
-layout_mode = 0
-offset_left = 36.0
-offset_top = 453.0
-offset_right = 204.0
-offset_bottom = 479.0
-theme_override_font_sizes/font_size = 16
-text = "教学进度"
-horizontal_alignment = 1
-vertical_alignment = 1
-clip_text = true
-
-[node name="ProgressRing" type="TextureRect" parent="DesignCanvas" unique_id=2067008334]
-layout_mode = 0
-offset_left = 69.0
-offset_top = 481.0
-offset_right = 171.0
-offset_bottom = 577.0
-mouse_filter = 2
-texture = ExtResource("4_progress")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="TutorialProgress" type="ProgressBar" parent="DesignCanvas" unique_id=1913873717]
-unique_name_in_owner = true
-visible = false
-layout_mode = 0
-offset_left = 55.0
-offset_top = 580.0
-offset_right = 185.0
-offset_bottom = 596.0
-max_value = 11.0
-show_percentage = false
-
-[node name="ProgressFraction" type="Label" parent="DesignCanvas" unique_id=768970840]
-unique_name_in_owner = true
-layout_mode = 0
-offset_left = 73.0
-offset_top = 508.0
-offset_right = 169.0
-offset_bottom = 552.0
-theme_override_colors/font_color = Color(0.94, 0.77, 0.43, 1)
-theme_override_font_sizes/font_size = 22
-text = "0 / 11"
-horizontal_alignment = 1
-vertical_alignment = 1
-clip_text = true
-
-[node name="ResetButton" type="Button" parent="DesignCanvas" unique_id=1532159649]
-unique_name_in_owner = true
-visible = false
-layout_mode = 0
-offset_left = 55.0
-offset_top = 584.0
-offset_right = 185.0
-offset_bottom = 637.0
-theme_type_variation = &"LevelSecondaryButton"
-theme_override_font_sizes/font_size = 11
-text = "清空教学进度"
-clip_text = true
-
-[node name="CodexButton" type="Button" parent="DesignCanvas"]
-unique_name_in_owner = true
-layout_mode = 0
-offset_left = 31.0
-offset_top = 584.0
-offset_right = 209.0
-offset_bottom = 637.0
-theme_type_variation = &"LevelSecondaryButton"
+custom_minimum_size = Vector2(150, 48)
+layout_mode = 2
 text = "战阵图鉴"
-clip_text = true
 
-[node name="CategoryTabs" type="TabContainer" parent="DesignCanvas" unique_id=1152323492]
-unique_name_in_owner = true
-layout_mode = 0
-offset_left = 238.0
-offset_top = 148.0
-offset_right = 940.0
-offset_bottom = 644.0
-clip_contents = true
-theme_override_styles/panel = SubResource("StyleEmpty")
-current_tab = 0
-tabs_visible = false
-
-[node name="Tutorial" type="Control" parent="DesignCanvas/CategoryTabs" unique_id=2014547833]
+[node name="Separator" type="HSeparator" parent="DesignCanvas/Page/Content"]
 layout_mode = 2
-metadata/_tab_index = 0
 
-[node name="TutorialGrid" type="Control" parent="DesignCanvas/CategoryTabs/Tutorial" unique_id=1089119361]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Challenge" type="Control" parent="DesignCanvas/CategoryTabs" unique_id=1063720945]
-visible = false
+[node name="Body" type="HBoxContainer" parent="DesignCanvas/Page/Content"]
 layout_mode = 2
-metadata/_tab_index = 1
-
-[node name="ChallengeGrid" type="Control" parent="DesignCanvas/CategoryTabs/Challenge" unique_id=1158323893]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="RouteStrip" type="HBoxContainer" parent="DesignCanvas"]
-unique_name_in_owner = true
-layout_mode = 0
-offset_left = 250.0
-offset_top = 88.0
-offset_right = 928.0
-offset_bottom = 144.0
+size_flags_vertical = 3
 theme_override_constants/separation = 10
 
-[node name="FoundationRouteButton" type="Button" parent="DesignCanvas/RouteStrip"]
+[node name="Sidebar" type="PanelContainer" parent="DesignCanvas/Page/Content/Body"]
+custom_minimum_size = Vector2(170, 0)
+layout_mode = 2
+theme_type_variation = &"SecondarySurface"
+
+[node name="Column" type="VBoxContainer" parent="DesignCanvas/Page/Content/Body/Sidebar"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="DesignCanvas/Page/Content/Body/Sidebar/Column"]
+layout_mode = 2
+theme_type_variation = &"SectionTitle"
+text = "作战分类"
+
+[node name="TutorialCategoryButton" parent="DesignCanvas/Page/Content/Body/Sidebar/Column" instance=ExtResource("4_primary")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(172, 48)
+custom_minimum_size = Vector2(0, 54)
 layout_mode = 2
 toggle_mode = true
-button_group = SubResource("ButtonGroupRoute")
-theme_override_font_sizes/font_size = 16
-text = "从基础学起"
-clip_text = true
+button_pressed = true
+text = "新手教学"
 
-[node name="ExperiencedRouteButton" type="Button" parent="DesignCanvas/RouteStrip"]
+[node name="ChallengeCategoryButton" parent="DesignCanvas/Page/Content/Body/Sidebar/Column" instance=ExtResource("5_secondary")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(210, 48)
+custom_minimum_size = Vector2(0, 54)
 layout_mode = 2
 toggle_mode = true
-button_group = SubResource("ButtonGroupRoute")
-theme_override_font_sizes/font_size = 16
-text = "只学《雾疆》差异"
-clip_text = true
+text = "挑战关卡"
 
-[node name="RouteSummary" type="Label" parent="DesignCanvas/RouteStrip"]
+[node name="Separator" type="HSeparator" parent="DesignCanvas/Page/Content/Body/Sidebar/Column"]
+layout_mode = 2
+
+[node name="ProgressLabel" type="Label" parent="DesignCanvas/Page/Content/Body/Sidebar/Column"]
 unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"SectionTitle"
+text = "教学进度"
+
+[node name="TutorialProgress" type="ProgressBar" parent="DesignCanvas/Page/Content/Body/Sidebar/Column"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 22)
+layout_mode = 2
+max_value = 18.0
+show_percentage = false
+
+[node name="ProgressFraction" type="Label" parent="DesignCanvas/Page/Content/Body/Sidebar/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"NumericText"
+text = "0 / 18"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="DesignCanvas/Page/Content/Body/Sidebar/Column"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ResetButton" parent="DesignCanvas/Page/Content/Body/Sidebar/Column" instance=ExtResource("6_danger")]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+text = "重置进度"
+
+[node name="CenterColumn" type="VBoxContainer" parent="DesignCanvas/Page/Content/Body"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.82, 0.75, 0.62, 1)
-theme_override_font_sizes/font_size = 13
-text = "完成 P0 后请选择路线；以后可随时切换。"
-vertical_alignment = 1
-clip_text = true
+theme_override_constants/separation = 8
 
-[node name="DetailCode" type="Label" parent="DesignCanvas" unique_id=753590606]
+[node name="RouteStrip" type="HBoxContainer" parent="DesignCanvas/Page/Content/Body/CenterColumn"]
 unique_name_in_owner = true
-layout_mode = 0
-offset_left = 976.0
-offset_top = 101.0
-offset_right = 1246.0
-offset_bottom = 150.0
-theme_override_colors/font_color = Color(0.94, 0.81, 0.57, 1)
-theme_override_font_sizes/font_size = 30
-text = "T0"
-horizontal_alignment = 1
-vertical_alignment = 1
-clip_text = true
-
-[node name="DetailTitle" type="Label" parent="DesignCanvas" unique_id=2135251411]
-unique_name_in_owner = true
-layout_mode = 0
-offset_left = 965.0
-offset_top = 153.0
-offset_right = 1257.0
-offset_bottom = 205.0
-theme_override_colors/font_color = Color(0.9, 0.81, 0.66, 1)
-theme_override_font_sizes/font_size = 18
-text = "操作校准：棋落交点"
-horizontal_alignment = 1
-vertical_alignment = 1
-autowrap_mode = 3
-clip_text = true
-
-[node name="DetailTextBackdrop" type="PanelContainer" parent="DesignCanvas"]
-layout_mode = 0
-offset_left = 958.0
-offset_top = 238.0
-offset_right = 1264.0
-offset_bottom = 447.0
-clip_contents = true
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleDetailTextBackdrop")
-
-[node name="DetailTextMargin" type="MarginContainer" parent="DesignCanvas/DetailTextBackdrop"]
-layout_mode = 2
-theme_override_constants/margin_left = 14
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 14
-theme_override_constants/margin_bottom = 10
-
-[node name="DetailTextStack" type="VBoxContainer" parent="DesignCanvas/DetailTextBackdrop/DetailTextMargin"]
+custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="DetailSummary" type="Label" parent="DesignCanvas/DetailTextBackdrop/DetailTextMargin/DetailTextStack" unique_id=1665603912]
+[node name="FoundationRouteButton" parent="DesignCanvas/Page/Content/Body/CenterColumn/RouteStrip" instance=ExtResource("5_secondary")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(132, 44)
+layout_mode = 2
+toggle_mode = true
+text = "从基础学起"
+
+[node name="ExperiencedRouteButton" parent="DesignCanvas/Page/Content/Body/CenterColumn/RouteStrip" instance=ExtResource("5_secondary")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(132, 44)
+layout_mode = 2
+toggle_mode = true
+text = "象棋老手"
+
+[node name="RouteSummary" type="Label" parent="DesignCanvas/Page/Content/Body/CenterColumn/RouteStrip"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"SecondaryText"
+text = "完成 P0 后选择学习路线"
+horizontal_alignment = 2
+vertical_alignment = 1
+clip_text = true
+
+[node name="CategoryTabs" type="TabContainer" parent="DesignCanvas/Page/Content/Body/CenterColumn"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_colors/font_color = Color(0.91, 0.86, 0.76, 1)
-theme_override_colors/font_outline_color = Color(0.015, 0.012, 0.009, 0.96)
-theme_override_constants/outline_size = 1
-theme_override_fonts/font = ExtResource("6_semibold")
-theme_override_font_sizes/font_size = 16
-text = "认识九路棋盘、选择、取消与确认。"
-vertical_alignment = 1
-autowrap_mode = 3
-clip_text = true
+tabs_visible = false
 
-[node name="DetailObjective" type="Label" parent="DesignCanvas/DetailTextBackdrop/DetailTextMargin/DetailTextStack" unique_id=970032561]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 68)
+[node name="教学" type="ScrollContainer" parent="DesignCanvas/Page/Content/Body/CenterColumn/CategoryTabs"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.98, 0.84, 0.58, 1)
-theme_override_colors/font_outline_color = Color(0.015, 0.012, 0.009, 0.96)
-theme_override_constants/outline_size = 1
-theme_override_fonts/font = ExtResource("6_semibold")
-theme_override_font_sizes/font_size = 16
-text = "作战目标：完成一次合法移动。"
-vertical_alignment = 1
-autowrap_mode = 3
-clip_text = true
+horizontal_scroll_mode = 1
 
-[node name="EnterButton" type="Button" parent="DesignCanvas" unique_id=558069176]
+[node name="Margin" type="MarginContainer" parent="DesignCanvas/Page/Content/Body/CenterColumn/CategoryTabs/教学"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="TutorialGrid" type="GridContainer" parent="DesignCanvas/Page/Content/Body/CenterColumn/CategoryTabs/教学/Margin"]
 unique_name_in_owner = true
-layout_mode = 0
-offset_left = 970.0
-offset_top = 548.0
-offset_right = 1248.0
-offset_bottom = 632.0
-theme_type_variation = &"LevelEnterButton"
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 5
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+
+[node name="挑战" type="ScrollContainer" parent="DesignCanvas/Page/Content/Body/CenterColumn/CategoryTabs"]
+layout_mode = 2
+horizontal_scroll_mode = 1
+
+[node name="Margin" type="MarginContainer" parent="DesignCanvas/Page/Content/Body/CenterColumn/CategoryTabs/挑战"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="ChallengeGrid" type="GridContainer" parent="DesignCanvas/Page/Content/Body/CenterColumn/CategoryTabs/挑战/Margin"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 3
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+
+[node name="DetailPanel" type="PanelContainer" parent="DesignCanvas/Page/Content/Body"]
+custom_minimum_size = Vector2(230, 0)
+layout_mode = 2
+theme_type_variation = &"PrimarySurface"
+
+[node name="Column" type="VBoxContainer" parent="DesignCanvas/Page/Content/Body/DetailPanel"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="DetailCode" type="Label" parent="DesignCanvas/Page/Content/Body/DetailPanel/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"NumericText"
+text = "P0"
+
+[node name="DetailTitle" type="Label" parent="DesignCanvas/Page/Content/Body/DetailPanel/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"ScreenTitle"
+text = "雾中烽火"
+autowrap_mode = 2
+
+[node name="Separator" type="HSeparator" parent="DesignCanvas/Page/Content/Body/DetailPanel/Column"]
+layout_mode = 2
+
+[node name="DetailSummary" type="Label" parent="DesignCanvas/Page/Content/Body/DetailPanel/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"BodyText"
+text = "选择关卡以查看战况说明。"
+autowrap_mode = 2
+
+[node name="ObjectivePanel" type="PanelContainer" parent="DesignCanvas/Page/Content/Body/DetailPanel/Column"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"InsetSurface"
+
+[node name="DetailObjective" type="Label" parent="DesignCanvas/Page/Content/Body/DetailPanel/Column/ObjectivePanel"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"BodyText"
+text = "关卡目标"
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="StatusLabel" type="Label" parent="DesignCanvas/Page/Content/Body/DetailPanel/Column"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 28)
+layout_mode = 2
+theme_type_variation = &"SecondaryText"
+text = "选择一个关卡"
+horizontal_alignment = 1
+
+[node name="EnterButton" parent="DesignCanvas/Page/Content/Body/DetailPanel/Column" instance=ExtResource("4_primary")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
 text = "进入关卡"
-clip_text = true
 
-[node name="FooterHints" type="Control" parent="DesignCanvas"]
-layout_mode = 0
-offset_left = 22.0
-offset_top = 660.0
-offset_right = 640.0
-offset_bottom = 710.0
-
-[node name="CategoryKeys" type="Label" parent="DesignCanvas/FooterHints"]
-layout_mode = 0
-offset_right = 62.0
-offset_bottom = 50.0
-theme_override_colors/font_color = Color(0.84, 0.75, 0.6, 1)
-theme_override_font_sizes/font_size = 11
-text = "W    S"
-horizontal_alignment = 1
-vertical_alignment = 1
-clip_text = true
-
-[node name="CategoryAction" type="Label" parent="DesignCanvas/FooterHints"]
-layout_mode = 0
-offset_left = 68.0
-offset_right = 151.0
-offset_bottom = 50.0
-theme_override_colors/font_color = Color(0.75, 0.68, 0.56, 1)
-theme_override_font_sizes/font_size = 12
-text = "切换分类"
-horizontal_alignment = 1
-vertical_alignment = 1
-clip_text = true
-
-[node name="LevelKeys" type="Label" parent="DesignCanvas/FooterHints"]
-layout_mode = 0
-offset_left = 157.0
-offset_right = 219.0
-offset_bottom = 50.0
-theme_override_colors/font_color = Color(0.84, 0.75, 0.6, 1)
-theme_override_font_sizes/font_size = 12
-text = "↑    ↓"
-horizontal_alignment = 1
-vertical_alignment = 1
-clip_text = true
-
-[node name="LevelAction" type="Label" parent="DesignCanvas/FooterHints"]
-layout_mode = 0
-offset_left = 225.0
-offset_right = 310.0
-offset_bottom = 50.0
-theme_override_colors/font_color = Color(0.75, 0.68, 0.56, 1)
-theme_override_font_sizes/font_size = 12
-text = "切换关卡"
-horizontal_alignment = 1
-vertical_alignment = 1
-clip_text = true
-
-[node name="EnterKey" type="Label" parent="DesignCanvas/FooterHints"]
-layout_mode = 0
-offset_left = 316.0
-offset_right = 391.0
-offset_bottom = 50.0
-theme_override_colors/font_color = Color(0.84, 0.75, 0.6, 1)
-theme_override_font_sizes/font_size = 11
-text = "Enter"
-horizontal_alignment = 1
-vertical_alignment = 1
-clip_text = true
-
-[node name="EnterAction" type="Label" parent="DesignCanvas/FooterHints"]
-layout_mode = 0
-offset_left = 397.0
-offset_right = 499.0
-offset_bottom = 50.0
-theme_override_colors/font_color = Color(0.75, 0.68, 0.56, 1)
-theme_override_font_sizes/font_size = 12
-text = "进入关卡"
-horizontal_alignment = 1
-vertical_alignment = 1
-clip_text = true
-
-[node name="EscKey" type="Label" parent="DesignCanvas/FooterHints"]
-layout_mode = 0
-offset_left = 505.0
-offset_right = 555.0
-offset_bottom = 50.0
-theme_override_colors/font_color = Color(0.84, 0.75, 0.6, 1)
-theme_override_font_sizes/font_size = 11
-text = "Esc"
-horizontal_alignment = 1
-vertical_alignment = 1
-clip_text = true
-
-[node name="EscAction" type="Label" parent="DesignCanvas/FooterHints"]
-layout_mode = 0
-offset_left = 561.0
-offset_right = 618.0
-offset_bottom = 50.0
-theme_override_colors/font_color = Color(0.75, 0.68, 0.56, 1)
-theme_override_font_sizes/font_size = 12
-text = "返回"
-horizontal_alignment = 1
-vertical_alignment = 1
-clip_text = true
-
-[node name="StatusLabel" type="Label" parent="DesignCanvas" unique_id=1081341565]
+[node name="ResetDialog" parent="." instance=ExtResource("7_dialog")]
 unique_name_in_owner = true
-layout_mode = 0
-offset_left = 650.0
-offset_top = 660.0
-offset_right = 1258.0
-offset_bottom = 710.0
-theme_override_font_sizes/font_size = 12
-horizontal_alignment = 2
-vertical_alignment = 1
-autowrap_mode = 3
-clip_text = true
-
-[node name="ResetDialog" parent="." unique_id=1569314894 instance=ExtResource("5_dialog")]
-unique_name_in_owner = true
-title = "清空教学进度"
-dialog_text = "清除教学路线、能力与模块记录；挑战关和局域网设置保持不变。"
-ok_button_text = "清空进度"
-cancel_button_text = "返回"
+title = "重置关卡进度"
+dialog_text = "确定清空教学和挑战关卡进度吗？"
+ok_button_text = "确认重置"
+cancel_button_text = "取消"
 focus_cancel_by_default = true
-
-[node name="FrontendAudioFeedback" parent="." instance=ExtResource("7_frontend_audio")]
-unique_name_in_owner = true
 
 [node name="TutorialCodex" parent="." instance=ExtResource("8_codex")]
 unique_name_in_owner = true
 
-[connection signal="pressed" from="DesignCanvas/BackButton" to="." method="_return_to_title_screen"]
-[connection signal="pressed" from="DesignCanvas/TutorialCategoryButton" to="." method="_show_tutorial_category"]
-[connection signal="pressed" from="DesignCanvas/ChallengeCategoryButton" to="." method="_show_challenge_category"]
-[connection signal="pressed" from="DesignCanvas/ResetButton" to="." method="_on_reset_progress"]
-[connection signal="pressed" from="DesignCanvas/CodexButton" to="TutorialCodex" method="open_codex"]
-[connection signal="pressed" from="DesignCanvas/EnterButton" to="." method="_enter_selected_level"]
+[node name="FrontendAudioFeedback" parent="." instance=ExtResource("9_audio")]
+unique_name_in_owner = true
+
+[connection signal="pressed" from="DesignCanvas/Page/Content/Header/BackButton" to="." method="_return_to_title_screen"]
+[connection signal="pressed" from="DesignCanvas/Page/Content/Header/CodexButton" to="TutorialCodex" method="open_codex"]
+[connection signal="pressed" from="DesignCanvas/Page/Content/Body/Sidebar/Column/TutorialCategoryButton" to="." method="_show_tutorial_category"]
+[connection signal="pressed" from="DesignCanvas/Page/Content/Body/Sidebar/Column/ChallengeCategoryButton" to="." method="_show_challenge_category"]
+[connection signal="pressed" from="DesignCanvas/Page/Content/Body/Sidebar/Column/ResetButton" to="." method="_on_reset_progress"]
+[connection signal="pressed" from="DesignCanvas/Page/Content/Body/DetailPanel/Column/EnterButton" to="." method="_enter_selected_level"]

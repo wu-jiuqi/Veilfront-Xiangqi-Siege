@@ -2,7 +2,7 @@ extends SceneTree
 
 const START_SCREEN_SCENE := preload("res://scenes/game/frontend/start_screen.tscn")
 const FrontendRoutes := preload("res://scripts/integration/frontend_routes.gd")
-const OUTPUT_PATH := "res://evidence/ui/title-menu-settings-shield-v1-1280x720.png"
+const OUTPUT_PATH := "res://evidence/ui/ui-rebuild-start-menu-1280x720.png"
 
 
 func _init() -> void:

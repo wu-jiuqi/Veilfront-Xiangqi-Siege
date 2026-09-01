@@ -1,177 +1,161 @@
-[gd_scene format=3 uid="uid://btxmu216i7ouv"]
+[gd_scene load_steps=9 format=3]
 
-[ext_resource type="Theme" uid="uid://blq4lo6avwchq" path="res://resources/game/ui/themes/terracotta_ui_theme.tres" id="1_theme"]
-[ext_resource type="Script" uid="uid://d37g5cdgjm1ut" path="res://scripts/game/frontend/settings_screen.gd" id="2_script"]
-[ext_resource type="PackedScene" path="res://scenes/game/presentation/battle_command_tent_background.tscn" id="3_background"]
-[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button.tscn" id="4_motion_button"]
-[ext_resource type="Texture2D" uid="uid://cxdwdyljintlq" path="res://assets/art/ui/settings/png_v2/settings_title_crest_v2.png" id="5_title_crest"]
-[ext_resource type="PackedScene" path="res://scenes/game/ui/terracotta_modal_dialog.tscn" id="6_dialog"]
-[ext_resource type="PackedScene" path="res://scenes/game/audio/frontend_audio_feedback.tscn" id="7_frontend_audio"]
+[ext_resource type="Script" path="res://scripts/game/frontend/settings_screen.gd" id="1_script"]
+[ext_resource type="Theme" path="res://resources/game/ui/themes/veilfront_ui_theme_v2.tres" id="2_theme"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/concepts/main_menu_background_v7_denoised.png" id="3_background"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_primary.tscn" id="4_primary"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_secondary.tscn" id="5_secondary"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_danger.tscn" id="6_danger"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/terracotta_modal_dialog.tscn" id="7_dialog"]
+[ext_resource type="PackedScene" path="res://scenes/game/audio/frontend_audio_feedback.tscn" id="8_audio"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxSettingsToggleEmpty"]
-
-[node name="SettingsScreen" type="Control" unique_id=2025215758]
+[node name="SettingsScreen" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("1_theme")
-script = ExtResource("2_script")
+theme = ExtResource("2_theme")
+script = ExtResource("1_script")
 
-[node name="Background" parent="." unique_id=1156892923 instance=ExtResource("3_background")]
-layout_mode = 1
-
-[node name="SafeMargin" type="MarginContainer" parent="." unique_id=21288968]
+[node name="Background" type="TextureRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 18.0
-offset_top = 18.0
-offset_right = -18.0
-offset_bottom = -18.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("3_background")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Veil" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.006, 0.009, 0.01, 0.72)
+
+[node name="SafeMargin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = 12.0
+offset_right = -12.0
+offset_bottom = -12.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="SettingsFrame" type="PanelContainer" parent="SafeMargin" unique_id=1922788514]
+[node name="Center" type="CenterContainer" parent="SafeMargin"]
+layout_mode = 2
+
+[node name="SettingsFrame" type="PanelContainer" parent="SafeMargin/Center"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(880, 0)
 layout_mode = 2
-theme_type_variation = &"SettingsPngPanel"
+offset_transform_enabled = true
+offset_transform_visual_only = true
+theme_type_variation = &"PageSurface"
 
-[node name="ContentMargin" type="MarginContainer" parent="SafeMargin/SettingsFrame" unique_id=4213322]
+[node name="Content" type="VBoxContainer" parent="SafeMargin/Center/SettingsFrame"]
 layout_mode = 2
-theme_override_constants/margin_left = 18
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 18
-theme_override_constants/margin_bottom = 12
+theme_override_constants/separation = 12
 
-[node name="ContentColumn" type="VBoxContainer" parent="SafeMargin/SettingsFrame/ContentMargin" unique_id=979180217]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="HeaderRow" type="HBoxContainer" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn" unique_id=709442709]
+[node name="Header" type="HBoxContainer" parent="SafeMargin/Center/SettingsFrame/Content"]
+custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="BackButton" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/HeaderRow" unique_id=2084971363 instance=ExtResource("4_motion_button")]
+[node name="BackButton" parent="SafeMargin/Center/SettingsFrame/Content/Header" instance=ExtResource("5_secondary")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(176, 54)
+custom_minimum_size = Vector2(120, 48)
 layout_mode = 2
-size_flags_vertical = 4
-theme_type_variation = &"SettingsPngSecondaryButton"
-text = "返回"
-motion_profile = null
+text = "← 返回"
 
-[node name="TitleGroup" type="VBoxContainer" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/HeaderRow" unique_id=47730928]
+[node name="TitleGroup" type="VBoxContainer" parent="SafeMargin/Center/SettingsFrame/Content/Header"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Title" type="Label" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/HeaderRow/TitleGroup" unique_id=2140844124]
+[node name="Title" type="Label" parent="SafeMargin/Center/SettingsFrame/Content/Header/TitleGroup"]
 layout_mode = 2
-theme_type_variation = &"SectionTitle"
+theme_type_variation = &"ScreenTitle"
 text = "军帐设置"
 
-[node name="Subtitle" type="Label" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/HeaderRow/TitleGroup" unique_id=1178744400]
-visible = false
+[node name="Subtitle" type="Label" parent="SafeMargin/Center/SettingsFrame/Content/Header/TitleGroup"]
 layout_mode = 2
-theme_type_variation = &"MutedLabel"
-text = "调整显示、音频与演出体验；规则与联机公平性不受影响"
-autowrap_mode = 2
+theme_type_variation = &"SecondaryText"
+text = "显示、声音与操作体验"
 
-[node name="HeaderCrest" type="TextureRect" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/HeaderRow" unique_id=926775576]
-custom_minimum_size = Vector2(118, 52)
-layout_mode = 2
-mouse_filter = 2
-texture = ExtResource("5_title_crest")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="HeaderSeparator" type="HSeparator" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn" unique_id=2018484354]
+[node name="Separator" type="HSeparator" parent="SafeMargin/Center/SettingsFrame/Content"]
 layout_mode = 2
 
-[node name="SettingsTabsCenter" type="HBoxContainer" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn"]
-custom_minimum_size = Vector2(0, 210)
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/separation = 0
-
-[node name="LeftSpacer" type="Control" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="SettingsTabs" type="TabContainer" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter" unique_id=1770043772]
+[node name="SettingsTabs" type="TabContainer" parent="SafeMargin/Center/SettingsFrame/Content"]
 unique_name_in_owner = true
-custom_maximum_size = Vector2(900, -1)
 layout_mode = 2
-size_flags_horizontal = 3
 size_flags_vertical = 3
-size_flags_stretch_ratio = 100.0
-theme_type_variation = &"SettingsPngTabs"
 tab_alignment = 1
-current_tab = 0
+tab_focus_mode = 2
 
-[node name="画面" type="ScrollContainer" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs" unique_id=1494033623]
+[node name="画面" type="MarginContainer" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs"]
 layout_mode = 2
-horizontal_scroll_mode = 0
-metadata/_tab_index = 0
-
-[node name="TabMargin" type="MarginContainer" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/画面" unique_id=244491870]
-layout_mode = 2
-size_flags_horizontal = 3
 theme_override_constants/margin_left = 18
 theme_override_constants/margin_top = 18
 theme_override_constants/margin_right = 18
 theme_override_constants/margin_bottom = 18
 
-[node name="Rows" type="VBoxContainer" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/画面/TabMargin" unique_id=650640970]
+[node name="Rows" type="VBoxContainer" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/画面"]
 layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 10
+theme_override_constants/separation = 8
 
-[node name="WindowModeRow" type="HBoxContainer" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/画面/TabMargin/Rows" unique_id=757209877]
-custom_minimum_size = Vector2(0, 54)
+[node name="WindowModeRow" type="HBoxContainer" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/画面/Rows"]
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/画面/TabMargin/Rows/WindowModeRow" unique_id=2055355133]
+[node name="Label" type="Label" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/画面/Rows/WindowModeRow"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "显示模式"
 vertical_alignment = 1
 
-[node name="WindowModeOption" type="OptionButton" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/画面/TabMargin/Rows/WindowModeRow" unique_id=1010182317]
+[node name="WindowModeOption" type="OptionButton" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/画面/Rows/WindowModeRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(300, 52)
+custom_minimum_size = Vector2(320, 48)
 layout_mode = 2
-theme_type_variation = &"SettingsPngOptionButton"
-selected = 1
+focus_mode = 2
 item_count = 2
-popup/item_0/text = "窗口"
+selected = 0
+popup/item_0/text = "窗口模式"
 popup/item_0/id = 0
 popup/item_1/text = "无边框全屏"
 popup/item_1/id = 1
 
-[node name="WindowSeparator" type="HSeparator" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/画面/TabMargin/Rows" unique_id=352153693]
+[node name="Sep1" type="HSeparator" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/画面/Rows"]
 layout_mode = 2
 
-[node name="ResolutionRow" type="HBoxContainer" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/画面/TabMargin/Rows" unique_id=363577943]
-custom_minimum_size = Vector2(0, 54)
+[node name="ResolutionRow" type="HBoxContainer" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/画面/Rows"]
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/画面/TabMargin/Rows/ResolutionRow" unique_id=1115553508]
+[node name="Label" type="Label" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/画面/Rows/ResolutionRow"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "窗口分辨率"
 vertical_alignment = 1
 
-[node name="ResolutionOption" type="OptionButton" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/画面/TabMargin/Rows/ResolutionRow" unique_id=1518167613]
+[node name="ResolutionOption" type="OptionButton" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/画面/Rows/ResolutionRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(300, 52)
+custom_minimum_size = Vector2(320, 48)
 layout_mode = 2
-theme_type_variation = &"SettingsPngOptionButton"
-selected = 2
+focus_mode = 2
 item_count = 3
+selected = 0
 popup/item_0/text = "1280 × 720"
 popup/item_0/id = 0
 popup/item_1/text = "1600 × 900"
@@ -179,320 +163,284 @@ popup/item_1/id = 1
 popup/item_2/text = "1920 × 1080"
 popup/item_2/id = 2
 
-[node name="ResolutionSeparator" type="HSeparator" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/画面/TabMargin/Rows" unique_id=1394139211]
+[node name="Sep2" type="HSeparator" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/画面/Rows"]
 layout_mode = 2
 
-[node name="VsyncRow" type="HBoxContainer" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/画面/TabMargin/Rows" unique_id=1242914637]
-custom_minimum_size = Vector2(0, 54)
+[node name="VsyncRow" type="HBoxContainer" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/画面/Rows"]
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/画面/TabMargin/Rows/VsyncRow" unique_id=842732721]
+[node name="Label" type="Label" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/画面/Rows/VsyncRow"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "垂直同步"
 vertical_alignment = 1
 
-[node name="VsyncToggle" type="CheckButton" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/画面/TabMargin/Rows/VsyncRow" unique_id=465752982]
+[node name="VsyncToggle" type="CheckButton" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/画面/Rows/VsyncRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(64, 64)
+custom_minimum_size = Vector2(160, 48)
 layout_mode = 2
-theme_type_variation = &"SettingsPngCheckButton"
-theme_override_styles/normal = SubResource("StyleBoxSettingsToggleEmpty")
-theme_override_styles/hover = SubResource("StyleBoxSettingsToggleEmpty")
-theme_override_styles/pressed = SubResource("StyleBoxSettingsToggleEmpty")
-theme_override_styles/hover_pressed = SubResource("StyleBoxSettingsToggleEmpty")
-theme_override_styles/disabled = SubResource("StyleBoxSettingsToggleEmpty")
-theme_override_styles/focus = SubResource("StyleBoxSettingsToggleEmpty")
-button_pressed = true
+focus_mode = 2
+text = "启用"
 
-[node name="音频" type="ScrollContainer" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs" unique_id=1407063424]
-visible = false
+[node name="画面Spacer" type="Control" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/画面/Rows"]
 layout_mode = 2
-horizontal_scroll_mode = 0
-metadata/_tab_index = 1
+size_flags_vertical = 3
 
-[node name="TabMargin" type="MarginContainer" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/音频" unique_id=1525341738]
+[node name="音频" type="MarginContainer" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs"]
 layout_mode = 2
-size_flags_horizontal = 3
 theme_override_constants/margin_left = 18
 theme_override_constants/margin_top = 18
 theme_override_constants/margin_right = 18
 theme_override_constants/margin_bottom = 18
 
-[node name="Rows" type="VBoxContainer" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/音频/TabMargin" unique_id=355746412]
+[node name="Rows" type="VBoxContainer" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/音频"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="MasterRow" type="HBoxContainer" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/音频/Rows"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/音频/Rows/MasterRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 10
-
-[node name="MasterRow" type="HBoxContainer" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/音频/TabMargin/Rows" unique_id=554695166]
-custom_minimum_size = Vector2(0, 54)
-layout_mode = 2
-theme_override_constants/separation = 14
-
-[node name="Label" type="Label" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/音频/TabMargin/Rows/MasterRow" unique_id=2094543497]
-custom_minimum_size = Vector2(150, 0)
-layout_mode = 2
-text = "总音量"
+text = "主音量"
 vertical_alignment = 1
 
-[node name="MasterVolumeSlider" type="HSlider" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/音频/TabMargin/Rows/MasterRow" unique_id=425557576]
+[node name="MasterVolumeSlider" type="HSlider" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/音频/Rows/MasterRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(260, 46)
+custom_minimum_size = Vector2(360, 48)
 layout_mode = 2
-size_flags_horizontal = 3
-theme_type_variation = &"SettingsPngSlider"
-value = 100.0
+focus_mode = 2
+value = 80.0
 
-[node name="MasterVolumeValue" type="Label" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/音频/TabMargin/Rows/MasterRow" unique_id=532103014]
+[node name="MasterVolumeValue" type="Label" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/音频/Rows/MasterRow"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 0)
 layout_mode = 2
-text = "100%"
+theme_type_variation = &"NumericText"
+text = "80%"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="MasterSeparator" type="HSeparator" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/音频/TabMargin/Rows" unique_id=905435739]
+[node name="Sep1" type="HSeparator" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/音频/Rows"]
 layout_mode = 2
 
-[node name="MusicRow" type="HBoxContainer" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/音频/TabMargin/Rows" unique_id=234160993]
-custom_minimum_size = Vector2(0, 54)
+[node name="MusicRow" type="HBoxContainer" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/音频/Rows"]
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
-theme_override_constants/separation = 14
 
-[node name="Label" type="Label" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/音频/TabMargin/Rows/MusicRow" unique_id=71550762]
-custom_minimum_size = Vector2(150, 0)
+[node name="Label" type="Label" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/音频/Rows/MusicRow"]
 layout_mode = 2
+size_flags_horizontal = 3
 text = "音乐"
 vertical_alignment = 1
 
-[node name="MusicVolumeSlider" type="HSlider" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/音频/TabMargin/Rows/MusicRow" unique_id=140986552]
+[node name="MusicVolumeSlider" type="HSlider" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/音频/Rows/MusicRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(260, 46)
+custom_minimum_size = Vector2(360, 48)
 layout_mode = 2
-size_flags_horizontal = 3
-theme_type_variation = &"SettingsPngSlider"
-value = 100.0
+focus_mode = 2
+value = 70.0
 
-[node name="MusicVolumeValue" type="Label" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/音频/TabMargin/Rows/MusicRow" unique_id=983510031]
+[node name="MusicVolumeValue" type="Label" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/音频/Rows/MusicRow"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 0)
 layout_mode = 2
-text = "100%"
+theme_type_variation = &"NumericText"
+text = "70%"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="MusicSeparator" type="HSeparator" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/音频/TabMargin/Rows" unique_id=2073358750]
+[node name="Sep2" type="HSeparator" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/音频/Rows"]
 layout_mode = 2
 
-[node name="SfxRow" type="HBoxContainer" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/音频/TabMargin/Rows" unique_id=1798265503]
-custom_minimum_size = Vector2(0, 54)
+[node name="SfxRow" type="HBoxContainer" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/音频/Rows"]
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
-theme_override_constants/separation = 14
 
-[node name="Label" type="Label" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/音频/TabMargin/Rows/SfxRow" unique_id=2008927861]
-custom_minimum_size = Vector2(150, 0)
+[node name="Label" type="Label" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/音频/Rows/SfxRow"]
 layout_mode = 2
+size_flags_horizontal = 3
 text = "音效"
 vertical_alignment = 1
 
-[node name="SfxVolumeSlider" type="HSlider" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/音频/TabMargin/Rows/SfxRow" unique_id=183007072]
+[node name="SfxVolumeSlider" type="HSlider" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/音频/Rows/SfxRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(260, 46)
+custom_minimum_size = Vector2(360, 48)
 layout_mode = 2
-size_flags_horizontal = 3
-theme_type_variation = &"SettingsPngSlider"
-value = 100.0
+focus_mode = 2
+value = 80.0
 
-[node name="SfxVolumeValue" type="Label" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/音频/TabMargin/Rows/SfxRow" unique_id=1618505553]
+[node name="SfxVolumeValue" type="Label" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/音频/Rows/SfxRow"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 0)
 layout_mode = 2
-text = "100%"
+theme_type_variation = &"NumericText"
+text = "80%"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="体验" type="ScrollContainer" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs" unique_id=1010566163]
-visible = false
+[node name="音频Spacer" type="Control" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/音频/Rows"]
 layout_mode = 2
-horizontal_scroll_mode = 0
-metadata/_tab_index = 2
+size_flags_vertical = 3
 
-[node name="TabMargin" type="MarginContainer" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/体验" unique_id=1985129880]
+[node name="体验" type="MarginContainer" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs"]
 layout_mode = 2
-size_flags_horizontal = 3
 theme_override_constants/margin_left = 18
 theme_override_constants/margin_top = 18
 theme_override_constants/margin_right = 18
 theme_override_constants/margin_bottom = 18
 
-[node name="Rows" type="VBoxContainer" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/体验/TabMargin" unique_id=1641976756]
+[node name="Rows" type="VBoxContainer" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/体验"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="SkipOpeningRow" type="HBoxContainer" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/体验/Rows"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+
+[node name="Copy" type="VBoxContainer" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/体验/Rows/SkipOpeningRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 10
 
-[node name="SkipOpeningRow" type="HBoxContainer" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/体验/TabMargin/Rows" unique_id=1533288012]
-custom_minimum_size = Vector2(0, 54)
+[node name="Title" type="Label" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/体验/Rows/SkipOpeningRow/Copy"]
 layout_mode = 2
+text = "跳过开场"
 
-[node name="LabelGroup" type="VBoxContainer" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/体验/TabMargin/Rows/SkipOpeningRow" unique_id=105092695]
+[node name="Hint" type="Label" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/体验/Rows/SkipOpeningRow/Copy"]
 layout_mode = 2
-size_flags_horizontal = 3
+theme_type_variation = &"SecondaryText"
+text = "下次启动时直接进入主菜单"
 
-[node name="Title" type="Label" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/体验/TabMargin/Rows/SkipOpeningRow/LabelGroup" unique_id=1907904780]
-layout_mode = 2
-text = "跳过开场演出"
-
-[node name="Hint" type="Label" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/体验/TabMargin/Rows/SkipOpeningRow/LabelGroup" unique_id=1523054292]
-layout_mode = 2
-theme_type_variation = &"MutedLabel"
-text = "启动后直接进入主菜单"
-
-[node name="SkipOpeningToggle" type="CheckButton" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/体验/TabMargin/Rows/SkipOpeningRow" unique_id=1182926100]
+[node name="SkipOpeningToggle" type="CheckButton" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/体验/Rows/SkipOpeningRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(64, 64)
+custom_minimum_size = Vector2(160, 48)
 layout_mode = 2
-theme_type_variation = &"SettingsPngCheckButton"
-theme_override_styles/normal = SubResource("StyleBoxSettingsToggleEmpty")
-theme_override_styles/hover = SubResource("StyleBoxSettingsToggleEmpty")
-theme_override_styles/pressed = SubResource("StyleBoxSettingsToggleEmpty")
-theme_override_styles/hover_pressed = SubResource("StyleBoxSettingsToggleEmpty")
-theme_override_styles/disabled = SubResource("StyleBoxSettingsToggleEmpty")
-theme_override_styles/focus = SubResource("StyleBoxSettingsToggleEmpty")
+focus_mode = 2
+text = "启用"
 
-[node name="SkipSeparator" type="HSeparator" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/体验/TabMargin/Rows" unique_id=573253577]
+[node name="Sep1" type="HSeparator" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/体验/Rows"]
 layout_mode = 2
 
-[node name="ReducedMotionRow" type="HBoxContainer" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/体验/TabMargin/Rows" unique_id=1226495717]
-custom_minimum_size = Vector2(0, 54)
+[node name="ReduceMotionRow" type="HBoxContainer" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/体验/Rows"]
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 
-[node name="LabelGroup" type="VBoxContainer" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/体验/TabMargin/Rows/ReducedMotionRow" unique_id=117636638]
+[node name="Copy" type="VBoxContainer" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/体验/Rows/ReduceMotionRow"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Title" type="Label" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/体验/TabMargin/Rows/ReducedMotionRow/LabelGroup" unique_id=1130571687]
+[node name="Title" type="Label" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/体验/Rows/ReduceMotionRow/Copy"]
 layout_mode = 2
 text = "减少动态效果"
 
-[node name="Hint" type="Label" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/体验/TabMargin/Rows/ReducedMotionRow/LabelGroup" unique_id=714706501]
+[node name="Hint" type="Label" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/体验/Rows/ReduceMotionRow/Copy"]
 layout_mode = 2
-theme_type_variation = &"MutedLabel"
-text = "跳过强烈的界面位移与冲击演出"
+theme_type_variation = &"SecondaryText"
+text = "关闭界面位移、缩放与循环动效"
 
-[node name="ReduceMotionToggle" type="CheckButton" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/体验/TabMargin/Rows/ReducedMotionRow" unique_id=433964788]
+[node name="ReduceMotionToggle" type="CheckButton" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/体验/Rows/ReduceMotionRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(64, 64)
+custom_minimum_size = Vector2(160, 48)
 layout_mode = 2
-theme_type_variation = &"SettingsPngCheckButton"
-theme_override_styles/normal = SubResource("StyleBoxSettingsToggleEmpty")
-theme_override_styles/hover = SubResource("StyleBoxSettingsToggleEmpty")
-theme_override_styles/pressed = SubResource("StyleBoxSettingsToggleEmpty")
-theme_override_styles/hover_pressed = SubResource("StyleBoxSettingsToggleEmpty")
-theme_override_styles/disabled = SubResource("StyleBoxSettingsToggleEmpty")
-theme_override_styles/focus = SubResource("StyleBoxSettingsToggleEmpty")
+focus_mode = 2
+text = "启用"
 
-[node name="MotionSeparator" type="HSeparator" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/体验/TabMargin/Rows" unique_id=79646305]
+[node name="Sep2" type="HSeparator" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/体验/Rows"]
 layout_mode = 2
 
-[node name="ProgressRow" type="HBoxContainer" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/体验/TabMargin/Rows" unique_id=985277970]
-custom_minimum_size = Vector2(0, 58)
+[node name="ProgressRow" type="HBoxContainer" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/体验/Rows"]
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 
-[node name="LabelGroup" type="VBoxContainer" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/体验/TabMargin/Rows/ProgressRow" unique_id=792907066]
+[node name="Copy" type="VBoxContainer" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/体验/Rows/ProgressRow"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Title" type="Label" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/体验/TabMargin/Rows/ProgressRow/LabelGroup" unique_id=1593480703]
+[node name="Title" type="Label" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/体验/Rows/ProgressRow/Copy"]
 layout_mode = 2
 text = "关卡进度"
 
-[node name="Hint" type="Label" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/体验/TabMargin/Rows/ProgressRow/LabelGroup" unique_id=680694481]
+[node name="Hint" type="Label" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/体验/Rows/ProgressRow/Copy"]
 layout_mode = 2
-theme_type_variation = &"MutedLabel"
+theme_type_variation = &"SecondaryText"
 text = "清空教学与挑战关卡完成记录"
 
-[node name="ResetProgressButton" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter/SettingsTabs/体验/TabMargin/Rows/ProgressRow" unique_id=1949122639 instance=ExtResource("4_motion_button")]
+[node name="ResetProgressButton" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/体验/Rows/ProgressRow" instance=ExtResource("6_danger")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(220, 54)
+custom_minimum_size = Vector2(220, 52)
 layout_mode = 2
-theme_type_variation = &"SettingsPngDangerButton"
 text = "重置关卡进度"
-motion_profile = null
 
-[node name="RightSpacer" type="Control" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter"]
+[node name="体验Spacer" type="Control" parent="SafeMargin/Center/SettingsFrame/Content/SettingsTabs/体验/Rows"]
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="StatusLabel" type="Label" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn" unique_id=733388161]
+[node name="StatusLabel" type="Label" parent="SafeMargin/Center/SettingsFrame/Content"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 28)
 layout_mode = 2
-theme_type_variation = &"MutedLabel"
+theme_type_variation = &"SecondaryText"
 text = "修改设置后点击“应用”"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="FooterSeparator" type="HSeparator" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn" unique_id=1508787672]
+[node name="FooterSeparator" type="HSeparator" parent="SafeMargin/Center/SettingsFrame/Content"]
 layout_mode = 2
 
-[node name="FooterRow" type="HBoxContainer" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn" unique_id=1211630295]
+[node name="Footer" type="HBoxContainer" parent="SafeMargin/Center/SettingsFrame/Content"]
+custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="RestoreDefaultsButton" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/FooterRow" unique_id=1509484555 instance=ExtResource("4_motion_button")]
+[node name="RestoreDefaultsButton" parent="SafeMargin/Center/SettingsFrame/Content/Footer" instance=ExtResource("5_secondary")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(200, 54)
+custom_minimum_size = Vector2(180, 52)
 layout_mode = 2
-theme_type_variation = &"SettingsPngSecondaryButton"
 text = "恢复默认值"
-motion_profile = null
 
-[node name="Spacer" type="Control" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/FooterRow" unique_id=716255861]
+[node name="Spacer" type="Control" parent="SafeMargin/Center/SettingsFrame/Content/Footer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="CancelButton" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/FooterRow" unique_id=1993365533 instance=ExtResource("4_motion_button")]
+[node name="CancelButton" parent="SafeMargin/Center/SettingsFrame/Content/Footer" instance=ExtResource("5_secondary")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(160, 54)
+custom_minimum_size = Vector2(150, 52)
 layout_mode = 2
-theme_type_variation = &"SettingsPngSecondaryButton"
 text = "取消"
-motion_profile = null
 
-[node name="ApplyButton" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/FooterRow" unique_id=1364899508 instance=ExtResource("4_motion_button")]
+[node name="ApplyButton" parent="SafeMargin/Center/SettingsFrame/Content/Footer" instance=ExtResource("4_primary")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(180, 54)
+custom_minimum_size = Vector2(180, 52)
 layout_mode = 2
-theme_type_variation = &"SettingsPngPrimaryButton"
 text = "应用"
-motion_profile = null
 
-[node name="DisplayConfirmTimer" type="Timer" parent="." unique_id=543837108]
+[node name="DisplayConfirmTimer" type="Timer" parent="."]
 unique_name_in_owner = true
+wait_time = 1.0
 
-[node name="DisplayConfirmDialog" parent="." unique_id=651942286 instance=ExtResource("6_dialog")]
+[node name="DisplayConfirmDialog" parent="." instance=ExtResource("7_dialog")]
 unique_name_in_owner = true
 title = "确认显示设置"
-dialog_text = "新的显示设置是否正常？
-10 秒后将自动恢复原设置。"
+dialog_text = "新的显示设置是否正常？\n10 秒后将自动恢复原设置。"
 ok_button_text = "保留设置"
 cancel_button_text = "恢复原设置"
 focus_cancel_by_default = true
 
-[node name="ResetProgressDialog" parent="." unique_id=2109329801 instance=ExtResource("6_dialog")]
+[node name="ResetProgressDialog" parent="." instance=ExtResource("7_dialog")]
 unique_name_in_owner = true
 title = "重置关卡进度"
+dialog_text = "确定清空全部教学与挑战关卡完成记录吗？\n此操作不会重置其他设置。"
 ok_button_text = "确认重置"
 cancel_button_text = "取消"
-dialog_text = "确定清空全部教学与挑战关卡完成记录吗？
-此操作不会重置其他设置。"
 focus_cancel_by_default = true
 
-[node name="ErrorDialog" parent="." unique_id=724856708 instance=ExtResource("6_dialog")]
+[node name="ErrorDialog" parent="." instance=ExtResource("7_dialog")]
 unique_name_in_owner = true
 title = "设置操作失败"
-ok_button_text = "知道了"
 show_cancel_button = false
 
-[node name="FrontendAudioFeedback" parent="." instance=ExtResource("7_frontend_audio")]
+[node name="FrontendAudioFeedback" parent="." instance=ExtResource("8_audio")]
 unique_name_in_owner = true

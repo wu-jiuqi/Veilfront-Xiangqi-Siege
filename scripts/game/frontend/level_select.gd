@@ -5,14 +5,6 @@ const LEVEL_CARD_SCENE := preload("res://scenes/game/frontend/level_card.tscn")
 const CATALOG := preload("res://resources/game/levels/level_catalog.tres")
 const TutorialChapterCatalog = preload("res://scripts/game/tutorial/tutorial_chapter_catalog.gd")
 const TutorialProgressStore = preload("res://scripts/game/tutorial/tutorial_progress_store.gd")
-const DESIGN_SIZE := Vector2(1280.0, 720.0)
-const CHALLENGE_NODE_POSITIONS: Array[Vector2] = [
-	Vector2(102, 24), Vector2(309, 24), Vector2(514, 20),
-]
-const TUTORIAL_COLUMNS: int = 5
-const TUTORIAL_COLUMN_STEP: float = 132.0
-const TUTORIAL_ROW_STEP: float = 118.0
-const TUTORIAL_GRID_ORIGIN := Vector2(12.0, 4.0)
 
 @export var test_all_levels_unlocked: bool = false
 @export var load_saved_progress: bool = true
@@ -86,8 +78,6 @@ func _build_level_grid(grid: Control, levels: Array[LevelDefinition]) -> void:
 		var level: LevelDefinition = levels[index]
 		var card := LEVEL_CARD_SCENE.instantiate() as LevelCard
 		grid.add_child(card)
-		card.position = _tutorial_node_position(index) \
-			if level.category == "tutorial" else CHALLENGE_NODE_POSITIONS[index]
 		_cards.append(card)
 		var state := _module_state(level.level_id) if level.category == "tutorial" \
 			else TutorialProgressStore.COMPLETED if bool(_completed.get(level.level_id, false)) \
@@ -319,16 +309,9 @@ func _sync_route_strip() -> void:
 		else "两条路线复用同一套正式规则课程，可随时切换。"
 
 
-func _tutorial_node_position(index: int) -> Vector2:
-	return TUTORIAL_GRID_ORIGIN + Vector2(
-		float(index % TUTORIAL_COLUMNS) * TUTORIAL_COLUMN_STEP,
-		float(index / TUTORIAL_COLUMNS) * TUTORIAL_ROW_STEP
-	)
-
-
 func _layout_design_canvas() -> void:
 	if not is_instance_valid(_design_canvas):
 		return
-	var factor := minf(size.x / DESIGN_SIZE.x, size.y / DESIGN_SIZE.y)
-	_design_canvas.scale = Vector2.ONE * factor
-	_design_canvas.position = (size - DESIGN_SIZE * factor) * 0.5
+	# The rebuilt page is container-driven. Keep the canvas at native scale so
+	# text and 44 px interaction targets do not shrink on compact viewports.
+	_design_canvas.scale = Vector2.ONE

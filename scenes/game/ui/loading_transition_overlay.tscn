@@ -1,166 +1,55 @@
-[gd_scene load_steps=31 format=3]
+[gd_scene load_steps=16 format=3]
 
-[ext_resource type="Theme" path="res://resources/game/ui/themes/terracotta_ui_theme.tres" id="1_theme"]
+[ext_resource type="Theme" path="res://resources/game/ui/themes/veilfront_ui_theme_v2.tres" id="1_theme"]
 [ext_resource type="Script" path="res://scripts/game/presentation/ui/loading_transition_overlay.gd" id="2_script"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/level_select/level_campaign_map_background_v1.png" id="3_backdrop"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/turn_progress_incense/turn_progress_smoke_wisp_v1.png" id="4_smoke"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/loading_transition/loading_nine_route_seal_v1.png" id="5_seal"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_metal/frames/loading_progress_arc_v1.svg" id="6_ring"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_metal/icons/markers/warning.svg" id="7_warning"]
-[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button.tscn" id="8_button"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/loading_transition/failure_retry_button_v1.png" id="9_retry_plate"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/loading_transition/failure_back_button_v1.png" id="10_back_plate"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_metal/frames/loading_progress_cursor_v1.svg" id="8_cursor"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_primary.tscn" id="9_primary"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_secondary.tscn" id="10_secondary"]
 [ext_resource type="Resource" path="res://resources/game/ui/motion/terracotta_ui_motion_profile.tres" id="11_motion"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/hud_panel_9slice_v1.png" id="12_failure_panel"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_metal/frames/loading_progress_track_v1.svg" id="13_progress_track"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_metal/frames/loading_progress_cursor_v1.svg" id="14_progress_cursor"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxProgressBackground"]
-bg_color = Color(0.012, 0.017, 0.016, 0.98)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
+[sub_resource type="StyleBoxFlat" id="StyleProgressBackground"]
+bg_color = Color(0.016, 0.022, 0.021, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.34, 0.29, 0.19, 0.82)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxProgressEmpty"]
+[sub_resource type="StyleBoxFlat" id="StyleProgressFill"]
+bg_color = Color(0.83, 0.57, 0.19, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxProgressGlow"]
-bg_color = Color(0.96, 0.58, 0.16, 0.22)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
+[sub_resource type="StyleBoxEmpty" id="StyleProgressEmpty"]
 
-[sub_resource type="Gradient" id="GradientProgressFill"]
-offsets = PackedFloat32Array(0, 0.34, 0.72, 1)
-colors = PackedColorArray(0.34, 0.14, 0.035, 1, 0.72, 0.37, 0.075, 1, 0.96, 0.68, 0.2, 1, 1, 0.9, 0.56, 1)
+[sub_resource type="StyleBoxFlat" id="StyleProgressGlow"]
+bg_color = Color(0.96, 0.68, 0.24, 0.22)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
 
-[sub_resource type="GradientTexture2D" id="GradientTextureProgressFill"]
-gradient = SubResource("GradientProgressFill")
-width = 512
-height = 16
-fill_from = Vector2(0, 0.5)
-fill_to = Vector2(1, 0.5)
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxProgressFill"]
-texture = SubResource("GradientTextureProgressFill")
-
-[sub_resource type="Gradient" id="GradientProgressSheen"]
+[sub_resource type="Gradient" id="GradientSheen"]
 offsets = PackedFloat32Array(0, 0.5, 1)
-colors = PackedColorArray(1, 0.78, 0.32, 0, 1, 0.96, 0.76, 0.88, 1, 0.78, 0.32, 0)
+colors = PackedColorArray(1, 0.84, 0.44, 0, 1, 0.96, 0.76, 0.84, 1, 0.84, 0.44, 0)
 
-[sub_resource type="GradientTexture2D" id="GradientTextureProgressSheen"]
-gradient = SubResource("GradientProgressSheen")
-width = 96
-height = 16
+[sub_resource type="GradientTexture2D" id="TextureSheen"]
+gradient = SubResource("GradientSheen")
+width = 84
+height = 18
 fill_from = Vector2(0, 0.5)
 fill_to = Vector2(1, 0.5)
-
-[sub_resource type="StyleBoxTexture" id="StyleFailurePanel"]
-content_margin_left = 12.0
-content_margin_top = 12.0
-content_margin_right = 12.0
-content_margin_bottom = 12.0
-texture = ExtResource("12_failure_panel")
-texture_margin_left = 24.0
-texture_margin_top = 24.0
-texture_margin_right = 24.0
-texture_margin_bottom = 24.0
-modulate_color = Color(0.78, 0.82, 0.78, 1)
-
-[sub_resource type="StyleBoxTexture" id="StyleRetryNormal"]
-content_margin_left = 24.0
-content_margin_top = 12.0
-content_margin_right = 24.0
-content_margin_bottom = 12.0
-texture = ExtResource("9_retry_plate")
-texture_margin_left = 22.0
-texture_margin_top = 12.0
-texture_margin_right = 22.0
-texture_margin_bottom = 12.0
-
-[sub_resource type="StyleBoxTexture" id="StyleRetryHover"]
-content_margin_left = 24.0
-content_margin_top = 12.0
-content_margin_right = 24.0
-content_margin_bottom = 12.0
-texture = ExtResource("9_retry_plate")
-texture_margin_left = 22.0
-texture_margin_top = 12.0
-texture_margin_right = 22.0
-texture_margin_bottom = 12.0
-modulate_color = Color(1.16, 1.06, 0.82, 1)
-
-[sub_resource type="StyleBoxTexture" id="StyleRetryPressed"]
-content_margin_left = 24.0
-content_margin_top = 13.0
-content_margin_right = 24.0
-content_margin_bottom = 11.0
-texture = ExtResource("9_retry_plate")
-texture_margin_left = 22.0
-texture_margin_top = 12.0
-texture_margin_right = 22.0
-texture_margin_bottom = 12.0
-modulate_color = Color(0.78, 0.46, 0.4, 1)
-
-[sub_resource type="StyleBoxTexture" id="StyleRetryDisabled"]
-content_margin_left = 24.0
-content_margin_top = 12.0
-content_margin_right = 24.0
-content_margin_bottom = 12.0
-texture = ExtResource("9_retry_plate")
-texture_margin_left = 22.0
-texture_margin_top = 12.0
-texture_margin_right = 22.0
-texture_margin_bottom = 12.0
-modulate_color = Color(0.46, 0.45, 0.42, 0.82)
-
-[sub_resource type="StyleBoxTexture" id="StyleBackNormal"]
-content_margin_left = 24.0
-content_margin_top = 12.0
-content_margin_right = 24.0
-content_margin_bottom = 12.0
-texture = ExtResource("10_back_plate")
-texture_margin_left = 22.0
-texture_margin_top = 12.0
-texture_margin_right = 22.0
-texture_margin_bottom = 12.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBackHover"]
-content_margin_left = 24.0
-content_margin_top = 12.0
-content_margin_right = 24.0
-content_margin_bottom = 12.0
-texture = ExtResource("10_back_plate")
-texture_margin_left = 22.0
-texture_margin_top = 12.0
-texture_margin_right = 22.0
-texture_margin_bottom = 12.0
-modulate_color = Color(1.14, 1.08, 0.84, 1)
-
-[sub_resource type="StyleBoxTexture" id="StyleBackPressed"]
-content_margin_left = 24.0
-content_margin_top = 13.0
-content_margin_right = 24.0
-content_margin_bottom = 11.0
-texture = ExtResource("10_back_plate")
-texture_margin_left = 22.0
-texture_margin_top = 12.0
-texture_margin_right = 22.0
-texture_margin_bottom = 12.0
-modulate_color = Color(0.72, 0.7, 0.66, 1)
-
-[sub_resource type="StyleBoxTexture" id="StyleBackDisabled"]
-content_margin_left = 24.0
-content_margin_top = 12.0
-content_margin_right = 24.0
-content_margin_bottom = 12.0
-texture = ExtResource("10_back_plate")
-texture_margin_left = 22.0
-texture_margin_top = 12.0
-texture_margin_right = 22.0
-texture_margin_bottom = 12.0
-modulate_color = Color(0.46, 0.45, 0.42, 0.82)
 
 [node name="LoadingTransitionOverlay" type="Control"]
 process_mode = 3
@@ -196,7 +85,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.005, 0.009, 0.01, 0.66)
+color = Color(0.005, 0.009, 0.01, 0.76)
 
 [node name="FogLayer" type="Control" parent="."]
 layout_mode = 1
@@ -209,7 +98,7 @@ mouse_filter = 2
 
 [node name="FogBack" type="TextureRect" parent="FogLayer"]
 unique_name_in_owner = true
-modulate = Color(0.39, 0.46, 0.44, 0.18)
+modulate = Color(0.38, 0.46, 0.43, 0.14)
 layout_mode = 1
 anchor_top = 0.08
 anchor_right = 1.0
@@ -225,7 +114,7 @@ stretch_mode = 6
 
 [node name="FogFront" type="TextureRect" parent="FogLayer"]
 unique_name_in_owner = true
-modulate = Color(0.28, 0.35, 0.35, 0.24)
+modulate = Color(0.28, 0.35, 0.35, 0.2)
 layout_mode = 1
 anchor_top = 0.48
 anchor_right = 1.0
@@ -240,47 +129,55 @@ expand_mode = 1
 stretch_mode = 6
 flip_h = true
 
-[node name="LoadingContent" type="Control" parent="."]
-unique_name_in_owner = true
+[node name="SafeMargin" type="MarginContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 18.0
+offset_right = -20.0
+offset_bottom = -18.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
 
-[node name="TitleLabel" type="Label" parent="LoadingContent"]
-layout_mode = 1
-anchor_left = 0.5
-anchor_top = 0.055
-anchor_right = 0.5
-anchor_bottom = 0.055
-offset_left = -330.0
-offset_right = 330.0
-offset_bottom = 52.0
-grow_horizontal = 2
-theme_override_colors/font_color = Color(0.82, 0.69, 0.43, 0.94)
-theme_override_font_sizes/font_size = 30
-text = "雾疆：九路烽棋"
+[node name="Center" type="CenterContainer" parent="SafeMargin"]
+layout_mode = 2
+
+[node name="LoadingContent" type="PanelContainer" parent="SafeMargin/Center"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(660, 620)
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"PageSurface"
+
+[node name="Content" type="VBoxContainer" parent="SafeMargin/Center/LoadingContent"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Eyebrow" type="Label" parent="SafeMargin/Center/LoadingContent/Content"]
+layout_mode = 2
+theme_type_variation = &"SecondaryText"
+text = "雾疆 · 战场调度"
 horizontal_alignment = 1
-vertical_alignment = 1
 
-[node name="SealAnchor" type="Control" parent="LoadingContent"]
-layout_mode = 1
-anchor_left = 0.5
-anchor_top = 0.4
-anchor_right = 0.5
-anchor_bottom = 0.4
-offset_left = -172.0
-offset_top = -172.0
-offset_right = 172.0
-offset_bottom = 172.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="TitleLabel" type="Label" parent="SafeMargin/Center/LoadingContent/Content"]
+layout_mode = 2
+theme_type_variation = &"ScreenTitle"
+text = "九路烽棋"
+horizontal_alignment = 1
+
+[node name="SealCenter" type="CenterContainer" parent="SafeMargin/Center/LoadingContent/Content"]
+custom_minimum_size = Vector2(0, 300)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SealAnchor" type="Control" parent="SafeMargin/Center/LoadingContent/Content/SealCenter"]
+custom_minimum_size = Vector2(270, 270)
+layout_mode = 2
 mouse_filter = 2
 
-[node name="SealMotionRoot" type="Control" parent="LoadingContent/SealAnchor"]
+[node name="SealMotionRoot" type="Control" parent="SafeMargin/Center/LoadingContent/Content/SealCenter/SealAnchor"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -290,9 +187,9 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="SealGlow" type="TextureRect" parent="LoadingContent/SealAnchor/SealMotionRoot"]
+[node name="SealGlow" type="TextureRect" parent="SafeMargin/Center/LoadingContent/Content/SealCenter/SealAnchor/SealMotionRoot"]
 unique_name_in_owner = true
-modulate = Color(1, 0.76, 0.36, 0.08)
+modulate = Color(1, 0.76, 0.36, 0.1)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -308,7 +205,7 @@ texture = ExtResource("5_seal")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Seal" type="TextureRect" parent="LoadingContent/SealAnchor/SealMotionRoot"]
+[node name="Seal" type="TextureRect" parent="SafeMargin/Center/LoadingContent/Content/SealCenter/SealAnchor/SealMotionRoot"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -320,16 +217,16 @@ texture = ExtResource("5_seal")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="ProgressRing" type="TextureRect" parent="LoadingContent/SealAnchor/SealMotionRoot"]
+[node name="ProgressRing" type="TextureRect" parent="SafeMargin/Center/LoadingContent/Content/SealCenter/SealAnchor/SealMotionRoot"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -25.0
-offset_top = -25.0
-offset_right = 25.0
-offset_bottom = 25.0
+offset_left = -18.0
+offset_top = -18.0
+offset_right = 18.0
+offset_bottom = 18.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -337,278 +234,113 @@ texture = ExtResource("6_ring")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="StatusAnchor" type="Control" parent="LoadingContent"]
-layout_mode = 1
-anchor_left = 0.5
-anchor_top = 0.72
-anchor_right = 0.5
-anchor_bottom = 0.72
-offset_left = -330.0
-offset_top = -24.0
-offset_right = 330.0
-offset_bottom = 132.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-
-[node name="StatusStack" type="VBoxContainer" parent="LoadingContent/StatusAnchor"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="StatusStack" type="VBoxContainer" parent="SafeMargin/Center/LoadingContent/Content"]
+layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="StatusLabel" type="Label" parent="LoadingContent/StatusAnchor/StatusStack"]
+[node name="StatusLabel" type="Label" parent="SafeMargin/Center/LoadingContent/Content/StatusStack"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 38)
+custom_minimum_size = Vector2(0, 34)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.9, 0.79, 0.58, 1)
-theme_override_font_sizes/font_size = 26
+theme_type_variation = &"SectionTitle"
 text = "正在布设九路战场…"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ProgressStack" type="Control" parent="LoadingContent/StatusAnchor/StatusStack"]
-custom_minimum_size = Vector2(0, 52)
+[node name="ProgressCanvas" type="Control" parent="SafeMargin/Center/LoadingContent/Content/StatusStack"]
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 mouse_filter = 2
 
-[node name="ProgressTrackFrame" type="TextureRect" parent="LoadingContent/StatusAnchor/StatusStack/ProgressStack"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 18.0
-offset_right = -18.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("13_progress_track")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="ProgressInset" type="Control" parent="LoadingContent/StatusAnchor/StatusStack/ProgressStack"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 44.0
-offset_top = 18.0
-offset_right = -44.0
-offset_bottom = -18.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-
-[node name="ProgressGlow" type="ProgressBar" parent="LoadingContent/StatusAnchor/StatusStack/ProgressStack/ProgressInset"]
+[node name="ProgressGlow" type="ProgressBar" parent="SafeMargin/Center/LoadingContent/Content/StatusStack/ProgressCanvas"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -3.0
-offset_top = -3.0
-offset_right = 3.0
-offset_bottom = 3.0
+offset_left = 24.0
+offset_top = 8.0
+offset_right = -24.0
+offset_bottom = -8.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_styles/background = SubResource("StyleBoxProgressEmpty")
-theme_override_styles/fill = SubResource("StyleBoxProgressGlow")
+theme_override_styles/background = SubResource("StyleProgressEmpty")
+theme_override_styles/fill = SubResource("StyleProgressGlow")
 show_percentage = false
 
-[node name="ProgressBar" type="ProgressBar" parent="LoadingContent/StatusAnchor/StatusStack/ProgressStack/ProgressInset"]
+[node name="ProgressBar" type="ProgressBar" parent="SafeMargin/Center/LoadingContent/Content/StatusStack/ProgressCanvas"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 11.0
+offset_right = -24.0
+offset_bottom = -11.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_styles/background = SubResource("StyleBoxProgressBackground")
-theme_override_styles/fill = SubResource("StyleBoxProgressFill")
+theme_override_styles/background = SubResource("StyleProgressBackground")
+theme_override_styles/fill = SubResource("StyleProgressFill")
 show_percentage = false
 
-[node name="ProgressFillClip" type="Control" parent="LoadingContent/StatusAnchor/StatusStack/ProgressStack/ProgressInset"]
+[node name="ProgressFillClip" type="Control" parent="SafeMargin/Center/LoadingContent/Content/StatusStack/ProgressCanvas"]
 unique_name_in_owner = true
 layout_mode = 0
 offset_right = 1.0
-offset_bottom = 16.0
+offset_bottom = 18.0
 mouse_filter = 2
 clip_contents = true
 
-[node name="ProgressSheen" type="TextureRect" parent="LoadingContent/StatusAnchor/StatusStack/ProgressStack/ProgressInset/ProgressFillClip"]
+[node name="ProgressSheen" type="TextureRect" parent="SafeMargin/Center/LoadingContent/Content/StatusStack/ProgressCanvas/ProgressFillClip"]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = -96.0
+offset_left = -84.0
 offset_right = 0.0
-offset_bottom = 16.0
+offset_bottom = 18.0
 mouse_filter = 2
-texture = SubResource("GradientTextureProgressSheen")
+texture = SubResource("TextureSheen")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="ProgressTicks" type="Control" parent="LoadingContent/StatusAnchor/StatusStack/ProgressStack/ProgressInset"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-
-[node name="Tick01" type="ColorRect" parent="LoadingContent/StatusAnchor/StatusStack/ProgressStack/ProgressInset/ProgressTicks"]
-layout_mode = 1
-anchor_left = 0.111111
-anchor_top = 0.2
-anchor_right = 0.111111
-anchor_bottom = 0.8
-offset_left = -1.0
-offset_right = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-color = Color(0.08, 0.075, 0.055, 0.62)
-
-[node name="Tick02" type="ColorRect" parent="LoadingContent/StatusAnchor/StatusStack/ProgressStack/ProgressInset/ProgressTicks"]
-layout_mode = 1
-anchor_left = 0.222222
-anchor_top = 0.2
-anchor_right = 0.222222
-anchor_bottom = 0.8
-offset_left = -1.0
-offset_right = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-color = Color(0.08, 0.075, 0.055, 0.62)
-
-[node name="Tick03" type="ColorRect" parent="LoadingContent/StatusAnchor/StatusStack/ProgressStack/ProgressInset/ProgressTicks"]
-layout_mode = 1
-anchor_left = 0.333333
-anchor_top = 0.2
-anchor_right = 0.333333
-anchor_bottom = 0.8
-offset_left = -1.0
-offset_right = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-color = Color(0.08, 0.075, 0.055, 0.62)
-
-[node name="Tick04" type="ColorRect" parent="LoadingContent/StatusAnchor/StatusStack/ProgressStack/ProgressInset/ProgressTicks"]
-layout_mode = 1
-anchor_left = 0.444444
-anchor_top = 0.2
-anchor_right = 0.444444
-anchor_bottom = 0.8
-offset_left = -1.0
-offset_right = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-color = Color(0.08, 0.075, 0.055, 0.62)
-
-[node name="Tick05" type="ColorRect" parent="LoadingContent/StatusAnchor/StatusStack/ProgressStack/ProgressInset/ProgressTicks"]
-layout_mode = 1
-anchor_left = 0.555556
-anchor_top = 0.2
-anchor_right = 0.555556
-anchor_bottom = 0.8
-offset_left = -1.0
-offset_right = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-color = Color(0.08, 0.075, 0.055, 0.62)
-
-[node name="Tick06" type="ColorRect" parent="LoadingContent/StatusAnchor/StatusStack/ProgressStack/ProgressInset/ProgressTicks"]
-layout_mode = 1
-anchor_left = 0.666667
-anchor_top = 0.2
-anchor_right = 0.666667
-anchor_bottom = 0.8
-offset_left = -1.0
-offset_right = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-color = Color(0.08, 0.075, 0.055, 0.62)
-
-[node name="Tick07" type="ColorRect" parent="LoadingContent/StatusAnchor/StatusStack/ProgressStack/ProgressInset/ProgressTicks"]
-layout_mode = 1
-anchor_left = 0.777778
-anchor_top = 0.2
-anchor_right = 0.777778
-anchor_bottom = 0.8
-offset_left = -1.0
-offset_right = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-color = Color(0.08, 0.075, 0.055, 0.62)
-
-[node name="Tick08" type="ColorRect" parent="LoadingContent/StatusAnchor/StatusStack/ProgressStack/ProgressInset/ProgressTicks"]
-layout_mode = 1
-anchor_left = 0.888889
-anchor_top = 0.2
-anchor_right = 0.888889
-anchor_bottom = 0.8
-offset_left = -1.0
-offset_right = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-color = Color(0.08, 0.075, 0.055, 0.62)
-
-[node name="ProgressSparkGlow" type="TextureRect" parent="LoadingContent/StatusAnchor/StatusStack/ProgressStack/ProgressInset"]
+[node name="ProgressSparkGlow" type="TextureRect" parent="SafeMargin/Center/LoadingContent/Content/StatusStack/ProgressCanvas"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(42, 42)
-layout_mode = 0
-offset_right = 42.0
-offset_bottom = 42.0
-mouse_filter = 2
 modulate = Color(1, 0.71, 0.25, 0.18)
-texture = ExtResource("14_progress_cursor")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="ProgressSpark" type="TextureRect" parent="LoadingContent/StatusAnchor/StatusStack/ProgressStack/ProgressInset"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(28, 28)
+custom_minimum_size = Vector2(38, 38)
 layout_mode = 0
-offset_right = 28.0
-offset_bottom = 28.0
+offset_right = 38.0
+offset_bottom = 38.0
 mouse_filter = 2
-texture = ExtResource("14_progress_cursor")
+texture = ExtResource("8_cursor")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="PercentLabel" type="Label" parent="LoadingContent/StatusAnchor/StatusStack"]
+[node name="ProgressSpark" type="TextureRect" parent="SafeMargin/Center/LoadingContent/Content/StatusStack/ProgressCanvas"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(26, 26)
+layout_mode = 0
+offset_right = 26.0
+offset_bottom = 26.0
+mouse_filter = 2
+texture = ExtResource("8_cursor")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="PercentLabel" type="Label" parent="SafeMargin/Center/LoadingContent/Content/StatusStack"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 28)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.79, 0.67, 0.45, 0.95)
-theme_override_font_sizes/font_size = 20
+theme_type_variation = &"NumericText"
 text = "0%"
 horizontal_alignment = 1
 
-[node name="LoreTip" type="Label" parent="LoadingContent"]
-layout_mode = 1
-anchor_left = 0.2
-anchor_top = 0.9
-anchor_right = 0.8
-anchor_bottom = 0.965
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_color = Color(0.72, 0.66, 0.53, 0.88)
-theme_override_font_sizes/font_size = 18
-text = "◇  雾幕之外，敌影皆为未知。"
+[node name="LoreTip" type="Label" parent="SafeMargin/Center/LoadingContent/Content"]
+layout_mode = 2
+theme_type_variation = &"SecondaryText"
+text = "雾幕之外，敌影皆为未知。"
 horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="FailureLayer" type="Control" parent="."]
 unique_name_in_owner = true
@@ -629,118 +361,77 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.01, 0.012, 0.012, 0.46)
+color = Color(0.006, 0.008, 0.008, 0.72)
 
-[node name="FailureAnchor" type="Control" parent="FailureLayer"]
+[node name="Center" type="CenterContainer" parent="FailureLayer"]
 layout_mode = 1
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -230.0
-offset_top = -185.0
-offset_right = 230.0
-offset_bottom = 185.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="FailureCard" type="PanelContainer" parent="FailureLayer/FailureAnchor"]
+[node name="FailureCard" type="PanelContainer" parent="FailureLayer/Center"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(460, 370)
-layout_mode = 1
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -230.0
-offset_top = -185.0
-offset_right = 230.0
-offset_bottom = 185.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleFailurePanel")
-
-[node name="Margin" type="MarginContainer" parent="FailureLayer/FailureAnchor/FailureCard"]
+custom_minimum_size = Vector2(520, 340)
 layout_mode = 2
-theme_override_constants/margin_left = 30
-theme_override_constants/margin_top = 24
-theme_override_constants/margin_right = 30
-theme_override_constants/margin_bottom = 24
+theme_type_variation = &"DangerSurface"
 
-[node name="Content" type="VBoxContainer" parent="FailureLayer/FailureAnchor/FailureCard/Margin"]
+[node name="Content" type="VBoxContainer" parent="FailureLayer/Center/FailureCard"]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 12
 
-[node name="WarningIconCenter" type="CenterContainer" parent="FailureLayer/FailureAnchor/FailureCard/Margin/Content"]
-custom_minimum_size = Vector2(0, 52)
+[node name="WarningCenter" type="CenterContainer" parent="FailureLayer/Center/FailureCard/Content"]
+custom_minimum_size = Vector2(0, 54)
 layout_mode = 2
 
-[node name="WarningIcon" type="TextureRect" parent="FailureLayer/FailureAnchor/FailureCard/Margin/Content/WarningIconCenter"]
-custom_minimum_size = Vector2(46, 46)
+[node name="WarningIcon" type="TextureRect" parent="FailureLayer/Center/FailureCard/Content/WarningCenter"]
+custom_minimum_size = Vector2(48, 48)
 layout_mode = 2
 texture = ExtResource("7_warning")
 expand_mode = 3
 stretch_mode = 5
 
-[node name="FailureTitle" type="Label" parent="FailureLayer/FailureAnchor/FailureCard/Margin/Content"]
+[node name="FailureTitle" type="Label" parent="FailureLayer/Center/FailureCard/Content"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.88, 0.31, 0.23, 1)
-theme_override_font_sizes/font_size = 30
+theme_type_variation = &"ScreenTitle"
 text = "加载失败"
 horizontal_alignment = 1
 
-[node name="FailureMessage" type="Label" parent="FailureLayer/FailureAnchor/FailureCard/Margin/Content"]
+[node name="FailureMessage" type="Label" parent="FailureLayer/Center/FailureCard/Content"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.9, 0.82, 0.67, 1)
-theme_override_font_sizes/font_size = 22
+theme_type_variation = &"SectionTitle"
 text = "未能抵达战场"
 horizontal_alignment = 1
 
-[node name="FailureDetail" type="Label" parent="FailureLayer/FailureAnchor/FailureCard/Margin/Content"]
+[node name="FailureDetail" type="Label" parent="FailureLayer/Center/FailureCard/Content"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"SecondaryText"
 text = "场景资源响应超时，请重试。"
 horizontal_alignment = 1
+vertical_alignment = 1
 autowrap_mode = 2
-theme_type_variation = &"MutedLabel"
 
-[node name="ButtonRow" type="HBoxContainer" parent="FailureLayer/FailureAnchor/FailureCard/Margin/Content"]
+[node name="ButtonRow" type="HBoxContainer" parent="FailureLayer/Center/FailureCard/Content"]
 layout_mode = 2
-size_flags_vertical = 10
 theme_override_constants/separation = 12
 alignment = 1
 
-[node name="RetryButton" parent="FailureLayer/FailureAnchor/FailureCard/Margin/Content/ButtonRow" instance=ExtResource("8_button")]
+[node name="RetryButton" parent="FailureLayer/Center/FailureCard/Content/ButtonRow" instance=ExtResource("9_primary")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(176, 58)
+custom_minimum_size = Vector2(180, 52)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.96, 0.82, 0.58, 1)
-theme_override_colors/font_hover_color = Color(1, 0.91, 0.7, 1)
-theme_override_colors/font_pressed_color = Color(0.98, 0.74, 0.52, 1)
-theme_override_font_sizes/font_size = 22
-theme_override_styles/normal = SubResource("StyleRetryNormal")
-theme_override_styles/hover = SubResource("StyleRetryHover")
-theme_override_styles/pressed = SubResource("StyleRetryPressed")
-theme_override_styles/disabled = SubResource("StyleRetryDisabled")
 text = "重试"
-theme_type_variation = &"Button"
 
-[node name="BackButton" parent="FailureLayer/FailureAnchor/FailureCard/Margin/Content/ButtonRow" instance=ExtResource("8_button")]
+[node name="BackButton" parent="FailureLayer/Center/FailureCard/Content/ButtonRow" instance=ExtResource("10_secondary")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(176, 58)
+custom_minimum_size = Vector2(180, 52)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.86, 0.81, 0.7, 1)
-theme_override_colors/font_hover_color = Color(1, 0.92, 0.72, 1)
-theme_override_colors/font_pressed_color = Color(0.76, 0.73, 0.66, 1)
-theme_override_font_sizes/font_size = 22
-theme_override_styles/normal = SubResource("StyleBackNormal")
-theme_override_styles/hover = SubResource("StyleBackHover")
-theme_override_styles/pressed = SubResource("StyleBackPressed")
-theme_override_styles/disabled = SubResource("StyleBackDisabled")
 text = "返回"
-theme_type_variation = &"Button"
 
-[connection signal="pressed" from="FailureLayer/FailureAnchor/FailureCard/Margin/Content/ButtonRow/RetryButton" to="." method="_on_retry_pressed"]
-[connection signal="pressed" from="FailureLayer/FailureAnchor/FailureCard/Margin/Content/ButtonRow/BackButton" to="." method="_on_back_pressed"]
+[connection signal="pressed" from="FailureLayer/Center/FailureCard/Content/ButtonRow/RetryButton" to="." method="_on_retry_pressed"]
+[connection signal="pressed" from="FailureLayer/Center/FailureCard/Content/ButtonRow/BackButton" to="." method="_on_back_pressed"]

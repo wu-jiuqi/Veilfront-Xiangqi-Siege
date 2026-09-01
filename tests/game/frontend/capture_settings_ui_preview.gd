@@ -2,7 +2,7 @@ extends SceneTree
 
 const SETTINGS_SCENE := preload("res://scenes/game/frontend/settings_screen.tscn")
 const SettingsManagerScript := preload("res://scripts/game/settings/settings_manager.gd")
-const OUTPUT_PATH := "res://evidence/ui/settings-screen-functional-1280x720.png"
+const OUTPUT_PATH := "res://evidence/ui/ui-rebuild-settings-1280x720.png"
 
 
 func _init() -> void:

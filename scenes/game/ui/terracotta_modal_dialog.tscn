@@ -1,24 +1,19 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/game/presentation/ui/terracotta_modal_dialog.gd" id="1_script"]
-[ext_resource type="Theme" path="res://resources/game/ui/themes/terracotta_ui_theme.tres" id="2_theme"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/system_dialog/system_dialog_panel_v1.png" id="3_panel"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/system_dialog/system_dialog_button_primary_v1.png" id="4_primary"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/system_dialog/system_dialog_button_secondary_v1.png" id="5_secondary"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmptyButton"]
+[ext_resource type="Theme" path="res://resources/game/ui/themes/veilfront_ui_theme_v2.tres" id="2_theme"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_confirm.tscn" id="3_confirm"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_secondary.tscn" id="4_secondary"]
 
 [node name="TerracottaModalDialog" type="Control"]
-process_mode = 3
 visible = false
-z_index = 100
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
+mouse_filter = 1
 theme = ExtResource("2_theme")
 script = ExtResource("1_script")
 
@@ -30,107 +25,82 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 0
-color = Color(0.015, 0.018, 0.02, 0.78)
+color = Color(0.005, 0.007, 0.008, 0.78)
 
 [node name="DialogCenter" type="CenterContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = -24.0
+offset_bottom = -24.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
 
-[node name="DialogCanvas" type="Control" parent="DialogCenter"]
-custom_minimum_size = Vector2(780, 356)
+[node name="DialogPanel" type="PanelContainer" parent="DialogCenter"]
+custom_minimum_size = Vector2(600, 320)
 layout_mode = 2
-mouse_filter = 0
+theme_type_variation = &"OverlaySurface"
 
-[node name="PanelArt" type="TextureRect" parent="DialogCenter/DialogCanvas"]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("3_panel")
-expand_mode = 1
-stretch_mode = 0
+[node name="Content" type="VBoxContainer" parent="DialogCenter/DialogPanel"]
+layout_mode = 2
+theme_override_constants/separation = 16
 
-[node name="TitleLabel" type="Label" parent="DialogCenter/DialogCanvas"]
+[node name="Header" type="HBoxContainer" parent="DialogCenter/DialogPanel/Content"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TitleLabel" type="Label" parent="DialogCenter/DialogPanel/Content/Header"]
 unique_name_in_owner = true
-layout_mode = 0
-offset_left = 126.0
-offset_top = 76.0
-offset_right = 654.0
-offset_bottom = 114.0
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.96, 0.82, 0.55, 1)
-theme_override_colors/font_outline_color = Color(0.025, 0.02, 0.016, 0.96)
-theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 24
-text = "弹窗标题"
-horizontal_alignment = 1
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"ScreenTitle"
+text = "提示"
 vertical_alignment = 1
 
-[node name="CloseButton" type="Button" parent="DialogCenter/DialogCanvas"]
+[node name="CloseButton" type="Button" parent="DialogCenter/DialogPanel/Content/Header"]
 unique_name_in_owner = true
-layout_mode = 0
-offset_left = 680.0
-offset_top = 78.0
-offset_right = 718.0
-offset_bottom = 114.0
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
 focus_mode = 2
-mouse_default_cursor_shape = 2
-theme_override_colors/font_color = Color(0.9, 0.82, 0.64, 1)
-theme_override_colors/font_hover_color = Color(1, 0.86, 0.56, 1)
-theme_override_colors/font_focus_color = Color(1, 0.86, 0.56, 1)
-theme_override_font_sizes/font_size = 22
-theme_override_styles/normal = SubResource("StyleBoxEmptyButton")
-theme_override_styles/hover = SubResource("StyleBoxEmptyButton")
-theme_override_styles/pressed = SubResource("StyleBoxEmptyButton")
-theme_override_styles/focus = SubResource("StyleBoxEmptyButton")
-text = "X"
-flat = true
+theme_type_variation = &"GhostButton"
+text = "×"
 
-[node name="BodyLabel" type="Label" parent="DialogCenter/DialogCanvas"]
+[node name="Separator" type="HSeparator" parent="DialogCenter/DialogPanel/Content"]
+layout_mode = 2
+
+[node name="BodyPanel" type="PanelContainer" parent="DialogCenter/DialogPanel/Content"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"InsetSurface"
+
+[node name="BodyLabel" type="Label" parent="DialogCenter/DialogPanel/Content/BodyPanel"]
 unique_name_in_owner = true
-layout_mode = 0
-offset_left = 104.0
-offset_top = 124.0
-offset_right = 676.0
-offset_bottom = 224.0
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.9, 0.86, 0.75, 1)
-theme_override_colors/font_outline_color = Color(0.02, 0.018, 0.016, 0.9)
-theme_override_constants/outline_size = 1
-theme_override_font_sizes/font_size = 18
-text = "弹窗正文"
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+theme_type_variation = &"BodyText"
+text = "提示内容"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="ButtonRow" type="HBoxContainer" parent="DialogCenter/DialogCanvas"]
-unique_name_in_owner = true
-layout_mode = 0
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -256.0
-offset_top = 240.0
-offset_right = 256.0
-offset_bottom = 302.0
-theme_override_constants/separation = 24
-alignment = 1
+[node name="ButtonRow" type="HBoxContainer" parent="DialogCenter/DialogPanel/Content"]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+alignment = 2
+theme_override_constants/separation = 12
 
-[node name="CancelSlot" type="Control" parent="DialogCenter/DialogCanvas/ButtonRow"]
+[node name="CancelSlot" type="Control" parent="DialogCenter/DialogPanel/Content/ButtonRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(244, 58)
+custom_minimum_size = Vector2(180, 52)
 layout_mode = 2
 
-[node name="CancelFrame" type="TextureRect" parent="DialogCenter/DialogCanvas/ButtonRow/CancelSlot"]
+[node name="CancelFrame" type="TextureRect" parent="DialogCenter/DialogPanel/Content/ButtonRow/CancelSlot"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -138,11 +108,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource("5_secondary")
-expand_mode = 1
-stretch_mode = 0
 
-[node name="CancelButton" type="Button" parent="DialogCenter/DialogCanvas/ButtonRow/CancelSlot"]
+[node name="CancelButton" parent="DialogCenter/DialogPanel/Content/ButtonRow/CancelSlot" instance=ExtResource("4_secondary")]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -150,28 +117,18 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-focus_mode = 2
-mouse_default_cursor_shape = 2
-theme_override_colors/font_color = Color(0.84, 0.81, 0.72, 1)
-theme_override_colors/font_hover_color = Color(1, 0.91, 0.66, 1)
-theme_override_colors/font_focus_color = Color(1, 0.91, 0.66, 1)
-theme_override_colors/font_pressed_color = Color(0.72, 0.68, 0.58, 1)
-theme_override_font_sizes/font_size = 18
-theme_override_styles/normal = SubResource("StyleBoxEmptyButton")
-theme_override_styles/hover = SubResource("StyleBoxEmptyButton")
-theme_override_styles/pressed = SubResource("StyleBoxEmptyButton")
-theme_override_styles/focus = SubResource("StyleBoxEmptyButton")
+focus_neighbor_right = NodePath("../../ConfirmSlot/ConfirmButton")
+focus_next = NodePath("../../ConfirmSlot/ConfirmButton")
 text = "取消"
-flat = true
-alignment = 1
 
-[node name="ConfirmSlot" type="Control" parent="DialogCenter/DialogCanvas/ButtonRow"]
+[node name="ConfirmSlot" type="Control" parent="DialogCenter/DialogPanel/Content/ButtonRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(244, 58)
+custom_minimum_size = Vector2(180, 52)
 layout_mode = 2
 
-[node name="ConfirmFrame" type="TextureRect" parent="DialogCenter/DialogCanvas/ButtonRow/ConfirmSlot"]
+[node name="ConfirmFrame" type="TextureRect" parent="DialogCenter/DialogPanel/Content/ButtonRow/ConfirmSlot"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -179,11 +136,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource("4_primary")
-expand_mode = 1
-stretch_mode = 0
 
-[node name="ConfirmButton" type="Button" parent="DialogCenter/DialogCanvas/ButtonRow/ConfirmSlot"]
+[node name="ConfirmButton" parent="DialogCenter/DialogPanel/Content/ButtonRow/ConfirmSlot" instance=ExtResource("3_confirm")]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -191,17 +145,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-focus_mode = 2
-mouse_default_cursor_shape = 2
-theme_override_colors/font_color = Color(1, 0.9, 0.62, 1)
-theme_override_colors/font_hover_color = Color(1, 0.96, 0.78, 1)
-theme_override_colors/font_focus_color = Color(1, 0.96, 0.78, 1)
-theme_override_colors/font_pressed_color = Color(0.78, 0.68, 0.46, 1)
-theme_override_font_sizes/font_size = 18
-theme_override_styles/normal = SubResource("StyleBoxEmptyButton")
-theme_override_styles/hover = SubResource("StyleBoxEmptyButton")
-theme_override_styles/pressed = SubResource("StyleBoxEmptyButton")
-theme_override_styles/focus = SubResource("StyleBoxEmptyButton")
+focus_neighbor_left = NodePath("../../CancelSlot/CancelButton")
+focus_next = NodePath("../../CancelSlot/CancelButton")
 text = "确定"
-flat = true
-alignment = 1

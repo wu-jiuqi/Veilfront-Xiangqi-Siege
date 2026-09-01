@@ -114,3 +114,18 @@ func _update_visual_state() -> void:
 		next_texture = completed_texture
 	if _state_texture.texture != next_texture:
 		_state_texture.texture = next_texture
+	if _node_button.disabled:
+		_node_button.theme_type_variation = &"SecondaryButton"
+		_node_button.modulate = Color(0.62, 0.62, 0.58, 0.72)
+	elif _selected:
+		_node_button.theme_type_variation = &"PrimaryButton"
+		_node_button.modulate = Color.WHITE
+	elif _completed:
+		_node_button.theme_type_variation = &"ConfirmButton"
+		_node_button.modulate = Color.WHITE
+	elif _focused or _pointer_inside:
+		_node_button.theme_type_variation = &"PrimaryButton"
+		_node_button.modulate = Color(1.06, 1.02, 0.9, 1.0)
+	else:
+		_node_button.theme_type_variation = &"SecondaryButton"
+		_node_button.modulate = Color.WHITE
