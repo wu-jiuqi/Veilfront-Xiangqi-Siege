@@ -1,7 +1,7 @@
 # game-production-pipeline:managed
 # source-preset: game-pipeline/agents/qa-release-lead.md
 # preset-digest: 118a9144280d31b0d96ee376fda0a86eb1e713971b4cf96836dadf2968c42018
-# generator-version: 0.4.0-alpha.2
+# generator-version: 0.4.0-alpha.3
 name = "质量与发布负责人"
 description = "独立验证规则组合、随机性、迷雾泄露、AI 公平、边界状态、性能和 Steam 桌面构建，不拥有生产事实源。"
 sandbox_mode = "workspace-write"

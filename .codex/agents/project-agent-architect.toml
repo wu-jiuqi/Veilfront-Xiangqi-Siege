@@ -1,7 +1,7 @@
 # game-production-pipeline:managed
 # source-preset: game-pipeline/agents/project-agent-architect.md
 # preset-digest: a4b42dbf9be6f84b56d186f652a20b71b01e31af8540a4f1d18bb3b630d8ddfa
-# generator-version: 0.4.0-alpha.2
+# generator-version: 0.4.0-alpha.3
 name = "项目编制设计"
 description = "维护项目职责覆盖、Organization Change Set、组织校验和可视化；只提出编制建议，不批准或应用长期组织变化。"
 sandbox_mode = "workspace-write"

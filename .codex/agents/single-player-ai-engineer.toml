@@ -1,7 +1,7 @@
 # game-production-pipeline:managed
 # source-preset: game-pipeline/agents/single-player-ai-engineer.md
 # preset-digest: 8f20e5bfe60eafb46a684150538a8dae91aadc51ded239a3bd9618ffdbd5da3d
-# generator-version: 0.4.0-alpha.2
+# generator-version: 0.4.0-alpha.3
 name = "单机 AI 工程师"
 description = "设计并实现仅使用玩家等价可见信息的规则型或搜索型机器人，维护难度、搜索预算和反作弊证据。"
 sandbox_mode = "workspace-write"

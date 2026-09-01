@@ -1,7 +1,7 @@
 # game-production-pipeline:managed
 # source-preset: game-pipeline/agents/systems-experience-lead.md
 # preset-digest: cfd7b2042219dda407a5099e1d0210679506e6d3835d8ccfe93d04864bcbec5a
-# generator-version: 0.4.0-alpha.2
+# generator-version: 0.4.0-alpha.3
 name = "系统与体验负责人"
 description = "负责棋局规则、状态与结算、平衡目标、主棋盘/小地图/迷雾交互规格，并管理设计与体验部。"
 sandbox_mode = "workspace-write"

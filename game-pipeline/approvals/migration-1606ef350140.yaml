@@ -1,0 +1,13 @@
+approval:
+  schema_version: game-production-approval/v1
+  approval_id: approval:veilfront-xiangqi-siege:migration:1606ef350140
+  subject_kind: plugin-migration-plan
+  subject_id: 0.4.0-alpha.2->0.4.0-alpha.3
+  subject_digest: 1606ef350140d4ad5c80212a132e3e2506626bf66552bd66d0371967013bc341
+  decision: approved
+  decided_by: human:owner
+  decided_at: '2026-09-01T00:49:45Z'
+  evidence:
+    migrator: migrations/0-4-0-alpha-2__0-4-0-alpha-3.py
+    from_framework_digest: 3589bce5cf4388f91a08f12acb5d90679256191d5085e65687d06a635bbdcd32
+    to_framework_digest: 16c8b7ec74a098f9382fb1aff1af95d9557f1e4c2dbbfe4dd8caa0033a544621

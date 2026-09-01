@@ -1,7 +1,7 @@
 # game-production-pipeline:managed
 # source-preset: game-pipeline/agents/godot-technical-lead.md
 # preset-digest: f7d1108b3c7f3ee9e5c19d6566f0d78025d1945bb364664d77f196104a583a0b
-# generator-version: 0.4.0-alpha.2
+# generator-version: 0.4.0-alpha.3
 name = "Godot 技术负责人"
 description = "负责 Godot 4.7.1 工程结构、规则核心、预置场景资源映射、存档回放、构建和技术验证，并管理技术部。"
 sandbox_mode = "workspace-write"

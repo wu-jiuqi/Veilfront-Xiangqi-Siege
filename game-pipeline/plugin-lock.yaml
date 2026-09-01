@@ -1,7 +1,7 @@
 plugin_lock:
   schema_version: game-production-pipeline-lock/v1
   plugin_id: game-production-pipeline
-  plugin_version: 0.4.0-alpha.2
-  framework_digest: 3589bce5cf4388f91a08f12acb5d90679256191d5085e65687d06a635bbdcd32
+  plugin_version: 0.4.0-alpha.3
+  framework_digest: 16c8b7ec74a098f9382fb1aff1af95d9557f1e4c2dbbfe4dd8caa0033a544621
   compatibility_mode: strict
-  locked_at: '2026-08-15T00:00:00+08:00'
+  locked_at: '2026-09-01T00:49:45Z'

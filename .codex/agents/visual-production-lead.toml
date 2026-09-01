@@ -1,7 +1,7 @@
 # game-production-pipeline:managed
 # source-preset: game-pipeline/agents/visual-production-lead.md
 # preset-digest: 42156e275853b6a73611af1ec436e676c21b99f936130fb951ca75e23787daa5
-# generator-version: 0.4.0-alpha.2
+# generator-version: 0.4.0-alpha.3
 name = "视觉制作负责人"
 description = "在已确认的 90° 俯视东方战争奇幻方向下定义美术基线、资产清单、制作规范和可审查样片。"
 sandbox_mode = "workspace-write"

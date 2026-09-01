@@ -1,7 +1,7 @@
 # game-production-pipeline:managed
 # source-preset: game-pipeline/agents/project-manager.md
 # preset-digest: 33b13d15eacf94fec9c32f034bb184e9b137315ecdb0caad9ef8fd5dadcff591
-# generator-version: 0.4.0-alpha.2
+# generator-version: 0.4.0-alpha.3
 name = "项目经理"
 description = "协调《雾疆：九路烽棋》的跨部门优先级、依赖、交接、风险和人工决策请求；不替代领域结论或人工闸门。"
 sandbox_mode = "workspace-write"
