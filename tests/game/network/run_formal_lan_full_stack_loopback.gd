@@ -70,8 +70,8 @@ func _run() -> void:
 	var client_match: Control = _client_app.get_node("ScreenHost/MatchScreen")
 	_check(str(server_match.get_player_view_snapshot().get("viewer_side", "")) == "red", "房主 MatchScreen 只绑定赤方 PlayerView")
 	_check(str(client_match.get_player_view_snapshot().get("viewer_side", "")) == "black", "客户端 MatchScreen 只绑定玄方 PlayerView")
-	_check(not (server_match.get_node("MatchHudV3/SafeMargin/MainRows/TopBand/FactionRight/MirrorButton") as Button).visible, "LAN 隐藏镜像视角按钮")
-	_check((server_match.get_node("MatchHudV3/SafeMargin/MainRows/TopBand/FactionLeft/ReturnButton") as Button).visible, "LAN 显示退出对局按钮")
+	_check(not (server_match.get_node("MatchHudV3/SafeMargin/MainRows/TopBand/FactionRight/Row/MirrorButton") as Button).visible, "LAN 隐藏镜像视角按钮")
+	_check((server_match.get_node("MatchHudV3/SafeMargin/MainRows/TopBand/FactionLeft/Row/ReturnButton") as Button).visible, "LAN 显示退出对局按钮")
 	_check(
 		not (server_match.get_node("TerminalDialog").get_node("%RestartButton") as BaseButton).visible,
 		"LAN 隐藏直接重赛按钮",
