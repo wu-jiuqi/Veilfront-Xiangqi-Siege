@@ -15,7 +15,7 @@ offset_left = -210.0
 offset_right = 210.0
 mouse_filter = 0
 theme = ExtResource("2_theme")
-theme_type_variation = &"OverlaySurface"
+theme_type_variation = &"CalloutSurface"
 script = ExtResource("1_script")
 
 [node name="Content" type="HBoxContainer" parent="."]
@@ -46,4 +46,3 @@ custom_minimum_size = Vector2(96, 48)
 layout_mode = 2
 size_flags_vertical = 4
 text = "知道了"
-

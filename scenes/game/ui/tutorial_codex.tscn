@@ -136,7 +136,7 @@ autowrap_mode = 2
 
 [node name="KeyPanel" type="PanelContainer" parent="Panel/Content/Body/TextScroll/Text"]
 layout_mode = 2
-theme_type_variation = &"PrimarySurface"
+theme_type_variation = &"CalloutSurface"
 
 [node name="Content" type="VBoxContainer" parent="Panel/Content/Body/TextScroll/Text/KeyPanel"]
 layout_mode = 2
@@ -175,7 +175,7 @@ theme_override_constants/line_spacing = 2
 
 [node name="PitfallPanel" type="PanelContainer" parent="Panel/Content/Body/TextScroll/Text"]
 layout_mode = 2
-theme_type_variation = &"DangerSurface"
+theme_type_variation = &"WarningSurface"
 
 [node name="Content" type="VBoxContainer" parent="Panel/Content/Body/TextScroll/Text/PitfallPanel"]
 layout_mode = 2

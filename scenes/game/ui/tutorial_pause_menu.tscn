@@ -40,10 +40,10 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="DialogCanvas" type="PanelContainer" parent="DialogCenter"]
-custom_minimum_size = Vector2(560, 460)
+custom_minimum_size = Vector2(560, 510)
 layout_mode = 2
 mouse_filter = 0
-theme_type_variation = &"OverlaySurface"
+theme_type_variation = &"PauseOverlaySurface"
 
 [node name="Content" type="VBoxContainer" parent="DialogCenter/DialogCanvas"]
 layout_mode = 2
@@ -123,4 +123,3 @@ horizontal_alignment = 1
 [connection signal="pressed" from="DialogCenter/DialogCanvas/Content/ActionColumn/RestartChapterButton" to="." method="_on_restart_pressed"]
 [connection signal="pressed" from="DialogCenter/DialogCanvas/Content/ActionColumn/CodexButton" to="." method="_on_codex_pressed"]
 [connection signal="pressed" from="DialogCenter/DialogCanvas/Content/ActionColumn/ExitTutorialButton" to="." method="_on_exit_pressed"]
-

@@ -135,7 +135,7 @@ autowrap_mode = 2
 
 [node name="CurrentSurface" type="PanelContainer" parent="ExpandedContent/Content"]
 layout_mode = 2
-theme_type_variation = &"PrimarySurface"
+theme_type_variation = &"CalloutSurface"
 
 [node name="CurrentContent" type="VBoxContainer" parent="ExpandedContent/Content/CurrentSurface"]
 layout_mode = 2
