@@ -270,9 +270,14 @@ theme_type_variation = &"BodyText"
 text = "选择关卡以查看战况说明。"
 autowrap_mode = 2
 
-[node name="ObjectivePanel" type="PanelContainer" parent="DesignCanvas/Page/Content/Body/DetailPanel/Column"]
+[node name="ObjectiveCaption" type="Label" parent="DesignCanvas/Page/Content/Body/DetailPanel/Column"]
 layout_mode = 2
-size_flags_vertical = 3
+theme_type_variation = &"SectionTitle"
+text = "本关军令"
+
+[node name="ObjectivePanel" type="PanelContainer" parent="DesignCanvas/Page/Content/Body/DetailPanel/Column"]
+custom_minimum_size = Vector2(0, 132)
+layout_mode = 2
 theme_type_variation = &"InsetSurface"
 
 [node name="DetailObjective" type="Label" parent="DesignCanvas/Page/Content/Body/DetailPanel/Column/ObjectivePanel"]
@@ -280,8 +285,12 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"BodyText"
 text = "关卡目标"
-vertical_alignment = 1
+vertical_alignment = 0
 autowrap_mode = 2
+
+[node name="DetailSpacer" type="Control" parent="DesignCanvas/Page/Content/Body/DetailPanel/Column"]
+layout_mode = 2
+size_flags_vertical = 3
 
 [node name="StatusLabel" type="Label" parent="DesignCanvas/Page/Content/Body/DetailPanel/Column"]
 unique_name_in_owner = true

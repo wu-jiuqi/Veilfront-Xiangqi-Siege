@@ -319,25 +319,25 @@ text = "战局规则"
 
 [node name="Rule1" type="Label" parent="SafeMargin/Page/Content/Body/RulesPanel/Column"]
 layout_mode = 2
-text = "▦  九路烽棋"
+text = "棋制  九路烽棋"
 
 [node name="Rule2" type="Label" parent="SafeMargin/Page/Content/Body/RulesPanel/Column"]
 layout_mode = 2
-text = "☁  标准迷雾"
+text = "迷雾  标准规则"
 
 [node name="RulesTurnClockValue" type="Label" parent="SafeMargin/Page/Content/Body/RulesPanel/Column"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "◷  回合计时以战局配置为准"
+text = "计时  以战局配置为准"
 autowrap_mode = 2
 
 [node name="Rule4" type="Label" parent="SafeMargin/Page/Content/Body/RulesPanel/Column"]
 layout_mode = 2
-text = "⚑  夺旗或斩将"
+text = "胜负  夺旗或斩将"
 
 [node name="Rule5" type="Label" parent="SafeMargin/Page/Content/Body/RulesPanel/Column"]
 layout_mode = 2
-text = "⌂  仅限局域网"
+text = "网络  仅限局域网"
 
 [node name="Spacer" type="Control" parent="SafeMargin/Page/Content/Body/RulesPanel/Column"]
 layout_mode = 2

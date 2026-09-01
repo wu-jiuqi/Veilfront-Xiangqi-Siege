@@ -1,8 +1,7 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/game/presentation/ui/match_terminal_dialog.gd" id="1_script"]
 [ext_resource type="Theme" path="res://resources/game/ui/themes/veilfront_ui_theme_v2.tres" id="2_theme"]
-[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_primary.tscn" id="3_primary"]
 [ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_secondary.tscn" id="4_secondary"]
 [ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_confirm.tscn" id="5_confirm"]
 
@@ -203,7 +202,7 @@ custom_minimum_size = Vector2(200, 52)
 layout_mode = 2
 text = "返回大厅"
 
-[node name="LevelSelectButton" parent="SafeMargin/Center/ResultPanel/Content/Actions" instance=ExtResource("3_primary")]
+[node name="LevelSelectButton" parent="SafeMargin/Center/ResultPanel/Content/Actions" instance=ExtResource("4_secondary")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 52)
 layout_mode = 2
