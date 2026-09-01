@@ -128,7 +128,8 @@ func get_state_snapshot() -> Dictionary:
 		"reset_available": _reset_available,
 		"collapsed": _collapsed,
 		"action_button_count": 2,
-		"background_texture_path": str((%Background as TextureRect).texture.resource_path),
+		"surface_system": "veilfront-ui-theme-v2",
+		"background_texture_path": "",
 	}
 
 

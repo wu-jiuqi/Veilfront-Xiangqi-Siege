@@ -2,8 +2,8 @@ extends PopupPanel
 
 signal marker_selected(cell: Vector2i, marker_type: String)
 
-const MENU_SIZE := Vector2i(512, 144)
-const POINT_GAP := 14.0
+const MENU_SIZE := Vector2i(520, 178)
+const POINT_GAP := 24.0
 const SCREEN_MARGIN := 8.0
 
 var _cell := Vector2i.ZERO

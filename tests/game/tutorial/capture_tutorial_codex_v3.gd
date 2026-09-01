@@ -29,8 +29,7 @@ func _capture() -> void:
 	RenderingServer.force_draw()
 	await process_frame
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://evidence/ui"))
-	var output_path := "res://evidence/ui/tutorial-codex-v3-p%02d-%dx%d.png" % [
-		page_index,
+	var output_path := "res://evidence/ui/ui-rebuild-tutorial-codex-%dx%d.png" % [
 		capture_size.x,
 		capture_size.y,
 	]

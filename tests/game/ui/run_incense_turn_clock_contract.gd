@@ -157,8 +157,8 @@ func _run() -> void:
 	root.add_child(drawer)
 	await process_frame
 	_expect(
-		drawer.get_node("Background").texture.resource_path == "res://assets/art/ui/terracotta_hud_v2/incense_assembly/piece_info_drawer_frame_v2.png",
-		"棋子信息展开栏没有使用正式边框资源"
+		drawer.get_node_or_null("DrawerBackground") is ColorRect,
+		"棋子信息展开栏没有使用统一的可伸缩背景"
 	)
 	_expect(not drawer.visible, "棋子信息展开栏默认没有隐藏")
 	drawer.show_piece({"id": "red-cannon", "piece_type": "cannon"}, true, false)

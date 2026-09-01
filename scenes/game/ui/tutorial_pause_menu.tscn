@@ -1,12 +1,10 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scripts/game/tutorial/tutorial_pause_menu.gd" id="1_script"]
-[ext_resource type="Theme" path="res://resources/game/ui/themes/terracotta_ui_theme.tres" id="2_theme"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/system_dialog/system_dialog_panel_v1.png" id="3_panel"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/system_dialog/system_dialog_button_primary_v1.png" id="4_primary"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/system_dialog/system_dialog_button_secondary_v1.png" id="5_secondary"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmptyButton"]
+[ext_resource type="Theme" path="res://resources/game/ui/themes/veilfront_ui_theme_v2.tres" id="2_theme"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_confirm.tscn" id="3_confirm"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_secondary.tscn" id="4_secondary"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_danger.tscn" id="5_danger"]
 
 [node name="TutorialPauseMenu" type="Control"]
 process_mode = 3
@@ -30,7 +28,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 0
-color = Color(0.008, 0.009, 0.01, 0.86)
+color = Color(0.005, 0.007, 0.006, 0.88)
 
 [node name="DialogCenter" type="CenterContainer" parent="."]
 layout_mode = 1
@@ -41,243 +39,88 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="DialogCanvas" type="Control" parent="DialogCenter"]
-custom_minimum_size = Vector2(780, 540)
+[node name="DialogCanvas" type="PanelContainer" parent="DialogCenter"]
+custom_minimum_size = Vector2(560, 460)
 layout_mode = 2
 mouse_filter = 0
+theme_type_variation = &"OverlaySurface"
 
-[node name="PanelArt" type="TextureRect" parent="DialogCenter/DialogCanvas"]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("3_panel")
-expand_mode = 1
-stretch_mode = 0
-
-[node name="Title" type="Label" parent="DialogCenter/DialogCanvas"]
-layout_mode = 0
-offset_left = 126.0
-offset_top = 92.0
-offset_right = 654.0
-offset_bottom = 130.0
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.96, 0.82, 0.55, 1)
-theme_override_colors/font_outline_color = Color(0.025, 0.02, 0.016, 0.96)
-theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 28
-text = "教学暂停"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="CloseButton" type="Button" parent="DialogCenter/DialogCanvas"]
-layout_mode = 0
-offset_left = 680.0
-offset_top = 78.0
-offset_right = 718.0
-offset_bottom = 114.0
-focus_mode = 2
-mouse_default_cursor_shape = 2
-theme_override_colors/font_color = Color(0.9, 0.82, 0.64, 1)
-theme_override_colors/font_hover_color = Color(1, 0.86, 0.56, 1)
-theme_override_colors/font_focus_color = Color(1, 0.86, 0.56, 1)
-theme_override_font_sizes/font_size = 22
-theme_override_styles/normal = SubResource("StyleBoxEmptyButton")
-theme_override_styles/hover = SubResource("StyleBoxEmptyButton")
-theme_override_styles/pressed = SubResource("StyleBoxEmptyButton")
-theme_override_styles/focus = SubResource("StyleBoxEmptyButton")
-text = "X"
-flat = true
-
-[node name="Subtitle" type="Label" parent="DialogCenter/DialogCanvas"]
-layout_mode = 0
-offset_left = 120.0
-offset_top = 132.0
-offset_right = 660.0
-offset_bottom = 162.0
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.76, 0.73, 0.66, 1)
-theme_override_colors/font_outline_color = Color(0.02, 0.018, 0.016, 0.9)
-theme_override_constants/outline_size = 1
-theme_override_font_sizes/font_size = 15
-text = "当前章节进度已保留 · ESC 继续"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="ActionColumn" type="VBoxContainer" parent="DialogCenter/DialogCanvas"]
-layout_mode = 0
-offset_left = 142.0
-offset_top = 164.0
-offset_right = 638.0
-offset_bottom = 504.0
+[node name="Content" type="VBoxContainer" parent="DialogCenter/DialogCanvas"]
+layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="ContinueSlot" type="Control" parent="DialogCenter/DialogCanvas/ActionColumn"]
-custom_minimum_size = Vector2(496, 72)
+[node name="Header" type="HBoxContainer" parent="DialogCenter/DialogCanvas/Content"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="DialogCenter/DialogCanvas/Content/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"ScreenTitle"
+text = "教学暂停"
+
+[node name="CloseButton" parent="DialogCenter/DialogCanvas/Content/Header" instance=ExtResource("4_secondary")]
+custom_minimum_size = Vector2(48, 44)
+layout_mode = 2
+theme_type_variation = &"CompactButton"
+text = "×"
+tooltip_text = "继续教学"
+
+[node name="Subtitle" type="Label" parent="DialogCenter/DialogCanvas/Content"]
+layout_mode = 2
+theme_type_variation = &"SecondaryText"
+text = "当前章节进度已保留 · 按 ESC 继续"
+
+[node name="Separator" type="HSeparator" parent="DialogCenter/DialogCanvas/Content"]
 layout_mode = 2
 
-[node name="ContinueFrame" type="TextureRect" parent="DialogCenter/DialogCanvas/ActionColumn/ContinueSlot"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("4_primary")
-expand_mode = 1
-stretch_mode = 0
+[node name="ActionColumn" type="VBoxContainer" parent="DialogCenter/DialogCanvas/Content"]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 1
+theme_override_constants/separation = 10
 
-[node name="ContinueButton" type="Button" parent="DialogCenter/DialogCanvas/ActionColumn/ContinueSlot"]
+[node name="ContinueButton" parent="DialogCenter/DialogCanvas/Content/ActionColumn" instance=ExtResource("3_confirm")]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-focus_mode = 2
-focus_neighbor_top = NodePath("../../ExitSlot/ExitTutorialButton")
-focus_neighbor_bottom = NodePath("../../RestartSlot/RestartChapterButton")
-mouse_default_cursor_shape = 2
-theme_override_colors/font_color = Color(1, 0.9, 0.62, 1)
-theme_override_colors/font_hover_color = Color(1, 0.96, 0.78, 1)
-theme_override_colors/font_focus_color = Color(1, 0.96, 0.78, 1)
-theme_override_colors/font_pressed_color = Color(0.78, 0.68, 0.46, 1)
-theme_override_font_sizes/font_size = 20
-theme_override_styles/normal = SubResource("StyleBoxEmptyButton")
-theme_override_styles/hover = SubResource("StyleBoxEmptyButton")
-theme_override_styles/pressed = SubResource("StyleBoxEmptyButton")
-theme_override_styles/focus = SubResource("StyleBoxEmptyButton")
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+focus_neighbor_top = NodePath("../ExitTutorialButton")
+focus_neighbor_bottom = NodePath("../RestartChapterButton")
 text = "继续教学"
-flat = true
 
-[node name="RestartSlot" type="Control" parent="DialogCenter/DialogCanvas/ActionColumn"]
-custom_minimum_size = Vector2(496, 72)
-layout_mode = 2
-
-[node name="RestartFrame" type="TextureRect" parent="DialogCenter/DialogCanvas/ActionColumn/RestartSlot"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("5_secondary")
-expand_mode = 1
-stretch_mode = 0
-
-[node name="RestartChapterButton" type="Button" parent="DialogCenter/DialogCanvas/ActionColumn/RestartSlot"]
+[node name="RestartChapterButton" parent="DialogCenter/DialogCanvas/Content/ActionColumn" instance=ExtResource("4_secondary")]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-focus_mode = 2
-focus_neighbor_top = NodePath("../../ContinueSlot/ContinueButton")
-focus_neighbor_bottom = NodePath("../../CodexSlot/CodexButton")
-mouse_default_cursor_shape = 2
-theme_override_colors/font_color = Color(0.86, 0.83, 0.75, 1)
-theme_override_colors/font_hover_color = Color(1, 0.91, 0.66, 1)
-theme_override_colors/font_focus_color = Color(1, 0.91, 0.66, 1)
-theme_override_colors/font_pressed_color = Color(0.72, 0.68, 0.58, 1)
-theme_override_font_sizes/font_size = 20
-theme_override_styles/normal = SubResource("StyleBoxEmptyButton")
-theme_override_styles/hover = SubResource("StyleBoxEmptyButton")
-theme_override_styles/pressed = SubResource("StyleBoxEmptyButton")
-theme_override_styles/focus = SubResource("StyleBoxEmptyButton")
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+focus_neighbor_top = NodePath("../ContinueButton")
+focus_neighbor_bottom = NodePath("../CodexButton")
 text = "重新开始本章"
-flat = true
 
-[node name="CodexSlot" type="Control" parent="DialogCenter/DialogCanvas/ActionColumn"]
-custom_minimum_size = Vector2(496, 72)
-layout_mode = 2
-
-[node name="CodexFrame" type="TextureRect" parent="DialogCenter/DialogCanvas/ActionColumn/CodexSlot"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("5_secondary")
-expand_mode = 1
-stretch_mode = 0
-
-[node name="CodexButton" type="Button" parent="DialogCenter/DialogCanvas/ActionColumn/CodexSlot"]
+[node name="CodexButton" parent="DialogCenter/DialogCanvas/Content/ActionColumn" instance=ExtResource("4_secondary")]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-focus_mode = 2
-focus_neighbor_top = NodePath("../../RestartSlot/RestartChapterButton")
-focus_neighbor_bottom = NodePath("../../ExitSlot/ExitTutorialButton")
-mouse_default_cursor_shape = 2
-theme_override_colors/font_color = Color(0.86, 0.83, 0.75, 1)
-theme_override_colors/font_hover_color = Color(1, 0.91, 0.66, 1)
-theme_override_colors/font_focus_color = Color(1, 0.91, 0.66, 1)
-theme_override_font_sizes/font_size = 20
-theme_override_styles/normal = SubResource("StyleBoxEmptyButton")
-theme_override_styles/hover = SubResource("StyleBoxEmptyButton")
-theme_override_styles/pressed = SubResource("StyleBoxEmptyButton")
-theme_override_styles/focus = SubResource("StyleBoxEmptyButton")
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+focus_neighbor_top = NodePath("../RestartChapterButton")
+focus_neighbor_bottom = NodePath("../ExitTutorialButton")
 text = "打开战阵图鉴"
-flat = true
 
-[node name="ExitSlot" type="Control" parent="DialogCenter/DialogCanvas/ActionColumn"]
-custom_minimum_size = Vector2(496, 72)
-layout_mode = 2
-
-[node name="ExitFrame" type="TextureRect" parent="DialogCenter/DialogCanvas/ActionColumn/ExitSlot"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("5_secondary")
-expand_mode = 1
-stretch_mode = 0
-self_modulate = Color(0.88, 0.58, 0.5, 1)
-
-[node name="ExitTutorialButton" type="Button" parent="DialogCenter/DialogCanvas/ActionColumn/ExitSlot"]
+[node name="ExitTutorialButton" parent="DialogCenter/DialogCanvas/Content/ActionColumn" instance=ExtResource("5_danger")]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-focus_mode = 2
-focus_neighbor_top = NodePath("../../CodexSlot/CodexButton")
-focus_neighbor_bottom = NodePath("../../ContinueSlot/ContinueButton")
-mouse_default_cursor_shape = 2
-theme_override_colors/font_color = Color(1, 0.82, 0.72, 1)
-theme_override_colors/font_hover_color = Color(1, 0.94, 0.72, 1)
-theme_override_colors/font_focus_color = Color(1, 0.94, 0.72, 1)
-theme_override_colors/font_pressed_color = Color(0.76, 0.58, 0.5, 1)
-theme_override_font_sizes/font_size = 20
-theme_override_styles/normal = SubResource("StyleBoxEmptyButton")
-theme_override_styles/hover = SubResource("StyleBoxEmptyButton")
-theme_override_styles/pressed = SubResource("StyleBoxEmptyButton")
-theme_override_styles/focus = SubResource("StyleBoxEmptyButton")
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+focus_neighbor_top = NodePath("../CodexButton")
+focus_neighbor_bottom = NodePath("../ContinueButton")
 text = "退出教学"
-flat = true
 
-[connection signal="pressed" from="DialogCenter/DialogCanvas/CloseButton" to="." method="_on_continue_pressed"]
-[connection signal="pressed" from="DialogCenter/DialogCanvas/ActionColumn/ContinueSlot/ContinueButton" to="." method="_on_continue_pressed"]
-[connection signal="pressed" from="DialogCenter/DialogCanvas/ActionColumn/RestartSlot/RestartChapterButton" to="." method="_on_restart_pressed"]
-[connection signal="pressed" from="DialogCenter/DialogCanvas/ActionColumn/CodexSlot/CodexButton" to="." method="_on_codex_pressed"]
-[connection signal="pressed" from="DialogCenter/DialogCanvas/ActionColumn/ExitSlot/ExitTutorialButton" to="." method="_on_exit_pressed"]
+[node name="FooterHint" type="Label" parent="DialogCenter/DialogCanvas/Content"]
+layout_mode = 2
+theme_type_variation = &"SecondaryText"
+text = "键盘方向键切换 · Enter 确认"
+horizontal_alignment = 1
+
+[connection signal="pressed" from="DialogCenter/DialogCanvas/Content/Header/CloseButton" to="." method="_on_continue_pressed"]
+[connection signal="pressed" from="DialogCenter/DialogCanvas/Content/ActionColumn/ContinueButton" to="." method="_on_continue_pressed"]
+[connection signal="pressed" from="DialogCenter/DialogCanvas/Content/ActionColumn/RestartChapterButton" to="." method="_on_restart_pressed"]
+[connection signal="pressed" from="DialogCenter/DialogCanvas/Content/ActionColumn/CodexButton" to="." method="_on_codex_pressed"]
+[connection signal="pressed" from="DialogCenter/DialogCanvas/Content/ActionColumn/ExitTutorialButton" to="." method="_on_exit_pressed"]
+

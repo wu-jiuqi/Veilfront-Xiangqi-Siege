@@ -1,10 +1,12 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/game/ui/turn_progress_incense.tscn" id="1_incense"]
+[ext_resource type="Theme" path="res://resources/game/ui/themes/veilfront_ui_theme_v2.tres" id="2_theme"]
 
 [node name="MatchHeader" type="PanelContainer"]
 custom_minimum_size = Vector2(0, 64)
-theme_type_variation = &"TurnStatusPanel"
+theme = ExtResource("2_theme")
+theme_type_variation = &"PrimarySurface"
 
 [node name="Content" type="HBoxContainer" parent="."]
 layout_mode = 2
@@ -15,20 +17,24 @@ visible = false
 unique_name_in_owner = true
 custom_minimum_size = Vector2(112, 44)
 layout_mode = 2
+theme_type_variation = &"SecondaryButton"
 text = "退出教学"
 
 [node name="Title" type="Label" parent="Content"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_type_variation = &"ScreenTitle"
 text = "《雾疆：九路烽棋》"
 
 [node name="TurnLabel" type="Label" parent="Content"]
 layout_mode = 2
+theme_type_variation = &"SectionTitle"
 text = "行动方：--"
 
 [node name="RoundLabel" type="Label" parent="Content"]
 visible = false
 layout_mode = 2
+theme_type_variation = &"NumericText"
 text = "回合：-- / 50"
 
 [node name="TurnProgressIncense" parent="Content" instance=ExtResource("1_incense")]
@@ -39,4 +45,5 @@ layout_mode = 2
 unique_name_in_owner = true
 custom_minimum_size = Vector2(148, 44)
 layout_mode = 2
+theme_type_variation = &"SecondaryButton"
 text = "切换黑方镜像"

@@ -1,46 +1,9 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/game/presentation/ui/level_guide_panel.gd" id="1_script"]
-[ext_resource type="Theme" path="res://resources/game/ui/themes/match_hud_v3_theme.tres" id="2_theme"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/level_guide_panel/level_guide_panel_v1.png" id="3_panel"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleButtonNormal"]
-
-[sub_resource type="StyleBoxFlat" id="StyleButtonHover"]
-bg_color = Color(0.72, 0.48, 0.18, 0.12)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.84, 0.65, 0.31, 0.78)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-
-[sub_resource type="StyleBoxFlat" id="StyleButtonPressed"]
-bg_color = Color(0.8, 0.55, 0.2, 0.22)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.96, 0.76, 0.37, 0.92)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-
-[sub_resource type="StyleBoxFlat" id="StyleButtonFocus"]
-bg_color = Color(0, 0, 0, 0)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.96, 0.76, 0.37, 0.92)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
+[ext_resource type="Theme" path="res://resources/game/ui/themes/veilfront_ui_theme_v2.tres" id="2_theme"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_secondary.tscn" id="3_secondary"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button.tscn" id="4_button"]
 
 [node name="LevelGuidePanel" type="Control"]
 custom_minimum_size = Vector2(376, 0)
@@ -50,11 +13,11 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 0
+mouse_filter = 1
 theme = ExtResource("2_theme")
 script = ExtResource("1_script")
 
-[node name="ExpandedContent" type="Control" parent="."]
+[node name="ExpandedContent" type="PanelContainer" parent="."]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -62,314 +25,199 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 0
+theme_type_variation = &"SecondarySurface"
 
-[node name="Background" type="TextureRect" parent="ExpandedContent"]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("3_panel")
-expand_mode = 1
+[node name="Content" type="VBoxContainer" parent="ExpandedContent"]
+layout_mode = 2
+theme_override_constants/separation = 8
 
-[node name="GuideTitle" type="Label" parent="ExpandedContent"]
+[node name="Header" type="HBoxContainer" parent="ExpandedContent/Content"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="GuideTitle" type="Label" parent="ExpandedContent/Content/Header"]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.105
-anchor_top = 0.035
-anchor_right = 0.755
-anchor_bottom = 0.116
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.94, 0.79, 0.5, 1)
-theme_override_colors/font_outline_color = Color(0.025, 0.02, 0.015, 1)
-theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 18
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"ScreenTitle"
 text = "关卡指引"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="CollapseButton" type="Button" parent="ExpandedContent"]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.792
-anchor_top = 0.037
-anchor_right = 0.925
-anchor_bottom = 0.116
-focus_mode = 2
-theme_override_colors/font_color = Color(0.9, 0.78, 0.52, 1)
-theme_override_font_sizes/font_size = 18
-theme_override_styles/normal = SubResource("StyleButtonNormal")
-theme_override_styles/hover = SubResource("StyleButtonHover")
-theme_override_styles/pressed = SubResource("StyleButtonPressed")
-theme_override_styles/focus = SubResource("StyleButtonFocus")
-text = "〉"
-
-[node name="GoalContent" type="VBoxContainer" parent="ExpandedContent"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.105
-anchor_top = 0.143
-anchor_right = 0.895
-anchor_bottom = 0.272
-mouse_filter = 2
-theme_override_constants/separation = 3
-
-[node name="Caption" type="Label" parent="ExpandedContent/GoalContent"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.9, 0.7, 0.34, 1)
-theme_override_font_sizes/font_size = 14
-text = "关卡目标"
-
-[node name="ObjectiveText" type="Label" parent="ExpandedContent/GoalContent"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 3
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.88, 0.84, 0.73, 1)
-theme_override_font_sizes/font_size = 16
-text = "田字封路：控制中央区域并完成协同行动。"
-vertical_alignment = 1
-autowrap_mode = 3
-clip_text = true
-
-[node name="StepsContent" type="Control" parent="ExpandedContent"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.09
-anchor_top = 0.289
-anchor_right = 0.91
-anchor_bottom = 0.596
-mouse_filter = 2
-
-[node name="Step1" type="HBoxContainer" parent="ExpandedContent/StepsContent"]
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 0.333333
-mouse_filter = 2
-
-[node name="Step1Status" type="Label" parent="ExpandedContent/StepsContent/Step1"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(51, 0)
-layout_mode = 2
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.56, 0.74, 0.43, 1)
-theme_override_font_sizes/font_size = 17
-text = "✓"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Step1Text" type="Label" parent="ExpandedContent/StepsContent/Step1"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.82, 0.8, 0.71, 1)
-theme_override_font_sizes/font_size = 14
-text = "移动兵至指定交点"
-vertical_alignment = 1
 text_overrun_behavior = 3
 
-[node name="Step2" type="HBoxContainer" parent="ExpandedContent/StepsContent"]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = 0.333333
-anchor_right = 1.0
-anchor_bottom = 0.666667
-mouse_filter = 2
-
-[node name="Step2Status" type="Label" parent="ExpandedContent/StepsContent/Step2"]
+[node name="CollapseButton" parent="ExpandedContent/Content/Header" instance=ExtResource("3_secondary")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(51, 0)
+custom_minimum_size = Vector2(72, 44)
 layout_mode = 2
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.95, 0.67, 0.27, 1)
-theme_override_font_sizes/font_size = 16
-text = "◆"
-horizontal_alignment = 1
-vertical_alignment = 1
+theme_type_variation = &"CompactButton"
+text = "收起"
+tooltip_text = "收起关卡指引"
 
-[node name="Step2Text" type="Label" parent="ExpandedContent/StepsContent/Step2"]
-unique_name_in_owner = true
+[node name="ObjectiveSurface" type="PanelContainer" parent="ExpandedContent/Content"]
 layout_mode = 2
-size_flags_horizontal = 3
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.96, 0.78, 0.42, 1)
-theme_override_font_sizes/font_size = 15
-text = "形成田字封路"
-vertical_alignment = 1
-text_overrun_behavior = 3
+theme_type_variation = &"InsetSurface"
 
-[node name="Step3" type="HBoxContainer" parent="ExpandedContent/StepsContent"]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = 0.666667
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
-
-[node name="Step3Status" type="Label" parent="ExpandedContent/StepsContent/Step3"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(51, 0)
+[node name="GoalContent" type="VBoxContainer" parent="ExpandedContent/Content/ObjectiveSurface"]
 layout_mode = 2
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.48, 0.49, 0.45, 1)
-theme_override_font_sizes/font_size = 18
-text = "·"
-horizontal_alignment = 1
-vertical_alignment = 1
+theme_override_constants/separation = 4
 
-[node name="Step3Text" type="Label" parent="ExpandedContent/StepsContent/Step3"]
-unique_name_in_owner = true
+[node name="Caption" type="Label" parent="ExpandedContent/Content/ObjectiveSurface/GoalContent"]
 layout_mode = 2
-size_flags_horizontal = 3
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.82, 0.8, 0.71, 1)
-theme_override_font_sizes/font_size = 12
-text = "确认行动完成关卡"
-vertical_alignment = 1
-text_overrun_behavior = 3
+theme_type_variation = &"SecondaryText"
+text = "本章目标"
 
-[node name="CurrentContent" type="VBoxContainer" parent="ExpandedContent"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.105
-anchor_top = 0.622
-anchor_right = 0.895
-anchor_bottom = 0.718
-mouse_filter = 2
-theme_override_constants/separation = 2
-
-[node name="Caption" type="Label" parent="ExpandedContent/CurrentContent"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.9, 0.7, 0.34, 1)
-theme_override_font_sizes/font_size = 14
-text = "当前操作"
-
-[node name="CurrentOperationText" type="Label" parent="ExpandedContent/CurrentContent"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 3
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.9, 0.86, 0.75, 1)
-theme_override_font_sizes/font_size = 15
-text = "选择兵并移动至高亮交点"
-vertical_alignment = 1
-autowrap_mode = 3
-clip_text = true
-
-[node name="ReasonFoldable" type="FoldableContainer" parent="ExpandedContent"]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.105
-anchor_top = 0.725
-anchor_right = 0.895
-anchor_bottom = 0.815
-mouse_filter = 0
-title = "为什么会这样"
-folded = true
-
-[node name="ReasonText" type="Label" parent="ExpandedContent/ReasonFoldable"]
+[node name="ObjectiveText" type="Label" parent="ExpandedContent/Content/ObjectiveSurface/GoalContent"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.78, 0.77, 0.68, 1)
-theme_override_font_sizes/font_size = 14
-text = "完成军令后，这里会解释公开规则结果。"
+text = "完成当前关卡目标"
 autowrap_mode = 3
 clip_text = true
 
-[node name="HintContent" type="VBoxContainer" parent="ExpandedContent"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.105
-anchor_top = 0.822
-anchor_right = 0.895
-anchor_bottom = 0.9
-mouse_filter = 2
-theme_override_constants/separation = 2
-
-[node name="Caption" type="Label" parent="ExpandedContent/HintContent"]
+[node name="StepsContent" type="VBoxContainer" parent="ExpandedContent/Content"]
 layout_mode = 2
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.72, 0.67, 0.55, 1)
-theme_override_font_sizes/font_size = 14
-text = "关卡提示"
+theme_override_constants/separation = 6
 
-[node name="HintText" type="Label" parent="ExpandedContent/HintContent"]
+[node name="Step1" type="HBoxContainer" parent="ExpandedContent/Content/StepsContent"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Step1Status" type="Label" parent="ExpandedContent/Content/StepsContent/Step1"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(24, 0)
+layout_mode = 2
+theme_type_variation = &"NumericText"
+text = "◆"
+horizontal_alignment = 1
+
+[node name="Step1Text" type="Label" parent="ExpandedContent/Content/StepsContent/Step1"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "第一步"
+autowrap_mode = 2
+
+[node name="Step2" type="HBoxContainer" parent="ExpandedContent/Content/StepsContent"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Step2Status" type="Label" parent="ExpandedContent/Content/StepsContent/Step2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(24, 0)
+layout_mode = 2
+theme_type_variation = &"NumericText"
+text = "·"
+horizontal_alignment = 1
+
+[node name="Step2Text" type="Label" parent="ExpandedContent/Content/StepsContent/Step2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "第二步"
+autowrap_mode = 2
+
+[node name="Step3" type="HBoxContainer" parent="ExpandedContent/Content/StepsContent"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Step3Status" type="Label" parent="ExpandedContent/Content/StepsContent/Step3"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(24, 0)
+layout_mode = 2
+theme_type_variation = &"NumericText"
+text = "·"
+horizontal_alignment = 1
+
+[node name="Step3Text" type="Label" parent="ExpandedContent/Content/StepsContent/Step3"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "第三步"
+autowrap_mode = 2
+
+[node name="CurrentSurface" type="PanelContainer" parent="ExpandedContent/Content"]
+layout_mode = 2
+theme_type_variation = &"PrimarySurface"
+
+[node name="CurrentContent" type="VBoxContainer" parent="ExpandedContent/Content/CurrentSurface"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Caption" type="Label" parent="ExpandedContent/Content/CurrentSurface/CurrentContent"]
+layout_mode = 2
+theme_type_variation = &"SecondaryText"
+text = "当前军令"
+
+[node name="CurrentOperationText" type="Label" parent="ExpandedContent/Content/CurrentSurface/CurrentContent"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 2
+text = "等待玩家操作"
+autowrap_mode = 3
+clip_text = true
+
+[node name="ReasonFoldable" type="FoldableContainer" parent="ExpandedContent/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+title = "为何如此"
+folded = true
+
+[node name="ReasonText" type="Label" parent="ExpandedContent/Content/ReasonFoldable"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+theme_type_variation = &"SecondaryText"
+text = "完成军令后，这里会解释公开规则结果。"
+autowrap_mode = 2
+
+[node name="HintSurface" type="PanelContainer" parent="ExpandedContent/Content"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"InsetSurface"
+
+[node name="HintContent" type="VBoxContainer" parent="ExpandedContent/Content/HintSurface"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Caption" type="Label" parent="ExpandedContent/Content/HintSurface/HintContent"]
+layout_mode = 2
+theme_type_variation = &"SecondaryText"
+text = "操作提示"
+
+[node name="HintText" type="Label" parent="ExpandedContent/Content/HintSurface/HintContent"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.7, 0.72, 0.66, 1)
-theme_override_font_sizes/font_size = 14
+theme_type_variation = &"SecondaryText"
 text = "点击「显示提示」查看本步提示"
 vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="BottomActions" type="HBoxContainer" parent="ExpandedContent"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.09
-anchor_top = 0.912
-anchor_right = 0.91
-anchor_bottom = 0.982
+[node name="BottomActions" type="HBoxContainer" parent="ExpandedContent/Content"]
+layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="HintButton" type="Button" parent="ExpandedContent/BottomActions"]
+[node name="HintButton" parent="ExpandedContent/Content/BottomActions" instance=ExtResource("4_button")]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 size_flags_horizontal = 3
-focus_mode = 2
-theme_override_colors/font_color = Color(0.88, 0.82, 0.68, 1)
-theme_override_colors/font_disabled_color = Color(0.58, 0.57, 0.51, 1)
-theme_override_font_sizes/font_size = 14
-theme_override_styles/normal = SubResource("StyleButtonNormal")
-theme_override_styles/hover = SubResource("StyleButtonHover")
-theme_override_styles/pressed = SubResource("StyleButtonPressed")
-theme_override_styles/disabled = SubResource("StyleButtonNormal")
-theme_override_styles/focus = SubResource("StyleButtonFocus")
 text = "显示提示"
 
-[node name="ResetButton" type="Button" parent="ExpandedContent/BottomActions"]
+[node name="ResetButton" parent="ExpandedContent/Content/BottomActions" instance=ExtResource("3_secondary")]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 size_flags_horizontal = 3
-focus_mode = 2
-theme_override_colors/font_color = Color(0.88, 0.82, 0.68, 1)
-theme_override_font_sizes/font_size = 14
-theme_override_styles/normal = SubResource("StyleButtonNormal")
-theme_override_styles/hover = SubResource("StyleButtonHover")
-theme_override_styles/pressed = SubResource("StyleButtonPressed")
-theme_override_styles/focus = SubResource("StyleButtonFocus")
 text = "重置步骤"
 
-[node name="CollapsedButton" type="Button" parent="."]
+[node name="CollapsedButton" parent="." instance=ExtResource("3_secondary")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 1.0
-anchor_top = 0.035
+anchors_preset = 15
 anchor_right = 1.0
-anchor_bottom = 0.145
-offset_left = -42.0
-offset_right = -2.0
-focus_mode = 2
-theme_override_colors/font_color = Color(0.92, 0.78, 0.5, 1)
-theme_override_font_sizes/font_size = 18
-theme_override_styles/normal = SubResource("StyleButtonHover")
-theme_override_styles/hover = SubResource("StyleButtonPressed")
-theme_override_styles/pressed = SubResource("StyleButtonPressed")
-theme_override_styles/focus = SubResource("StyleButtonFocus")
-text = "〈"
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"CompactButton"
+text = "军令\n▶"
+tooltip_text = "展开关卡指引"

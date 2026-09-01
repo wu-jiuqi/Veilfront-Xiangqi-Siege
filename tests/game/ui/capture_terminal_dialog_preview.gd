@@ -1,7 +1,7 @@
 extends SceneTree
 
 const MATCH_SCREEN_SCENE: PackedScene = preload("res://scenes/game/match/match_screen.tscn")
-const OUTPUT_PATH := "res://evidence/ui/formal-terminal-dialog-v2-1280x720.png"
+const OUTPUT_PATH := "res://evidence/ui/ui-rebuild-terminal-dialog-1280x720.png"
 
 
 func _init() -> void:

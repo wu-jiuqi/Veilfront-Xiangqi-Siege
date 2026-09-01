@@ -88,6 +88,7 @@ vertical_alignment = 1
 autowrap_mode = 2
 
 [node name="ButtonRow" type="HBoxContainer" parent="DialogCenter/DialogPanel/Content"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
 alignment = 2

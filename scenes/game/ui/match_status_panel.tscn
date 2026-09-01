@@ -1,7 +1,11 @@
-[gd_scene format=3]
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Theme" path="res://resources/game/ui/themes/veilfront_ui_theme_v2.tres" id="1_theme"]
 
 [node name="MatchStatusPanel" type="PanelContainer"]
 custom_minimum_size = Vector2(280, 0)
+theme = ExtResource("1_theme")
+theme_type_variation = &"SecondarySurface"
 
 [node name="Content" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -9,8 +13,8 @@ theme_override_constants/separation = 10
 
 [node name="Heading" type="Label" parent="Content"]
 layout_mode = 2
+theme_type_variation = &"SectionTitle"
 text = "战局信息（仅玩家可见内容）"
-theme_override_font_sizes/font_size = 19
 
 [node name="SelectionStatus" type="Label" parent="Content"]
 unique_name_in_owner = true
@@ -47,31 +51,35 @@ columns = 2
 unique_name_in_owner = true
 custom_minimum_size = Vector2(98, 44)
 layout_mode = 2
+theme_type_variation = &"SecondaryButton"
 text = "普通移动"
 
 [node name="BombardButton" type="Button" parent="Content/ActionMode"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(98, 44)
 layout_mode = 2
+theme_type_variation = &"SecondaryButton"
 text = "区域炮击"
 
 [node name="ResurrectButton" type="Button" parent="Content/ActionMode"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(98, 44)
 layout_mode = 2
+theme_type_variation = &"SecondaryButton"
 text = "献祭复活"
 
 [node name="PassButton" type="Button" parent="Content/ActionMode"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(98, 44)
 layout_mode = 2
+theme_type_variation = &"DangerButton"
 text = "主动跳过"
 
 [node name="MessageValue" type="Label" parent="Content"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.82, 0.38, 1)
+theme_type_variation = &"SecondaryText"
 text = "提示：鼠标滚轮或 W/S、↑/↓ 上下滚动棋盘；Ctrl+滚轮缩放。左键选择，右键取消、添加或清除标注。"
 autowrap_mode = 2
 

@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3]
 
-[ext_resource type="Theme" path="res://resources/game/ui/themes/terracotta_ui_theme.tres" id="1_theme"]
+[ext_resource type="Theme" path="res://resources/game/ui/themes/veilfront_ui_theme_v2.tres" id="1_theme"]
 [ext_resource type="PackedScene" path="res://scenes/game/match/match_screen.tscn" id="2_match"]
 [ext_resource type="Script" path="res://scripts/game/application/application_host.gd" id="3_host"]
 [ext_resource type="PackedScene" path="res://scenes/game/ui/terracotta_modal_dialog.tscn" id="4_dialog"]
@@ -23,7 +23,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_type_variation = &"ScreenBackground"
 
 [node name="ApplicationHost" type="Node" parent="."]
 script = ExtResource("3_host")

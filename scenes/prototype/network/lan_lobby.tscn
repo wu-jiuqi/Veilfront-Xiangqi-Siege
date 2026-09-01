@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/prototype/network/lan_lobby.gd" id="1_lobby"]
 [ext_resource type="PackedScene" path="res://scenes/prototype/network/lan_network_session.tscn" id="2_network"]
-[ext_resource type="Theme" path="res://resources/game/ui/themes/terracotta_ui_theme.tres" id="3_theme"]
+[ext_resource type="Theme" path="res://resources/game/ui/themes/veilfront_ui_theme_v2.tres" id="3_theme"]
 [ext_resource type="PackedScene" path="res://scenes/prototype/gate1_logic_lab.tscn" id="4_board"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/lan_lobby_board_backdrop_v1.png" id="5_backdrop"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/header_frame.png" id="6_header"]

@@ -1,7 +1,7 @@
 extends SceneTree
 
 const LAB_SCENE: PackedScene = preload("res://scenes/dev/ui/level_gameplay_hud_lab.tscn")
-const SCREENSHOT_PATH := "res://evidence/ui/level-gameplay-hud-lab-1280x720.png"
+const SCREENSHOT_PATH := "res://evidence/ui/ui-rebuild-level-guide-1280x720.png"
 
 var _failures: Array[String] = []
 
@@ -11,7 +11,6 @@ func _init() -> void:
 
 
 func _run() -> void:
-	_check_panel_asset()
 	var viewport := SubViewport.new()
 	viewport.size = Vector2i(1280, 720)
 	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
@@ -48,9 +47,9 @@ func _run() -> void:
 		"当前操作没有启用中文智能换行与边界裁切"
 	)
 	_expect(
-		str(guide.get("background_texture_path", "")) \
-			== "res://assets/art/ui/level_guide_panel/level_guide_panel_v1.png",
-		"关卡指引没有使用已审批的抠图资产"
+		str(guide.get("surface_system", "")) == "veilfront-ui-theme-v2" \
+		and str(guide.get("background_texture_path", "")).is_empty(),
+		"关卡指引没有使用统一的可伸缩主题表面"
 	)
 
 	if DisplayServer.get_name() != "headless":
@@ -87,24 +86,6 @@ func _run() -> void:
 	viewport.queue_free()
 	await process_frame
 	_finish()
-
-
-func _check_panel_asset() -> void:
-	var image := Image.load_from_file(ProjectSettings.globalize_path(
-		"res://assets/art/ui/level_guide_panel/level_guide_panel_v1.png"
-	))
-	_expect(image != null and not image.is_empty(), "无法读取关卡指引透明资产")
-	if image == null or image.is_empty():
-		return
-	for point: Vector2i in [
-		Vector2i.ZERO,
-		Vector2i(image.get_width() - 1, 0),
-		Vector2i(0, image.get_height() - 1),
-		Vector2i(image.get_width() - 1, image.get_height() - 1),
-	]:
-		_expect(image.get_pixelv(point).a <= 0.02, "关卡指引抠图四角不透明")
-	var center := image.get_pixelv(Vector2i(image.get_width() / 2, image.get_height() / 2))
-	_expect(center.a >= 0.9, "关卡指引实体中心被误抠")
 
 
 func _rects_match(snapshot: Dictionary) -> bool:

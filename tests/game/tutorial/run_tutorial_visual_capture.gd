@@ -49,11 +49,11 @@ func _capture() -> void:
 	for _frame: int in 4:
 		await process_frame
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://evidence/ui"))
-	var output_path := "res://evidence/ui/formal-level-%s-hud-1280x720.png" % level_id.to_lower()
+	var output_path := "res://evidence/ui/ui-rebuild-tutorial-%s-hud-1280x720.png" % level_id.to_lower()
 	if capture_state == "completion":
-		output_path = "res://evidence/ui/formal-level-%s-completion-buttons-1280x720.png" % level_id.to_lower()
+		output_path = "res://evidence/ui/ui-rebuild-tutorial-%s-completion-1280x720.png" % level_id.to_lower()
 	elif capture_state == "pause":
-		output_path = "res://evidence/ui/formal-level-%s-pause-menu-1280x720.png" % level_id.to_lower()
+		output_path = "res://evidence/ui/ui-rebuild-tutorial-%s-pause-1280x720.png" % level_id.to_lower()
 	var error: Error = root.get_texture().get_image().save_png(
 		ProjectSettings.globalize_path(output_path)
 	)

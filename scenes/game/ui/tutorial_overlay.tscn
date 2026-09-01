@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/game/tutorial/tutorial_overlay.gd" id="1_script"]
+[ext_resource type="Theme" path="res://resources/game/ui/themes/veilfront_ui_theme_v2.tres" id="2_theme"]
 
 [node name="TutorialOverlay" type="Control"]
 z_index = 20
@@ -14,6 +15,7 @@ anchor_bottom = 0.95
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+theme = ExtResource("2_theme")
 
 [node name="InteriorMask" type="ColorRect" parent="."]
 layout_mode = 1
@@ -134,24 +136,28 @@ layout_mode = 2
 visible = false
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
+theme_type_variation = &"SecondaryButton"
 theme_override_font_sizes/font_size = 16
 
 [node name="Option1" type="Button" parent="TutorialFoldable/Margin/Content/Options"]
 visible = false
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
+theme_type_variation = &"SecondaryButton"
 theme_override_font_sizes/font_size = 16
 
 [node name="Option2" type="Button" parent="TutorialFoldable/Margin/Content/Options"]
 visible = false
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
+theme_type_variation = &"SecondaryButton"
 theme_override_font_sizes/font_size = 16
 
 [node name="ContinueButton" type="Button" parent="TutorialFoldable/Margin/Content"]
 visible = false
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
+theme_type_variation = &"ConfirmButton"
 theme_override_font_sizes/font_size = 16
 text = "继续"
 
@@ -163,6 +169,7 @@ theme_override_constants/separation = 8
 [node name="NextChapterButton" type="Button" parent="TutorialFoldable/Margin/Content/CompletionActions"]
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
+theme_type_variation = &"ConfirmButton"
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 16
 text = "进入下一章"
@@ -170,6 +177,7 @@ text = "进入下一章"
 [node name="StayButton" type="Button" parent="TutorialFoldable/Margin/Content/CompletionActions"]
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
+theme_type_variation = &"SecondaryButton"
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 16
 text = "留在本章"
@@ -190,6 +198,7 @@ size_flags_vertical = 3
 visible = false
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
+theme_type_variation = &"PrimaryButton"
 theme_override_font_sizes/font_size = 16
 text = "显示操作提示"
 
@@ -197,6 +206,7 @@ text = "显示操作提示"
 visible = false
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
+theme_type_variation = &"SecondaryButton"
 theme_override_font_sizes/font_size = 16
 text = "重置本步骤"
 
@@ -207,17 +217,20 @@ columns = 1
 [node name="RetryButton" type="Button" parent="TutorialFoldable/Margin/Content/Actions"]
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
+theme_type_variation = &"DangerButton"
 theme_override_font_sizes/font_size = 16
 text = "重置章节"
 
 [node name="SkipButton" type="Button" parent="TutorialFoldable/Margin/Content/Actions"]
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
+theme_type_variation = &"SecondaryButton"
 theme_override_font_sizes/font_size = 16
 text = "跳过章节"
 
 [node name="BackToLevelsButton" type="Button" parent="TutorialFoldable/Margin/Content/Actions"]
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
+theme_type_variation = &"SecondaryButton"
 theme_override_font_sizes/font_size = 16
 text = "返回目录"

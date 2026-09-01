@@ -67,6 +67,7 @@ func collapse_guide_for_test(collapsed: bool) -> void:
 
 func _initialize_preview() -> void:
 	_online_match_screen.call("set_session_navigation_enabled", false)
+	_online_match_screen.call("set_level_guide_layout_enabled", true)
 	_online_match_screen.call("render_player_view", _build_player_view())
 	_online_match_screen.call("handle_board_point", SAMPLE_CELL)
 	var hud := _online_match_screen.get_node("MatchHudV3") as Control

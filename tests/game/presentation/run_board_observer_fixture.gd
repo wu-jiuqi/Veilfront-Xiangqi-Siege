@@ -58,13 +58,10 @@ func _run() -> void:
 	_expect(second_right_click == "open_marker_menu", "idle right click must open marker menu")
 	var marker_menu: PopupPanel = match_screen.find_child("MarkerMenu", true, false)
 	var initial_menu_snapshot: Dictionary = marker_menu.get_context_snapshot()
-	var marker_frame: TextureRect = marker_menu.find_child("Frame", true, false) as TextureRect
 	var circle_button: Button = marker_menu.find_child("CircleButton", true, false) as Button
 	_expect(
-		marker_frame != null \
-		and marker_frame.texture != null \
-		and marker_frame.texture.resource_path.ends_with("marker_menu_frame_v1.png"),
-		"marker menu did not use the generated frame artwork"
+		marker_menu.theme != null and marker_menu.theme.resource_path.ends_with("veilfront_ui_theme_v2.tres"),
+		"marker menu did not use the unified scalable panel theme"
 	)
 	_expect(
 		circle_button != null and circle_button.icon is AtlasTexture,

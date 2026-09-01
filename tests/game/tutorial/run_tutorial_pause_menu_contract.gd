@@ -4,13 +4,6 @@ const PAUSE_MENU_SCENE: PackedScene = preload(
 	"res://scenes/game/ui/tutorial_pause_menu.tscn"
 )
 const MATCH_HUD_SCENE: PackedScene = preload("res://scenes/game/ui/match_hud_v2.tscn")
-const PANEL_TEXTURE_PATH: String = \
-	"res://assets/art/ui/system_dialog/system_dialog_panel_v1.png"
-const PRIMARY_TEXTURE_PATH: String = \
-	"res://assets/art/ui/system_dialog/system_dialog_button_primary_v1.png"
-const SECONDARY_TEXTURE_PATH: String = \
-	"res://assets/art/ui/system_dialog/system_dialog_button_secondary_v1.png"
-
 var _failures: Array[String] = []
 
 
@@ -31,30 +24,22 @@ func _run() -> void:
 	_expect(not menu.visible and not menu.is_open(), "pause menu must start closed")
 	for button: Button in [continue_button, restart_button, codex_button, exit_button]:
 		_expect(button.focus_mode == Control.FOCUS_ALL, "%s must accept keyboard focus" % button.name)
-		_expect(button.flat, "%s must leave rendering to the preset texture frame" % button.name)
+		_expect(button.custom_minimum_size.y >= 44.0, "%s must keep a 44px target" % button.name)
+		_expect(button.get_theme_stylebox("normal") is StyleBoxFlat, "%s must use a scalable theme surface" % button.name)
 	_expect(
-		(menu.get_node("%PanelArt") as TextureRect).texture.resource_path == PANEL_TEXTURE_PATH,
-		"pause menu does not reuse the online system dialog panel"
+		menu.theme != null and menu.theme.resource_path.ends_with("veilfront_ui_theme_v2.tres"),
+		"pause menu does not use the unified V2 theme"
 	)
 	_expect(
-		(menu.get_node("DialogCenter/DialogCanvas/ActionColumn/ContinueSlot/ContinueFrame") as TextureRect).texture.resource_path == PRIMARY_TEXTURE_PATH,
-		"continue action does not reuse the system dialog primary button"
+		continue_button.theme_type_variation == &"ConfirmButton",
+		"continue action is not the unified confirm role"
 	)
-	for frame_path: String in [
-		"DialogCenter/DialogCanvas/ActionColumn/RestartSlot/RestartFrame",
-		"DialogCenter/DialogCanvas/ActionColumn/CodexSlot/CodexFrame",
-		"DialogCenter/DialogCanvas/ActionColumn/ExitSlot/ExitFrame",
-	]:
-		_expect(
-			(menu.get_node(frame_path) as TextureRect).texture.resource_path == SECONDARY_TEXTURE_PATH,
-			"%s does not reuse the system dialog secondary button" % frame_path
-		)
 	_expect(
-		not FileAccess.get_file_as_string("res://scenes/game/ui/tutorial_pause_menu.tscn").contains(
-			"terracotta_pause_menu/tutorial_pause_button_v1.png"
-		),
-		"pause menu still references the retired standalone theme button asset"
+		exit_button.theme_type_variation == &"DangerButton",
+		"exit action is not the unified danger role"
 	)
+	var scene_text := FileAccess.get_file_as_string("res://scenes/game/ui/tutorial_pause_menu.tscn")
+	_expect(not scene_text.contains(".png"), "pause menu still uses layout-defining PNG assets")
 
 	var escape_event := InputEventAction.new()
 	escape_event.action = &"ui_cancel"

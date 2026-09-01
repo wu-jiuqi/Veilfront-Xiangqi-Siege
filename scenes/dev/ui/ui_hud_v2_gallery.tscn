@@ -18,7 +18,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_type_variation = &"HUDPanel"
+theme_type_variation = &"PrimarySurface"
 script = ExtResource("1_script")
 
 [node name="Margin" type="MarginContainer" parent="."]
@@ -71,7 +71,7 @@ theme_override_constants/separation = 16
 
 [node name="TurnSection" type="PanelContainer" parent="Margin/Page/Scroll/Gallery"]
 layout_mode = 2
-theme_type_variation = &"CardPanel"
+theme_type_variation = &"InsetSurface"
 
 [node name="Content" type="VBoxContainer" parent="Margin/Page/Scroll/Gallery/TurnSection"]
 layout_mode = 2
@@ -93,7 +93,7 @@ mouse_filter = 2
 
 [node name="FactionSection" type="PanelContainer" parent="Margin/Page/Scroll/Gallery"]
 layout_mode = 2
-theme_type_variation = &"CardPanel"
+theme_type_variation = &"InsetSurface"
 
 [node name="Content" type="VBoxContainer" parent="Margin/Page/Scroll/Gallery/FactionSection"]
 layout_mode = 2
@@ -138,7 +138,7 @@ theme_override_constants/v_separation = 12
 [node name="UnitCard" type="PanelContainer" parent="Margin/Page/Scroll/Gallery/PanelGrid"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_type_variation = &"CardPanel"
+theme_type_variation = &"InsetSurface"
 
 [node name="Content" type="VBoxContainer" parent="Margin/Page/Scroll/Gallery/PanelGrid/UnitCard"]
 layout_mode = 2
@@ -161,7 +161,7 @@ mouse_filter = 2
 [node name="ObjectivePanel" type="PanelContainer" parent="Margin/Page/Scroll/Gallery/PanelGrid"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_type_variation = &"CardPanel"
+theme_type_variation = &"InsetSurface"
 
 [node name="Content" type="VBoxContainer" parent="Margin/Page/Scroll/Gallery/PanelGrid/ObjectivePanel"]
 layout_mode = 2
@@ -184,7 +184,7 @@ mouse_filter = 2
 [node name="MinimapPanel" type="PanelContainer" parent="Margin/Page/Scroll/Gallery/PanelGrid"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_type_variation = &"CardPanel"
+theme_type_variation = &"InsetSurface"
 
 [node name="Content" type="VBoxContainer" parent="Margin/Page/Scroll/Gallery/PanelGrid/MinimapPanel"]
 layout_mode = 2
@@ -242,7 +242,7 @@ mouse_filter = 2
 
 [node name="ActionSection" type="PanelContainer" parent="Margin/Page/Scroll/Gallery"]
 layout_mode = 2
-theme_type_variation = &"CardPanel"
+theme_type_variation = &"InsetSurface"
 
 [node name="Content" type="VBoxContainer" parent="Margin/Page/Scroll/Gallery/ActionSection"]
 layout_mode = 2
@@ -269,7 +269,7 @@ theme_override_constants/separation = 12
 [node name="ButtonAtlasPanel" type="PanelContainer" parent="Margin/Page/Scroll/Gallery/AtlasRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_type_variation = &"CardPanel"
+theme_type_variation = &"InsetSurface"
 
 [node name="Content" type="VBoxContainer" parent="Margin/Page/Scroll/Gallery/AtlasRow/ButtonAtlasPanel"]
 layout_mode = 2
@@ -292,7 +292,7 @@ mouse_filter = 2
 [node name="DecorAtlasPanel" type="PanelContainer" parent="Margin/Page/Scroll/Gallery/AtlasRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_type_variation = &"CardPanel"
+theme_type_variation = &"InsetSurface"
 
 [node name="Content" type="VBoxContainer" parent="Margin/Page/Scroll/Gallery/AtlasRow/DecorAtlasPanel"]
 layout_mode = 2
@@ -314,7 +314,7 @@ mouse_filter = 2
 
 [node name="NineSliceSection" type="PanelContainer" parent="Margin/Page/Scroll/Gallery"]
 layout_mode = 2
-theme_type_variation = &"CardPanel"
+theme_type_variation = &"InsetSurface"
 
 [node name="Content" type="VBoxContainer" parent="Margin/Page/Scroll/Gallery/NineSliceSection"]
 layout_mode = 2

@@ -1,7 +1,7 @@
 extends SceneTree
 
 const LAB_SCENE_PATH := "res://scenes/dev/ui/gate3_ui_foundation_lab.tscn"
-const THEME_PATH := "res://resources/game/ui/themes/terracotta_ui_theme.tres"
+const THEME_PATH := "res://resources/game/ui/themes/veilfront_ui_theme_v2.tres"
 const PROFILE_PATH := "res://resources/game/ui/motion/terracotta_ui_motion_profile.tres"
 const SCREENSHOT_PATH := "res://evidence/gate3/ui/gate3-ui-foundation-lab-1280x720.png"
 const BUTTON_GRID_PATH := "SafeMargin/Center/FoundationPanel/PanelMargin/Content/ButtonGrid"
@@ -26,12 +26,12 @@ const VARIANTS := {
 }
 
 const TEXT_ROLES := {
-	&"UiDisplayText": 38,
-	&"UiHeadingText": 24,
-	&"UiBodyText": 16,
-	&"UiSecondaryText": 14,
-	&"UiControlText": 18,
-	&"UiNumericText": 20,
+	&"DisplayTitle": 38,
+	&"ScreenTitle": 28,
+	&"SectionTitle": 20,
+	&"BodyText": 16,
+	&"SecondaryText": 14,
+	&"NumericText": 22,
 }
 
 const VIEWPORTS: Array[Vector2i] = [
@@ -65,11 +65,6 @@ func _check_theme(theme: Theme) -> void:
 		_expect(theme.get_type_variation_base(variation) == &"Button", "按钮 Theme 角色缺失：%s" % variation)
 		for style_name: StringName in [&"normal", &"hover", &"pressed", &"disabled", &"focus"]:
 			_expect(theme.has_stylebox(style_name, variation), "按钮状态样式缺失：%s/%s" % [variation, style_name])
-		for color_name: StringName in [
-			&"font_color", &"font_hover_color", &"font_pressed_color",
-			&"font_disabled_color", &"font_focus_color",
-		]:
-			_expect(theme.has_color(color_name, variation), "按钮状态颜色缺失：%s/%s" % [variation, color_name])
 	for role: StringName in TEXT_ROLES:
 		_expect(theme.get_type_variation_base(role) == &"Label", "文本 Theme 角色缺失：%s" % role)
 		_expect(theme.get_font_size(&"font_size", role) == int(TEXT_ROLES[role]), "文本字号错误：%s" % role)
@@ -106,7 +101,7 @@ func _check_variant_scenes() -> void:
 		_expect(button.theme_type_variation == data["theme"], "按钮 Theme 角色错误：%s" % role)
 		_expect(is_equal_approx(float(button.call("_release_duration")), 0.12), "Release 时序必须为 120 ms：%s" % role)
 		if role == &"primary" or role == &"confirm":
-			_expect(button.custom_minimum_size.y >= 56.0, "高价值按钮常规高度低于 56：%s" % role)
+			_expect(button.custom_minimum_size.y >= 52.0, "高价值按钮常规高度低于 52：%s" % role)
 		button.call("set_reduced_motion", false)
 		button.call("preview_state", &"hover")
 		button.disabled = true

@@ -1,6 +1,6 @@
 [gd_scene load_steps=12 format=3]
 
-[ext_resource type="Theme" path="res://resources/game/ui/themes/terracotta_ui_theme.tres" id="1_theme"]
+[ext_resource type="Theme" path="res://resources/game/ui/themes/veilfront_ui_theme_v2.tres" id="1_theme"]
 [ext_resource type="Script" path="res://scripts/dev/ui/ui_button_motion_lab.gd" id="2_script"]
 [ext_resource type="Resource" path="res://resources/game/ui/motion/terracotta_ui_motion_profile.tres" id="3_profile"]
 [ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button.tscn" id="4_button"]
@@ -31,7 +31,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_type_variation = &"ScreenBackground"
 
 [node name="SafeMargin" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -67,7 +66,7 @@ theme_override_constants/separation = 18
 [node name="ControlPanel" type="PanelContainer" parent="SafeMargin/Page/Body"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
-theme_type_variation = &"SettingsPanel"
+theme_type_variation = &"SecondarySurface"
 
 [node name="Margin" type="MarginContainer" parent="SafeMargin/Page/Body/ControlPanel"]
 layout_mode = 2
@@ -126,7 +125,7 @@ autowrap_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_type_variation = &"HUDPanel"
+theme_type_variation = &"PrimarySurface"
 
 [node name="Margin" type="MarginContainer" parent="SafeMargin/Page/Body/DemoPanel"]
 layout_mode = 2
@@ -174,13 +173,13 @@ theme_type_variation = &"DangerButton"
 layout_mode = 2
 text = "设置"
 icon = ExtResource("7_settings")
-theme_type_variation = &"IconButton"
+theme_type_variation = &"CompactButton"
 
 [node name="QuietButton" parent="SafeMargin/Page/Body/DemoPanel/Margin/Content/ButtonGrid" instance=ExtResource("4_button")]
 layout_mode = 2
 text = "查看帮助"
 icon = ExtResource("9_help")
-theme_type_variation = &"QuietButton"
+theme_type_variation = &"GhostButton"
 
 [node name="DisabledButton" parent="SafeMargin/Page/Body/DemoPanel/Margin/Content/ButtonGrid" instance=ExtResource("4_button")]
 layout_mode = 2
@@ -196,31 +195,31 @@ theme_override_constants/separation = 8
 custom_minimum_size = Vector2(128, 54)
 layout_mode = 2
 text = "战况"
-theme_type_variation = &"TabButton"
+theme_type_variation = &"SecondaryButton"
 
 [node name="UnitsTab" parent="SafeMargin/Page/Body/DemoPanel/Margin/Content/TabRow" instance=ExtResource("4_button")]
 custom_minimum_size = Vector2(128, 54)
 layout_mode = 2
 text = "部队"
-theme_type_variation = &"TabButton"
+theme_type_variation = &"SecondaryButton"
 
 [node name="OrdersTab" parent="SafeMargin/Page/Body/DemoPanel/Margin/Content/TabRow" instance=ExtResource("4_button")]
 custom_minimum_size = Vector2(128, 54)
 layout_mode = 2
 text = "军令"
-theme_type_variation = &"TabButton"
+theme_type_variation = &"SecondaryButton"
 
 [node name="TabIndicator" type="Panel" parent="SafeMargin/Page/Body/DemoPanel/Margin/Content"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 5)
 layout_mode = 2
-theme_type_variation = &"FocusFrame"
+theme_type_variation = &"PrimarySurface"
 
 [node name="FeedbackTarget" type="PanelContainer" parent="SafeMargin/Page/Body/DemoPanel/Margin/Content"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
-theme_type_variation = &"ResultPanel"
+theme_type_variation = &"DangerSurface"
 
 [node name="Label" type="Label" parent="SafeMargin/Page/Body/DemoPanel/Margin/Content/FeedbackTarget"]
 layout_mode = 2

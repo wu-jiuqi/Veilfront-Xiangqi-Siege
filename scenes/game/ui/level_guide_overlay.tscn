@@ -1,86 +1,11 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scripts/game/tutorial/level_guide_overlay.gd" id="1_script"]
 [ext_resource type="PackedScene" path="res://scenes/game/ui/level_guide_panel.tscn" id="2_guide"]
-[ext_resource type="Theme" path="res://resources/game/ui/themes/match_hud_v3_theme.tres" id="3_theme"]
-
-[sub_resource type="StyleBoxFlat" id="StyleDecisionPanel"]
-bg_color = Color(0.025, 0.025, 0.022, 0.97)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.66, 0.49, 0.27, 0.94)
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
-shadow_color = Color(0, 0, 0, 0.72)
-shadow_size = 8
-
-[sub_resource type="StyleBoxFlat" id="StyleDecisionButton"]
-bg_color = Color(0.1, 0.085, 0.06, 0.98)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.7, 0.52, 0.28, 0.9)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-
-[sub_resource type="StyleBoxFlat" id="StyleDecisionButtonHover"]
-bg_color = Color(0.15, 0.12, 0.075, 0.98)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.88, 0.68, 0.34, 1)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-
-[sub_resource type="StyleBoxFlat" id="StyleDecisionButtonPressed"]
-bg_color = Color(0.065, 0.055, 0.04, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.94, 0.7, 0.3, 1)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-
-[sub_resource type="StyleBoxFlat" id="StyleDecisionButtonDisabled"]
-bg_color = Color(0.045, 0.042, 0.036, 0.82)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.28, 0.25, 0.2, 0.72)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-
-[sub_resource type="StyleBoxFlat" id="StyleDecisionButtonFocus"]
-bg_color = Color(0, 0, 0, 0)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.94, 0.72, 0.36, 0.96)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-expand_margin_left = 3.0
-expand_margin_top = 3.0
-expand_margin_right = 3.0
-expand_margin_bottom = 3.0
+[ext_resource type="Theme" path="res://resources/game/ui/themes/veilfront_ui_theme_v2.tres" id="3_theme"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_secondary.tscn" id="4_secondary"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_confirm.tscn" id="5_confirm"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_danger.tscn" id="6_danger"]
 
 [node name="LevelGuideOverlay" type="Control"]
 layout_mode = 3
@@ -107,21 +32,21 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 0.0
+offset_bottom = -8.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_constants/margin_left = 6
-theme_override_constants/margin_top = 6
-theme_override_constants/margin_right = 6
-theme_override_constants/margin_bottom = 6
 
 [node name="MainRows" type="VBoxContainer" parent="LevelGuideLayer/SafeMargin"]
 layout_mode = 2
 mouse_filter = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 8
 
 [node name="TopSpacer" type="Control" parent="LevelGuideLayer/SafeMargin/MainRows"]
-custom_minimum_size = Vector2(0, 92)
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
 mouse_filter = 2
 
@@ -129,10 +54,10 @@ mouse_filter = 2
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 8
 
 [node name="LeftRailSpacer" type="Control" parent="LevelGuideLayer/SafeMargin/MainRows/BodyBand"]
-custom_minimum_size = Vector2(252, 0)
+custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
 mouse_filter = 2
 
@@ -158,214 +83,111 @@ mouse_filter = 2
 [node name="DecisionPanel" type="PanelContainer" parent="DecisionLayer"]
 unique_name_in_owner = true
 visible = false
+custom_minimum_size = Vector2(460, 0)
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.31
-anchor_top = 0.27
-anchor_right = 0.69
-anchor_bottom = 0.73
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -230.0
+offset_top = -210.0
+offset_right = 230.0
+offset_bottom = 210.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 0
-theme_override_styles/panel = SubResource("StyleDecisionPanel")
+theme_type_variation = &"OverlaySurface"
 
-[node name="Margin" type="MarginContainer" parent="DecisionLayer/DecisionPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 22
-theme_override_constants/margin_top = 18
-theme_override_constants/margin_right = 22
-theme_override_constants/margin_bottom = 18
-
-[node name="Content" type="VBoxContainer" parent="DecisionLayer/DecisionPanel/Margin"]
+[node name="Content" type="VBoxContainer" parent="DecisionLayer/DecisionPanel"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="DecisionTitle" type="Label" parent="DecisionLayer/DecisionPanel/Margin/Content"]
+[node name="DecisionTitle" type="Label" parent="DecisionLayer/DecisionPanel/Content"]
 unique_name_in_owner = true
 layout_mode = 2
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.94, 0.76, 0.42, 1)
-theme_override_font_sizes/font_size = 20
+theme_type_variation = &"ScreenTitle"
 text = "规则确认"
 horizontal_alignment = 1
-vertical_alignment = 1
 
-[node name="DecisionBody" type="Label" parent="DecisionLayer/DecisionPanel/Margin/Content"]
+[node name="DecisionBody" type="Label" parent="DecisionLayer/DecisionPanel/Content"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 54)
 layout_mode = 2
 size_flags_vertical = 3
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.86, 0.83, 0.74, 1)
-theme_override_font_sizes/font_size = 16
 text = "请选择正确答案。"
 horizontal_alignment = 1
 vertical_alignment = 1
-autowrap_mode = 3
-clip_text = true
+autowrap_mode = 2
 
-[node name="Options" type="VBoxContainer" parent="DecisionLayer/DecisionPanel/Margin/Content"]
+[node name="Options" type="VBoxContainer" parent="DecisionLayer/DecisionPanel/Content"]
 layout_mode = 2
-theme_override_constants/separation = 7
+theme_override_constants/separation = 8
 
-[node name="Option0" type="Button" parent="DecisionLayer/DecisionPanel/Margin/Content/Options"]
+[node name="Option0" parent="DecisionLayer/DecisionPanel/Content/Options" instance=ExtResource("4_secondary")]
 unique_name_in_owner = true
 visible = false
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
-focus_mode = 2
-theme_override_font_sizes/font_size = 16
-theme_override_colors/font_color = Color(0.9, 0.84, 0.7, 1)
-theme_override_colors/font_hover_color = Color(1, 0.91, 0.66, 1)
-theme_override_colors/font_pressed_color = Color(1, 0.84, 0.48, 1)
-theme_override_colors/font_focus_color = Color(1, 0.91, 0.66, 1)
-theme_override_colors/font_disabled_color = Color(0.46, 0.44, 0.39, 1)
-theme_override_styles/normal = SubResource("StyleDecisionButton")
-theme_override_styles/hover = SubResource("StyleDecisionButtonHover")
-theme_override_styles/pressed = SubResource("StyleDecisionButtonPressed")
-theme_override_styles/disabled = SubResource("StyleDecisionButtonDisabled")
-theme_override_styles/focus = SubResource("StyleDecisionButtonFocus")
 text = "选项一"
 
-[node name="Option1" type="Button" parent="DecisionLayer/DecisionPanel/Margin/Content/Options"]
+[node name="Option1" parent="DecisionLayer/DecisionPanel/Content/Options" instance=ExtResource("4_secondary")]
 unique_name_in_owner = true
 visible = false
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
-focus_mode = 2
-theme_override_font_sizes/font_size = 16
-theme_override_colors/font_color = Color(0.9, 0.84, 0.7, 1)
-theme_override_colors/font_hover_color = Color(1, 0.91, 0.66, 1)
-theme_override_colors/font_pressed_color = Color(1, 0.84, 0.48, 1)
-theme_override_colors/font_focus_color = Color(1, 0.91, 0.66, 1)
-theme_override_colors/font_disabled_color = Color(0.46, 0.44, 0.39, 1)
-theme_override_styles/normal = SubResource("StyleDecisionButton")
-theme_override_styles/hover = SubResource("StyleDecisionButtonHover")
-theme_override_styles/pressed = SubResource("StyleDecisionButtonPressed")
-theme_override_styles/disabled = SubResource("StyleDecisionButtonDisabled")
-theme_override_styles/focus = SubResource("StyleDecisionButtonFocus")
 text = "选项二"
 
-[node name="Option2" type="Button" parent="DecisionLayer/DecisionPanel/Margin/Content/Options"]
+[node name="Option2" parent="DecisionLayer/DecisionPanel/Content/Options" instance=ExtResource("4_secondary")]
 unique_name_in_owner = true
 visible = false
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
-focus_mode = 2
-theme_override_font_sizes/font_size = 16
-theme_override_colors/font_color = Color(0.9, 0.84, 0.7, 1)
-theme_override_colors/font_hover_color = Color(1, 0.91, 0.66, 1)
-theme_override_colors/font_pressed_color = Color(1, 0.84, 0.48, 1)
-theme_override_colors/font_focus_color = Color(1, 0.91, 0.66, 1)
-theme_override_colors/font_disabled_color = Color(0.46, 0.44, 0.39, 1)
-theme_override_styles/normal = SubResource("StyleDecisionButton")
-theme_override_styles/hover = SubResource("StyleDecisionButtonHover")
-theme_override_styles/pressed = SubResource("StyleDecisionButtonPressed")
-theme_override_styles/disabled = SubResource("StyleDecisionButtonDisabled")
-theme_override_styles/focus = SubResource("StyleDecisionButtonFocus")
 text = "选项三"
 
-[node name="ContinueButton" type="Button" parent="DecisionLayer/DecisionPanel/Margin/Content"]
+[node name="ContinueButton" parent="DecisionLayer/DecisionPanel/Content" instance=ExtResource("5_confirm")]
 unique_name_in_owner = true
 visible = false
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
-focus_mode = 2
-theme_override_font_sizes/font_size = 16
-theme_override_colors/font_color = Color(0.9, 0.84, 0.7, 1)
-theme_override_colors/font_hover_color = Color(1, 0.91, 0.66, 1)
-theme_override_colors/font_pressed_color = Color(1, 0.84, 0.48, 1)
-theme_override_colors/font_focus_color = Color(1, 0.91, 0.66, 1)
-theme_override_colors/font_disabled_color = Color(0.46, 0.44, 0.39, 1)
-theme_override_styles/normal = SubResource("StyleDecisionButton")
-theme_override_styles/hover = SubResource("StyleDecisionButtonHover")
-theme_override_styles/pressed = SubResource("StyleDecisionButtonPressed")
-theme_override_styles/disabled = SubResource("StyleDecisionButtonDisabled")
-theme_override_styles/focus = SubResource("StyleDecisionButtonFocus")
 text = "继续"
 
-[node name="CompletionActions" type="HBoxContainer" parent="DecisionLayer/DecisionPanel/Margin/Content"]
+[node name="CompletionActions" type="HBoxContainer" parent="DecisionLayer/DecisionPanel/Content"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 8
 
-[node name="NextChapterButton" type="Button" parent="DecisionLayer/DecisionPanel/Margin/Content/CompletionActions"]
+[node name="NextChapterButton" parent="DecisionLayer/DecisionPanel/Content/CompletionActions" instance=ExtResource("5_confirm")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 size_flags_horizontal = 3
-focus_mode = 2
-theme_override_font_sizes/font_size = 16
-theme_override_colors/font_color = Color(0.9, 0.84, 0.7, 1)
-theme_override_colors/font_hover_color = Color(1, 0.91, 0.66, 1)
-theme_override_colors/font_pressed_color = Color(1, 0.84, 0.48, 1)
-theme_override_colors/font_focus_color = Color(1, 0.91, 0.66, 1)
-theme_override_colors/font_disabled_color = Color(0.46, 0.44, 0.39, 1)
-theme_override_styles/normal = SubResource("StyleDecisionButton")
-theme_override_styles/hover = SubResource("StyleDecisionButtonHover")
-theme_override_styles/pressed = SubResource("StyleDecisionButtonPressed")
-theme_override_styles/disabled = SubResource("StyleDecisionButtonDisabled")
-theme_override_styles/focus = SubResource("StyleDecisionButtonFocus")
 text = "进入下一章"
 
-[node name="StayButton" type="Button" parent="DecisionLayer/DecisionPanel/Margin/Content/CompletionActions"]
+[node name="StayButton" parent="DecisionLayer/DecisionPanel/Content/CompletionActions" instance=ExtResource("4_secondary")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 size_flags_horizontal = 3
-focus_mode = 2
-theme_override_font_sizes/font_size = 16
-theme_override_colors/font_color = Color(0.9, 0.84, 0.7, 1)
-theme_override_colors/font_hover_color = Color(1, 0.91, 0.66, 1)
-theme_override_colors/font_pressed_color = Color(1, 0.84, 0.48, 1)
-theme_override_colors/font_focus_color = Color(1, 0.91, 0.66, 1)
-theme_override_colors/font_disabled_color = Color(0.46, 0.44, 0.39, 1)
-theme_override_styles/normal = SubResource("StyleDecisionButton")
-theme_override_styles/hover = SubResource("StyleDecisionButtonHover")
-theme_override_styles/pressed = SubResource("StyleDecisionButtonPressed")
-theme_override_styles/disabled = SubResource("StyleDecisionButtonDisabled")
-theme_override_styles/focus = SubResource("StyleDecisionButtonFocus")
 text = "留在本章"
 
-[node name="FailureActions" type="HBoxContainer" parent="DecisionLayer/DecisionPanel/Margin/Content"]
+[node name="FailureActions" type="HBoxContainer" parent="DecisionLayer/DecisionPanel/Content"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 8
 
-[node name="RetryButton" type="Button" parent="DecisionLayer/DecisionPanel/Margin/Content/FailureActions"]
+[node name="RetryButton" parent="DecisionLayer/DecisionPanel/Content/FailureActions" instance=ExtResource("6_danger")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 size_flags_horizontal = 3
-focus_mode = 2
-theme_override_font_sizes/font_size = 16
-theme_override_colors/font_color = Color(0.9, 0.84, 0.7, 1)
-theme_override_colors/font_hover_color = Color(1, 0.91, 0.66, 1)
-theme_override_colors/font_pressed_color = Color(1, 0.84, 0.48, 1)
-theme_override_colors/font_focus_color = Color(1, 0.91, 0.66, 1)
-theme_override_colors/font_disabled_color = Color(0.46, 0.44, 0.39, 1)
-theme_override_styles/normal = SubResource("StyleDecisionButton")
-theme_override_styles/hover = SubResource("StyleDecisionButtonHover")
-theme_override_styles/pressed = SubResource("StyleDecisionButtonPressed")
-theme_override_styles/disabled = SubResource("StyleDecisionButtonDisabled")
-theme_override_styles/focus = SubResource("StyleDecisionButtonFocus")
 text = "重置章节"
 
-[node name="BackToLevelsButton" type="Button" parent="DecisionLayer/DecisionPanel/Margin/Content/FailureActions"]
+[node name="BackToLevelsButton" parent="DecisionLayer/DecisionPanel/Content/FailureActions" instance=ExtResource("4_secondary")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 size_flags_horizontal = 3
-focus_mode = 2
-theme_override_font_sizes/font_size = 16
-theme_override_colors/font_color = Color(0.9, 0.84, 0.7, 1)
-theme_override_colors/font_hover_color = Color(1, 0.91, 0.66, 1)
-theme_override_colors/font_pressed_color = Color(1, 0.84, 0.48, 1)
-theme_override_colors/font_focus_color = Color(1, 0.91, 0.66, 1)
-theme_override_colors/font_disabled_color = Color(0.46, 0.44, 0.39, 1)
-theme_override_styles/normal = SubResource("StyleDecisionButton")
-theme_override_styles/hover = SubResource("StyleDecisionButtonHover")
-theme_override_styles/pressed = SubResource("StyleDecisionButtonPressed")
-theme_override_styles/disabled = SubResource("StyleDecisionButtonDisabled")
-theme_override_styles/focus = SubResource("StyleDecisionButtonFocus")
 text = "返回目录"

@@ -43,6 +43,8 @@ func _run() -> void:
 		var center_rect: Rect2 = snapshot.get("center_column_rect", Rect2())
 		var guide_rect: Rect2 = snapshot.get("tutorial_rect", Rect2())
 		var rail_rect: Rect2 = snapshot.get("objective_rect", Rect2())
+		if not _rect_approximately_equal(guide_rect, rail_rect):
+			print("TUTORIAL_LAYOUT_DIAGNOSTIC resolution=%s guide=%s rail=%s" % [resolution, guide_rect, rail_rect])
 		_expect(_rect_inside(guide_rect, resolution), "%s level guide exceeds the screen" % resolution)
 		_expect(_rect_approximately_equal(guide_rect, rail_rect), "%s level guide does not cover the reserved right rail" % resolution)
 		_expect(not center_rect.intersects(guide_rect), "%s center column expands beneath the level guide" % resolution)
@@ -116,14 +118,14 @@ func _check_decision_button_styles(overlay: Control) -> void:
 		_expect(button != null, "level decision button is missing: %s" % button_name)
 		if button == null:
 			continue
+		_expect(
+			button.theme_type_variation in [&"SecondaryButton", &"ConfirmButton", &"DangerButton"],
+			"%s does not use a unified workflow button role" % button_name
+		)
 		for style_name: StringName in [&"normal", &"hover", &"pressed", &"disabled", &"focus"]:
 			_expect(
-				button.has_theme_stylebox_override(style_name),
-				"%s still relies on the global Button skin for %s" % [button_name, style_name]
-			)
-			_expect(
 				button.get_theme_stylebox(style_name) is StyleBoxFlat,
-				"%s resolved a non-local textured Button style for %s" % [button_name, style_name]
+				"%s resolved a non-scalable Button style for %s" % [button_name, style_name]
 			)
 
 

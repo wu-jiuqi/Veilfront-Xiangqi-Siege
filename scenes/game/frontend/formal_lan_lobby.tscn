@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://scripts/game/frontend/formal_lan_lobby.gd" id="1_script"]
 [ext_resource type="Theme" path="res://resources/game/ui/themes/veilfront_ui_theme_v2.tres" id="2_theme"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_primary.tscn" id="7_primary"]
 [ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_secondary.tscn" id="8_secondary"]
 [ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_danger.tscn" id="9_danger"]
+[ext_resource type="PackedScene" path="res://scenes/game/audio/frontend_audio_feedback.tscn" id="10_audio"]
 
 [node name="FormalLanLobby" type="Control"]
 layout_mode = 3
@@ -19,6 +20,9 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_theme")
 script = ExtResource("1_script")
+
+[node name="FrontendAudioFeedback" parent="." instance=ExtResource("10_audio")]
+unique_name_in_owner = true
 
 [node name="Background" type="TextureRect" parent="."]
 layout_mode = 1

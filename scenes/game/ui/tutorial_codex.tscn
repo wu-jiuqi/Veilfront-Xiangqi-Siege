@@ -1,57 +1,9 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/game/tutorial/tutorial_codex.gd" id="1_script"]
-
-[sub_resource type="StyleBoxFlat" id="CodexPanel"]
-bg_color = Color(0.025, 0.022, 0.017, 0.985)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.66, 0.48, 0.25, 0.95)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-
-[sub_resource type="StyleBoxFlat" id="ImagePanel"]
-bg_color = Color(0.008, 0.009, 0.008, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.32, 0.25, 0.16, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-
-[sub_resource type="StyleBoxFlat" id="KeyPanel"]
-bg_color = Color(0.105, 0.075, 0.035, 0.86)
-border_width_left = 3
-border_color = Color(0.88, 0.63, 0.25, 0.95)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-
-[sub_resource type="StyleBoxFlat" id="StepsPanel"]
-bg_color = Color(0.045, 0.06, 0.065, 0.9)
-border_width_left = 3
-border_color = Color(0.32, 0.58, 0.62, 0.95)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-
-[sub_resource type="StyleBoxFlat" id="PitfallPanel"]
-bg_color = Color(0.095, 0.04, 0.035, 0.88)
-border_width_left = 3
-border_color = Color(0.75, 0.25, 0.18, 0.95)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
+[ext_resource type="Theme" path="res://resources/game/ui/themes/veilfront_ui_theme_v2.tres" id="2_theme"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_secondary.tscn" id="3_secondary"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button.tscn" id="4_button"]
 
 [node name="TutorialCodex" type="Control"]
 process_mode = 3
@@ -63,6 +15,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 0
+theme = ExtResource("2_theme")
 script = ExtResource("1_script")
 
 [node name="Backdrop" type="ColorRect" parent="."]
@@ -73,217 +26,188 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 0
-color = Color(0.004, 0.005, 0.005, 0.92)
+color = Color(0.004, 0.006, 0.005, 0.94)
 
 [node name="Panel" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.03
-anchor_top = 0.035
-anchor_right = 0.97
-anchor_bottom = 0.965
+anchor_left = 0.025
+anchor_top = 0.04
+anchor_right = 0.975
+anchor_bottom = 0.96
 clip_contents = true
-theme_override_styles/panel = SubResource("CodexPanel")
+theme_type_variation = &"OverlaySurface"
 
-[node name="Margin" type="MarginContainer" parent="Panel"]
-layout_mode = 2
-theme_override_constants/margin_left = 18
-theme_override_constants/margin_top = 14
-theme_override_constants/margin_right = 18
-theme_override_constants/margin_bottom = 14
-
-[node name="Content" type="VBoxContainer" parent="Panel/Margin"]
+[node name="Content" type="VBoxContainer" parent="Panel"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Header" type="HBoxContainer" parent="Panel/Margin/Content"]
+[node name="Header" type="HBoxContainer" parent="Panel/Content"]
 layout_mode = 2
+theme_override_constants/separation = 10
 
-[node name="PageLabel" type="Label" parent="Panel/Margin/Content/Header"]
-unique_name_in_owner = true
+[node name="HeaderCopy" type="VBoxContainer" parent="Panel/Content/Header"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.92, 0.76, 0.46, 1)
-theme_override_font_sizes/font_size = 20
-text = "战阵图鉴 · 01 / 18"
-clip_text = true
+theme_override_constants/separation = 2
 
-[node name="CloseButton" type="Button" parent="Panel/Margin/Content/Header"]
+[node name="Eyebrow" type="Label" parent="Panel/Content/Header/HeaderCopy"]
+layout_mode = 2
+theme_type_variation = &"SecondaryText"
+text = "规则知识库"
+
+[node name="PageLabel" type="Label" parent="Panel/Content/Header/HeaderCopy"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"ScreenTitle"
+text = "战阵图鉴 · 01 / 18"
+text_overrun_behavior = 3
+
+[node name="CloseButton" parent="Panel/Content/Header" instance=ExtResource("3_secondary")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(88, 44)
 layout_mode = 2
+theme_type_variation = &"CompactButton"
 text = "关闭"
 
-[node name="Body" type="HBoxContainer" parent="Panel/Margin/Content"]
+[node name="Separator" type="HSeparator" parent="Panel/Content"]
+layout_mode = 2
+
+[node name="Body" type="HBoxContainer" parent="Panel/Content"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/separation = 18
+theme_override_constants/separation = 14
 
-[node name="VisualColumn" type="VBoxContainer" parent="Panel/Margin/Content/Body"]
-custom_minimum_size = Vector2(390, 0)
+[node name="VisualColumn" type="VBoxContainer" parent="Panel/Content/Body"]
+custom_minimum_size = Vector2(350, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 8
 
-[node name="ImagePanel" type="PanelContainer" parent="Panel/Margin/Content/Body/VisualColumn"]
+[node name="ImagePanel" type="PanelContainer" parent="Panel/Content/Body/VisualColumn"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_styles/panel = SubResource("ImagePanel")
+theme_type_variation = &"InsetSurface"
 
-[node name="PageImage" type="TextureRect" parent="Panel/Margin/Content/Body/VisualColumn/ImagePanel"]
+[node name="PageImage" type="TextureRect" parent="Panel/Content/Body/VisualColumn/ImagePanel"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(360, 230)
+custom_minimum_size = Vector2(320, 200)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 expand_mode = 1
 stretch_mode = 5
 
-[node name="VisualCaption" type="Label" parent="Panel/Margin/Content/Body/VisualColumn"]
+[node name="VisualCaption" type="Label" parent="Panel/Content/Body/VisualColumn"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.66, 0.64, 0.58, 1)
-theme_override_font_sizes/font_size = 14
+theme_type_variation = &"SecondaryText"
 text = "看图重点：图像只承担一个清晰的规则记忆点。"
-autowrap_mode = 3
+autowrap_mode = 2
 vertical_alignment = 1
 
-[node name="TextScroll" type="ScrollContainer" parent="Panel/Margin/Content/Body"]
-custom_minimum_size = Vector2(330, 0)
+[node name="TextScroll" type="ScrollContainer" parent="Panel/Content/Body"]
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="Text" type="VBoxContainer" parent="Panel/Margin/Content/Body/TextScroll"]
+[node name="Text" type="VBoxContainer" parent="Panel/Content/Body/TextScroll"]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/separation = 9
+theme_override_constants/separation = 8
 
-[node name="PageCategory" type="Label" parent="Panel/Margin/Content/Body/TextScroll/Text"]
+[node name="PageCategory" type="Label" parent="Panel/Content/Body/TextScroll/Text"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.47, 0.68, 0.7, 1)
-theme_override_font_sizes/font_size = 14
+theme_type_variation = &"SecondaryText"
 text = "基础 · 战场"
 
-[node name="PageTitle" type="Label" parent="Panel/Margin/Content/Body/TextScroll/Text"]
+[node name="PageTitle" type="Label" parent="Panel/Content/Body/TextScroll/Text"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 38)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.96, 0.82, 0.55, 1)
-theme_override_font_sizes/font_size = 24
+theme_type_variation = &"ScreenTitle"
 text = "棋盘与一个完整轮"
-autowrap_mode = 3
-vertical_alignment = 1
+autowrap_mode = 2
 
-[node name="KeyPanel" type="PanelContainer" parent="Panel/Margin/Content/Body/TextScroll/Text"]
+[node name="KeyPanel" type="PanelContainer" parent="Panel/Content/Body/TextScroll/Text"]
 layout_mode = 2
-theme_override_styles/panel = SubResource("KeyPanel")
+theme_type_variation = &"PrimarySurface"
 
-[node name="Margin" type="MarginContainer" parent="Panel/Margin/Content/Body/TextScroll/Text/KeyPanel"]
+[node name="Content" type="VBoxContainer" parent="Panel/Content/Body/TextScroll/Text/KeyPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 9
+theme_override_constants/separation = 4
 
-[node name="Content" type="VBoxContainer" parent="Panel/Margin/Content/Body/TextScroll/Text/KeyPanel/Margin"]
+[node name="Header" type="Label" parent="Panel/Content/Body/TextScroll/Text/KeyPanel/Content"]
 layout_mode = 2
-theme_override_constants/separation = 3
-
-[node name="Header" type="Label" parent="Panel/Margin/Content/Body/TextScroll/Text/KeyPanel/Margin/Content"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.93, 0.7, 0.32, 1)
-theme_override_font_sizes/font_size = 14
+theme_type_variation = &"SecondaryText"
 text = "先记这一句"
 
-[node name="KeyRule" type="Label" parent="Panel/Margin/Content/Body/TextScroll/Text/KeyPanel/Margin/Content"]
+[node name="KeyRule" type="Label" parent="Panel/Content/Body/TextScroll/Text/KeyPanel/Content"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.96, 0.92, 0.82, 1)
-theme_override_font_sizes/font_size = 17
 text = "棋子落在线的交点；赤方先手，双方各行动一次才算一个完整轮。"
-autowrap_mode = 3
+autowrap_mode = 2
 
-[node name="StepsPanel" type="PanelContainer" parent="Panel/Margin/Content/Body/TextScroll/Text"]
+[node name="StepsPanel" type="PanelContainer" parent="Panel/Content/Body/TextScroll/Text"]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StepsPanel")
+theme_type_variation = &"InsetSurface"
 
-[node name="Margin" type="MarginContainer" parent="Panel/Margin/Content/Body/TextScroll/Text/StepsPanel"]
+[node name="Content" type="VBoxContainer" parent="Panel/Content/Body/TextScroll/Text/StepsPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 9
+theme_override_constants/separation = 4
 
-[node name="Content" type="VBoxContainer" parent="Panel/Margin/Content/Body/TextScroll/Text/StepsPanel/Margin"]
+[node name="Header" type="Label" parent="Panel/Content/Body/TextScroll/Text/StepsPanel/Content"]
 layout_mode = 2
-theme_override_constants/separation = 3
-
-[node name="Header" type="Label" parent="Panel/Margin/Content/Body/TextScroll/Text/StepsPanel/Margin/Content"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.42, 0.72, 0.76, 1)
-theme_override_font_sizes/font_size = 14
+theme_type_variation = &"SecondaryText"
 text = "看懂这三步"
 
-[node name="StepsText" type="Label" parent="Panel/Margin/Content/Body/TextScroll/Text/StepsPanel/Margin/Content"]
+[node name="StepsText" type="Label" parent="Panel/Content/Body/TextScroll/Text/StepsPanel/Content"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.86, 0.9, 0.88, 1)
-theme_override_font_sizes/font_size = 16
 text = "① 选择棋子与目标\n② 查看预览，再确认提交\n③ 玄方行动后，完整轮结束"
-autowrap_mode = 3
+autowrap_mode = 2
 theme_override_constants/line_spacing = 2
 
-[node name="PitfallPanel" type="PanelContainer" parent="Panel/Margin/Content/Body/TextScroll/Text"]
+[node name="PitfallPanel" type="PanelContainer" parent="Panel/Content/Body/TextScroll/Text"]
 layout_mode = 2
-theme_override_styles/panel = SubResource("PitfallPanel")
+theme_type_variation = &"DangerSurface"
 
-[node name="Margin" type="MarginContainer" parent="Panel/Margin/Content/Body/TextScroll/Text/PitfallPanel"]
+[node name="Content" type="VBoxContainer" parent="Panel/Content/Body/TextScroll/Text/PitfallPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 9
+theme_override_constants/separation = 4
 
-[node name="Content" type="VBoxContainer" parent="Panel/Margin/Content/Body/TextScroll/Text/PitfallPanel/Margin"]
+[node name="Header" type="Label" parent="Panel/Content/Body/TextScroll/Text/PitfallPanel/Content"]
 layout_mode = 2
-theme_override_constants/separation = 3
-
-[node name="Header" type="Label" parent="Panel/Margin/Content/Body/TextScroll/Text/PitfallPanel/Margin/Content"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.9, 0.42, 0.32, 1)
-theme_override_font_sizes/font_size = 14
+theme_type_variation = &"StatusDanger"
 text = "容易搞错"
 
-[node name="PitfallText" type="Label" parent="Panel/Margin/Content/Body/TextScroll/Text/PitfallPanel/Margin/Content"]
+[node name="PitfallText" type="Label" parent="Panel/Content/Body/TextScroll/Text/PitfallPanel/Content"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.94, 0.84, 0.79, 1)
-theme_override_font_sizes/font_size = 15
 text = "主动跳过也会推进战局；镜像视角只改变显示，不改变规则坐标。"
-autowrap_mode = 3
+autowrap_mode = 2
 
-[node name="Navigation" type="HBoxContainer" parent="Panel/Margin/Content"]
+[node name="Navigation" type="HBoxContainer" parent="Panel/Content"]
 layout_mode = 2
 alignment = 1
-theme_override_constants/separation = 12
+theme_override_constants/separation = 10
 
-[node name="PreviousButton" type="Button" parent="Panel/Margin/Content/Navigation"]
+[node name="PreviousButton" parent="Panel/Content/Navigation" instance=ExtResource("3_secondary")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 44)
+custom_minimum_size = Vector2(150, 48)
 layout_mode = 2
 focus_neighbor_left = NodePath("../NextButton")
 focus_neighbor_right = NodePath("../NextButton")
 text = "上一页"
 
-[node name="NextButton" type="Button" parent="Panel/Margin/Content/Navigation"]
+[node name="NextButton" parent="Panel/Content/Navigation" instance=ExtResource("4_button")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 44)
+custom_minimum_size = Vector2(150, 48)
 layout_mode = 2
 focus_neighbor_left = NodePath("../PreviousButton")
 focus_neighbor_right = NodePath("../../Header/CloseButton")

@@ -40,18 +40,18 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_constants/margin_left = 6
-theme_override_constants/margin_top = 6
-theme_override_constants/margin_right = 6
-theme_override_constants/margin_bottom = 6
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 8
 
 [node name="MainRows" type="VBoxContainer" parent="LevelGuideOverlay/SafeMargin"]
 layout_mode = 2
 mouse_filter = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 8
 
 [node name="TopSpacer" type="Control" parent="LevelGuideOverlay/SafeMargin/MainRows"]
-custom_minimum_size = Vector2(0, 92)
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
 mouse_filter = 2
 
@@ -59,10 +59,10 @@ mouse_filter = 2
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 8
 
 [node name="LeftRailSpacer" type="Control" parent="LevelGuideOverlay/SafeMargin/MainRows/BodyBand"]
-custom_minimum_size = Vector2(252, 0)
+custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
 mouse_filter = 2
 

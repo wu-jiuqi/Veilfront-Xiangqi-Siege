@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3]
 
-[ext_resource type="Theme" path="res://resources/game/ui/themes/terracotta_ui_theme.tres" id="1_theme"]
+[ext_resource type="Theme" path="res://resources/game/ui/themes/veilfront_ui_theme_v2.tres" id="1_theme"]
 [ext_resource type="Script" path="res://scripts/dev/ui/gate3_ui_foundation_lab.gd" id="2_script"]
 [ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_primary.tscn" id="3_primary"]
 [ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_secondary.tscn" id="4_secondary"]
@@ -25,7 +25,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_type_variation = &"ScreenBackground"
 
 [node name="SafeMargin" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -46,7 +45,7 @@ layout_mode = 2
 custom_minimum_size = Vector2(820, 430)
 custom_maximum_size = Vector2(1120, 480)
 layout_mode = 2
-theme_type_variation = &"HUDPanel"
+theme_type_variation = &"OverlaySurface"
 
 [node name="PanelMargin" type="MarginContainer" parent="SafeMargin/Center/FoundationPanel"]
 layout_mode = 2
@@ -62,12 +61,12 @@ theme_override_constants/separation = 10
 [node name="Title" type="Label" parent="SafeMargin/Center/FoundationPanel/PanelMargin/Content"]
 layout_mode = 2
 text = "GATE-3 · 统一交互基础"
-theme_type_variation = &"UiDisplayText"
+theme_type_variation = &"DisplayTitle"
 
 [node name="Subtitle" type="Label" parent="SafeMargin/Center/FoundationPanel/PanelMargin/Content"]
 layout_mode = 2
 text = "四类动作语义共享焦点、字色与动效时序；核心功能区在超宽屏保持安全宽度。"
-theme_type_variation = &"UiBodyText"
+theme_type_variation = &"BodyText"
 
 [node name="ButtonGrid" type="GridContainer" parent="SafeMargin/Center/FoundationPanel/PanelMargin/Content"]
 layout_mode = 2
@@ -133,35 +132,35 @@ theme_override_constants/v_separation = 4
 [node name="DisplayRole" type="Label" parent="SafeMargin/Center/FoundationPanel/PanelMargin/Content/RoleGrid"]
 layout_mode = 2
 text = "Display 38"
-theme_type_variation = &"UiDisplayText"
+theme_type_variation = &"DisplayTitle"
 
 [node name="HeadingRole" type="Label" parent="SafeMargin/Center/FoundationPanel/PanelMargin/Content/RoleGrid"]
 layout_mode = 2
-text = "Heading 24"
-theme_type_variation = &"UiHeadingText"
+text = "Heading 28"
+theme_type_variation = &"ScreenTitle"
 
 [node name="BodyRole" type="Label" parent="SafeMargin/Center/FoundationPanel/PanelMargin/Content/RoleGrid"]
 layout_mode = 2
 text = "Body 16"
-theme_type_variation = &"UiBodyText"
+theme_type_variation = &"BodyText"
 
 [node name="SecondaryRole" type="Label" parent="SafeMargin/Center/FoundationPanel/PanelMargin/Content/RoleGrid"]
 layout_mode = 2
 text = "Secondary 14"
-theme_type_variation = &"UiSecondaryText"
+theme_type_variation = &"SecondaryText"
 
 [node name="ControlRole" type="Label" parent="SafeMargin/Center/FoundationPanel/PanelMargin/Content/RoleGrid"]
 layout_mode = 2
-text = "Control 18"
-theme_type_variation = &"UiControlText"
+text = "Control 20"
+theme_type_variation = &"SectionTitle"
 
 [node name="NumericRole" type="Label" parent="SafeMargin/Center/FoundationPanel/PanelMargin/Content/RoleGrid"]
 layout_mode = 2
-text = "Numeric 20 · 09/09"
-theme_type_variation = &"UiNumericText"
+text = "Numeric 22 · 09/09"
+theme_type_variation = &"NumericText"
 
 [node name="MotionStatus" type="Label" parent="SafeMargin/Center/FoundationPanel/PanelMargin/Content"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "减少动态：关闭"
-theme_type_variation = &"UiSecondaryText"
+theme_type_variation = &"SecondaryText"

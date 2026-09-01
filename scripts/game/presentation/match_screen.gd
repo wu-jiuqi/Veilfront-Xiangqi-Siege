@@ -18,6 +18,7 @@ signal terminal_exit_requested(destination: String)
 const COMPACT_BREAKPOINT: float = 1100.0
 const MINIMUM_ACTION_TARGET_HEIGHT: float = 44.0
 const TUTORIAL_GUIDE_WIDTH: float = 376.0
+const MATCH_RIGHT_RAIL_WIDTH: float = 210.0
 const IDLE: String = "IDLE"
 const SELECTED: String = "SELECTED"
 const PREVIEW_SELECTED: String = "PREVIEW_SELECTED"
@@ -342,7 +343,8 @@ func set_level_guide_layout_enabled(enabled: bool) -> void:
 		# Keep the authored rail in its HBoxContainer so the center board keeps
 		# exactly the same width as the approved online-match layout.
 		right_rail.visible = true
-		right_rail.custom_minimum_size.x = TUTORIAL_GUIDE_WIDTH if enabled else 284.0
+		right_rail.custom_minimum_size.x = TUTORIAL_GUIDE_WIDTH if enabled \
+			else MATCH_RIGHT_RAIL_WIDTH
 		right_rail.mouse_filter = Control.MOUSE_FILTER_IGNORE if enabled \
 			else Control.MOUSE_FILTER_PASS
 	if is_instance_valid(_objective_events):

@@ -188,25 +188,21 @@ func _check_match_screen(instance: Node) -> void:
 		_failures.append("MatchScreen controller script failed to load")
 	for required_path: String in [
 		"MatchHudV2",
-		"MatchHudV2/BoardFrame/BoardViewport",
-		"MatchHudV2/BoardFrame/BoardViewport/ScreenInputSurface",
-		"MatchHudV2/BoardFrame/BoardViewport/BoardSubViewport/BoardFeedbackLayer",
-		"MatchHudV2/BoardFrame/BoardViewport/BoardSubViewport/BoardFeedbackLayer/BoardAudioEmitterPool",
-		"MatchHudV2/BoardFrame/BoardViewport/BoardSubViewport/BoardFeedbackLayer/VfxRoot",
+		"MatchHudV2/SafeMargin/MainRows/BodyBand/CenterColumn/BoardFrame/BoardViewport",
+		"MatchHudV2/SafeMargin/MainRows/BodyBand/CenterColumn/BoardFrame/BoardViewport/ScreenInputSurface",
+		"MatchHudV2/SafeMargin/MainRows/BodyBand/CenterColumn/BoardFrame/BoardViewport/BoardSubViewport/BoardFeedbackLayer",
+		"MatchHudV2/SafeMargin/MainRows/BodyBand/CenterColumn/BoardFrame/BoardViewport/BoardSubViewport/BoardFeedbackLayer/BoardAudioEmitterPool",
+		"MatchHudV2/SafeMargin/MainRows/BodyBand/CenterColumn/BoardFrame/BoardViewport/BoardSubViewport/BoardFeedbackLayer/VfxRoot",
 		"MatchFeedbackCoordinator",
 		"MatchFeedbackCoordinator/AudioRoot",
-		"MatchHudV2/FactionLeft",
-		"MatchHudV2/FactionRight",
-		"MatchHudV2/UnitInfo",
-		"MatchHudV2/ObjectiveEvents",
-		"MatchHudV2/Minimap/TacticalMinimap",
-		"MatchHudV2/Minimap/TacticalMinimap/BirdEyeViewportContainer/BirdEyeViewport/BoardWorld",
-		"MatchHudV2/PieceInfoDrawer",
-		"MatchHudV2/IncenseTurnClock",
-		"MatchHudV2/IncenseTurnClock/TimerIncenseSlot",
-		"MatchHudV2/IncenseTurnClock/IncenseStandSlot",
-		"MatchHudV2/IncenseTurnClock/RoundIncenseSlot",
-		"MatchHudV2/IncenseTurnClock/RoundDisplaySlot",
+		"MatchHudV2/SafeMargin/MainRows/TopBand/FactionLeft",
+		"MatchHudV2/SafeMargin/MainRows/TopBand/FactionRight",
+		"MatchHudV2/SafeMargin/MainRows/BodyBand/LeftRail/UnitInfo",
+		"MatchHudV2/SafeMargin/MainRows/BodyBand/RightRail/ObjectiveEvents",
+		"MatchHudV2/SafeMargin/MainRows/BodyBand/LeftRail/MinimapPanel/Column/TacticalMinimap",
+		"MatchHudV2/SafeMargin/MainRows/BodyBand/LeftRail/MinimapPanel/Column/TacticalMinimap/BirdEyeViewportContainer/BirdEyeViewport/BoardWorld",
+		"MatchHudV2/SafeMargin/MainRows/BodyBand/CenterColumn/ActionPanel/PieceInfoDrawer",
+		"MatchHudV2/SafeMargin/MainRows/TopBand/TurnStatus/StatusRow/Round",
 		"MarkerMenu",
 		"TutorialOverlayHost",
 		"TerminalDialog",
@@ -216,7 +212,7 @@ func _check_match_screen(instance: Node) -> void:
 	if instance.get_node_or_null("ActionConfirmationPanel") != null:
 		_failures.append("MatchScreen still contains the removed central confirmation UI")
 	var board_world: Node = instance.get_node_or_null(
-		"MatchHudV2/BoardFrame/BoardViewport/BoardSubViewport/BoardWorld"
+		"MatchHudV2/SafeMargin/MainRows/BodyBand/CenterColumn/BoardFrame/BoardViewport/BoardSubViewport/BoardWorld"
 	)
 	if board_world == null:
 		_failures.append("MatchScreen missing preset BoardWorld")
@@ -240,7 +236,7 @@ func _check_match_screen(instance: Node) -> void:
 		if input_surface.focus_mode != Control.FOCUS_ALL:
 			_failures.append("InputSurface must accept keyboard focus")
 	var screen_input_surface: Control = instance.get_node_or_null(
-		"MatchHudV2/BoardFrame/BoardViewport/ScreenInputSurface"
+		"MatchHudV2/SafeMargin/MainRows/BodyBand/CenterColumn/BoardFrame/BoardViewport/ScreenInputSurface"
 	) as Control
 	if screen_input_surface == null:
 		_failures.append("MatchScreen missing screen-space board interaction surface")
