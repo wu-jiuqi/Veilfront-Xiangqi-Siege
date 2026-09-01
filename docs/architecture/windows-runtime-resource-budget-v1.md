@@ -4,7 +4,7 @@
 
 Windows 正式局域网导出使用 `resources` 白名单，不再使用 `all_resources`。白名单只保留启动、设置、关卡选择、正式局域网、教程入口及 T0–T10 动态教学资源；HUD 布局 JSON 通过 `include_filter` 显式加入。
 
-`concepts`、`source_chroma`、`source_rgb`、`chroma_sources`、测试场景/脚本、原型和证据目录均为硬排除项。战阵图鉴当前使用的 18 张 `comic_v2/page_*.png` 是明确登记的运行时图片；其余未被运行时引用的漫画源文件仍不得进入包。新增运行时根资源、动态 `load()` 路径或非 Resource 文件时，必须同步更新 `tools/release/windows_runtime_manifest.json` 和 `export_presets.cfg`。
+`concepts`、`source_chroma`、`source_rgb`、`chroma_sources`、测试场景/脚本、原型和证据目录均为硬排除项。战阵图鉴当前使用的 18 张 `diagram_v3/page_*.png` 是明确登记的运行时图片；旧 `comic_v1`、`comic_v2` 与其他未被运行时引用的源文件不得进入包。新增运行时根资源、动态 `load()` 路径或非 Resource 文件时，必须同步更新 `tools/release/windows_runtime_manifest.json` 和 `export_presets.cfg`。
 
 ## 预算
 

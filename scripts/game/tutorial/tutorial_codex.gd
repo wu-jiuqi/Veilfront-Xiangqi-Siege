@@ -167,7 +167,7 @@ const PAGES: Array[Dictionary] = [
 		"visual_caption": "看图重点：颜色解释当前可见决策，不承诺揭示真实隐藏路径。",
 	},
 ]
-const IMAGE_ROOT: String = "res://assets/art/tutorial/comic_v2/"
+const IMAGE_ROOT: String = "res://assets/art/tutorial/diagram_v3/"
 
 @onready var _image: TextureRect = %PageImage
 @onready var _page_label: Label = %PageLabel

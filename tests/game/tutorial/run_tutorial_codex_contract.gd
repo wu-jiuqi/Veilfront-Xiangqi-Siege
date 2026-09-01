@@ -25,7 +25,7 @@ func _run() -> void:
 	_expect(str(first.get("steps", "")).count("\n") == 2, "codex first page must expose three steps")
 	_expect(not str(first.get("pitfall", "")).is_empty(), "codex first page lacks a pitfall explanation")
 	_expect(not str(first.get("visual_caption", "")).is_empty(), "codex first page lacks an image caption")
-	_expect(str(first.get("image_path", "")).contains("/comic_v2/"), "codex must load the v2 tutorial image set")
+	_expect(str(first.get("image_path", "")).contains("/diagram_v3/"), "codex must load the accuracy-first v3 tutorial diagram set")
 	_expect(str(first.get("image_path", "")).ends_with("page_00_board_turns.png"), "codex first image is wrong")
 	for expected_index: int in range(1, 18):
 		(codex.get_node("%NextButton") as Button).pressed.emit()
@@ -36,7 +36,7 @@ func _run() -> void:
 		_expect(str(page.get("steps", "")).count("\n") == 2, "codex page %d must expose three steps" % expected_index)
 		_expect(not str(page.get("pitfall", "")).is_empty(), "codex page %d lacks a pitfall explanation" % expected_index)
 		_expect(not str(page.get("visual_caption", "")).is_empty(), "codex page %d lacks an image caption" % expected_index)
-		_expect(str(page.get("image_path", "")).contains("/comic_v2/"), "codex page %d did not load the v2 image set" % expected_index)
+		_expect(str(page.get("image_path", "")).contains("/diagram_v3/"), "codex page %d did not load the v3 diagram set" % expected_index)
 	var emissions := {"closed": 0}
 	codex.closed.connect(func() -> void: emissions["closed"] += 1)
 	(codex.get_node("%CloseButton") as Button).pressed.emit()

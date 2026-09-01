@@ -12,8 +12,8 @@ from reportlab.lib.utils import ImageReader
 
 
 ROOT = Path(__file__).resolve().parents[2]
-SOURCE_DIR = ROOT / "assets" / "art" / "tutorial" / "comic_v1"
-OUTPUT_PATH = ROOT / "output" / "pdf" / "veilfront-comic-tutorial-v1.pdf"
+SOURCE_DIR = ROOT / "assets" / "art" / "tutorial" / "diagram_v3"
+OUTPUT_PATH = ROOT / "output" / "pdf" / "veilfront-illustrated-tutorial-v3.pdf"
 
 
 PAGE_FILES = [
@@ -52,9 +52,9 @@ def build_pdf() -> None:
     usable_height = page_height - margin_top - margin_bottom
 
     pdf = canvas.Canvas(str(OUTPUT_PATH), pagesize=A4, pageCompression=1)
-    pdf.setTitle("Veilfront Xiangqi Siege - Comic Tutorial v1")
+    pdf.setTitle("Veilfront Xiangqi Siege - Illustrated Tutorial v3")
     pdf.setAuthor("Veilfront Xiangqi Siege Project")
-    pdf.setSubject("Four-panel comic tutorial")
+    pdf.setSubject("Accuracy-first illustrated tutorial")
 
     for index, filename in enumerate(PAGE_FILES, start=1):
         path = SOURCE_DIR / filename

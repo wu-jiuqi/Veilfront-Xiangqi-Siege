@@ -1,0 +1,189 @@
+{
+  "schema_version": "veilfront_tutorial_diagram_manifest_v1",
+  "generator": "tools/art/build_tutorial_diagrams_v3.py",
+  "source_rule": "docs/prototype/rules-spec-v1.md owner-freeze revision 5",
+  "visual_policy": "deterministic_accuracy_first",
+  "page_count": 18,
+  "pages": [
+    {
+      "index": 0,
+      "file": "page_00_board_turns.png",
+      "size": [
+        1200,
+        800
+      ],
+      "sha256": "b8b1d8f15eb71f92d9faac70718985d9dee8f02dfa148563eaeffb8c9b50c43a",
+      "rule_ref": "§1 坐标、区域与回合术语"
+    },
+    {
+      "index": 1,
+      "file": "page_01_pawn.png",
+      "size": [
+        1200,
+        800
+      ],
+      "sha256": "73883274e252195e27053658f8ebc340d9c46a189f4585b84d14d574ef0f6177",
+      "rule_ref": "§3 普通行动：兵卒"
+    },
+    {
+      "index": 2,
+      "file": "page_02_horse_elephant.png",
+      "size": [
+        1200,
+        800
+      ],
+      "sha256": "3702effadd1685a227bca7d8ad52eacb4290c391b47df94a6a697df4d6257ab3",
+      "rule_ref": "§3 普通行动：马与相"
+    },
+    {
+      "index": 3,
+      "file": "page_03_rook_cannon.png",
+      "size": [
+        1200,
+        800
+      ],
+      "sha256": "d1630e8b55edf61126e0e7e4801d6f6a473fae918b7feff6a0dddaa3a4bac365",
+      "rule_ref": "§3 普通行动：车与炮"
+    },
+    {
+      "index": 4,
+      "file": "page_04_palace_general.png",
+      "size": [
+        1200,
+        800
+      ],
+      "sha256": "23d7b26a59f668d1a7645d21e0efb3ed23a10f3615fbef79bb13f30e5edef79e",
+      "rule_ref": "§1/§3 九宫与将帅"
+    },
+    {
+      "index": 5,
+      "file": "page_05_fog_flag_memory.png",
+      "size": [
+        1200,
+        800
+      ],
+      "sha256": "505d57d946cd54d993cc3475f08aae374ae4ae6190c6c82ac1432499df7ab542",
+      "rule_ref": "§6 迷雾与旗帜发现记忆"
+    },
+    {
+      "index": 6,
+      "file": "page_06_special_eligibility.png",
+      "size": [
+        1200,
+        800
+      ],
+      "sha256": "733693856a6674df346ca3a385f83a29124b3eb4004f6ba4cabb948a5b3c3d4e",
+      "rule_ref": "§4 特殊行动共同资格"
+    },
+    {
+      "index": 7,
+      "file": "page_07_hidden_horse_elephant_field.png",
+      "size": [
+        1200,
+        800
+      ],
+      "sha256": "d5f41e2e2a3b4525538d28b8e2fc5ba39d2899bc7739cc7d0d202e6e854c1d02",
+      "rule_ref": "§4 特殊马与相田"
+    },
+    {
+      "index": 8,
+      "file": "page_08_special_rook_pawn.png",
+      "size": [
+        1200,
+        800
+      ],
+      "sha256": "78685ed50d83243ba7a8cb389908dfcd984ec1bc9506874b37ee3e995c8b4ed8",
+      "rule_ref": "§4 特殊车与特殊兵"
+    },
+    {
+      "index": 9,
+      "file": "page_09_bombardment.png",
+      "size": [
+        1200,
+        800
+      ],
+      "sha256": "0145f876c0fbe88ea7d8f276049f3b4ff26811e745b9c37c625c4e846426b4b2",
+      "rule_ref": "§4/§8 区域轰炸"
+    },
+    {
+      "index": 10,
+      "file": "page_10_advisor_sacrifice.png",
+      "size": [
+        1200,
+        800
+      ],
+      "sha256": "db563be27c86848901d1cc7589a901520a6eae04de16da955604725982bc0265",
+      "rule_ref": "§6 士献祭复活"
+    },
+    {
+      "index": 11,
+      "file": "page_11_wall_breach_entry.png",
+      "size": [
+        1200,
+        800
+      ],
+      "sha256": "866d9795bfc89d8a85b729978fdbeeed380cdfd722398ccd9db3f7e6ec52daf6",
+      "rule_ref": "§3/§5 缓冲区与破墙"
+    },
+    {
+      "index": 12,
+      "file": "page_12_wall_repair.png",
+      "size": [
+        1200,
+        800
+      ],
+      "sha256": "33e897dabbcff0507d7a3d83b3390ba86cfba72a44c583ef9f00f222cfb876a7",
+      "rule_ref": "§5 城墙修复状态机"
+    },
+    {
+      "index": 13,
+      "file": "page_13_flag_capture.png",
+      "size": [
+        1200,
+        800
+      ],
+      "sha256": "7d18a1396a3151bda5df1aa48fb77f20fb34ef617e0149734613cbb79309f672",
+      "rule_ref": "§6 旗帜占领"
+    },
+    {
+      "index": 14,
+      "file": "page_14_flag_contest.png",
+      "size": [
+        1200,
+        800
+      ],
+      "sha256": "51b78553322219ca47b961c42338f8975aa9b5e48cccd3c53265a599b7e62f72",
+      "rule_ref": "§6 旗帜争夺"
+    },
+    {
+      "index": 15,
+      "file": "page_15_victory.png",
+      "size": [
+        1200,
+        800
+      ],
+      "sha256": "081079cc2a22a992064e7e1820a9d087b0d1ead4e44eed40dc16c8d20fa63a29",
+      "rule_ref": "§6/§8 胜负结算"
+    },
+    {
+      "index": 16,
+      "file": "page_16_casualty_reserve.png",
+      "size": [
+        1200,
+        800
+      ],
+      "sha256": "b55f161e1f66acfff5bcf98969d34eb59c9870c91fdc5934e5cf4ff60e8accec",
+      "rule_ref": "§2/§7 阵亡记录与后备"
+    },
+    {
+      "index": 17,
+      "file": "page_17_action_preview.png",
+      "size": [
+        1200,
+        800
+      ],
+      "sha256": "8b2b8b58013a4a4ae3114e9aab8220e4cc650fb1ef189c84da529e63dac84cf3",
+      "rule_ref": "information-boundary-v1 行动预览"
+    }
+  ]
+}
