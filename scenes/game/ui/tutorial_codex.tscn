@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scripts/game/tutorial/tutorial_codex.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button.tscn" id="2_semantic_button"]
 
 [sub_resource type="StyleBoxFlat" id="CodexPanel"]
 bg_color = Color(0.025, 0.022, 0.017, 0.985)
@@ -108,11 +109,12 @@ theme_override_font_sizes/font_size = 20
 text = "战阵图鉴 · 01 / 18"
 clip_text = true
 
-[node name="CloseButton" type="Button" parent="Panel/Margin/Content/Header"]
+[node name="CloseButton" parent="Panel/Margin/Content/Header" instance=ExtResource("2_semantic_button")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(88, 44)
 layout_mode = 2
 text = "关闭"
+semantic_role = &"secondary"
 
 [node name="Body" type="HBoxContainer" parent="Panel/Margin/Content"]
 layout_mode = 2
@@ -273,18 +275,20 @@ layout_mode = 2
 alignment = 1
 theme_override_constants/separation = 12
 
-[node name="PreviousButton" type="Button" parent="Panel/Margin/Content/Navigation"]
+[node name="PreviousButton" parent="Panel/Margin/Content/Navigation" instance=ExtResource("2_semantic_button")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(150, 44)
 layout_mode = 2
 focus_neighbor_left = NodePath("../NextButton")
 focus_neighbor_right = NodePath("../NextButton")
 text = "上一页"
+semantic_role = &"secondary"
 
-[node name="NextButton" type="Button" parent="Panel/Margin/Content/Navigation"]
+[node name="NextButton" parent="Panel/Margin/Content/Navigation" instance=ExtResource("2_semantic_button")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(150, 44)
 layout_mode = 2
 focus_neighbor_left = NodePath("../PreviousButton")
 focus_neighbor_right = NodePath("../../Header/CloseButton")
 text = "下一页"
+semantic_role = &"primary"

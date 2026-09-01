@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scripts/game/presentation/ui/level_guide_panel.gd" id="1_script"]
 [ext_resource type="Theme" path="res://resources/game/ui/themes/match_hud_v3_theme.tres" id="2_theme"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/level_guide_panel/level_guide_panel_v1.png" id="3_panel"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button.tscn" id="4_semantic_button"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleButtonNormal"]
 
@@ -93,7 +94,7 @@ text = "关卡指引"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="CollapseButton" type="Button" parent="ExpandedContent"]
+[node name="CollapseButton" parent="ExpandedContent" instance=ExtResource("4_semantic_button")]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = -1
@@ -109,6 +110,8 @@ theme_override_styles/hover = SubResource("StyleButtonHover")
 theme_override_styles/pressed = SubResource("StyleButtonPressed")
 theme_override_styles/focus = SubResource("StyleButtonFocus")
 text = "〉"
+semantic_role = &"secondary"
+show_semantic_mark = false
 
 [node name="GoalContent" type="VBoxContainer" parent="ExpandedContent"]
 layout_mode = 1
@@ -326,7 +329,7 @@ anchor_right = 0.91
 anchor_bottom = 0.982
 theme_override_constants/separation = 8
 
-[node name="HintButton" type="Button" parent="ExpandedContent/BottomActions"]
+[node name="HintButton" parent="ExpandedContent/BottomActions" instance=ExtResource("4_semantic_button")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -340,8 +343,9 @@ theme_override_styles/pressed = SubResource("StyleButtonPressed")
 theme_override_styles/disabled = SubResource("StyleButtonNormal")
 theme_override_styles/focus = SubResource("StyleButtonFocus")
 text = "显示提示"
+semantic_role = &"primary"
 
-[node name="ResetButton" type="Button" parent="ExpandedContent/BottomActions"]
+[node name="ResetButton" parent="ExpandedContent/BottomActions" instance=ExtResource("4_semantic_button")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -353,8 +357,9 @@ theme_override_styles/hover = SubResource("StyleButtonHover")
 theme_override_styles/pressed = SubResource("StyleButtonPressed")
 theme_override_styles/focus = SubResource("StyleButtonFocus")
 text = "重置步骤"
+semantic_role = &"danger"
 
-[node name="CollapsedButton" type="Button" parent="."]
+[node name="CollapsedButton" parent="." instance=ExtResource("4_semantic_button")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -373,3 +378,5 @@ theme_override_styles/hover = SubResource("StyleButtonPressed")
 theme_override_styles/pressed = SubResource("StyleButtonPressed")
 theme_override_styles/focus = SubResource("StyleButtonFocus")
 text = "〈"
+semantic_role = &"secondary"
+show_semantic_mark = false

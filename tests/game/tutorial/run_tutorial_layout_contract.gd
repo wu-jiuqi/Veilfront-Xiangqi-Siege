@@ -116,15 +116,18 @@ func _check_decision_button_styles(overlay: Control) -> void:
 		_expect(button != null, "level decision button is missing: %s" % button_name)
 		if button == null:
 			continue
+		_expect(button.has_method("sync_visual_state"), "%s does not use the shared semantic button" % button_name)
 		for style_name: StringName in [&"normal", &"hover", &"pressed", &"disabled", &"focus"]:
 			_expect(
 				button.has_theme_stylebox_override(style_name),
 				"%s still relies on the global Button skin for %s" % [button_name, style_name]
 			)
 			_expect(
-				button.get_theme_stylebox(style_name) is StyleBoxFlat,
-				"%s resolved a non-local textured Button style for %s" % [button_name, style_name]
+				button.get_theme_stylebox(style_name) is StyleBoxEmpty,
+				"%s semantic root still draws a screen-specific style for %s" % [button_name, style_name]
 			)
+		_expect(button.get_node_or_null("%Surface") is NinePatchRect, "%s is missing the authored visual surface" % button_name)
+		_expect((button.get_node("%FocusFrame") as Panel).get_theme_stylebox(&"panel") is StyleBoxFlat, "%s is missing the independent focus frame" % button_name)
 
 
 func _rect_inside(rect: Rect2, bounds: Vector2) -> bool:

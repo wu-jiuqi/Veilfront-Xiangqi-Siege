@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scripts/game/frontend/level_card.gd" id="1_script"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/level_select/components/node_available_v2.png" id="2_available"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/level_select/components/node_selected_v2.png" id="3_selected"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/level_select/components/node_completed_v2.png" id="4_completed"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/level_select/components/node_locked_v2.png" id="5_locked"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button.tscn" id="6_semantic_button"]
 
 [sub_resource type="StyleBoxFlat" id="StyleStatusBackdrop"]
 bg_color = Color(0.025, 0.022, 0.016, 0.82)
@@ -91,7 +92,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 clip_text = true
 
-[node name="NodeButton" type="Button" parent="."]
+[node name="NodeButton" parent="." instance=ExtResource("6_semantic_button")]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -102,6 +103,14 @@ grow_vertical = 2
 focus_mode = 2
 mouse_default_cursor_shape = 2
 flat = true
+text = "选择关卡"
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+semantic_role = &"primary"
+show_semantic_mark = false
+show_label = false
 
 [connection signal="focus_entered" from="NodeButton" to="." method="_on_focus_entered"]
 [connection signal="focus_exited" from="NodeButton" to="." method="_on_focus_exited"]

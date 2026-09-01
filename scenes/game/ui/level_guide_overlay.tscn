@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://scripts/game/tutorial/level_guide_overlay.gd" id="1_script"]
 [ext_resource type="PackedScene" path="res://scenes/game/ui/level_guide_panel.tscn" id="2_guide"]
 [ext_resource type="Theme" path="res://resources/game/ui/themes/match_hud_v3_theme.tres" id="3_theme"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button.tscn" id="4_semantic_button"]
 
 [sub_resource type="StyleBoxFlat" id="StyleDecisionPanel"]
 bg_color = Color(0.025, 0.025, 0.022, 0.97)
@@ -206,7 +207,7 @@ clip_text = true
 layout_mode = 2
 theme_override_constants/separation = 7
 
-[node name="Option0" type="Button" parent="DecisionLayer/DecisionPanel/Margin/Content/Options"]
+[node name="Option0" parent="DecisionLayer/DecisionPanel/Margin/Content/Options" instance=ExtResource("4_semantic_button")]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(0, 44)
@@ -224,8 +225,9 @@ theme_override_styles/pressed = SubResource("StyleDecisionButtonPressed")
 theme_override_styles/disabled = SubResource("StyleDecisionButtonDisabled")
 theme_override_styles/focus = SubResource("StyleDecisionButtonFocus")
 text = "选项一"
+semantic_role = &"primary"
 
-[node name="Option1" type="Button" parent="DecisionLayer/DecisionPanel/Margin/Content/Options"]
+[node name="Option1" parent="DecisionLayer/DecisionPanel/Margin/Content/Options" instance=ExtResource("4_semantic_button")]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(0, 44)
@@ -243,8 +245,9 @@ theme_override_styles/pressed = SubResource("StyleDecisionButtonPressed")
 theme_override_styles/disabled = SubResource("StyleDecisionButtonDisabled")
 theme_override_styles/focus = SubResource("StyleDecisionButtonFocus")
 text = "选项二"
+semantic_role = &"primary"
 
-[node name="Option2" type="Button" parent="DecisionLayer/DecisionPanel/Margin/Content/Options"]
+[node name="Option2" parent="DecisionLayer/DecisionPanel/Margin/Content/Options" instance=ExtResource("4_semantic_button")]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(0, 44)
@@ -262,8 +265,9 @@ theme_override_styles/pressed = SubResource("StyleDecisionButtonPressed")
 theme_override_styles/disabled = SubResource("StyleDecisionButtonDisabled")
 theme_override_styles/focus = SubResource("StyleDecisionButtonFocus")
 text = "选项三"
+semantic_role = &"primary"
 
-[node name="ContinueButton" type="Button" parent="DecisionLayer/DecisionPanel/Margin/Content"]
+[node name="ContinueButton" parent="DecisionLayer/DecisionPanel/Margin/Content" instance=ExtResource("4_semantic_button")]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(0, 44)
@@ -281,6 +285,7 @@ theme_override_styles/pressed = SubResource("StyleDecisionButtonPressed")
 theme_override_styles/disabled = SubResource("StyleDecisionButtonDisabled")
 theme_override_styles/focus = SubResource("StyleDecisionButtonFocus")
 text = "继续"
+semantic_role = &"confirm"
 
 [node name="CompletionActions" type="HBoxContainer" parent="DecisionLayer/DecisionPanel/Margin/Content"]
 unique_name_in_owner = true
@@ -288,7 +293,7 @@ visible = false
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="NextChapterButton" type="Button" parent="DecisionLayer/DecisionPanel/Margin/Content/CompletionActions"]
+[node name="NextChapterButton" parent="DecisionLayer/DecisionPanel/Margin/Content/CompletionActions" instance=ExtResource("4_semantic_button")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
@@ -306,8 +311,9 @@ theme_override_styles/pressed = SubResource("StyleDecisionButtonPressed")
 theme_override_styles/disabled = SubResource("StyleDecisionButtonDisabled")
 theme_override_styles/focus = SubResource("StyleDecisionButtonFocus")
 text = "进入下一章"
+semantic_role = &"confirm"
 
-[node name="StayButton" type="Button" parent="DecisionLayer/DecisionPanel/Margin/Content/CompletionActions"]
+[node name="StayButton" parent="DecisionLayer/DecisionPanel/Margin/Content/CompletionActions" instance=ExtResource("4_semantic_button")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
@@ -325,6 +331,7 @@ theme_override_styles/pressed = SubResource("StyleDecisionButtonPressed")
 theme_override_styles/disabled = SubResource("StyleDecisionButtonDisabled")
 theme_override_styles/focus = SubResource("StyleDecisionButtonFocus")
 text = "留在本章"
+semantic_role = &"secondary"
 
 [node name="FailureActions" type="HBoxContainer" parent="DecisionLayer/DecisionPanel/Margin/Content"]
 unique_name_in_owner = true
@@ -332,7 +339,7 @@ visible = false
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="RetryButton" type="Button" parent="DecisionLayer/DecisionPanel/Margin/Content/FailureActions"]
+[node name="RetryButton" parent="DecisionLayer/DecisionPanel/Margin/Content/FailureActions" instance=ExtResource("4_semantic_button")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
@@ -350,8 +357,9 @@ theme_override_styles/pressed = SubResource("StyleDecisionButtonPressed")
 theme_override_styles/disabled = SubResource("StyleDecisionButtonDisabled")
 theme_override_styles/focus = SubResource("StyleDecisionButtonFocus")
 text = "重置章节"
+semantic_role = &"danger"
 
-[node name="BackToLevelsButton" type="Button" parent="DecisionLayer/DecisionPanel/Margin/Content/FailureActions"]
+[node name="BackToLevelsButton" parent="DecisionLayer/DecisionPanel/Margin/Content/FailureActions" instance=ExtResource("4_semantic_button")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
@@ -369,3 +377,4 @@ theme_override_styles/pressed = SubResource("StyleDecisionButtonPressed")
 theme_override_styles/disabled = SubResource("StyleDecisionButtonDisabled")
 theme_override_styles/focus = SubResource("StyleDecisionButtonFocus")
 text = "返回目录"
+semantic_role = &"secondary"

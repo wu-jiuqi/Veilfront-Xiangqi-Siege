@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scripts/game/tutorial/tutorial_pause_menu.gd" id="1_script"]
 [ext_resource type="Theme" path="res://resources/game/ui/themes/terracotta_ui_theme.tres" id="2_theme"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/system_dialog/system_dialog_panel_v1.png" id="3_panel"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/system_dialog/system_dialog_button_primary_v1.png" id="4_primary"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/system_dialog/system_dialog_button_secondary_v1.png" id="5_secondary"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button.tscn" id="6_semantic_button"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmptyButton"]
 
@@ -74,7 +75,7 @@ text = "教学暂停"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="CloseButton" type="Button" parent="DialogCenter/DialogCanvas"]
+[node name="CloseButton" parent="DialogCenter/DialogCanvas" instance=ExtResource("6_semantic_button")]
 layout_mode = 0
 offset_left = 680.0
 offset_top = 78.0
@@ -92,6 +93,12 @@ theme_override_styles/pressed = SubResource("StyleBoxEmptyButton")
 theme_override_styles/focus = SubResource("StyleBoxEmptyButton")
 text = "X"
 flat = true
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+semantic_role = &"secondary"
+show_semantic_mark = false
 
 [node name="Subtitle" type="Label" parent="DialogCenter/DialogCanvas"]
 layout_mode = 0
@@ -132,7 +139,7 @@ texture = ExtResource("4_primary")
 expand_mode = 1
 stretch_mode = 0
 
-[node name="ContinueButton" type="Button" parent="DialogCenter/DialogCanvas/ActionColumn/ContinueSlot"]
+[node name="ContinueButton" parent="DialogCenter/DialogCanvas/ActionColumn/ContinueSlot" instance=ExtResource("6_semantic_button")]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -155,6 +162,12 @@ theme_override_styles/pressed = SubResource("StyleBoxEmptyButton")
 theme_override_styles/focus = SubResource("StyleBoxEmptyButton")
 text = "继续教学"
 flat = true
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+semantic_role = &"confirm"
+show_semantic_mark = false
 
 [node name="RestartSlot" type="Control" parent="DialogCenter/DialogCanvas/ActionColumn"]
 custom_minimum_size = Vector2(496, 72)
@@ -172,7 +185,7 @@ texture = ExtResource("5_secondary")
 expand_mode = 1
 stretch_mode = 0
 
-[node name="RestartChapterButton" type="Button" parent="DialogCenter/DialogCanvas/ActionColumn/RestartSlot"]
+[node name="RestartChapterButton" parent="DialogCenter/DialogCanvas/ActionColumn/RestartSlot" instance=ExtResource("6_semantic_button")]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -195,6 +208,12 @@ theme_override_styles/pressed = SubResource("StyleBoxEmptyButton")
 theme_override_styles/focus = SubResource("StyleBoxEmptyButton")
 text = "重新开始本章"
 flat = true
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+semantic_role = &"danger"
+show_semantic_mark = false
 
 [node name="CodexSlot" type="Control" parent="DialogCenter/DialogCanvas/ActionColumn"]
 custom_minimum_size = Vector2(496, 72)
@@ -212,7 +231,7 @@ texture = ExtResource("5_secondary")
 expand_mode = 1
 stretch_mode = 0
 
-[node name="CodexButton" type="Button" parent="DialogCenter/DialogCanvas/ActionColumn/CodexSlot"]
+[node name="CodexButton" parent="DialogCenter/DialogCanvas/ActionColumn/CodexSlot" instance=ExtResource("6_semantic_button")]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -234,6 +253,12 @@ theme_override_styles/pressed = SubResource("StyleBoxEmptyButton")
 theme_override_styles/focus = SubResource("StyleBoxEmptyButton")
 text = "打开战阵图鉴"
 flat = true
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+semantic_role = &"secondary"
+show_semantic_mark = false
 
 [node name="ExitSlot" type="Control" parent="DialogCenter/DialogCanvas/ActionColumn"]
 custom_minimum_size = Vector2(496, 72)
@@ -252,7 +277,7 @@ expand_mode = 1
 stretch_mode = 0
 self_modulate = Color(0.88, 0.58, 0.5, 1)
 
-[node name="ExitTutorialButton" type="Button" parent="DialogCenter/DialogCanvas/ActionColumn/ExitSlot"]
+[node name="ExitTutorialButton" parent="DialogCenter/DialogCanvas/ActionColumn/ExitSlot" instance=ExtResource("6_semantic_button")]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -275,6 +300,12 @@ theme_override_styles/pressed = SubResource("StyleBoxEmptyButton")
 theme_override_styles/focus = SubResource("StyleBoxEmptyButton")
 text = "退出教学"
 flat = true
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+semantic_role = &"danger"
+show_semantic_mark = false
 
 [connection signal="pressed" from="DialogCenter/DialogCanvas/CloseButton" to="." method="_on_continue_pressed"]
 [connection signal="pressed" from="DialogCenter/DialogCanvas/ActionColumn/ContinueSlot/ContinueButton" to="." method="_on_continue_pressed"]
