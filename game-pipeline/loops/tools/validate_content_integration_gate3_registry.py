@@ -10,7 +10,7 @@ import yaml
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
-PLUGIN_ROOT = Path.home() / ".codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.2"
+PLUGIN_ROOT = Path.home() / ".codex/plugins/cache/personal/game-production-pipeline/0.4.0-alpha.3"
 VALIDATOR_PATH = PLUGIN_ROOT / "scripts/validate_loop_registry.py"
 REGISTRY_DIR = PROJECT_ROOT / "game-pipeline/loops/registry/content-integration-gate3"
 EVENT_CONTRACT = PLUGIN_ROOT / "contracts/loop-registry-event.template.yaml"
