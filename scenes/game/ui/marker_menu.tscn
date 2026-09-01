@@ -1,8 +1,9 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="Script" path="res://scripts/game/presentation/marker_menu.gd" id="1_script"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/markers/marker_menu_frame_v1.png" id="2_frame"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/markers/marker_icon_atlas_v1.png" id="3_icons"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button.tscn" id="4_semantic_button"]
 
 [sub_resource type="AtlasTexture" id="AtlasTextureCircle"]
 atlas = ExtResource("3_icons")
@@ -122,77 +123,49 @@ offset_right = 472.0
 offset_bottom = 133.0
 theme_override_constants/separation = 14
 
-[node name="CircleButton" type="Button" parent="Content/Choices"]
-custom_minimum_size = Vector2(94, 38)
+[node name="CircleButton" parent="Content/Choices" instance=ExtResource("4_semantic_button")]
+custom_minimum_size = Vector2(94, 44)
 layout_mode = 2
 size_flags_horizontal = 3
-focus_mode = 2
-mouse_default_cursor_shape = 2
-theme_override_colors/icon_normal_color = Color(1, 1, 1, 0.95)
-theme_override_colors/icon_hover_color = Color(1.16, 1.05, 1.18, 1)
-theme_override_colors/icon_pressed_color = Color(0.8, 0.7, 0.9, 1)
-theme_override_constants/icon_max_width = 31
-theme_override_styles/normal = SubResource("StyleBoxEmpty")
-theme_override_styles/hover = SubResource("StyleBoxHover")
-theme_override_styles/pressed = SubResource("StyleBoxPressed")
-theme_override_styles/focus = SubResource("StyleBoxFocus")
 icon = SubResource("AtlasTextureCircle")
-expand_icon = true
+text = "圆形标注"
 tooltip_text = "圆形标注"
+semantic_role = &"primary"
+show_semantic_mark = false
+show_label = false
 
-[node name="CrossButton" type="Button" parent="Content/Choices"]
-custom_minimum_size = Vector2(94, 38)
+[node name="CrossButton" parent="Content/Choices" instance=ExtResource("4_semantic_button")]
+custom_minimum_size = Vector2(94, 44)
 layout_mode = 2
 size_flags_horizontal = 3
-focus_mode = 2
-mouse_default_cursor_shape = 2
-theme_override_colors/icon_normal_color = Color(1, 1, 1, 0.95)
-theme_override_colors/icon_hover_color = Color(1.16, 1.05, 1.18, 1)
-theme_override_colors/icon_pressed_color = Color(0.8, 0.7, 0.9, 1)
-theme_override_constants/icon_max_width = 31
-theme_override_styles/normal = SubResource("StyleBoxEmpty")
-theme_override_styles/hover = SubResource("StyleBoxHover")
-theme_override_styles/pressed = SubResource("StyleBoxPressed")
-theme_override_styles/focus = SubResource("StyleBoxFocus")
 icon = SubResource("AtlasTextureCross")
-expand_icon = true
+text = "叉形标注"
 tooltip_text = "叉形标注"
+semantic_role = &"primary"
+show_semantic_mark = false
+show_label = false
 
-[node name="SquareButton" type="Button" parent="Content/Choices"]
-custom_minimum_size = Vector2(94, 38)
+[node name="SquareButton" parent="Content/Choices" instance=ExtResource("4_semantic_button")]
+custom_minimum_size = Vector2(94, 44)
 layout_mode = 2
 size_flags_horizontal = 3
-focus_mode = 2
-mouse_default_cursor_shape = 2
-theme_override_colors/icon_normal_color = Color(1, 1, 1, 0.95)
-theme_override_colors/icon_hover_color = Color(1.16, 1.05, 1.18, 1)
-theme_override_colors/icon_pressed_color = Color(0.8, 0.7, 0.9, 1)
-theme_override_constants/icon_max_width = 31
-theme_override_styles/normal = SubResource("StyleBoxEmpty")
-theme_override_styles/hover = SubResource("StyleBoxHover")
-theme_override_styles/pressed = SubResource("StyleBoxPressed")
-theme_override_styles/focus = SubResource("StyleBoxFocus")
 icon = SubResource("AtlasTextureSquare")
-expand_icon = true
+text = "方形标注"
 tooltip_text = "方形标注"
+semantic_role = &"primary"
+show_semantic_mark = false
+show_label = false
 
-[node name="ClearButton" type="Button" parent="Content/Choices"]
-custom_minimum_size = Vector2(94, 38)
+[node name="ClearButton" parent="Content/Choices" instance=ExtResource("4_semantic_button")]
+custom_minimum_size = Vector2(94, 44)
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 2
 mouse_default_cursor_shape = 2
 disabled = true
-theme_override_colors/icon_normal_color = Color(1, 1, 1, 0.95)
-theme_override_colors/icon_hover_color = Color(1.16, 1.05, 1.18, 1)
-theme_override_colors/icon_pressed_color = Color(0.8, 0.7, 0.9, 1)
-theme_override_colors/icon_disabled_color = Color(0.42, 0.42, 0.4, 0.52)
-theme_override_constants/icon_max_width = 31
-theme_override_styles/normal = SubResource("StyleBoxEmpty")
-theme_override_styles/hover = SubResource("StyleBoxHover")
-theme_override_styles/pressed = SubResource("StyleBoxPressed")
-theme_override_styles/disabled = SubResource("StyleBoxEmpty")
-theme_override_styles/focus = SubResource("StyleBoxFocus")
 icon = SubResource("AtlasTextureClear")
-expand_icon = true
+text = "清除标注"
 tooltip_text = "清除此交点的标注"
+semantic_role = &"danger"
+show_semantic_mark = false
+show_label = false

@@ -27,13 +27,14 @@ func _run() -> void:
 		and panel_art.texture.resource_path.ends_with("terminal_result_panel_v2.png"),
 		"terminal frame must use the approved chroma-keyed result-panel PNG",
 	)
-	var restart_button := dialog.get_node("%RestartButton") as TextureButton
-	var lobby_button := dialog.get_node("%LobbyButton") as TextureButton
+	var restart_button := dialog.get_node("%RestartButton") as Button
+	var lobby_button := dialog.get_node("%LobbyButton") as Button
 	_expect(
-		restart_button.texture_normal.resource_path.ends_with("terminal_result_button_primary_v2.png") \
-		and lobby_button.texture_normal.resource_path.ends_with("terminal_result_button_secondary_v2.png") \
-		and lobby_button.texture_hover.resource_path.ends_with("terminal_result_button_primary_v2.png"),
-		"terminal actions must use PNG plates for normal and hover states",
+		(restart_button.get("art_texture") as Texture2D).resource_path.ends_with("terminal_result_button_primary_v2.png") \
+		and (lobby_button.get("art_texture") as Texture2D).resource_path.ends_with("terminal_result_button_secondary_v2.png") \
+		and (lobby_button.get("hover_art_texture") as Texture2D).resource_path.ends_with("terminal_result_button_primary_v2.png") \
+		and (lobby_button.get_node("%ArtLayer") as TextureRect).stretch_mode == TextureRect.STRETCH_KEEP_ASPECT_CENTERED,
+		"terminal actions must use independent aspect-preserving PNG art layers",
 	)
 	var panel_image := Image.load_from_file(
 		ProjectSettings.globalize_path("res://assets/art/ui/terminal_result/terminal_result_panel_v2.png")

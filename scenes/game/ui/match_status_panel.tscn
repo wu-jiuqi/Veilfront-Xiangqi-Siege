@@ -1,4 +1,6 @@
-[gd_scene format=3]
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button.tscn" id="1_semantic_button"]
 
 [node name="MatchStatusPanel" type="PanelContainer"]
 custom_minimum_size = Vector2(280, 0)
@@ -43,29 +45,33 @@ autowrap_mode = 2
 layout_mode = 2
 columns = 2
 
-[node name="MoveButton" type="Button" parent="Content/ActionMode"]
+[node name="MoveButton" parent="Content/ActionMode" instance=ExtResource("1_semantic_button")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(98, 44)
 layout_mode = 2
 text = "普通移动"
+semantic_role = &"primary"
 
-[node name="BombardButton" type="Button" parent="Content/ActionMode"]
+[node name="BombardButton" parent="Content/ActionMode" instance=ExtResource("1_semantic_button")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(98, 44)
 layout_mode = 2
 text = "区域炮击"
+semantic_role = &"primary"
 
-[node name="ResurrectButton" type="Button" parent="Content/ActionMode"]
+[node name="ResurrectButton" parent="Content/ActionMode" instance=ExtResource("1_semantic_button")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(98, 44)
 layout_mode = 2
 text = "献祭复活"
+semantic_role = &"confirm"
 
-[node name="PassButton" type="Button" parent="Content/ActionMode"]
+[node name="PassButton" parent="Content/ActionMode" instance=ExtResource("1_semantic_button")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(98, 44)
 layout_mode = 2
 text = "主动跳过"
+semantic_role = &"confirm"
 
 [node name="MessageValue" type="Label" parent="Content"]
 unique_name_in_owner = true

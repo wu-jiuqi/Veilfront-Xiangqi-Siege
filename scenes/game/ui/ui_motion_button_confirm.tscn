@@ -4,6 +4,7 @@
 [ext_resource type="Resource" path="res://resources/game/ui/motion/terracotta_ui_motion_profile.tres" id="2_profile"]
 
 [node name="UiMotionButtonConfirm" instance=ExtResource("1_base")]
+custom_minimum_size = Vector2(0, 56)
 text = "确认操作"
 theme_type_variation = &"ConfirmButton"
 motion_profile = ExtResource("2_profile")

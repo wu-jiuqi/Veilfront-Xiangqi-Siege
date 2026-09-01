@@ -210,7 +210,8 @@ anchor_bottom = 0.75
 theme_type_variation = &"QuietButton"
 theme_override_font_sizes/font_size = 11
 text = "返回"
-motion_profile = null
+semantic_role = &"secondary"
+show_semantic_mark = false
 
 [node name="FactionRight" type="Control" parent="." unique_id=540878461]
 unique_name_in_owner = true
@@ -316,7 +317,8 @@ anchor_bottom = 0.75
 theme_type_variation = &"QuietButton"
 theme_override_font_sizes/font_size = 10
 text = "镜像"
-motion_profile = null
+semantic_role = &"secondary"
+show_semantic_mark = false
 
 [node name="UnitInfo" type="Control" parent="." unique_id=269808670]
 unique_name_in_owner = true
@@ -492,12 +494,9 @@ anchor_right = 0.46
 anchor_bottom = 0.9
 theme_type_variation = &"QuietButton"
 theme_override_font_sizes/font_size = 12
-theme_override_styles/normal = SubResource("StyleBoxActionEmpty")
-theme_override_styles/pressed = SubResource("StyleBoxActionPressed")
-theme_override_styles/hover = SubResource("StyleBoxActionHover")
-theme_override_styles/disabled = SubResource("StyleBoxActionEmpty")
 text = "跳过"
-motion_profile = null
+semantic_role = &"confirm"
+show_semantic_mark = false
 
 [node name="MessageValue" type="Label" parent="ObjectiveEvents" unique_id=86535464]
 unique_name_in_owner = true

@@ -9,6 +9,7 @@ extends Button
 @export var motion_profile: Resource
 @export var reduced_motion := false
 @export var semantic_role: StringName = &"primary"
+@export var semantic_shell_style: StyleBox
 @export_group("Visual Assets")
 @export var normal_surface: Texture2D
 @export var hover_surface: Texture2D
@@ -28,6 +29,8 @@ extends Button
 @onready var _surface := %Surface as NinePatchRect
 @onready var _art_layer := %ArtLayer as TextureRect
 @onready var _focus_frame := %FocusFrame as Panel
+@onready var _content_margin := %ContentMargin as MarginContainer
+@onready var _content_row := %ContentRow as HBoxContainer
 @onready var _icon_layer := %Icon as TextureRect
 @onready var _button_label := %ButtonLabel as Label
 @onready var _semantic_mark := %SemanticMark as Label
@@ -43,6 +46,7 @@ var _cached_disabled := false
 
 
 func _ready() -> void:
+	_enforce_semantic_shell()
 	offset_transform_enabled = true
 	offset_transform_visual_only = true
 	offset_transform_pivot = Vector2.ZERO
@@ -52,6 +56,26 @@ func _ready() -> void:
 	_visual_root.offset_transform_pivot = Vector2.ZERO
 	_visual_root.offset_transform_pivot_ratio = Vector2(0.5, 0.5)
 	sync_visual_state()
+
+
+func _enforce_semantic_shell() -> void:
+	# Screen-specific legacy Theme overrides must never redraw art or text on the
+	# semantic root. The authored child layers are the only visual presentation.
+	for style_name: StringName in [&"normal", &"hover", &"pressed", &"disabled", &"focus"]:
+		add_theme_stylebox_override(style_name, semantic_shell_style)
+	for color_name: StringName in [
+		&"font_color",
+		&"font_hover_color",
+		&"font_pressed_color",
+		&"font_focus_color",
+		&"font_disabled_color",
+		&"icon_normal_color",
+		&"icon_hover_color",
+		&"icon_pressed_color",
+		&"icon_focus_color",
+		&"icon_disabled_color",
+	]:
+		add_theme_color_override(color_name, Color(1, 1, 1, 0))
 
 
 func _notification(what: int) -> void:
@@ -86,7 +110,7 @@ func sync_visual_state() -> void:
 	_icon_layer.texture = icon
 	_icon_layer.visible = icon != null
 	_semantic_mark.text = semantic_mark_override if not semantic_mark_override.is_empty() else _role_mark()
-	_semantic_mark.visible = show_semantic_mark
+	_sync_content_density()
 	_semantic_mark.modulate = _role_text_color()
 	_button_label.modulate = _role_text_color()
 	if accessibility_name.is_empty():
@@ -142,6 +166,15 @@ func reset_motion() -> void:
 func _flush_visual_sync() -> void:
 	if is_instance_valid(self):
 		sync_visual_state()
+
+
+func _sync_content_density() -> void:
+	var compact := size.x > 0.0 and size.x < 160.0
+	var margin := 8 if compact else 22
+	for side: StringName in [&"margin_left", &"margin_top", &"margin_right", &"margin_bottom"]:
+		_content_margin.add_theme_constant_override(side, margin if side in [&"margin_left", &"margin_right"] else 8)
+	_content_row.add_theme_constant_override(&"separation", 6 if compact else 10)
+	_semantic_mark.visible = show_semantic_mark and (not compact or size.x >= 112.0)
 
 
 func _on_mouse_entered() -> void:
@@ -341,7 +374,7 @@ func _role_surface_color() -> Color:
 
 
 func _role_text_color() -> Color:
-	return Color(0.15, 0.105, 0.045, 1) if semantic_role == &"confirm" else Color(0.91, 0.87, 0.77, 1)
+	return Color(0.98, 0.89, 0.65, 1) if semantic_role == &"confirm" else Color(0.91, 0.87, 0.77, 1)
 
 
 func _role_mark() -> String:

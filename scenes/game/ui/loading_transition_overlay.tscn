@@ -716,31 +716,29 @@ alignment = 1
 unique_name_in_owner = true
 custom_minimum_size = Vector2(176, 58)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.96, 0.82, 0.58, 1)
-theme_override_colors/font_hover_color = Color(1, 0.91, 0.7, 1)
-theme_override_colors/font_pressed_color = Color(0.98, 0.74, 0.52, 1)
 theme_override_font_sizes/font_size = 22
-theme_override_styles/normal = SubResource("StyleRetryNormal")
-theme_override_styles/hover = SubResource("StyleRetryHover")
-theme_override_styles/pressed = SubResource("StyleRetryPressed")
-theme_override_styles/disabled = SubResource("StyleRetryDisabled")
 text = "重试"
 theme_type_variation = &"Button"
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+art_texture = ExtResource("9_retry_plate")
+semantic_role = &"primary"
 
 [node name="BackButton" parent="FailureLayer/FailureAnchor/FailureCard/Margin/Content/ButtonRow" instance=ExtResource("8_button")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(176, 58)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.86, 0.81, 0.7, 1)
-theme_override_colors/font_hover_color = Color(1, 0.92, 0.72, 1)
-theme_override_colors/font_pressed_color = Color(0.76, 0.73, 0.66, 1)
 theme_override_font_sizes/font_size = 22
-theme_override_styles/normal = SubResource("StyleBackNormal")
-theme_override_styles/hover = SubResource("StyleBackHover")
-theme_override_styles/pressed = SubResource("StyleBackPressed")
-theme_override_styles/disabled = SubResource("StyleBackDisabled")
 text = "返回"
 theme_type_variation = &"Button"
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+art_texture = ExtResource("10_back_plate")
+semantic_role = &"secondary"
 
 [connection signal="pressed" from="FailureLayer/FailureAnchor/FailureCard/Margin/Content/ButtonRow/RetryButton" to="." method="_on_retry_pressed"]
 [connection signal="pressed" from="FailureLayer/FailureAnchor/FailureCard/Margin/Content/ButtonRow/BackButton" to="." method="_on_back_pressed"]

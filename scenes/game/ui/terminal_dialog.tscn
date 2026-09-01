@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scripts/game/presentation/ui/match_terminal_dialog.gd" id="1_script"]
 [ext_resource type="Theme" path="res://resources/game/ui/themes/terracotta_ui_theme.tres" id="2_theme"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/terminal_result/terminal_result_panel_v2.png" id="3_panel"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/terminal_result/terminal_result_button_primary_v2.png" id="4_primary"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/terminal_result/terminal_result_button_secondary_v2.png" id="5_secondary"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button.tscn" id="6_semantic_button"]
 
 [node name="TerminalDialog" type="Control"]
 process_mode = 3
@@ -254,18 +255,21 @@ mouse_filter = 2
 theme_override_constants/separation = 10
 alignment = 1
 
-[node name="RestartButton" type="TextureButton" parent="SafeMargin/Center/ResultPanel/ContentOverlay/Actions"]
+[node name="RestartButton" parent="SafeMargin/Center/ResultPanel/ContentOverlay/Actions" instance=ExtResource("6_semantic_button")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 58)
 layout_mode = 2
-focus_mode = 2
-mouse_default_cursor_shape = 2
-texture_normal = ExtResource("4_primary")
-texture_pressed = ExtResource("5_secondary")
-texture_hover = ExtResource("4_primary")
-texture_focused = ExtResource("4_primary")
-ignore_texture_size = true
-stretch_mode = 0
+text = "重赛"
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+art_texture = ExtResource("4_primary")
+hover_art_texture = ExtResource("4_primary")
+pressed_art_texture = ExtResource("5_secondary")
+semantic_role = &"confirm"
+show_semantic_mark = false
+show_label = false
 
 [node name="Label" type="Label" parent="SafeMargin/Center/ResultPanel/ContentOverlay/Actions/RestartButton"]
 layout_mode = 1
@@ -283,18 +287,21 @@ text = "重  赛"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="LobbyButton" type="TextureButton" parent="SafeMargin/Center/ResultPanel/ContentOverlay/Actions"]
+[node name="LobbyButton" parent="SafeMargin/Center/ResultPanel/ContentOverlay/Actions" instance=ExtResource("6_semantic_button")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 58)
 layout_mode = 2
-focus_mode = 2
-mouse_default_cursor_shape = 2
-texture_normal = ExtResource("5_secondary")
-texture_pressed = ExtResource("5_secondary")
-texture_hover = ExtResource("4_primary")
-texture_focused = ExtResource("4_primary")
-ignore_texture_size = true
-stretch_mode = 0
+text = "返回大厅"
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+art_texture = ExtResource("5_secondary")
+hover_art_texture = ExtResource("4_primary")
+pressed_art_texture = ExtResource("5_secondary")
+semantic_role = &"secondary"
+show_semantic_mark = false
+show_label = false
 
 [node name="Label" type="Label" parent="SafeMargin/Center/ResultPanel/ContentOverlay/Actions/LobbyButton"]
 layout_mode = 1
@@ -312,18 +319,21 @@ text = "返回大厅"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="LevelSelectButton" type="TextureButton" parent="SafeMargin/Center/ResultPanel/ContentOverlay/Actions"]
+[node name="LevelSelectButton" parent="SafeMargin/Center/ResultPanel/ContentOverlay/Actions" instance=ExtResource("6_semantic_button")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 58)
 layout_mode = 2
-focus_mode = 2
-mouse_default_cursor_shape = 2
-texture_normal = ExtResource("5_secondary")
-texture_pressed = ExtResource("5_secondary")
-texture_hover = ExtResource("4_primary")
-texture_focused = ExtResource("4_primary")
-ignore_texture_size = true
-stretch_mode = 0
+text = "关卡选择"
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+art_texture = ExtResource("5_secondary")
+hover_art_texture = ExtResource("4_primary")
+pressed_art_texture = ExtResource("5_secondary")
+semantic_role = &"secondary"
+show_semantic_mark = false
+show_label = false
 
 [node name="Label" type="Label" parent="SafeMargin/Center/ResultPanel/ContentOverlay/Actions/LevelSelectButton"]
 layout_mode = 1

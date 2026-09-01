@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scripts/game/presentation/ui/terracotta_modal_dialog.gd" id="1_script"]
 [ext_resource type="Theme" path="res://resources/game/ui/themes/terracotta_ui_theme.tres" id="2_theme"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/system_dialog/system_dialog_panel_v1.png" id="3_panel"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/system_dialog/system_dialog_button_primary_v1.png" id="4_primary"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/system_dialog/system_dialog_button_secondary_v1.png" id="5_secondary"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button.tscn" id="6_semantic_button"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmptyButton"]
 
@@ -75,25 +76,21 @@ text = "弹窗标题"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="CloseButton" type="Button" parent="DialogCenter/DialogCanvas"]
+[node name="CloseButton" parent="DialogCenter/DialogCanvas" instance=ExtResource("6_semantic_button")]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 680.0
 offset_top = 78.0
 offset_right = 718.0
 offset_bottom = 114.0
-focus_mode = 2
-mouse_default_cursor_shape = 2
-theme_override_colors/font_color = Color(0.9, 0.82, 0.64, 1)
-theme_override_colors/font_hover_color = Color(1, 0.86, 0.56, 1)
-theme_override_colors/font_focus_color = Color(1, 0.86, 0.56, 1)
 theme_override_font_sizes/font_size = 22
-theme_override_styles/normal = SubResource("StyleBoxEmptyButton")
-theme_override_styles/hover = SubResource("StyleBoxEmptyButton")
-theme_override_styles/pressed = SubResource("StyleBoxEmptyButton")
-theme_override_styles/focus = SubResource("StyleBoxEmptyButton")
 text = "X"
-flat = true
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+semantic_role = &"secondary"
+show_semantic_mark = false
 
 [node name="BodyLabel" type="Label" parent="DialogCenter/DialogCanvas"]
 unique_name_in_owner = true
@@ -142,7 +139,7 @@ texture = ExtResource("5_secondary")
 expand_mode = 1
 stretch_mode = 0
 
-[node name="CancelButton" type="Button" parent="DialogCenter/DialogCanvas/ButtonRow/CancelSlot"]
+[node name="CancelButton" parent="DialogCenter/DialogCanvas/ButtonRow/CancelSlot" instance=ExtResource("6_semantic_button")]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -150,20 +147,15 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-focus_mode = 2
-mouse_default_cursor_shape = 2
-theme_override_colors/font_color = Color(0.84, 0.81, 0.72, 1)
-theme_override_colors/font_hover_color = Color(1, 0.91, 0.66, 1)
-theme_override_colors/font_focus_color = Color(1, 0.91, 0.66, 1)
-theme_override_colors/font_pressed_color = Color(0.72, 0.68, 0.58, 1)
 theme_override_font_sizes/font_size = 18
-theme_override_styles/normal = SubResource("StyleBoxEmptyButton")
-theme_override_styles/hover = SubResource("StyleBoxEmptyButton")
-theme_override_styles/pressed = SubResource("StyleBoxEmptyButton")
-theme_override_styles/focus = SubResource("StyleBoxEmptyButton")
 text = "取消"
-flat = true
 alignment = 1
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+semantic_role = &"secondary"
+show_semantic_mark = false
 
 [node name="ConfirmSlot" type="Control" parent="DialogCenter/DialogCanvas/ButtonRow"]
 unique_name_in_owner = true
@@ -183,7 +175,7 @@ texture = ExtResource("4_primary")
 expand_mode = 1
 stretch_mode = 0
 
-[node name="ConfirmButton" type="Button" parent="DialogCenter/DialogCanvas/ButtonRow/ConfirmSlot"]
+[node name="ConfirmButton" parent="DialogCenter/DialogCanvas/ButtonRow/ConfirmSlot" instance=ExtResource("6_semantic_button")]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -191,17 +183,12 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-focus_mode = 2
-mouse_default_cursor_shape = 2
-theme_override_colors/font_color = Color(1, 0.9, 0.62, 1)
-theme_override_colors/font_hover_color = Color(1, 0.96, 0.78, 1)
-theme_override_colors/font_focus_color = Color(1, 0.96, 0.78, 1)
-theme_override_colors/font_pressed_color = Color(0.78, 0.68, 0.46, 1)
 theme_override_font_sizes/font_size = 18
-theme_override_styles/normal = SubResource("StyleBoxEmptyButton")
-theme_override_styles/hover = SubResource("StyleBoxEmptyButton")
-theme_override_styles/pressed = SubResource("StyleBoxEmptyButton")
-theme_override_styles/focus = SubResource("StyleBoxEmptyButton")
 text = "确定"
-flat = true
 alignment = 1
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+semantic_role = &"confirm"
+show_semantic_mark = false

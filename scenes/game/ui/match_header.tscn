@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/game/ui/turn_progress_incense.tscn" id="1_incense"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button.tscn" id="2_semantic_button"]
 
 [node name="MatchHeader" type="PanelContainer"]
 custom_minimum_size = Vector2(0, 64)
@@ -10,12 +11,13 @@ theme_type_variation = &"TurnStatusPanel"
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="ReturnButton" type="Button" parent="Content"]
+[node name="ReturnButton" parent="Content" instance=ExtResource("2_semantic_button")]
 visible = false
 unique_name_in_owner = true
 custom_minimum_size = Vector2(112, 44)
 layout_mode = 2
 text = "退出教学"
+semantic_role = &"danger"
 
 [node name="Title" type="Label" parent="Content"]
 layout_mode = 2
@@ -35,8 +37,9 @@ text = "回合：-- / 50"
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="MirrorButton" type="Button" parent="Content"]
+[node name="MirrorButton" parent="Content" instance=ExtResource("2_semantic_button")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(148, 44)
 layout_mode = 2
 text = "切换黑方镜像"
+semantic_role = &"secondary"

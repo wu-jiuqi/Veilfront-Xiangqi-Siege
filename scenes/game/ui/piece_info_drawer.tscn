@@ -115,13 +115,10 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"QuietButton"
 theme_override_font_sizes/font_size = 11
-theme_override_styles/normal = SubResource("StyleBoxEmpty_normal")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_pressed")
-theme_override_styles/hover = SubResource("StyleBoxFlat_hover")
-theme_override_styles/disabled = SubResource("StyleBoxFlat_disabled")
 toggle_mode = true
 text = "移动"
-motion_profile = null
+semantic_role = &"primary"
+show_semantic_mark = false
 
 [node name="BombardButton" parent="ContentMargin/ContentRow/SkillButtons" unique_id=91402327 instance=ExtResource("3_button")]
 unique_name_in_owner = true
@@ -130,13 +127,10 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"QuietButton"
 theme_override_font_sizes/font_size = 11
-theme_override_styles/normal = SubResource("StyleBoxEmpty_normal")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_pressed")
-theme_override_styles/hover = SubResource("StyleBoxFlat_hover")
-theme_override_styles/disabled = SubResource("StyleBoxFlat_disabled")
 toggle_mode = true
 text = "轰炸"
-motion_profile = null
+semantic_role = &"primary"
+show_semantic_mark = false
 
 [node name="ResurrectButton" parent="ContentMargin/ContentRow/SkillButtons" unique_id=1354400505 instance=ExtResource("3_button")]
 unique_name_in_owner = true
@@ -145,13 +139,10 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"QuietButton"
 theme_override_font_sizes/font_size = 11
-theme_override_styles/normal = SubResource("StyleBoxEmpty_normal")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_pressed")
-theme_override_styles/hover = SubResource("StyleBoxFlat_hover")
-theme_override_styles/disabled = SubResource("StyleBoxFlat_disabled")
 toggle_mode = true
 text = "复活"
-motion_profile = null
+semantic_role = &"confirm"
+show_semantic_mark = false
 
 [node name="NoSkillButton" parent="ContentMargin/ContentRow/SkillButtons" unique_id=374461301 instance=ExtResource("3_button")]
 unique_name_in_owner = true
@@ -160,10 +151,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"QuietButton"
 theme_override_font_sizes/font_size = 11
-theme_override_styles/normal = SubResource("StyleBoxEmpty_normal")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_pressed")
-theme_override_styles/hover = SubResource("StyleBoxFlat_hover")
-theme_override_styles/disabled = SubResource("StyleBoxFlat_disabled")
 disabled = true
 text = "无技能"
-motion_profile = null
+semantic_role = &"secondary"
+show_semantic_mark = false

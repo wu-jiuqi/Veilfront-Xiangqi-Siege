@@ -42,7 +42,7 @@ corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
 [node name="UiMotionButton" type="Button" groups=["ui_motion_buttons"]]
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 48)
 focus_mode = 2
 mouse_default_cursor_shape = 2
 offset_transform_enabled = true
@@ -63,12 +63,13 @@ theme_override_styles/hover = SubResource("StyleBoxSemanticShell")
 theme_override_styles/pressed = SubResource("StyleBoxSemanticShell")
 theme_override_styles/disabled = SubResource("StyleBoxSemanticShell")
 theme_override_styles/focus = SubResource("StyleBoxSemanticShell")
+script = ExtResource("1_script")
 motion_profile = ExtResource("2_profile")
+semantic_shell_style = SubResource("StyleBoxSemanticShell")
 normal_surface = SubResource("AtlasNormal")
 hover_surface = SubResource("AtlasHover")
 pressed_surface = SubResource("AtlasPressed")
 disabled_surface = SubResource("AtlasDisabled")
-script = ExtResource("1_script")
 semantic_role = &"primary"
 
 [node name="VisualRoot" type="Control" parent="."]
@@ -123,6 +124,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+expand_mode = 1
 stretch_mode = 5
 
 [node name="FocusFrame" type="Panel" parent="VisualRoot"]

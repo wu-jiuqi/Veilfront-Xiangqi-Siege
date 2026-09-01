@@ -54,6 +54,7 @@ func _check_variant(role: StringName, scene_path: String) -> void:
 	_expect(visual_root != null and visual_root.mouse_filter == Control.MOUSE_FILTER_IGNORE, "视觉根必须忽略输入：%s" % role)
 	_expect(surface != null and surface.mouse_filter == Control.MOUSE_FILTER_IGNORE, "按钮表面必须独立且忽略输入：%s" % role)
 	_expect(art_layer != null and art_layer.stretch_mode == TextureRect.STRETCH_KEEP_ASPECT_CENTERED, "插画层必须保持比例：%s" % role)
+	_expect(art_layer != null and art_layer.expand_mode == TextureRect.EXPAND_IGNORE_SIZE, "插画层不能用原图尺寸撑开布局：%s" % role)
 	_expect(focus_frame != null and focus_frame.mouse_filter == Control.MOUSE_FILTER_IGNORE, "焦点框必须独立且忽略输入：%s" % role)
 	_expect(button.has_method("sync_visual_state"), "按钮缺少显式视觉同步接口：%s" % role)
 	button.text = "测试%s" % role
