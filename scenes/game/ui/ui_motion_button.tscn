@@ -1,7 +1,45 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://scripts/game/presentation/ui/ui_motion_button.gd" id="1_script"]
 [ext_resource type="Resource" path="res://resources/game/ui/motion/terracotta_ui_motion_profile.tres" id="2_profile"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/terracotta_hud_v2/action_button_states_v1.png" id="3_button_atlas"]
+
+[sub_resource type="AtlasTexture" id="AtlasNormal"]
+atlas = ExtResource("3_button_atlas")
+region = Rect2(0, 94, 543, 497)
+
+[sub_resource type="AtlasTexture" id="AtlasHover"]
+atlas = ExtResource("3_button_atlas")
+region = Rect2(543, 94, 543, 497)
+
+[sub_resource type="AtlasTexture" id="AtlasPressed"]
+atlas = ExtResource("3_button_atlas")
+region = Rect2(1086, 94, 543, 497)
+
+[sub_resource type="AtlasTexture" id="AtlasDisabled"]
+atlas = ExtResource("3_button_atlas")
+region = Rect2(1629, 94, 543, 497)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxSemanticShell"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxShadow"]
+bg_color = Color(0.015, 0.012, 0.009, 0.82)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFocus"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.96, 0.78, 0.4, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
 
 [node name="UiMotionButton" type="Button" groups=["ui_motion_buttons"]]
 custom_minimum_size = Vector2(220, 64)
@@ -10,9 +48,152 @@ mouse_default_cursor_shape = 2
 offset_transform_enabled = true
 offset_transform_visual_only = true
 theme_type_variation = &"PrimaryButton"
+theme_override_colors/font_color = Color(1, 1, 1, 0)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 0)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 0)
+theme_override_colors/font_focus_color = Color(1, 1, 1, 0)
+theme_override_colors/font_disabled_color = Color(1, 1, 1, 0)
+theme_override_colors/icon_normal_color = Color(1, 1, 1, 0)
+theme_override_colors/icon_hover_color = Color(1, 1, 1, 0)
+theme_override_colors/icon_pressed_color = Color(1, 1, 1, 0)
+theme_override_colors/icon_focus_color = Color(1, 1, 1, 0)
+theme_override_colors/icon_disabled_color = Color(1, 1, 1, 0)
+theme_override_styles/normal = SubResource("StyleBoxSemanticShell")
+theme_override_styles/hover = SubResource("StyleBoxSemanticShell")
+theme_override_styles/pressed = SubResource("StyleBoxSemanticShell")
+theme_override_styles/disabled = SubResource("StyleBoxSemanticShell")
+theme_override_styles/focus = SubResource("StyleBoxSemanticShell")
 motion_profile = ExtResource("2_profile")
+normal_surface = SubResource("AtlasNormal")
+hover_surface = SubResource("AtlasHover")
+pressed_surface = SubResource("AtlasPressed")
+disabled_surface = SubResource("AtlasDisabled")
 script = ExtResource("1_script")
 semantic_role = &"primary"
+
+[node name="VisualRoot" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+offset_transform_enabled = true
+offset_transform_visual_only = true
+
+[node name="Shadow" type="Panel" parent="VisualRoot"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 3.0
+offset_top = 5.0
+offset_right = 3.0
+offset_bottom = 5.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxShadow")
+
+[node name="Surface" type="NinePatchRect" parent="VisualRoot"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("AtlasNormal")
+patch_margin_left = 42
+patch_margin_top = 24
+patch_margin_right = 42
+patch_margin_bottom = 24
+
+[node name="ArtLayer" type="TextureRect" parent="VisualRoot"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+stretch_mode = 5
+
+[node name="FocusFrame" type="Panel" parent="VisualRoot"]
+unique_name_in_owner = true
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -4.0
+offset_top = -4.0
+offset_right = 4.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFocus")
+
+[node name="ContentMargin" type="MarginContainer" parent="VisualRoot"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 22
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 22
+theme_override_constants/margin_bottom = 10
+
+[node name="ContentRow" type="HBoxContainer" parent="VisualRoot/ContentMargin"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="Icon" type="TextureRect" parent="VisualRoot/ContentMargin/ContentRow"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+mouse_filter = 2
+expand_mode = 3
+stretch_mode = 5
+
+[node name="ButtonLabel" type="Label" parent="VisualRoot/ContentMargin/ContentRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_type_variation = &"UiControlText"
+theme_override_colors/font_color = Color(0.91, 0.87, 0.77, 1)
+theme_override_font_sizes/font_size = 18
+text = "主要操作"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SemanticMark" type="Label" parent="VisualRoot/ContentMargin/ContentRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(22, 0)
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"UiControlText"
+theme_override_colors/font_color = Color(0.91, 0.87, 0.77, 1)
+theme_override_font_sizes/font_size = 18
+text = "◆"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [connection signal="button_down" from="." to="." method="_on_button_down"]
 [connection signal="button_up" from="." to="." method="_on_button_up"]
