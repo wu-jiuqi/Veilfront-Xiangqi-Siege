@@ -1,0 +1,219 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Theme" path="res://resources/game/ui/themes/veilfront_ui_theme_v2.tres" id="1_theme"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_primary.tscn" id="2_primary"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_secondary.tscn" id="3_secondary"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_confirm.tscn" id="4_confirm"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_danger.tscn" id="5_danger"]
+
+[node name="UiCompleteRebuildGallery" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.014, 0.019, 0.02, 1)
+
+[node name="AmbientBand" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 172.0
+grow_horizontal = 2
+mouse_filter = 2
+color = Color(0.13, 0.07, 0.025, 0.55)
+
+[node name="SafeMargin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 32.0
+offset_top = 24.0
+offset_right = -32.0
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Page" type="PanelContainer" parent="SafeMargin"]
+layout_mode = 2
+theme_type_variation = &"PageSurface"
+
+[node name="Content" type="VBoxContainer" parent="SafeMargin/Page"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Header" type="HBoxContainer" parent="SafeMargin/Page/Content"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="TitleGroup" type="VBoxContainer" parent="SafeMargin/Page/Content/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Title" type="Label" parent="SafeMargin/Page/Content/Header/TitleGroup"]
+layout_mode = 2
+theme_type_variation = &"ScreenTitle"
+text = "玄铁军帐 · 统一界面基线"
+
+[node name="Subtitle" type="Label" parent="SafeMargin/Page/Content/Header/TitleGroup"]
+layout_mode = 2
+theme_type_variation = &"SecondaryText"
+text = "同一网格、同一表面、同一按钮家族"
+
+[node name="Status" type="PanelContainer" parent="SafeMargin/Page/Content/Header"]
+custom_minimum_size = Vector2(210, 48)
+layout_mode = 2
+theme_type_variation = &"InsetSurface"
+
+[node name="Label" type="Label" parent="SafeMargin/Page/Content/Header/Status"]
+layout_mode = 2
+theme_type_variation = &"StatusSuccess"
+text = "● 视觉系统已连接"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Separator" type="HSeparator" parent="SafeMargin/Page/Content"]
+layout_mode = 2
+
+[node name="Body" type="HBoxContainer" parent="SafeMargin/Page/Content"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="PrimaryPanel" type="PanelContainer" parent="SafeMargin/Page/Content/Body"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"PrimarySurface"
+
+[node name="Column" type="VBoxContainer" parent="SafeMargin/Page/Content/Body/PrimaryPanel"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="SafeMargin/Page/Content/Body/PrimaryPanel/Column"]
+layout_mode = 2
+theme_type_variation = &"SectionTitle"
+text = "核心任务区"
+
+[node name="Body" type="Label" parent="SafeMargin/Page/Content/Body/PrimaryPanel/Column"]
+layout_mode = 2
+theme_type_variation = &"BodyText"
+text = "正文独立承载信息，装饰不再决定控件尺寸。页面依靠 Container 对齐，所有状态都从同一 Theme 派生。"
+autowrap_mode = 2
+
+[node name="Inset" type="PanelContainer" parent="SafeMargin/Page/Content/Body/PrimaryPanel/Column"]
+custom_minimum_size = Vector2(0, 88)
+layout_mode = 2
+theme_type_variation = &"InsetSurface"
+
+[node name="Label" type="Label" parent="SafeMargin/Page/Content/Body/PrimaryPanel/Column/Inset"]
+layout_mode = 2
+text = "当前目标\n确认主按钮、次按钮与面板材质自然融合。"
+vertical_alignment = 1
+
+[node name="Progress" type="ProgressBar" parent="SafeMargin/Page/Content/Body/PrimaryPanel/Column"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+value = 68.0
+show_percentage = false
+
+[node name="SecondaryPanel" type="PanelContainer" parent="SafeMargin/Page/Content/Body"]
+custom_minimum_size = Vector2(340, 0)
+layout_mode = 2
+theme_type_variation = &"SecondarySurface"
+
+[node name="Column" type="VBoxContainer" parent="SafeMargin/Page/Content/Body/SecondaryPanel"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="SafeMargin/Page/Content/Body/SecondaryPanel/Column"]
+layout_mode = 2
+theme_type_variation = &"SectionTitle"
+text = "辅助信息"
+
+[node name="Metric" type="Label" parent="SafeMargin/Page/Content/Body/SecondaryPanel/Column"]
+layout_mode = 2
+theme_type_variation = &"NumericText"
+text = "09 / 18"
+
+[node name="Hint" type="Label" parent="SafeMargin/Page/Content/Body/SecondaryPanel/Column"]
+layout_mode = 2
+theme_type_variation = &"SecondaryText"
+text = "辅助信息保持清楚，但不与主任务争夺注意力。"
+autowrap_mode = 2
+
+[node name="Spacer" type="Control" parent="SafeMargin/Page/Content/Body/SecondaryPanel/Column"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Warning" type="PanelContainer" parent="SafeMargin/Page/Content/Body/SecondaryPanel/Column"]
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+theme_type_variation = &"DangerSurface"
+
+[node name="Label" type="Label" parent="SafeMargin/Page/Content/Body/SecondaryPanel/Column/Warning"]
+layout_mode = 2
+theme_type_variation = &"StatusDanger"
+text = "危险操作使用铁红语义"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Separator2" type="HSeparator" parent="SafeMargin/Page/Content"]
+layout_mode = 2
+
+[node name="ButtonRow" type="HBoxContainer" parent="SafeMargin/Page/Content"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="PrimaryButton" parent="SafeMargin/Page/Content/ButtonRow" instance=ExtResource("2_primary")]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_neighbor_left = NodePath("../DangerButton")
+focus_neighbor_right = NodePath("../SecondaryButton")
+focus_next = NodePath("../SecondaryButton")
+focus_previous = NodePath("../DangerButton")
+text = "主要操作"
+
+[node name="SecondaryButton" parent="SafeMargin/Page/Content/ButtonRow" instance=ExtResource("3_secondary")]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_neighbor_left = NodePath("../PrimaryButton")
+focus_neighbor_right = NodePath("../ConfirmButton")
+focus_next = NodePath("../ConfirmButton")
+focus_previous = NodePath("../PrimaryButton")
+text = "次要操作"
+
+[node name="ConfirmButton" parent="SafeMargin/Page/Content/ButtonRow" instance=ExtResource("4_confirm")]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_neighbor_left = NodePath("../SecondaryButton")
+focus_neighbor_right = NodePath("../DangerButton")
+focus_next = NodePath("../DangerButton")
+focus_previous = NodePath("../SecondaryButton")
+text = "确认推进"
+
+[node name="DangerButton" parent="SafeMargin/Page/Content/ButtonRow" instance=ExtResource("5_danger")]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_neighbor_left = NodePath("../ConfirmButton")
+focus_neighbor_right = NodePath("../PrimaryButton")
+focus_next = NodePath("../PrimaryButton")
+focus_previous = NodePath("../ConfirmButton")
+text = "危险操作"

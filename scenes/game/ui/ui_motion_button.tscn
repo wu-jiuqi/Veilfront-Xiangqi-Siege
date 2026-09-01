@@ -4,7 +4,7 @@
 [ext_resource type="Resource" path="res://resources/game/ui/motion/terracotta_ui_motion_profile.tres" id="2_profile"]
 
 [node name="UiMotionButton" type="Button" groups=["ui_motion_buttons"]]
-custom_minimum_size = Vector2(220, 64)
+custom_minimum_size = Vector2(180, 52)
 focus_mode = 2
 mouse_default_cursor_shape = 2
 offset_transform_enabled = true
