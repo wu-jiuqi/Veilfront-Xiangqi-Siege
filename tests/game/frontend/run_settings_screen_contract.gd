@@ -52,19 +52,19 @@ func _init() -> void:
 		assert(button.alignment == HORIZONTAL_ALIGNMENT_CENTER, "%s text must stay centered in its PNG surface" % button_name)
 		assert(button.has_method("set_reduced_motion"), "%s must use the reusable motion-button preset" % button_name)
 		assert(button.offset_transform_enabled, "%s must use visual-only offset transforms" % button_name)
-		var normal_style := button.get_theme_stylebox(&"normal") as StyleBoxTexture
-		assert(is_equal_approx(normal_style.content_margin_left, normal_style.content_margin_right))
-		assert(is_equal_approx(normal_style.content_margin_top, normal_style.content_margin_bottom))
-		for style_name: StringName in [&"normal", &"hover", &"pressed", &"disabled"]:
-			_assert_texture_style_fits_control(button, button.get_theme_stylebox(style_name) as StyleBoxTexture)
+		assert(button.get_theme_stylebox(&"normal") is StyleBoxEmpty)
+		var button_art := button.get_node("%ArtLayer") as TextureRect
+		assert(button_art.mouse_filter == Control.MOUSE_FILTER_IGNORE)
+		assert(button_art.stretch_mode == TextureRect.STRETCH_KEEP_ASPECT_CENTERED)
+		assert((button.get("art_texture") as Texture2D).resource_path == "res://assets/art/ui/settings/png_v2/settings_button_secondary_v2.png")
+		assert((button.get_node("%FocusFrame") as Panel).get_theme_stylebox(&"panel") is StyleBoxFlat)
 	assert(settings_screen.get_node("%BackButton").theme_type_variation == &"SettingsPngSecondaryButton")
 	assert(settings_screen.get_node("%ApplyButton").theme_type_variation == &"SettingsPngPrimaryButton")
 	var settings_panel_style := (settings_screen.get_node("%SettingsFrame") as PanelContainer).get_theme_stylebox(&"panel") as StyleBoxTexture
 	assert(settings_panel_style.texture.resource_path == "res://assets/art/ui/settings/png_v2/settings_frame_v2.png")
-	var secondary_style := (settings_screen.get_node("%BackButton") as Button).get_theme_stylebox(&"normal") as StyleBoxTexture
-	assert(secondary_style.texture.resource_path == "res://assets/art/ui/settings/png_v2/settings_button_secondary_v2.png")
-	var primary_style := (settings_screen.get_node("%ApplyButton") as Button).get_theme_stylebox(&"normal") as StyleBoxTexture
-	assert(primary_style.texture.resource_path == "res://assets/art/ui/settings/png_v2/settings_button_secondary_v2.png")
+	assert((settings_screen.get_node("%BackButton") as Button).get("semantic_role") == &"secondary")
+	assert((settings_screen.get_node("%ApplyButton") as Button).get("semantic_role") == &"confirm")
+	assert((settings_screen.get_node("%ResetProgressButton") as Button).get("semantic_role") == &"danger")
 	var tabs := settings_screen.get_node("%SettingsTabs") as TabContainer
 	var active_tab_style := tabs.get_theme_stylebox(&"tab_selected") as StyleBoxTexture
 	var inactive_tab_style := tabs.get_theme_stylebox(&"tab_unselected") as StyleBoxTexture

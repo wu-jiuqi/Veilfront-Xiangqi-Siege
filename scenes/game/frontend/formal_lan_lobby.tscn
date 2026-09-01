@@ -38,6 +38,7 @@
 [ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/ready_cancel_button_v2.png" id="38_ready_cancel"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/lan_lobby/slices_v3/start_game_button_v2.png" id="39_start_game"]
 [ext_resource type="PackedScene" path="res://scenes/game/audio/frontend_audio_feedback.tscn" id="40_frontend_audio"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button.tscn" id="41_semantic_button"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleEmpty"]
 
@@ -166,19 +167,24 @@ text = "等待联机"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ReturnToMainMenuButton" type="TextureButton" parent="LobbyChrome" unique_id=1466750775]
+[node name="ReturnToMainMenuButton" parent="LobbyChrome" unique_id=1466750775 instance=ExtResource("41_semantic_button")]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 2.0
 offset_top = 13.0
 offset_right = 87.0
 offset_bottom = 63.0
-mouse_default_cursor_shape = 2
-texture_normal = ExtResource("7_return")
-texture_pressed = ExtResource("9_return_pressed")
-texture_hover = ExtResource("8_return_hover")
-ignore_texture_size = true
-stretch_mode = 0
+text = "返回主菜单"
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+art_texture = ExtResource("7_return")
+hover_art_texture = ExtResource("8_return_hover")
+pressed_art_texture = ExtResource("9_return_pressed")
+semantic_role = &"secondary"
+show_semantic_mark = false
+show_label = false
 
 [node name="RoomInfoPanel" type="TextureRect" parent="LobbyChrome" unique_id=324985797]
 layout_mode = 0
@@ -255,19 +261,24 @@ min_value = 1024.0
 max_value = 65535.0
 value = 27771.0
 
-[node name="CopyAddressButton" type="TextureButton" parent="LobbyChrome" unique_id=623456462]
+[node name="CopyAddressButton" parent="LobbyChrome" unique_id=623456462 instance=ExtResource("41_semantic_button")]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 63.0
 offset_top = 377.0
 offset_right = 256.0
 offset_bottom = 427.0
-mouse_default_cursor_shape = 2
-texture_normal = ExtResource("12_copy")
-texture_pressed = ExtResource("14_copy_pressed")
-texture_hover = ExtResource("13_copy_hover")
-ignore_texture_size = true
-stretch_mode = 0
+text = "复制地址"
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+art_texture = ExtResource("12_copy")
+hover_art_texture = ExtResource("13_copy_hover")
+pressed_art_texture = ExtResource("14_copy_pressed")
+semantic_role = &"secondary"
+show_semantic_mark = false
+show_label = false
 
 [node name="VersusPanel" type="TextureRect" parent="LobbyChrome" unique_id=2077974636]
 layout_mode = 0
@@ -413,53 +424,68 @@ mouse_filter = 2
 texture = ExtResource("18_actions")
 expand_mode = 1
 
-[node name="DisconnectButton" type="TextureButton" parent="LobbyChrome" unique_id=872558267]
+[node name="DisconnectButton" parent="LobbyChrome" unique_id=872558267 instance=ExtResource("41_semantic_button")]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 626.0
 offset_top = 635.0
 offset_right = 824.0
 offset_bottom = 702.0
-mouse_default_cursor_shape = 2
 disabled = true
-texture_normal = ExtResource("19_disconnect")
-texture_pressed = ExtResource("21_disconnect_pressed")
-texture_hover = ExtResource("20_disconnect_hover")
-texture_disabled = ExtResource("22_disconnect_disabled")
-ignore_texture_size = true
-stretch_mode = 0
+text = "断开连接"
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+art_texture = ExtResource("19_disconnect")
+hover_art_texture = ExtResource("20_disconnect_hover")
+pressed_art_texture = ExtResource("21_disconnect_pressed")
+disabled_art_texture = ExtResource("22_disconnect_disabled")
+semantic_role = &"danger"
+show_semantic_mark = false
+show_label = false
 
-[node name="JoinButton" type="TextureButton" parent="LobbyChrome" unique_id=33444202]
+[node name="JoinButton" parent="LobbyChrome" unique_id=33444202 instance=ExtResource("41_semantic_button")]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 839.0
 offset_top = 635.0
 offset_right = 1023.0
 offset_bottom = 702.0
-mouse_default_cursor_shape = 2
-texture_normal = ExtResource("23_join")
-texture_pressed = ExtResource("25_join_pressed")
-texture_hover = ExtResource("24_join_hover")
-texture_disabled = ExtResource("26_join_disabled")
-ignore_texture_size = true
-stretch_mode = 0
+text = "加入房间"
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+art_texture = ExtResource("23_join")
+hover_art_texture = ExtResource("24_join_hover")
+pressed_art_texture = ExtResource("25_join_pressed")
+disabled_art_texture = ExtResource("26_join_disabled")
+semantic_role = &"primary"
+show_semantic_mark = false
+show_label = false
 
-[node name="HostButton" type="TextureButton" parent="LobbyChrome" unique_id=178335980]
+[node name="HostButton" parent="LobbyChrome" unique_id=178335980 instance=ExtResource("41_semantic_button")]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 1036.0
 offset_top = 635.0
 offset_right = 1250.0
 offset_bottom = 702.0
-mouse_default_cursor_shape = 2
-texture_normal = ExtResource("27_host")
-texture_pressed = ExtResource("29_host_pressed")
-texture_hover = ExtResource("28_host_hover")
-texture_disabled = ExtResource("30_host_disabled")
-ignore_texture_size = true
-stretch_mode = 0
+text = "创建房间"
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+art_texture = ExtResource("27_host")
+hover_art_texture = ExtResource("28_host_hover")
+pressed_art_texture = ExtResource("29_host_pressed")
+disabled_art_texture = ExtResource("30_host_disabled")
+semantic_role = &"primary"
+show_semantic_mark = false
+show_label = false
 
-[node name="ReadyButton" type="Button" parent="LobbyChrome" unique_id=1979154577]
+[node name="ReadyButton" parent="LobbyChrome" unique_id=1979154577 instance=ExtResource("41_semantic_button")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
@@ -467,15 +493,20 @@ offset_left = 839.0
 offset_top = 635.0
 offset_right = 1023.0
 offset_bottom = 702.0
-mouse_default_cursor_shape = 2
-theme_override_styles/normal = SubResource("StyleReadyConfirm")
-theme_override_styles/hover = SubResource("StyleReadyConfirmHover")
-theme_override_styles/pressed = SubResource("StyleReadyCancel")
-theme_override_styles/disabled = SubResource("StyleReadyDisabled")
-theme_override_styles/focus = SubResource("StyleActionFocus")
 toggle_mode = true
+text = "准备"
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+art_texture = ExtResource("37_ready_confirm")
+pressed_art_texture = ExtResource("38_ready_cancel")
+disabled_art_texture = ExtResource("38_ready_cancel")
+semantic_role = &"confirm"
+show_semantic_mark = false
+show_label = false
 
-[node name="StartButton" type="Button" parent="LobbyChrome" unique_id=1578484669]
+[node name="StartButton" parent="LobbyChrome" unique_id=1578484669 instance=ExtResource("41_semantic_button")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
@@ -483,12 +514,15 @@ offset_left = 1036.0
 offset_top = 635.0
 offset_right = 1250.0
 offset_bottom = 702.0
-mouse_default_cursor_shape = 2
-theme_override_styles/normal = SubResource("StyleStartGame")
-theme_override_styles/hover = SubResource("StyleStartGameHover")
-theme_override_styles/pressed = SubResource("StyleStartGamePressed")
-theme_override_styles/disabled = SubResource("StyleStartGameDisabled")
-theme_override_styles/focus = SubResource("StyleActionFocus")
+text = "开始游戏"
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+art_texture = ExtResource("39_start_game")
+semantic_role = &"confirm"
+show_semantic_mark = false
+show_label = false
 
 [node name="FrontendAudioFeedback" parent="." instance=ExtResource("40_frontend_audio")]
 unique_name_in_owner = true

@@ -167,7 +167,8 @@ func _init() -> void:
 
 
 func _count_texture_rects(node: Node) -> int:
-	var count := 1 if node is TextureRect else 0
+	var is_semantic_visual := node.name == &"ArtLayer" or node.name == &"Icon"
+	var count := 1 if node is TextureRect and not is_semantic_visual else 0
 	for child: Node in node.get_children():
 		count += _count_texture_rects(child)
 	return count

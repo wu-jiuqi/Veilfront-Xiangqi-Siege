@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3]
+[gd_scene load_steps=20 format=3]
 
 [ext_resource type="Script" path="res://scripts/game/frontend/start_menu_overlay.gd" id="1_script"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/start_sequence/veilfront_logo_gold_pair_v2.png" id="2_logo_pair"]
@@ -8,6 +8,7 @@
 [ext_resource type="Shader" path="res://assets/shaders/ui/title_impact_mist.gdshader" id="6_impact_mist"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/start_sequence/menu_bronze_sword_button_v1.png" id="7_sword_button"]
 [ext_resource type="PackedScene" path="res://scenes/game/ui/terracotta_modal_dialog.tscn" id="8_dialog"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button.tscn" id="9_semantic_button"]
 
 [sub_resource type="AtlasTexture" id="AtlasTextureMist"]
 atlas = ExtResource("2_logo_pair")
@@ -369,24 +370,21 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(1, 1, 1, 1)
 
-[node name="SettingsButton" type="Button" parent="UiRoot"]
+[node name="SettingsButton" parent="UiRoot" instance=ExtResource("9_semantic_button")]
 unique_name_in_owner = true
 layout_mode = 1
 anchor_left = 0.0125
 anchor_top = 0.022222
 anchor_right = 0.0625
 anchor_bottom = 0.111111
-focus_mode = 2
-mouse_default_cursor_shape = 2
-theme_override_colors/icon_normal_color = Color(0.92, 0.92, 0.86, 1)
-theme_override_colors/icon_hover_color = Color(1.12, 1.05, 0.82, 1)
-theme_override_colors/icon_pressed_color = Color(0.74, 0.68, 0.52, 1)
-theme_override_colors/icon_focus_color = Color(1.08, 0.98, 0.74, 1)
-theme_override_colors/icon_disabled_color = Color(0.42, 0.45, 0.42, 0.62)
 icon = ExtResource("5_settings_shield")
-flat = true
-expand_icon = true
-icon_max_width = 48
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+semantic_role = &"secondary"
+show_semantic_mark = false
+accessibility_name = "设置"
 
 [node name="MistCharacter" type="TextureRect" parent="UiRoot"]
 layout_mode = 1
@@ -442,124 +440,84 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 0
 
-[node name="LanButton" type="Button" parent="UiRoot/MenuPanel"]
+[node name="LanButton" parent="UiRoot/MenuPanel" instance=ExtResource("9_semantic_button")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
 offset_transform_enabled = true
 offset_transform_position = Vector2(600, 0)
-focus_mode = 2
-mouse_default_cursor_shape = 2
-theme_override_colors/font_color = Color(0.76, 0.64, 0.38, 1)
-theme_override_colors/font_hover_color = Color(1, 0.87, 0.56, 1)
-theme_override_colors/font_pressed_color = Color(0.88, 0.73, 0.42, 1)
-theme_override_colors/font_focus_color = Color(1, 0.87, 0.56, 1)
-theme_override_colors/font_disabled_color = Color(0.46, 0.42, 0.32, 0.58)
-theme_override_colors/font_outline_color = Color(0.035, 0.025, 0.015, 0.96)
-theme_override_colors/font_shadow_color = Color(0.02, 0.015, 0.01, 0.9)
-theme_override_constants/outline_size = 2
-theme_override_constants/shadow_offset_y = -1
 theme_override_fonts/font = ExtResource("3_ui_font")
 theme_override_font_sizes/font_size = 27
-theme_override_styles/normal = SubResource("StyleSwordNormal")
-theme_override_styles/hover = SubResource("StyleSwordHover")
-theme_override_styles/pressed = SubResource("StyleSwordPressed")
-theme_override_styles/focus = SubResource("StyleSwordHover")
-theme_override_styles/disabled = SubResource("StyleSwordDisabled")
 text = "联机对战"
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+art_texture = ExtResource("7_sword_button")
+semantic_role = &"primary"
 
 [node name="LanLevelSpacer" type="Control" parent="UiRoot/MenuPanel"]
 custom_minimum_size = Vector2(0, 37.3333)
 layout_mode = 2
 mouse_filter = 2
 
-[node name="LevelModeButton" type="Button" parent="UiRoot/MenuPanel"]
+[node name="LevelModeButton" parent="UiRoot/MenuPanel" instance=ExtResource("9_semantic_button")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
 offset_transform_enabled = true
 offset_transform_position = Vector2(620, 0)
-focus_mode = 2
-mouse_default_cursor_shape = 2
-theme_override_colors/font_color = Color(0.76, 0.64, 0.38, 1)
-theme_override_colors/font_hover_color = Color(1, 0.87, 0.56, 1)
-theme_override_colors/font_pressed_color = Color(0.88, 0.73, 0.42, 1)
-theme_override_colors/font_focus_color = Color(1, 0.87, 0.56, 1)
-theme_override_colors/font_disabled_color = Color(0.46, 0.42, 0.32, 0.58)
-theme_override_colors/font_outline_color = Color(0.035, 0.025, 0.015, 0.96)
-theme_override_colors/font_shadow_color = Color(0.02, 0.015, 0.01, 0.9)
-theme_override_constants/outline_size = 2
-theme_override_constants/shadow_offset_y = -1
 theme_override_fonts/font = ExtResource("3_ui_font")
 theme_override_font_sizes/font_size = 27
-theme_override_styles/normal = SubResource("StyleSwordNormal")
-theme_override_styles/hover = SubResource("StyleSwordHover")
-theme_override_styles/pressed = SubResource("StyleSwordPressed")
-theme_override_styles/focus = SubResource("StyleSwordHover")
-theme_override_styles/disabled = SubResource("StyleSwordDisabled")
 text = "关卡模式"
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+art_texture = ExtResource("7_sword_button")
+semantic_role = &"confirm"
 
 [node name="LevelCommunitySpacer" type="Control" parent="UiRoot/MenuPanel"]
 custom_minimum_size = Vector2(0, 37.3333)
 layout_mode = 2
 mouse_filter = 2
 
-[node name="CommunityButton" type="Button" parent="UiRoot/MenuPanel"]
+[node name="CommunityButton" parent="UiRoot/MenuPanel" instance=ExtResource("9_semantic_button")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
 offset_transform_enabled = true
 offset_transform_position = Vector2(640, 0)
-focus_mode = 2
-mouse_default_cursor_shape = 2
-theme_override_colors/font_color = Color(0.76, 0.64, 0.38, 1)
-theme_override_colors/font_hover_color = Color(1, 0.87, 0.56, 1)
-theme_override_colors/font_pressed_color = Color(0.88, 0.73, 0.42, 1)
-theme_override_colors/font_focus_color = Color(1, 0.87, 0.56, 1)
-theme_override_colors/font_disabled_color = Color(0.46, 0.42, 0.32, 0.58)
-theme_override_colors/font_outline_color = Color(0.035, 0.025, 0.015, 0.96)
-theme_override_colors/font_shadow_color = Color(0.02, 0.015, 0.01, 0.9)
-theme_override_constants/outline_size = 2
-theme_override_constants/shadow_offset_y = -1
 theme_override_fonts/font = ExtResource("3_ui_font")
 theme_override_font_sizes/font_size = 27
-theme_override_styles/normal = SubResource("StyleSwordNormal")
-theme_override_styles/hover = SubResource("StyleSwordHover")
-theme_override_styles/pressed = SubResource("StyleSwordPressed")
-theme_override_styles/focus = SubResource("StyleSwordHover")
-theme_override_styles/disabled = SubResource("StyleSwordDisabled")
 text = "社群"
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+art_texture = ExtResource("7_sword_button")
+semantic_role = &"secondary"
 
 [node name="CommunityQuitSpacer" type="Control" parent="UiRoot/MenuPanel"]
 custom_minimum_size = Vector2(0, 37.3333)
 layout_mode = 2
 mouse_filter = 2
 
-[node name="QuitButton" type="Button" parent="UiRoot/MenuPanel"]
+[node name="QuitButton" parent="UiRoot/MenuPanel" instance=ExtResource("9_semantic_button")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
 offset_transform_enabled = true
 offset_transform_position = Vector2(660, 0)
-focus_mode = 2
-mouse_default_cursor_shape = 2
-theme_override_colors/font_color = Color(0.76, 0.64, 0.38, 1)
-theme_override_colors/font_hover_color = Color(1, 0.87, 0.56, 1)
-theme_override_colors/font_pressed_color = Color(0.88, 0.73, 0.42, 1)
-theme_override_colors/font_focus_color = Color(1, 0.87, 0.56, 1)
-theme_override_colors/font_disabled_color = Color(0.46, 0.42, 0.32, 0.58)
-theme_override_colors/font_outline_color = Color(0.035, 0.025, 0.015, 0.96)
-theme_override_colors/font_shadow_color = Color(0.02, 0.015, 0.01, 0.9)
-theme_override_constants/outline_size = 2
-theme_override_constants/shadow_offset_y = -1
 theme_override_fonts/font = ExtResource("3_ui_font")
 theme_override_font_sizes/font_size = 27
-theme_override_styles/normal = SubResource("StyleSwordNormal")
-theme_override_styles/hover = SubResource("StyleSwordHover")
-theme_override_styles/pressed = SubResource("StyleSwordPressed")
-theme_override_styles/focus = SubResource("StyleSwordHover")
-theme_override_styles/disabled = SubResource("StyleSwordDisabled")
 text = "退出游戏"
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+art_texture = ExtResource("7_sword_button")
+semantic_role = &"danger"
 
 [node name="VersionLabel" type="Label" parent="UiRoot"]
 unique_name_in_owner = true

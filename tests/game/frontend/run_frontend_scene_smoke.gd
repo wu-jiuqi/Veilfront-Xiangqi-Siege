@@ -90,8 +90,11 @@ func _init() -> void:
 		var sword_button := menu_overlay.get_node("UiRoot/MenuPanel/%s" % button_name) as Button
 		assert(sword_button.offset_transform_enabled, "%s must use visual-only entry motion" % button_name)
 		assert(_is_vector_near(sword_button.custom_minimum_size, Vector2(0.0, 72.0)), "%s must match the authored layout height" % button_name)
-		assert(sword_button.get_theme_stylebox(&"normal") is StyleBoxTexture, "%s must use the bronze sword texture style" % button_name)
-		assert((sword_button.get_theme_stylebox(&"normal") as StyleBoxTexture).texture.resource_path == sword_button_texture.resource_path)
+		assert(sword_button.has_method("sync_visual_state"), "%s must use the semantic button preset" % button_name)
+		var sword_art := sword_button.get_node("%ArtLayer") as TextureRect
+		assert(sword_art.stretch_mode == TextureRect.STRETCH_KEEP_ASPECT_CENTERED)
+		assert((sword_button.get("art_texture") as Texture2D).resource_path == sword_button_texture.resource_path)
+		assert(sword_button.get_theme_stylebox(&"normal") is StyleBoxEmpty, "%s semantic shell must not stretch sword art" % button_name)
 	var impact_material := menu_overlay.get_node("UiRoot/ImpactMist").material as ShaderMaterial
 	var initial_impact_center: Vector2 = impact_material.get_shader_parameter(&"impact_center")
 	assert(initial_impact_center.is_equal_approx(Vector2(0.4825, 0.326667)), "impact mist must start at the relocated mist character")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://dggtl1ydqi28y"]
+[gd_scene load_steps=15 format=3 uid="uid://dggtl1ydqi28y"]
 
 [ext_resource type="Script" uid="uid://128pt5o3gpxk" path="res://scripts/game/frontend/level_select.gd" id="1_script"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/level_select/level_select_empty_background_v3.png" id="2_background"]
@@ -8,6 +8,12 @@
 [ext_resource type="Font" path="res://resources/game/ui/fonts/noto_sans_sc_semibold.tres" id="6_semibold"]
 [ext_resource type="PackedScene" path="res://scenes/game/audio/frontend_audio_feedback.tscn" id="7_frontend_audio"]
 [ext_resource type="PackedScene" path="res://scenes/game/ui/tutorial_codex.tscn" id="8_codex"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button.tscn" id="9_semantic_button"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/level_select/components/back_button_v2.png" id="10_back_art"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/level_select/components/enter_button_v2.png" id="11_enter_art"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/level_select/components/category_normal_v2.png" id="12_category_art"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/level_select/components/category_selected_v2.png" id="13_category_selected_art"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/level_select/components/secondary_button_v2.png" id="14_secondary_art"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroupCategory"]
 
@@ -62,7 +68,7 @@ mouse_filter = 2
 texture = ExtResource("2_background")
 expand_mode = 1
 
-[node name="BackButton" type="Button" parent="DesignCanvas" unique_id=2052370368]
+[node name="BackButton" parent="DesignCanvas" unique_id=2052370368 instance=ExtResource("9_semantic_button")]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 18.0
@@ -72,6 +78,12 @@ offset_bottom = 68.0
 theme_type_variation = &"LevelBackButton"
 text = "‹  返回"
 clip_text = true
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+art_texture = ExtResource("10_back_art")
+semantic_role = &"secondary"
 
 [node name="Title" type="Label" parent="DesignCanvas" unique_id=1707236561]
 layout_mode = 0
@@ -86,7 +98,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 clip_text = true
 
-[node name="TutorialCategoryButton" type="Button" parent="DesignCanvas" unique_id=1814841203]
+[node name="TutorialCategoryButton" parent="DesignCanvas" unique_id=1814841203 instance=ExtResource("9_semantic_button")]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 15.0
@@ -99,8 +111,15 @@ button_pressed = true
 button_group = SubResource("ButtonGroupCategory")
 text = "新手教学"
 clip_text = true
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+art_texture = ExtResource("12_category_art")
+selected_art_texture = ExtResource("13_category_selected_art")
+semantic_role = &"primary"
 
-[node name="ChallengeCategoryButton" type="Button" parent="DesignCanvas" unique_id=1002798098]
+[node name="ChallengeCategoryButton" parent="DesignCanvas" unique_id=1002798098 instance=ExtResource("9_semantic_button")]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 15.0
@@ -112,6 +131,13 @@ toggle_mode = true
 button_group = SubResource("ButtonGroupCategory")
 text = "挑战关卡"
 clip_text = true
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+art_texture = ExtResource("12_category_art")
+selected_art_texture = ExtResource("13_category_selected_art")
+semantic_role = &"primary"
 
 [node name="ProgressLabel" type="Label" parent="DesignCanvas" unique_id=1835754773]
 unique_name_in_owner = true
@@ -162,7 +188,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 clip_text = true
 
-[node name="ResetButton" type="Button" parent="DesignCanvas" unique_id=1532159649]
+[node name="ResetButton" parent="DesignCanvas" unique_id=1532159649 instance=ExtResource("9_semantic_button")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
@@ -174,8 +200,14 @@ theme_type_variation = &"LevelSecondaryButton"
 theme_override_font_sizes/font_size = 11
 text = "清空教学进度"
 clip_text = true
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+art_texture = ExtResource("14_secondary_art")
+semantic_role = &"danger"
 
-[node name="CodexButton" type="Button" parent="DesignCanvas"]
+[node name="CodexButton" parent="DesignCanvas" instance=ExtResource("9_semantic_button")]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 31.0
@@ -185,6 +217,12 @@ offset_bottom = 637.0
 theme_type_variation = &"LevelSecondaryButton"
 text = "战阵图鉴"
 clip_text = true
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+art_texture = ExtResource("14_secondary_art")
+semantic_role = &"secondary"
 
 [node name="CategoryTabs" type="TabContainer" parent="DesignCanvas" unique_id=1152323492]
 unique_name_in_owner = true
@@ -234,7 +272,7 @@ offset_right = 928.0
 offset_bottom = 144.0
 theme_override_constants/separation = 10
 
-[node name="FoundationRouteButton" type="Button" parent="DesignCanvas/RouteStrip"]
+[node name="FoundationRouteButton" parent="DesignCanvas/RouteStrip" instance=ExtResource("9_semantic_button")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(172, 48)
 layout_mode = 2
@@ -243,8 +281,14 @@ button_group = SubResource("ButtonGroupRoute")
 theme_override_font_sizes/font_size = 16
 text = "从基础学起"
 clip_text = true
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+art_texture = ExtResource("14_secondary_art")
+semantic_role = &"secondary"
 
-[node name="ExperiencedRouteButton" type="Button" parent="DesignCanvas/RouteStrip"]
+[node name="ExperiencedRouteButton" parent="DesignCanvas/RouteStrip" instance=ExtResource("9_semantic_button")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(210, 48)
 layout_mode = 2
@@ -253,6 +297,12 @@ button_group = SubResource("ButtonGroupRoute")
 theme_override_font_sizes/font_size = 16
 text = "只学《雾疆》差异"
 clip_text = true
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+art_texture = ExtResource("14_secondary_art")
+semantic_role = &"secondary"
 
 [node name="RouteSummary" type="Label" parent="DesignCanvas/RouteStrip"]
 unique_name_in_owner = true
@@ -342,7 +392,7 @@ vertical_alignment = 1
 autowrap_mode = 3
 clip_text = true
 
-[node name="EnterButton" type="Button" parent="DesignCanvas" unique_id=558069176]
+[node name="EnterButton" parent="DesignCanvas" unique_id=558069176 instance=ExtResource("9_semantic_button")]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 970.0
@@ -352,6 +402,12 @@ offset_bottom = 632.0
 theme_type_variation = &"LevelEnterButton"
 text = "进入关卡"
 clip_text = true
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+art_texture = ExtResource("11_enter_art")
+semantic_role = &"confirm"
 
 [node name="FooterHints" type="Control" parent="DesignCanvas"]
 layout_mode = 0

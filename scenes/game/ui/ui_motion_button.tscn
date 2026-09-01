@@ -42,7 +42,7 @@ corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
 [node name="UiMotionButton" type="Button" groups=["ui_motion_buttons"]]
-custom_minimum_size = Vector2(220, 64)
+custom_minimum_size = Vector2(0, 44)
 focus_mode = 2
 mouse_default_cursor_shape = 2
 offset_transform_enabled = true

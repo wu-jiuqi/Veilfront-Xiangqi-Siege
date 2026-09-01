@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://cxdwdyljintlq" path="res://assets/art/ui/settings/png_v2/settings_title_crest_v2.png" id="5_title_crest"]
 [ext_resource type="PackedScene" path="res://scenes/game/ui/terracotta_modal_dialog.tscn" id="6_dialog"]
 [ext_resource type="PackedScene" path="res://scenes/game/audio/frontend_audio_feedback.tscn" id="7_frontend_audio"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/settings/png_v2/settings_button_secondary_v2.png" id="8_button_art"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxSettingsToggleEmpty"]
 
@@ -62,7 +63,12 @@ layout_mode = 2
 size_flags_vertical = 4
 theme_type_variation = &"SettingsPngSecondaryButton"
 text = "返回"
-motion_profile = null
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+art_texture = ExtResource("8_button_art")
+semantic_role = &"secondary"
 
 [node name="TitleGroup" type="VBoxContainer" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/HeaderRow" unique_id=47730928]
 layout_mode = 2
@@ -417,7 +423,12 @@ custom_minimum_size = Vector2(220, 54)
 layout_mode = 2
 theme_type_variation = &"SettingsPngDangerButton"
 text = "重置关卡进度"
-motion_profile = null
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+art_texture = ExtResource("8_button_art")
+semantic_role = &"danger"
 
 [node name="RightSpacer" type="Control" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/SettingsTabsCenter"]
 layout_mode = 2
@@ -445,7 +456,12 @@ custom_minimum_size = Vector2(200, 54)
 layout_mode = 2
 theme_type_variation = &"SettingsPngSecondaryButton"
 text = "恢复默认值"
-motion_profile = null
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+art_texture = ExtResource("8_button_art")
+semantic_role = &"secondary"
 
 [node name="Spacer" type="Control" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/FooterRow" unique_id=716255861]
 layout_mode = 2
@@ -457,7 +473,12 @@ custom_minimum_size = Vector2(160, 54)
 layout_mode = 2
 theme_type_variation = &"SettingsPngSecondaryButton"
 text = "取消"
-motion_profile = null
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+art_texture = ExtResource("8_button_art")
+semantic_role = &"secondary"
 
 [node name="ApplyButton" parent="SafeMargin/SettingsFrame/ContentMargin/ContentColumn/FooterRow" unique_id=1364899508 instance=ExtResource("4_motion_button")]
 unique_name_in_owner = true
@@ -465,7 +486,12 @@ custom_minimum_size = Vector2(180, 54)
 layout_mode = 2
 theme_type_variation = &"SettingsPngPrimaryButton"
 text = "应用"
-motion_profile = null
+normal_surface = null
+hover_surface = null
+pressed_surface = null
+disabled_surface = null
+art_texture = ExtResource("8_button_art")
+semantic_role = &"confirm"
 
 [node name="DisplayConfirmTimer" type="Timer" parent="." unique_id=543837108]
 unique_name_in_owner = true

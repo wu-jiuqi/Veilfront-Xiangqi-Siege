@@ -15,7 +15,13 @@ extends Button
 @export var pressed_surface: Texture2D
 @export var disabled_surface: Texture2D
 @export var art_texture: Texture2D
+@export var hover_art_texture: Texture2D
+@export var pressed_art_texture: Texture2D
+@export var disabled_art_texture: Texture2D
+@export var selected_art_texture: Texture2D
 @export var semantic_mark_override := ""
+@export var show_semantic_mark := true
+@export var show_label := true
 
 @onready var _visual_root := %VisualRoot as Control
 @onready var _shadow := %Shadow as Panel
@@ -66,11 +72,21 @@ func sync_visual_state() -> void:
 	_cached_disabled = disabled
 	_visual_disabled = disabled
 	_button_label.text = text
+	_button_label.visible = show_label
+	_button_label.horizontal_alignment = alignment
+	_button_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS if clip_text else TextServer.OVERRUN_NO_TRIMMING
+	var semantic_font := get_theme_font(&"font")
+	if semantic_font != null:
+		_button_label.add_theme_font_override(&"font", semantic_font)
+		_semantic_mark.add_theme_font_override(&"font", semantic_font)
+	var semantic_font_size := get_theme_font_size(&"font_size")
+	if semantic_font_size > 0:
+		_button_label.add_theme_font_size_override(&"font_size", semantic_font_size)
+		_semantic_mark.add_theme_font_size_override(&"font_size", semantic_font_size)
 	_icon_layer.texture = icon
 	_icon_layer.visible = icon != null
-	_art_layer.texture = art_texture
-	_art_layer.visible = art_texture != null
 	_semantic_mark.text = semantic_mark_override if not semantic_mark_override.is_empty() else _role_mark()
+	_semantic_mark.visible = show_semantic_mark
 	_semantic_mark.modulate = _role_text_color()
 	_button_label.modulate = _role_text_color()
 	if accessibility_name.is_empty():
@@ -179,6 +195,8 @@ func _resolved_state() -> StringName:
 func _apply_visual_state(state: StringName, animate: bool) -> void:
 	_visual_disabled = state == &"disabled"
 	_surface.texture = _texture_for_state(state)
+	_art_layer.texture = _art_texture_for_state(state)
+	_art_layer.visible = _art_layer.texture != null
 	var focus_visible := state == &"focus" or state == &"focus_hover"
 	var target_scale := 1.0
 	var target_position := Vector2.ZERO
@@ -198,6 +216,7 @@ func _apply_visual_state(state: StringName, animate: bool) -> void:
 		_visual_root.offset_transform_scale = Vector2.ONE if reduced_motion else Vector2.ONE * target_scale
 		_visual_root.offset_transform_position = Vector2.ZERO if reduced_motion else target_position
 		_surface.self_modulate = target_surface_modulate
+		_art_layer.self_modulate = target_surface_modulate
 		_button_label.self_modulate = target_text_modulate
 		_semantic_mark.self_modulate = target_text_modulate
 		_focus_frame.self_modulate = Color(1, 1, 1, 1 if focus_visible else 0)
@@ -242,6 +261,7 @@ func _animate_to(
 			_visual_root, "offset_transform_position", target_position, duration
 		)
 	_active_tween.tween_property(_surface, "self_modulate", target_surface_modulate, duration)
+	_active_tween.tween_property(_art_layer, "self_modulate", target_surface_modulate, duration)
 	_active_tween.tween_property(_button_label, "self_modulate", target_text_modulate, duration)
 	_active_tween.tween_property(_semantic_mark, "self_modulate", target_text_modulate, duration)
 	_active_tween.tween_property(_focus_frame, "self_modulate:a", target_focus_alpha, duration)
@@ -259,6 +279,15 @@ func _texture_for_state(state: StringName) -> Texture2D:
 		&"press": return pressed_surface if pressed_surface != null else normal_surface
 		&"hover", &"focus", &"focus_hover": return hover_surface if hover_surface != null else normal_surface
 		_: return normal_surface
+
+
+func _art_texture_for_state(state: StringName) -> Texture2D:
+	var resting_art := selected_art_texture if toggle_mode and button_pressed and selected_art_texture != null else art_texture
+	match state:
+		&"disabled": return disabled_art_texture if disabled_art_texture != null else resting_art
+		&"press": return pressed_art_texture if pressed_art_texture != null else resting_art
+		&"hover", &"focus", &"focus_hover": return hover_art_texture if hover_art_texture != null else resting_art
+		_: return resting_art
 
 
 func _surface_modulate_for_state(state: StringName) -> Color:
