@@ -1,7 +1,7 @@
 # 全量 UI Workflow 重构计划
 
-日期：2026-09-02  
-分支：`codex/ui-workflow-refactor`  
+日期：2026-09-02
+分支：`codex/ui-workflow-refactor`
 工作区：`D:\Veilfront Xiangqi Siege-ui-refactor`
 
 ## 目标

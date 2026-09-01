@@ -2,8 +2,8 @@
 
 状态：`producer_integrated / awaiting-independent-qa / not-gate3-frozen`
 
-日期：2026-09-02  
-分支：`codex/ui-workflow-refactor`  
+日期：2026-09-02
+分支：`codex/ui-workflow-refactor`
 Worktree：`D:\Veilfront Xiangqi Siege-ui-refactor`
 
 ## 授权与边界
