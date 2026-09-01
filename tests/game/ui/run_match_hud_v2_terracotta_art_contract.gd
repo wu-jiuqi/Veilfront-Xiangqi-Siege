@@ -88,7 +88,7 @@ func _run() -> void:
 		)
 
 	var background: Sprite2D = lab.get_node(
-		"MatchScreen/MatchHudV2/BoardFrame/BoardViewport/BoardSubViewport/BoardWorld/MapBackground"
+		"MatchScreen/MatchHudV2/SafeMargin/MainRows/BodyBand/CenterColumn/BoardFrame/BoardViewport/BoardSubViewport/BoardWorld/MapBackground"
 	) as Sprite2D
 	_expect(background.visible, "preset map background node remained hidden")
 	_expect(is_equal_approx(background.scale.x, background.scale.y), "map background was stretched non-uniformly")
@@ -102,7 +102,7 @@ func _run() -> void:
 	)
 
 	var piece_layer: Node2D = lab.get_node(
-		"MatchScreen/MatchHudV2/BoardFrame/BoardViewport/BoardSubViewport/BoardWorld/PieceLayer"
+		"MatchScreen/MatchHudV2/SafeMargin/MainRows/BodyBand/CenterColumn/BoardFrame/BoardViewport/BoardSubViewport/BoardWorld/PieceLayer"
 	) as Node2D
 	var board_world: Node2D = piece_layer.get_parent() as Node2D
 	var board_theme: BoardTheme = board_world.get("board_theme") as BoardTheme

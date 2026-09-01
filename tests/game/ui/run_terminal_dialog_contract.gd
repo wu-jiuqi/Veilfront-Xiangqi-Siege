@@ -21,27 +21,19 @@ func _run() -> void:
 
 	_expect(dialog.get_node_or_null("Dimmer") == null, "terminal dialog must not own a generated background")
 	var panel := dialog.get_node("SafeMargin/Center/ResultPanel") as Control
-	var panel_art := panel.get_node("PanelArt") as TextureRect
 	_expect(
-		panel_art.texture != null \
-		and panel_art.texture.resource_path.ends_with("terminal_result_panel_v2.png"),
-		"terminal frame must use the approved chroma-keyed result-panel PNG",
+		dialog.theme.resource_path == "res://resources/game/ui/themes/veilfront_ui_theme_v2.tres",
+		"terminal dialog must use the rebuilt unified theme",
 	)
-	var restart_button := dialog.get_node("%RestartButton") as TextureButton
-	var lobby_button := dialog.get_node("%LobbyButton") as TextureButton
+	_expect(panel.get_theme_stylebox(&"panel") is StyleBoxFlat, "terminal frame must use a scalable surface")
+	var restart_button := dialog.get_node("%RestartButton") as Button
+	var lobby_button := dialog.get_node("%LobbyButton") as Button
 	_expect(
-		restart_button.texture_normal.resource_path.ends_with("terminal_result_button_primary_v2.png") \
-		and lobby_button.texture_normal.resource_path.ends_with("terminal_result_button_secondary_v2.png") \
-		and lobby_button.texture_hover.resource_path.ends_with("terminal_result_button_primary_v2.png"),
-		"terminal actions must use PNG plates for normal and hover states",
+		restart_button.get_theme_stylebox(&"normal") is StyleBoxFlat \
+		and lobby_button.get_theme_stylebox(&"normal") is StyleBoxFlat,
+		"terminal actions must use unified scalable button surfaces",
 	)
-	var panel_image := Image.load_from_file(
-		ProjectSettings.globalize_path("res://assets/art/ui/terminal_result/terminal_result_panel_v2.png")
-	)
-	_expect(
-		panel_image != null and panel_image.get_format() in [Image.FORMAT_RGBA8, Image.FORMAT_RGBAF],
-		"terminal result panel must preserve a real alpha channel after chroma keying",
-	)
+	_expect(restart_button.has_method("set_reduced_motion"), "terminal actions must use the reusable motion button")
 
 	var victory_view := {
 		"terminal": true,

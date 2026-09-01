@@ -1,10 +1,10 @@
 [gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scripts/game/presentation/ui/match_terminal_dialog.gd" id="1_script"]
-[ext_resource type="Theme" path="res://resources/game/ui/themes/terracotta_ui_theme.tres" id="2_theme"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/terminal_result/terminal_result_panel_v2.png" id="3_panel"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/terminal_result/terminal_result_button_primary_v2.png" id="4_primary"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/terminal_result/terminal_result_button_secondary_v2.png" id="5_secondary"]
+[ext_resource type="Theme" path="res://resources/game/ui/themes/veilfront_ui_theme_v2.tres" id="2_theme"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_primary.tscn" id="3_primary"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_secondary.tscn" id="4_secondary"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_confirm.tscn" id="5_confirm"]
 
 [node name="TerminalDialog" type="Control"]
 process_mode = 3
@@ -19,6 +19,16 @@ grow_vertical = 2
 mouse_filter = 0
 theme = ExtResource("2_theme")
 script = ExtResource("1_script")
+
+[node name="Veil" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.004, 0.006, 0.006, 0.78)
 
 [node name="SafeMargin" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -37,310 +47,168 @@ theme_override_constants/margin_bottom = 18
 layout_mode = 2
 mouse_filter = 2
 
-[node name="ResultPanel" type="AspectRatioContainer" parent="SafeMargin/Center"]
+[node name="ResultPanel" type="PanelContainer" parent="SafeMargin/Center"]
 custom_minimum_size = Vector2(760, 486)
 layout_mode = 2
 mouse_filter = 0
-ratio = 1.56527
-stretch_mode = 2
+theme_type_variation = &"OverlaySurface"
 
-[node name="PanelArt" type="TextureRect" parent="SafeMargin/Center/ResultPanel"]
+[node name="Content" type="VBoxContainer" parent="SafeMargin/Center/ResultPanel"]
 layout_mode = 2
-mouse_filter = 2
-texture = ExtResource("3_panel")
-expand_mode = 1
-stretch_mode = 5
+theme_override_constants/separation = 10
 
-[node name="ContentOverlay" type="Control" parent="SafeMargin/Center/ResultPanel"]
+[node name="TerminalHeading" type="Label" parent="SafeMargin/Center/ResultPanel/Content"]
 layout_mode = 2
-mouse_filter = 2
-
-[node name="TerminalHeading" type="Label" parent="SafeMargin/Center/ResultPanel/ContentOverlay"]
-layout_mode = 1
-anchors_preset = 0
-anchor_left = 0.24
-anchor_top = 0.215
-anchor_right = 0.76
-anchor_bottom = 0.26
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.68, 0.57, 0.4, 1)
-theme_override_colors/font_outline_color = Color(0.02, 0.018, 0.014, 1)
-theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 16
-text = "战  局  终  结"
+theme_type_variation = &"SecondaryText"
+text = "战局终结"
 horizontal_alignment = 1
-vertical_alignment = 1
 
-[node name="ResultTitle" type="Label" parent="SafeMargin/Center/ResultPanel/ContentOverlay"]
+[node name="ResultTitle" type="Label" parent="SafeMargin/Center/ResultPanel/Content"]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 0
-anchor_left = 0.17
-anchor_top = 0.26
-anchor_right = 0.83
-anchor_bottom = 0.38
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.96, 0.79, 0.43, 1)
-theme_override_colors/font_outline_color = Color(0.055, 0.038, 0.018, 1)
-theme_override_constants/outline_size = 5
-theme_override_constants/shadow_offset_x = 2
-theme_override_constants/shadow_offset_y = 3
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.72)
-theme_override_font_sizes/font_size = 58
+custom_minimum_size = Vector2(0, 82)
+layout_mode = 2
+theme_type_variation = &"DisplayTitle"
 text = "胜利"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ReasonLabel" type="Label" parent="SafeMargin/Center/ResultPanel/ContentOverlay"]
+[node name="ReasonLabel" type="Label" parent="SafeMargin/Center/ResultPanel/Content"]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 0
-anchor_left = 0.17
-anchor_top = 0.385
-anchor_right = 0.83
-anchor_bottom = 0.465
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.82, 0.72, 0.55, 1)
-theme_override_colors/font_outline_color = Color(0.02, 0.018, 0.014, 1)
-theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 19
+layout_mode = 2
+theme_type_variation = &"SectionTitle"
 text = "胜负原因：夺得三面军旗"
 horizontal_alignment = 1
-vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="RedResult" type="Label" parent="SafeMargin/Center/ResultPanel/ContentOverlay"]
+[node name="Separator" type="HSeparator" parent="SafeMargin/Center/ResultPanel/Content"]
+layout_mode = 2
+
+[node name="Outcomes" type="HBoxContainer" parent="SafeMargin/Center/ResultPanel/Content"]
+custom_minimum_size = Vector2(0, 62)
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="RedPanel" type="PanelContainer" parent="SafeMargin/Center/ResultPanel/Content/Outcomes"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"SecondarySurface"
+
+[node name="RedResult" type="Label" parent="SafeMargin/Center/ResultPanel/Content/Outcomes/RedPanel"]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 0
-anchor_left = 0.105
-anchor_top = 0.598
-anchor_right = 0.495
-anchor_bottom = 0.68
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.96, 0.78, 0.64, 1)
-theme_override_colors/font_outline_color = Color(0.08, 0.02, 0.01, 1)
-theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 24
+layout_mode = 2
+theme_type_variation = &"SectionTitle"
 text = "赤方 · 胜利"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="BlackResult" type="Label" parent="SafeMargin/Center/ResultPanel/ContentOverlay"]
+[node name="BlackPanel" type="PanelContainer" parent="SafeMargin/Center/ResultPanel/Content/Outcomes"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"SecondarySurface"
+
+[node name="BlackResult" type="Label" parent="SafeMargin/Center/ResultPanel/Content/Outcomes/BlackPanel"]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 0
-anchor_left = 0.505
-anchor_top = 0.598
-anchor_right = 0.895
-anchor_bottom = 0.68
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.68, 0.8, 0.7, 1)
-theme_override_colors/font_outline_color = Color(0.01, 0.055, 0.035, 1)
-theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 24
+layout_mode = 2
+theme_type_variation = &"SectionTitle"
 text = "玄方 · 败北"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Stats" type="HBoxContainer" parent="SafeMargin/Center/ResultPanel/ContentOverlay"]
-layout_mode = 1
-anchors_preset = 0
-anchor_left = 0.105
-anchor_top = 0.695
-anchor_right = 0.895
-anchor_bottom = 0.825
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_constants/separation = 0
-alignment = 1
+[node name="Stats" type="HBoxContainer" parent="SafeMargin/Center/ResultPanel/Content"]
+custom_minimum_size = Vector2(0, 88)
+layout_mode = 2
+theme_override_constants/separation = 10
 
-[node name="RoundStat" type="VBoxContainer" parent="SafeMargin/Center/ResultPanel/ContentOverlay/Stats"]
+[node name="RoundStat" type="PanelContainer" parent="SafeMargin/Center/ResultPanel/Content/Stats"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 0
+theme_type_variation = &"InsetSurface"
+
+[node name="Column" type="VBoxContainer" parent="SafeMargin/Center/ResultPanel/Content/Stats/RoundStat"]
+layout_mode = 2
 alignment = 1
 
-[node name="Caption" type="Label" parent="SafeMargin/Center/ResultPanel/ContentOverlay/Stats/RoundStat"]
+[node name="Caption" type="Label" parent="SafeMargin/Center/ResultPanel/Content/Stats/RoundStat/Column"]
 layout_mode = 2
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.55, 0.51, 0.43, 1)
-theme_override_font_sizes/font_size = 13
+theme_type_variation = &"SecondaryText"
 text = "完整回合"
 horizontal_alignment = 1
 
-[node name="RoundValue" type="Label" parent="SafeMargin/Center/ResultPanel/ContentOverlay/Stats/RoundStat"]
+[node name="RoundValue" type="Label" parent="SafeMargin/Center/ResultPanel/Content/Stats/RoundStat/Column"]
 unique_name_in_owner = true
 layout_mode = 2
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.91, 0.76, 0.48, 1)
-theme_override_colors/font_outline_color = Color(0.03, 0.025, 0.018, 1)
-theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 27
+theme_type_variation = &"NumericText"
 text = "18"
 horizontal_alignment = 1
 
-[node name="FlagStat" type="VBoxContainer" parent="SafeMargin/Center/ResultPanel/ContentOverlay/Stats"]
+[node name="FlagStat" type="PanelContainer" parent="SafeMargin/Center/ResultPanel/Content/Stats"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 0
+theme_type_variation = &"InsetSurface"
+
+[node name="Column" type="VBoxContainer" parent="SafeMargin/Center/ResultPanel/Content/Stats/FlagStat"]
+layout_mode = 2
 alignment = 1
 
-[node name="Caption" type="Label" parent="SafeMargin/Center/ResultPanel/ContentOverlay/Stats/FlagStat"]
+[node name="Caption" type="Label" parent="SafeMargin/Center/ResultPanel/Content/Stats/FlagStat/Column"]
 layout_mode = 2
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.55, 0.51, 0.43, 1)
-theme_override_font_sizes/font_size = 13
+theme_type_variation = &"SecondaryText"
 text = "军旗  赤 : 玄"
 horizontal_alignment = 1
 
-[node name="FlagValue" type="Label" parent="SafeMargin/Center/ResultPanel/ContentOverlay/Stats/FlagStat"]
+[node name="FlagValue" type="Label" parent="SafeMargin/Center/ResultPanel/Content/Stats/FlagStat/Column"]
 unique_name_in_owner = true
 layout_mode = 2
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.91, 0.76, 0.48, 1)
-theme_override_colors/font_outline_color = Color(0.03, 0.025, 0.018, 1)
-theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 27
+theme_type_variation = &"NumericText"
 text = "3 : 0"
 horizontal_alignment = 1
 
-[node name="CasualtyStat" type="VBoxContainer" parent="SafeMargin/Center/ResultPanel/ContentOverlay/Stats"]
+[node name="CasualtyStat" type="PanelContainer" parent="SafeMargin/Center/ResultPanel/Content/Stats"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 0
+theme_type_variation = &"InsetSurface"
+
+[node name="Column" type="VBoxContainer" parent="SafeMargin/Center/ResultPanel/Content/Stats/CasualtyStat"]
+layout_mode = 2
 alignment = 1
 
-[node name="Caption" type="Label" parent="SafeMargin/Center/ResultPanel/ContentOverlay/Stats/CasualtyStat"]
+[node name="Caption" type="Label" parent="SafeMargin/Center/ResultPanel/Content/Stats/CasualtyStat/Column"]
 layout_mode = 2
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.55, 0.51, 0.43, 1)
-theme_override_font_sizes/font_size = 13
+theme_type_variation = &"SecondaryText"
 text = "阵亡  赤 : 玄"
 horizontal_alignment = 1
 
-[node name="CasualtyValue" type="Label" parent="SafeMargin/Center/ResultPanel/ContentOverlay/Stats/CasualtyStat"]
+[node name="CasualtyValue" type="Label" parent="SafeMargin/Center/ResultPanel/Content/Stats/CasualtyStat/Column"]
 unique_name_in_owner = true
 layout_mode = 2
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.91, 0.76, 0.48, 1)
-theme_override_colors/font_outline_color = Color(0.03, 0.025, 0.018, 1)
-theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 27
+theme_type_variation = &"NumericText"
 text = "6 : 9"
 horizontal_alignment = 1
 
-[node name="Actions" type="HBoxContainer" parent="SafeMargin/Center/ResultPanel/ContentOverlay"]
-layout_mode = 1
-anchors_preset = 0
-anchor_left = 0.105
-anchor_top = 0.84
-anchor_right = 0.895
-anchor_bottom = 0.945
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
+[node name="Actions" type="HBoxContainer" parent="SafeMargin/Center/ResultPanel/Content"]
+custom_minimum_size = Vector2(0, 58)
+layout_mode = 2
 theme_override_constants/separation = 10
 alignment = 1
 
-[node name="RestartButton" type="TextureButton" parent="SafeMargin/Center/ResultPanel/ContentOverlay/Actions"]
+[node name="RestartButton" parent="SafeMargin/Center/ResultPanel/Content/Actions" instance=ExtResource("5_confirm")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(200, 58)
+custom_minimum_size = Vector2(200, 52)
 layout_mode = 2
-focus_mode = 2
-mouse_default_cursor_shape = 2
-texture_normal = ExtResource("4_primary")
-texture_pressed = ExtResource("5_secondary")
-texture_hover = ExtResource("4_primary")
-texture_focused = ExtResource("4_primary")
-ignore_texture_size = true
-stretch_mode = 0
+text = "再战一局"
 
-[node name="Label" type="Label" parent="SafeMargin/Center/ResultPanel/ContentOverlay/Actions/RestartButton"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_colors/font_color = Color(1, 0.88, 0.62, 1)
-theme_override_colors/font_outline_color = Color(0.055, 0.032, 0.012, 1)
-theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 21
-text = "重  赛"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="LobbyButton" type="TextureButton" parent="SafeMargin/Center/ResultPanel/ContentOverlay/Actions"]
+[node name="LobbyButton" parent="SafeMargin/Center/ResultPanel/Content/Actions" instance=ExtResource("4_secondary")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(200, 58)
+custom_minimum_size = Vector2(200, 52)
 layout_mode = 2
-focus_mode = 2
-mouse_default_cursor_shape = 2
-texture_normal = ExtResource("5_secondary")
-texture_pressed = ExtResource("5_secondary")
-texture_hover = ExtResource("4_primary")
-texture_focused = ExtResource("4_primary")
-ignore_texture_size = true
-stretch_mode = 0
-
-[node name="Label" type="Label" parent="SafeMargin/Center/ResultPanel/ContentOverlay/Actions/LobbyButton"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.87, 0.81, 0.69, 1)
-theme_override_colors/font_outline_color = Color(0.025, 0.022, 0.018, 1)
-theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 20
 text = "返回大厅"
-horizontal_alignment = 1
-vertical_alignment = 1
 
-[node name="LevelSelectButton" type="TextureButton" parent="SafeMargin/Center/ResultPanel/ContentOverlay/Actions"]
+[node name="LevelSelectButton" parent="SafeMargin/Center/ResultPanel/Content/Actions" instance=ExtResource("3_primary")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(200, 58)
+custom_minimum_size = Vector2(200, 52)
 layout_mode = 2
-focus_mode = 2
-mouse_default_cursor_shape = 2
-texture_normal = ExtResource("5_secondary")
-texture_pressed = ExtResource("5_secondary")
-texture_hover = ExtResource("4_primary")
-texture_focused = ExtResource("4_primary")
-ignore_texture_size = true
-stretch_mode = 0
-
-[node name="Label" type="Label" parent="SafeMargin/Center/ResultPanel/ContentOverlay/Actions/LevelSelectButton"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.87, 0.81, 0.69, 1)
-theme_override_colors/font_outline_color = Color(0.025, 0.022, 0.018, 1)
-theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 20
 text = "关卡选择"
-horizontal_alignment = 1
-vertical_alignment = 1
 
-[connection signal="pressed" from="SafeMargin/Center/ResultPanel/ContentOverlay/Actions/RestartButton" to="." method="_on_restart_pressed"]
-[connection signal="pressed" from="SafeMargin/Center/ResultPanel/ContentOverlay/Actions/LobbyButton" to="." method="_on_lobby_pressed"]
-[connection signal="pressed" from="SafeMargin/Center/ResultPanel/ContentOverlay/Actions/LevelSelectButton" to="." method="_on_level_select_pressed"]
+[connection signal="pressed" from="SafeMargin/Center/ResultPanel/Content/Actions/RestartButton" to="." method="_on_restart_pressed"]
+[connection signal="pressed" from="SafeMargin/Center/ResultPanel/Content/Actions/LobbyButton" to="." method="_on_lobby_pressed"]
+[connection signal="pressed" from="SafeMargin/Center/ResultPanel/Content/Actions/LevelSelectButton" to="." method="_on_level_select_pressed"]

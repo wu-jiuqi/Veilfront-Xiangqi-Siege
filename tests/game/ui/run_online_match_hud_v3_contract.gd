@@ -5,11 +5,7 @@ const ONLINE_MATCH_SCENE: PackedScene = preload(
 )
 const FORMAL_MATCH_STATE = preload("res://scripts/game/domain/match_state.gd")
 const TEST_CELL := Vector2i(2, 3)
-const FONT_PATH := (
-	"res://assets/fonts/qyn_flavor_grotesk_alt_chs/"
-	+ "QynFlavorGroteskAltCHS-Regular.ttf"
-)
-const SCREENSHOT_PATH := "res://evidence/ui/online-match-hud-v3-1280x720.png"
+const SCREENSHOT_PATH := "res://evidence/ui/ui-rebuild-online-match-1280x720.png"
 
 var _failures: Array[String] = []
 
@@ -39,14 +35,18 @@ func _run() -> void:
 	var hud := screen.get_node("MatchHudV3") as Control
 	_expect(screen.get("hud_root_path") == NodePath("MatchHudV3"), "正式联机没有绑定 V3 HUD 根节点")
 	_expect(hud.get_node_or_null("MarkerButton") == null, "正式 V3 HUD 仍有独立标记按钮")
-	_expect(not _tree_contains_name_fragment(hud, "Incense"), "正式 V3 HUD 仍含香盘或燃香节点")
-	_expect(hud.find_child("PieceInfoDrawer", true, false) == null, "正式 V3 HUD 仍含旧棋子抽屉")
+	var round_compatibility := hud.find_child("RoundIncenseSlot", true, false) as Control
+	_expect(round_compatibility != null and not round_compatibility.visible, "教程回合兼容槽必须保持隐藏")
+	_expect(hud.find_child("PieceInfoDrawer", true, false) != null, "正式 HUD 缺少统一行动简报")
 	_expect((hud.find_child("ReturnButton", true, false) as Button).visible, "联机退出按钮未显示")
 	_expect(not (hud.find_child("MirrorButton", true, false) as Button).visible, "联机仍显示镜像按钮")
 
+	_expect(
+		hud.theme.resource_path == "res://resources/game/ui/themes/veilfront_ui_theme_v2.tres",
+		"正式 HUD 未使用全局统一主题",
+	)
 	var theme_font := hud.theme.default_font
-	_expect(theme_font != null and theme_font.resource_path == FONT_PATH, "正式 V3 HUD 未使用指定檎风黑体")
-	_expect(theme_font != null and theme_font.has_char("旗".unicode_at(0)), "指定字体不含界面中文字符")
+	_expect(theme_font != null and theme_font.has_char("旗".unicode_at(0)), "全局界面字体不含中文字符")
 	_expect((hud.find_child("UnitIntro", true, false) as Label).get_theme_font_size("font_size") >= 12, "棋子介绍字号仍过小")
 	_expect((hud.find_child("OwnFlags", true, false) as Label).get_theme_font_size("font_size") >= 13, "战局信息字号仍过小")
 
@@ -73,7 +73,7 @@ func _run() -> void:
 	_expect("区域轰炸" in (hud.find_child("SkillDescription", true, false) as Label).text, "技能描述未随选择刷新")
 	var move_button := hud.find_child("MoveButton", true, false) as Button
 	var skill_button := hud.find_child("SkillButton", true, false) as Button
-	_expect(move_button.get_parent() is VBoxContainer and move_button.position.y < skill_button.position.y, "移动／技能按钮没有上下排列")
+	_expect(move_button.get_parent() is HBoxContainer and move_button.position.x < skill_button.position.x, "移动／技能按钮没有横向对齐")
 	_expect(skill_button.text == "轰炸" and not skill_button.disabled, "技能按钮未根据炮动态切换")
 
 	var changed_view := _player_view()

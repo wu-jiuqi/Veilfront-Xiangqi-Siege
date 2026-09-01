@@ -1,169 +1,108 @@
-[gd_scene format=3 uid="uid://7kh2s735m2wf"]
+[gd_scene load_steps=5 format=3]
 
-[ext_resource type="Script" uid="uid://34lukig0scxf" path="res://scripts/game/presentation/ui/piece_info_drawer.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://cht02rr4xmnyh" path="res://assets/art/ui/terracotta_hud_v2/incense_assembly/piece_info_drawer_frame_v2.png" id="2_frame"]
-[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button.tscn" id="3_button"]
+[ext_resource type="Script" path="res://scripts/game/presentation/ui/piece_info_drawer.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_secondary.tscn" id="2_secondary"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button_confirm.tscn" id="3_confirm"]
+[ext_resource type="PackedScene" path="res://scenes/game/ui/ui_motion_button.tscn" id="4_button"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_normal"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pressed"]
-bg_color = Color(0.13, 0.18, 0.15, 0.62)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.85, 0.7, 0.38, 0.9)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hover"]
-bg_color = Color(0.42, 0.34, 0.19, 0.32)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.74, 0.61, 0.34, 0.72)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_disabled"]
-bg_color = Color(0.05, 0.05, 0.05, 0.26)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.24, 0.22, 0.16, 0.62)
-
-[node name="PieceInfoDrawer" type="Control" unique_id=1443580969]
-custom_minimum_size = Vector2(480, 44)
-clip_contents = true
+[node name="PieceInfoDrawer" type="Control"]
+custom_minimum_size = Vector2(360, 72)
 layout_mode = 3
-anchors_preset = 0
-offset_right = 648.0
-offset_bottom = 56.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 1
 script = ExtResource("1_script")
 
-[node name="Background" type="TextureRect" parent="." unique_id=1613558735]
+[node name="DrawerBackground" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -6.0
-offset_bottom = 7.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource("2_frame")
-expand_mode = 1
+color = Color(0.026, 0.031, 0.027, 1)
 
-[node name="ContentMargin" type="MarginContainer" parent="." unique_id=165432942]
+[node name="ContentMargin" type="MarginContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 93.0
-offset_top = 6.0
+offset_left = 14.0
+offset_top = 10.0
 offset_right = -14.0
-offset_bottom = -6.0
+offset_bottom = -10.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ContentRow" type="HBoxContainer" parent="ContentMargin" unique_id=766487469]
+[node name="ContentRow" type="HBoxContainer" parent="ContentMargin"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 12
 
-[node name="TextArea" type="VBoxContainer" parent="ContentMargin/ContentRow" unique_id=389935869]
+[node name="TextArea" type="VBoxContainer" parent="ContentMargin/ContentRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 0
+theme_override_constants/separation = 4
 
-[node name="MovementCaption" type="Label" parent="ContentMargin/ContentRow/TextArea" unique_id=1586648429]
-custom_minimum_size = Vector2(0, 15)
+[node name="MovementCaption" type="Label" parent="ContentMargin/ContentRow/TextArea"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.91, 0.77, 0.48, 1)
-theme_override_font_sizes/font_size = 11
-text = "棋子介绍"
-vertical_alignment = 1
+theme_type_variation = &"SectionTitle"
+text = "行动简报"
 
-[node name="MovementSummary" type="Label" parent="ContentMargin/ContentRow/TextArea" unique_id=12012335]
+[node name="MovementSummary" type="Label" parent="ContentMargin/ContentRow/TextArea"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_colors/font_color = Color(0.76, 0.77, 0.7, 1)
-theme_override_font_sizes/font_size = 10
+theme_type_variation = &"SecondaryText"
 text = "选择棋子后显示移动逻辑。"
 vertical_alignment = 1
+autowrap_mode = 2
 text_overrun_behavior = 3
 
-[node name="SkillButtons" type="HBoxContainer" parent="ContentMargin/ContentRow" unique_id=527259309]
+[node name="SkillButtons" type="HBoxContainer" parent="ContentMargin/ContentRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(154, 44)
+custom_minimum_size = Vector2(224, 52)
 layout_mode = 2
 size_flags_vertical = 4
-theme_override_constants/separation = 6
+theme_override_constants/separation = 8
 alignment = 1
 
-[node name="MoveButton" parent="ContentMargin/ContentRow/SkillButtons" unique_id=1422259175 instance=ExtResource("3_button")]
+[node name="MoveButton" parent="ContentMargin/ContentRow/SkillButtons" instance=ExtResource("2_secondary")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(74, 44)
+custom_minimum_size = Vector2(104, 52)
 layout_mode = 2
-size_flags_horizontal = 3
-theme_type_variation = &"QuietButton"
-theme_override_font_sizes/font_size = 11
-theme_override_styles/normal = SubResource("StyleBoxEmpty_normal")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_pressed")
-theme_override_styles/hover = SubResource("StyleBoxFlat_hover")
-theme_override_styles/disabled = SubResource("StyleBoxFlat_disabled")
 toggle_mode = true
 text = "移动"
-motion_profile = null
 
-[node name="BombardButton" parent="ContentMargin/ContentRow/SkillButtons" unique_id=91402327 instance=ExtResource("3_button")]
+[node name="SkillButton" parent="ContentMargin/ContentRow/SkillButtons" instance=ExtResource("3_confirm")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(74, 44)
+custom_minimum_size = Vector2(104, 52)
 layout_mode = 2
-size_flags_horizontal = 3
-theme_type_variation = &"QuietButton"
-theme_override_font_sizes/font_size = 11
-theme_override_styles/normal = SubResource("StyleBoxEmpty_normal")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_pressed")
-theme_override_styles/hover = SubResource("StyleBoxFlat_hover")
-theme_override_styles/disabled = SubResource("StyleBoxFlat_disabled")
 toggle_mode = true
+text = "技能"
+
+[node name="Compatibility" type="Control" parent="ContentMargin/ContentRow/SkillButtons"]
+visible = false
+layout_mode = 2
+
+[node name="BombardButton" parent="ContentMargin/ContentRow/SkillButtons/Compatibility" instance=ExtResource("4_button")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(92, 52)
+layout_mode = 0
 text = "轰炸"
-motion_profile = null
 
-[node name="ResurrectButton" parent="ContentMargin/ContentRow/SkillButtons" unique_id=1354400505 instance=ExtResource("3_button")]
+[node name="ResurrectButton" parent="ContentMargin/ContentRow/SkillButtons/Compatibility" instance=ExtResource("4_button")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(74, 44)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_type_variation = &"QuietButton"
-theme_override_font_sizes/font_size = 11
-theme_override_styles/normal = SubResource("StyleBoxEmpty_normal")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_pressed")
-theme_override_styles/hover = SubResource("StyleBoxFlat_hover")
-theme_override_styles/disabled = SubResource("StyleBoxFlat_disabled")
-toggle_mode = true
+custom_minimum_size = Vector2(92, 52)
+layout_mode = 0
 text = "复活"
-motion_profile = null
 
-[node name="NoSkillButton" parent="ContentMargin/ContentRow/SkillButtons" unique_id=374461301 instance=ExtResource("3_button")]
+[node name="NoSkillButton" parent="ContentMargin/ContentRow/SkillButtons/Compatibility" instance=ExtResource("4_button")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(74, 44)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_type_variation = &"QuietButton"
-theme_override_font_sizes/font_size = 11
-theme_override_styles/normal = SubResource("StyleBoxEmpty_normal")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_pressed")
-theme_override_styles/hover = SubResource("StyleBoxFlat_hover")
-theme_override_styles/disabled = SubResource("StyleBoxFlat_disabled")
+custom_minimum_size = Vector2(92, 52)
+layout_mode = 0
 disabled = true
 text = "无技能"
-motion_profile = null
