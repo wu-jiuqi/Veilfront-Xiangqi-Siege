@@ -28,6 +28,8 @@ func _run() -> void:
 	)
 	_expect(not source.contains("ready_confirm_button_v2.png"), "ready action still depends on fixed PNG geometry")
 	_expect(not source.contains("start_game_button_v2.png"), "start action still depends on fixed PNG geometry")
+	for structural_symbol: String in ["▦", "☁", "◷", "⚑", "⌂"]:
+		_expect(not source.contains(structural_symbol), "LAN rules must not depend on font-specific structural symbols")
 	_expect(
 		_is_scalable_stylebox((lobby.get_node("SafeMargin/Page") as PanelContainer).get_theme_stylebox(&"panel")),
 		"formal lobby page must use a scalable panel surface",
@@ -66,6 +68,10 @@ func _run() -> void:
 	_expect(_disconnect_button(lobby).disabled, "disconnect must be disabled while idle")
 	_expect(not _ready_button(lobby).visible, "ready must be hidden before seating")
 	_expect(not _start_button(lobby).visible, "start must be hidden before seating")
+	_expect(
+		(lobby.get_node("SafeMargin/Page/Content/Body/RulesPanel/Column/Rule1") as Label).text.begins_with("棋制"),
+		"LAN rules must use stable text labels instead of decorative glyphs",
+	)
 
 	lobby.render_connection_snapshot({
 		"state": "hosting",

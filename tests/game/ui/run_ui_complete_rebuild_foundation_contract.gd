@@ -12,12 +12,12 @@ const BUTTONS: Array[StringName] = [
 	&"GhostButton", &"DangerButton", &"CompactButton",
 ]
 const LABELS := {
-	&"DisplayTitle": 40,
-	&"ScreenTitle": 30,
-	&"SectionTitle": 22,
+	&"DisplayTitle": 42,
+	&"ScreenTitle": 32,
+	&"SectionTitle": 19,
 	&"BodyText": 16,
 	&"SecondaryText": 14,
-	&"NumericText": 23,
+	&"NumericText": 20,
 }
 const VIEWPORTS: Array[Vector2i] = [
 	Vector2i(960, 540), Vector2i(1280, 720),
@@ -40,6 +40,8 @@ func _run() -> void:
 			_expect(theme.has_stylebox(&"panel", surface), "表面样式缺失：%s" % surface)
 		_expect(theme.get_stylebox(&"panel", &"PageSurface") is StyleBoxTexture, "页面必须使用风格化可缩放材质框")
 		_expect(theme.get_stylebox(&"panel", &"OverlaySurface") is StyleBoxTexture, "模态必须使用风格化可缩放材质框")
+		_expect(theme.get_stylebox(&"panel", &"PrimarySurface") is StyleBoxFlat, "任务区必须使用克制的平面承载层")
+		_expect(theme.get_stylebox(&"panel", &"SecondarySurface") is StyleBoxFlat, "普通栏目不得与页面外框争夺装饰层级")
 		for button: StringName in BUTTONS:
 			_expect(theme.get_type_variation_base(button) == &"Button", "按钮变体缺失：%s" % button)
 			for state: StringName in [&"normal", &"hover", &"pressed", &"disabled", &"focus"]:
@@ -47,6 +49,23 @@ func _run() -> void:
 		for label: StringName in LABELS:
 			_expect(theme.get_type_variation_base(label) == &"Label", "文字变体缺失：%s" % label)
 			_expect(theme.get_font_size(&"font_size", label) == int(LABELS[label]), "字号不匹配：%s" % label)
+		_expect(
+			theme.get_font(&"font", &"ScreenTitle").resource_path.contains("ramega_zhang_qingping"),
+			"页面题签必须使用受控的书法字体",
+		)
+		_expect(
+			theme.get_font(&"font", &"SectionTitle").resource_path.ends_with("noto_sans_sc_semibold.tres"),
+			"栏目标题必须回到高可读黑体",
+		)
+		var reading_surface := theme.get_stylebox(&"panel", &"SecondarySurface") as StyleBoxFlat
+		_expect(
+			_contrast_ratio(theme.get_color(&"font_color", &"BodyText"), reading_surface.bg_color) >= 4.5,
+			"正文与普通承载面的对比度低于 4.5:1",
+		)
+		_expect(
+			_contrast_ratio(theme.get_color(&"font_color", &"SecondaryText"), reading_surface.bg_color) >= 4.5,
+			"辅助文字与普通承载面的对比度低于 4.5:1",
+		)
 	await _check_gallery()
 	_finish()
 
@@ -82,13 +101,25 @@ func _check_gallery() -> void:
 
 func _finish() -> void:
 	if _failures.is_empty():
-		print("UI_COMPLETE_REBUILD_FOUNDATION_PASS surfaces=9 buttons=6 labels=6 viewports=4 stylized=true")
+		print("UI_COMPLETE_REBUILD_FOUNDATION_PASS surfaces=9 buttons=6 labels=6 viewports=4 hierarchy=v3")
 		quit(0)
 		return
 	for failure: String in _failures:
 		push_error(failure)
 	print("UI_COMPLETE_REBUILD_FOUNDATION_FAIL failures=%d" % _failures.size())
 	quit(1)
+
+
+func _contrast_ratio(foreground: Color, background: Color) -> float:
+	var foreground_luminance := _relative_luminance(foreground)
+	var background_luminance := _relative_luminance(background)
+	return (maxf(foreground_luminance, background_luminance) + 0.05) \
+		/ (minf(foreground_luminance, background_luminance) + 0.05)
+
+
+func _relative_luminance(color: Color) -> float:
+	var linear := color.srgb_to_linear()
+	return 0.2126 * linear.r + 0.7152 * linear.g + 0.0722 * linear.b
 
 
 func _expect(condition: bool, message: String) -> void:

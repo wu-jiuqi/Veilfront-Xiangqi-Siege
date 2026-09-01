@@ -42,6 +42,14 @@ func _run() -> void:
 	_expect(screen.get_node("%ChallengeGrid").get_child_count() == 3, "challenge catalog count changed")
 	_expect((screen.get_node("%DetailCode") as Label).text == "P0", "P0 must be selected on entry")
 	_expect((screen.get_node("%EnterButton") as Button).text == "进入关卡", "P0 must remain enterable")
+	_expect(
+		(screen.get_node("DesignCanvas/Page/Content/Body/DetailPanel/Column/ObjectiveCaption") as Label).text == "本关军令",
+		"level details must identify the actionable objective before supporting status",
+	)
+	_expect(
+		(screen.get_node("DesignCanvas/Page/Content/Body/DetailPanel/Column/ObjectivePanel") as Control).custom_minimum_size.y <= 160.0,
+		"level objective must not expand into an empty pseudo-preview",
+	)
 
 	var button_names: Array[String] = [
 		"BackButton", "TutorialCategoryButton", "ChallengeCategoryButton",

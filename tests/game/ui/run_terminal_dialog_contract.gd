@@ -28,12 +28,15 @@ func _run() -> void:
 	_expect(_is_scalable_stylebox(panel.get_theme_stylebox(&"panel")), "terminal frame must use a scalable surface")
 	var restart_button := dialog.get_node("%RestartButton") as Button
 	var lobby_button := dialog.get_node("%LobbyButton") as Button
+	var level_select_button := dialog.get_node("%LevelSelectButton") as Button
 	_expect(
 		_is_scalable_stylebox(restart_button.get_theme_stylebox(&"normal")) \
 		and _is_scalable_stylebox(lobby_button.get_theme_stylebox(&"normal")),
 		"terminal actions must use unified scalable button surfaces",
 	)
 	_expect(restart_button.has_method("set_reduced_motion"), "terminal actions must use the reusable motion button")
+	_expect(restart_button.theme_type_variation == &"ConfirmButton", "terminal default action must be the sole confirm role")
+	_expect(level_select_button.theme_type_variation == &"SecondaryButton", "terminal alternate destination must not compete with the default action")
 
 	var victory_view := {
 		"terminal": true,
